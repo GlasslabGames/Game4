@@ -219,16 +219,20 @@ PlayState.checkTouching = function (t1, t2) {
 /**
 * Randomly choose the digit for a new tile. It should be 1/3 target, 1/3 another digit, and 1/3 factor
 * @method getNewTileDigit
+* @return digit{int}
 * @public
 */
 PlayState.getNewTileDigit = function () {
     var rand = Math.random() * 3;
     var multiplier = Math.floor(Math.random() * (this.gemCount / this.targetNumber));
     if (rand < 1) {
+        console.log("Case 1, multiplier:",multiplier,"return:",multiplier);
         return multiplier; // case 1: a number that, when multiplied by the target, doesn't exceed the max tile
     } else if (rand < 2) {
+        console.log("Case 2, multiplier:",multiplier,"return:",multiplier * this.targetNumber);
         return multiplier * this.targetNumber; // case 2: the product
     } else {
+        console.log("Case 3, multiplier:",multiplier,"return:",this.targetNumber);
         return this.targetNumber; // case 3: the target number
     }
 }
@@ -351,12 +355,23 @@ PlayState.getMatches = function () {
 };
 
 /**
+* Check whether these three pieces form a match
+* @method isMatch
+* @return isMatch{bool} 
+* @public
+*/
+PlayState.isMatch = function (pieceA, pieceB, pieceC) {
+    return (pieceA.animation.frameIndex * pieceB.animation.frameIndex == pieceC.animation.frameIndex) ||
+            (pieceA.animation.frameIndex == pieceB.animation.frameIndex * pieceC.animation.frameIndex);
+};
+
+/**
 * This method returns all matching tiles that are connected horizontally
 * @method getMatchesHorizontal
 * @public
 * @param piece{Sprite}
 * @return matches{Array}
-*/
+*
 PlayState.getMatchesHorizontal = function (piece) {
     var matches = [];
     matches.push(piece);
@@ -378,7 +393,72 @@ PlayState.getMatchesHorizontal = function (piece) {
     }
     return matches;
 }
+*/
 
+/**
+* This method returns any 3-tile horizontal match including this piece
+* @method getMatchesHorizontal
+* @public
+* @param piece{Sprite}
+* @return matches{Array}
+*/
+PlayState.getMatchesHorizontal = function (piece) {
+    var matches = [];
+    matches.push(piece); // adding this now is fine; if we don't find any other pieces, we'll discount a 1-piece match anyway.
+
+    // Find nearby pieces: [A][B][X][C][D]
+    var pieceA = (piece.my_x - 2 >= 0) && this.pieces[piece.my_y][piece.my_x - 2];
+    var pieceB = (piece.my_x - 1 >= 0) && this.pieces[piece.my_y][piece.my_x - 1];
+    var pieceC = (piece.my_x + 1 < this.width) && this.pieces[piece.my_y][piece.my_x + 1];
+    var pieceD = (piece.my_x + 2 < this.width) && this.pieces[piece.my_y][piece.my_x + 2];
+
+    if (pieceA && pieceB && PlayState.isMatch(pieceA, pieceB, piece)) {
+        matches.push(pieceA, pieceB);
+    }
+
+    if (pieceB && pieceC && PlayState.isMatch(pieceB, piece, pieceC)) {
+        matches.push(pieceB, pieceC);
+    }
+
+    if (pieceC && pieceD && PlayState.isMatch(piece, pieceC, pieceD)) {
+        matches.push(pieceC, pieceD);
+    }
+
+    return matches;
+}
+
+
+/**
+* This method returns any 3-tile vertical match including this piece
+* @method getMatchesVertical
+* @public
+* @param piece{Sprite}
+* @return matches{Array}
+*/
+PlayState.getMatchesVertical = function (piece) {
+    var matches = [];
+    matches.push(piece); // adding this now is fine; if we don't find any other pieces, we'll discount a 1-piece match anyway.
+
+    // Find nearby pieces: [A][B][X][C][D] (but vertical)
+    var pieceA = (piece.my_y - 2 >= 0) && this.pieces[piece.my_y - 2][piece.my_x];
+    var pieceB = (piece.my_y - 1 >= 0) && this.pieces[piece.my_y - 1][piece.my_x];
+    var pieceC = (piece.my_y + 1 < this.height) && this.pieces[piece.my_y + 1][piece.my_x];
+    var pieceD = (piece.my_y + 2 < this.height) && this.pieces[piece.my_y + 2][piece.my_x];
+
+    if (pieceA && pieceB && PlayState.isMatch(pieceA, pieceB, piece)) {
+        matches.push(pieceA, pieceB);
+    }
+
+    if (pieceB && pieceC && PlayState.isMatch(pieceB, piece, pieceC)) {
+        matches.push(pieceB, pieceC);
+    }
+
+    if (pieceC && pieceD && PlayState.isMatch(piece, pieceC, pieceD)) {
+        matches.push(pieceC, pieceD);
+    }
+
+    return matches;
+}
 
 /**
 * This method returns all matching tiles that are connected vertically
@@ -386,7 +466,7 @@ PlayState.getMatchesHorizontal = function (piece) {
 * @public
 * @param piece{Sprite}
 * @return matches{Array}
-*/
+*
 PlayState.getMatchesVertical = function (piece) {
     var matches = [];
     matches.push(piece);
@@ -409,6 +489,7 @@ PlayState.getMatchesVertical = function (piece) {
     }
     return matches;
 }
+*/
 
 
 /**
@@ -507,9 +588,9 @@ PlayState.updateOriginalBoard = function () {
                     }
                     newCount++;
                     //no above tile, so randomize a new one
-                    var rand = Math.floor(Math.random() * PlayState.gemCount);
+                    var digit = PlayState.getNewTileDigit();
                     var tempTile = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems, (tile.my_x * PlayState.tileSize) + this.startX, (tile.my_y * PlayState.tileSize) + this.startY);
-                    tempTile.animation.switchTo(rand);
+                    tempTile.animation.switchTo(digit);
                     tempTile.my_x = tile.my_x;
                     tempTile.my_y = tile.my_y;
                     tempTile.animating = true;
