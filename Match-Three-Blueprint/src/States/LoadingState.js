@@ -19,7 +19,7 @@
 * 3 - dimensions {Object} A Object containing the width/height that the game is to be. For example {width: 1024, height: 768}
 * 4 - subfolder {String} The folder that the loading graphics are located at. 
 */
-var LoadingState = new KiwiLoadingScreen('LoadingState','IntroState',{width:420,height: 420}, 'assets/img/loading/');
+var LoadingState = new KiwiLoadingScreen('LoadingState','IntroState',{width:500,height: 500}, 'assets/img/loading/');
 
 LoadingState.preload = function () {
     
@@ -29,4 +29,9 @@ LoadingState.preload = function () {
 
     //this.addSpriteSheet('gems', 'assets/img/gems.png', 40, 40);
     this.addSpriteSheet('gems', 'assets/img/numberTiles2.png', 60, 60);
+    this.addSpriteSheet('numbers', 'assets/img/numbers.png', 36, 70);
+    this.addImage('tile', 'assets/img/mathyMatch_prototype1_numberTile_default.png');
+    this.addImage('tile_highlight', 'assets/img/mathyMatch_prototype1_numberTile_highlight.png');
+
+
 };

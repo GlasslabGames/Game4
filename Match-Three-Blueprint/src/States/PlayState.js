@@ -52,19 +52,7 @@ PlayState.create = function () {
 
     for (var y = 0; y < this.height; y++) {
         for (var x = 0; x < this.width; x++) {
-            var digit = PlayState.getNewTileDigit();
-            // var digit = Math.floor(Math.random() * PlayState.gemCount); // old totally random way
-            var tempCreate = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems, x * PlayState.tileSize + this.startX, y * PlayState.tileSize + this.startY);
-            tempCreate.animation.switchTo(digit);
-            tempCreate.my_x = x;
-            tempCreate.my_y = y;
-            //tempCreate.d_y = y;
-            tempCreate.name = 'gem' + y + '_' + x;
-            PlayState.addChild(tempCreate);
-            tempCreate.animating = false;
-
-
-            this.pieces[y][x] = tempCreate;
+            PlayState.createTile(x, y);
         };
     };
     this.curr = '';
@@ -215,14 +203,40 @@ PlayState.checkTouching = function (t1, t2) {
 }
 
 
+/**
+* Creates a new tile and adds it to the game.
+* @method createTile
+* @return tile{Sprite}
+* @public
+*/
+PlayState.createTile = function(x, y, startY) {
+    var tile = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems);
+    tile.x = x * PlayState.tileSize + this.startX;
+    if (typeof startY == 'undefined') {
+        tile.y = y * PlayState.tileSize + this.startY;
+    } else {
+        tile.y = startY * PlayState.tileSize + this.startY;
+    }
+
+    var number = PlayState.getNewTileNumber();
+    tile.animation.switchTo(number);
+    tile.my_x = x;
+    tile.my_y = y;
+    tile.value = number;
+
+    PlayState.addChild(tile);
+    this.pieces[y][x] = tile;
+
+    return tile;
+}
 
 /**
 * Randomly choose the digit for a new tile. It should be 1/3 target, 1/3 another digit, and 1/3 factor
-* @method getNewTileDigit
+* @method getNewTileNumber
 * @return digit{int}
 * @public
 */
-PlayState.getNewTileDigit = function () {
+PlayState.getNewTileNumber = function () {
     var rand = Math.random() * 3;
     var multiplier = Math.floor(Math.random() * (this.gemCount / this.targetNumber));
     if (rand < 1) {
@@ -268,18 +282,7 @@ PlayState.updateBoard = function () {
                         }
                     }
                     newCount++;
-                    var digit = PlayState.getNewTileDigit();
-                    var tempTile = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems, (tile.my_x * PlayState.tileSize) + this.startX, -((newCount) * PlayState.tileSize) + this.startY);
-                    tempTile.animation.switchTo(digit);
-                    tempTile.my_x = tile.my_x;
-                    tempTile.my_y = tile.my_y;
-                    tempTile.animating = true;
-                    tempTile.name = 'gem' + tile.my_y  + '_' + tile.my_x;
-                    PlayState.addChild(tempTile);
-
-                    this.pieces[tile.my_y ][tile.my_x] = tempTile;
-
-                    
+                    PlayState.createTile(tile.my_x, tile.my_y, -newCount).animating = true;
                     
                 } else { // Visible tile above. Therefore move it to lowest !visible
 
@@ -365,35 +368,6 @@ PlayState.isMatch = function (pieceA, pieceB, pieceC) {
             (pieceA.animation.frameIndex == pieceB.animation.frameIndex * pieceC.animation.frameIndex);
 };
 
-/**
-* This method returns all matching tiles that are connected horizontally
-* @method getMatchesHorizontal
-* @public
-* @param piece{Sprite}
-* @return matches{Array}
-*
-PlayState.getMatchesHorizontal = function (piece) {
-    var matches = [];
-    matches.push(piece);
-    for (var i = piece.my_x - 1; i >= 0; i--) {
-        var t = this.pieces[piece.my_y][i]; 
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
-    }
-    for (var i = piece.my_x + 1; i < this.width; i++) {
-        var t = this.pieces[piece.my_y][i];
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
-    }
-    return matches;
-}
-*/
 
 /**
 * This method returns any 3-tile horizontal match including this piece
@@ -460,36 +434,6 @@ PlayState.getMatchesVertical = function (piece) {
     return matches;
 }
 
-/**
-* This method returns all matching tiles that are connected vertically
-* @method getMatchesVertical
-* @public
-* @param piece{Sprite}
-* @return matches{Array}
-*
-PlayState.getMatchesVertical = function (piece) {
-    var matches = [];
-    matches.push(piece);
-    for (var i = piece.my_y - 1; i >= 0; i--) {
-        var t = this.pieces[i][piece.my_x];
-
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
-    }
-    for (var i = piece.my_y + 1; i < this.height; i++) {
-        var t = this.pieces[i][piece.my_x];
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
-    }
-    return matches;
-}
-*/
 
 
 /**
@@ -588,16 +532,7 @@ PlayState.updateOriginalBoard = function () {
                     }
                     newCount++;
                     //no above tile, so randomize a new one
-                    var digit = PlayState.getNewTileDigit();
-                    var tempTile = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems, (tile.my_x * PlayState.tileSize) + this.startX, (tile.my_y * PlayState.tileSize) + this.startY);
-                    tempTile.animation.switchTo(digit);
-                    tempTile.my_x = tile.my_x;
-                    tempTile.my_y = tile.my_y;
-                    tempTile.animating = true;
-                    tempTile.name = 'gem' + tile.my_y  + '_' + tile.my_x;
-                    PlayState.addChild(tempTile);
-                    tempTile.visible = true;
-                    this.pieces[tile.my_y ][tile.my_x] = tempTile;
+                    PlayState.createTile(tile.my_x, tile.my_y);
                     
                 } else {
                     this.pieces[lowestVisible.my_y][lowestVisible.my_x] = tile;
