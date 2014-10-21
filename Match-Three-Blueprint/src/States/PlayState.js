@@ -82,6 +82,34 @@ PlayState.update = function(){
         this.clearMatches();
         this.animating = true;
     }
+
+    if (this.curr && this.game.input.mouse.isDown) {
+        PlayState.mouseOverTile(this.game.input.mouse.x, this.game.input.mouse.y);
+    } else {
+        this.highlight(null);
+    }
+}
+
+PlayState.mouseOverTile = function (mouseX, mouseY) {
+    var tileX = 0;
+    var tileY = 0;
+
+    for(var i = 0; i < this.width; i++){
+        if (mouseX - this.startX > this.tileSize * i && mouseX - this.startX < this.tileSize * (i + 1)) {
+            tileX = i;
+        }
+    }
+
+    for(var j = 0; j < this.height; j++){
+        if (mouseY - this.startY > this.tileSize * j && mouseY - this.startY < this.tileSize * (j + 1)) {
+            tileY = j;
+        }
+    }
+
+    var tile = this.pieces[tileY][tileX];
+    if (this.checkTouching(this.curr, tile)) {
+        this.highlight(tile);
+    }
 }
 
 
@@ -112,12 +140,12 @@ PlayState.clickTile = function (mouseX, mouseY) {
     var tile = this.pieces[tileY][tileX];
 
 
-    if (this.curr == '') {
+    if (!this.curr) {
         //Select your first tile
-        this.curr = tile;
+        this.select(tile);
     } else if (this.curr == tile) {
         //Deselect current tile
-        this.curr = '';
+        this.select(null);
     } else {
         //need to check if the two are touching
         if (this.checkTouching(this.curr, tile)) {
@@ -175,14 +203,38 @@ PlayState.clickTile = function (mouseX, mouseY) {
                 this.pieces[tmy_y][tmy_x] = tile;
             }
 
-            this.curr = '';
+            this.select(null);
         } else {
-            //Select new tile
-            this.curr = tile;
+            // We used to select the new tile here, but it's better to select nothing.
+            this.select(null);
         }
     }
 }
 
+
+PlayState.select = function(tile) {
+    if (tile == this.curr) return; // nothing to do
+
+    if (this.curr) {
+        this.curr.atlas = PlayState.textures.gems; // unhighlight the previous tile
+    }
+    this.curr = tile;
+    if (this.curr) {
+        this.curr.atlas = PlayState.textures.gemsHighlight; // highlight this tile
+    }
+}
+
+PlayState.highlight = function(tile) {
+    if (tile == this.highlighted) return; // nothing to do
+
+    if (this.highlighted && this.highlighted != this.curr) {
+        this.highlighted.atlas = PlayState.textures.gems; // unhighlight the previous tile unless it's selected
+    }
+    this.highlighted = tile;
+    if (this.highlighted) {
+        this.highlighted.atlas = PlayState.textures.gemsHighlight; // highlight this tile
+    }
+}
 
 /**
 * This method returns whether two tiles are touching or not.

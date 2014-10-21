@@ -29,9 +29,12 @@ LoadingState.preload = function () {
 
     //this.addSpriteSheet('gems', 'assets/img/gems.png', 40, 40);
     this.addSpriteSheet('gems', 'assets/img/numberTiles2.png', 60, 60);
+    this.addSpriteSheet('gemsHighlight', 'assets/img/numberTiles2_highlight.png', 60, 60);
+		/*
     this.addSpriteSheet('numbers', 'assets/img/numbers.png', 36, 70);
     this.addImage('tile', 'assets/img/mathyMatch_prototype1_numberTile_default.png');
     this.addImage('tile_highlight', 'assets/img/mathyMatch_prototype1_numberTile_highlight.png');
+    */
 
 
 };
