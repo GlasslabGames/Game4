@@ -22,7 +22,7 @@ PlayState.create = function () {
     * Create your randomized board.
     */
     this.gemCount = 16;
-    this.tileSize = 60;
+    this.tileSize = 60 + 10; // 10: margin
     this.height = 7;
     this.width = 7;
     this.matchesCleared = 0;
@@ -33,8 +33,8 @@ PlayState.create = function () {
     //Total matches per turn
     this.totalMatchesCleared = 0;
 
-    this.startX = 0;
-    this.startY = 0;
+    this.startX = 10;
+    this.startY = 10;
 
     this.targetNumber = 2; // start with target number 2 (which focuses on multiples of 2)
 
