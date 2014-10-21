@@ -240,13 +240,10 @@ PlayState.getNewTileNumber = function () {
     var rand = Math.random() * 3;
     var multiplier = Math.floor(Math.random() * (this.gemCount / this.targetNumber));
     if (rand < 1) {
-        console.log("Case 1, multiplier:",multiplier,"return:",multiplier);
         return multiplier; // case 1: a number that, when multiplied by the target, doesn't exceed the max tile
     } else if (rand < 2) {
-        console.log("Case 2, multiplier:",multiplier,"return:",multiplier * this.targetNumber);
         return multiplier * this.targetNumber; // case 2: the product
     } else {
-        console.log("Case 3, multiplier:",multiplier,"return:",this.targetNumber);
         return this.targetNumber; // case 3: the target number
     }
 }
@@ -364,8 +361,8 @@ PlayState.getMatches = function () {
 * @public
 */
 PlayState.isMatch = function (pieceA, pieceB, pieceC) {
-    return (pieceA.animation.frameIndex * pieceB.animation.frameIndex == pieceC.animation.frameIndex) ||
-            (pieceA.animation.frameIndex == pieceB.animation.frameIndex * pieceC.animation.frameIndex);
+    return (pieceA.value * pieceB.value == pieceC.value) ||
+            (pieceA.value == pieceB.value * pieceC.value);
 };
 
 
