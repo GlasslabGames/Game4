@@ -22,7 +22,7 @@ PlayState.create = function () {
     * Create your randomized board.
     */
     this.gemCount = 16;
-    this.tileSize = 60;
+    this.tileSize = 60 + 10; // 10: margin
     this.height = 7;
     this.width = 7;
     this.matchesCleared = 0;
@@ -33,8 +33,8 @@ PlayState.create = function () {
     //Total matches per turn
     this.totalMatchesCleared = 0;
 
-    this.startX = 0;
-    this.startY = 0;
+    this.startX = 10;
+    this.startY = 10;
 
     this.targetNumber = 2; // start with target number 2 (which focuses on multiples of 2)
 
@@ -52,19 +52,7 @@ PlayState.create = function () {
 
     for (var y = 0; y < this.height; y++) {
         for (var x = 0; x < this.width; x++) {
-            var digit = PlayState.getNewTileDigit();
-            // var digit = Math.floor(Math.random() * PlayState.gemCount); // old totally random way
-            var tempCreate = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems, x * PlayState.tileSize + this.startX, y * PlayState.tileSize + this.startY);
-            tempCreate.animation.switchTo(digit);
-            tempCreate.my_x = x;
-            tempCreate.my_y = y;
-            //tempCreate.d_y = y;
-            tempCreate.name = 'gem' + y + '_' + x;
-            PlayState.addChild(tempCreate);
-            tempCreate.animating = false;
-
-
-            this.pieces[y][x] = tempCreate;
+            PlayState.createTile(x, y);
         };
     };
     this.curr = '';
@@ -93,6 +81,34 @@ PlayState.update = function(){
     if(!this.animating){
         this.clearMatches();
         this.animating = true;
+    }
+
+    if (this.curr && this.game.input.mouse.isDown) {
+        PlayState.mouseOverTile(this.game.input.mouse.x, this.game.input.mouse.y);
+    } else {
+        this.highlight(null);
+    }
+}
+
+PlayState.mouseOverTile = function (mouseX, mouseY) {
+    var tileX = 0;
+    var tileY = 0;
+
+    for(var i = 0; i < this.width; i++){
+        if (mouseX - this.startX > this.tileSize * i && mouseX - this.startX < this.tileSize * (i + 1)) {
+            tileX = i;
+        }
+    }
+
+    for(var j = 0; j < this.height; j++){
+        if (mouseY - this.startY > this.tileSize * j && mouseY - this.startY < this.tileSize * (j + 1)) {
+            tileY = j;
+        }
+    }
+
+    var tile = this.pieces[tileY][tileX];
+    if (this.checkTouching(this.curr, tile)) {
+        this.highlight(tile);
     }
 }
 
@@ -124,12 +140,12 @@ PlayState.clickTile = function (mouseX, mouseY) {
     var tile = this.pieces[tileY][tileX];
 
 
-    if (this.curr == '') {
+    if (!this.curr) {
         //Select your first tile
-        this.curr = tile;
+        this.select(tile);
     } else if (this.curr == tile) {
         //Deselect current tile
-        this.curr = '';
+        this.select(null);
     } else {
         //need to check if the two are touching
         if (this.checkTouching(this.curr, tile)) {
@@ -187,14 +203,38 @@ PlayState.clickTile = function (mouseX, mouseY) {
                 this.pieces[tmy_y][tmy_x] = tile;
             }
 
-            this.curr = '';
+            this.select(null);
         } else {
-            //Select new tile
-            this.curr = tile;
+            // We used to select the new tile here, but it's better to select nothing.
+            this.select(null);
         }
     }
 }
 
+
+PlayState.select = function(tile) {
+    if (tile == this.curr) return; // nothing to do
+
+    if (this.curr) {
+        this.curr.atlas = PlayState.textures.gems; // unhighlight the previous tile
+    }
+    this.curr = tile;
+    if (this.curr) {
+        this.curr.atlas = PlayState.textures.gemsHighlight; // highlight this tile
+    }
+}
+
+PlayState.highlight = function(tile) {
+    if (tile == this.highlighted) return; // nothing to do
+
+    if (this.highlighted && this.highlighted != this.curr) {
+        this.highlighted.atlas = PlayState.textures.gems; // unhighlight the previous tile unless it's selected
+    }
+    this.highlighted = tile;
+    if (this.highlighted) {
+        this.highlighted.atlas = PlayState.textures.gemsHighlight; // highlight this tile
+    }
+}
 
 /**
 * This method returns whether two tiles are touching or not.
@@ -215,13 +255,40 @@ PlayState.checkTouching = function (t1, t2) {
 }
 
 
+/**
+* Creates a new tile and adds it to the game.
+* @method createTile
+* @return tile{Sprite}
+* @public
+*/
+PlayState.createTile = function(x, y, startY) {
+    var tile = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems);
+    tile.x = x * PlayState.tileSize + this.startX;
+    if (typeof startY == 'undefined') {
+        tile.y = y * PlayState.tileSize + this.startY;
+    } else {
+        tile.y = startY * PlayState.tileSize + this.startY;
+    }
+
+    var number = PlayState.getNewTileNumber();
+    tile.animation.switchTo(number);
+    tile.my_x = x;
+    tile.my_y = y;
+    tile.value = number;
+
+    PlayState.addChild(tile);
+    this.pieces[y][x] = tile;
+
+    return tile;
+}
 
 /**
 * Randomly choose the digit for a new tile. It should be 1/3 target, 1/3 another digit, and 1/3 factor
-* @method getNewTileDigit
+* @method getNewTileNumber
+* @return digit{int}
 * @public
 */
-PlayState.getNewTileDigit = function () {
+PlayState.getNewTileNumber = function () {
     var rand = Math.random() * 3;
     var multiplier = Math.floor(Math.random() * (this.gemCount / this.targetNumber));
     if (rand < 1) {
@@ -264,18 +331,7 @@ PlayState.updateBoard = function () {
                         }
                     }
                     newCount++;
-                    var digit = PlayState.getNewTileDigit();
-                    var tempTile = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems, (tile.my_x * PlayState.tileSize) + this.startX, -((newCount) * PlayState.tileSize) + this.startY);
-                    tempTile.animation.switchTo(digit);
-                    tempTile.my_x = tile.my_x;
-                    tempTile.my_y = tile.my_y;
-                    tempTile.animating = true;
-                    tempTile.name = 'gem' + tile.my_y  + '_' + tile.my_x;
-                    PlayState.addChild(tempTile);
-
-                    this.pieces[tile.my_y ][tile.my_x] = tempTile;
-
-                    
+                    PlayState.createTile(tile.my_x, tile.my_y, -newCount).animating = true;
                     
                 } else { // Visible tile above. Therefore move it to lowest !visible
 
@@ -351,7 +407,19 @@ PlayState.getMatches = function () {
 };
 
 /**
-* This method returns all matching tiles that are connected horizontally
+* Check whether these three pieces form a match
+* @method isMatch
+* @return isMatch{bool} 
+* @public
+*/
+PlayState.isMatch = function (pieceA, pieceB, pieceC) {
+    return (pieceA.value * pieceB.value == pieceC.value) ||
+            (pieceA.value == pieceB.value * pieceC.value);
+};
+
+
+/**
+* This method returns any 3-tile horizontal match including this piece
 * @method getMatchesHorizontal
 * @public
 * @param piece{Sprite}
@@ -359,29 +427,32 @@ PlayState.getMatches = function () {
 */
 PlayState.getMatchesHorizontal = function (piece) {
     var matches = [];
-    matches.push(piece);
-    for (var i = piece.my_x - 1; i >= 0; i--) {
-        var t = this.pieces[piece.my_y][i]; 
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
+    matches.push(piece); // adding this now is fine; if we don't find any other pieces, we'll discount a 1-piece match anyway.
+
+    // Find nearby pieces: [A][B][X][C][D]
+    var pieceA = (piece.my_x - 2 >= 0) && this.pieces[piece.my_y][piece.my_x - 2];
+    var pieceB = (piece.my_x - 1 >= 0) && this.pieces[piece.my_y][piece.my_x - 1];
+    var pieceC = (piece.my_x + 1 < this.width) && this.pieces[piece.my_y][piece.my_x + 1];
+    var pieceD = (piece.my_x + 2 < this.width) && this.pieces[piece.my_y][piece.my_x + 2];
+
+    if (pieceA && pieceB && PlayState.isMatch(pieceA, pieceB, piece)) {
+        matches.push(pieceA, pieceB);
     }
-    for (var i = piece.my_x + 1; i < this.width; i++) {
-        var t = this.pieces[piece.my_y][i];
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
+
+    if (pieceB && pieceC && PlayState.isMatch(pieceB, piece, pieceC)) {
+        matches.push(pieceB, pieceC);
     }
+
+    if (pieceC && pieceD && PlayState.isMatch(piece, pieceC, pieceD)) {
+        matches.push(pieceC, pieceD);
+    }
+
     return matches;
 }
 
 
 /**
-* This method returns all matching tiles that are connected vertically
+* This method returns any 3-tile vertical match including this piece
 * @method getMatchesVertical
 * @public
 * @param piece{Sprite}
@@ -389,26 +460,29 @@ PlayState.getMatchesHorizontal = function (piece) {
 */
 PlayState.getMatchesVertical = function (piece) {
     var matches = [];
-    matches.push(piece);
-    for (var i = piece.my_y - 1; i >= 0; i--) {
-        var t = this.pieces[i][piece.my_x];
+    matches.push(piece); // adding this now is fine; if we don't find any other pieces, we'll discount a 1-piece match anyway.
 
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
+    // Find nearby pieces: [A][B][X][C][D] (but vertical)
+    var pieceA = (piece.my_y - 2 >= 0) && this.pieces[piece.my_y - 2][piece.my_x];
+    var pieceB = (piece.my_y - 1 >= 0) && this.pieces[piece.my_y - 1][piece.my_x];
+    var pieceC = (piece.my_y + 1 < this.height) && this.pieces[piece.my_y + 1][piece.my_x];
+    var pieceD = (piece.my_y + 2 < this.height) && this.pieces[piece.my_y + 2][piece.my_x];
+
+    if (pieceA && pieceB && PlayState.isMatch(pieceA, pieceB, piece)) {
+        matches.push(pieceA, pieceB);
     }
-    for (var i = piece.my_y + 1; i < this.height; i++) {
-        var t = this.pieces[i][piece.my_x];
-        if (t.animation.frameIndex == piece.animation.frameIndex) {
-            matches.push(t);
-        } else {
-            break;
-        }
+
+    if (pieceB && pieceC && PlayState.isMatch(pieceB, piece, pieceC)) {
+        matches.push(pieceB, pieceC);
     }
+
+    if (pieceC && pieceD && PlayState.isMatch(piece, pieceC, pieceD)) {
+        matches.push(pieceC, pieceD);
+    }
+
     return matches;
 }
+
 
 
 /**
@@ -507,16 +581,7 @@ PlayState.updateOriginalBoard = function () {
                     }
                     newCount++;
                     //no above tile, so randomize a new one
-                    var rand = Math.floor(Math.random() * PlayState.gemCount);
-                    var tempTile = new Kiwi.GameObjects.Sprite(PlayState, PlayState.textures.gems, (tile.my_x * PlayState.tileSize) + this.startX, (tile.my_y * PlayState.tileSize) + this.startY);
-                    tempTile.animation.switchTo(rand);
-                    tempTile.my_x = tile.my_x;
-                    tempTile.my_y = tile.my_y;
-                    tempTile.animating = true;
-                    tempTile.name = 'gem' + tile.my_y  + '_' + tile.my_x;
-                    PlayState.addChild(tempTile);
-                    tempTile.visible = true;
-                    this.pieces[tile.my_y ][tile.my_x] = tempTile;
+                    PlayState.createTile(tile.my_x, tile.my_y);
                     
                 } else {
                     this.pieces[lowestVisible.my_y][lowestVisible.my_x] = tile;
