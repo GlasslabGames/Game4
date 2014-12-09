@@ -1,8 +1,0 @@
-
-public enum QuestState {
-  ACTIVE = 0,
-  AVAILABLE,
-  UNAVAILABLE,
-  COMPLETE,
-  UNINITIALIZED
-};
