@@ -3,7 +3,7 @@
 // Copyright © 2011-2014 Tasharen Entertainment
 //----------------------------------------------
 
-#if !UNITY_EDITOR && (UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8 || UNITY_BLACKBERRY || UNITY_WINRT)
+#if !UNITY_EDITOR && (UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8 || UNITY_WP_8_1 || UNITY_BLACKBERRY)
 #define MOBILE
 #endif
 
@@ -99,6 +99,13 @@ public class UIInput : MonoBehaviour
 	public bool hideInput = false;
 
 	/// <summary>
+	/// Whether all text will be selected when the input field gains focus.
+	/// </summary>
+
+	[System.NonSerialized]
+	public bool selectAllTextOnFocus = true;
+
+	/// <summary>
 	/// What kind of validation to use with the input field's data.
 	/// </summary>
 
@@ -117,10 +124,10 @@ public class UIInput : MonoBehaviour
 	public string savedAs;
 
 	/// <summary>
-	/// Object to select when Tab key gets pressed.
+	/// Don't use this anymore. Attach UIKeyNavigation instead.
 	/// </summary>
 
-	public GameObject selectOnTab;
+	[HideInInspector][SerializeField] GameObject selectOnTab;
 
 	/// <summary>
 	/// Color of the label when the input field has focus.
@@ -197,6 +204,7 @@ public class UIInput : MonoBehaviour
 	{
 		get
 		{
+			if (mDoInit) Init();
 			return mDefaultText;
 		}
 		set
@@ -424,6 +432,19 @@ public class UIInput : MonoBehaviour
 
 	void Start ()
 	{
+		if (selectOnTab != null)
+		{
+			UIKeyNavigation nav = GetComponent<UIKeyNavigation>();
+
+			if (nav == null)
+			{
+				nav = gameObject.AddComponent<UIKeyNavigation>();
+				nav.onDown = selectOnTab;
+			}
+			selectOnTab = null;
+			NGUITools.SetDirty(this);
+		}
+
 		if (mLoadSavedValue && !string.IsNullOrEmpty(savedAs)) LoadValue();
 		else value = mValue.Replace("\\n", "\n");
 	}
@@ -466,14 +487,34 @@ public class UIInput : MonoBehaviour
 		}
 	}
 
+#if !MOBILE
+	[System.NonSerialized] UIInputOnGUI mOnGUI;
+#endif
 	/// <summary>
 	/// Selection event, sent by the EventSystem.
 	/// </summary>
 
 	protected virtual void OnSelect (bool isSelected)
 	{
-		if (isSelected) OnSelectEvent();
-		else OnDeselectEvent();
+		if (isSelected)
+		{
+#if !MOBILE
+			if (mOnGUI == null)
+				mOnGUI = gameObject.AddComponent<UIInputOnGUI>();
+#endif
+			OnSelectEvent();
+		}
+		else
+		{
+#if !MOBILE
+			if (mOnGUI != null)
+			{
+				Destroy(mOnGUI);
+				mOnGUI = null;
+			}
+#endif
+			OnDeselectEvent();
+		}
 	}
 
 	/// <summary>
@@ -528,7 +569,7 @@ public class UIInput : MonoBehaviour
 	/// Update the text based on input.
 	/// </summary>
 	
-	void Update ()
+	protected virtual void Update ()
 	{
 #if UNITY_EDITOR
 		if (!Application.isPlaying) return;
@@ -549,9 +590,9 @@ public class UIInput : MonoBehaviour
 			if (mSelectMe != -1 && mSelectMe != Time.frameCount)
 			{
 				mSelectMe = -1;
-				mSelectionStart = 0;
 				mSelectionEnd = string.IsNullOrEmpty(mValue) ? 0 : mValue.Length;
 				mDrawStart = 0;
+				mSelectionStart = selectAllTextOnFocus ? 0 : mSelectionEnd;
 				label.color = activeTextColor;
 #if MOBILE
 				if (Application.platform == RuntimePlatform.IPhonePlayer
@@ -657,12 +698,6 @@ public class UIInput : MonoBehaviour
 			else
 #endif // MOBILE
 			{
-				if (selectOnTab != null && Input.GetKeyDown(KeyCode.Tab))
-				{
-					UICamera.selectedObject = selectOnTab;
-					return;
-				}
-
 				string ime = Input.compositionString;
 
 				// There seems to be an inconsistency between IME on Windows, and IME on OSX.
@@ -713,16 +748,6 @@ public class UIInput : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Unfortunately Unity 4.3 and earlier doesn't offer a way to properly process events outside of OnGUI.
-	/// </summary>
-
-	void OnGUI ()
-	{
-		if (isSelected && Event.current.rawType == EventType.KeyDown)
-			ProcessEvent(Event.current);
-	}
-
-	/// <summary>
 	/// Perform a backspace operation.
 	/// </summary>
 
@@ -739,11 +764,12 @@ public class UIInput : MonoBehaviour
 		}
 	}
 
+#if !MOBILE
 	/// <summary>
 	/// Handle the specified event.
 	/// </summary>
 
-	protected virtual bool ProcessEvent (Event ev)
+	public virtual bool ProcessEvent (Event ev)
 	{
 		if (label == null) return false;
 
@@ -980,6 +1006,7 @@ public class UIInput : MonoBehaviour
 		}
 		return false;
 	}
+#endif
 
 	/// <summary>
 	/// Insert the specified text string into the current input value, respecting selection and validation.
@@ -1095,6 +1122,9 @@ public class UIInput : MonoBehaviour
 			(UICamera.currentScheme == UICamera.ControlScheme.Mouse ||
 			 UICamera.currentScheme == UICamera.ControlScheme.Touch))
 		{
+ #if UNITY_METRO
+			if (mKeyboard != null) mKeyboard.active = true;
+ #endif
 			selectionEnd = GetCharUnderMouse();
 			if (!Input.GetKey(KeyCode.LeftShift) &&
 				!Input.GetKey(KeyCode.RightShift)) selectionStart = mSelectionEnd;

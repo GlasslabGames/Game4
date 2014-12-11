@@ -15,14 +15,14 @@ using System.IO;
 
 public class UIFontMaker : EditorWindow
 {
-	enum FontType
+	public enum FontType
 	{
 		GeneratedBitmap,	// Bitmap font, created from a dynamic font using FreeType
 		ImportedBitmap,		// Imported bitmap font, created using BMFont or another external tool
 		Dynamic,			// Dynamic font, used as-is
 	}
 
-	enum Create
+	public enum Create
 	{
 		None,
 		Bitmap,		// Bitmap font, created from a dynamic font using FreeType
@@ -30,7 +30,7 @@ public class UIFontMaker : EditorWindow
 		Dynamic,	// Dynamic font, used as-is
 	}
 
-	enum CharacterMap
+	public enum CharacterMap
 	{
 		Numeric,	// 0 through 9
 		Ascii,		// Character IDs 32 through 127
@@ -181,8 +181,11 @@ public class UIFontMaker : EditorWindow
 			{
 				if (!FreeType.isPresent)
 				{
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 					string filename = (Application.platform == RuntimePlatform.WindowsEditor) ? "FreeType.dll" : "FreeType.dylib";
-					
+#else
+					string filename = (Application.platform == RuntimePlatform.WindowsEditor) ? "FreeType64.dll" : "FreeType64.dylib";
+#endif
 					EditorGUILayout.HelpBox("Assets/NGUI/Editor/" + filename + " is missing", MessageType.Error);
 
 					GUILayout.BeginHorizontal();
@@ -472,7 +475,7 @@ public class UIFontMaker : EditorWindow
 				NGUISettings.dynamicFont,
 				NGUISettings.fontSize, mFaceIndex,
 				NGUISettings.fontKerning,
-				NGUISettings.charsToInclude, out bmFont, out tex))
+				NGUISettings.charsToInclude, 1, out bmFont, out tex))
 			{
 				uiFont.bmFont = bmFont;
 				tex.name = fontName;
@@ -551,7 +554,7 @@ public class UIFontMaker : EditorWindow
 	/// Helper function that draws a slightly padded toggle
 	/// </summary>
 
-	static bool DrawOption (bool state, string text, params GUILayoutOption[] options)
+	static public bool DrawOption (bool state, string text, params GUILayoutOption[] options)
 	{
 		GUILayout.BeginHorizontal();
 		GUILayout.Space(10f);

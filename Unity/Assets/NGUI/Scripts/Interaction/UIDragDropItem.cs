@@ -63,8 +63,13 @@ public class UIDragDropItem : MonoBehaviour
 	protected virtual void Start ()
 	{
 		mTrans = transform;
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 		mCollider = collider;
 		mCollider2D = collider2D;
+#else
+		mCollider = gameObject.GetComponent<Collider>();
+		mCollider2D = gameObject.GetComponent<Collider2D>();
+#endif
 		mButton = GetComponent<UIButton>();
 		mDragScrollView = GetComponent<UIDragScrollView>();
 	}
@@ -134,8 +139,6 @@ public class UIDragDropItem : MonoBehaviour
 	{
 		if (!mDragging)
 		{
-			mDragging = true;
-
 			if (cloneOnDrag)
 			{
 				GameObject clone = NGUITools.AddChild(transform.parent.gameObject, gameObject);
@@ -149,10 +152,15 @@ public class UIDragDropItem : MonoBehaviour
 				UICamera.currentTouch.dragged = clone;
 
 				UIDragDropItem item = clone.GetComponent<UIDragDropItem>();
+				item.mDragging = true;
 				item.Start();
 				item.OnDragDropStart();
 			}
-			else OnDragDropStart();
+			else
+			{
+				mDragging = true;
+				OnDragDropStart();
+			}
 		}
 	}
 

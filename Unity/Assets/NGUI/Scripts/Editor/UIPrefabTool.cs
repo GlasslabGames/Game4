@@ -374,6 +374,24 @@ public class UIPrefabTool : EditorWindow
 	}
 
 	/// <summary>
+	/// GetComponentInChildren doesn't work on prefabs.
+	/// </summary>
+
+	static UISnapshotPoint GetSnapshotPoint (Transform t)
+	{
+		UISnapshotPoint point = t.GetComponent<UISnapshotPoint>();
+		if (point != null) return point;
+		
+		for (int i = 0, imax = t.childCount; i < imax; ++i)
+		{
+			Transform c = t.GetChild(i);
+			point = GetSnapshotPoint(c);
+			if (point != null) return point;
+		}
+		return null;
+	}
+
+	/// <summary>
 	/// Generate an item preview for the specified item.
 	/// </summary>
 
@@ -381,9 +399,19 @@ public class UIPrefabTool : EditorWindow
 	{
 		if (item == null || item.prefab == null) return;
 
-		// Render textures only work in Unity Pro
-		if (!UnityEditorInternal.InternalEditorUtility.HasPro())
+		if (point == null) point = GetSnapshotPoint(item.prefab.transform);
+
+		if (point != null && point.thumbnail != null)
 		{
+			Debug.Log(2);
+			// Explicitly chosen thumbnail
+			item.tex = point.thumbnail;
+			item.dynamicTex = false;
+			return;
+		}
+		else if (!UnityEditorInternal.InternalEditorUtility.HasPro())
+		{
+			// Render textures only work in Unity Pro
 			string path = "Assets/NGUI/Editor/Preview/" + item.prefab.name + ".png";
 			item.tex = File.Exists(path) ? (Texture2D)Resources.LoadAssetAtPath(path, typeof(Texture2D)) : null;
 			item.dynamicTex = false;
@@ -410,10 +438,15 @@ public class UIPrefabTool : EditorWindow
 		root.layer = item.prefab.layer;
 
 		// Set up the camera
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 		Camera cam = camGO.camera;
+		cam.isOrthoGraphic = true;
+#else
+		Camera cam = camGO.GetComponent<Camera>();
+		cam.orthographic = true;
+#endif
 		cam.renderingPath = RenderingPath.Forward;
 		cam.clearFlags = CameraClearFlags.Skybox;
-		cam.isOrthoGraphic = true;
 		cam.backgroundColor = new Color(0f, 0f, 0f, 0f);
 		cam.targetTexture = (item.tex as RenderTexture);
 		cam.enabled = false;
@@ -501,7 +534,11 @@ public class UIPrefabTool : EditorWindow
 
 		// Set the camera's properties
 		cam.cullingMask = mask;
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 		cam.isOrthoGraphic = true;
+#else
+		cam.orthographic = true;
+#endif
 		cam.transform.position = bounds.center;
 		cam.transform.rotation = Quaternion.LookRotation(camDir);
 
@@ -542,7 +579,11 @@ public class UIPrefabTool : EditorWindow
 
 		cam.transform.position = pos;
 		cam.transform.rotation = rot;
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 		cam.isOrthoGraphic = point.isOrthographic;
+#else
+		cam.orthographic = point.isOrthographic;
+#endif
 		cam.nearClipPlane = point.nearClip;
 		cam.farClipPlane = point.farClip;
 		cam.orthographicSize = point.orthoSize;
@@ -587,7 +628,11 @@ public class UIPrefabTool : EditorWindow
 			float.TryParse(parts[1], out far);
 			float.TryParse(parts[2], out fov);
 
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 			cam.isOrthoGraphic = false;
+#else
+			cam.orthographic = false;
+#endif
 			cam.nearClipPlane = near;
 			cam.farClipPlane = far;
 			cam.fieldOfView = fov;
