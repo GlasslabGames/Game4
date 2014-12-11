@@ -21,6 +21,11 @@ public class Idle : AnimalBehaviorState
   private float m_waitTime;
   private const float WAIT_TIME = 2.0f;
   private static Vector3 VECTOR = new Vector3();
+
+  override protected void enter()
+  {
+  }
+
   override protected void update()
   {
     if (!float.IsNaN(m_targetPosition.x))
