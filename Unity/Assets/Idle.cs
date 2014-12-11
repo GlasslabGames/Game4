@@ -56,6 +56,9 @@ public class Idle : AnimalBehaviorState
   private void GetNewWanderPosition()
   {
     GameObject ownerObject = owner.gameObject;
-    m_targetPosition.Set(ownerObject.transform.localPosition.x + Random.Range(-50, 50), owner.transform.localPosition.y + Random.Range(-50, 50), 0);
+    m_targetPosition.Set(
+      Mathf.Clamp(ownerObject.transform.localPosition.x + Random.Range(-50, 50), -406, 406),
+      Mathf.Clamp(owner.transform.localPosition.y + Random.Range(-50, 50), -253, 253),
+      0);
   }
 }

@@ -9,14 +9,28 @@ public class Animal : MonoBehaviour {
 
   public GameObject Target;
 
+  public FoodType DesiredFood;
+
+  public bool Happy;
+
   private AnimalBehaviorState m_currentState;
 
   public Vector2 TargetPoint;
   private float m_idleTime;
 
+  private GLDragDropContainer m_container;
+
   void Awake()
   {
     BeginIdle();
+
+    m_container = GetComponent<GLDragDropContainer>();
+    m_container.ItemDropped += onItemDropped;
+  }
+
+  private void onItemDropped(GLDragEventArgs args)
+  {
+    Debug.Log(args.DragObject.name);
   }
 
   public void BeginIdle()
