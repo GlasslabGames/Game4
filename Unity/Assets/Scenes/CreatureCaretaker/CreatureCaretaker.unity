@@ -114,7 +114,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 108234875}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3064353ec481bb4ab01fe771ab11e23, type: 3}
+  m_Script: {fileID: 11500000, guid: 2dee88cba4c145c46af37bab17f2fbb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &148245487
@@ -786,10 +786,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 664782051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a880d4c055f4c4aaa37fd6f2452ceb, type: 3}
+  m_Script: {fileID: 11500000, guid: bef43a575f7484944ab486032ac9c935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reparentTarget: {fileID: 1985158595}
+  reparentTarget: {fileID: 0}
   Magnetic: 0
   SnapIntoPlace: 0
   ConsumeEvents: 0
@@ -932,8 +932,8 @@ GameObject:
   - 114: {fileID: 1038402031}
   - 65: {fileID: 1038402030}
   - 114: {fileID: 1038402033}
-  - 114: {fileID: 1038402032}
   - 114: {fileID: 1038402034}
+  - 114: {fileID: 1038402032}
   m_Layer: 9
   m_Name: Contents
   m_TagString: Untagged
@@ -1031,19 +1031,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1038402028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a7d4792041248ac83cb6180f6a37e2, type: 3}
+  m_Script: {fileID: 11500000, guid: de10b33b775528142a2639be5426133f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restriction: 0
-  cloneOnDrag: 1
-  pressAndHoldDelay: 1
-  ApplyRestrictionForScrollViewOnly: 0
-  ReturnToOriginalParent: 0
-  DisableOthersOnDrag: 1
-  m_snapIntoPlaceSpeed: 0
-  m_returnSpeed: 0
-  CenterOnMouse: 0
-  m_constrainWithinPanel: 0
+  Contents: []
 --- !u!114 &1038402033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,9 +1043,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1038402028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11d9cf2bb650534fb1e37880032bd1f, type: 3}
+  m_Script: {fileID: 11500000, guid: c43e00aa6917e12418a9f705972c064c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  restriction: 0
+  cloneOnDrag: 0
+  pressAndHoldDelay: 1
+  ApplyRestrictionForScrollViewOnly: 0
+  ReturnToOriginalParent: 0
+  DisableOthersOnDrag: 1
+  m_snapIntoPlaceSpeed: 0
+  m_returnSpeed: 0
+  CenterOnMouse: 0
+  m_constrainWithinPanel: 0
 --- !u!114 &1038402034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1167,7 +1168,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1251178520}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a880d4c055f4c4aaa37fd6f2452ceb, type: 3}
+  m_Script: {fileID: 11500000, guid: bef43a575f7484944ab486032ac9c935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   reparentTarget: {fileID: 0}
@@ -1236,7 +1237,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1292872613}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1251178521}
@@ -1250,7 +1251,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1292872613}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a880d4c055f4c4aaa37fd6f2452ceb, type: 3}
+  m_Script: {fileID: 11500000, guid: bef43a575f7484944ab486032ac9c935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   reparentTarget: {fileID: 0}
@@ -1299,13 +1300,13 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 100
-  mHeight: 100
+  mWidth: 1058
+  mHeight: 530
   mDepth: -5
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 1
+  aspectRatio: 1.99622643
 --- !u!1 &1438218258
 GameObject:
   m_ObjectHideFlags: 0
@@ -1825,19 +1826,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1852694885}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a7d4792041248ac83cb6180f6a37e2, type: 3}
+  m_Script: {fileID: 11500000, guid: de10b33b775528142a2639be5426133f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restriction: 0
-  cloneOnDrag: 1
-  pressAndHoldDelay: 1
-  ApplyRestrictionForScrollViewOnly: 0
-  ReturnToOriginalParent: 0
-  DisableOthersOnDrag: 1
-  m_snapIntoPlaceSpeed: 0
-  m_returnSpeed: 0
-  CenterOnMouse: 0
-  m_constrainWithinPanel: 0
+  Contents: []
 --- !u!114 &1852694890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1846,9 +1838,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1852694885}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11d9cf2bb650534fb1e37880032bd1f, type: 3}
+  m_Script: {fileID: 11500000, guid: c43e00aa6917e12418a9f705972c064c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  restriction: 0
+  cloneOnDrag: 0
+  pressAndHoldDelay: 1
+  ApplyRestrictionForScrollViewOnly: 0
+  ReturnToOriginalParent: 0
+  DisableOthersOnDrag: 1
+  m_snapIntoPlaceSpeed: 0
+  m_returnSpeed: 0
+  CenterOnMouse: 0
+  m_constrainWithinPanel: 0
 --- !u!1 &1901784488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2071,7 +2073,7 @@ Transform:
   m_GameObject: {fileID: 1928974911}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .00331125828, y: .00331125828, z: .00331125828}
+  m_LocalScale: {x: .00395256933, y: .00395256933, z: .00395256933}
   m_Children:
   - {fileID: 680510760}
   m_Father: {fileID: 0}
@@ -2118,18 +2120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d69d87246f8f7c4cb4534183f11764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrangement: 0
-  sorting: 0
-  pivot: 0
-  maxPerLine: 0
-  cellWidth: 100
-  cellHeight: 200
-  animateSmoothly: 0
-  hideInactive: 0
-  keepWithinPanel: 0
-  sorted: 0
-  onRepositionEventDelegate: []
-  KeepAlignedWithPanelBounds: 0
 --- !u!1 &2011274002
 GameObject:
   m_ObjectHideFlags: 0
@@ -2239,19 +2229,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2011274002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7a7d4792041248ac83cb6180f6a37e2, type: 3}
+  m_Script: {fileID: 11500000, guid: de10b33b775528142a2639be5426133f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restriction: 0
-  cloneOnDrag: 1
-  pressAndHoldDelay: 1
-  ApplyRestrictionForScrollViewOnly: 0
-  ReturnToOriginalParent: 0
-  DisableOthersOnDrag: 1
-  m_snapIntoPlaceSpeed: 0
-  m_returnSpeed: 0
-  CenterOnMouse: 0
-  m_constrainWithinPanel: 0
+  Contents: []
 --- !u!114 &2011274007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2260,6 +2241,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2011274002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e11d9cf2bb650534fb1e37880032bd1f, type: 3}
+  m_Script: {fileID: 11500000, guid: c43e00aa6917e12418a9f705972c064c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  restriction: 0
+  cloneOnDrag: 0
+  pressAndHoldDelay: 1
+  ApplyRestrictionForScrollViewOnly: 0
+  ReturnToOriginalParent: 0
+  DisableOthersOnDrag: 1
+  m_snapIntoPlaceSpeed: 0
+  m_returnSpeed: 0
+  CenterOnMouse: 0
+  m_constrainWithinPanel: 0

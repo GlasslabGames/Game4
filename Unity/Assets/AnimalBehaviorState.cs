@@ -28,6 +28,6 @@ public class AnimalBehaviorState
   }
 
   protected virtual void update() {}
-  protected virtual void enterState() {}
-  protected virtual void exitState() {}
+  protected virtual void enter() {}
+  protected virtual void exit() {}
 }

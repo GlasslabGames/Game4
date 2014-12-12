@@ -39,11 +39,21 @@ public class Animal : MonoBehaviour {
     m_currentState = new Idle().Initialize(this);
   }
 
+  public void HungerForMoreFood()
+  {
+    if (DesiredFood != FoodType.NONE)
+    {
+      DesiredFood = (FoodType) UnityEngine.Random.Range(1f, (float)(FoodType.TOTAL_TYPES-1));
+    }
+  }
+
   void Update()
   {
     if (m_currentState != null)
     {
       m_currentState.Do();
     }
+
+    HungerForMoreFood();
   }
 }
