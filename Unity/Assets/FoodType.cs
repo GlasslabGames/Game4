@@ -14,9 +14,10 @@
 
 public enum FoodType
 {
-  NONE,
+  NONE = 0,
   RED,
   BLUE,
   GREEN,
-  WHITE
+  WHITE,
+  TOTAL_TYPES
 }
