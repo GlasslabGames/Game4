@@ -19,7 +19,7 @@ public class Animal : MonoBehaviour {
   private float m_idleTime;
 
   private GLDragDropContainer m_container;
-
+  
   void Awake()
   {
     BeginIdle();
@@ -41,7 +41,7 @@ public class Animal : MonoBehaviour {
 
   public void HungerForMoreFood()
   {
-    if (DesiredFood != FoodType.NONE)
+    if (DesiredFood == FoodType.NONE)
     {
       DesiredFood = (FoodType) UnityEngine.Random.Range(1f, (float)(FoodType.TOTAL_TYPES-1));
     }

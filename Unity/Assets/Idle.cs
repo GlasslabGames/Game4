@@ -41,7 +41,8 @@ public class Idle : AnimalBehaviorState
         displacement.y *= owner.Speed / magnitude;
       }
       
-      ownerTransform.localPosition = ownerTransform.localPosition + displacement;
+      ownerTransform.localPosition += displacement;
+
       if (ownerTransform.localPosition.AlmostEquals(m_targetPosition, 0.001f))
       {
         m_targetPosition.x = float.NaN;

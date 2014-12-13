@@ -16,6 +16,17 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     base.Awake();
 
     m_animals = Utility.FindInstancesInScene<Animal>();
+
+    // Add more animals to match the target number
+    Animal a = m_animals[0]; // if we don't have at least one animal, we're in trouble anyway ¯\_(ツ)_/¯
+    Animal b; Transform t;
+    while (m_animals.Count < 10) {
+      t = Utility.InstantiateAsChild(a.gameObject, a.transform.parent);
+      b = t.GetComponent<Animal>();
+      m_animals.Add(b);
+      b.gameObject.name = "Animal"+m_animals.Count;
+      t.localPosition = new Vector3( Random.Range(-500, 500), Random.Range(-400, 400));
+    }
   }
 
   private void RefreshHappiness()
