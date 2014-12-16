@@ -18,6 +18,6 @@ public enum FoodType
   RED,
   BLUE,
   GREEN,
-  WHITE,
+  YELLOW,
   TOTAL_TYPES
 }

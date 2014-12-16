@@ -143,7 +143,9 @@ public class GlasslabSDK {
 			mInstSet = true;
 			
 			Debug.Log ( dataPath );
+#if UNITY_IOS || UNITY_ANDROID
 			iPhone.SetNoBackupFlag( dataPath + "/glasslabsdk.db" );
+#endif
 		}
 		
 		// If the client requests to reset the database, do so
