@@ -11,6 +11,10 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
 
   private List<Animal> m_animals;
 
+  public FloatText FloatTextEffect;
+  public FloatText FinalFloatTextEffect;
+  public UILabel CreatureCountLabel;
+
   override protected void Awake()
   {
     base.Awake();
@@ -61,11 +65,20 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
       b.collider.enabled = false;
       Utility.Delay(delegate{ b.collider.enabled = true; }, 1f);
     }
+
+    FloatTextEffect.Show("1:"+num, a.transform.position);
+
+    if (m_animals.Count >= 9) {
+      Utility.Delay ( delegate {
+        FinalFloatTextEffect.Show("Good Job!", FinalFloatTextEffect.transform.position);
+      }, 1.25f);
+    }
   }
 
   void Update()
   {
-    RefreshHappiness();
+    //RefreshHappiness();
+    CreatureCountLabel.text = "Creatures: "+m_animals.Count;
   }
 }
 
