@@ -13,7 +13,7 @@ public class Animal : MonoBehaviour {
 
   public bool Happy;
 
-  private AnimalBehaviorState m_currentState;
+  private Idle m_currentState; // hacky but we're only using Idle now anyway
 
   public Vector2 TargetPoint;
   private float m_idleTime;
@@ -21,6 +21,7 @@ public class Animal : MonoBehaviour {
   private GLDragDropContainer m_container;
 
   public UITexture BodyTexture;
+  public UITexture AngryTexture;
 
   void Awake()
   {
@@ -44,7 +45,10 @@ public class Animal : MonoBehaviour {
   public void BeginIdle()
   {
     Target = null;
-    m_currentState = new Idle().Initialize(this);
+    m_currentState = new Idle().Initialize(this) as Idle;
+    
+    GLDragDropItem ddi = GetComponent<GLDragDropItem>();
+    ddi.OnDropped += m_currentState.PauseWandering;
   }
 
   public void SetColor(Color c, bool change = false) {
@@ -56,6 +60,7 @@ public class Animal : MonoBehaviour {
       c.b = Mathf.Clamp01( c.b + ((i == 2)? d : -0.5f * d ));
     }
     BodyTexture.color = c;
+	  if (AngryTexture != null) AngryTexture.color = c;
   }
 
   public void HungerForMoreFood()
@@ -74,5 +79,13 @@ public class Animal : MonoBehaviour {
     }
 
     HungerForMoreFood();
+  }
+
+  void OnCollisionEnter(Collision collision) {
+    Debug.Log (this+" on collision!");
+    Idle idle = m_currentState as Idle;
+    if (idle != null) {
+      idle.WanderAwayFrom( collision.collider.transform.position );
+    }
   }
 }

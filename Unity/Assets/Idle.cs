@@ -19,8 +19,10 @@ public class Idle : AnimalBehaviorState
 
   private Vector3 m_targetPosition = new Vector3(float.NaN, 0, 0);
   private float m_waitTime;
-  private const float WAIT_TIME = 2.0f;
+  private const float MIN_WAIT_TIME = 1f;
+  private const float MAX_WAIT_TIME = 3f;
   private static Vector3 VECTOR = new Vector3();
+  private Vector3 prevPosition;
 
   override protected void enter()
   {
@@ -42,12 +44,13 @@ public class Idle : AnimalBehaviorState
       }
       
       ownerTransform.localPosition += displacement;
-
       if (ownerTransform.localPosition.AlmostEquals(m_targetPosition, 0.001f))
       {
-        m_targetPosition.x = float.NaN;
-        m_waitTime = WAIT_TIME;
+        PauseWandering(); // take a break before wandering elsewhere
+      } else if (ownerTransform.localPosition.AlmostEquals(prevPosition, 0.01f)) { // we must be stuck, so try the other direction
+        WanderAwayFrom( owner.transform.TransformPoint (m_targetPosition) );
       }
+      prevPosition = ownerTransform.localPosition;
     }
     else
     {
@@ -63,8 +66,29 @@ public class Idle : AnimalBehaviorState
   {
     GameObject ownerObject = owner.gameObject;
     m_targetPosition.Set(
-      Mathf.Clamp(ownerObject.transform.localPosition.x + Random.Range(-50, 50), -406, 406),
-      Mathf.Clamp(owner.transform.localPosition.y + Random.Range(-50, 50), -253, 253),
+      ownerObject.transform.localPosition.x + Random.Range(-50, 50),
+      owner.transform.localPosition.y + Random.Range(-50, 50),
       0);
+  }
+
+  // These shouldn't really be in Idle, but this is all hacky anyway
+  public void PauseWandering(GLDragEventArgs args = null) {
+    m_targetPosition.x = float.NaN;
+    m_waitTime = Random.Range (MIN_WAIT_TIME, MAX_WAIT_TIME);
+  }
+
+  public void WanderAwayFrom( Vector3 pos ) {
+    m_targetPosition = owner.transform.localPosition;
+    if (pos.x < owner.transform.position.x) {
+      m_targetPosition.x += Random.Range(5, 30);
+    } else {
+      m_targetPosition.x -= Random.Range(5, 30);
+    }
+    if (pos.y < owner.transform.position.y) {
+      m_targetPosition.y += Random.Range(5, 30);
+    } else {
+      m_targetPosition.y -= Random.Range(5, 30);
+    }
+    Debug.Log (owner.name+" avoiding "+pos+" to "+m_targetPosition);
   }
 }

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AnimalManager : SingletonBehavior<AnimalManager>
 {
+  public int NumAnimals = 3;
+  public Color[] AnimalColors;
   public Transform FillBarTransform;
   private float m_totalHappiness;
 
@@ -21,22 +23,17 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
 
     m_animals = Utility.FindInstancesInScene<Animal>();
 
-    Color[] animalColors = new Color[3]; 
-    animalColors[0] = new Color(0.8f, 0, 0);
-    animalColors[1] = new Color(0, 0.6f, 0f);
-    animalColors[2] = new Color(0, 0, 0.8f);
-
     // Add more animals to match the target number
     Animal a = m_animals[0]; // if we don't have at least one animal, we're in trouble anyway ¯\_(ツ)_/¯
-    a.SetColor(animalColors[0]);
+    a.SetColor(AnimalColors[0]);
     Animal b; Transform t;
-    while (m_animals.Count < 3) {
+    while (m_animals.Count < NumAnimals) {
       t = Utility.InstantiateAsChild(a.gameObject, a.transform.parent);
       b = t.GetComponent<Animal>();
-      b.SetColor(animalColors[m_animals.Count]);
+      b.SetColor(AnimalColors[m_animals.Count % AnimalColors.Length]);
       m_animals.Add(b);
       b.gameObject.name = "Animal"+m_animals.Count;
-      t.localPosition = new Vector3( Random.Range(-400, 400), Random.Range(-250, 250)); // hacks
+      t.localPosition = new Vector3( Random.Range(-350, 350), Random.Range(-200, 200)); // hacks
     }
   }
 
@@ -78,7 +75,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   void Update()
   {
     //RefreshHappiness();
-    CreatureCountLabel.text = "Creatures: "+m_animals.Count;
+    if (CreatureCountLabel != null) CreatureCountLabel.text = "Creatures: "+m_animals.Count;
   }
 }
 
