@@ -36,7 +36,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
       b.SetColor(animalColors[m_animals.Count]);
       m_animals.Add(b);
       b.gameObject.name = "Animal"+m_animals.Count;
-      t.localPosition = new Vector3( Random.Range(-500, 500), Random.Range(-400, 400));
+      t.localPosition = new Vector3( Random.Range(-400, 400), Random.Range(-250, 250)); // hacks
     }
   }
 
@@ -66,7 +66,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
       Utility.Delay(delegate{ b.collider.enabled = true; }, 1f);
     }
 
-    FloatTextEffect.Show("1:"+num, a.transform.position);
+    FloatTextEffect.Show("1 : "+num, a.transform.position);
 
     if (m_animals.Count >= 9) {
       Utility.Delay ( delegate {
