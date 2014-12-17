@@ -26,7 +26,8 @@ public class Animal : MonoBehaviour {
   public UITexture AngryTexture;
 
   public AnimalPen InPen;
-
+  public bool TriedToDropInLockedPen;
+  private Vector3 m_outOfPenPosition;
 
   void Awake()
   {
@@ -46,6 +47,8 @@ public class Animal : MonoBehaviour {
     if (args.DragObject.GetComponent<FoodCrate>() != null) {
       AnimalManager.Instance.Split(this, 3);
       GameObject.Destroy(args.DragObject.gameObject);
+    } else if (InPen != null && args.DragObject.GetComponent<Animal>() != null) {
+      InPen.onItemDropped(args); // pass along the event
     }
   }
 
@@ -53,11 +56,17 @@ public class Animal : MonoBehaviour {
   private void onDragged(GLDragEventArgs args) {
     if (InPen != null) {
       InPen.RemoveAnimal(this);
+    } else {
+      m_outOfPenPosition = transform.position;
     }
   }
 
 	private void onDropped(GLDragEventArgs args) {
 		m_currentState.PauseWandering();
+    if (TriedToDropInLockedPen) {
+      transform.position = m_outOfPenPosition; // TODO
+      TriedToDropInLockedPen = false;
+    }
 	}
 
   public void BeginIdle()

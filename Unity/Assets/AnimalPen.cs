@@ -10,6 +10,7 @@ public class AnimalPen : MonoBehaviour {
   public int TargetRatioTerm2;
   private float m_targetQuotient;
 
+  public bool Locked;
   public bool Satisfied;
   public bool WinWhenSatisfied;
   public int[] InitialAnimalCounts;
@@ -26,6 +27,7 @@ public class AnimalPen : MonoBehaviour {
   void Start() {
     Animal a;
     Bounds b = collider.bounds;
+    b.size = new Vector3( b.size.x - 0.2f, b.size.y - 0.2f, b.size.z );
     for (int i = 0; i < InitialAnimalCounts.Length; i++) {
       for (int j = 0; j < InitialAnimalCounts[i]; j++) {
         a = AnimalManager.Instance.CreateAnimal(i, b);
@@ -34,11 +36,15 @@ public class AnimalPen : MonoBehaviour {
     }
   }
 
-  private void onItemDropped(GLDragEventArgs args)
+  public void onItemDropped(GLDragEventArgs args)
   {
     if (args.DragObject.GetComponent<Animal>() != null) {
-      AddAnimal( args.DragObject.GetComponent<Animal>() );
-      args.Consume();
+      if (!Locked) {
+        AddAnimal( args.DragObject.GetComponent<Animal>() );
+        args.Consume();
+      } else {
+        args.DragObject.GetComponent<Animal>().TriedToDropInLockedPen = true;
+      }
     }
   }
 

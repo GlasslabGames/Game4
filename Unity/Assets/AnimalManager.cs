@@ -26,14 +26,20 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     m_pens = Utility.FindInstancesInScene<AnimalPen>();
     m_animals = new List<Animal>();
 
+    // Either we've added a collider to show where the creatuers should be placed, or just use the whole screen excluding pens
+    Bounds b;
+    if (collider) b = collider.bounds;
+    else b = new Bounds(Vector3.zero, new Vector3(2, 1));
+
     // Add more animals to match the target number
-    Bounds b = new Bounds(Vector3.zero, new Vector3(2, 1));
     for (int i = 0; i < AnimalCounts.Length; i++) {
       for (int j = 0; j < AnimalCounts[i]; j++) {
         Debug.Log ("Creating animal "+i+", "+j);
-        CreateAnimal(i, b, true);
+        CreateAnimal(i, b, (collider == null)); // if we haven't specified a collider, automatically avoid pens instead
       }
     }
+
+    collider.enabled = false; // it was interfering
   }
 
   public Animal CreateAnimal(int kind, Bounds bounds, bool avoidPens = false)
