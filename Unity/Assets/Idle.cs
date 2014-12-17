@@ -19,8 +19,8 @@ public class Idle : AnimalBehaviorState
 
   private Vector3 m_targetPosition = new Vector3(float.NaN, 0, 0);
   private float m_waitTime;
-  private const float MIN_WAIT_TIME = 1f;
-  private const float MAX_WAIT_TIME = 3f;
+  private const float MIN_WAIT_TIME = 0.5f;
+  private const float MAX_WAIT_TIME = 2f;
   private static Vector3 VECTOR = new Vector3();
   private Vector3 prevPosition;
 
@@ -89,6 +89,6 @@ public class Idle : AnimalBehaviorState
     } else {
       m_targetPosition.y -= Random.Range(5, 30);
     }
-    Debug.Log (owner.name+" avoiding "+pos+" to "+m_targetPosition);
+    //Debug.Log (owner.name+" avoiding "+pos+" to "+m_targetPosition);
   }
 }

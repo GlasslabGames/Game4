@@ -3,6 +3,8 @@ using System.Collections;
 using System;
 
 public class Animal : MonoBehaviour {
+  public enum Kinds { RED, BLUE, KINDS_FINAL };
+  public Kinds Kind;
   public float Speed;
 
   public float TurnSpeed; // Degrees per sec
@@ -23,6 +25,9 @@ public class Animal : MonoBehaviour {
   public UITexture BodyTexture;
   public UITexture AngryTexture;
 
+  public AnimalPen InPen;
+
+
   void Awake()
   {
     BeginIdle();
@@ -30,7 +35,9 @@ public class Animal : MonoBehaviour {
     m_container = GetComponent<GLDragDropContainer>();
     m_container.ItemDropped += onItemDropped;
 
-    Debug.Log (this.name+" awake!");
+    GLDragDropItem ddi = GetComponent<GLDragDropItem>();
+    ddi.OnDropped += onDropped;
+    ddi.OnDragStarted += onDragged;
   }
 
   private void onItemDropped(GLDragEventArgs args)
@@ -42,13 +49,21 @@ public class Animal : MonoBehaviour {
     }
   }
 
+  // onItemTaken doesn't work well so we're doing this here ¯\_(ツ)_/¯
+  private void onDragged(GLDragEventArgs args) {
+    if (InPen != null) {
+      InPen.RemoveAnimal(this);
+    }
+  }
+
+	private void onDropped(GLDragEventArgs args) {
+		m_currentState.PauseWandering();
+	}
+
   public void BeginIdle()
   {
     Target = null;
     m_currentState = new Idle().Initialize(this) as Idle;
-    
-    GLDragDropItem ddi = GetComponent<GLDragDropItem>();
-    ddi.OnDropped += m_currentState.PauseWandering;
   }
 
   public void SetColor(Color c, bool change = false) {
@@ -79,10 +94,13 @@ public class Animal : MonoBehaviour {
     }
 
     HungerForMoreFood();
+
+    if (AngryTexture != null) {
+      AngryTexture.gameObject.SetActive( InPen != null && !InPen.Satisfied );
+    }
   }
 
   void OnCollisionEnter(Collision collision) {
-    Debug.Log (this+" on collision!");
     Idle idle = m_currentState as Idle;
     if (idle != null) {
       idle.WanderAwayFrom( collision.collider.transform.position );

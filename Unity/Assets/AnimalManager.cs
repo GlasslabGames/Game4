@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AnimalManager : SingletonBehavior<AnimalManager>
 {
-  public int NumAnimals = 3;
+  public Transform AnimalParent;
+  public int[] AnimalCounts;
   public Color[] AnimalColors;
   public Transform FillBarTransform;
   private float m_totalHappiness;
 
   private List<Animal> m_animals;
+  private List<AnimalPen> m_pens;
 
   public FloatText FloatTextEffect;
   public FloatText FinalFloatTextEffect;
@@ -21,22 +23,45 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   {
     base.Awake();
 
-    m_animals = Utility.FindInstancesInScene<Animal>();
+    m_pens = Utility.FindInstancesInScene<AnimalPen>();
+    m_animals = new List<Animal>();
 
     // Add more animals to match the target number
-    Animal a = m_animals[0]; // if we don't have at least one animal, we're in trouble anyway ¯\_(ツ)_/¯
-    a.SetColor(AnimalColors[0]);
-    Animal b; Transform t;
-    while (m_animals.Count < NumAnimals) {
-      t = Utility.InstantiateAsChild(a.gameObject, a.transform.parent);
-      b = t.GetComponent<Animal>();
-      b.SetColor(AnimalColors[m_animals.Count % AnimalColors.Length]);
-      m_animals.Add(b);
-      b.gameObject.name = "Animal"+m_animals.Count;
-      t.localPosition = new Vector3( Random.Range(-350, 350), Random.Range(-200, 200)); // hacks
+    Bounds b = new Bounds(Vector3.zero, new Vector3(2, 1));
+    for (int i = 0; i < AnimalCounts.Length; i++) {
+      for (int j = 0; j < AnimalCounts[i]; j++) {
+        Debug.Log ("Creating animal "+i+", "+j);
+        CreateAnimal(i, b, true);
+      }
     }
   }
 
+  public Animal CreateAnimal(int kind, Bounds bounds, bool avoidPens = false)
+  {
+    Transform t = Utility.InstantiateAsChild(Resources.Load("Animal"), AnimalParent);
+    Animal b = t.GetComponent<Animal>();
+    b.Kind = (Animal.Kinds) kind;
+    b.SetColor(AnimalColors[kind]);
+    m_animals.Add(b);
+    b.gameObject.name = "Animal"+m_animals.Count;
+    Vector3 pos = Vector3.zero;
+    for (int i = 0; i < 99; i++) { // try for a while to find a free spot but give up after 99 tries
+      pos = new Vector3( Random.Range(bounds.min.x, bounds.max.x), Random.Range(bounds.min.y, bounds.max.y));
+      if (!avoidPens || !IsPointInPen(pos)) break;
+    }
+    t.position = pos;
+    return b;
+  }
+
+  private bool IsPointInPen(Vector3 point) {
+    foreach (AnimalPen pen in m_pens) {
+      if (pen.collider.bounds.Contains(point)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
   private void RefreshHappiness()
   {
     m_totalHappiness = 0;
@@ -66,12 +91,15 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     FloatTextEffect.Show("1 : "+num, a.transform.position);
 
     if (m_animals.Count >= 9) {
-      Utility.Delay ( delegate {
-        FinalFloatTextEffect.Show("Good Job!", FinalFloatTextEffect.transform.position);
-      }, 1.25f);
+      Utility.Delay ( Win, 1.25f );
     }
   }
 
+  public void Win()
+  {
+    FinalFloatTextEffect.Show("Good Job!", FinalFloatTextEffect.transform.position);
+  }
+  
   void Update()
   {
     //RefreshHappiness();
