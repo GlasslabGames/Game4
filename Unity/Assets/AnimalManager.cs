@@ -6,10 +6,14 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AnimalManager : SingletonBehavior<AnimalManager>
 {
+  public Transform AnimalParent;
+  public int[] AnimalCounts;
+  public Color[] AnimalColors;
   public Transform FillBarTransform;
   private float m_totalHappiness;
 
   private List<Animal> m_animals;
+  private List<AnimalPen> m_pens;
 
   public FloatText FloatTextEffect;
   public FloatText FinalFloatTextEffect;
@@ -19,27 +23,51 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   {
     base.Awake();
 
-    m_animals = Utility.FindInstancesInScene<Animal>();
+    m_pens = Utility.FindInstancesInScene<AnimalPen>();
+    m_animals = new List<Animal>();
 
-    Color[] animalColors = new Color[3]; 
-    animalColors[0] = new Color(0.8f, 0, 0);
-    animalColors[1] = new Color(0, 0.6f, 0f);
-    animalColors[2] = new Color(0, 0, 0.8f);
+    // Either we've added a collider to show where the creatuers should be placed, or just use the whole screen excluding pens
+    Bounds b;
+    if (collider) b = collider.bounds;
+    else b = new Bounds(Vector3.zero, new Vector3(2, 1));
 
     // Add more animals to match the target number
-    Animal a = m_animals[0]; // if we don't have at least one animal, we're in trouble anyway ¯\_(ツ)_/¯
-    a.SetColor(animalColors[0]);
-    Animal b; Transform t;
-    while (m_animals.Count < 3) {
-      t = Utility.InstantiateAsChild(a.gameObject, a.transform.parent);
-      b = t.GetComponent<Animal>();
-      b.SetColor(animalColors[m_animals.Count]);
-      m_animals.Add(b);
-      b.gameObject.name = "Animal"+m_animals.Count;
-      t.localPosition = new Vector3( Random.Range(-400, 400), Random.Range(-250, 250)); // hacks
+    for (int i = 0; i < AnimalCounts.Length; i++) {
+      for (int j = 0; j < AnimalCounts[i]; j++) {
+        Debug.Log ("Creating animal "+i+", "+j);
+        CreateAnimal(i, b, (collider == null)); // if we haven't specified a collider, automatically avoid pens instead
+      }
     }
+
+    collider.enabled = false; // it was interfering
   }
 
+  public Animal CreateAnimal(int kind, Bounds bounds, bool avoidPens = false)
+  {
+    Transform t = Utility.InstantiateAsChild(Resources.Load("Animal"), AnimalParent);
+    Animal b = t.GetComponent<Animal>();
+    b.Kind = (Animal.Kinds) kind;
+    b.SetColor(AnimalColors[kind]);
+    m_animals.Add(b);
+    b.gameObject.name = "Animal"+m_animals.Count;
+    Vector3 pos = Vector3.zero;
+    for (int i = 0; i < 99; i++) { // try for a while to find a free spot but give up after 99 tries
+      pos = new Vector3( Random.Range(bounds.min.x, bounds.max.x), Random.Range(bounds.min.y, bounds.max.y));
+      if (!avoidPens || !IsPointInPen(pos)) break;
+    }
+    t.position = pos;
+    return b;
+  }
+
+  private bool IsPointInPen(Vector3 point) {
+    foreach (AnimalPen pen in m_pens) {
+      if (pen.collider.bounds.Contains(point)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
   private void RefreshHappiness()
   {
     m_totalHappiness = 0;
@@ -69,16 +97,20 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     FloatTextEffect.Show("1 : "+num, a.transform.position);
 
     if (m_animals.Count >= 9) {
-      Utility.Delay ( delegate {
-        FinalFloatTextEffect.Show("Good Job!", FinalFloatTextEffect.transform.position);
-      }, 1.25f);
+      Utility.Delay ( DisplayResult, 1.25f );
     }
   }
 
+  public void DisplayResult(bool correct = true)
+  {
+    string message = (correct)? "Good Job!" : "Try Again";
+    FinalFloatTextEffect.Show(message, FinalFloatTextEffect.transform.position);
+  }
+  
   void Update()
   {
     //RefreshHappiness();
-    CreatureCountLabel.text = "Creatures: "+m_animals.Count;
+    if (CreatureCountLabel != null) CreatureCountLabel.text = "Creatures: "+m_animals.Count;
   }
 }
 
