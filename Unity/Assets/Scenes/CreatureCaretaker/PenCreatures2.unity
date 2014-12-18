@@ -1355,7 +1355,7 @@ MonoBehaviour:
   TargetRatioTerm2: 5
   Locked: 1
   Satisfied: 0
-  WinWhenSatisfied: 1
+  WinWhenSatisfied: 0
   InitialAnimalCounts: 0000000003000000
 --- !u!1 &531626297
 GameObject:
@@ -1669,6 +1669,92 @@ MonoBehaviour:
   mMaxLineHeight: 0
   mLineWidth: 0
   mMultiline: 1
+--- !u!1 &642978351
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 642978352}
+  - 114: {fileID: 642978353}
+  m_Layer: 9
+  m_Name: Background2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &642978352
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 642978351}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1753293552}
+  m_RootOrder: 3
+--- !u!114 &642978353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 642978351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5c5ca47aa5c01740810b7c66662099f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  rightAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  bottomAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  topAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  updateAnchors: 1
+  mColor: {r: .498039216, g: .80392158, b: .886274517, a: .258823544}
+  mPivot: 4
+  mWidth: 352
+  mHeight: 212
+  mDepth: -9
+  autoResizeBoxCollider: 0
+  hideIfOffScreen: 0
+  keepAspectRatio: 0
+  aspectRatio: 1.66037738
+  mType: 2
+  mFillDirection: 4
+  mFillAmount: 1
+  mInvert: 0
+  mFlip: 0
+  centerType: 1
+  leftType: 1
+  rightType: 1
+  bottomType: 1
+  topType: 1
+  mRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  mTexture: {fileID: 2800000, guid: 672645786a621bd469f68bbf446c3328, type: 3}
+  mMat: {fileID: 0}
+  mShader: {fileID: 4800000, guid: e75727d9555d9d14ca51d91908c681bc, type: 3}
+  mBorder: {x: 0, y: 0, z: 0, w: 0}
+  mFixedAspect: 0
 --- !u!1 &680510759
 GameObject:
   m_ObjectHideFlags: 0
@@ -2416,7 +2502,6 @@ MonoBehaviour:
   Target: {fileID: 0}
   DesiredFood: 0
   Happy: 0
-  TargetPoint: {x: 0, y: 0}
   BodyTexture: {fileID: 148245489}
   AngryTexture: {fileID: 1928921582}
   InPen: {fileID: 0}
@@ -3858,10 +3943,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetRatioTerm1: 4
   TargetRatioTerm2: 5
-  Locked: 0
+  Locked: 1
   Satisfied: 0
   WinWhenSatisfied: 0
-  InitialAnimalCounts: 2700000032000000
+  InitialAnimalCounts: 2800000032000000
 --- !u!4 &1753293552
 Transform:
   m_ObjectHideFlags: 0
@@ -3875,6 +3960,7 @@ Transform:
   - {fileID: 962212054}
   - {fileID: 1467105379}
   - {fileID: 1582364691}
+  - {fileID: 642978352}
   m_Father: {fileID: 1292872614}
   m_RootOrder: 4
 --- !u!1 &1836412882

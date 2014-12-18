@@ -15,6 +15,11 @@ public class AnimalPen : MonoBehaviour {
   public bool WinWhenSatisfied;
   public int[] InitialAnimalCounts;
 
+  public List<Animal> Animals {
+    get { return m_animals; }
+    set { m_animals = value; }
+  }
+
 	void Awake () {
     m_container = GetComponent<GLDragDropContainer>();
     m_container.ItemDropped += onItemDropped;
@@ -51,6 +56,7 @@ public class AnimalPen : MonoBehaviour {
   public void AddAnimal(Animal a) {
     m_animals.Add(a);
     a.InPen = this;
+    a.GetComponent<GLDragDropItem>().enabled = !Locked;
     RefreshCount();
   }
 	
@@ -60,7 +66,7 @@ public class AnimalPen : MonoBehaviour {
     RefreshCount();
   }
 
-  public void RefreshCount() {
+  public void RefreshCount(bool finalCount = false) {
     int count1 = 0;
     int count2 = 0;
 
@@ -74,8 +80,9 @@ public class AnimalPen : MonoBehaviour {
     float quotient = (float) count1 / count2;
     Satisfied = ( quotient == m_targetQuotient );
 
-    if (Satisfied && WinWhenSatisfied) AnimalManager.Instance.Win();
-
+    // check for win
+    if (Satisfied && WinWhenSatisfied) AnimalManager.Instance.DisplayResult();
+    else if (finalCount) AnimalManager.Instance.DisplayResult( Satisfied ); // force a result whether we won or lost
   }
 
 }

@@ -97,13 +97,14 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     FloatTextEffect.Show("1 : "+num, a.transform.position);
 
     if (m_animals.Count >= 9) {
-      Utility.Delay ( Win, 1.25f );
+      Utility.Delay ( DisplayResult, 1.25f );
     }
   }
 
-  public void Win()
+  public void DisplayResult(bool correct = true)
   {
-    FinalFloatTextEffect.Show("Good Job!", FinalFloatTextEffect.transform.position);
+    string message = (correct)? "Good Job!" : "Try Again";
+    FinalFloatTextEffect.Show(message, FinalFloatTextEffect.transform.position);
   }
   
   void Update()

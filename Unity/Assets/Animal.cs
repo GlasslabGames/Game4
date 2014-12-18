@@ -17,7 +17,6 @@ public class Animal : MonoBehaviour {
 
   private Idle m_currentState; // hacky but we're only using Idle now anyway
 
-  public Vector2 TargetPoint;
   private float m_idleTime;
 
   private GLDragDropContainer m_container;
@@ -28,6 +27,12 @@ public class Animal : MonoBehaviour {
   public AnimalPen InPen;
   public bool TriedToDropInLockedPen;
   private Vector3 m_outOfPenPosition;
+
+  public Vector3 TargetPos {
+    set {
+      m_currentState.m_targetPosition = value;
+    }
+  }
 
   void Awake()
   {

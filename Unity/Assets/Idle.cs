@@ -17,7 +17,7 @@ using UnityEngine;
 public class Idle : AnimalBehaviorState
 {
 
-  private Vector3 m_targetPosition = new Vector3(float.NaN, 0, 0);
+  public Vector3 m_targetPosition = new Vector3(float.NaN, 0, 0);
   private float m_waitTime;
   private const float MIN_WAIT_TIME = 0.5f;
   private const float MAX_WAIT_TIME = 2f;
