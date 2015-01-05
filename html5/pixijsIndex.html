@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>pixi.js example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF;
+        }
+
+        #help{
+            position: absolute;
+            z-index: 20;
+            color: black;
+            top: 20px;
+            left: 120px;
+        }
+    </style>
+
+    <script src="pixi.js/bin/pixi.js"></script>
+</head>
+<body>
+<script>
+
+    // create an new instance of a pixi stage
+    // the second parameter is interactivity...
+    var stage = new PIXI.Stage(0x000000, true);
+
+    var dragObject = null;
+
+    // create a renderer instance.
+    var renderer = PIXI.autoDetectRenderer(620, 400);
+
+    // add the renderer view element to the DOM
+    document.body.appendChild(renderer.view);
+
+    requestAnimFrame( animate );
+
+    // create some textures from an image path
+    var textureButton = PIXI.Texture.fromImage("assets/images/copy-that-floppy.png");
+    var textureButtonDown = PIXI.Texture.fromImage("assets/images/mushroom2.png");
+
+    PIXI.EventTarget.mixin(PIXI.DisplayObjectContainer.prototype);
+
+    var parent = new PIXI.Sprite(textureButton);
+    parent.anchor.x = 0.5;
+    parent.anchor.y = 0.5;
+    parent.position.x = 25;
+    parent.position.y = 25;
+    parent.interactive = true;
+    parent.name = "Floppy";
+    stage.addChild(parent);
+
+    var child = new PIXI.Sprite(textureButtonDown);
+    child.anchor.x = 0.5;
+    child.anchor.y = 0.5;
+    child.position.x = 25;
+    child.position.y = 25;
+    child.interactive = true;
+    child.name = "1UP";
+    parent.addChild(child);
+
+    parent.addEventListener('mousedown', onDown);
+    child.addEventListener('mousedown', onDown);
+    parent.addEventListener('mouseup', onUp);
+    child.addEventListener('mouseup', onUp);
+    parent.addEventListener('"mouseover"', onOver);
+    child.addEventListener('"mouseover"', onOver);
+
+    parent.mousedown = function(event) {
+        event.target.emit("parentmousedown", event);
+    };
+    parent.mouseup = function(event) {
+        event.target.emit("parentmouseup", event);
+    };
+    parent.mouseover = function(event) {
+        event.target.emit("parentmouseover", event);
+    };
+
+    child.mousedown = function(event) {
+        event.target.emit("mousedown", event);
+    };
+    child.mouseup = function(event) {
+        event.target.emit("mouseup", event);
+    };
+    child.mouseover = function(event) {
+        event.target.emit("mouseover", event);
+    };
+
+    function onDown(data, pointer){
+        if (data.target != this) return;
+        dragObject = data.target;
+
+        console.log(data.target.name);
+    };
+
+    function onOver(data, pointer){
+
+        console.log("Over: "+data.target.name);
+    };
+
+    function onUp(data, pointer){
+        if (data.target != this) return;
+        if (data.target.scale.x != 2)
+            data.target.scale.x = 2;
+        else
+            data.target.scale.x = 1;
+
+        dragObject = null;
+    };
+
+    function animate() {
+
+        requestAnimFrame( animate );
+        if (dragObject)
+        {
+            dragObject.position.x = stage.getMousePosition().x - dragObject.parent.position.x;
+            dragObject.position.y = stage.getMousePosition().y - dragObject.parent.position.y;
+        }
+        renderer.render(stage);
+    }
+</script>
+
+</body>
+</html>
