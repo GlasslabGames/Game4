@@ -36,8 +36,8 @@ public class AnimalThoughtBubble : MonoBehaviour {
         return Color.blue;
       case FoodType.RED:
         return Color.red;
-      case FoodType.WHITE:
-        return Color.white;
+      case FoodType.YELLOW:
+        return Color.yellow;
       default:
         return Color.black;
     }
