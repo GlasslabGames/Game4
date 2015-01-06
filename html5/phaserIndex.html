@@ -3,13 +3,9 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Creature Caretaker</title>
-    <script src="pixi.js/bin/pixi.js"></script>
     <script src="phaser/build/phaser.js"></script>
     <script src="js/src/AE.js"></script>
     <script type="text/javascript">
-
-        var assetsToLoader = ["data/spineboy.json", "data/spineboy.anim"];
-
         // create a new loader
         //loader = new PIXI.AssetLoader(assetsToLoader);
 
@@ -18,6 +14,7 @@
 
         //begin load
         //loader.load();
+        var global = {};
 
         window.onload = function() {
             var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update});
@@ -27,7 +24,6 @@
                 game.load.image('disk', 'assets/images/copy-that-floppy.png');
                 game.load.image('1UP', 'assets/images/mushroom2.png');
 
-                //spineAnimation = new PIXI.Spine("assets/spine/spinosaurus/export/spinosaurus.json");
             }
 
             var parent;
@@ -35,45 +31,35 @@
             var child2;
             var dragObject;
             var dragOrigin;
+            function conseClick()
+            {
+                console.log("TEST");
+            };
 
             function create()
             {
                 var asset = game.cache.getXML('consebot2anim');
+                var conseBotData = new AE.Data(asset);
 
-                var objects = [];
-                function printChildren(dom, assetData, level)
+                for (var asset in conseBotData.requiredAssets)
                 {
-                    if (typeof level === 'undefined') level = 0;
-
-                    var indent = "";
-
-                    for (var i=0; i < level; i++) indent += "--";
-                    var nodeName = dom.nodeName;
-                    console.log(indent + nodeName);
-                    var nodeAttributes = {};
-                    if (dom.attributes)
-                    {
-                        for (var i=0; i < dom.attributes.length; i++)
-                        {
-                            var attribute = dom.attributes[i];
-                            nodeAttributes[attribute.nodeName] = attribute.value;
-                            console.log(indent + "--" + attribute.nodeName + ", " + attribute.value);
-                        }
-                    }
-
-
-                    for (var i=0; i < dom.children.length; i++)
-                    {
-                        printChildren(dom.children[i], nodeAttributes, level+1);
-                    }
-
-                    assetData[nodeName] = nodeAttributes;
+                    conseBotData.requiredAssets[asset] = false;
+                    game.load.image(asset, "assets/animations/consebot/"+asset);
                 }
+                game.load.onLoadComplete.add(function(index){
+                    console.log("Consebot Assets Load Complete.");
 
-                var processedAsset = {};
-                printChildren(asset, processedAsset);
+                    var animation = new AE.Animation(conseBotData, game);
 
-                console.log(processedAsset);
+                    animation.gameObject.inputEnabled = true;
+                    animation.gameObject.events.onInputDown.add(conseClick, this);
+                    animation.gameObject.events.onInputUp.add(onUp, this);
+                    animation.gameObject.events.onInputDown.add(onDown, this);
+
+                    global.animation = animation;
+                });
+
+                game.load.start();
 
                 parent = game.add.sprite(100, 100, 'disk');
                 parent.inputEnabled = true;
@@ -114,6 +100,11 @@
                     var localPoint = dragObject.toLocal(new PIXI.Point(game.input.worldX, game.input.worldY));
                     dragObject.x += localPoint.x;
                     dragObject.y += localPoint.y;
+                }
+
+                if (global.animation)
+                {
+                    global.animation.update();
                 }
             }
 
