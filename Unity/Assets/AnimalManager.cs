@@ -34,7 +34,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     // Add more animals to match the target number
     for (int i = 0; i < AnimalCounts.Length; i++) {
       for (int j = 0; j < AnimalCounts[i]; j++) {
-        Debug.Log ("Creating animal "+i+", "+j);
+        //Debug.Log ("Creating animal "+i+", "+j);
         CreateAnimal(i, b, (collider == null)); // if we haven't specified a collider, automatically avoid pens instead
       }
     }
