@@ -7,6 +7,14 @@ public class Crate : MonoBehaviour {
   public int MaxWidth;
   public int MaxHeight;
 
+  public int TargetRatioTerm1;
+  public int TargetRatioTerm2;
+  private float m_targetQuotient;
+
+  private bool m_changed;
+  private bool m_satisfied;
+  public bool WinWhenSatisfied;
+
 	// there are leftWidth * height creatures on the left, and rightWidth * height creatures on the right
 	public int LeftWidth;
 	public int RightWidth;
@@ -35,7 +43,13 @@ public class Crate : MonoBehaviour {
 
 	void Start() {
 		RefreshSize();
+    m_targetQuotient = (float) TargetRatioTerm1 / TargetRatioTerm2;
 	}
+
+  void Update() {
+    if (m_changed) CheckRatio(); // do this once a frame only if somehting about this crate actually changed
+    m_changed = false;
+  }
 
   // if this col would make the crate too large or too small, return an acceptable col
   public int GetValidCol(CrateHandle h, int col) {
@@ -80,6 +94,7 @@ public class Crate : MonoBehaviour {
     if (kind == Animal.Kinds.RED) m_leftCount = count;
     else m_rightCount = count;
     RefreshText();
+    m_changed = true;
   }
 
   private void RefreshText() {
@@ -105,6 +120,7 @@ public class Crate : MonoBehaviour {
     RightPen.UpdateCreatures();
      
     RefreshText();
+    m_changed = true;
 	}
 
   // Adjust other components to match the currently moving handle. 
@@ -128,5 +144,15 @@ public class Crate : MonoBehaviour {
     RightBackground.transform.localPosition = new Vector3(centerX, topY, 0);
     RightBackground.width = rightX - centerX;
     RightBackground.height = topY - bottomY;
+  }
+
+  public void CheckRatio() {
+    // To succeed, each side must be filled in and the ratio must be correct
+    float quotient = (float) LeftPen.Animals.Count / RightPen.Animals.Count;
+    if (LeftPen.Animals.Count == LeftPen.MaxCount && RightPen.Animals.Count == RightPen.MaxCount && quotient == m_targetQuotient) {
+      m_satisfied = true;
+      Debug.Log(this+"satisfied!");
+      if (WinWhenSatisfied) AnimalManager.Instance.DisplayResult();
+    }
   }
 }

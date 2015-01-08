@@ -3418,6 +3418,8 @@ MonoBehaviour:
   Resizable: 1
   MaxWidth: 10
   MaxHeight: 5
+  TargetRatioTerm1: 3
+  TargetRatioTerm2: 5
   LeftWidth: 1
   RightWidth: 1
   Height: 1
