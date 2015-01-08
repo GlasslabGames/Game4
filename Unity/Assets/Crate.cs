@@ -101,12 +101,9 @@ public class Crate : MonoBehaviour {
     RightPen.MaxCount = RightWidth * Height;
 
     // Fix which creatures are in or out of the crate
-    // TODO
-    /*
     LeftPen.UpdateCreatures();
     RightPen.UpdateCreatures();
-    */
-
+     
     RefreshText();
 	}
 

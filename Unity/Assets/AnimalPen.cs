@@ -62,7 +62,7 @@ public class AnimalPen : MonoBehaviour {
   }
 
   public void AddAnimal(Animal a) {
-    m_animals.Add(a);
+    if (!m_animals.Contains(a)) m_animals.Add(a);
     a.InPen = this;
     a.GetComponent<GLDragDropItem>().enabled = !Locked;
     RefreshCount();
@@ -70,7 +70,7 @@ public class AnimalPen : MonoBehaviour {
 	
   public void RemoveAnimal(Animal a) {
     m_animals.Remove(a);
-    a.InPen = null;
+    if (a.InPen == this) a.InPen = null;
     RefreshCount();
   }
 
@@ -105,8 +105,24 @@ public class AnimalPen : MonoBehaviour {
   // Force each creature to be in or out depending on its position - good for cleaning up after we resize a pen/crate
   public void UpdateCreatures() {
     // This is so inefficient... but it's just a protoype anyway ¯\_(ツ)_/¯
+    int count = 0;
     foreach (Animal a in Utility.FindInstancesInScene<Animal>()) {
-      // TODO: check if a is in the pen or not
+      if (!a.gameObject.activeInHierarchy) continue; // if the animal is disabled, who cares
+      if (collider.bounds.Contains(a.transform.position)) { // check if the animal is currently in the pen or not
+        //Debug.Log (a+" is in "+this);
+        if (count >= MaxCount || (AcceptOnlyOneKind && TargetKind != a.Kind)) {
+          RemoveAnimal(a);
+          // We need to move the animal out of the pen, so just pop it out the bottom
+          Vector3 pos = a.transform.position;
+          pos.y = collider.bounds.min.y - 0.1f;
+          a.transform.position = pos;
+        } else { // welcome to the pen!
+          AddAnimal(a);
+          count++;
+        }
+      } else { // it's not in the pen, so ensure that we aren't counting it as in the pen
+        RemoveAnimal(a);
+      }
     }
   }
 
