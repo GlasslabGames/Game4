@@ -23,6 +23,16 @@ public class Crate : MonoBehaviour {
 	public UITexture LeftBackground;
 	public UITexture RightBackground;
 
+  public AnimalPen LeftPen;
+  public AnimalPen RightPen;
+
+  // the labels that count how much space there is on each side
+  public UILabel LeftLabel;
+  public UILabel RightLabel;
+
+  private int m_leftCount;
+  private int m_rightCount;
+
 	void Start() {
 		RefreshSize();
 	}
@@ -65,6 +75,18 @@ public class Crate : MonoBehaviour {
     RefreshSize();
   }
 
+  public void UpdateCreatureCount(Animal.Kinds kind, int count) {
+    // Equating left and right directly with animal kinds is a little hacky
+    if (kind == Animal.Kinds.RED) m_leftCount = count;
+    else m_rightCount = count;
+    RefreshText();
+  }
+
+  private void RefreshText() {
+    LeftLabel.text = m_leftCount+"/"+(LeftWidth*Height).ToString(); // TODO: use number of creatures
+    RightLabel.text = m_rightCount+"/"+(RightWidth*Height).ToString(); // TODO: use number of creatures
+  }
+
 	// adjusts components to reflect the current width and height. Note that this will move the whole shape...
 	[ContextMenu ("RefreshSize")]
 	public void RefreshSize() {
@@ -74,6 +96,18 @@ public class Crate : MonoBehaviour {
     TopHandle.SetPosition(-LeftWidth * TileSize, 0);
 		BottomHandle.SetPosition(-LeftWidth * TileSize, -Height * TileSize);
     AdjustToHandles();
+
+    LeftPen.MaxCount = LeftWidth * Height;
+    RightPen.MaxCount = RightWidth * Height;
+
+    // Fix which creatures are in or out of the crate
+    // TODO
+    /*
+    LeftPen.UpdateCreatures();
+    RightPen.UpdateCreatures();
+    */
+
+    RefreshText();
 	}
 
   // Adjust other components to match the currently moving handle. 

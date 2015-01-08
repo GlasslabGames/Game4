@@ -15,6 +15,13 @@ public class AnimalPen : MonoBehaviour {
   public bool WinWhenSatisfied;
   public int[] InitialAnimalCounts;
 
+  private int m_animalCount;
+
+  public Crate ParentCrate;
+  public bool AcceptOnlyOneKind;
+  public Animal.Kinds TargetKind;
+  public int MaxCount;
+
   public List<Animal> Animals {
     get { return m_animals; }
     set { m_animals = value; }
@@ -43,12 +50,13 @@ public class AnimalPen : MonoBehaviour {
 
   public void onItemDropped(GLDragEventArgs args)
   {
-    if (args.DragObject.GetComponent<Animal>() != null) {
-      if (!Locked) {
-        AddAnimal( args.DragObject.GetComponent<Animal>() );
-        args.Consume();
+    Animal a = args.DragObject.GetComponent<Animal>();
+    if (a != null) {
+      if (Locked || (MaxCount > 0 && (m_animalCount >= MaxCount)) || (AcceptOnlyOneKind && TargetKind != a.Kind)) {
+        a.TriedToDropInLockedPen = true;
       } else {
-        args.DragObject.GetComponent<Animal>().TriedToDropInLockedPen = true;
+        AddAnimal( a );
+        args.Consume();
       }
     }
   }
@@ -67,22 +75,39 @@ public class AnimalPen : MonoBehaviour {
   }
 
   public void RefreshCount(bool finalCount = false) {
+    int count0 = 0;
     int count1 = 0;
-    int count2 = 0;
 
     foreach (Animal a in m_animals) {
-      if (a.Kind == (Animal.Kinds) 0) count1++;
-      else if (a.Kind == (Animal.Kinds) 1) count2++;
+      if (a.Kind == (Animal.Kinds) 0) count0++;
+      else if (a.Kind == (Animal.Kinds) 1) count1++;
     }
-    
-    m_label.text = count1 + " : " + count2;
 
-    float quotient = (float) count1 / count2;
+    if (m_label != null) {
+      m_label.text = count0 + " : " + count1;
+    }
+
+    if (ParentCrate != null) {
+      ParentCrate.UpdateCreatureCount(TargetKind, count0 + count1);
+    }
+
+    float quotient = (float) count0 / count1;
     Satisfied = ( quotient == m_targetQuotient );
 
     // check for win
     if (Satisfied && WinWhenSatisfied) AnimalManager.Instance.DisplayResult();
     else if (finalCount) AnimalManager.Instance.DisplayResult( Satisfied ); // force a result whether we won or lost
+
+    // remember total count for use later
+    m_animalCount = count0 + count1;
+  }
+
+  // Force each creature to be in or out depending on its position - good for cleaning up after we resize a pen/crate
+  public void UpdateCreatures() {
+    // This is so inefficient... but it's just a protoype anyway ¯\_(ツ)_/¯
+    foreach (Animal a in Utility.FindInstancesInScene<Animal>()) {
+      // TODO: check if a is in the pen or not
+    }
   }
 
 }
