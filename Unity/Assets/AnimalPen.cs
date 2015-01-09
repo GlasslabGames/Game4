@@ -20,6 +20,8 @@ public class AnimalPen : MonoBehaviour {
   public Animal.Kinds TargetKind;
   public int MaxCount;
 
+  public GLGrid AnimalGrid;
+
   public List<Animal> Animals {
     get { return m_animals; }
     set { m_animals = value; }
@@ -34,6 +36,10 @@ public class AnimalPen : MonoBehaviour {
 	}
 
   void Start() {
+    Utility.NextFrame(AddAnimals); // delay one frame in case there's a crate that will resize us
+  }
+
+  public void AddAnimals() {
     Animal a;
     Bounds b = collider.bounds;
     b.size = new Vector3( b.size.x - 0.2f, b.size.y - 0.2f, b.size.z );
@@ -61,15 +67,20 @@ public class AnimalPen : MonoBehaviour {
   public void AddAnimal(Animal a, bool skipRecount = false) {
     if (!m_animals.Contains(a)) {
       m_animals.Add(a);
-      a.InPen = this;
-      a.GetComponent<GLDragDropItem>().enabled = !Locked;
+      a.OnEnterPen(this);
+      if (AnimalGrid != null) {
+        Utility.NextFrame( delegate() {
+          AnimalGrid.AddChild(a.transform);
+          AnimalGrid.Reposition();
+        });
+      }
       if (!skipRecount) RefreshCount();
     }
   }
 	
   public void RemoveAnimal(Animal a, bool skipRecount = false) {
     if (a.InPen == this) {
-      a.InPen = null;
+      a.OnEnterPen(null);
       m_animals.Remove(a);
       if (!skipRecount) RefreshCount();
     }

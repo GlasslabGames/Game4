@@ -15,7 +15,7 @@ public class Animal : MonoBehaviour {
 
   public bool Happy;
 
-  private Idle m_currentState; // hacky but we're only using Idle now anyway
+  private AnimalBehaviorState m_currentState; // hacky but we're only using Idle now anyway
 
   private float m_idleTime;
 
@@ -28,11 +28,6 @@ public class Animal : MonoBehaviour {
   public bool TriedToDropInLockedPen;
   private Vector3 m_outOfPenPosition;
 
-  public Vector3 TargetPos {
-    set {
-      m_currentState.m_targetPosition = value;
-    }
-  }
 
   void Awake()
   {
@@ -49,7 +44,8 @@ public class Animal : MonoBehaviour {
   private void onItemDropped(GLDragEventArgs args)
   {
     Debug.Log(args.DragObject.name);
-    if (args.DragObject.GetComponent<FoodCrate>() != null) {
+    if (args.DragObject.GetComponent<Potion>() != null && InPen == null) { // don't split if we're in a pen
+      Debug.Log ("Dropped potion");
       AnimalManager.Instance.Split(this, 3);
       GameObject.Destroy(args.DragObject.gameObject);
     } else if (InPen != null && args.DragObject.GetComponent<Animal>() != null) {
@@ -57,7 +53,7 @@ public class Animal : MonoBehaviour {
     }
   }
 
-  // onItemTaken doesn't work well so we're doing this here ¯\_(ツ)_/¯
+  // onItemTaken doesn't work so we're doing this here ¯\_(ツ)_/¯
   private void onDragged(GLDragEventArgs args) {
     if (InPen != null) {
       InPen.RemoveAnimal(this);
@@ -67,17 +63,34 @@ public class Animal : MonoBehaviour {
   }
 
 	private void onDropped(GLDragEventArgs args) {
-		m_currentState.PauseWandering();
     if (TriedToDropInLockedPen) {
       transform.position = m_outOfPenPosition; // TODO
       TriedToDropInLockedPen = false;
+    }
+    IdleState idle = m_currentState as IdleState;
+    if (idle != null) {
+      idle.PauseWandering();
     }
 	}
 
   public void BeginIdle()
   {
     Target = null;
-    m_currentState = new Idle().Initialize(this) as Idle;
+    m_currentState = new IdleState().Initialize(this);
+  }
+
+  public void OnEnterPen(AnimalPen pen)
+  {
+    InPen = pen;
+    if (pen == null) {
+      m_currentState = new IdleState().Initialize(this);
+      transform.parent = AnimalManager.Instance.AnimalParent;
+    } else {
+      GetComponent<GLDragDropItem>().enabled = !pen.Locked;
+      if (pen.AnimalGrid != null) {
+        m_currentState = new PennedState().Initialize(this);
+      }
+    }
   }
 
   public void SetColor(Color c, bool change = false) {
@@ -91,7 +104,7 @@ public class Animal : MonoBehaviour {
     BodyTexture.color = c;
 	  if (AngryTexture != null) AngryTexture.color = c;
   }
-
+  /*
   public void HungerForMoreFood()
   {
     if (DesiredFood == FoodType.NONE)
@@ -99,6 +112,7 @@ public class Animal : MonoBehaviour {
       DesiredFood = (FoodType) UnityEngine.Random.Range(1f, (float)(FoodType.TOTAL_TYPES-1));
     }
   }
+  */
 
   void Update()
   {
@@ -107,7 +121,7 @@ public class Animal : MonoBehaviour {
       m_currentState.Do();
     }
 
-    HungerForMoreFood();
+    //HungerForMoreFood();
 
     if (AngryTexture != null) {
       AngryTexture.gameObject.SetActive( InPen != null && !InPen.Satisfied );
@@ -115,7 +129,7 @@ public class Animal : MonoBehaviour {
   }
 
   void OnCollisionEnter(Collision collision) {
-    Idle idle = m_currentState as Idle;
+    IdleState idle = m_currentState as IdleState;
     if (idle != null) {
       idle.WanderAwayFrom( collision.collider.transform.position );
     }

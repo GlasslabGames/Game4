@@ -19,16 +19,27 @@ public class CrateHandle : MonoBehaviour {
 	void OnPress(bool down) {
 		//Debug.Log ("onPress "+down);
 		if (down) {
-			if (Draggable) m_dragging = true;
+			if (Draggable && m_crate.Resizable && !m_dragging) {
+        m_crate.StartResizing();
+        m_dragging = true;
+      }
 		} else {
 			if (m_dragging) {
         m_dragging = false;
         Snap();
         m_crate.AdjustToHandles();
+        m_crate.StopResizing();
         m_crate.SetEdge(this);
       }
 		}
 	}
+  /*
+  void OnHover(bool over) {
+    if (Draggable && m_crate.Resizable) {
+      m_texture.color = (over)? Color.yellow : Color.black;
+    }
+  }
+  */
 
 	void Update() {
 		if (m_dragging) {
@@ -56,6 +67,13 @@ public class CrateHandle : MonoBehaviour {
         m_crate.AdjustToHandles();
       }
 		}
+    if (Draggable && m_crate.Resizable) {
+      if (UICamera.hoveredObject == this.gameObject && GLDragDropItem.CurrentlyDragging == null) {
+        m_texture.color = Color.yellow;
+      } else {
+        m_texture.color = Color.black;
+      }
+    }
 	}
 
   void Snap() {
@@ -72,6 +90,7 @@ public class CrateHandle : MonoBehaviour {
   }
 
   public void SetSize(int newSize) {
+    if (m_texture == null) return;
     if (EdgeDirection == Direction.Vertical) {
       m_texture.height = newSize;
     } else {

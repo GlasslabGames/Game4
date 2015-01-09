@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Crate : MonoBehaviour {
 	public int TileSize;
@@ -34,6 +34,9 @@ public class Crate : MonoBehaviour {
   public AnimalPen LeftPen;
   public AnimalPen RightPen;
 
+  public GLGrid LeftSpotGrid;
+  public GLGrid RightSpotGrid;
+
   // the labels that count how much space there is on each side
   public UILabel LeftLabel;
   public UILabel RightLabel;
@@ -44,11 +47,32 @@ public class Crate : MonoBehaviour {
 	void Start() {
 		RefreshSize();
     m_targetQuotient = (float) TargetRatioTerm1 / TargetRatioTerm2;
+
+    // Set up some initial features of all the grids
+    GLGrid[] grids = new GLGrid[] { LeftSpotGrid, RightSpotGrid, LeftPen.AnimalGrid, RightPen.AnimalGrid };
+    for (int i = 0; i < grids.Length; i++) {
+      if (grids[i] != null) {
+        int side = (i % 2 == 0)? -1 : 1;
+        grids[i].transform.localPosition = new Vector3(side * 0.5f * TileSize, -0.5f * TileSize, 0);
+        grids[i].cellWidth = TileSize;
+        grids[i].cellHeight = TileSize;
+      }
+    }
 	}
 
   void Update() {
     if (m_changed) CheckRatio(); // do this once a frame only if somehting about this crate actually changed
     m_changed = false;
+  }
+
+  public void StartResizing() {
+    LeftSpotGrid.gameObject.SetActive(false);
+    RightSpotGrid.gameObject.SetActive(false);
+  }
+
+  public void StopResizing() {
+    LeftSpotGrid.gameObject.SetActive(true);
+    RightSpotGrid.gameObject.SetActive(true);
   }
 
   // if this col would make the crate too large or too small, return an acceptable col
@@ -112,6 +136,17 @@ public class Crate : MonoBehaviour {
 		BottomHandle.SetPosition(-LeftWidth * TileSize, -Height * TileSize);
     AdjustToHandles();
 
+    // Fill the dots that show up on the grid
+    FillInGrid(LeftSpotGrid, LeftWidth);
+    FillInGrid(RightSpotGrid, RightWidth);
+
+    if (LeftPen.AnimalGrid != null) {
+      LeftPen.AnimalGrid.maxPerLine = LeftWidth;
+    }
+    if (RightPen.AnimalGrid != null) {
+      RightPen.AnimalGrid.maxPerLine = RightWidth;
+    }
+
     LeftPen.MaxCount = LeftWidth * Height;
     RightPen.MaxCount = RightWidth * Height;
 
@@ -122,6 +157,22 @@ public class Crate : MonoBehaviour {
     RefreshText();
     m_changed = true;
 	}
+
+  void FillInGrid(GLGrid grid, int width) {
+    grid.maxPerLine = width;
+    List<Transform> children = new List<Transform>(grid.GetComponentsInChildren<Transform>(true));
+    children.Remove(grid.transform); // make sure the grid itself isn't counted among its children
+    GameObject spot = children[0].gameObject;
+
+    for (int i = 0; i < Mathf.Max(children.Count, width * Height); i++) {
+      if (i < children.Count) { // if we have a child
+        children[i].gameObject.SetActive( i < width * Height ); // hide it if its count is greater than the number we want
+      } else { // we must add a child
+        Utility.InstantiateAsChild(spot, grid.transform);
+      }
+    }
+    grid.Reposition();
+  }
 
   // Adjust other components to match the currently moving handle. 
   public void AdjustToHandles() {
@@ -153,6 +204,10 @@ public class Crate : MonoBehaviour {
       m_satisfied = true;
       Debug.Log(this+"satisfied!");
       if (WinWhenSatisfied) AnimalManager.Instance.DisplayResult();
+    } else {
+      m_satisfied = false;
     }
+    LeftPen.Satisfied = m_satisfied;
+    RightPen.Satisfied = m_satisfied;
   }
 }
