@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 public class FoodCrate : MonoBehaviour
 {
-  public Food[] Contents;
+  public FoodItem[] Contents;
 
   public void Eat(FoodType target)
   {
-    Food f = getFoodByType(target);
+    FoodItem f = getFoodByType(target);
     if (f != null && f.Amount > 0)
     {
       f.Amount--;
@@ -28,7 +28,7 @@ public class FoodCrate : MonoBehaviour
 
   }
 
-  private Food getFoodByType(FoodType type)
+  private FoodItem getFoodByType(FoodType type)
   {
     for (int i=Contents.Length-1; i<=0; i--)
     {

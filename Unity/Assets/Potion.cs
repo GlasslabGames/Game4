@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Food : MonoBehaviour {
-	public Animal.Kinds Kind;
-	private float Health = 1;
+public class Potion : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

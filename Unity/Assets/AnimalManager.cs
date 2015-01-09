@@ -34,7 +34,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     // Add more animals to match the target number
     for (int i = 0; i < AnimalCounts.Length; i++) {
       for (int j = 0; j < AnimalCounts[i]; j++) {
-        Debug.Log ("Creating animal "+i+", "+j);
+        //Debug.Log ("Creating animal "+i+", "+j);
         CreateAnimal(i, b, (collider == null)); // if we haven't specified a collider, automatically avoid pens instead
       }
     }
@@ -87,7 +87,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     for (int i = 1; i < num; i++) {
       Transform t = Utility.InstantiateAsChild(a.gameObject, a.transform.parent);
       Animal b = t.GetComponent<Animal>();
-      b.SetColor(a.BodyTexture.color, true);
+      b.SetColor(a.BodyTexture.color);
       m_animals.Add(b);
       b.gameObject.name = "Animal"+m_animals.Count;
       b.collider.enabled = false;
@@ -97,7 +97,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     FloatTextEffect.Show("1 : "+num, a.transform.position);
 
     if (m_animals.Count >= 9) {
-      Utility.Delay ( DisplayResult, 1.25f );
+      //Utility.Delay ( DisplayResult, 1.25f );
     }
   }
 
