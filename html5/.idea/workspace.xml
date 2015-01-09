@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdcf8aa3-6798-4a76-9342-827a5da80b8d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/src/AE.js" afterPath="$PROJECT_DIR$/js/src/AE.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phaserIndex.html" afterPath="$PROJECT_DIR$/phaserIndex.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="html5.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,8 +31,8 @@
           <file leaf-file-name="AE.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/js/src/AE.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.40384614" vertical-offset="5661" max-vertical-offset="7446">
-                  <caret line="356" column="5" selection-start-line="356" selection-start-column="5" selection-end-line="356" selection-end-column="5" />
+                <state vertical-scroll-proportion="2.1153846" vertical-offset="4131" max-vertical-offset="7446">
+                  <caret line="355" column="29" selection-start-line="355" selection-start-column="29" selection-end-line="355" selection-end-column="29" />
                   <folding>
                     <element signature="e#0#45#0" expanded="false" />
                   </folding>
@@ -49,8 +47,8 @@
           <file leaf-file-name="phaserIndex.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/phaserIndex.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.57459205" vertical-offset="816" max-vertical-offset="2652">
-                  <caret line="77" column="38" selection-start-line="77" selection-start-column="38" selection-end-line="77" selection-end-column="38" />
+                <state vertical-scroll-proportion="0.7925408" vertical-offset="1275" max-vertical-offset="2652">
+                  <caret line="115" column="36" selection-start-line="115" selection-start-column="36" selection-end-line="115" selection-end-column="36" />
                   <folding />
                 </state>
               </provider>
@@ -486,8 +484,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/src/AE.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40384614" vertical-offset="5661" max-vertical-offset="7446">
-          <caret line="356" column="5" selection-start-line="356" selection-start-column="5" selection-end-line="356" selection-end-column="5" />
+        <state vertical-scroll-proportion="2.1153846" vertical-offset="4131" max-vertical-offset="7446">
+          <caret line="355" column="29" selection-start-line="355" selection-start-column="29" selection-end-line="355" selection-end-column="29" />
           <folding>
             <element signature="e#0#45#0" expanded="false" />
           </folding>
@@ -496,8 +494,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/phaserIndex.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57459205" vertical-offset="816" max-vertical-offset="2652">
-          <caret line="77" column="38" selection-start-line="77" selection-start-column="38" selection-end-line="77" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.7925408" vertical-offset="1275" max-vertical-offset="2652">
+          <caret line="115" column="36" selection-start-line="115" selection-start-column="36" selection-end-line="115" selection-end-column="36" />
           <folding />
         </state>
       </provider>
