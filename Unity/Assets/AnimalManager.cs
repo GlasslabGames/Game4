@@ -14,17 +14,23 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
 
   private List<Animal> m_animals;
   private List<AnimalPen> m_pens;
+  private List<Food> m_foods;
+  public List<Food> Foods {
+    get { return m_foods; }
+    set { m_foods = value; }
+  }
 
   public FloatText FloatTextEffect;
   public FloatText FinalFloatTextEffect;
   public UILabel CreatureCountLabel;
-
+ 
   override protected void Awake()
   {
     base.Awake();
 
     m_pens = Utility.FindInstancesInScene<AnimalPen>();
     m_animals = new List<Animal>();
+    m_foods = new List<Food>();
 
     // Either we've added a collider to show where the creatuers should be placed, or just use the whole screen excluding pens
     Bounds b;
@@ -98,6 +104,49 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
 
     if (m_animals.Count >= 9) {
       //Utility.Delay ( DisplayResult, 1.25f );
+    }
+  }
+
+  public void DropFood(Food food) {
+    food.transform.parent = transform;
+    m_foods.Add(food);
+
+    // for each animal, consider moving it towards this food
+    foreach (Animal a in m_animals) {
+      if (a.Kind != food.Kind) continue;
+      if (a.CurrentState is IdleState) { // it's just sitting around, of course it wants food
+        a.BeginMovingTowardsFood(food);
+      } else if (a.CurrentState is TowardsFoodState) { // it's heading for some other food, but switch if the new one is closer
+        Food oldFood = ((TowardsFoodState) a.CurrentState).TargetFood;
+        if (Vector3.Distance (a.transform.position, food.transform.position) <=
+            Vector3.Distance(a.transform.position, oldFood.transform.position)) {
+          a.BeginMovingTowardsFood(food);
+        }
+      }
+    }
+  }
+
+  public void FoodEaten(Food food) {
+    m_foods.Remove(food);
+    // foreach animal that was targetting this food, either move it towards the next closest or switch it back to idle
+    foreach (Animal a in m_animals) {
+      if ((a.CurrentState is EatingFoodState && ((EatingFoodState) a.CurrentState).TargetFood == food) ||
+          (a.CurrentState is TowardsFoodState && ((TowardsFoodState) a.CurrentState).TargetFood == food)) {
+        Food closestFood = null;
+        if (m_foods.Count > 0) {
+          float closestDist = float.PositiveInfinity;
+          foreach (Food f in AnimalManager.Instance.Foods) {
+            if (a.Kind != f.Kind) continue;
+            float dist = Vector3.Distance(a.transform.position, f.transform.position);
+            if (dist < closestDist) {
+              closestDist = dist;
+              closestFood = f;
+            }
+          }
+        }
+        if (closestFood != null) a.BeginMovingTowardsFood(closestFood);
+        else a.BeginIdle();
+      }
     }
   }
 

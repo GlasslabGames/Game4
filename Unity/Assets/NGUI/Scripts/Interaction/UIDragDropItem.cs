@@ -32,6 +32,7 @@ public class UIDragDropItem : MonoBehaviour
 	/// </summary>
 
 	public bool cloneOnDrag = false;
+  public bool destroyDroppedClone = true;
 
 	/// <summary>
 	/// How long the user has to press on an item before the drag action activates.
@@ -257,7 +258,7 @@ public class UIDragDropItem : MonoBehaviour
 	protected virtual void OnDragDropRelease (GameObject surface)
 	{
     Debug.Log(this+" dragRelease");
-		if (!cloneOnDrag)
+		if (!cloneOnDrag || !destroyDroppedClone)
 		{
 			mTouchID = int.MinValue;
 
@@ -282,6 +283,12 @@ public class UIDragDropItem : MonoBehaviour
 			{
 				// No valid container under the mouse -- revert the item's parent
 				mTrans.parent = mParent;
+
+        // if it's a cloned object, destroy it in this case no matter what
+        if (cloneOnDrag) {
+          NGUITools.Destroy(gameObject);
+          return;
+        }
 			}
 
 			// Update the grid and table references

@@ -16,6 +16,7 @@ public class Animal : MonoBehaviour {
   public bool Happy;
 
   private AnimalBehaviorState m_currentState; // hacky but we're only using Idle now anyway
+  public AnimalBehaviorState CurrentState { get { return m_currentState; } }
 
   private float m_idleTime;
 
@@ -91,6 +92,14 @@ public class Animal : MonoBehaviour {
         m_currentState = new PennedState().Initialize(this);
       }
     }
+  }
+
+  public void BeginMovingTowardsFood(Food food) {
+    m_currentState = new TowardsFoodState().Initialize(this, food);
+  }
+
+  public void StartEating(Food food) {
+    m_currentState = new EatingFoodState().Initialize(this, food);
   }
 
   public void SetColor(Color c, bool change = false) {

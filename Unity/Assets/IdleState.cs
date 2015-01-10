@@ -47,12 +47,12 @@ public class IdleState : AnimalBehaviorState
       m_waitTime -= Time.deltaTime;
       if (m_waitTime <= 0)
       {
-        GetNewWanderPosition();
+        getNewWanderPosition();
       }
     }
   }
 
-  private void GetNewWanderPosition()
+  private void getNewWanderPosition()
   {
     GameObject ownerObject = owner.gameObject;
     m_targetPosition.Set(
