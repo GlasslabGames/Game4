@@ -109,6 +109,15 @@ public class AnimalPen : MonoBehaviour {
     // check for win
     if (Satisfied && WinWhenSatisfied) AnimalManager.Instance.DisplayResult();
     else if (finalCount) AnimalManager.Instance.DisplayResult( Satisfied ); // force a result whether we won or lost
+
+    // if there's a grid (indicating that we want to be totally filled) and we aren't filled, attract creatures
+    if (AnimalGrid != null) {
+      if (m_animals.Count < MaxCount) {
+        AnimalManager.Instance.AttractAnimalsToPen(this);
+      } else {
+        AnimalManager.Instance.StopAttractingAnimals(this);
+      }
+    }
   }
 
   // Force each creature to be in or out depending on its position - good for cleaning up after we resize a pen/crate

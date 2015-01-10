@@ -76,6 +76,7 @@ public class Animal : MonoBehaviour {
 
   public void BeginIdle()
   {
+    Debug.Log (this+" begin idle");
     Target = null;
     m_currentState = new IdleState().Initialize(this);
   }
@@ -98,8 +99,16 @@ public class Animal : MonoBehaviour {
     m_currentState = new TowardsFoodState().Initialize(this, food);
   }
 
+  public void BeginMovingTowardsPen(AnimalPen pen) {
+    m_currentState = new TowardsPenState().Initialize(this, pen);
+  }
+
   public void StartEating(Food food) {
     m_currentState = new EatingFoodState().Initialize(this, food);
+  }
+
+  public void EnterPen(AnimalPen pen) {
+    // TODO
   }
 
   public void SetColor(Color c, bool change = false) {

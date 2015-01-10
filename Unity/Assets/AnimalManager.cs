@@ -19,6 +19,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     get { return m_foods; }
     set { m_foods = value; }
   }
+  private List<AnimalPen> m_openPens;
 
   public FloatText FloatTextEffect;
   public FloatText FinalFloatTextEffect;
@@ -31,6 +32,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     m_pens = Utility.FindInstancesInScene<AnimalPen>();
     m_animals = new List<Animal>();
     m_foods = new List<Food>();
+    m_openPens = new List<AnimalPen>();
 
     // Either we've added a collider to show where the creatuers should be placed, or just use the whole screen excluding pens
     Bounds b;
@@ -135,7 +137,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
         Food closestFood = null;
         if (m_foods.Count > 0) {
           float closestDist = float.PositiveInfinity;
-          foreach (Food f in AnimalManager.Instance.Foods) {
+          foreach (Food f in m_foods) {
             if (a.Kind != f.Kind) continue;
             float dist = Vector3.Distance(a.transform.position, f.transform.position);
             if (dist < closestDist) {
@@ -145,6 +147,54 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
           }
         }
         if (closestFood != null) a.BeginMovingTowardsFood(closestFood);
+        else a.BeginIdle();
+      }
+    }
+  }
+
+  public void AttractAnimalsToPen(AnimalPen pen) {
+    if (m_openPens.Contains(pen)) return; // no need
+    m_openPens.Add(pen);
+    Debug.Log ("Start attracting animals to "+pen);
+
+    // for each animal, consider moving it towards this pen
+    foreach (Animal a in m_animals) {
+      if (a.Kind != pen.TargetKind) continue;
+      if (a.CurrentState is TowardsPenState) { // it's heading for some other pen, but switch if the new one is closer
+        AnimalPen oldPen = ((TowardsPenState) a.CurrentState).TargetPen;
+        if (Vector3.Distance (a.transform.position, pen.transform.position) <=
+            Vector3.Distance(a.transform.position, oldPen.transform.position)) {
+          a.BeginMovingTowardsPen(pen);
+        }
+      } else if (a.CurrentState is IdleState) {
+		    a.BeginMovingTowardsPen(pen);
+		  }
+    }
+    
+  }
+
+  public void StopAttractingAnimals(AnimalPen pen) {
+    if (!m_openPens.Contains(pen)) return; // no need
+    m_openPens.Remove(pen);
+    Debug.Log ("Stop attracting animals to "+pen);
+    // foreach animal that was targetting this food, either move it towards the next closest or switch it back to idle
+    foreach (Animal a in m_animals) {
+      if (a.CurrentState is TowardsPenState && ((TowardsPenState) a.CurrentState).TargetPen == pen) {
+        Debug.Log ("Stop "+a+" going to "+pen+". Num open pens? "+m_openPens.Count);
+
+        AnimalPen closestPen = null;
+        if (m_openPens.Count > 0) {
+          float closestDist = float.PositiveInfinity;
+          foreach (AnimalPen p in m_openPens) {
+            if (a.Kind != p.TargetKind) continue;
+            float dist = Vector3.Distance(a.transform.position, p.transform.position);
+            if (dist < closestDist) {
+              closestDist = dist;
+              closestPen = p;
+            }
+          }
+        }
+        if (closestPen != null) a.BeginMovingTowardsPen(closestPen);
         else a.BeginIdle();
       }
     }
