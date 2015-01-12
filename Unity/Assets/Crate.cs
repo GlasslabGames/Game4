@@ -122,8 +122,8 @@ public class Crate : MonoBehaviour {
   }
 
   private void RefreshText() {
-    LeftLabel.text = m_leftCount+"/"+(LeftWidth*Height).ToString(); // TODO: use number of creatures
-    RightLabel.text = m_rightCount+"/"+(RightWidth*Height).ToString(); // TODO: use number of creatures
+    LeftLabel.text = m_leftCount.ToString();//+"/"+(LeftWidth*Height).ToString();
+    RightLabel.text = m_rightCount.ToString();//+"/"+(RightWidth*Height).ToString();
   }
 
 	// adjusts components to reflect the current width and height. Note that this will move the whole shape...

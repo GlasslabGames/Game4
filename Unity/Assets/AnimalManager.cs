@@ -9,7 +9,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   public Transform AnimalParent;
   public int[] AnimalCounts;
   public Color[] AnimalColors;
-  public Transform FillBarTransform;
+  public UITexture FillBarTexture;
   private float m_totalHappiness;
 
   private List<Animal> m_animals;
@@ -20,6 +20,10 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     set { m_foods = value; }
   }
   private List<AnimalPen> m_openPens;
+  public List<AnimalPen> OpenPens {
+    get { return m_openPens; }
+    set { m_openPens = value; }
+  }
 
   public FloatText FloatTextEffect;
   public FloatText FinalFloatTextEffect;
@@ -86,7 +90,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     }
 
     m_totalHappiness /= totalAnimals;
-    FillBarTransform.localScale = new Vector3(m_totalHappiness, 1, 1);
+    FillBarTexture.fillAmount = m_totalHappiness;
   }
 
   // Splits a single animal a into #num animals
@@ -115,40 +119,16 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
 
     // for each animal, consider moving it towards this food
     foreach (Animal a in m_animals) {
-      if (a.Kind != food.Kind) continue;
-      if (a.CurrentState is IdleState) { // it's just sitting around, of course it wants food
-        a.BeginMovingTowardsFood(food);
-      } else if (a.CurrentState is TowardsFoodState) { // it's heading for some other food, but switch if the new one is closer
-        Food oldFood = ((TowardsFoodState) a.CurrentState).TargetFood;
-        if (Vector3.Distance (a.transform.position, food.transform.position) <=
-            Vector3.Distance(a.transform.position, oldFood.transform.position)) {
-          a.BeginMovingTowardsFood(food);
-        }
-      }
+      a.CheckForTarget();
     }
   }
 
   public void FoodEaten(Food food) {
     m_foods.Remove(food);
+    Debug.Log ("Food eaten. Foods: "+m_foods.Count+" Open pens: "+m_openPens.Count);
     // foreach animal that was targetting this food, either move it towards the next closest or switch it back to idle
     foreach (Animal a in m_animals) {
-      if ((a.CurrentState is EatingFoodState && ((EatingFoodState) a.CurrentState).TargetFood == food) ||
-          (a.CurrentState is TowardsFoodState && ((TowardsFoodState) a.CurrentState).TargetFood == food)) {
-        Food closestFood = null;
-        if (m_foods.Count > 0) {
-          float closestDist = float.PositiveInfinity;
-          foreach (Food f in m_foods) {
-            if (a.Kind != f.Kind) continue;
-            float dist = Vector3.Distance(a.transform.position, f.transform.position);
-            if (dist < closestDist) {
-              closestDist = dist;
-              closestFood = f;
-            }
-          }
-        }
-        if (closestFood != null) a.BeginMovingTowardsFood(closestFood);
-        else a.BeginIdle();
-      }
+      a.CheckForTarget();
     }
   }
 
@@ -159,16 +139,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
 
     // for each animal, consider moving it towards this pen
     foreach (Animal a in m_animals) {
-      if (a.Kind != pen.TargetKind) continue;
-      if (a.CurrentState is TowardsPenState) { // it's heading for some other pen, but switch if the new one is closer
-        AnimalPen oldPen = ((TowardsPenState) a.CurrentState).TargetPen;
-        if (Vector3.Distance (a.transform.position, pen.transform.position) <=
-            Vector3.Distance(a.transform.position, oldPen.transform.position)) {
-          a.BeginMovingTowardsPen(pen);
-        }
-      } else if (a.CurrentState is IdleState) {
-		    a.BeginMovingTowardsPen(pen);
-		  }
+      a.CheckForTarget();
     }
     
   }
@@ -179,24 +150,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     Debug.Log ("Stop attracting animals to "+pen);
     // foreach animal that was targetting this food, either move it towards the next closest or switch it back to idle
     foreach (Animal a in m_animals) {
-      if (a.CurrentState is TowardsPenState && ((TowardsPenState) a.CurrentState).TargetPen == pen) {
-        Debug.Log ("Stop "+a+" going to "+pen+". Num open pens? "+m_openPens.Count);
-
-        AnimalPen closestPen = null;
-        if (m_openPens.Count > 0) {
-          float closestDist = float.PositiveInfinity;
-          foreach (AnimalPen p in m_openPens) {
-            if (a.Kind != p.TargetKind) continue;
-            float dist = Vector3.Distance(a.transform.position, p.transform.position);
-            if (dist < closestDist) {
-              closestDist = dist;
-              closestPen = p;
-            }
-          }
-        }
-        if (closestPen != null) a.BeginMovingTowardsPen(closestPen);
-        else a.BeginIdle();
-      }
+      a.CheckForTarget();
     }
   }
 
@@ -208,7 +162,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   
   void Update()
   {
-    //RefreshHappiness();
+    RefreshHappiness();
     if (CreatureCountLabel != null) CreatureCountLabel.text = "Creatures: "+m_animals.Count;
   }
 }

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Animal : MonoBehaviour {
@@ -76,13 +76,13 @@ public class Animal : MonoBehaviour {
       idle.PauseWandering();
     }
     m_dragging = false;
+    CheckForTarget();
 	}
 
   public void BeginIdle()
   {
-    Debug.Log (this+" begin idle");
-    Target = null;
-    m_currentState = new IdleState().Initialize(this);
+    //m_currentState = new IdleState().Initialize(this);
+    CheckForTarget();
   }
 
   public void OnEnterPen(AnimalPen pen)
@@ -146,9 +146,9 @@ public class Animal : MonoBehaviour {
     }
 
     //HungerForMoreFood();
-
+    Happy = (InPen == null || InPen.Satisfied);
     if (AngryTexture != null) {
-      AngryTexture.gameObject.SetActive( InPen != null && !InPen.Satisfied );
+      AngryTexture.gameObject.SetActive( !Happy );
     }
   }
 
@@ -156,6 +156,44 @@ public class Animal : MonoBehaviour {
     IdleState idle = m_currentState as IdleState;
     if (idle != null) {
       idle.WanderAwayFrom( collision.collider.transform.position );
+    }
+  }
+
+  public void CheckForTarget() {
+    // Switch to the closest point of interest, or Idle if there's not one.
+    if (CurrentState is PennedState) return; // can't be interrupted
+
+    // We'll be doing things a little hackily in order to check for both food and open pens
+    // Ideally food and pen would both extend "PointOfInterest" or whatever...
+    // and TowardsFoodState and TowardsPenState would be combined
+    List<Transform> targets = AnimalManager.Instance.Foods.ConvertAll(x => x.transform);
+    targets.AddRange( AnimalManager.Instance.OpenPens.ConvertAll(x => x.transform) );
+
+    float closestDist = float.PositiveInfinity;
+    Transform closestTarget = null;
+   
+    foreach (Transform target in targets) {
+      Food food = target.GetComponent<Food>();
+      AnimalPen pen = target.GetComponent<AnimalPen>();
+      if ((food != null && food.Kind != Kind) || (pen != null && pen.TargetKind != Kind)) continue;
+
+      float dist = Vector3.Distance(transform.position, target.position);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestTarget = target;
+      }
+    }
+
+    Debug.Log (this+" closest target: "+closestTarget+" Idling? "+(CurrentState is IdleState));
+
+    if (closestTarget != null) {
+      Food food = closestTarget.GetComponent<Food>();
+      AnimalPen pen = closestTarget.GetComponent<AnimalPen>();
+      if (food != null) m_currentState = new TowardsFoodState().Initialize(this, food);
+      else if (pen != null) m_currentState = new TowardsPenState().Initialize(this, pen);
+    } else {
+      // start idling... or continue idling
+      if (!(CurrentState is IdleState)) m_currentState = new IdleState().Initialize(this);
     }
   }
 }

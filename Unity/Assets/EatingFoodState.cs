@@ -21,6 +21,6 @@ public class EatingFoodState : AnimalBehaviorState
 
   override protected void update()
   {
-    TargetFood.Bite();
+    if (TargetFood != null) TargetFood.Bite();
   }
 }
