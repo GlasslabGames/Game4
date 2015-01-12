@@ -184,7 +184,7 @@ public class Animal : MonoBehaviour {
       }
     }
 
-    Debug.Log (this+" closest target: "+closestTarget+" Idling? "+(CurrentState is IdleState));
+    //Debug.Log (this+" closest target: "+closestTarget+" Idling? "+(CurrentState is IdleState));
 
     if (closestTarget != null) {
       Food food = closestTarget.GetComponent<Food>();
