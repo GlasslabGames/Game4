@@ -106,4 +106,15 @@ public class CrateHandle : MonoBehaviour {
 
 		if (newSize > -1) SetSize(newSize);
 	}
+
+  public bool IsOnPen(AnimalPen pen, Vector3 atPosition) {
+    if (pen == m_crate.LeftPen && (this == m_crate.LeftHandle || this == m_crate.CenterHandle)) return true;
+    else if (pen == m_crate.RightPen && (this == m_crate.RightHandle || this == m_crate.CenterHandle)) return true;
+    else if (this == m_crate.TopHandle || this == m_crate.BottomHandle) {
+      Vector3 center = m_crate.CenterHandle.transform.position;
+      if (pen == m_crate.LeftPen && atPosition.x <= center.x) return true;
+      else if (pen == m_crate.RightPen && atPosition.x >= center.x) return true;
+      else return false;
+    } else return false;
+  }
 }

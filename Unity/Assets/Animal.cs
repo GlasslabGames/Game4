@@ -29,6 +29,8 @@ public class Animal : MonoBehaviour {
   public bool TriedToDropInLockedPen;
   private Vector3 m_outOfPenPosition;
 
+  private bool m_dragging;
+
 
   void Awake()
   {
@@ -61,6 +63,7 @@ public class Animal : MonoBehaviour {
     } else {
       m_outOfPenPosition = transform.position;
     }
+    m_dragging = true;
   }
 
 	private void onDropped(GLDragEventArgs args) {
@@ -72,6 +75,7 @@ public class Animal : MonoBehaviour {
     if (idle != null) {
       idle.PauseWandering();
     }
+    m_dragging = false;
 	}
 
   public void BeginIdle()
@@ -107,9 +111,11 @@ public class Animal : MonoBehaviour {
     m_currentState = new EatingFoodState().Initialize(this, food);
   }
 
+  /*
   public void EnterPen(AnimalPen pen) {
-    // TODO
+    pen.AddAnimal(this);
   }
+  */
 
   public void SetColor(Color c, bool change = false) {
     if (change) {
@@ -134,7 +140,7 @@ public class Animal : MonoBehaviour {
 
   void Update()
   {
-    if (m_currentState != null)
+    if (m_currentState != null && !m_dragging)
     {
       m_currentState.Do();
     }
