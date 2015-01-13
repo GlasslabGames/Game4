@@ -9,20 +9,21 @@ public class PrototypeLevelManager : MonoBehaviour {
 	void Awake() {
     // Resize and add creatures to the happy crates
 		int randHeight1 = UnityEngine.Random.Range(2, 5);
-		int randHeight2 = UnityEngine.Random.Range(2, 5);
+		/*int randHeight2 = UnityEngine.Random.Range(2, 5);
 		while (randHeight1 == randHeight2) { // technically this could run infinitely but it won't.
 			randHeight2 = UnityEngine.Random.Range(2, 5);
 		}
+  */  
 
-		Debug.Log ("Random height 1: "+randHeight1+" Random height 2: "+randHeight2);
+		//Debug.Log ("Random height 1: "+randHeight1+" Random height 2: "+randHeight2);
 
-		HappyCrate1.Height = randHeight1;
-		HappyCrate1.LeftPen.InitialAnimalCounts = new int[] {randHeight1 * HappyCrate1.LeftWidth, 0};
-		HappyCrate1.RightPen.InitialAnimalCounts = new int[] {0, randHeight1 * HappyCrate1.RightWidth};
+		HappyCrate1.Height = 1;
+		HappyCrate1.LeftPen.InitialAnimalCounts = new int[] {1 * HappyCrate1.LeftWidth, 0};
+		HappyCrate1.RightPen.InitialAnimalCounts = new int[] {0, 1 * HappyCrate1.RightWidth};
 
-		HappyCrate2.Height = randHeight2;
-		HappyCrate2.LeftPen.InitialAnimalCounts = new int[] {randHeight2 * HappyCrate2.LeftWidth, 0};
-		HappyCrate2.RightPen.InitialAnimalCounts = new int[] {0, randHeight2 * HappyCrate2.RightWidth};
+		HappyCrate2.Height = randHeight1;
+		HappyCrate2.LeftPen.InitialAnimalCounts = new int[] {randHeight1 * HappyCrate2.LeftWidth, 0};
+		HappyCrate2.RightPen.InitialAnimalCounts = new int[] {0, randHeight1 * HappyCrate2.RightWidth};
 
     // Add creatures to the sad crate
     int randCount = UnityEngine.Random.Range (1, 4);

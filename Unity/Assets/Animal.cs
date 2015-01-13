@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Animal : MonoBehaviour {
@@ -16,6 +16,7 @@ public class Animal : MonoBehaviour {
   public bool Happy;
 
   private AnimalBehaviorState m_currentState; // hacky but we're only using Idle now anyway
+  public AnimalBehaviorState CurrentState { get { return m_currentState; } }
 
   private float m_idleTime;
 
@@ -27,6 +28,8 @@ public class Animal : MonoBehaviour {
   public AnimalPen InPen;
   public bool TriedToDropInLockedPen;
   private Vector3 m_outOfPenPosition;
+
+  private bool m_dragging;
 
 
   void Awake()
@@ -60,9 +63,11 @@ public class Animal : MonoBehaviour {
     } else {
       m_outOfPenPosition = transform.position;
     }
+    m_dragging = true;
   }
 
 	private void onDropped(GLDragEventArgs args) {
+    Debug.Log ("Dropped "+this+" with state "+CurrentState);
     if (TriedToDropInLockedPen) {
       transform.position = m_outOfPenPosition; // TODO
       TriedToDropInLockedPen = false;
@@ -71,20 +76,22 @@ public class Animal : MonoBehaviour {
     if (idle != null) {
       idle.PauseWandering();
     }
+    m_dragging = false;
+    CheckForTarget();
 	}
 
   public void BeginIdle()
   {
-    Target = null;
     m_currentState = new IdleState().Initialize(this);
+    CheckForTarget();
   }
 
   public void OnEnterPen(AnimalPen pen)
   {
     InPen = pen;
     if (pen == null) {
-      m_currentState = new IdleState().Initialize(this);
       transform.parent = AnimalManager.Instance.AnimalParent;
+      BeginIdle();
     } else {
       GetComponent<GLDragDropItem>().enabled = !pen.Locked;
       if (pen.AnimalGrid != null) {
@@ -92,6 +99,24 @@ public class Animal : MonoBehaviour {
       }
     }
   }
+
+  public void BeginMovingTowardsFood(Food food) {
+    m_currentState = new TowardsFoodState().Initialize(this, food);
+  }
+
+  public void BeginMovingTowardsPen(AnimalPen pen) {
+    m_currentState = new TowardsPenState().Initialize(this, pen);
+  }
+
+  public void StartEating(Food food) {
+    m_currentState = new EatingFoodState().Initialize(this, food);
+  }
+
+  /*
+  public void EnterPen(AnimalPen pen) {
+    pen.AddAnimal(this);
+  }
+  */
 
   public void SetColor(Color c, bool change = false) {
     if (change) {
@@ -116,15 +141,15 @@ public class Animal : MonoBehaviour {
 
   void Update()
   {
-    if (m_currentState != null)
+    if (m_currentState != null && !m_dragging)
     {
       m_currentState.Do();
     }
 
     //HungerForMoreFood();
-
+    Happy = (InPen == null || InPen.Satisfied);
     if (AngryTexture != null) {
-      AngryTexture.gameObject.SetActive( InPen != null && !InPen.Satisfied );
+      AngryTexture.gameObject.SetActive( !Happy );
     }
   }
 
@@ -132,6 +157,44 @@ public class Animal : MonoBehaviour {
     IdleState idle = m_currentState as IdleState;
     if (idle != null) {
       idle.WanderAwayFrom( collision.collider.transform.position );
+    }
+  }
+
+  public void CheckForTarget() {
+    // Switch to the closest point of interest, or Idle if there's not one.
+    if (CurrentState is PennedState) return; // can't be interrupted
+
+    // We'll be doing things a little hackily in order to check for both food and open pens
+    // Ideally food and pen would both extend "PointOfInterest" or whatever...
+    // and TowardsFoodState and TowardsPenState would be combined
+    List<Transform> targets = AnimalManager.Instance.Foods.ConvertAll(x => x.transform);
+    targets.AddRange( AnimalManager.Instance.OpenPens.ConvertAll(x => x.transform) );
+
+    float closestDist = float.PositiveInfinity;
+    Transform closestTarget = null;
+   
+    foreach (Transform target in targets) {
+      Food food = target.GetComponent<Food>();
+      AnimalPen pen = target.GetComponent<AnimalPen>();
+      if ((food != null && food.Kind != Kind) || (pen != null && pen.TargetKind != Kind)) continue;
+
+      float dist = Vector3.Distance(transform.position, target.position);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestTarget = target;
+      }
+    }
+
+    //Debug.Log (this+" closest target: "+closestTarget+" Idling? "+(CurrentState is IdleState));
+
+    if (closestTarget != null) {
+      Food food = closestTarget.GetComponent<Food>();
+      AnimalPen pen = closestTarget.GetComponent<AnimalPen>();
+      if (food != null) m_currentState = new TowardsFoodState().Initialize(this, food);
+      else if (pen != null) m_currentState = new TowardsPenState().Initialize(this, pen);
+    } else {
+      // start idling... or continue idling
+      if (!(CurrentState is IdleState)) m_currentState = new IdleState().Initialize(this);
     }
   }
 }
