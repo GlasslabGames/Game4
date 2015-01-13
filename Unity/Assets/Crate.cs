@@ -56,6 +56,7 @@ public class Crate : MonoBehaviour {
         grids[i].transform.localPosition = new Vector3(side * 0.5f * TileSize, -0.5f * TileSize, 0);
         grids[i].cellWidth = TileSize;
         grids[i].cellHeight = TileSize;
+        grids[i].Reposition();
       }
     }
 	}
@@ -136,26 +137,29 @@ public class Crate : MonoBehaviour {
 		BottomHandle.SetPosition(-LeftWidth * TileSize, -Height * TileSize);
     AdjustToHandles();
 
-    // Fill the dots that show up on the grid
-    FillInGrid(LeftSpotGrid, LeftWidth);
-    FillInGrid(RightSpotGrid, RightWidth);
+    if (Application.isPlaying) {
+      // Fill the dots that show up on the grid
+      FillInGrid(LeftSpotGrid, LeftWidth);
+      FillInGrid(RightSpotGrid, RightWidth);
 
-    if (LeftPen.AnimalGrid != null) {
-      LeftPen.AnimalGrid.maxPerLine = LeftWidth;
+      if (LeftPen.AnimalGrid != null) {
+        LeftPen.AnimalGrid.maxPerLine = LeftWidth;
+      }
+      if (RightPen.AnimalGrid != null) {
+        RightPen.AnimalGrid.maxPerLine = RightWidth;
+      }
+
+      LeftPen.MaxCount = LeftWidth * Height;
+      RightPen.MaxCount = RightWidth * Height;
+
+
+      // Fix which creatures are in or out of the crate
+      LeftPen.UpdateCreatures();
+      RightPen.UpdateCreatures();
+       
+      RefreshText();
+      m_changed = true;
     }
-    if (RightPen.AnimalGrid != null) {
-      RightPen.AnimalGrid.maxPerLine = RightWidth;
-    }
-
-    LeftPen.MaxCount = LeftWidth * Height;
-    RightPen.MaxCount = RightWidth * Height;
-
-    // Fix which creatures are in or out of the crate
-    LeftPen.UpdateCreatures();
-    RightPen.UpdateCreatures();
-     
-    RefreshText();
-    m_changed = true;
 	}
 
   void FillInGrid(GLGrid grid, int width) {

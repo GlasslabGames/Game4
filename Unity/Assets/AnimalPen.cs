@@ -73,10 +73,8 @@ public class AnimalPen : MonoBehaviour {
           AnimalGrid.AddChild(a.transform);
           AnimalGrid.Reposition();
           // hacks to fix the angry face from not rendering in the correct position
-          foreach (Transform child in AnimalGrid.transform) {
-            transform.gameObject.SetActive(false);
-            transform.gameObject.SetActive(true);
-          }
+          a.gameObject.SetActive(false);
+          a.gameObject.SetActive(true);
         });
       }
       if (!skipRecount) RefreshCount();

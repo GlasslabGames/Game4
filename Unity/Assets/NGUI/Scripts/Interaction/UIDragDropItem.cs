@@ -206,7 +206,6 @@ public class UIDragDropItem : MonoBehaviour
 
 	protected virtual void OnDragDropStart ()
 	{
-    Debug.Log(this+" dragStart");
 		// Automatically disable the scroll view
 		if (mDragScrollView != null) mDragScrollView.enabled = false;
 
@@ -257,7 +256,6 @@ public class UIDragDropItem : MonoBehaviour
 
 	protected virtual void OnDragDropRelease (GameObject surface)
 	{
-    Debug.Log(this+" dragRelease");
 		if (!cloneOnDrag || !destroyDroppedClone)
 		{
 			mTouchID = int.MinValue;

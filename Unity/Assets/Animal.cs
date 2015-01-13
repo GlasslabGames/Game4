@@ -67,6 +67,7 @@ public class Animal : MonoBehaviour {
   }
 
 	private void onDropped(GLDragEventArgs args) {
+    Debug.Log ("Dropped "+this+" with state "+CurrentState);
     if (TriedToDropInLockedPen) {
       transform.position = m_outOfPenPosition; // TODO
       TriedToDropInLockedPen = false;
@@ -81,7 +82,7 @@ public class Animal : MonoBehaviour {
 
   public void BeginIdle()
   {
-    //m_currentState = new IdleState().Initialize(this);
+    m_currentState = new IdleState().Initialize(this);
     CheckForTarget();
   }
 
@@ -89,8 +90,8 @@ public class Animal : MonoBehaviour {
   {
     InPen = pen;
     if (pen == null) {
-      m_currentState = new IdleState().Initialize(this);
       transform.parent = AnimalManager.Instance.AnimalParent;
+      BeginIdle();
     } else {
       GetComponent<GLDragDropItem>().enabled = !pen.Locked;
       if (pen.AnimalGrid != null) {
