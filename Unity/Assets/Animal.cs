@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Animal : MonoBehaviour {
@@ -15,7 +15,8 @@ public class Animal : MonoBehaviour {
 
   public bool Happy;
 
-  private Idle m_currentState; // hacky but we're only using Idle now anyway
+  private AnimalBehaviorState m_currentState; // hacky but we're only using Idle now anyway
+  public AnimalBehaviorState CurrentState { get { return m_currentState; } }
 
   private float m_idleTime;
 
@@ -28,11 +29,8 @@ public class Animal : MonoBehaviour {
   public bool TriedToDropInLockedPen;
   private Vector3 m_outOfPenPosition;
 
-  public Vector3 TargetPos {
-    set {
-      m_currentState.m_targetPosition = value;
-    }
-  }
+  private bool m_dragging;
+
 
   void Awake()
   {
@@ -49,7 +47,8 @@ public class Animal : MonoBehaviour {
   private void onItemDropped(GLDragEventArgs args)
   {
     Debug.Log(args.DragObject.name);
-    if (args.DragObject.GetComponent<FoodCrate>() != null) {
+    if (args.DragObject.GetComponent<Potion>() != null && InPen == null) { // don't split if we're in a pen
+      Debug.Log ("Dropped potion");
       AnimalManager.Instance.Split(this, 3);
       GameObject.Destroy(args.DragObject.gameObject);
     } else if (InPen != null && args.DragObject.GetComponent<Animal>() != null) {
@@ -57,28 +56,67 @@ public class Animal : MonoBehaviour {
     }
   }
 
-  // onItemTaken doesn't work well so we're doing this here ¯\_(ツ)_/¯
+  // onItemTaken doesn't work so we're doing this here ¯\_(ツ)_/¯
   private void onDragged(GLDragEventArgs args) {
     if (InPen != null) {
       InPen.RemoveAnimal(this);
     } else {
       m_outOfPenPosition = transform.position;
     }
+    m_dragging = true;
   }
 
 	private void onDropped(GLDragEventArgs args) {
-		m_currentState.PauseWandering();
+    Debug.Log ("Dropped "+this+" with state "+CurrentState);
     if (TriedToDropInLockedPen) {
       transform.position = m_outOfPenPosition; // TODO
       TriedToDropInLockedPen = false;
     }
+    IdleState idle = m_currentState as IdleState;
+    if (idle != null) {
+      idle.PauseWandering();
+    }
+    m_dragging = false;
+    CheckForTarget();
 	}
 
   public void BeginIdle()
   {
-    Target = null;
-    m_currentState = new Idle().Initialize(this) as Idle;
+    m_currentState = new IdleState().Initialize(this);
+    CheckForTarget();
   }
+
+  public void OnEnterPen(AnimalPen pen)
+  {
+    InPen = pen;
+    if (pen == null) {
+      transform.parent = AnimalManager.Instance.AnimalParent;
+      BeginIdle();
+    } else {
+      GetComponent<GLDragDropItem>().enabled = !pen.Locked;
+      if (pen.AnimalGrid != null) {
+        m_currentState = new PennedState().Initialize(this);
+      }
+    }
+  }
+
+  public void BeginMovingTowardsFood(Food food) {
+    m_currentState = new TowardsFoodState().Initialize(this, food);
+  }
+
+  public void BeginMovingTowardsPen(AnimalPen pen) {
+    m_currentState = new TowardsPenState().Initialize(this, pen);
+  }
+
+  public void StartEating(Food food) {
+    m_currentState = new EatingFoodState().Initialize(this, food);
+  }
+
+  /*
+  public void EnterPen(AnimalPen pen) {
+    pen.AddAnimal(this);
+  }
+  */
 
   public void SetColor(Color c, bool change = false) {
     if (change) {
@@ -91,7 +129,7 @@ public class Animal : MonoBehaviour {
     BodyTexture.color = c;
 	  if (AngryTexture != null) AngryTexture.color = c;
   }
-
+  /*
   public void HungerForMoreFood()
   {
     if (DesiredFood == FoodType.NONE)
@@ -99,25 +137,64 @@ public class Animal : MonoBehaviour {
       DesiredFood = (FoodType) UnityEngine.Random.Range(1f, (float)(FoodType.TOTAL_TYPES-1));
     }
   }
+  */
 
   void Update()
   {
-    if (m_currentState != null)
+    if (m_currentState != null && !m_dragging)
     {
       m_currentState.Do();
     }
 
-    HungerForMoreFood();
-
+    //HungerForMoreFood();
+    Happy = (InPen == null || InPen.Satisfied);
     if (AngryTexture != null) {
-      AngryTexture.gameObject.SetActive( InPen != null && !InPen.Satisfied );
+      AngryTexture.gameObject.SetActive( !Happy );
     }
   }
 
   void OnCollisionEnter(Collision collision) {
-    Idle idle = m_currentState as Idle;
+    IdleState idle = m_currentState as IdleState;
     if (idle != null) {
       idle.WanderAwayFrom( collision.collider.transform.position );
+    }
+  }
+
+  public void CheckForTarget() {
+    // Switch to the closest point of interest, or Idle if there's not one.
+    if (CurrentState is PennedState) return; // can't be interrupted
+
+    // We'll be doing things a little hackily in order to check for both food and open pens
+    // Ideally food and pen would both extend "PointOfInterest" or whatever...
+    // and TowardsFoodState and TowardsPenState would be combined
+    List<Transform> targets = AnimalManager.Instance.Foods.ConvertAll(x => x.transform);
+    targets.AddRange( AnimalManager.Instance.OpenPens.ConvertAll(x => x.transform) );
+
+    float closestDist = float.PositiveInfinity;
+    Transform closestTarget = null;
+   
+    foreach (Transform target in targets) {
+      Food food = target.GetComponent<Food>();
+      AnimalPen pen = target.GetComponent<AnimalPen>();
+      if ((food != null && food.Kind != Kind) || (pen != null && pen.TargetKind != Kind)) continue;
+
+      float dist = Vector3.Distance(transform.position, target.position);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestTarget = target;
+      }
+    }
+
+    //Debug.Log (this+" closest target: "+closestTarget+" Idling? "+(CurrentState is IdleState));
+
+    if (closestTarget != null) {
+      Food food = closestTarget.GetComponent<Food>();
+      AnimalPen pen = closestTarget.GetComponent<AnimalPen>();
+      if (food != null) m_currentState = new TowardsFoodState().Initialize(this, food);
+      else if (pen != null) m_currentState = new TowardsPenState().Initialize(this, pen);
+    } else {
+      // start idling... or continue idling
+      if (!(CurrentState is IdleState)) m_currentState = new IdleState().Initialize(this);
     }
   }
 }

@@ -204,7 +204,7 @@ Transform:
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .300000012, y: .300000012, z: 1}
+  m_LocalScale: {x: .400000006, y: .400000006, z: 1}
   m_Children:
   - {fileID: 400002}
   - {fileID: 400018}
@@ -283,7 +283,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100012}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -199.651688, y: 95.5687637, z: 0}
+  m_LocalPosition: {x: -20.8654652, y: -84.6664963, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
@@ -628,7 +628,6 @@ MonoBehaviour:
   Target: {fileID: 0}
   DesiredFood: 0
   Happy: 0
-  TargetPoint: {x: 0, y: 0}
   BodyTexture: {fileID: 11400000}
   AngryTexture: {fileID: 11400026}
   InPen: {fileID: 0}
@@ -661,6 +660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   restriction: 0
   cloneOnDrag: 0
+  destroyDroppedClone: 1
   pressAndHoldDelay: 1
   ApplyRestrictionForScrollViewOnly: 0
   ReturnToOriginalParent: 0
@@ -980,7 +980,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 15
+  m_Radius: 17
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:

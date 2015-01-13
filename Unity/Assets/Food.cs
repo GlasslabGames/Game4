@@ -1,12 +1,35 @@
-//
-// Food.cs
-// Author: Jerry Fu <jerry@glasslabgames.org>
-// 2014 - 12 - 10
-using System;
+﻿using UnityEngine;
+using System.Collections;
 
-[Serializable]
-public class Food
-{
-  public FoodType Type;
-  public int Amount;
+public class Food : MonoBehaviour {
+	public Animal.Kinds Kind;
+	private float Health = 1;
+  private UITexture m_texture;
+  private float m_startSize;
+
+  void Awake() {
+    m_texture = GetComponent<UITexture>();
+    m_startSize = m_texture.width;
+  }
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+
+  public void Bite() {
+    Health -= 0.002f;
+    int size = (int) Mathf.Lerp(5, m_startSize, Health);
+    m_texture.width = size;
+    m_texture.height = size;
+    if (Health <= 0) {
+      AnimalManager.Instance.FoodEaten(this);
+      Destroy(this.gameObject);
+    }
+  }
 }

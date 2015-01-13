@@ -9,22 +9,34 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   public Transform AnimalParent;
   public int[] AnimalCounts;
   public Color[] AnimalColors;
-  public Transform FillBarTransform;
+  public UITexture FillBarTexture;
   private float m_totalHappiness;
 
   private List<Animal> m_animals;
   private List<AnimalPen> m_pens;
+  private List<Food> m_foods;
+  public List<Food> Foods {
+    get { return m_foods; }
+    set { m_foods = value; }
+  }
+  private List<AnimalPen> m_openPens;
+  public List<AnimalPen> OpenPens {
+    get { return m_openPens; }
+    set { m_openPens = value; }
+  }
 
   public FloatText FloatTextEffect;
   public FloatText FinalFloatTextEffect;
   public UILabel CreatureCountLabel;
-
+ 
   override protected void Awake()
   {
     base.Awake();
 
     m_pens = Utility.FindInstancesInScene<AnimalPen>();
     m_animals = new List<Animal>();
+    m_foods = new List<Food>();
+    m_openPens = new List<AnimalPen>();
 
     // Either we've added a collider to show where the creatuers should be placed, or just use the whole screen excluding pens
     Bounds b;
@@ -34,7 +46,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     // Add more animals to match the target number
     for (int i = 0; i < AnimalCounts.Length; i++) {
       for (int j = 0; j < AnimalCounts[i]; j++) {
-        Debug.Log ("Creating animal "+i+", "+j);
+        //Debug.Log ("Creating animal "+i+", "+j);
         CreateAnimal(i, b, (collider == null)); // if we haven't specified a collider, automatically avoid pens instead
       }
     }
@@ -78,7 +90,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     }
 
     m_totalHappiness /= totalAnimals;
-    FillBarTransform.localScale = new Vector3(m_totalHappiness, 1, 1);
+    FillBarTexture.fillAmount = m_totalHappiness;
   }
 
   // Splits a single animal a into #num animals
@@ -87,7 +99,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     for (int i = 1; i < num; i++) {
       Transform t = Utility.InstantiateAsChild(a.gameObject, a.transform.parent);
       Animal b = t.GetComponent<Animal>();
-      b.SetColor(a.BodyTexture.color, true);
+      b.SetColor(a.BodyTexture.color);
       m_animals.Add(b);
       b.gameObject.name = "Animal"+m_animals.Count;
       b.collider.enabled = false;
@@ -97,7 +109,48 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
     FloatTextEffect.Show("1 : "+num, a.transform.position);
 
     if (m_animals.Count >= 9) {
-      Utility.Delay ( DisplayResult, 1.25f );
+      //Utility.Delay ( DisplayResult, 1.25f );
+    }
+  }
+
+  public void DropFood(Food food) {
+    food.transform.parent = transform;
+    m_foods.Add(food);
+
+    // for each animal, consider moving it towards this food
+    foreach (Animal a in m_animals) {
+      a.CheckForTarget();
+    }
+  }
+
+  public void FoodEaten(Food food) {
+    m_foods.Remove(food);
+    Debug.Log ("Food eaten. Foods: "+m_foods.Count+" Open pens: "+m_openPens.Count);
+    // foreach animal that was targetting this food, either move it towards the next closest or switch it back to idle
+    foreach (Animal a in m_animals) {
+      a.CheckForTarget();
+    }
+  }
+
+  public void AttractAnimalsToPen(AnimalPen pen) {
+    if (m_openPens.Contains(pen)) return; // no need
+    m_openPens.Add(pen);
+    Debug.Log ("Start attracting animals to "+pen);
+
+    // for each animal, consider moving it towards this pen
+    foreach (Animal a in m_animals) {
+      a.CheckForTarget();
+    }
+    
+  }
+
+  public void StopAttractingAnimals(AnimalPen pen) {
+    if (!m_openPens.Contains(pen)) return; // no need
+    m_openPens.Remove(pen);
+    Debug.Log ("Stop attracting animals to "+pen);
+    // foreach animal that was targetting this food, either move it towards the next closest or switch it back to idle
+    foreach (Animal a in m_animals) {
+      a.CheckForTarget();
     }
   }
 
@@ -109,7 +162,7 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   
   void Update()
   {
-    //RefreshHappiness();
+    RefreshHappiness();
     if (CreatureCountLabel != null) CreatureCountLabel.text = "Creatures: "+m_animals.Count;
   }
 }

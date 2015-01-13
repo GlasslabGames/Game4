@@ -15,6 +15,13 @@ public class AnimalPen : MonoBehaviour {
   public bool WinWhenSatisfied;
   public int[] InitialAnimalCounts;
 
+  public Crate ParentCrate;
+  public bool AcceptOnlyOneKind;
+  public Animal.Kinds TargetKind;
+  public int MaxCount;
+
+  public GLGrid AnimalGrid;
+
   public List<Animal> Animals {
     get { return m_animals; }
     set { m_animals = value; }
@@ -26,10 +33,13 @@ public class AnimalPen : MonoBehaviour {
 
     m_label = GetComponentInChildren<UILabel>();
     m_targetQuotient = (float) TargetRatioTerm1 / TargetRatioTerm2;
-    Debug.Log (this+" targetQuotient: "+m_targetQuotient);
 	}
 
   void Start() {
+    Utility.NextFrame(AddAnimals); // delay one frame in case there's a crate that will resize us
+  }
+
+  public void AddAnimals() {
     Animal a;
     Bounds b = collider.bounds;
     b.size = new Vector3( b.size.x - 0.2f, b.size.y - 0.2f, b.size.z );
@@ -43,46 +53,100 @@ public class AnimalPen : MonoBehaviour {
 
   public void onItemDropped(GLDragEventArgs args)
   {
-    if (args.DragObject.GetComponent<Animal>() != null) {
-      if (!Locked) {
-        AddAnimal( args.DragObject.GetComponent<Animal>() );
-        args.Consume();
+    Animal a = args.DragObject.GetComponent<Animal>();
+    if (a != null) {
+      if (Locked || (MaxCount > 0 && (Animals.Count >= MaxCount)) || (AcceptOnlyOneKind && TargetKind != a.Kind)) {
+        a.TriedToDropInLockedPen = true;
       } else {
-        args.DragObject.GetComponent<Animal>().TriedToDropInLockedPen = true;
+        AddAnimal( a );
+        args.Consume();
       }
     }
   }
 
-  public void AddAnimal(Animal a) {
-    m_animals.Add(a);
-    a.InPen = this;
-    a.GetComponent<GLDragDropItem>().enabled = !Locked;
-    RefreshCount();
+  public void AddAnimal(Animal a, bool skipRecount = false) {
+    if (!m_animals.Contains(a)) {
+      m_animals.Add(a);
+      a.OnEnterPen(this);
+      if (AnimalGrid != null) {
+        Utility.NextFrame( delegate() {
+          AnimalGrid.AddChild(a.transform);
+          AnimalGrid.Reposition();
+          // hacks to fix the angry face from not rendering in the correct position
+          a.gameObject.SetActive(false);
+          a.gameObject.SetActive(true);
+        });
+      }
+      if (!skipRecount) RefreshCount();
+    }
   }
 	
-  public void RemoveAnimal(Animal a) {
-    m_animals.Remove(a);
-    a.InPen = null;
-    RefreshCount();
+  public void RemoveAnimal(Animal a, bool skipRecount = false) {
+    if (a.InPen == this) {
+      a.OnEnterPen(null);
+      m_animals.Remove(a);
+      if (!skipRecount) RefreshCount();
+    }
   }
 
   public void RefreshCount(bool finalCount = false) {
+    int count0 = 0;
     int count1 = 0;
-    int count2 = 0;
 
     foreach (Animal a in m_animals) {
-      if (a.Kind == (Animal.Kinds) 0) count1++;
-      else if (a.Kind == (Animal.Kinds) 1) count2++;
+      if (a.Kind == (Animal.Kinds) 0) count0++;
+      else if (a.Kind == (Animal.Kinds) 1) count1++;
     }
-    
-    m_label.text = count1 + " : " + count2;
 
-    float quotient = (float) count1 / count2;
+    if (m_label != null) {
+      m_label.text = count0 + " : " + count1;
+    }
+
+    if (ParentCrate != null) {
+      ParentCrate.UpdateCreatureCount(TargetKind, count0 + count1);
+    }
+
+    float quotient = (float) count0 / count1;
     Satisfied = ( quotient == m_targetQuotient );
 
     // check for win
     if (Satisfied && WinWhenSatisfied) AnimalManager.Instance.DisplayResult();
     else if (finalCount) AnimalManager.Instance.DisplayResult( Satisfied ); // force a result whether we won or lost
+
+    // if there's a grid (indicating that we want to be totally filled) and we aren't filled, attract creatures
+    if (AnimalGrid != null) {
+      if (m_animals.Count < MaxCount) {
+        AnimalManager.Instance.AttractAnimalsToPen(this);
+      } else {
+        AnimalManager.Instance.StopAttractingAnimals(this);
+      }
+    }
+  }
+
+  // Force each creature to be in or out depending on its position - good for cleaning up after we resize a pen/crate
+  public void UpdateCreatures() {
+    // This is so inefficient... but it's just a protoype anyway ¯\_(ツ)_/¯
+    int count = 0;
+    foreach (Animal a in Utility.FindInstancesInScene<Animal>()) {
+      if (!a.gameObject.activeInHierarchy) continue; // if the animal is disabled, who cares
+      if (collider.bounds.Contains(a.transform.position)) { // check if the animal is currently in the pen or not
+        //Debug.Log (a+" is in "+this);
+        if (count >= MaxCount || (AcceptOnlyOneKind && TargetKind != a.Kind)) {
+          RemoveAnimal(a, true);
+          // We need to move the animal out of the pen, so just pop it out the bottom
+          Vector3 pos = a.transform.position;
+          pos.y = collider.bounds.min.y - 0.1f;
+          a.transform.position = pos;
+        } else { // welcome to the pen!
+          AddAnimal(a, true);
+          count++;
+        }
+      } else { // it's not in the pen, so ensure that we aren't counting it as in the pen
+        RemoveAnimal(a, true);
+      }
+    }
+
+    RefreshCount(); // do a single recount at the end
   }
 
 }
