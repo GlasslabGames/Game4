@@ -12,16 +12,6 @@ public class Food : MonoBehaviour {
     m_startSize = m_texture.width;
   }
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
   public void Bite() {
     Health -= 0.002f;
     int size = (int) Mathf.Lerp(5, m_startSize, Health);
