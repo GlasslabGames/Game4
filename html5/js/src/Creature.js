@@ -20,17 +20,19 @@ GlassLab.CreatureManager.prototype;
  */
 GlassLab.Creature = function(game, typeName)
 {
-    //this.sprite = game.make.isoSprite(0,0, typeName);
-    this.sprite = game.make.sprite(0,0, typeName);
+    this.sprite = game.make.isoSprite(0,0,0, typeName);
+    //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
     this.state = null;
 
     this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
 
     this.sprite.inputEnabled = true;
+
+    // TODO: Input handling should be handled outside this class.
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
-    this.sprite.anchor.x = this.sprite.anchor.y = .5;
+    this.sprite.anchor.setTo(0.5, 0.8);
 
     this.sprite.animations.add('run');
 
@@ -92,6 +94,7 @@ GlassLab.CreatureStateIdle = function(game, owner)
     GlassLab.CreatureState.call(this, game, owner);
 
     this.targetPosition = new Phaser.Point();
+    this.targetIsoPoint = new Phaser.Plugin.Isometric.Point3();
     this.findDestinationTimer = null;
     this.updateHandler = null;
 };
@@ -126,10 +129,19 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
 GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 {
     this.targetPosition.set(Math.random()*100.0 + 100.0, 0);
-    this.targetPosition.rotate(0,0, ((Math.random() - 0.5) * Math.PI / 2.0 ) + (Math.random() < .5 ? 0 : Math.PI));
-    this.targetPosition.add(this.creature.sprite.x, this.creature.sprite.y);
-    this.targetPosition.x = Math.round(this.targetPosition.x);
-    this.targetPosition.y = Math.round(this.targetPosition.y);
+    this.targetPosition.rotate(0,0, Math.random() * Math.PI * 2);
+    if (Math.random() > 0.5)
+    {
+        this.targetPosition.y = 0;
+    }
+    else
+    {
+        this.targetPosition.x = 0;
+    }
+    this.targetPosition.add(this.creature.sprite.isoX, this.creature.sprite.isoY);
+    this.targetPosition.x = Math.round(this.targetPosition.x / GLOBAL.tileSize) * GLOBAL.tileSize;
+    this.targetPosition.y = Math.round(this.targetPosition.y / GLOBAL.tileSize) * GLOBAL.tileSize;
+    this.targetIsoPoint.setTo(this.targetPosition.x, this.targetPosition.y, 0);
 
     this.findDestinationHandler = null;
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -139,7 +151,7 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 
 GlassLab.CreatureStateIdle.prototype._onUpdate = function()
 {
-    var delta = Phaser.Point.subtract(this.targetPosition, this.creature.sprite.position);
+    var delta = Phaser.Point.subtract(this.targetPosition, this.creature.sprite.isoPosition);
     if (delta.getMagnitudeSq() > 1)
     {
         delta.setMagnitude(1);
@@ -152,12 +164,21 @@ GlassLab.CreatureStateIdle.prototype._onUpdate = function()
         this.creature.sprite.animations.stop(null, true);
         this.findDestinationHandler = this.game.time.events.add(Math.random()*3000 + 2000, this._findNewDestination, this);
     }
+    if (Math.abs(delta.x) > Math.abs(delta.y))
+        delta.y = 0;
+    else delta.x = 0;
 
-    this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (delta.x > 0 ? -1 : 1);
-    Phaser.Point.add(this.creature.sprite.position, delta, delta);
-    this.creature.sprite.position = delta;
+    var debugPoint = this.game.iso.project(delta);
 
-    this.creature.debugAILine.setTo(this.creature.sprite.x, this.creature.sprite.y, this.targetPosition.x, this.targetPosition.y);
+    this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (debugPoint.x > 0 ? -1 : 1);
+    Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
 
-    this.game.debug.geom(this.creature.debugAILine);
+    //this.creature.sprite.position = delta;
+    this.creature.sprite.isoX = delta.x;
+    this.creature.sprite.isoY = delta.y;
+
+    debugPoint = this.game.iso.project(this.targetIsoPoint);
+    this.creature.debugAILine.setTo(this.creature.sprite.x, this.creature.sprite.y, debugPoint.x, debugPoint.y);
+
+    //this.game.debug.geom(this.creature.debugAILine);
 };
