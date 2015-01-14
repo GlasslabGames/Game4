@@ -44,6 +44,11 @@ public class Crate : MonoBehaviour {
   private int m_leftCount;
   private int m_rightCount;
 
+  void Awake() {
+    if (MaxWidth <= 0) MaxWidth = int.MaxValue;
+    if (MaxHeight <= 0) MaxHeight = int.MaxValue;
+  }
+
 	void Start() {
 		RefreshSize();
     m_targetQuotient = (float) TargetRatioTerm1 / TargetRatioTerm2;
@@ -67,19 +72,19 @@ public class Crate : MonoBehaviour {
   }
 
   public void StartResizing() {
-    LeftSpotGrid.gameObject.SetActive(false);
-    RightSpotGrid.gameObject.SetActive(false);
+    if (LeftSpotGrid != null) LeftSpotGrid.gameObject.SetActive(false);
+    if (RightSpotGrid != null) RightSpotGrid.gameObject.SetActive(false);
   }
 
   public void StopResizing() {
-    LeftSpotGrid.gameObject.SetActive(true);
-    RightSpotGrid.gameObject.SetActive(true);
+    if (LeftSpotGrid != null) LeftSpotGrid.gameObject.SetActive(true);
+    if (RightSpotGrid != null) RightSpotGrid.gameObject.SetActive(true);
   }
 
   // if this col would make the crate too large or too small, return an acceptable col
   public int GetValidCol(CrateHandle h, int col) {
-    int leftCol = Mathf.RoundToInt (LeftHandle.transform.localPosition.x / TileSize);
-    int rightCol = Mathf.RoundToInt (RightHandle.transform.localPosition.x / TileSize);
+    int leftCol = LeftHandle.GetCol();// Mathf.RoundToInt (LeftHandle.transform.localPosition.x / TileSize);
+    int rightCol = RightHandle.GetCol (); //Mathf.RoundToInt (RightHandle.transform.localPosition.x / TileSize);
 
     if (h == LeftHandle) {
       return Mathf.Clamp(col, rightCol - MaxWidth, -1); // since the center is at 0, the max row is -1
@@ -92,23 +97,24 @@ public class Crate : MonoBehaviour {
 
   public int GetValidRow(CrateHandle h, int row) {
     if (h == TopHandle) {
-      int bottomRow = Mathf.RoundToInt (BottomHandle.transform.localPosition.y / TileSize);
+      int bottomRow = BottomHandle.GetRow (); //Mathf.RoundToInt (BottomHandle.transform.localPosition.y / TileSize);
       return Mathf.Clamp(row, bottomRow + 1, bottomRow + MaxHeight);
     } else { // BottomHandle
-      int topRow = Mathf.RoundToInt (TopHandle.transform.localPosition.y / TileSize);
+      int topRow = TopHandle.GetRow (); //Mathf.RoundToInt (TopHandle.transform.localPosition.y / TileSize);
       return Mathf.Clamp(row, topRow - MaxHeight, topRow - 1);
     }
   }
 
   // when they drop a handle, update counts
-  public void SetEdge(CrateHandle h) {
+  public virtual void SetEdge(CrateHandle h) {
     if (h == TopHandle || h == BottomHandle) {
-      Height = Mathf.RoundToInt((TopHandle.transform.localPosition.y - BottomHandle.transform.localPosition.y) / TileSize);
+      int ts = (TopHandle.EdgeDirection == CrateHandle.Direction.Horizontal)? TileSize : TileSize / 2; // isometric case
+      Height = Mathf.RoundToInt((TopHandle.transform.localPosition.y - BottomHandle.transform.localPosition.y) / ts);
     } else {
       LeftWidth = Mathf.RoundToInt((CenterHandle.transform.localPosition.x - LeftHandle.transform.localPosition.x) / TileSize);
       RightWidth = Mathf.RoundToInt((RightHandle.transform.localPosition.x - CenterHandle.transform.localPosition.x) / TileSize);
     }
-    Debug.Log ("Left: "+LeftWidth+" Right: "+RightWidth+" Height: "+Height);
+    //Debug.Log ("Left: "+LeftWidth+" Right: "+RightWidth+" Height: "+Height);
     // Now move the whole shape so that we end up centered on the apparent top-center
     transform.position = CenterHandle.transform.position;
     RefreshSize();
@@ -129,7 +135,7 @@ public class Crate : MonoBehaviour {
 
 	// adjusts components to reflect the current width and height. Note that this will move the whole shape...
 	[ContextMenu ("RefreshSize")]
-	public void RefreshSize() {
+	public virtual void RefreshSize() {
 		LeftHandle.SetPosition(-LeftWidth * TileSize, 0);
     RightHandle.SetPosition(RightWidth * TileSize, 0);
 		CenterHandle.SetPosition(0, 0);
@@ -179,7 +185,7 @@ public class Crate : MonoBehaviour {
   }
 
   // Adjust other components to match the currently moving handle. 
-  public void AdjustToHandles() {
+  public virtual void AdjustToHandles(CrateHandle currentHandle = null) {
     int leftX = (int) LeftHandle.transform.localPosition.x;
     int rightX = (int) RightHandle.transform.localPosition.x;
     int topY = (int) TopHandle.transform.localPosition.y;
