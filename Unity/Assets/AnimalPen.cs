@@ -55,6 +55,7 @@ public class AnimalPen : MonoBehaviour {
   {
     Animal a = args.DragObject.GetComponent<Animal>();
     if (a != null) {
+      Debug.Log ("Dropped "+a+" on "+this);
       if (Locked || (MaxCount > 0 && (Animals.Count >= MaxCount)) || (AcceptOnlyOneKind && TargetKind != a.Kind)) {
         a.TriedToDropInLockedPen = true;
       } else {

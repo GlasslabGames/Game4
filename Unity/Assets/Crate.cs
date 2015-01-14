@@ -129,8 +129,8 @@ public class Crate : MonoBehaviour {
   }
 
   private void RefreshText() {
-    LeftLabel.text = m_leftCount.ToString();//+"/"+(LeftWidth*Height).ToString();
-    RightLabel.text = m_rightCount.ToString();//+"/"+(RightWidth*Height).ToString();
+    if (LeftLabel != null) LeftLabel.text = m_leftCount.ToString();//+"/"+(LeftWidth*Height).ToString();
+    if (RightLabel != null) RightLabel.text = m_rightCount.ToString();//+"/"+(RightWidth*Height).ToString();
   }
 
 	// adjusts components to reflect the current width and height. Note that this will move the whole shape...

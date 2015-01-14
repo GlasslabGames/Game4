@@ -25,6 +25,11 @@ public class IsoCrate : Crate {
       );
 
     AdjustToHandles();
+
+		if (Application.isPlaying) {
+      if (LeftPen != null) (LeftPen as IsoPen).Resize();
+      if (RightPen != null) (RightPen as IsoPen).Resize();
+    }
   }
 
   // Adjust other components to match the currently moving handle. 
@@ -37,15 +42,6 @@ public class IsoCrate : Crate {
     Vector3 bottom = BottomHandle.transform.localPosition;
     Vector3 center = CenterHandle.transform.localPosition;
 
-    int topLength = (int) Vector3.Distance(left, right);
-    int leftLength = (int) Vector3.Distance(top, bottom);
-
-    TopHandle.SetSize(topLength);
-    BottomHandle.SetSize(topLength);
-    LeftHandle.SetSize(leftLength);
-    RightHandle.SetSize(leftLength);
-    CenterHandle.SetSize(leftLength);
-
     if (currentHandle == LeftHandle) {
       TopHandle.SetPosition(LeftHandle.transform.localPosition);
       BottomHandle.SetPosition(
@@ -54,8 +50,8 @@ public class IsoCrate : Crate {
         );
     } else if (currentHandle == TopHandle) {
       // TODO... maybe
-      /*LeftHandle.SetPosition( top );
-      CenterHandle.SetPosition(
+      //LeftHandle.SetPosition( top );
+      /*CenterHandle.SetPosition(
         (int) ( top.x + TileSize * LeftWidth ),
         (int) ( top.y + 0.5f * TileSize * LeftWidth )
         );
@@ -65,6 +61,15 @@ public class IsoCrate : Crate {
         );
         */
     }
+
+    int topLength = (int) Vector3.Distance(left, right);
+    int leftLength = (int) Vector3.Distance(top, bottom);
+    
+    TopHandle.SetSize(topLength);
+    BottomHandle.SetSize(topLength);
+    LeftHandle.SetSize(leftLength);
+    RightHandle.SetSize(leftLength);
+    CenterHandle.SetSize(leftLength);
 
     //TopHandle.SetPosition(LeftHandle.transform.localPosition);
 
