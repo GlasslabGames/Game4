@@ -38,7 +38,7 @@ public class TowardsFoodState : AnimalBehaviorState
       }
       
       ownerTransform.position += displacement;
-      if (ownerTransform.position.AlmostEquals(TargetFood.transform.position, 0.01f))
+      if (ownerTransform.position.AlmostEquals(TargetFood.transform.position, 0.02f))
       {
         Debug.Log (this+" start eating!");
         owner.StartEating(TargetFood);

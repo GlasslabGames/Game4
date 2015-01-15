@@ -13,7 +13,8 @@ public class Animal : MonoBehaviour {
 
   public FoodType DesiredFood;
 
-  public bool Happy;
+  public enum Moods { NEUTRAL, HAPPY, SAD };
+  public Moods Mood;
 
   private AnimalBehaviorState m_currentState; // hacky but we're only using Idle now anyway
   public AnimalBehaviorState CurrentState { get { return m_currentState; } }
@@ -24,6 +25,8 @@ public class Animal : MonoBehaviour {
 
   public UITexture BodyTexture;
   public UITexture AngryTexture;
+  public UITexture[] ClosedEyes;
+  public UITexture[] Eyelids;
 
   public AnimalPen InPen;
   public bool TriedToDropInLockedPen;
@@ -128,6 +131,9 @@ public class Animal : MonoBehaviour {
     }
     BodyTexture.color = c;
 	  if (AngryTexture != null) AngryTexture.color = c;
+    foreach (UITexture lid in Eyelids) {
+      lid.color = c;
+    }
   }
   /*
   public void HungerForMoreFood()
@@ -147,9 +153,17 @@ public class Animal : MonoBehaviour {
     }
 
     //HungerForMoreFood();
-    Happy = (InPen == null || InPen.Satisfied);
+    if (InPen != null) {
+      Mood = (InPen.Satisfied)? Moods.HAPPY : Moods.SAD;
+    } else {
+      Mood = Moods.NEUTRAL;
+    }
+
     if (AngryTexture != null) {
-      AngryTexture.gameObject.SetActive( !Happy );
+      AngryTexture.gameObject.SetActive( Mood == Moods.SAD );
+    }
+    foreach (UITexture closedEye in ClosedEyes) {
+      closedEye.gameObject.SetActive( Mood == Moods.HAPPY || CurrentState is EatingFoodState );
     }
   }
 
