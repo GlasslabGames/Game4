@@ -146,8 +146,9 @@ window.onload = function() {
         // else drag the camera
         else if (game.input.activePointer.isDown)
         {
-            game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
-            game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
+            // FIXME: temporarily disabled for testing pen dragging
+            //game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
+            //game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
 
         GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position

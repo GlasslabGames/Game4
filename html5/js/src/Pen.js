@@ -36,6 +36,9 @@ GlassLab.Pen = function(game, layer)
     this.root.addChild( this.edges[i].sprite );
   }
 
+  this.root.isoX = 3 * GLOBAL.tileSize;
+  this.root.isoY = 3 * GLOBAL.tileSize;
+
   this.SetSize(2,3,2);
 };
 
@@ -46,6 +49,33 @@ GlassLab.Pen.prototype.SetSize = function(leftWidth, rightWidth, height) {
   this.leftWidth = leftWidth;
   this.rightWidth = rightWidth;
   this.height = height;
+  this.Resize();
+}
+
+GlassLab.Pen.prototype.SetSizeFromEdge = function(edge) {
+  var rows = Math.round(edge.sprite.isoY / GLOBAL.tileSize);
+  var cols = Math.round(edge.sprite.isoX / GLOBAL.tileSize);
+
+  switch (edge.side) {
+    case GlassLab.Edge.SIDES.top:
+      this.height -= rows;
+      this.root.isoY += rows * GLOBAL.tileSize;
+      break;
+    case GlassLab.Edge.SIDES.bottom:
+      this.height += rows;
+      break;
+    case GlassLab.Edge.SIDES.left:
+      this.leftWidth -= cols;
+      this.root.isoX += cols * GLOBAL.tileSize;
+      break;
+    case GlassLab.Edge.SIDES.right:
+      this.rightWidth += cols;
+      break;
+    case GlassLab.Edge.SIDES.center:
+      this.leftWidth += cols;
+      this.rightWidth -= cols;
+      break;
+  }
   this.Resize();
 }
 
@@ -104,10 +134,16 @@ GlassLab.Edge = function(pen, side) {
   if (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) {
     this.spriteName = "penRightEdge";
     this.sprite.isoX = 0.5 * GLOBAL.tileSize;
+    this.horizontal = true;
   } else {
     this.spriteName = "penLeftEdge";
     this.sprite.isoY = 0.5 * GLOBAL.tileSize;
+    this.horizontal = false;
   }
+
+  this.dragging = false;
+  this.initialCursorIsoPos;
+  this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 }
 
 GlassLab.Edge.prototype.Reset = function() {
@@ -115,6 +151,11 @@ GlassLab.Edge.prototype.Reset = function() {
   for (var i = 0; i < this.sprite.children.length; i++) {
     this.unusedSprites.push(this.sprite.children[i]);
     this.sprite.children[i].visible = false;
+  }
+  if (this.horizontal) {
+    this.sprite.isoY = 0;
+  } else {
+    this.sprite.isoX = 0;
   }
 }
 
@@ -139,8 +180,32 @@ GlassLab.Edge.prototype.PlacePiece = function(col, row) {
 
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
   console.log("down on",this.sprite.name);
+  if (!this.dragging) {
+    this.dragging = true;
+    this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
+    Phaser.Point.divide(this.initialCursorIsoPos, this.game.world.scale, this.initialCursorIsoPos);
+  }
 }
 
 GlassLab.Edge.prototype._onUp = function( target, pointer ) {
   console.log("up on",this.sprite.name);
+  if (this.dragging) {
+    this.dragging = false;
+    this.pen.SetSizeFromEdge(this);
+  }
+}
+
+GlassLab.Edge.prototype._onUpdate = function() {
+  if (this.dragging) {
+    var cursorIsoPosition = this.game.iso.unproject(this.game.input.activePointer.position);
+    Phaser.Point.divide(cursorIsoPosition, this.game.world.scale, cursorIsoPosition);
+    cursorIsoPosition = Phaser.Point.subtract(cursorIsoPosition, this.initialCursorIsoPos);
+
+    if (this.horizontal) {
+      //int row =
+      this.sprite.isoY = cursorIsoPosition.y;
+    } else {
+      this.sprite.isoX = cursorIsoPosition.x;
+    }
+  }
 }
