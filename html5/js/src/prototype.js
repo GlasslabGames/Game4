@@ -11,6 +11,9 @@ window.onload = function() {
     function preload() {
         game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
         game.load.image('tile', 'assets/images/tile.png');
+        game.load.image('penBg', 'assets/images/penBg_placeholder.png');
+        game.load.image('penLeftEdge', 'assets/images/penEdge_left_placeholder.png');
+        game.load.image('penRightEdge', 'assets/images/penEdge_right_placeholder.png');
         /*
         game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');
         game.load.image('autumnTile2', 'assets/images/autumn_ground2.png');
@@ -71,6 +74,11 @@ window.onload = function() {
         // Sort tile render order
         game.iso.simpleSort(GLOBAL.grassGroup);
 
+        // Create pen
+        GLOBAL.penLayer = game.add.group();
+        var pen = new GlassLab.Pen(game, GLOBAL.penLayer);
+        GLOBAL.pen = pen; // FIXME: temporarily made global for console testing
+
         // Create creatures
         GLOBAL.creatureLayer = game.add.group();
         for (var i=0; i < 5; i++)
@@ -90,6 +98,7 @@ window.onload = function() {
             creature.sprite.events.onInputDown.add(onDown, this);
             creature.sprite.events.onInputUp.add(onUp, this);
         }
+
 
         game.input.onDown.add(globalDown, this); // Global input down handler
 
@@ -137,8 +146,8 @@ window.onload = function() {
         // else drag the camera
         else if (game.input.activePointer.isDown)
         {
-            game.camera.x -= game.input.activePointer.x - lastMousePosition.x;
-            game.camera.y -= game.input.activePointer.y - lastMousePosition.y;
+            game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
+            game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
 
         GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
