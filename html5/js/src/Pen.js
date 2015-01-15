@@ -20,23 +20,21 @@ GlassLab.Pen = function(game, layer)
   this.rightWidth = 1;
   this.height = 1;
 
-  // TODO
+  // Add a root for all tiles now so that tiles will appear under the edges
   this.tileRoot = this.game.make.isoSprite();
   this.root.addChild(this.tileRoot).name = "tileRoot";
 
-  this.topEdge = this.game.make.isoSprite();
-  this.bottomEdge = this.game.make.isoSprite();
-  this.centerEdge = this.game.make.isoSprite();
-  this.rightEdge = this.game.make.isoSprite();
-  this.leftEdge = this.game.make.isoSprite();
+  this.topEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.top);
+  this.bottomEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.bottom);
+  this.centerEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.center);
+  this.leftEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.left);
+  this.rightEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right);
 
-  console.log(this.root, this.topEdge);
+  this.edges = [ this.topEdge, this.bottomEdge, this.centerEdge, this.leftEdge, this.rightEdge ];
 
-  this.root.addChild(this.topEdge).name = "topEdge";
-  this.root.addChild(this.bottomEdge).name = "bottomEdge";
-  this.root.addChild(this.centerEdge).name = "centerEdge";
-  this.root.addChild(this.rightEdge).name = "rightEdge";
-  this.root.addChild(this.leftEdge).name = "leftEdge";
+  for (var i = 0; i < this.edges.length; i++) {
+    this.root.addChild( this.edges[i].sprite );
+  }
 
   this.SetSize(2,3,2);
 };
@@ -56,13 +54,17 @@ GlassLab.Pen.prototype.Resize = function() {
 
   var tiles = this.tiles.slice(); // copy array
 
+  for (var i = 0; i < this.edges.length; i++) {
+    this.edges[i].Reset();
+  }
+
   for (var row = 0; row < this.height; row++) {
     for (var col = 0; col < this.leftWidth + this.rightWidth; col++) {
       var tile = tiles.pop();
       if (!tile) { // we ran out of existing tiles, so make a new one
         tile = this.game.make.isoSprite(0, 0, 0, "penBg");
         tile.anchor.set(0.5, 0);
-        this.root.addChild(tile);
+        this.tileRoot.addChild(tile);
         this.tiles.push(tile);
       }
       tile.visible = true;
@@ -70,15 +72,15 @@ GlassLab.Pen.prototype.Resize = function() {
       tile.isoY = row * GLOBAL.tileSize;
       tile.tint = (col < this.leftWidth)? GlassLab.Pen.LEFT_COLOR : GlassLab.Pen.RIGHT_COLOR;
 
-      if (row == this.height - 1 ) { // on the last pass
-        this.topEdge.addChild( (new GlassLab.Edge(this, GlassLab.Edge.SIDES.top, col, 0)).sprite);
-        this.bottomEdge.addChild( (new GlassLab.Edge(this, GlassLab.Edge.SIDES.bottom, col, this.height)).sprite );
+      if (row == 0 ) { // do these once for each col
+        this.topEdge.PlacePiece(col, 0);
+        this.bottomEdge.PlacePiece(col, this.height);
       }
     }
 
-    this.leftEdge.addChild( (new GlassLab.Edge(this, GlassLab.Edge.SIDES.left, 0, row)).sprite );
-    this.centerEdge.addChild( (new GlassLab.Edge(this, GlassLab.Edge.SIDES.center, this.leftWidth, row)).sprite );
-    this.rightEdge.addChild( (new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, this.leftWidth + this.rightWidth, row)).sprite );
+    this.leftEdge.PlacePiece( 0, row );
+    this.centerEdge.PlacePiece( this.leftWidth, row );
+    this.rightEdge.PlacePiece( this.leftWidth + this.rightWidth, row );
   }
 
   // Hide any tiles we own but aren't currently using
@@ -90,30 +92,55 @@ GlassLab.Pen.prototype.Resize = function() {
 
 
 /**
- * Edge
+ * Edge - represents the edge of a pen, made up of multiple sprites
  */
-GlassLab.Edge = function(pen, side, col, row) {
+GlassLab.Edge = function(pen, side) {
   this.game = pen.game;
   this.side = side;
   this.pen = pen;
+  this.sprite = this.game.make.isoSprite();
+  this.sprite.name = side + "Edge";
 
-  var spriteName = (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom)?
-    "penRightEdge" : "penLeftEdge";
-  this.sprite = this.game.make.isoSprite(col * GLOBAL.tileSize, row * GLOBAL.tileSize, 0, spriteName);
-  this.sprite.tint = 0x695B47;
-  this.sprite.anchor.set(0.5, 0);
+  if (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) {
+    this.spriteName = "penRightEdge";
+    this.sprite.isoX = 0.5 * GLOBAL.tileSize;
+  } else {
+    this.spriteName = "penLeftEdge";
+    this.sprite.isoY = 0.5 * GLOBAL.tileSize;
+  }
+}
 
-  this.sprite.inputEnabled = true;
-  this.sprite.events.onInputUp.add(this._onUp, this);
-  this.sprite.events.onInputDown.add(this._onDown, this);
+GlassLab.Edge.prototype.Reset = function() {
+  this.unusedSprites = [];
+  for (var i = 0; i < this.sprite.children.length; i++) {
+    this.unusedSprites.push(this.sprite.children[i]);
+    this.sprite.children[i].visible = false;
+  }
 }
 
 GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "right", center: "center" }; // enum
 
+// add a new piece or recycle one
+GlassLab.Edge.prototype.PlacePiece = function(col, row) {
+  var sprite = this.unusedSprites.pop();
+  if (!sprite) {
+    sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
+    sprite.tint = 0x695B47;
+    sprite.anchor.set(0.5, 0);
+    sprite.inputEnabled = true;
+    sprite.events.onInputUp.add(this._onUp, this);
+    sprite.events.onInputDown.add(this._onDown, this);
+    this.sprite.addChild(sprite);
+  }
+  sprite.visible = true;
+  sprite.isoX = col * GLOBAL.tileSize;
+  sprite.isoY = row * GLOBAL.tileSize;
+}
+
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
-  console.log(this.sprite.parent);
+  console.log("down on",this.sprite.name);
 }
 
 GlassLab.Edge.prototype._onUp = function( target, pointer ) {
-  console.log(this.side);
+  console.log("up on",this.sprite.name);
 }
