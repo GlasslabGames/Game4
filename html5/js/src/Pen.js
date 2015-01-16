@@ -55,6 +55,8 @@ GlassLab.Pen.prototype.SetSize = function(leftWidth, rightWidth, height) {
 GlassLab.Pen.prototype.SetSizeFromEdge = function(edge) {
   var rows = Math.round(edge.sprite.isoY / GLOBAL.tileSize);
   var cols = Math.round(edge.sprite.isoX / GLOBAL.tileSize);
+  console.log("left:",this.leftWidth,"right:",this.rightWidth,"height:",this.height);
+  console.log("cols:", cols, "rows:", rows);
 
   switch (edge.side) {
     case GlassLab.Edge.SIDES.top:
@@ -120,6 +122,75 @@ GlassLab.Pen.prototype.Resize = function() {
 
 }
 
+// FIXME: This has some issues and doesn't work with snapping edges
+GlassLab.Pen.prototype.AdjustToEdge = function(edge) {
+  var ts = GLOBAL.tileSize;
+  var topY = 0;
+  var bottomY = this.height * ts;
+  var leftX = -this.leftWidth * ts;
+  var rightX = this.rightWidth * ts;
+  var centerX = 0;
+
+  console.log(1, topY, bottomY);
+
+  if (edge) {
+    switch (edge.side) {
+      case GlassLab.Edge.SIDES.top:
+        topY = edge.sprite.isoY;
+        break;
+      case GlassLab.Edge.SIDES.bottom:
+        bottomY = edge.sprite.isoY;
+        break;
+      case GlassLab.Edge.SIDES.left:
+        leftX = edge.sprite.isoX;
+        break;
+      case GlassLab.Edge.SIDES.center:
+        centerX = edge.sprite.isoX;
+        break;
+      case GlassLab.Edge.SIDES.right:
+        rightX = edge.sprite.isoX;
+        break;
+    }
+  }
+
+  console.log(2, topY, bottomY);
+
+  var tiles = this.tiles.slice(); // copy array
+
+  for (var i = 0; i < this.edges.length; i++) {
+    this.edges[i].Reset();
+  }
+
+  for (var y = topY; y < bottomY; y += ts) {
+    for (var x = leftX; x < rightX; x += ts) {
+      var tile = tiles.pop();
+      if (!tile) { // we ran out of existing tiles, so make a new one
+        tile = this.game.make.isoSprite(0, 0, 0, "penBg");
+        tile.anchor.set(0.5, 0);
+        this.tileRoot.addChild(tile);
+        this.tiles.push(tile);
+      }
+      tile.visible = true;
+      tile.isoX = x;
+      tile.isoY = y;
+      tile.tint = (x < centerX)? GlassLab.Pen.LEFT_COLOR : GlassLab.Pen.RIGHT_COLOR;
+
+      if (y == topY ) { // do these once for each col
+        this.topEdge.PlacePieceAt(x, topY);
+        this.bottomEdge.PlacePieceAt(x, bottomY);
+      }
+    }
+
+    this.leftEdge.PlacePieceAt( leftX, y );
+    this.centerEdge.PlacePieceAt( centerX, y );
+    this.rightEdge.PlacePieceAt( rightX, y );
+  }
+
+  // Hide any tiles we own but aren't currently using
+  for (var i = 0; i < tiles.length; i++) {
+    tiles[i].visible = false;
+  }
+}
 
 /**
  * Edge - represents the edge of a pen, made up of multiple sprites
@@ -163,6 +234,10 @@ GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "righ
 
 // add a new piece or recycle one
 GlassLab.Edge.prototype.PlacePiece = function(col, row) {
+  this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize);
+}
+
+GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
   var sprite = this.unusedSprites.pop();
   if (!sprite) {
     sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
@@ -174,8 +249,9 @@ GlassLab.Edge.prototype.PlacePiece = function(col, row) {
     this.sprite.addChild(sprite);
   }
   sprite.visible = true;
-  sprite.isoX = col * GLOBAL.tileSize;
-  sprite.isoY = row * GLOBAL.tileSize;
+  sprite.isoX = x;
+  sprite.isoY = y;
+  return sprite;
 }
 
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
@@ -200,12 +276,49 @@ GlassLab.Edge.prototype._onUpdate = function() {
     var cursorIsoPosition = this.game.iso.unproject(this.game.input.activePointer.position);
     Phaser.Point.divide(cursorIsoPosition, this.game.world.scale, cursorIsoPosition);
     cursorIsoPosition = Phaser.Point.subtract(cursorIsoPosition, this.initialCursorIsoPos);
+    var ts = GLOBAL.tileSize;
+    var row = Math.round(cursorIsoPosition.y / ts);
+    var col = Math.round(cursorIsoPosition.x / ts);
+    var targetPos = { x: this.sprite.isoX, y: this.sprite.isoY };
 
-    if (this.horizontal) {
-      //int row =
-      this.sprite.isoY = cursorIsoPosition.y;
+    // I'm not sure if we want to have the edge stick to the grid yet, so do the calculations for both
+    switch (this.side) {
+      case GlassLab.Edge.SIDES.top:
+        row = Math.min(row, this.pen.height - 1);
+        targetPos.y = Math.min( cursorIsoPosition.y, (this.pen.height - 1) * ts);
+        break;
+      case GlassLab.Edge.SIDES.bottom:
+        row = Math.max(row, -(this.pen.height - 1));
+        targetPos.y = Math.max( cursorIsoPosition.y, -(this.pen.height - 1) * ts);
+        break;
+      case GlassLab.Edge.SIDES.left:
+        col = Math.min(col, this.pen.leftWidth - 1);
+        targetPos.x = Math.min( cursorIsoPosition.x, (this.pen.leftWidth - 1) * ts);
+        break;
+      case GlassLab.Edge.SIDES.right:
+        col = Math.max(col, -(this.pen.rightWidth - 1));
+        targetPos.x = Math.max( cursorIsoPosition.x, -(this.pen.rightWidth - 1) * ts);
+        break;
+      case GlassLab.Edge.SIDES.center:
+        col = Math.min(col, this.pen.rightWidth - 1);
+        col = Math.max(col, -(this.pen.leftWidth - 1));
+        targetPos.x = Math.min( cursorIsoPosition.x, (this.pen.rightWidth - 1) * ts);
+        targetPos.x = Math.max( targetPos.x, -(this.pen.leftWidth - 1) * ts);
+        break;
+    }
+
+    if (targetPos.x != this.sprite.isoX || targetPos.y != this.sprite.isoY) {
+      //this.pen.AdjustToEdge(this); // FIXME
+    }
+
+    // allow different options for how the handles move ( ideally we could put these in the game for pepole to try)
+    var lerpFactor = 0; // 0: no snap, 0.2: some snap, 1: full snap
+    if (lerpFactor > 0) {
+      if (this.horizontal) this.sprite.isoY = (1 - lerpFactor) * this.sprite.isoY + lerpFactor * row * ts;
+      else this.sprite.isoX = (1 - lerpFactor) * this.sprite.isoX + lerpFactor * col * ts;
     } else {
-      this.sprite.isoX = cursorIsoPosition.x;
+      if (this.horizontal) this.sprite.isoY = targetPos.y;
+      else this.sprite.isoX = targetPos.x;
     }
   }
 }
