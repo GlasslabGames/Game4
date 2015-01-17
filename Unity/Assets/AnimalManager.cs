@@ -10,7 +10,6 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   public int[] AnimalCounts;
   public Color[] AnimalColors;
   public UITexture FillBarTexture;
-  private float m_totalHappiness;
 
   private List<Animal> m_animals;
   private List<AnimalPen> m_pens;
@@ -82,11 +81,12 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
   
   private void RefreshHappiness()
   {
-    m_totalHappiness = 0;
+    float m_totalHappiness = 0;
     int totalAnimals = m_animals.Count;
     for (int i=0; i < totalAnimals; i++)
     {
-      if (m_animals[i].Happy) m_totalHappiness++;
+      if (m_animals[i].Mood == Animal.Moods.HAPPY) m_totalHappiness += 1f;
+      else if (m_animals[i].Mood == Animal.Moods.NEUTRAL) m_totalHappiness += 0.5f;
     }
 
     m_totalHappiness /= totalAnimals;
@@ -102,8 +102,8 @@ public class AnimalManager : SingletonBehavior<AnimalManager>
       b.SetColor(a.BodyTexture.color);
       m_animals.Add(b);
       b.gameObject.name = "Animal"+m_animals.Count;
-      b.collider.enabled = false;
-      Utility.Delay(delegate{ b.collider.enabled = true; }, 1f);
+      //b.collider.enabled = false;
+      //Utility.Delay(delegate{ b.collider.enabled = true; }, 1f);
     }
 
     FloatTextEffect.Show("1 : "+num, a.transform.position);

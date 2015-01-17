@@ -9,6 +9,9 @@ window.onload = function() {
     function preload() {
         game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
         game.load.image('tile', 'assets/images/tile.png');
+        game.load.image('penBg', 'assets/images/penBg_placeholder.png');
+        game.load.image('penLeftEdge', 'assets/images/penEdge_left_placeholder.png');
+        game.load.image('penRightEdge', 'assets/images/penEdge_right_placeholder.png');
         /*
         game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');
         game.load.image('autumnTile2', 'assets/images/autumn_ground2.png');
@@ -57,6 +60,11 @@ window.onload = function() {
         GLOBAL.grassGroup = game.add.group();
         GLOBAL.tileManager.GenerateMapFromDataToGroup(GLOBAL.grassGroup);
 
+        // Create pen
+        GLOBAL.penLayer = game.add.group();
+        var pen = new GlassLab.Pen(game, GLOBAL.penLayer);
+        GLOBAL.pen = pen; // FIXME: temporarily made global for console testing
+
         // Create creatures
         GLOBAL.creatureLayer = game.add.group();
         for (var i=0; i < 50; i++)
@@ -85,6 +93,7 @@ window.onload = function() {
             creature.sprite.events.onInputDown.add(onDown, this);
             creature.sprite.events.onInputUp.add(onUp, this);
         }
+
 
         game.input.onDown.add(globalDown, this); // Global input down handler
 

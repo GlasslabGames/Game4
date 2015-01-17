@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CrateHandle : MonoBehaviour {
-	public enum Direction { Horizontal, Vertical };
+	public enum Direction { Horizontal, Vertical, IsoLeft, IsoRight };
 	public Direction EdgeDirection;
 	public bool Draggable;
   private UITexture m_texture;
@@ -27,7 +27,7 @@ public class CrateHandle : MonoBehaviour {
 			if (m_dragging) {
         m_dragging = false;
         Snap();
-        m_crate.AdjustToHandles();
+        m_crate.AdjustToHandles(this);
         m_crate.StopResizing();
         m_crate.SetEdge(this);
       }
@@ -48,15 +48,29 @@ public class CrateHandle : MonoBehaviour {
       Vector3 mousePos = UICamera.mainCamera.ScreenToWorldPoint(Input.mousePosition);
       mousePos = this.transform.parent.InverseTransformPoint(mousePos);
 
-      if (EdgeDirection == Direction.Horizontal) {
+      //Debug.Log(mousePos);
+
+      if (EdgeDirection == Direction.Horizontal) { // direction: -
         int row = Mathf.RoundToInt(mousePos.y / ts);
         row = m_crate.GetValidRow(this, row);
         pos.y = row * ts;
-      } else {
+      } else if (EdgeDirection == Direction.Vertical) { // direction: |
         int col = Mathf.RoundToInt(mousePos.x / ts);
         col = m_crate.GetValidCol(this, col);
         pos.x = col * ts;
+      } else if (EdgeDirection == Direction.IsoLeft) { // direction: /
+        int col = Mathf.RoundToInt( (mousePos.y / (0.5f*ts) - mousePos.x / ts) / -2 );
+        col = m_crate.GetValidCol(this, col);
+        pos.x = col * ts;
+        pos.y = -0.5f * col * ts;
+      } else if (EdgeDirection == Direction.IsoRight) { // direction: \
+        int row = Mathf.RoundToInt( (mousePos.y / (0.5f*ts) + mousePos.x / ts) / 2 );
+        row = m_crate.GetValidRow(this, row);
+        Vector3 leftPos = m_crate.LeftHandle.transform.localPosition;
+        pos.x = leftPos.x + (row * ts);
+        pos.y = leftPos.y + (0.5f * row * ts);
       }
+
 
       // Move gradually to the target position
       float dist = Vector3.Distance(this.transform.localPosition, pos);
@@ -64,7 +78,7 @@ public class CrateHandle : MonoBehaviour {
         pos = Vector3.Lerp(this.transform.localPosition, pos, 0.4f);
 
         this.transform.localPosition = pos;
-        m_crate.AdjustToHandles();
+        m_crate.AdjustToHandles(this);
       }
 		}
     if (Draggable && m_crate.Resizable) {
@@ -77,25 +91,29 @@ public class CrateHandle : MonoBehaviour {
 	}
 
   void Snap() {
-    float ts = m_crate.TileSize;
+    float halfTileSize = m_crate.TileSize / 2; // use half tilesize for the isometric
     Vector3 pos = this.transform.localPosition;
-    if (EdgeDirection == Direction.Horizontal) {
-      int row = Mathf.RoundToInt(pos.y / ts);
-      pos.y = row * ts;
-    } else {
-      int col = Mathf.RoundToInt(pos.x / ts);
-      pos.x = col * ts;
-    }
+
+    pos.y = Mathf.Round(pos.y / halfTileSize) * halfTileSize;
+    pos.x = Mathf.Round(pos.x / halfTileSize) * halfTileSize;
+
     this.transform.localPosition = pos;
   }
 
   public void SetSize(int newSize) {
     if (m_texture == null) return;
-    if (EdgeDirection == Direction.Vertical) {
+    if (EdgeDirection == Direction.Vertical || EdgeDirection == Direction.IsoLeft) {
       m_texture.height = newSize;
     } else {
       m_texture.width = newSize;
     }
+  }
+
+  public void SetPosition(Vector3 target) {
+    Vector3 pos = transform.localPosition;
+    pos.x = (int) target.x;
+    pos.y = (int) target.y;
+    transform.localPosition = pos;
   }
 
 	public void SetPosition(int x, int y, int newSize = -1) {
@@ -116,5 +134,23 @@ public class CrateHandle : MonoBehaviour {
       else if (pen == m_crate.RightPen && atPosition.x >= center.x) return true;
       else return false;
     } else return false;
+  }
+
+  public int GetRow() {
+    Vector3 pos = transform.localPosition;
+    if (EdgeDirection == Direction.Horizontal || EdgeDirection == Direction.Vertical) {
+      return Mathf.RoundToInt (pos.y / m_crate.TileSize);
+    } else { // isometric
+      return Mathf.RoundToInt( (pos.y / (0.5f*m_crate.TileSize) + pos.x / m_crate.TileSize) / 2 );
+    }
+  }
+
+  public int GetCol() {
+    Vector3 pos = transform.localPosition;
+    if (EdgeDirection == Direction.Horizontal || EdgeDirection == Direction.Vertical) {
+      return Mathf.RoundToInt (pos.x / m_crate.TileSize);
+    } else { // isometric
+      return Mathf.RoundToInt( (pos.y / (0.5f*m_crate.TileSize) - pos.x / m_crate.TileSize) / -2 );
+    }
   }
 }
