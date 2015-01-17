@@ -38,7 +38,7 @@ GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
     return type && type > 0 && type < 5;
 };
 
-GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
+GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, min, max)
 {
     for (var i=0; i < width; i++)
     {
