@@ -21,10 +21,6 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.rightWidth = rightWidth || 1;
   this.height = height || 1;
 
-  // Add a root for all tiles now so that tiles will appear under the edges
-  this.tileRoot = this.game.make.isoSprite();
-  this.root.addChild(this.tileRoot).name = "tileRoot";
-
   this.topEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.top);
   this.bottomEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.bottom);
   this.centerEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.center);
@@ -33,9 +29,21 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
 
   this.edges = [ this.topEdge, this.bottomEdge, this.centerEdge, this.leftEdge, this.rightEdge ];
 
-  for (var i = 0; i < this.edges.length; i++) {
-    this.root.addChild( this.edges[i].sprite );
-  }
+
+  this.root.addChild(this.topEdge.sprite);
+  this.root.addChild(this.leftEdge.sprite);
+
+  // Add a root for all tiles now so that tiles will appear under the edges
+  this.tileRoot = this.game.make.isoSprite();
+  this.root.addChild(this.tileRoot).name = "tileRoot";
+
+  // Add a root for all objects that will be added
+  this.objectRoot = this.game.make.isoSprite();
+  this.root.addChild(this.objectRoot).name = "objectRoot";
+
+  this.root.addChild(this.rightEdge.sprite);
+  this.root.addChild(this.centerEdge.sprite);
+  this.root.addChild(this.bottomEdge.sprite);
 
   this.root.isoX = 3 * GLOBAL.tileSize;
   this.root.isoY = 3 * GLOBAL.tileSize;
@@ -43,8 +51,8 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.Resize();
 };
 
-GlassLab.Pen.LEFT_COLOR = 0xA8C2EF;
-GlassLab.Pen.RIGHT_COLOR = 0xF0C5CA;
+GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
+GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
 GlassLab.Pen.prototype.SetSize = function(leftWidth, rightWidth, height) {
   this.leftWidth = leftWidth;
@@ -95,6 +103,8 @@ GlassLab.Pen.prototype.Resize = function() {
     this.topEdge.PlacePiece(col, 0);
     this.bottomEdge.PlacePiece(col, this.height);
   }
+
+  //this.game.iso.simpleSort(this.tiles);
 };
 
 GlassLab.Pen.prototype._resetEdges = function() {
@@ -113,17 +123,7 @@ GlassLab.Pen.prototype._resetTiles = function() {
 
 GlassLab.Pen.prototype._drawRow = function(yPos, leftCol, centerCol, rightCol) {
   for (var col = leftCol; col < rightCol; col++) {
-    var tile = this.unusedTiles.pop();
-    if (!tile) { // we ran out of existing tiles, so make a new one
-      tile = this.game.make.isoSprite(0, 0, 0, "penBg");
-      tile.anchor.set(0.5, 0.25);
-      this.tileRoot.addChild(tile);
-      this.tiles.push(tile);
-    }
-    tile.visible = true;
-    tile.isoX = col * GLOBAL.tileSize;
-    tile.isoY = yPos;
-    tile.tint = (col < centerCol) ? GlassLab.Pen.LEFT_COLOR : GlassLab.Pen.RIGHT_COLOR;
+    this._placeTile(col * GLOBAL.tileSize, yPos, (col < centerCol));
   }
 
   this.leftEdge.PlacePieceAt( GLOBAL.tileSize * leftCol, yPos );
@@ -133,22 +133,29 @@ GlassLab.Pen.prototype._drawRow = function(yPos, leftCol, centerCol, rightCol) {
 
 GlassLab.Pen.prototype._drawCol = function(xPos, topRow, bottomRow) {
   for (var row = topRow; row < bottomRow; row++) {
-    var tile = this.unusedTiles.pop();
-    if (!tile) { // we ran out of existing tiles, so make a new one
-      tile = this.game.make.isoSprite(0, 0, 0, "penBg");
-      tile.anchor.set(0.5, 0);
-      this.tileRoot.addChild(tile);
-      this.tiles.push(tile);
-    }
-    tile.visible = true;
-    tile.isoX = xPos;
-    tile.isoY = row * GLOBAL.tileSize;
-    tile.tint = (col < this.leftWidth) ? GlassLab.Pen.LEFT_COLOR : GlassLab.Pen.RIGHT_COLOR;
+    this._placeTile(xPos, row * GLOBAL.tileSize, (col < this.leftWidth));
   }
 
   this.topEdge.PlacePieceAt(xPos, topRow * GLOBAL.tileSize);
   this.bottomEdge.PlacePieceAt(xPos, bottomRow * GLOBAL.tileSize);
 };
+
+GlassLab.Pen.prototype._placeTile = function(xPos, yPos, onLeft) {
+  if (onLeft) return; // for now, don't place any tile on the left side
+
+  var tile = this.unusedTiles.pop();
+  if (!tile) { // we ran out of existing tiles, so make a new one
+    tile = this.game.make.isoSprite(0, 0, 0, "penBg");
+    tile.anchor.set(0.5, 0.25);
+    this.tileRoot.addChild(tile);
+    this.tiles.push(tile);
+  }
+  tile.visible = true;
+  tile.isoX = xPos;
+  tile.isoY = yPos;
+  tile.tint = (onLeft) ? GlassLab.Pen.LEFT_COLOR : GlassLab.Pen.RIGHT_COLOR;
+  tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far
+}
 
 /**
  * Edge - represents the edge of a pen, made up of multiple sprites
@@ -198,7 +205,8 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
   var sprite = this.unusedSprites.pop();
   if (!sprite) {
     sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
-    sprite.tint = 0x695B47;
+    //sprite.tint = 0x695B47;
+    //sprite.alpha = 0.01;
     sprite.anchor.set(0.5, 0.75);
     sprite.inputEnabled = true;
     sprite.events.onInputUp.add(this._onUp, this);
@@ -208,6 +216,8 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
   sprite.visible = true;
   sprite.isoX = x;
   sprite.isoY = y;
+  sprite.parent.setChildIndex(sprite, sprite.parent.children.length - 1); // move it to the back of the children so far
+
   return sprite;
 };
 
@@ -217,6 +227,7 @@ GlassLab.Edge.prototype._onDown = function( target, pointer ) {
     this.dragging = true;
     this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
     Phaser.Point.divide(this.initialCursorIsoPos, this.game.world.scale, this.initialCursorIsoPos);
+    GLOBAL.dragTarget = this;
   }
 };
 
@@ -225,6 +236,7 @@ GlassLab.Edge.prototype._onUp = function( target, pointer ) {
   if (this.dragging) {
     this.dragging = false;
     this.pen.SetSizeFromEdge(this);
+    GLOBAL.dragTarget = null;
   }
 };
 
@@ -283,20 +295,50 @@ GlassLab.Edge.prototype._onUpdate = function() {
  * Feeding Pen - holds animals on the left and food on the right
  */
 GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
-  var pen = new GlassLab.Pen(game, layer, animalWidth, foodWidth, height);
+  this.foods = [];
+  this.unusedFoods = [];
+
+  GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   for (var col = 1; col <= animalWidth; col++) {
     for (var row = 1; row <= height; row++) {
       var creature = new GlassLab.Creature(game, "sheep", "WaitingForFood");
-      GLOBAL.creatureLayer.add(creature.sprite);
-      creature.sprite.isoX = col * GLOBAL.tileSize + pen.root.isoX;
-      creature.sprite.isoY = row * GLOBAL.tileSize + pen.root.isoY;
+      this.objectRoot.addChild(creature.sprite);
+      creature.sprite.isoX = col * GLOBAL.tileSize;
+      creature.sprite.isoY = row * GLOBAL.tileSize;
       creature.sprite.scale.x = creature.sprite.scale.y = .25;
       creature.sprite.scale.x *= -1;
     }
   }
 
-  return pen;
+  this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
 };
 
-GlassLab.FeedingPen.prototype = GlassLab.Pen.prototype; // extend pen
+GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
+GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
+
+GlassLab.FeedingPen.prototype.Resize = function() {
+  GlassLab.Pen.prototype.Resize.call(this);
+
+  this.unusedFoods = this.foods.slice();
+  for (var col = this.leftWidth; col < this.leftWidth + this.rightWidth; col++) {
+    for (var row = 0; row < this.height; row++) {
+      var food = this.unusedFoods.pop();
+      if (!food) { // we ran out of existing tiles, so make a new one
+        food = this.game.make.isoSprite(0, 0, 0, "food");
+        food.scale.x = food.scale.y = 0.75;
+        food.anchor.set(0.5, 0.25);
+        this.objectRoot.addChild(food);
+        this.foods.push(food);
+      }
+      food.visible = true;
+      food.isoX = col * GLOBAL.tileSize;
+      food.isoY = row * GLOBAL.tileSize;
+      food.parent.setChildIndex(food, food.parent.children.length - 1); // move it to the back of the children so far
+    }
+  }
+
+  for (var i = 0; i < this.unusedFoods.length; i++) {
+    this.unusedFoods[i].visible = false;
+  }
+}

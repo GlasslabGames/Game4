@@ -9,9 +9,10 @@ window.onload = function() {
     function preload() {
         game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
         game.load.image('tile', 'assets/images/tile.png');
-        game.load.image('penBg', 'assets/images/penBg_placeholder.png');
-        game.load.image('penLeftEdge', 'assets/images/penEdge_left_placeholder.png');
-        game.load.image('penRightEdge', 'assets/images/penEdge_right_placeholder.png');
+        game.load.image('penBg', 'assets/images/dirtTile1_top.png');
+        game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical.png');
+        game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal.png');
+        game.load.image('food', 'assets/images/isoCarrot.png');
         /*
         game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');
         game.load.image('autumnTile2', 'assets/images/autumn_ground2.png');
@@ -67,7 +68,7 @@ window.onload = function() {
       var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
 
         // Create creatures
-        for (var i=0; i < 50; i++)
+        for (var i=0; i < 10; i++)
         {
             var creature = new GlassLab.Creature(game, "sheep");
             GLOBAL.creatureLayer.add(creature.sprite);
@@ -149,9 +150,8 @@ window.onload = function() {
         // else drag the camera
         else if (game.input.activePointer.isDown)
         {
-            // FIXME: temporarily disabled for testing pen dragging
-            //game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
-            //game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
+            game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
+            game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
 
         cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY+50);
@@ -161,7 +161,7 @@ window.onload = function() {
         if (tileSprite != GLOBAL.highlightedTile)
         {
             if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
-            if (tileSprite) tileSprite.tint = 0x86bfda;
+            if (tileSprite) tileSprite.tint = 0xBFE2F2; //previous color was 0x86bfda (good for night) but I lightened it
             GLOBAL.highlightedTile = tileSprite;
         }
 
