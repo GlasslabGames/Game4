@@ -116,7 +116,7 @@ GlassLab.Pen.prototype._drawRow = function(yPos, leftCol, centerCol, rightCol) {
     var tile = this.unusedTiles.pop();
     if (!tile) { // we ran out of existing tiles, so make a new one
       tile = this.game.make.isoSprite(0, 0, 0, "penBg");
-      tile.anchor.set(0.5, 0);
+      tile.anchor.set(0.5, 0.25);
       this.tileRoot.addChild(tile);
       this.tiles.push(tile);
     }
@@ -199,7 +199,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
   if (!sprite) {
     sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
     sprite.tint = 0x695B47;
-    sprite.anchor.set(0.5, 0);
+    sprite.anchor.set(0.5, 0.75);
     sprite.inputEnabled = true;
     sprite.events.onInputUp.add(this._onUp, this);
     sprite.events.onInputDown.add(this._onDown, this);
