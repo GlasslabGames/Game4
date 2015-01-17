@@ -3,8 +3,6 @@
  */
 var GLOBAL = GLOBAL || {};
 window.onload = function() {
-
-
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
 
@@ -25,15 +23,15 @@ window.onload = function() {
         game.load.image('autumnTile8', 'assets/images/autumn_fenceStraight.png');
         game.load.image('autumnTile9', 'assets/images/autumn_fenceTopCorner.png');
         */
+        game.load.image('grassTile0', 'assets/images/grassy_water.png');
         game.load.image('grassTile1', 'assets/images/grassy_1.png');
         game.load.image('grassTile2', 'assets/images/grassy_2.png');
         game.load.image('grassTile3', 'assets/images/grassy_3.png');
         game.load.image('grassTile4', 'assets/images/grassy_4.png');
-        game.load.image('grassTile5', 'assets/images/grassy_water.png');
-        game.load.image('grassTile6', 'assets/images/grassy_fence_bottomCorner.png');
-        game.load.image('grassTile7', 'assets/images/grassy_fence_length.png');
-        game.load.image('grassTile8', 'assets/images/grassy_fence_sideCorner.png');
-        game.load.image('grassTile9', 'assets/images/grassy_fence_topCorner.png');
+        game.load.image('grassTile5', 'assets/images/grassy_fence_bottomCorner.png');
+        game.load.image('grassTile6', 'assets/images/grassy_fence_length.png');
+        game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
+        game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
     }
@@ -52,27 +50,15 @@ window.onload = function() {
 
         GLOBAL.tileSize = 139; // Art tile size is about 139 (guessed with trial and error)
 
-        // Create tiles
+        game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
+
+        // Create TileManager and map
+        GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
+        GLOBAL.tileManager.GenerateRandomMapData(20, 20);
+        GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
+        GLOBAL.tileManager.SetCenter(9,9);
         GLOBAL.grassGroup = game.add.group();
-        for (var i=-10; i < 10; i++)
-        {
-            for (var j=-10; j < 10; j++)
-            {
-                var tileType = parseInt(Math.random() * 5 + 1);
-                var image = game.make.isoSprite(i*GLOBAL.tileSize, j*GLOBAL.tileSize, 0, "grassTile" + tileType);
-                image.scale.x = image.scale.y = 1;
-                image.anchor.set(0.5, 0);
-                GLOBAL.grassGroup.add(image);
-
-                if (tileType == 5) // water
-                {
-                    // add collision box
-                }
-            }
-        }
-
-        // Sort tile render order
-        game.iso.simpleSort(GLOBAL.grassGroup);
+        GLOBAL.tileManager.GenerateMapFromDataToGroup(GLOBAL.grassGroup);
 
         // Create pen
         GLOBAL.penLayer = game.add.group();
@@ -81,14 +67,23 @@ window.onload = function() {
       var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
 
         // Create creatures
-        for (var i=0; i < 5; i++)
+        for (var i=0; i < 50; i++)
         {
             var creature = new GlassLab.Creature(game, "sheep");
             GLOBAL.creatureLayer.add(creature.sprite);
-            creature.sprite.isoX = Math.random() * game.world.width - game.world.width/2;
-            creature.sprite.isoX = Math.round(creature.sprite.isoX / GLOBAL.tileSize) * GLOBAL.tileSize;
-            creature.sprite.isoY = Math.random() * game.world.height - game.world.height/2;
-            creature.sprite.isoY = Math.round(creature.sprite.isoY / GLOBAL.tileSize) * GLOBAL.tileSize;
+            var randX = parseInt(Math.random() * 20);
+            var randY = parseInt(Math.random() * 20);
+            var targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
+            while (!GLOBAL.tileManager.IsTileTypeWalkable(targetPosition))
+            {
+                randX = parseInt(Math.random() * 20);
+                randY = parseInt(Math.random() * 20);
+                targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
+            }
+
+            var pos = GLOBAL.tileManager.GetTileWorldPosition(randX, randY);
+            creature.sprite.isoX = pos.x;
+            creature.sprite.isoY = pos.y;
             creature.sprite.scale.x = creature.sprite.scale.y = .25;
             if (i%2)
             {
@@ -132,16 +127,24 @@ window.onload = function() {
         // Re-sort creatures because they probably moved
         game.iso.simpleSort(GLOBAL.creatureLayer);
 
+        var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY+50);
+        game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+        Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
         // If we have a drag target, move it
         if (GLOBAL.dragTarget)
         {
             game.world.bringToTop(GLOBAL.dragTarget);
 
-            var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
-            game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
-            Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
-            GLOBAL.dragTarget.isoX = cursorIsoPosition.x;
-            GLOBAL.dragTarget.isoY = cursorIsoPosition.y;
+            if (GLOBAL.dragTarget.body)
+            {
+                GLOBAL.dragTarget.body.position.x = cursorIsoPosition.x;
+                GLOBAL.dragTarget.body.position.y = cursorIsoPosition.y;
+            }
+            else
+            {
+                GLOBAL.dragTarget.isoX = cursorIsoPosition.x;
+                GLOBAL.dragTarget.isoY = cursorIsoPosition.y;
+            }
         }
         // else drag the camera
         else if (game.input.activePointer.isDown)
@@ -151,13 +154,25 @@ window.onload = function() {
             //game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
 
-        GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
+        cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY+50);
+        game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+        Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
+        var tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
+        if (tileSprite != GLOBAL.highlightedTile)
+        {
+            if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
+            if (tileSprite) tileSprite.tint = 0x86bfda;
+            GLOBAL.highlightedTile = tileSprite;
+        }
 
-        //game.physics.isoArcade.collide(GLOBAL.creatureLayer, GLOBAL.grassGroup, collideCallback, processCallback);
+        GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
     }
 
     function render() {
         // Camera debug info
-        game.debug.cameraInfo(game.camera, 32, 32);
+        if (GLOBAL.debug)
+        {
+            game.debug.cameraInfo(game.camera, 32, 32);
+        }
     }
 };

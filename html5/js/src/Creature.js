@@ -21,6 +21,7 @@ GlassLab.CreatureManager.prototype;
 GlassLab.Creature = function(game, typeName, initialStateName)
 {
     this.sprite = game.make.isoSprite(0,0,0, typeName);
+
     //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
     this.state = null;
@@ -37,11 +38,13 @@ GlassLab.Creature = function(game, typeName, initialStateName)
     // TODO: Input handling should be handled outside this class.
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
-    this.sprite.anchor.setTo(0.5, 0.8);
+    this.sprite.anchor.setTo(0.5, 1.3);
 
     this.sprite.animations.add('run');
 
     this.debugAILine = new Phaser.Line();
+
+    //game.physics.isoArcade.enable(this.sprite);
 };
 
 GlassLab.Creature.prototype._onUp = function(sprite, pointer)
@@ -138,19 +141,32 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
 
 GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 {
-    this.targetPosition.set(Math.random()*100.0 + 100.0, 0);
-    this.targetPosition.rotate(0,0, Math.random() * Math.PI * 2);
-    if (Math.random() > 0.5)
+    GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY, this.targetPosition);
+
+    // Build list of possible movements
+    var possiblePositions = [];
+    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x+1, this.targetPosition.y);
+    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
+        possiblePositions.push(new Phaser.Point(this.targetPosition.x+1, this.targetPosition.y));
+    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x-1, this.targetPosition.y);
+    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
+        possiblePositions.push(new Phaser.Point(this.targetPosition.x-1, this.targetPosition.y));
+    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y+1);
+    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
+        possiblePositions.push(new Phaser.Point(this.targetPosition.x, this.targetPosition.y+1));
+    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y-1);
+    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
+        possiblePositions.push(new Phaser.Point(this.targetPosition.x, this.targetPosition.y-1));
+
+    if (possiblePositions.length > 0) this.targetPosition = possiblePositions[parseInt(Math.random() * possiblePositions.length)];
+
+    if (GLOBAL.tileManager.GetTileData(this.targetPosition.x, this.targetPosition.y) == 0)
     {
-        this.targetPosition.y = 0;
+        GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY, this.targetPosition);
     }
-    else
-    {
-        this.targetPosition.x = 0;
-    }
-    this.targetPosition.add(this.creature.sprite.isoX, this.creature.sprite.isoY);
-    this.targetPosition.x = Math.round(this.targetPosition.x / GLOBAL.tileSize) * GLOBAL.tileSize;
-    this.targetPosition.y = Math.round(this.targetPosition.y / GLOBAL.tileSize) * GLOBAL.tileSize;
+
+    GLOBAL.tileManager.GetTileWorldPosition(this.targetPosition.x, this.targetPosition.y, this.targetPosition);
+
     this.targetIsoPoint.setTo(this.targetPosition.x, this.targetPosition.y, 0);
 
     this.findDestinationHandler = null;
@@ -173,24 +189,34 @@ GlassLab.CreatureStateIdle.prototype._onUpdate = function()
         this.updateHandler = null;
         this.creature.sprite.animations.stop(null, true);
         this.findDestinationHandler = this.game.time.events.add(Math.random()*3000 + 2000, this._findNewDestination, this);
+        // Physics
+        if (this.creature.sprite.body)
+        {
+            this.creature.sprite.body.velocity.setTo(0,0);
+            return;
+        }
     }
-    if (Math.abs(delta.x) > Math.abs(delta.y))
-        delta.y = 0;
-    else delta.x = 0;
 
     var debugPoint = this.game.iso.project(delta);
-
     this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (debugPoint.x > 0 ? -1 : 1);
-    Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
 
-    //this.creature.sprite.position = delta;
-    this.creature.sprite.isoX = delta.x;
-    this.creature.sprite.isoY = delta.y;
+    if (this.creature.sprite.body)
+    {
+        // Physics
+        this.creature.sprite.body.velocity.x = delta.x * 100.0;
+        this.creature.sprite.body.velocity.y = delta.y * 100.0;
+    }
+    else
+    {
+        Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
+
+        //this.creature.sprite.position = delta;
+        this.creature.sprite.isoX = delta.x;
+        this.creature.sprite.isoY = delta.y;
+    }
 
     debugPoint = this.game.iso.project(this.targetIsoPoint);
     this.creature.debugAILine.setTo(this.creature.sprite.x, this.creature.sprite.y, debugPoint.x, debugPoint.y);
-
-    //this.game.debug.geom(this.creature.debugAILine);
 };
 
 /**
