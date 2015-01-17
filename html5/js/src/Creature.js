@@ -18,16 +18,21 @@ GlassLab.CreatureManager.prototype;
 /**
  * Creature
  */
-GlassLab.Creature = function(game, typeName)
+GlassLab.Creature = function(game, typeName, initialStateName)
 {
     this.sprite = game.make.isoSprite(0,0,0, typeName);
     //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
     this.state = null;
 
-    this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
+    if (initialStateName == "WaitingForFood") {
+      this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
+    } else {
+      this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
+    }
 
     this.sprite.inputEnabled = true;
+    this.sprite.draggable = false; // set this in each state
 
     // TODO: Input handling should be handled outside this class.
     this.sprite.events.onInputUp.add(this._onUp, this);
@@ -41,15 +46,19 @@ GlassLab.Creature = function(game, typeName)
 
 GlassLab.Creature.prototype._onUp = function(sprite, pointer)
 {
-    this.sprite.animations.stop(null, true);
-    this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
+    if (this.draggable) {
+      this.sprite.animations.stop(null, true);
+      this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
+    }
 };
 
 GlassLab.Creature.prototype._onDown = function(sprite, pointer)
 {
-    this.sprite.animations.stop(null, true);
-    this.sprite.animations.play("run", 96, true);
-    this.StateTransitionTo(null);
+    if (this.draggable) {
+      this.sprite.animations.stop(null, true);
+      this.sprite.animations.play("run", 96, true);
+      this.StateTransitionTo(null);
+    }
 };
 
 GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
@@ -107,6 +116,7 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
     GlassLab.CreatureState.prototype.Enter.call(this);
 
     this.findDestinationHandler = this.game.time.events.add(Math.random()*3000 + 2000, this._findNewDestination, this);
+    this.creature.draggable = true;
 };
 
 GlassLab.CreatureStateIdle.prototype.Exit = function()
@@ -181,4 +191,23 @@ GlassLab.CreatureStateIdle.prototype._onUpdate = function()
     this.creature.debugAILine.setTo(this.creature.sprite.x, this.creature.sprite.y, debugPoint.x, debugPoint.y);
 
     //this.game.debug.geom(this.creature.debugAILine);
+};
+
+/**
+ * CreatureStateWaitingForFood
+ */
+GlassLab.CreatureStateWaitingForFood = function(game, owner)
+{
+  GlassLab.CreatureState.call(this, game, owner);
+  // Do nothing
+};
+
+GlassLab.CreatureStateWaitingForFood.prototype.Enter = function()
+{
+  GlassLab.CreatureState.prototype.Enter.call(this);
+  this.creature.draggable = false;
+};
+
+GlassLab.CreatureStateWaitingForFood.prototype.Exit = function() {
+  GlassLab.CreatureState.prototype.Exit.call(this);
 };

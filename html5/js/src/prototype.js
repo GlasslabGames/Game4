@@ -76,11 +76,11 @@ window.onload = function() {
 
         // Create pen
         GLOBAL.penLayer = game.add.group();
-        var pen = new GlassLab.Pen(game, GLOBAL.penLayer);
-        GLOBAL.pen = pen; // FIXME: temporarily made global for console testing
+        GLOBAL.creatureLayer = game.add.group();
+
+      var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
 
         // Create creatures
-        GLOBAL.creatureLayer = game.add.group();
         for (var i=0; i < 5; i++)
         {
             var creature = new GlassLab.Creature(game, "sheep");
