@@ -27,18 +27,18 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6153846" vertical-offset="0" max-vertical-offset="408">
-              <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
+            <state vertical-scroll-proportion="-5.8846154" vertical-offset="0" max-vertical-offset="425">
+              <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="prototype.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="prototype.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/prototype.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6886574" vertical-offset="1224" max-vertical-offset="2941">
-              <caret line="107" column="79" selection-start-line="107" selection-start-column="79" selection-end-line="107" selection-end-column="79" />
+            <state vertical-scroll-proportion="-6.678571" vertical-offset="187" max-vertical-offset="3213">
+              <caret line="22" column="85" selection-start-line="22" selection-start-column="85" selection-end-line="22" selection-end-column="85" />
               <folding />
             </state>
           </provider>
@@ -47,18 +47,18 @@
       <file leaf-file-name="TileManager.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/TileManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="799" max-vertical-offset="3995">
-              <caret line="47" column="59" selection-start-line="47" selection-start-column="59" selection-end-line="47" selection-end-column="59" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2023" max-vertical-offset="4165">
+              <caret line="56" column="55" selection-start-line="56" selection-start-column="55" selection-end-line="56" selection-end-column="55" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Creature.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Creature.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/src/Creature.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.857142" vertical-offset="4196" max-vertical-offset="5032">
-              <caret line="268" column="46" selection-start-line="268" selection-start-column="46" selection-end-line="268" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.75598085" vertical-offset="4213" max-vertical-offset="5049">
+              <caret line="285" column="117" selection-start-line="285" selection-start-column="117" selection-end-line="285" selection-end-column="117" />
               <folding />
             </state>
           </provider>
@@ -77,8 +77,8 @@
       <file leaf-file-name="Pen.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/Pen.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3896" max-vertical-offset="7021">
-              <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="269" selection-end-column="1" />
+            <state vertical-scroll-proportion="-14.964286" vertical-offset="3576" max-vertical-offset="7021">
+              <caret line="237" column="24" selection-start-line="237" selection-start-column="24" selection-end-line="237" selection-end-column="24" />
               <folding>
                 <element signature="e#0#50#0" expanded="false" />
               </folding>
@@ -107,8 +107,8 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/js/src/TileManager.js" />
         <option value="$PROJECT_DIR$/js/src/Pen.js" />
-        <option value="$PROJECT_DIR$/js/src/Creature.js" />
         <option value="$PROJECT_DIR$/js/src/prototype.js" />
+        <option value="$PROJECT_DIR$/js/src/Creature.js" />
       </list>
     </option>
   </component>
@@ -619,10 +619,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/src/TileManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="952" max-vertical-offset="4165">
+          <caret line="56" column="55" selection-start-line="56" selection-start-column="55" selection-end-line="56" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/src/Pen.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3896" max-vertical-offset="7021">
-          <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="269" selection-end-column="1" />
+        <state vertical-scroll-proportion="-14.964286" vertical-offset="3576" max-vertical-offset="7021">
+          <caret line="237" column="24" selection-start-line="237" selection-start-column="24" selection-end-line="237" selection-end-column="24" />
           <folding>
             <element signature="e#0#50#0" expanded="false" />
           </folding>
@@ -631,32 +639,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6153846" vertical-offset="0" max-vertical-offset="408">
-          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/Creature.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.857142" vertical-offset="4196" max-vertical-offset="5032">
-          <caret line="268" column="46" selection-start-line="268" selection-start-column="46" selection-end-line="268" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/TileManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="3995">
-          <caret line="47" column="59" selection-start-line="47" selection-start-column="59" selection-end-line="47" selection-end-column="59" />
+        <state vertical-scroll-proportion="-5.8846154" vertical-offset="0" max-vertical-offset="425">
+          <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/src/prototype.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6886574" vertical-offset="1224" max-vertical-offset="2941">
-          <caret line="107" column="79" selection-start-line="107" selection-start-column="79" selection-end-line="107" selection-end-column="79" />
+        <state vertical-scroll-proportion="-6.678571" vertical-offset="187" max-vertical-offset="3213">
+          <caret line="22" column="85" selection-start-line="22" selection-start-column="85" selection-end-line="22" selection-end-column="85" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/src/Creature.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.75598085" vertical-offset="4213" max-vertical-offset="5049">
+          <caret line="285" column="117" selection-start-line="285" selection-start-column="117" selection-end-line="285" selection-end-column="117" />
           <folding />
         </state>
       </provider>

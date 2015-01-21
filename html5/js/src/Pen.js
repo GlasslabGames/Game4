@@ -165,7 +165,7 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, onLeft) {
   var tile = this.unusedTiles.pop();
   if (!tile) { // we ran out of existing tiles, so make a new one
     tile = this.game.make.isoSprite(0, 0, 0, "penBg");
-    tile.anchor.set(0.5, 0.25);
+    tile.anchor.set(0.5, 0.5);
     this.tileRoot.addChild(tile);
     this.tiles.push(tile);
   }
@@ -227,7 +227,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
     sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
     //sprite.tint = 0x695B47;
     //sprite.alpha = 0.01;
-    sprite.anchor.set(0.5, 0.75);
+    sprite.anchor.set(0.5, 1.13);
     sprite.inputEnabled = true;
     sprite.events.onInputUp.add(this._onUp, this);
     sprite.events.onInputDown.add(this._onDown, this);
@@ -373,7 +373,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
   this.FillIn(GlassLab.Food.bind(null, this.game, "food"), this.foods,
     this.leftWidth, this.leftWidth + this.rightWidth, 0, this.height);
   this.FillIn(GlassLab.Creature.bind(null, this.game, "sheep", "WaitingForFood"), this.creatures,
-    1, this.leftWidth+1, 1, this.height + 1); // the creatures are offset by 1 tile down and right
+    0, this.leftWidth, 0, this.height); // the creatures are offset by 1 tile down and right
 }
 
 GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol, endCol, startRow, endRow) {
@@ -405,5 +405,5 @@ GlassLab.Food = function(game, spriteName) {
   this.sprite = game.make.isoSprite(0,0,0, spriteName);
   this.sprite.scale.x = this.sprite.scale.y = 0.75;
   this.game = game;
-  this.sprite.anchor.setTo(0.5, 0.25);
+  this.sprite.anchor.setTo(0.5, 0.5);
 };
