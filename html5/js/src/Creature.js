@@ -285,7 +285,7 @@ GlassLab.CreatureStateDragged.prototype._onUpdate = function()
 {
   var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
   this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
-  Phaser.Point.divide(cursorIsoPosition, this.game.world.scale, cursorIsoPosition);
+    Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
   this.creature.sprite.isoX = cursorIsoPosition.x;
   this.creature.sprite.isoY = cursorIsoPosition.y;
 }

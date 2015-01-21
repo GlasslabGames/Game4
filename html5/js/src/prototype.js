@@ -39,7 +39,7 @@ window.onload = function() {
         game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
 
         // UI
-        game.load.image('zoomIcons', 'assets/images/zoom-icons-md.png');
+        game.load.spritesheet('zoomIcons', 'assets/images/zoom-icons-md.png', 138, 141, 2);
         game.load.image('fullscreenIcon', 'assets/images/maximize-128.png');
         game.load.image('pauseIcon', 'assets/images/519697-205_CircledPause-128.png');
 
@@ -56,9 +56,12 @@ window.onload = function() {
         // Setup world
         game.iso.anchor.setTo(0,0);
         game.iso.projectionAngle = 0.52359877559829887307710723054658; // 30 degree angle
-        game.world.scale.setTo(0.5, 0.5);
 
-        GLOBAL.tileSize = 139; // Art tile size is about 139 (guessed with trial and error)
+        GLOBAL.UILayer = game.add.group();
+        GLOBAL.WorldLayer = game.add.group();
+        GLOBAL.WorldLayer.scale.setTo(0.5, 0.5);
+
+        GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
 
         game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
@@ -67,12 +70,17 @@ window.onload = function() {
         GLOBAL.tileManager.GenerateRandomMapData(20, 20);
         GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
         GLOBAL.tileManager.SetCenter(10,10);
-        GLOBAL.grassGroup = game.add.group();
+        GLOBAL.grassGroup = game.make.group();
         GLOBAL.tileManager.GenerateMapFromDataToGroup(GLOBAL.grassGroup);
+        GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
         // Create pen
-        GLOBAL.penLayer = game.add.group();
-        GLOBAL.creatureLayer = game.add.group();
+        GLOBAL.penLayer = game.make.group();
+        GLOBAL.WorldLayer.add(GLOBAL.penLayer);
+        GLOBAL.creatureLayer = game.make.group();
+        GLOBAL.WorldLayer.add(GLOBAL.creatureLayer);
+
+        GLOBAL.paused = false;
 
       var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
 
@@ -106,11 +114,56 @@ window.onload = function() {
 
         // Add clouds
         GLOBAL.cloudManager = new GlassLab.CloudManager(game);
-        game.world.add(GLOBAL.cloudManager.renderGroup);
+        GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
 
         // Add UI
         var uiGroup = game.add.group();
-        var uiElement = game.make.sprite();
+        //uiGroup.fixedToCamera = true;
+        uiGroup.x = game.camera.width-75;
+        var uiElement;
+        uiElement = game.make.graphics(0,0);
+        uiElement.beginFill(0xFFFF99).drawRect(0,0, 150, 300);
+        uiElement.fixedToCamera = true;
+        uiGroup.add(uiElement);
+
+        uiElement = game.make.sprite(5, 0, "zoomIcons", 0);
+        uiElement.scale.setTo(0.5, 0.5);
+        uiElement.fixedToCamera = true;
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){
+            GLOBAL.WorldLayer.scale.x /= 2;GLOBAL.WorldLayer.scale.y /= 2;
+        }, this);
+        uiGroup.add(uiElement);
+        uiElement = game.make.sprite(5, 75, "zoomIcons", 1);
+        uiElement.scale.setTo(0.5, 0.5);
+        uiElement.fixedToCamera = true;
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){
+            GLOBAL.WorldLayer.scale.x *= 2;GLOBAL.WorldLayer.scale.y *= 2;
+        }, this);
+        uiGroup.add(uiElement);
+        uiElement = game.make.sprite(5, 150, "fullscreenIcon");
+        uiElement.scale.setTo(0.5, 0.5);
+        uiElement.fixedToCamera = true;
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){
+            if (game.scale.isFullScreen)
+            {
+                game.scale.stopFullScreen();
+            }
+            else
+            {
+                game.scale.startFullScreen(false);
+            }
+        }, this);
+        uiGroup.add(uiElement);
+        uiElement = game.make.sprite(5, 225, "pauseIcon");
+        uiElement.scale.setTo(0.5, 0.5);
+        uiElement.fixedToCamera = true;
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
+        uiGroup.add(uiElement);
+        GLOBAL.UIGroup = uiGroup;
 
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
@@ -121,7 +174,19 @@ window.onload = function() {
         // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
         GLOBAL.lastMousePosition = new Phaser.Point();
 
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;
+        game.scale.enterFullScreen.add(onEnterFullScreen, this);
+        game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
+
       this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+    }
+
+    function onEnterFullScreen() {
+        GLOBAL.UIGroup.x = game.camera.width-75;
+    }
+
+    function onLeaveFullScreen() {
+        GLOBAL.UIGroup.x = game.camera.width-75;
     }
 
     function globalDown(pointer, DOMevent)
@@ -142,9 +207,14 @@ window.onload = function() {
 
     function update(game)
     {
-        GlassLab.SignalManager.update.dispatch(game.time.elapsedMS);
+        if (!GLOBAL.paused)
+        {
+            GlassLab.SignalManager.update.dispatch(game.time.elapsedMS);
+        }
 
         GLOBAL.justDropped = false;
+
+        var tileSprite;
 
         // Re-sort creatures because they probably moved
         game.iso.simpleSort(GLOBAL.creatureLayer);
@@ -154,11 +224,14 @@ window.onload = function() {
             game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
             game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
+        else if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
+        {
+            cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
+            game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+            Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
+            tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
+        }
 
-        var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
-        game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
-        Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
-        var tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         if (tileSprite != GLOBAL.highlightedTile)
         {
             if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
