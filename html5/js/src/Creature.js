@@ -40,6 +40,9 @@ GlassLab.Creature = function(game, typeName, initialStateName)
     this.sprite.events.onInputDown.add(this._onDown, this);
     this.sprite.anchor.setTo(0.5, 1.3);
 
+    this.sprite.scale.x = -0.25;
+    this.sprite.scale.y = 0.25;
+
     this.sprite.animations.add('run');
 
     this.debugAILine = new Phaser.Line();
@@ -94,9 +97,13 @@ GlassLab.CreatureState = function(game, owner)
     this.game = game;
 };
 
-GlassLab.CreatureState.prototype.Enter = function() { console.log("Enter"); };
+GlassLab.CreatureState.prototype.Enter = function() {
+  //console.log("Enter");
+};
 
-GlassLab.CreatureState.prototype.Exit = function() { console.log("Exit"); };
+GlassLab.CreatureState.prototype.Exit = function() {
+  //console.log("Exit");
+};
 
 /**
  * CreatureStateIdle

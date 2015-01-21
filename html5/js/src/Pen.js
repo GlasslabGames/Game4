@@ -41,9 +41,9 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.objectRoot = this.game.make.isoSprite();
   this.root.addChild(this.objectRoot).name = "objectRoot";
 
-  this.root.addChild(this.rightEdge.sprite);
   this.root.addChild(this.centerEdge.sprite);
   this.root.addChild(this.bottomEdge.sprite);
+  this.root.addChild(this.rightEdge.sprite);
 
   this.root.isoX = 3 * GLOBAL.tileSize;
   this.root.isoY = 3 * GLOBAL.tileSize;
@@ -51,8 +51,26 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.Resize();
 };
 
+
 GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
+
+// sets only the listed edge(s) to be draggable
+GlassLab.Pen.prototype.SetDraggable = function() {
+  // first make all edges undraggable, then make the specific ones listed draggable
+  for (var i = 0; i < this.edges.length; i++) {
+    this.edges[i].draggable = false;
+  }
+  // set the listed edges to be draggable
+  for(var j=0; j < arguments.length; j++) {
+    for (var i = 0; i < this.edges.length; i++) {
+      if (this.edges[i] == arguments[j] || this.edges[i].side == arguments[j]) {
+        this.edges[i].draggable = true;
+        break;
+      }
+    }
+  }
+};
 
 GlassLab.Pen.prototype.SetSize = function(leftWidth, rightWidth, height) {
   this.leftWidth = leftWidth;
@@ -64,8 +82,9 @@ GlassLab.Pen.prototype.SetSize = function(leftWidth, rightWidth, height) {
 GlassLab.Pen.prototype.SetSizeFromEdge = function(edge) {
   var rows = Math.round(edge.sprite.isoY / GLOBAL.tileSize);
   var cols = Math.round(edge.sprite.isoX / GLOBAL.tileSize);
-  console.log("left:",this.leftWidth,"right:",this.rightWidth,"height:",this.height);
-  console.log("cols:", cols, "rows:", rows);
+  //console.log("left:",this.leftWidth,"right:",this.rightWidth,"height:",this.height);
+  //console.log("cols:", cols, "rows:", rows);
+  console.log("setSizeFromEdge");
 
   switch (edge.side) {
     case GlassLab.Edge.SIDES.top:
@@ -177,6 +196,7 @@ GlassLab.Edge = function(pen, side) {
     this.horizontal = false;
   }
 
+  this.draggable = true;
   this.dragging = false;
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 };
@@ -211,6 +231,8 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
     sprite.inputEnabled = true;
     sprite.events.onInputUp.add(this._onUp, this);
     sprite.events.onInputDown.add(this._onDown, this);
+    sprite.events.onInputOver.add(this._onOver, this);
+    sprite.events.onInputOut.add(this._onOut, this);
     this.sprite.addChild(sprite);
   }
   sprite.visible = true;
@@ -222,8 +244,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
 };
 
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
-  console.log("down on",this.sprite.name);
-  if (!this.dragging) {
+  if (!this.dragging && this.draggable) {
     this.dragging = true;
     this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
     Phaser.Point.divide(this.initialCursorIsoPos, this.game.world.scale, this.initialCursorIsoPos);
@@ -232,7 +253,6 @@ GlassLab.Edge.prototype._onDown = function( target, pointer ) {
 };
 
 GlassLab.Edge.prototype._onUp = function( target, pointer ) {
-  console.log("up on",this.sprite.name);
   if (this.dragging) {
     this.dragging = false;
     this.pen.SetSizeFromEdge(this);
@@ -240,54 +260,78 @@ GlassLab.Edge.prototype._onUp = function( target, pointer ) {
   }
 };
 
+GlassLab.Edge.prototype._onOver = function( target, pointer ) {
+  console.log("over",this.sprite.name);
+  if (this.draggable) {
+    this._highlight(true);
+  }
+};
+
+GlassLab.Edge.prototype._onOut = function( target, pointer ) {
+  console.log("out",this.sprite.name);
+  this._highlight(false);
+};
+
+GlassLab.Edge.prototype._highlight = function(on) {
+  for (var i = 0; i < this.sprite.children.length; i++) {
+    this.sprite.children[i].tint = (on)? 0xeebbff : 0xffffff;
+  }
+}
+
 GlassLab.Edge.prototype._onUpdate = function() {
   if (this.dragging) {
     var cursorIsoPosition = this.game.iso.unproject(this.game.input.activePointer.position);
     Phaser.Point.divide(cursorIsoPosition, this.game.world.scale, cursorIsoPosition);
-    cursorIsoPosition = Phaser.Point.subtract(cursorIsoPosition, this.initialCursorIsoPos);
+    cursorDifference = Phaser.Point.subtract(cursorIsoPosition, this.initialCursorIsoPos);
     var ts = GLOBAL.tileSize;
-    var row = Math.round(cursorIsoPosition.y / ts);
-    var col = Math.round(cursorIsoPosition.x / ts);
     var targetPos = { x: this.sprite.isoX, y: this.sprite.isoY };
+    var closestGridPos, flooredGridPos; // flooredGrid is the gridline closest to the center of the pen
 
     // I'm not sure if we want to have the edge stick to the grid yet, so do the calculations for both
     switch (this.side) {
       case GlassLab.Edge.SIDES.top:
-        row = Math.min(row, this.pen.height - 1);
-        targetPos.y = Math.min( cursorIsoPosition.y, (this.pen.height - 1) * ts);
+        targetPos.y = Math.min( cursorDifference.y, (this.pen.height - 1) * ts);
+        closestGridPos = Math.round(targetPos.y / ts);
+        flooredGridPos = Math.ceil(targetPos.y / ts);
         break;
       case GlassLab.Edge.SIDES.bottom:
-        row = Math.max(row, -(this.pen.height - 1));
-        targetPos.y = Math.max( cursorIsoPosition.y, -(this.pen.height - 1) * ts);
+        targetPos.y = Math.max( cursorDifference.y, -(this.pen.height - 1) * ts);
+        closestGridPos = Math.round(targetPos.y / ts);
+        flooredGridPos = Math.floor(targetPos.y / ts);
         break;
       case GlassLab.Edge.SIDES.left:
-        col = Math.min(col, this.pen.leftWidth - 1);
-        targetPos.x = Math.min( cursorIsoPosition.x, (this.pen.leftWidth - 1) * ts);
+        targetPos.x = Math.min( cursorDifference.x, (this.pen.leftWidth - 1) * ts);
+        closestGridPos = Math.round(targetPos.x / ts);
+        flooredGridPos = Math.ceil(targetPos.x / ts);
         break;
       case GlassLab.Edge.SIDES.right:
-        col = Math.max(col, -(this.pen.rightWidth - 1));
-        targetPos.x = Math.max( cursorIsoPosition.x, -(this.pen.rightWidth - 1) * ts);
+        targetPos.x = Math.max( cursorDifference.x, -(this.pen.rightWidth - 1) * ts);
+        closestGridPos = Math.round(targetPos.x / ts);
+        flooredGridPos = Math.floor(targetPos.x / ts);
         break;
       case GlassLab.Edge.SIDES.center:
-        col = Math.min(col, this.pen.rightWidth - 1);
-        col = Math.max(col, -(this.pen.leftWidth - 1));
-        targetPos.x = Math.min( cursorIsoPosition.x, (this.pen.rightWidth - 1) * ts);
+        targetPos.x = Math.min( cursorDifference.x, (this.pen.rightWidth - 1) * ts);
         targetPos.x = Math.max( targetPos.x, -(this.pen.leftWidth - 1) * ts);
+        closestGridPos = Math.round(targetPos.x / ts);
+        flooredGridPos = Math.ceil(targetPos.x / ts); // is this right?>
         break;
     }
 
-    if (targetPos.x != this.sprite.isoX || targetPos.y != this.sprite.isoY) {
-      // allow different options for how the handles move ( ideally we could put these in the game for pepole to try)
-      var lerpFactor = 0.2; // 0: no snap, 0.2: some snap, 1: full snap
-      if (lerpFactor > 0) {
-        if (this.horizontal) this.sprite.isoY = (1 - lerpFactor) * this.sprite.isoY + lerpFactor * row * ts;
-        else this.sprite.isoX = (1 - lerpFactor) * this.sprite.isoX + lerpFactor * col * ts;
-      } else {
-        if (this.horizontal) this.sprite.isoY = targetPos.y;
-        else this.sprite.isoX = targetPos.x;
+    // allow different options for how the handles move ( ideally we could put these in the game for pepole to try)
+    var lerpFactor = 0.2; // 0: no snap, 0.2: some snap, 1: full snap
+    if (lerpFactor > 0) {
+      if (this.horizontal) {
+        this.sprite.isoY = (1 - lerpFactor) * this.sprite.isoY + lerpFactor * closestGridPos * ts;
       }
+      else {
+        this.sprite.isoX = (1 - lerpFactor) * this.sprite.isoX + lerpFactor * closestGridPos * ts;
+      }
+    } else {
+      if (this.horizontal) this.sprite.isoY = targetPos.y;
+      else this.sprite.isoX = targetPos.x;
     }
 
+    // TODO: it would be nice to redraw the contents before the edge is dropped, but it's causing issues
   }
 };
 
@@ -296,22 +340,12 @@ GlassLab.Edge.prototype._onUpdate = function() {
  */
 GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.foods = [];
-  this.unusedFoods = [];
+  this.creatures = [];
 
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
-  for (var col = 1; col <= animalWidth; col++) {
-    for (var row = 1; row <= height; row++) {
-      var creature = new GlassLab.Creature(game, "sheep", "WaitingForFood");
-      this.objectRoot.addChild(creature.sprite);
-      creature.sprite.isoX = col * GLOBAL.tileSize;
-      creature.sprite.isoY = row * GLOBAL.tileSize;
-      creature.sprite.scale.x = creature.sprite.scale.y = .25;
-      creature.sprite.scale.x *= -1;
-    }
-  }
-
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
+  this.SetDraggable(GlassLab.Edge.SIDES.right);
 };
 
 GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -320,25 +354,40 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 GlassLab.FeedingPen.prototype.Resize = function() {
   GlassLab.Pen.prototype.Resize.call(this);
 
-  this.unusedFoods = this.foods.slice();
-  for (var col = this.leftWidth; col < this.leftWidth + this.rightWidth; col++) {
-    for (var row = 0; row < this.height; row++) {
-      var food = this.unusedFoods.pop();
-      if (!food) { // we ran out of existing tiles, so make a new one
-        food = this.game.make.isoSprite(0, 0, 0, "food");
-        food.scale.x = food.scale.y = 0.75;
-        food.anchor.set(0.5, 0.25);
-        this.objectRoot.addChild(food);
-        this.foods.push(food);
+  this.FillIn(GlassLab.Food.bind(null, this.game, "food"), this.foods,
+    this.leftWidth, this.leftWidth + this.rightWidth, 0, this.height);
+  this.FillIn(GlassLab.Creature.bind(null, this.game, "sheep", "WaitingForFood"), this.creatures,
+    1, this.leftWidth+1, 1, this.height + 1); // the creatures are offset by 1 tile down and right
+}
+
+GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol, endCol, startRow, endRow) {
+  var unusedObjects = list.slice();
+  for (var col = startCol; col < endCol; col++) {
+    for (var row = startRow; row < endRow; row++) {
+      var obj  = unusedObjects.pop();
+      if (!obj) { // we ran out of existing tiles, so make a new one
+        obj = new boundConstructor();
+        this.objectRoot.addChild(obj.sprite);
+        list.push(obj);
       }
-      food.visible = true;
-      food.isoX = col * GLOBAL.tileSize;
-      food.isoY = row * GLOBAL.tileSize;
-      food.parent.setChildIndex(food, food.parent.children.length - 1); // move it to the back of the children so far
+      obj.sprite.visible = true;
+      obj.sprite.isoX = col * GLOBAL.tileSize;
+      obj.sprite.isoY = row * GLOBAL.tileSize;
+      obj.sprite.parent.setChildIndex(obj.sprite, obj.sprite.parent.children.length - 1); // move it to the back of the children so far
     }
   }
 
-  for (var i = 0; i < this.unusedFoods.length; i++) {
-    this.unusedFoods[i].visible = false;
+  for (var i = 0; i < unusedObjects.length; i++) {
+    unusedObjects[i].sprite.visible = false;
   }
 }
+
+/**
+ * Food - just a sprite for now
+ */
+GlassLab.Food = function(game, spriteName) {
+  this.sprite = game.make.isoSprite(0,0,0, spriteName);
+  this.sprite.scale.x = this.sprite.scale.y = 0.75;
+  this.game = game;
+  this.sprite.anchor.setTo(0.5, 0.25);
+};
