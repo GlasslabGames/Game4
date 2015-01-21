@@ -38,7 +38,7 @@ GlassLab.Creature = function(game, typeName, initialStateName)
     // TODO: Input handling should be handled outside this class.
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
-    this.sprite.anchor.setTo(0.5, 1.3);
+    this.sprite.anchor.setTo(0.5, 0.8);
 
     this.sprite.scale.x = -0.25;
     this.sprite.scale.y = 0.25;

@@ -3,7 +3,7 @@
  */
 var GLOBAL = GLOBAL || {};
 window.onload = function() {
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
+    var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
     GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
 
@@ -35,6 +35,14 @@ window.onload = function() {
         game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
         game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');
 
+        // Cloud shadow
+        game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
+
+        // UI
+        game.load.image('zoomIcons', 'assets/images/zoom-icons-md.png');
+        game.load.image('fullscreenIcon', 'assets/images/maximize-128.png');
+        game.load.image('pauseIcon', 'assets/images/519697-205_CircledPause-128.png');
+
         game.plugins.add(new Phaser.Plugin.Isometric(game));
     }
 
@@ -58,7 +66,7 @@ window.onload = function() {
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
         GLOBAL.tileManager.GenerateRandomMapData(20, 20);
         GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
-        GLOBAL.tileManager.SetCenter(9,9);
+        GLOBAL.tileManager.SetCenter(10,10);
         GLOBAL.grassGroup = game.add.group();
         GLOBAL.tileManager.GenerateMapFromDataToGroup(GLOBAL.grassGroup);
 
@@ -95,6 +103,14 @@ window.onload = function() {
             //creature.sprite.events.onInputDown.add(onDown, this);
             //creature.sprite.events.onInputUp.add(onUp, this);
         }
+
+        // Add clouds
+        GLOBAL.cloudManager = new GlassLab.CloudManager(game);
+        game.world.add(GLOBAL.cloudManager.renderGroup);
+
+        // Add UI
+        var uiGroup = game.add.group();
+        var uiElement = game.make.sprite();
 
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
@@ -139,7 +155,7 @@ window.onload = function() {
             game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
 
-        cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY+50);
+        var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
         game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
         Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
         var tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
