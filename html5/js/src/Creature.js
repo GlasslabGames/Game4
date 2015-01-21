@@ -52,20 +52,38 @@ GlassLab.Creature = function(game, typeName, initialStateName)
 
 GlassLab.Creature.prototype._onUp = function(sprite, pointer)
 {
-    if (this.draggable) {
-      this.sprite.animations.stop(null, true);
-      this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
-    }
+  if (this.draggable && GLOBAL.stickyMode && !GLOBAL.dragTarget && !GLOBAL.justDropped) {
+    this._startDrag();
+  } else if (!GLOBAL.stickyMode && GLOBAL.dragTarget == this) {
+    this._endDrag();
+  }
 };
 
 GlassLab.Creature.prototype._onDown = function(sprite, pointer)
 {
-    if (this.draggable) {
-      this.sprite.animations.stop(null, true);
-      this.sprite.animations.play("run", 96, true);
-      this.StateTransitionTo(null);
-    }
+  if (!GLOBAL.stickyMode && this.draggable && !GLOBAL.dragTarget) {
+    this._startDrag();
+  }
 };
+
+
+GlassLab.Creature.prototype._startDrag = function() {
+  if (GLOBAL.dragTarget != null) return;
+  this.sprite.animations.stop(null, true);
+  this.sprite.animations.play("run", 96, true);
+  this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
+  GLOBAL.dragTarget = this;
+};
+
+GlassLab.Creature.prototype._endDrag = function() {
+  this.sprite.animations.stop(null, true);
+  this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
+  GLOBAL.dragTarget = null;
+};
+
+GlassLab.Creature.prototype.OnStickyDrop = function() { // called by (atm) prototype.js
+  this._endDrag();
+}
 
 GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
 {
@@ -185,41 +203,36 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 GlassLab.CreatureStateIdle.prototype._onUpdate = function()
 {
     var delta = Phaser.Point.subtract(this.targetPosition, this.creature.sprite.isoPosition);
-    if (delta.getMagnitudeSq() > 1)
-    {
-        delta.setMagnitude(1);
+    if (delta.getMagnitudeSq() > 1) {
+      delta.setMagnitude(1);
     }
-    else
-    {
-        // If the delta magnitude is less than our move speed, we're done after this frame.
-        this.updateHandler.detach();
-        this.updateHandler = null;
-        this.creature.sprite.animations.stop(null, true);
-        this.findDestinationHandler = this.game.time.events.add(Math.random()*3000 + 2000, this._findNewDestination, this);
-        // Physics
-        if (this.creature.sprite.body)
-        {
-            this.creature.sprite.body.velocity.setTo(0,0);
-            return;
-        }
+    else {
+      // If the delta magnitude is less than our move speed, we're done after this frame.
+      this.updateHandler.detach();
+      this.updateHandler = null;
+      this.creature.sprite.animations.stop(null, true);
+      this.findDestinationHandler = this.game.time.events.add(Math.random() * 3000 + 2000, this._findNewDestination, this);
+      // Physics
+      if (this.creature.sprite.body) {
+        this.creature.sprite.body.velocity.setTo(0, 0);
+        return;
+      }
     }
 
     var debugPoint = this.game.iso.project(delta);
     this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (debugPoint.x > 0 ? -1 : 1);
 
-    if (this.creature.sprite.body)
-    {
-        // Physics
-        this.creature.sprite.body.velocity.x = delta.x * 100.0;
-        this.creature.sprite.body.velocity.y = delta.y * 100.0;
+    if (this.creature.sprite.body) {
+      // Physics
+      this.creature.sprite.body.velocity.x = delta.x * 100.0;
+      this.creature.sprite.body.velocity.y = delta.y * 100.0;
     }
-    else
-    {
-        Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
+    else {
+      Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
 
-        //this.creature.sprite.position = delta;
-        this.creature.sprite.isoX = delta.x;
-        this.creature.sprite.isoY = delta.y;
+      //this.creature.sprite.position = delta;
+      this.creature.sprite.isoX = delta.x;
+      this.creature.sprite.isoY = delta.y;
     }
 
     debugPoint = this.game.iso.project(this.targetIsoPoint);
@@ -244,3 +257,35 @@ GlassLab.CreatureStateWaitingForFood.prototype.Enter = function()
 GlassLab.CreatureStateWaitingForFood.prototype.Exit = function() {
   GlassLab.CreatureState.prototype.Exit.call(this);
 };
+
+/**
+ * CreatureStateDragged
+ */
+GlassLab.CreatureStateDragged = function(game, owner)
+{
+  GlassLab.CreatureState.call(this, game, owner);
+};
+
+GlassLab.CreatureStateDragged.prototype.Enter = function()
+{
+  GlassLab.CreatureState.prototype.Enter.call(this);
+  this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
+};
+
+GlassLab.CreatureStateDragged.prototype.Exit = function() {
+  GlassLab.CreatureState.prototype.Exit.call(this);
+  if (this.updateHandler)
+  {
+    this.updateHandler.detach();
+    this.updateHandler = null;
+  }
+};
+
+GlassLab.CreatureStateDragged.prototype._onUpdate = function()
+{
+  var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY+50);
+  this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+  Phaser.Point.divide(cursorIsoPosition, this.game.world.scale, cursorIsoPosition);
+  this.creature.sprite.isoX = cursorIsoPosition.x;
+  this.creature.sprite.isoY = cursorIsoPosition.y;
+}

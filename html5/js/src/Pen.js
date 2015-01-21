@@ -244,32 +244,48 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
 };
 
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
-  if (!this.dragging && this.draggable) {
-    this.dragging = true;
-    this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
-    Phaser.Point.divide(this.initialCursorIsoPos, this.game.world.scale, this.initialCursorIsoPos);
-    GLOBAL.dragTarget = this;
+  if (!GLOBAL.stickyMode && !this.dragging && this.draggable) {
+    this._startDrag();
   }
 };
 
 GlassLab.Edge.prototype._onUp = function( target, pointer ) {
-  if (this.dragging) {
-    this.dragging = false;
-    this.pen.SetSizeFromEdge(this);
-    GLOBAL.dragTarget = null;
+  if (this.draggable && GLOBAL.stickyMode && !GLOBAL.dragTarget && !GLOBAL.justDropped) {
+    this._startDrag();
+  } else if (!GLOBAL.stickyMode && GLOBAL.dragTarget == this) {
+    this._endDrag();
   }
 };
 
+GlassLab.Edge.prototype._startDrag = function() {
+  if (GLOBAL.dragTarget != null) return;
+  this.dragging = true;
+  this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
+  Phaser.Point.divide(this.initialCursorIsoPos, this.game.world.scale, this.initialCursorIsoPos);
+  GLOBAL.dragTarget = this;
+};
+
+GlassLab.Edge.prototype.OnStickyDrop = function() { // called by (atm) prototype.js
+  this._endDrag();
+}
+
+GlassLab.Edge.prototype._endDrag = function() {
+  this.dragging = false;
+  this.pen.SetSizeFromEdge(this);
+  GLOBAL.dragTarget = null;
+  this._highlight(false);
+};
+
 GlassLab.Edge.prototype._onOver = function( target, pointer ) {
-  console.log("over",this.sprite.name);
   if (this.draggable) {
     this._highlight(true);
   }
 };
 
 GlassLab.Edge.prototype._onOut = function( target, pointer ) {
-  console.log("out",this.sprite.name);
-  this._highlight(false);
+  if (!this.dragging) { // if we are dragging, stay highlighted
+    this._highlight(false);
+  }
 };
 
 GlassLab.Edge.prototype._highlight = function(on) {

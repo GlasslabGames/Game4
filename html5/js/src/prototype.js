@@ -5,6 +5,7 @@ var GLOBAL = GLOBAL || {};
 window.onload = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
+    GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
 
     function preload() {
         game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
@@ -91,27 +92,20 @@ window.onload = function() {
                 creature.sprite.scale.x *= -1;
             }
 
-            creature.sprite.events.onInputDown.add(onDown, this);
-            creature.sprite.events.onInputUp.add(onUp, this);
+            //creature.sprite.events.onInputDown.add(onDown, this);
+            //creature.sprite.events.onInputUp.add(onUp, this);
         }
 
-
         game.input.onDown.add(globalDown, this); // Global input down handler
+        game.input.onUp.add(globalUp, this); // Global input down handler
 
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
 
         // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
         GLOBAL.lastMousePosition = new Phaser.Point();
-    }
 
-    function onDown(sprite, pointer)
-    {
-        GLOBAL.dragTarget = sprite;
-    }
-    function onUp(sprite, pointer)
-    {
-        GLOBAL.dragTarget = null;
+      this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
     }
 
     function globalDown(pointer, DOMevent)
@@ -121,34 +115,25 @@ window.onload = function() {
         }
     }
 
+  function globalUp(pointer, DOMevent)
+  {
+    if (GLOBAL.stickyMode && GLOBAL.dragTarget) {
+      if (GLOBAL.dragTarget.OnStickyDrop) GLOBAL.dragTarget.OnStickyDrop();
+      GLOBAL.dragTarget = null;
+      GLOBAL.justDropped = true;
+    }
+  }
+
     function update(game)
     {
         GlassLab.SignalManager.update.dispatch(game.time.elapsedMS);
 
+        GLOBAL.justDropped = false;
+
         // Re-sort creatures because they probably moved
         game.iso.simpleSort(GLOBAL.creatureLayer);
 
-        var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY+50);
-        game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
-        Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
-        // If we have a drag target, move it
-        if (GLOBAL.dragTarget)
-        {
-            game.world.bringToTop(GLOBAL.dragTarget);
-
-            if (GLOBAL.dragTarget.body)
-            {
-                GLOBAL.dragTarget.body.position.x = cursorIsoPosition.x;
-                GLOBAL.dragTarget.body.position.y = cursorIsoPosition.y;
-            }
-            else
-            {
-                GLOBAL.dragTarget.isoX = cursorIsoPosition.x;
-                GLOBAL.dragTarget.isoY = cursorIsoPosition.y;
-            }
-        }
-        // else drag the camera
-        else if (game.input.activePointer.isDown)
+        if (game.input.activePointer.isDown && !GLOBAL.dragTarget)
         {
             game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
             game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
@@ -166,6 +151,11 @@ window.onload = function() {
         }
 
         GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
+
+        if (this.toggleStickyModeKey && this.toggleStickyModeKey.justDown) {
+          GLOBAL.stickyMode = !GLOBAL.stickyMode;
+          console.log("Sticky mode:", GLOBAL.stickyMode);
+        }
     }
 
     function render() {

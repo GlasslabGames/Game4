@@ -34,11 +34,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="prototype.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="prototype.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/src/prototype.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1122" max-vertical-offset="3111">
-              <caret line="87" column="68" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="68" />
+            <state vertical-scroll-proportion="0.6886574" vertical-offset="1224" max-vertical-offset="2941">
+              <caret line="107" column="79" selection-start-line="107" selection-start-column="79" selection-end-line="107" selection-end-column="79" />
               <folding />
             </state>
           </provider>
@@ -57,11 +57,9 @@
       <file leaf-file-name="Creature.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/Creature.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.321428" vertical-offset="1422" max-vertical-offset="4233">
-              <caret line="101" column="2" selection-start-line="101" selection-start-column="2" selection-end-line="101" selection-end-column="2" />
-              <folding>
-                <element signature="e#0#45#0" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="-12.857142" vertical-offset="4196" max-vertical-offset="5032">
+              <caret line="268" column="46" selection-start-line="268" selection-start-column="46" selection-end-line="268" selection-end-column="46" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -76,11 +74,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Pen.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Pen.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/Pen.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2523148" vertical-offset="5630" max-vertical-offset="6749">
-              <caret line="346" column="61" selection-start-line="346" selection-start-column="61" selection-end-line="346" selection-end-column="61" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3896" max-vertical-offset="7021">
+              <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="269" selection-end-column="1" />
               <folding>
                 <element signature="e#0#50#0" expanded="false" />
               </folding>
@@ -108,9 +106,9 @@
         <option value="$PROJECT_DIR$/testMap.html" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/js/src/TileManager.js" />
-        <option value="$PROJECT_DIR$/js/src/prototype.js" />
-        <option value="$PROJECT_DIR$/js/src/Creature.js" />
         <option value="$PROJECT_DIR$/js/src/Pen.js" />
+        <option value="$PROJECT_DIR$/js/src/Creature.js" />
+        <option value="$PROJECT_DIR$/js/src/prototype.js" />
       </list>
     </option>
   </component>
@@ -403,9 +401,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1632" max-vertical-offset="4114">
           <caret line="118" column="4" selection-start-line="118" selection-start-column="4" selection-end-line="118" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#45#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -447,9 +443,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="538" max-vertical-offset="3179">
           <caret line="151" column="0" selection-start-line="151" selection-start-column="0" selection-end-line="152" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#45#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -491,9 +485,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="170">
           <caret line="6" column="3" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#45#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -560,6 +552,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.7236615" vertical-offset="20649" max-vertical-offset="25653">
           <caret line="1194" column="45" selection-start-line="1194" selection-start-column="45" selection-end-line="1194" selection-end-column="45" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -618,11 +611,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/TileManager.js">
+    <entry file="file://$PROJECT_DIR$/js/src/SignalManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="3995">
-          <caret line="47" column="59" selection-start-line="47" selection-start-column="59" selection-end-line="47" selection-end-column="59" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+          <caret line="9" column="2" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="2" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/src/Pen.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3896" max-vertical-offset="7021">
+          <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="269" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#50#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -634,39 +637,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/SignalManager.js">
+    <entry file="file://$PROJECT_DIR$/js/src/Creature.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
-          <caret line="9" column="2" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="2" />
+        <state vertical-scroll-proportion="-12.857142" vertical-offset="4196" max-vertical-offset="5032">
+          <caret line="268" column="46" selection-start-line="268" selection-start-column="46" selection-end-line="268" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/src/TileManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="3995">
+          <caret line="47" column="59" selection-start-line="47" selection-start-column="59" selection-end-line="47" selection-end-column="59" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/src/prototype.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1122" max-vertical-offset="3111">
-          <caret line="87" column="68" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="68" />
+        <state vertical-scroll-proportion="0.6886574" vertical-offset="1224" max-vertical-offset="2941">
+          <caret line="107" column="79" selection-start-line="107" selection-start-column="79" selection-end-line="107" selection-end-column="79" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/Creature.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.321428" vertical-offset="1422" max-vertical-offset="4233">
-          <caret line="101" column="2" selection-start-line="101" selection-start-column="2" selection-end-line="101" selection-end-column="2" />
-          <folding>
-            <element signature="e#0#45#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/Pen.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2523148" vertical-offset="5630" max-vertical-offset="6749">
-          <caret line="346" column="61" selection-start-line="346" selection-start-column="61" selection-end-line="346" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#50#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
