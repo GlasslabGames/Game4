@@ -161,7 +161,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(parentGroup
             if (!this.map[i]) this.map[i] = [];
             this.map[i][j] = image;
 
-            if (true || GLOBAL.debug)
+            if (GLOBAL.debug)
             {
                 var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
                 text.anchor.set(0.5, 0.5);
