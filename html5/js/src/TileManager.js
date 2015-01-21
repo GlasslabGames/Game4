@@ -33,6 +33,16 @@ GlassLab.TileManager.prototype.GetTile = function(x, y)
     return this.map[x][y];
 };
 
+GlassLab.TileManager.prototype.GetMapLength = function()
+{
+    return this.map.length;
+};
+
+GlassLab.TileManager.prototype.GetMapWidth = function()
+{
+    return this.map[0].length;
+};
+
 GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
 {
     return type && type > 0 && type < 5;
@@ -144,16 +154,16 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(parentGroup
             var assetName = "grassTile" + tileType;
 
             var image = this.game.make.isoSprite((i-10)*GLOBAL.tileSize, (j-10)*GLOBAL.tileSize, 0, assetName);
-            image.anchor.set(0.5, 0.25);
+            image.anchor.set(0.5, 0.5);
             if (shouldFlip) image.scale.x = -image.scale.x;
             parentGroup.add(image);
 
             if (!this.map[i]) this.map[i] = [];
             this.map[i][j] = image;
 
-            if (GLOBAL.debug)
+            if (true || GLOBAL.debug)
             {
-                var text = this.game.make.text(0,60, "(" + i + ", " + j + ")");
+                var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
                 text.anchor.set(0.5, 0.5);
                 image.addChild(text);
                 if (image.scale.x < 0)
