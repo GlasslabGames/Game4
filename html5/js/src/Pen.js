@@ -48,6 +48,13 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.root.isoX = 3 * GLOBAL.tileSize;
   this.root.isoY = 3 * GLOBAL.tileSize;
 
+  var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
+  this.ratioLabel = game.make.text(game.world.centerX, game.world.centerY, "1 : 2", style);
+  this.ratioLabel.anchor.set(0.5, 1);
+  this.root.addChild(this.ratioLabel);
+  this.ratioLabel.x = this.topEdge.sprite.x;
+  this.ratioLabel.y = this.topEdge.sprite.y - GLOBAL.tileSize * 1.5;
+
   this.Resize();
 };
 
@@ -123,7 +130,7 @@ GlassLab.Pen.prototype.Resize = function() {
     this.bottomEdge.PlacePiece(col, this.height);
   }
 
-  //this.game.iso.simpleSort(this.tiles);
+  this.ratioLabel.text = (this.leftWidth * this.height) + " : " + (this.rightWidth * this.height);
 };
 
 GlassLab.Pen.prototype._resetEdges = function() {
@@ -405,5 +412,5 @@ GlassLab.Food = function(game, spriteName) {
   this.sprite = game.make.isoSprite(0,0,0, spriteName);
   this.sprite.scale.x = this.sprite.scale.y = 0.75;
   this.game = game;
-  this.sprite.anchor.setTo(0.5, 0.5);
+  this.sprite.anchor.setTo(0.5, 0.65);
 };
