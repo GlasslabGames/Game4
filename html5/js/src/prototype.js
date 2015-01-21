@@ -44,6 +44,16 @@ window.onload = function() {
         game.load.image('pauseIcon', 'assets/images/519697-205_CircledPause-128.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
+
+        var loadingText = game.add.text(32, 32, "Loading...", { fill: '#ffffff' } );
+
+        game.load.onFileComplete.add(function(progress, cacheKey, success, totalLoaded, totalFiles){
+            loadingText.setText("Loading... "+progress+"%");
+        }, this);
+        game.load.onLoadComplete.add(function() {
+            loadingText.destroy();
+            loadingText = null;
+        }, this);
     }
 
     function create()

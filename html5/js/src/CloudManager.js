@@ -29,7 +29,7 @@ GlassLab.CloudManager = function(game)
 GlassLab.CloudManager.prototype.SpawnCloud = function()
 {
     var cloud = new GlassLab.Cloud(this.game, this.renderGroup);
-    this.spawnCloudTimer = this.game.time.events.add(Math.random()*3000+2000, this.SpawnCloud, this);
+    this.spawnCloudTimer = this.game.time.events.add(Math.random()*5000+10000, this.SpawnCloud, this); // TODO: Use interval instead
 };
 
 
