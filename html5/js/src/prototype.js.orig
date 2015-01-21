@@ -104,6 +104,8 @@ window.onload = function() {
             //creature.sprite.events.onInputUp.add(onUp, this);
         }
 
+<<<<<<< HEAD
+=======
         // Add clouds
         GLOBAL.cloudManager = new GlassLab.CloudManager(game);
         game.world.add(GLOBAL.cloudManager.renderGroup);
@@ -112,6 +114,7 @@ window.onload = function() {
         var uiGroup = game.add.group();
         var uiElement = game.make.sprite();
 
+>>>>>>> upstream/master
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
 
@@ -149,13 +152,37 @@ window.onload = function() {
         // Re-sort creatures because they probably moved
         game.iso.simpleSort(GLOBAL.creatureLayer);
 
+<<<<<<< HEAD
         if (game.input.activePointer.isDown && !GLOBAL.dragTarget)
+=======
+        var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
+        game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+        Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
+        // If we have a drag target, move it
+        if (GLOBAL.dragTarget)
+        {
+            game.world.bringToTop(GLOBAL.dragTarget);
+
+            if (GLOBAL.dragTarget.body)
+            {
+                GLOBAL.dragTarget.body.position.x = cursorIsoPosition.x;
+                GLOBAL.dragTarget.body.position.y = cursorIsoPosition.y;
+            }
+            else
+            {
+                GLOBAL.dragTarget.isoX = cursorIsoPosition.x;
+                GLOBAL.dragTarget.isoY = cursorIsoPosition.y;
+            }
+        }
+        // else drag the camera
+        else if (game.input.activePointer.isDown)
+>>>>>>> upstream/master
         {
             game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
             game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
 
-        var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
+        cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
         game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
         Phaser.Point.divide(cursorIsoPosition, game.world.scale, cursorIsoPosition);
         var tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
