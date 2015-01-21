@@ -261,7 +261,7 @@ GlassLab.Edge.prototype._startDrag = function() {
   if (GLOBAL.dragTarget != null) return;
   this.dragging = true;
   this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
-  Phaser.Point.divide(this.initialCursorIsoPos, this.game.world.scale, this.initialCursorIsoPos);
+  Phaser.Point.divide(this.initialCursorIsoPos, GLOBAL.WorldLayer.scale, this.initialCursorIsoPos);
   GLOBAL.dragTarget = this;
 };
 
@@ -297,7 +297,7 @@ GlassLab.Edge.prototype._highlight = function(on) {
 GlassLab.Edge.prototype._onUpdate = function() {
   if (this.dragging) {
     var cursorIsoPosition = this.game.iso.unproject(this.game.input.activePointer.position);
-    Phaser.Point.divide(cursorIsoPosition, this.game.world.scale, cursorIsoPosition);
+    Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
     cursorDifference = Phaser.Point.subtract(cursorIsoPosition, this.initialCursorIsoPos);
     var ts = GLOBAL.tileSize;
     var targetPos = { x: this.sprite.isoX, y: this.sprite.isoY };
