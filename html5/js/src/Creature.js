@@ -44,10 +44,15 @@ GlassLab.Creature = function(game, typeName, initialStateName)
     this.sprite.scale.y = 0.25;
 
     this.sprite.animations.add('run');
+    this.standingFrame = 3;
+    this.sprite.animations.frame = this.standingFrame;
 
     this.debugAILine = new Phaser.Line();
 
-    //game.physics.isoArcade.enable(this.sprite);
+    this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
+
+  //game.physics.isoArcade.enable(this.sprite);
+    //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 };
 
 GlassLab.Creature.prototype._onUp = function(sprite, pointer)
@@ -77,13 +82,21 @@ GlassLab.Creature.prototype._startDrag = function() {
 
 GlassLab.Creature.prototype._endDrag = function() {
   this.sprite.animations.stop(null, true);
+  this.sprite.animations.frame = this.standingFrame;
   this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
   GLOBAL.dragTarget = null;
 };
 
 GlassLab.Creature.prototype.OnStickyDrop = function() { // called by (atm) prototype.js
   this._endDrag();
-}
+};
+
+
+GlassLab.Creature.prototype._onUpdate = function() {
+  if (this.state) this.state.Update();
+
+  //if (this.rightKey.justDown) { }
+};
 
 GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
 {
@@ -123,6 +136,8 @@ GlassLab.CreatureState.prototype.Exit = function() {
   //console.log("Exit");
 };
 
+GlassLab.CreatureState.prototype.Update = function() {};
+
 /**
  * CreatureStateIdle
  */
@@ -133,7 +148,6 @@ GlassLab.CreatureStateIdle = function(game, owner)
     this.targetPosition = new Phaser.Point();
     this.targetIsoPoint = new Phaser.Plugin.Isometric.Point3();
     this.findDestinationTimer = null;
-    this.updateHandler = null;
 };
 
 GlassLab.CreatureStateIdle.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -150,12 +164,6 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
 GlassLab.CreatureStateIdle.prototype.Exit = function()
 {
     GlassLab.CreatureState.prototype.Exit.call(this);
-
-    if (this.updateHandler)
-    {
-        this.updateHandler.detach();
-        this.updateHandler = null;
-    }
 
     if (this.findDestinationHandler)
     {
@@ -195,22 +203,22 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
     this.targetIsoPoint.setTo(this.targetPosition.x, this.targetPosition.y, 0);
 
     this.findDestinationHandler = null;
-    this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.creature.sprite.animations.play("run", 24, true);
 };
 
-GlassLab.CreatureStateIdle.prototype._onUpdate = function()
+GlassLab.CreatureStateIdle.prototype.Update = function()
 {
+    if (this.findDestinationHandler) return; // still waiting to pick a new destination
+
     var delta = Phaser.Point.subtract(this.targetPosition, this.creature.sprite.isoPosition);
     if (delta.getMagnitudeSq() > 1) {
       delta.setMagnitude(1);
     }
     else {
       // If the delta magnitude is less than our move speed, we're done after this frame.
-      this.updateHandler.detach();
-      this.updateHandler = null;
       this.creature.sprite.animations.stop(null, true);
+      this.creature.sprite.animations.frame = this.creature.standingFrame;
       this.findDestinationHandler = this.game.time.events.add(Math.random() * 3000 + 2000, this._findNewDestination, this);
       // Physics
       if (this.creature.sprite.body) {
@@ -248,15 +256,8 @@ GlassLab.CreatureStateWaitingForFood = function(game, owner)
   // Do nothing
 };
 
-GlassLab.CreatureStateWaitingForFood.prototype.Enter = function()
-{
-  GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.draggable = false;
-};
-
-GlassLab.CreatureStateWaitingForFood.prototype.Exit = function() {
-  GlassLab.CreatureState.prototype.Exit.call(this);
-};
+GlassLab.CreatureStateWaitingForFood.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaitingForFood;
 
 /**
  * CreatureStateDragged
@@ -269,19 +270,13 @@ GlassLab.CreatureStateDragged = function(game, owner)
 GlassLab.CreatureStateDragged.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 };
 
 GlassLab.CreatureStateDragged.prototype.Exit = function() {
   GlassLab.CreatureState.prototype.Exit.call(this);
-  if (this.updateHandler)
-  {
-    this.updateHandler.detach();
-    this.updateHandler = null;
-  }
 };
 
-GlassLab.CreatureStateDragged.prototype._onUpdate = function()
+GlassLab.CreatureStateDragged.prototype.Update = function()
 {
   var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
   this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
@@ -289,3 +284,40 @@ GlassLab.CreatureStateDragged.prototype._onUpdate = function()
   this.creature.sprite.isoX = cursorIsoPosition.x;
   this.creature.sprite.isoY = cursorIsoPosition.y;
 }
+
+/**
+ * CreatureStateTraversingPen - moving to the next piece of food in the pen
+ */
+GlassLab.CreatureStateTraversingPen = function(game, owner)
+{
+  GlassLab.CreatureState.call(this, game, owner);
+  // Do nothing
+};
+
+GlassLab.CreatureStateTraversingPen.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateTraversingPen.constructor = GlassLab.CreatureStateTraversingPen;
+
+/**
+ * CreatureStateEating - chewing on some food
+ */
+GlassLab.CreatureStateEating = function(game, owner)
+{
+  GlassLab.CreatureState.call(this, game, owner);
+  // Do nothing
+};
+
+GlassLab.CreatureStateEating.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
+
+
+/**
+ * CreatureStateVomiting - when it has eaten too much
+ */
+GlassLab.CreatureStateVomiting = function(game, owner)
+{
+  GlassLab.CreatureState.call(this, game, owner);
+  // Do nothing
+};
+
+GlassLab.CreatureStateVomiting.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
