@@ -429,7 +429,7 @@ GlassLab.CreatureStateVomiting.prototype.Update = function()
 
   if (timeElapsed > GlassLab.CreatureStateVomiting.VOMITING_TIME) {
     this.food.sprite.visible = true;
-    this.food.sprite.alpha = 0.6;
+    this.food.sprite.alpha = 0.8;
     this.food.sprite.tint = 0xB3FFBD;
 
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));

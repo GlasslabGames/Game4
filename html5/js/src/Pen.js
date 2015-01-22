@@ -49,7 +49,7 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.root.isoY = 3 * GLOBAL.tileSize;
 
   var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
-  this.ratioLabel = game.make.text(game.world.centerX, game.world.centerY, "1 : 2", style);
+  this.ratioLabel = game.make.text(0, 0, "1 : 2", style);
   this.ratioLabel.anchor.set(0.5, 1);
   this.root.addChild(this.ratioLabel);
   this.ratioLabel.x = this.topEdge.sprite.x;
@@ -370,10 +370,16 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
-  this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
+  //this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
   this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
+
+  this.ratioLabel.x -= GLOBAL.tileSize * 0.75;
+  this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 0.75, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
+    'button', this.FeedCreatures, this, 1, 0, 1);
+  this.button.anchor.set(0.5, 1);
+  this.root.addChild(this.button);
 };
 
 GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -423,6 +429,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   console.log("Start feeding");
   this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
   this.feeding = true;
+  this.button.visible = false;
   this.SetDraggableOnly(); // make all edges undraggable
 
   for (var i = 0; i < this.creatures.length; i++) {
