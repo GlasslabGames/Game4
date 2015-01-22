@@ -370,7 +370,7 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
-  //this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
+  this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
   this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
