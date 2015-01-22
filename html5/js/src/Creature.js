@@ -265,50 +265,106 @@ GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaiting
 GlassLab.CreatureStateDragged = function(game, owner)
 {
   GlassLab.CreatureState.call(this, game, owner);
-};
-
-GlassLab.CreatureStateDragged.prototype.Enter = function()
-{
-  GlassLab.CreatureState.prototype.Enter.call(this);
-};
-
-GlassLab.CreatureStateDragged.prototype.Exit = function() {
-  GlassLab.CreatureState.prototype.Exit.call(this);
+  console.log(this.creature,"dragged");
 };
 
 GlassLab.CreatureStateDragged.prototype.Update = function()
 {
+  console.log("update"); // TODO: why doesn't this get called??
   var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
   this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
     Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
   this.creature.sprite.isoX = cursorIsoPosition.x;
   this.creature.sprite.isoY = cursorIsoPosition.y;
-}
-
-/**
- * CreatureStateTraversingPen - moving to the next piece of food in the pen
- */
-GlassLab.CreatureStateTraversingPen = function(game, owner)
-{
-  GlassLab.CreatureState.call(this, game, owner);
-  // Do nothing
 };
 
-GlassLab.CreatureStateTraversingPen.prototype = Object.create(GlassLab.CreatureState.prototype);
-GlassLab.CreatureStateTraversingPen.constructor = GlassLab.CreatureStateTraversingPen;
+GlassLab.CreatureStateDragged.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateDragged.constructor = GlassLab.CreatureStateDragged;
+
+/**
+ * CreatureStateWalkingToFood - moving to the next piece of food in the pen
+ */
+GlassLab.CreatureStateWalkingToFood = function(game, owner, food)
+{
+  GlassLab.CreatureState.call(this, game, owner);
+  this.food = food;
+  console.log(this.creature,"walking to food", food);
+};
+
+GlassLab.CreatureStateWalkingToFood.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateWalkingToFood.constructor = GlassLab.CreatureStateWalkingToFood;
+
+GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
+{
+  GlassLab.CreatureState.prototype.Enter.call(this);
+  this.creature.sprite.animations.play("run", 24, true);
+};
+
+GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
+{
+  GlassLab.CreatureState.prototype.Exit.call(this);
+  this.creature.sprite.animations.stop(null, true);
+  this.creature.sprite.animations.frame = this.creature.standingFrame;
+};
+
+GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
+{
+  var speed = 1;
+  var delta = Phaser.Point.subtract(this.food.sprite.isoPosition, this.creature.sprite.isoPosition);
+  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.3, 2)) { // we're more than one step away
+    delta.setMagnitude(speed);
+    Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
+    this.creature.sprite.isoX = delta.x;
+    this.creature.sprite.isoY = delta.y;
+  }
+  else {
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.food));
+  }
+};
 
 /**
  * CreatureStateEating - chewing on some food
  */
-GlassLab.CreatureStateEating = function(game, owner)
+GlassLab.CreatureStateEating = function(game, owner, food)
 {
   GlassLab.CreatureState.call(this, game, owner);
-  // Do nothing
+  console.log(this.creature,"eating");
+  this.food = food;
 };
 
 GlassLab.CreatureStateEating.prototype = Object.create(GlassLab.CreatureState.prototype);
 GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 
+GlassLab.CreatureStateEating.prototype.Enter = function()
+{
+  GlassLab.CreatureState.prototype.Enter.call(this);
+  this.startTime = this.game.time.totalElapsedSeconds();
+  this.startScaleY = this.creature.sprite.scale.y;
+  this.tween = this.game.add.tween(this.creature.sprite.scale).to( {y: this.startScaleY * 0.9 }, 200, Phaser.Easing.Linear.InOut, true, 0, -1, true);
+  this.tween2 = this.game.add.tween(this.food.sprite).to( {alpha: 0.1 },
+    GlassLab.CreatureStateEating.EATING_TIME * 1000, Phaser.Easing.Linear.None, true);
+
+};
+
+GlassLab.CreatureStateEating.prototype.Exit = function() {
+  GlassLab.CreatureState.prototype.Exit.call(this);
+}
+
+GlassLab.CreatureStateEating.EATING_TIME = 2; // in secs. This can be replaced by the length of the eating anim maybe
+
+GlassLab.CreatureStateEating.prototype.Update = function()
+{
+  var timeElapsed = this.game.time.totalElapsedSeconds() - this.startTime;
+
+  if (timeElapsed > GlassLab.CreatureStateEating.EATING_TIME) {
+    this.food.sprite.visible = false;
+    this.tween.stop();
+    this.tween2.stop();
+    this.creature.sprite.scale.y = this.startScaleY;
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature,
+      this.creature.pen.GetNextFoodInCreatureRow(this.creature)));
+  }
+};
 
 /**
  * CreatureStateVomiting - when it has eaten too much

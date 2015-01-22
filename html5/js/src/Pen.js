@@ -364,11 +364,15 @@ GlassLab.Edge.prototype._onUpdate = function() {
 GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.foods = [];
   this.creatures = [];
+  this.foodByRow = [];
 
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
   this.SetDraggable(GlassLab.Edge.SIDES.right);
+
+  this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+  this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 };
 
 GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -380,8 +384,10 @@ GlassLab.FeedingPen.prototype.Resize = function() {
   this.FillIn(GlassLab.Food.bind(null, this.game, "food"), this.foods,
     this.leftWidth, this.leftWidth + this.rightWidth, 0, this.height);
   this.FillIn(GlassLab.Creature.bind(null, this.game, "sheep", "WaitingForFood"), this.creatures,
-    0, this.leftWidth, 0, this.height); // the creatures are offset by 1 tile down and right
-}
+    0, this.leftWidth, 0, this.height);
+
+  this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
+};
 
 GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol, endCol, startRow, endRow) {
   var unusedObjects = list.slice();
@@ -397,13 +403,45 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol
       obj.sprite.isoX = col * GLOBAL.tileSize;
       obj.sprite.isoY = row * GLOBAL.tileSize;
       obj.sprite.parent.setChildIndex(obj.sprite, obj.sprite.parent.children.length - 1); // move it to the back of the children so far
+      obj.pen = this;
     }
   }
 
   for (var i = 0; i < unusedObjects.length; i++) {
     unusedObjects[i].sprite.visible = false;
   }
-}
+};
+
+GlassLab.FeedingPen.prototype._onUpdate = function() {
+  if (this.key2.justDown) {
+    this.FeedCreatures();
+  }
+};
+
+GlassLab.FeedingPen.prototype.FeedCreatures = function() {
+  console.log("Start feeding");
+  for (var i = 0; i < this.creatures.length; i++) { // FIXME: this only works when there's 1 column of creatures
+    this.creatures[i].StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(
+      this.game, this.creatures[i], this.GetNextFoodInCreatureRow(this.creatures[i])));
+  }
+};
+
+GlassLab.FeedingPen.prototype.GetNextFoodInCreatureRow = function(creature) {
+  if (!this.foodByRow || !this.foodByRow.length) this._getFoodByRow();
+  var row = Math.round(creature.sprite.isoY / GLOBAL.tileSize);
+  return this.foodByRow[row].shift();
+};
+
+GlassLab.FeedingPen.prototype._getFoodByRow = function() {
+  this.foodByRow = [];
+  for (var i = 0; i < this.foods.length; i++) {
+    var row = Math.round(this.foods[i].sprite.isoY / GLOBAL.tileSize);
+    var col = Math.round(this.foods[i].sprite.isoX / GLOBAL.tileSize);
+    if (!this.foodByRow[row]) this.foodByRow[row] = [];
+    this.foodByRow[row][col - 1] = this.foods[i];
+  }
+  console.log(this.foodByRow);
+};
 
 /**
  * Food - just a sprite for now
@@ -412,5 +450,5 @@ GlassLab.Food = function(game, spriteName) {
   this.sprite = game.make.isoSprite(0,0,0, spriteName);
   this.sprite.scale.x = this.sprite.scale.y = 0.75;
   this.game = game;
-  this.sprite.anchor.setTo(0.5, 0.65);
+  this.sprite.anchor.setTo(0.5, 0.5);
 };
