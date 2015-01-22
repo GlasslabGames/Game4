@@ -9,7 +9,6 @@ window.onload = function() {
 
     function preload() {
         game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
-        game.load.image('tile', 'assets/images/tile.png');
         game.load.image('penBg', 'assets/images/dirtTile1_top.png');
         game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical.png');
         game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal.png');
@@ -39,9 +38,17 @@ window.onload = function() {
         game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
 
         // UI
-        game.load.spritesheet('zoomIcons', 'assets/images/zoom-icons-md.png', 138, 141, 2);
-        game.load.image('fullscreenIcon', 'assets/images/maximize-128.png');
-        game.load.image('pauseIcon', 'assets/images/519697-205_CircledPause-128.png');
+        game.load.image('zoomBG', 'assets/images/prima_HUD_zoom.png');
+        game.load.image('zoomInIcon', 'assets/images/prima_HUD_zoomIn.png');
+        game.load.image('zoomOutIcon', 'assets/images/prima_HUD_zoomOut.png');
+        game.load.image('fullscreenIcon', 'assets/images/prima_HUD_enterFullScreen.png');
+        game.load.image('fullscreenOffIcon', 'assets/images/prima_HUD_exitFullScreen.png');
+        game.load.image('itemsIcon', 'assets/images/prima_HUD_items.png');
+        game.load.image('journalIcon', 'assets/images/prima_HUD_journal.png');
+        game.load.image('ordersIcon', 'assets/images/prima_HUD_orders.png');
+        game.load.image('pauseIcon', 'assets/images/prima_HUD_pause.png');
+        game.load.image('closeIcon', 'assets/images/Close-button.png');
+        game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -75,6 +82,8 @@ window.onload = function() {
 
         game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
+        GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
+
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
         GLOBAL.tileManager.GenerateRandomMapData(20, 20);
@@ -92,7 +101,7 @@ window.onload = function() {
 
         GLOBAL.paused = false;
 
-      var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
+        var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
 
         // Create creatures
         for (var i=0; i < 10; i++)
@@ -127,53 +136,107 @@ window.onload = function() {
         GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
 
         // Add UI
+        // TODO: Gross, so much crap here. How to clean?
         var uiGroup = game.add.group();
-        //uiGroup.fixedToCamera = true;
-        uiGroup.x = game.camera.width-75;
-        var uiElement;
-        uiElement = game.make.graphics(0,0);
-        uiElement.beginFill(0xFFFF99).drawRect(0,0, 150, 300);
-        uiElement.fixedToCamera = true;
-        uiGroup.add(uiElement);
+        GLOBAL.UIGroup = uiGroup;
 
-        uiElement = game.make.sprite(5, 0, "zoomIcons", 0);
-        uiElement.scale.setTo(0.5, 0.5);
-        uiElement.fixedToCamera = true;
+        // Anchors
+        var centerAnchor = game.make.sprite(game.camera.width/2, game.camera.height/2);
+        centerAnchor.anchor.setTo(.5, .5);
+        centerAnchor.fixedToCamera = true;
+        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
+            this.cameraOffset.x = game.camera.width/2;
+            this.cameraOffset.y = game.camera.height/2;
+        }, centerAnchor);
+        uiGroup.add(centerAnchor);
+
+        var topRightAnchor = game.make.sprite(game.camera.width, 0);
+        topRightAnchor.anchor.setTo(1, 0);
+        topRightAnchor.fixedToCamera = true;
+        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
+            this.cameraOffset.x = game.camera.width;
+        }, topRightAnchor);
+        uiGroup.add(topRightAnchor);
+
+        var table = new GlassLab.UITable(game, 1, 30);
+        table.x = table.y = 30;
+        uiGroup.add(table);
+        table.fixedToCamera = true;
+
+        // pause icon
+        uiElement = game.make.sprite(0, 0, "pauseIcon");
         uiElement.inputEnabled = true;
-        uiElement.events.onInputDown.add(function(){
-            GLOBAL.WorldLayer.scale.x /= 2;GLOBAL.WorldLayer.scale.y /= 2;
-        }, this);
-        uiGroup.add(uiElement);
-        uiElement = game.make.sprite(5, 75, "zoomIcons", 1);
-        uiElement.scale.setTo(0.5, 0.5);
-        uiElement.fixedToCamera = true;
+        uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
+        table.addManagedChild(uiElement);
+
+        var zoomBG = game.make.sprite(0, 0, "zoomBG");
+        table.addManagedChild(zoomBG);
+        var uiElement = game.make.sprite(15, 40, "zoomInIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
             GLOBAL.WorldLayer.scale.x *= 2;GLOBAL.WorldLayer.scale.y *= 2;
         }, this);
-        uiGroup.add(uiElement);
-        uiElement = game.make.sprite(5, 150, "fullscreenIcon");
-        uiElement.scale.setTo(0.5, 0.5);
-        uiElement.fixedToCamera = true;
+        zoomBG.addChild(uiElement);
+        uiElement = game.make.sprite(15, 110, "zoomOutIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
+            GLOBAL.WorldLayer.scale.x /= 2;GLOBAL.WorldLayer.scale.y /= 2;
+        }, this);
+        zoomBG.addChild(uiElement);
+
+        var fullscreenUIElement = game.make.sprite(0, 0, "fullscreenIcon");
+        fullscreenUIElement.inputEnabled = true;
+        fullscreenUIElement.events.onInputDown.add(function(){
             if (game.scale.isFullScreen)
             {
                 game.scale.stopFullScreen();
+                var texture = game.cache.getRenderTexture("fullscreenIcon");
+                fullscreenUIElement.loadTexture("fullscreenIcon");
             }
             else
             {
                 game.scale.startFullScreen(false);
+                var texture = game.cache.getRenderTexture("fullscreenOffIcon");
+                fullscreenUIElement.loadTexture("fullscreenOffIcon");
             }
         }, this);
-        uiGroup.add(uiElement);
-        uiElement = game.make.sprite(5, 225, "pauseIcon");
-        uiElement.scale.setTo(0.5, 0.5);
-        uiElement.fixedToCamera = true;
+        table.addManagedChild(fullscreenUIElement);
+        table._refresh();
+
+        table = new GlassLab.UITable(game, 1, 30);
+        table.x = -130;
+        table.y = 30;
+        topRightAnchor.addChild(table);
+
+        uiElement = game.make.sprite(0,0, "ordersIcon");
+        table.addManagedChild(uiElement);
+
+        uiElement = game.make.sprite(0,0, "journalIcon");
         uiElement.inputEnabled = true;
-        uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
-        uiGroup.add(uiElement);
-        GLOBAL.UIGroup = uiGroup;
+        uiElement.events.onInputDown.add(function(){
+            if (!GLOBAL.Journal.IsShowing())
+            {
+                GLOBAL.Journal.Show();
+            }
+            else
+            {
+                GLOBAL.Journal.Hide();
+            }
+        }, this);
+        table.addManagedChild(uiElement);
+        table._refresh();
+
+        var bottomRightAnchor = game.make.sprite(game.camera.width, game.camera.height);
+        bottomRightAnchor.anchor.setTo(1, 1);
+        bottomRightAnchor.fixedToCamera = true;
+        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
+            this.cameraOffset.x = game.camera.width;
+            this.cameraOffset.y = game.camera.height;
+        }, bottomRightAnchor);
+        uiGroup.add(bottomRightAnchor);
+
+        uiElement = game.make.sprite(-130, -130, "itemsIcon");
+        bottomRightAnchor.addChild(uiElement);
 
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
@@ -188,15 +251,23 @@ window.onload = function() {
         game.scale.enterFullScreen.add(onEnterFullScreen, this);
         game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
-      this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+        this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+
+        var failModal = new GlassLab.FailModal(game);
+        failModal.sprite.cameraOffset.setTo(450, 200);
+        game.world.add(failModal.sprite);
+
+        var journal = new GlassLab.Journal(game);
+        journal.sprite.x = -400
+        journal.sprite.y = -300;
+        centerAnchor.addChild(journal.sprite);
+        GLOBAL.Journal = journal;
     }
 
     function onEnterFullScreen() {
-        GLOBAL.UIGroup.x = game.camera.width-75;
     }
 
     function onLeaveFullScreen() {
-        GLOBAL.UIGroup.x = game.camera.width-75;
     }
 
     function globalDown(pointer, DOMevent)
