@@ -49,6 +49,8 @@ GlassLab.Creature = function(game, typeName, initialStateName)
 
     this.debugAILine = new Phaser.Line();
 
+    this.desiredNumberOfFood = 3; // TODO: don't hardcode
+
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
   //game.physics.isoArcade.enable(this.sprite);
@@ -103,6 +105,7 @@ GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
     if (targetState == this.state)
     {
         console.warn("Target state was the same as current state, ignoring transition request...");
+        console.log(this.state);
         return;
     }
 
@@ -259,6 +262,11 @@ GlassLab.CreatureStateWaitingForFood = function(game, owner)
 GlassLab.CreatureStateWaitingForFood.prototype = Object.create(GlassLab.CreatureState.prototype);
 GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaitingForFood;
 
+GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
+  this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game,
+    this.creature, this.creature.pen.GetNextFoodInCreatureRow(this.creature)));
+}
+
 /**
  * CreatureStateDragged
  */
@@ -267,6 +275,9 @@ GlassLab.CreatureStateDragged = function(game, owner)
   GlassLab.CreatureState.call(this, game, owner);
   console.log(this.creature,"dragged");
 };
+
+GlassLab.CreatureStateDragged.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateDragged.constructor = GlassLab.CreatureStateDragged;
 
 GlassLab.CreatureStateDragged.prototype.Update = function()
 {
@@ -278,8 +289,6 @@ GlassLab.CreatureStateDragged.prototype.Update = function()
   this.creature.sprite.isoY = cursorIsoPosition.y;
 };
 
-GlassLab.CreatureStateDragged.prototype = Object.create(GlassLab.CreatureState.prototype);
-GlassLab.CreatureStateDragged.constructor = GlassLab.CreatureStateDragged;
 
 /**
  * CreatureStateWalkingToFood - moving to the next piece of food in the pen
@@ -288,7 +297,6 @@ GlassLab.CreatureStateWalkingToFood = function(game, owner, food)
 {
   GlassLab.CreatureState.call(this, game, owner);
   this.food = food;
-  console.log(this.creature,"walking to food", food);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -296,6 +304,7 @@ GlassLab.CreatureStateWalkingToFood.constructor = GlassLab.CreatureStateWalkingT
 
 GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
+  console.log(this.creature,"walking to food", this.food);
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.creature.sprite.animations.play("run", 24, true);
 };

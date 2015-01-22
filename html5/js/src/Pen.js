@@ -420,9 +420,10 @@ GlassLab.FeedingPen.prototype._onUpdate = function() {
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   console.log("Start feeding");
-  for (var i = 0; i < this.creatures.length; i++) { // FIXME: this only works when there's 1 column of creatures
-    this.creatures[i].StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(
-      this.game, this.creatures[i], this.GetNextFoodInCreatureRow(this.creatures[i])));
+  for (var i = 0; i < this.creatures.length; i++) {
+    var creature = this.creatures[i];
+    var time = Math.random() * Phaser.Timer.SECOND; // this could be improved. Like I'd rather have a random creature always start at 0, etc
+    this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
   }
 };
 
