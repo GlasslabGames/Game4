@@ -63,7 +63,7 @@ GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
 // sets only the listed edge(s) to be draggable
-GlassLab.Pen.prototype.SetDraggable = function() {
+GlassLab.Pen.prototype.SetDraggableOnly = function() {
   // first make all edges undraggable, then make the specific ones listed draggable
   for (var i = 0; i < this.edges.length; i++) {
     this.edges[i].draggable = false;
@@ -365,11 +365,12 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.foods = [];
   this.creatures = [];
   this.foodByRow = [];
+  this.feeding = false;
 
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
-  this.SetDraggable(GlassLab.Edge.SIDES.right);
+  this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
   this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -413,13 +414,17 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol
 };
 
 GlassLab.FeedingPen.prototype._onUpdate = function() {
-  if (this.key2.justDown) {
+  if (this.key2.justDown && !this.feeding) {
     this.FeedCreatures();
   }
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   console.log("Start feeding");
+  this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
+  this.feeding = true;
+  this.SetDraggableOnly(); // make all edges undraggable
+
   for (var i = 0; i < this.creatures.length; i++) {
     var creature = this.creatures[i];
     var time = Math.random() * Phaser.Timer.SECOND; // this could be improved. Like I'd rather have a random creature always start at 0, etc
@@ -442,6 +447,23 @@ GlassLab.FeedingPen.prototype._getFoodByRow = function() {
     this.foodByRow[row][col - 1] = this.foods[i];
   }
   console.log(this.foodByRow);
+};
+
+GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
+  this.unfedCreatures --;
+  if (satisfied) this.unsatisfiedCreatures --;
+  if (this.unfedCreatures <= 0) {
+    var success = this.unsatisfiedCreatures <= 0;
+    this.FinishFeeding(success);
+  }
+};
+
+GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
+  console.log("Finished feeding creatures! Success?",win);
+  for (var i = 0; i < this.creatures.length; i++) {
+    var creature = this.creatures[i];
+    creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, creature));
+  }
 };
 
 /**

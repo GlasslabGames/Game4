@@ -49,7 +49,8 @@ GlassLab.Creature = function(game, typeName, initialStateName)
 
     this.debugAILine = new Phaser.Line();
 
-    this.desiredNumberOfFood = 3; // TODO: don't hardcode
+    this.desiredAmountOfFood = 3; // TODO: don't hardcode
+    this.foodEaten = 0;
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
@@ -281,7 +282,6 @@ GlassLab.CreatureStateDragged.constructor = GlassLab.CreatureStateDragged;
 
 GlassLab.CreatureStateDragged.prototype.Update = function()
 {
-  console.log("update"); // TODO: why doesn't this get called??
   var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
   this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
     Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
@@ -357,6 +357,9 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
   GlassLab.CreatureState.prototype.Exit.call(this);
+  this.tween.stop();
+  this.tween2.stop();
+  this.creature.sprite.scale.y = this.startScaleY;
 }
 
 GlassLab.CreatureStateEating.EATING_TIME = 2; // in secs. This can be replaced by the length of the eating anim maybe
@@ -366,23 +369,70 @@ GlassLab.CreatureStateEating.prototype.Update = function()
   var timeElapsed = this.game.time.totalElapsedSeconds() - this.startTime;
 
   if (timeElapsed > GlassLab.CreatureStateEating.EATING_TIME) {
-    this.food.sprite.visible = false;
-    this.tween.stop();
-    this.tween2.stop();
-    this.creature.sprite.scale.y = this.startScaleY;
-    this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature,
-      this.creature.pen.GetNextFoodInCreatureRow(this.creature)));
+    this.StopEating();
+  }
+};
+
+GlassLab.CreatureStateEating.prototype.StopEating = function() {
+  this.food.sprite.visible = false;
+  this.creature.foodEaten ++;
+
+  // Choose which state to go to based on the situation...
+  if (this.creature.foodEaten > this.creature.desiredAmountOfFood) {
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
+  } else {
+    var food = this.creature.pen.GetNextFoodInCreatureRow(this.creature);
+    if (food) {
+      this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
+    } else { // there's no more food
+      // end the level hungry or satisfied
+      this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
+      var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
+      this.creature.pen.SetCreatureFinishedEating(satisfied);
+    }
   }
 };
 
 /**
  * CreatureStateVomiting - when it has eaten too much
  */
-GlassLab.CreatureStateVomiting = function(game, owner)
+GlassLab.CreatureStateVomiting = function(game, owner, food)
 {
   GlassLab.CreatureState.call(this, game, owner);
-  // Do nothing
+  this.food = food;
 };
 
 GlassLab.CreatureStateVomiting.prototype = Object.create(GlassLab.CreatureState.prototype);
 GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
+
+GlassLab.CreatureStateVomiting.prototype.Enter = function() {
+  GlassLab.CreatureState.prototype.Enter.call(this);
+  this.startTime = this.game.time.totalElapsedSeconds();
+  this.creature.sprite.tint = 0xFFE6E6;
+  this.scaleX = this.creature.sprite.scale.x;
+  this.tween = this.game.add.tween(this.creature.sprite.scale).to( {x: this.scaleX * 0.85 },
+    GlassLab.CreatureStateVomiting.VOMITING_TIME * 250, Phaser.Easing.Default, true, 0, -1, true);
+};
+
+GlassLab.CreatureStateVomiting.prototype.Exit = function() {
+  GlassLab.CreatureState.prototype.Exit.call(this);
+  this.tween.stop();
+  this.creature.sprite.scale.x = this.scaleX;
+  this.creature.sprite.tint = 0xffffff;
+};
+
+GlassLab.CreatureStateVomiting.VOMITING_TIME = 1; // in secs. This can be replaced by the length of the eating anim maybe
+
+GlassLab.CreatureStateVomiting.prototype.Update = function()
+{
+  var timeElapsed = this.game.time.totalElapsedSeconds() - this.startTime;
+
+  if (timeElapsed > GlassLab.CreatureStateVomiting.VOMITING_TIME) {
+    this.food.sprite.visible = true;
+    this.food.sprite.alpha = 0.6;
+    this.food.sprite.tint = 0xB3FFBD;
+
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
+    this.creature.pen.FinishFeeding(false);
+  }
+};
