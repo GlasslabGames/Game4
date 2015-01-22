@@ -49,6 +49,7 @@ window.onload = function() {
         game.load.image('pauseIcon', 'assets/images/prima_HUD_pause.png');
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
+        game.load.image('skullIcon', 'assets/images/skull-icon.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -158,7 +159,7 @@ window.onload = function() {
         }, topRightAnchor);
         uiGroup.add(topRightAnchor);
 
-        var table = new GlassLab.UITable(game, 1, 30);
+        var table = new GlassLab.UITable(game, 1, 20);
         table.x = table.y = 30;
         uiGroup.add(table);
         table.fixedToCamera = true;
@@ -203,7 +204,7 @@ window.onload = function() {
         table.addManagedChild(fullscreenUIElement);
         table._refresh();
 
-        table = new GlassLab.UITable(game, 1, 30);
+        table = new GlassLab.UITable(game, 1, 40);
         table.x = -130;
         table.y = 30;
         topRightAnchor.addChild(table);
@@ -238,6 +239,14 @@ window.onload = function() {
         uiElement = game.make.sprite(-130, -130, "itemsIcon");
         bottomRightAnchor.addChild(uiElement);
 
+        uiElement = game.make.sprite(-230, -100, "skullIcon");
+        uiElement.scale.setTo(.25, .25);
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){
+            GLOBAL.FailModal.Show();
+        }, this);
+        bottomRightAnchor.addChild(uiElement);
+
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
 
@@ -254,8 +263,10 @@ window.onload = function() {
         this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
 
         var failModal = new GlassLab.FailModal(game);
-        failModal.sprite.cameraOffset.setTo(450, 200);
-        game.world.add(failModal.sprite);
+        failModal.sprite.x = -200
+        failModal.sprite.y = -150;
+        centerAnchor.addChild(failModal.sprite);
+        GLOBAL.FailModal = failModal;
 
         var journal = new GlassLab.Journal(game);
         journal.sprite.x = -400

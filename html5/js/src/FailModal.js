@@ -21,7 +21,6 @@ GlassLab.FailModal = function(game) {
     this.sprite.addChild(this.retryText);
 
     this.sprite.visible = false;
-    this.sprite.fixedToCamera = true;
 };
 
 GlassLab.FailModal.prototype.Show = function()
@@ -36,5 +35,6 @@ GlassLab.FailModal.prototype.Hide = function()
 
 GlassLab.FailModal.prototype._onRetryPressed = function()
 {
+    this.Hide();
     alert("HAR HAR");
 };
