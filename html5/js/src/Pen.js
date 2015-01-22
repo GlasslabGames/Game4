@@ -49,7 +49,7 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.root.isoY = 3 * GLOBAL.tileSize;
 
   var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
-  this.ratioLabel = game.make.text(game.world.centerX, game.world.centerY, "1 : 2", style);
+  this.ratioLabel = game.make.text(0, 0, "1 : 2", style);
   this.ratioLabel.anchor.set(0.5, 1);
   this.root.addChild(this.ratioLabel);
   this.ratioLabel.x = this.topEdge.sprite.x;
@@ -63,7 +63,7 @@ GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
 // sets only the listed edge(s) to be draggable
-GlassLab.Pen.prototype.SetDraggable = function() {
+GlassLab.Pen.prototype.SetDraggableOnly = function() {
   // first make all edges undraggable, then make the specific ones listed draggable
   for (var i = 0; i < this.edges.length; i++) {
     this.edges[i].draggable = false;
@@ -364,11 +364,22 @@ GlassLab.Edge.prototype._onUpdate = function() {
 GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.foods = [];
   this.creatures = [];
+  this.foodByRow = [];
+  this.feeding = false;
 
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
-  this.SetDraggable(GlassLab.Edge.SIDES.right);
+  //this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
+
+  this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+  this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
+
+  this.ratioLabel.x -= GLOBAL.tileSize * 0.75;
+  this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 0.75, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
+    'button', this.FeedCreatures, this, 1, 0, 1);
+  this.button.anchor.set(0.5, 1);
+  this.root.addChild(this.button);
 };
 
 GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -380,8 +391,10 @@ GlassLab.FeedingPen.prototype.Resize = function() {
   this.FillIn(GlassLab.Food.bind(null, this.game, "food"), this.foods,
     this.leftWidth, this.leftWidth + this.rightWidth, 0, this.height);
   this.FillIn(GlassLab.Creature.bind(null, this.game, "sheep", "WaitingForFood"), this.creatures,
-    0, this.leftWidth, 0, this.height); // the creatures are offset by 1 tile down and right
-}
+    0, this.leftWidth, 0, this.height);
+
+  this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
+};
 
 GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol, endCol, startRow, endRow) {
   var unusedObjects = list.slice();
@@ -397,13 +410,68 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol
       obj.sprite.isoX = col * GLOBAL.tileSize;
       obj.sprite.isoY = row * GLOBAL.tileSize;
       obj.sprite.parent.setChildIndex(obj.sprite, obj.sprite.parent.children.length - 1); // move it to the back of the children so far
+      obj.pen = this;
     }
   }
 
   for (var i = 0; i < unusedObjects.length; i++) {
     unusedObjects[i].sprite.visible = false;
   }
-}
+};
+
+GlassLab.FeedingPen.prototype._onUpdate = function() {
+  if (this.key2.justDown && !this.feeding) {
+    this.FeedCreatures();
+  }
+};
+
+GlassLab.FeedingPen.prototype.FeedCreatures = function() {
+  console.log("Start feeding");
+  this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
+  this.feeding = true;
+  this.button.visible = false;
+  this.SetDraggableOnly(); // make all edges undraggable
+
+  for (var i = 0; i < this.creatures.length; i++) {
+    var creature = this.creatures[i];
+    var time = Math.random() * Phaser.Timer.SECOND; // this could be improved. Like I'd rather have a random creature always start at 0, etc
+    this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
+  }
+};
+
+GlassLab.FeedingPen.prototype.GetNextFoodInCreatureRow = function(creature) {
+  if (!this.foodByRow || !this.foodByRow.length) this._getFoodByRow();
+  var row = Math.round(creature.sprite.isoY / GLOBAL.tileSize);
+  return this.foodByRow[row].shift();
+};
+
+GlassLab.FeedingPen.prototype._getFoodByRow = function() {
+  this.foodByRow = [];
+  for (var i = 0; i < this.foods.length; i++) {
+    var row = Math.round(this.foods[i].sprite.isoY / GLOBAL.tileSize);
+    var col = Math.round(this.foods[i].sprite.isoX / GLOBAL.tileSize);
+    if (!this.foodByRow[row]) this.foodByRow[row] = [];
+    this.foodByRow[row][col - 1] = this.foods[i];
+  }
+  console.log(this.foodByRow);
+};
+
+GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
+  this.unfedCreatures --;
+  if (satisfied) this.unsatisfiedCreatures --;
+  if (this.unfedCreatures <= 0) {
+    var success = this.unsatisfiedCreatures <= 0;
+    this.FinishFeeding(success);
+  }
+};
+
+GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
+  console.log("Finished feeding creatures! Success?",win);
+  for (var i = 0; i < this.creatures.length; i++) {
+    var creature = this.creatures[i];
+    creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, creature));
+  }
+};
 
 /**
  * Food - just a sprite for now
@@ -412,5 +480,5 @@ GlassLab.Food = function(game, spriteName) {
   this.sprite = game.make.isoSprite(0,0,0, spriteName);
   this.sprite.scale.x = this.sprite.scale.y = 0.75;
   this.game = game;
-  this.sprite.anchor.setTo(0.5, 0.65);
+  this.sprite.anchor.setTo(0.5, 0.5);
 };
