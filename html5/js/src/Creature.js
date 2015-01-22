@@ -10,10 +10,53 @@ var GlassLab = GlassLab || {};
  */
 GlassLab.CreatureManager = function(game)
 {
+    this.game = game;
+    this.creatureDatabase = {
+        rammus: {
+            desiredFoodType: "Carrots",
+            desiredAmount: 3,
+            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+        },
+        bird: {
+            desiredFoodType: "Rocks",
+            desiredAmount: 5,
+            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+        },
+        poopmonster: {
+            desiredFoodType: "Poop",
+            desiredAmount: .5,
+            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+        }
+    };
 
+    this.LogNumCreaturesFed("rammus", 3);
+    this.LogNumCreaturesFed("rammus", 1);
 };
 
-GlassLab.CreatureManager.prototype;
+/*
+ * CreatureManager.LogNumCreaturesFed - logs the number of creatures successfully fed
+ * @param type string, type of creature fed
+ * @param num int, number of creatures fed
+ * NOTE: Ratio is automatically derived by desired ratio is creature data
+ */
+GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function(type, num)
+{
+    var creatureData = this.creatureDatabase[type];
+    if (creatureData.discoveredFeedCounts.indexOf(num) != -1)
+    {
+        return;
+    }
+    else
+    {
+        creatureData.discoveredFeedCounts.push(num);
+        creatureData.discoveredFeedCounts.sort();
+    }
+};
+
+GlassLab.CreatureManager.prototype.GetCreatureData = function(type)
+{
+    return this.creatureDatabase[type];
+};
 
 /**
  * Creature
