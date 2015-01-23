@@ -7,17 +7,24 @@ var GlassLab = GlassLab || {};
 /**
  * UITable
  */
-GlassLab.UITable = function(game, numColumns, padding)
+GlassLab.UITable = function(game, numColumns, padding, drawBorder)
 {
     Phaser.Sprite.prototype.constructor.call(this, game);
 
     this.game = game;
     this.managedChildren = [];
+    this.drawBorder = drawBorder || false;
 
     this.padding = padding;
     this._rowHeights = [];
     this._columnLengths = [];
     this._columns = numColumns;
+
+    if (this.drawBorder)
+    {
+        this._borderGraphics = game.make.graphics();
+        this.addChild(this._borderGraphics);
+    }
 };
 
 // Extends Sprite
@@ -45,6 +52,7 @@ GlassLab.UITable.prototype.replaceChildAt = function(x, y, child)
 
 GlassLab.UITable.prototype._refresh = function()
 {
+    // TODO: Possible to optimize the loops to not calculate row/column every iteration
     // First refresh column and row sizes
     var numChildren = this.managedChildren.length;
     for (var i=0; i < numChildren; i++)
@@ -52,7 +60,7 @@ GlassLab.UITable.prototype._refresh = function()
         var child = this.managedChildren[i];
         if (child)
         {
-            var row = i / this._columns;
+            var row = parseInt(i / this._columns);
             var column = i % this._columns;
 
             // Insert element if missing
@@ -82,7 +90,7 @@ GlassLab.UITable.prototype._refresh = function()
         var child = this.managedChildren[i];
         if (child)
         {
-            var row = i / this._columns;
+            var row = parseInt(i / this._columns);
             var column = i % this._columns;
             var rowIterator = row - 1;
             var lengthIterator = column - 1;
@@ -91,7 +99,7 @@ GlassLab.UITable.prototype._refresh = function()
             {
                 x += this._columnLengths[lengthIterator--];
             }
-            var y = row * this.padding;
+            var y = (row) * this.padding;
             while (rowIterator >= 0)
             {
                 y += this._rowHeights[rowIterator--];
@@ -101,4 +109,61 @@ GlassLab.UITable.prototype._refresh = function()
             child.y = y;
         }
     }
+
+    if (this.drawBorder)
+    {
+        var totalLength = (this._columns-1) * this.padding;
+        var lengthIterator = this._columns-1;
+        while (lengthIterator >= 0) totalLength += this._columnLengths[lengthIterator--];
+
+        var totalHeight = (numChildren / this._columns-1 ) * this.padding;
+        var heightIterator = numChildren / this._columns - 1;
+        while (heightIterator >= 0) totalHeight += this._rowHeights[heightIterator--];
+
+        this._borderGraphics.clear();
+
+        this._borderGraphics.beginFill(0xFFFFFF)
+            .drawRect(-this.padding,-this.padding,totalLength + this.padding, this.padding) // top
+            .drawRect(-this.padding,-this.padding,this.padding,totalHeight+this.padding) // left
+            .drawRect(totalLength, -this.padding, this.padding, totalHeight + this.padding) // right
+            .drawRect(-this.padding, totalHeight, totalLength + this.padding * 2, this.padding); // bottom
+
+        var rows = parseInt(numChildren / this._columns);
+        var columns = this._columns;
+
+        this._borderGraphics.beginFill(0xFF0000);
+        for (var i=0; i < rows-1; i++)
+        {
+            var y = this.getRowYCoord(i);
+            for (var j=0; j < columns-1; j++)
+            {
+                var x = this.getColumnXCoord(j);
+                this._borderGraphics.drawRect(x, 0, this.padding, totalHeight); // vertical
+            }
+
+            this._borderGraphics.drawRect(0, y, totalLength, this.padding); // vertical
+            // horizontal
+        }
+
+
+    }
+};
+
+GlassLab.UITable.prototype.getColumnXCoord = function(columnNum) {
+    var totalLength = columnNum;
+    var lengthIterator = columnNum;
+    totalLength *= this.padding;
+    while (lengthIterator >= 0) totalLength += this._columnLengths[lengthIterator--];
+
+    return totalLength;
+};
+
+GlassLab.UITable.prototype.getRowYCoord = function(rowNum) {
+
+    var totalHeight = rowNum;
+    var widthIterator = rowNum;
+    totalHeight *= this.padding;
+    while (widthIterator >= 0) totalHeight += this._rowHeights[widthIterator--];
+
+    return totalHeight;
 };
