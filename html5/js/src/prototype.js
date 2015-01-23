@@ -145,10 +145,10 @@ window.onload = function() {
 
         // Add UI
         // TODO: Gross, so much crap here. How to clean?
-        GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
-
         var uiGroup = game.add.group();
         GLOBAL.UIGroup = uiGroup;
+
+        GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
 
         // Anchors
         var centerAnchor = game.make.sprite(game.camera.width/2, game.camera.height/2);
