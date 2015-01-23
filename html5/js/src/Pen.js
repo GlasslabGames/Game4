@@ -562,6 +562,19 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
     var creature = this.creatures[i];
     creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, creature));
   }*/
+
+  if (win)
+  {
+    GLOBAL.levelManager.CompleteCurrentLevel();
+
+    GLOBAL.Journal.Show();
+
+    GlassLab.SignalManager.levelWon.dispatch();
+  }
+  else
+  {
+    GlassLab.SignalManager.levelLost.dispatch();
+  }
 };
 
 /**
