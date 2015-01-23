@@ -232,8 +232,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
   var sprite = this.unusedSprites.pop();
   if (!sprite) {
     sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
-    //sprite.tint = 0x695B47;
-    //sprite.alpha = 0.01;
+    sprite.alpha = 0.3;
     sprite.anchor.set(0.5, 1.13);
     sprite.inputEnabled = true;
     sprite.events.onInputUp.add(this._onUp, this);
@@ -370,7 +369,7 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
-  //this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
+  this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
   this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -380,7 +379,12 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
     'button', this.FeedCreatures, this, 1, 0, 1);
   this.button.anchor.set(0.5, 1);
   this.root.addChild(this.button);
+
+  this.SetContents(3, 8);
+  GLOBAL.testPen = this; // for testing
 };
+
+GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5; // if we set the contents, don't go above this height // FIXME depending on screen constraints
 
 GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
 GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
@@ -388,18 +392,55 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 GlassLab.FeedingPen.prototype.Resize = function() {
   GlassLab.Pen.prototype.Resize.call(this);
 
-  this.FillIn(GlassLab.Food.bind(null, this.game, "food"), this.foods,
-    this.leftWidth, this.leftWidth + this.rightWidth, 0, this.height);
-  this.FillIn(GlassLab.Creature.bind(null, this.game, "sheep", "WaitingForFood"), this.creatures,
-    0, this.leftWidth, 0, this.height);
+  this.FillIn(GlassLab.Food.bind(null, this.game, "food"), this.foods, this.numFood,
+    this.leftWidth, this.leftWidth + this.rightWidth);
+  this.FillIn(GlassLab.Creature.bind(null, this.game, "sheep", "WaitingForFood"), this.creatures, this.numCreatures,
+    0, this.leftWidth, true);
+
+  if (this.numFood && this.numCreatures) {
+    this.ratioLabel.text = this.numCreatures + " : " + this.numFood;
+  }
 
   this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 };
 
-GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol, endCol, startRow, endRow) {
+function TestSetContents(numCreatures, numFood) {
+  if (GLOBAL.testPen) {
+    GLOBAL.testPen.SetContents(numCreatures, numFood);
+    return {height: GLOBAL.testPen.height, animalCols: GLOBAL.testPen.leftWidth, foodCols: GLOBAL.testPen.rightWidth};
+  }
+}
+
+// Resizes the pen to contain the specified number of creatures and food
+GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood) {
+  this.SetDraggableOnly(); // don't allow them to adjust the pen
+
+  this.numCreatures = numCreatures;
+  this.numFood = numFood;
+
+  if (numCreatures == 9 && GlassLab.FeedingPen.MAX_PEN_HEIGHT < 9) {
+    // I'm adding this one special case because 3x3 is a lot better than two columns of 4 and 5.
+    // Suggestions for a general algorithm that would better deal with this case are welcome.
+    this.height = this.leftWidth = 3;
+  } else {
+    this.height = numCreatures;
+    this.leftWidth = 1;
+
+    while (this.height > GlassLab.FeedingPen.MAX_PEN_HEIGHT) {
+      this.leftWidth++;
+      this.height = Math.ceil(numCreatures / this.leftWidth);
+    }
+  }
+
+  this.rightWidth = Math.ceil(numFood / this.height);
+  this.Resize();
+};
+
+GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount, startCol, endCol, fromRight) {
   var unusedObjects = list.slice();
-  for (var col = startCol; col < endCol; col++) {
-    for (var row = startRow; row < endRow; row++) {
+  var count = 0;
+  for (var col = startCol; col < endCol; col ++) {
+    for (var row = 0; row < this.height; row++) {
       var obj  = unusedObjects.pop();
       if (!obj) { // we ran out of existing tiles, so make a new one
         obj = new boundConstructor();
@@ -407,11 +448,14 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, startCol
         list.push(obj);
       }
       obj.sprite.visible = true;
-      obj.sprite.isoX = col * GLOBAL.tileSize;
+      obj.sprite.isoX = (fromRight? endCol - col - 1 : col) * GLOBAL.tileSize;
       obj.sprite.isoY = row * GLOBAL.tileSize;
       obj.sprite.parent.setChildIndex(obj.sprite, obj.sprite.parent.children.length - 1); // move it to the back of the children so far
       obj.pen = this;
+      count++;
+      if (count >= maxCount) break;
     }
+    if (count >= maxCount) break;
   }
 
   for (var i = 0; i < unusedObjects.length; i++) {
@@ -432,8 +476,10 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   this.button.visible = false;
   this.SetDraggableOnly(); // make all edges undraggable
 
+  // TODO: start creatures by row and make them skip carrots
   for (var i = 0; i < this.creatures.length; i++) {
     var creature = this.creatures[i];
+    if (!creature.sprite.visible) continue;
     var time = Math.random() * Phaser.Timer.SECOND; // this could be improved. Like I'd rather have a random creature always start at 0, etc
     this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
   }
@@ -442,12 +488,13 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 GlassLab.FeedingPen.prototype.GetNextFoodInCreatureRow = function(creature) {
   if (!this.foodByRow || !this.foodByRow.length) this._getFoodByRow();
   var row = Math.round(creature.sprite.isoY / GLOBAL.tileSize);
-  return this.foodByRow[row].shift();
+  return (this.foodByRow[row])? this.foodByRow[row].shift() : null;
 };
 
 GlassLab.FeedingPen.prototype._getFoodByRow = function() {
   this.foodByRow = [];
   for (var i = 0; i < this.foods.length; i++) {
+    if (!this.foods[i].sprite.visible) continue;
     var row = Math.round(this.foods[i].sprite.isoY / GLOBAL.tileSize);
     var col = Math.round(this.foods[i].sprite.isoX / GLOBAL.tileSize);
     if (!this.foodByRow[row]) this.foodByRow[row] = [];
