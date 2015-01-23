@@ -6,5 +6,6 @@
 var GlassLab = GlassLab || {};
 
 GlassLab.SignalManager = {
-    update: new Phaser.Signal()
+    update: new Phaser.Signal(),
+    journalClosed: new Phaser.Signal()
 };

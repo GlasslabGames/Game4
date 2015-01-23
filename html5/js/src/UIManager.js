@@ -6,33 +6,48 @@ var GlassLab = GlassLab || {};
 
 GlassLab.UIManager = function(game)
 {
-    this.endLevelButton = game.make.button(0,0,"closeIcon");
+    this.game = game;
+
+    this.endLevelButton = this._createEndLevelButton();
     GLOBAL.UILayer.add(this.endLevelButton);
+};
+
+GlassLab.UIManager.prototype.ShowEndLevelButton = function()
+{
+    this.endLevelButton.visible = true;
+};
+
+GlassLab.UIManager.prototype.HideEndLevelButton = function()
+{
     this.endLevelButton.visible = false;
-    this.endLevelButton.inputEnabled = true;
-    this.endLevelButton.events.onInputDown.add(function(){
+};
+
+GlassLab.UIManager.prototype.ShowEndLevelButton = function()
+{
+    this.endLevelButton.visible = true;
+};
+
+GlassLab.UIManager.prototype.HideEndLevelButton = function()
+{
+    this.endLevelButton.visible = false;
+};
+
+// TODO: Replace with class?
+GlassLab.UIManager.prototype._createEndLevelButton = function()
+{
+    var endLevelButton = this.game.make.button(0,0,"closeIcon");
+    endLevelButton.visible = false;
+    endLevelButton.inputEnabled = true;
+    endLevelButton.events.onInputDown.add(function(){
+        this.visible = false;
         GLOBAL.levelManager.LoadNextLevel();
     }, this);
-};
 
-GlassLab.UIManager.prototype.ShowEndLevelButton = function()
-{
-    this.endLevelButton.visible = true;
-};
+    GlassLab.SignalManager.journalClosed.add(function(){
+        this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
+    }, endLevelButton);
 
-GlassLab.UIManager.prototype.HideEndLevelButton = function()
-{
-    this.endLevelButton.visible = false;
-};
-
-GlassLab.UIManager.prototype.ShowEndLevelButton = function()
-{
-    this.endLevelButton.visible = true;
-};
-
-GlassLab.UIManager.prototype.HideEndLevelButton = function()
-{
-    this.endLevelButton.visible = false;
+    return endLevelButton;
 };
 
 GlassLab.UIManager.prototype._createZoomButton = function()

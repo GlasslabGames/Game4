@@ -90,6 +90,7 @@ window.onload = function() {
         GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
 
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
+        GLOBAL.levelManager.LoadNextLevel(); // Load first level
 
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
@@ -144,6 +145,8 @@ window.onload = function() {
 
         // Add UI
         // TODO: Gross, so much crap here. How to clean?
+        GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
+
         var uiGroup = game.add.group();
         GLOBAL.UIGroup = uiGroup;
 

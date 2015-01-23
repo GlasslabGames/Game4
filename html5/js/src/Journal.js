@@ -59,9 +59,6 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.closeButton);
 
     this.sprite.visible = false;
-
-    this.events = {};
-    this.events.onHidden = new Phaser.Signal();
 };
 
 GlassLab.Journal.prototype.IsShowing = function()
@@ -94,7 +91,7 @@ GlassLab.Journal.prototype.Hide = function()
 {
     this.sprite.visible = false;
 
-    this.events.onHidden.dispatch();
+    GlassLab.SignalManager.journalClosed.dispatch();
 };
 
 GlassLab.Journal.prototype._onClosePressed = function()
