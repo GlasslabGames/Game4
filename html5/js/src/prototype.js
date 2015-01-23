@@ -13,17 +13,19 @@ window.onload = function() {
         game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical.png');
         game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal.png');
         game.load.image('food', 'assets/images/isoCarrot.png');
-        /*
-        game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');
-        game.load.image('autumnTile2', 'assets/images/autumn_ground2.png');
-        game.load.image('autumnTile3', 'assets/images/autumn_ground3.png');
-        game.load.image('autumnTile4', 'assets/images/autumn_ground4.png');
-        game.load.image('autumnTile5', 'assets/images/autumn_water.png');
-        game.load.image('autumnTile6', 'assets/images/autumn_fenceBottomCorner.png');
-        game.load.image('autumnTile7', 'assets/images/autumn_fenceSideCorner.png');
-        game.load.image('autumnTile8', 'assets/images/autumn_fenceStraight.png');
-        game.load.image('autumnTile9', 'assets/images/autumn_fenceTopCorner.png');
-        */
+        game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
+
+      /*
+      game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');
+      game.load.image('autumnTile2', 'assets/images/autumn_ground2.png');
+      game.load.image('autumnTile3', 'assets/images/autumn_ground3.png');
+      game.load.image('autumnTile4', 'assets/images/autumn_ground4.png');
+      game.load.image('autumnTile5', 'assets/images/autumn_water.png');
+      game.load.image('autumnTile6', 'assets/images/autumn_fenceBottomCorner.png');
+      game.load.image('autumnTile7', 'assets/images/autumn_fenceSideCorner.png');
+      game.load.image('autumnTile8', 'assets/images/autumn_fenceStraight.png');
+      game.load.image('autumnTile9', 'assets/images/autumn_fenceTopCorner.png');
+      */
         game.load.image('grassTile0', 'assets/images/grassy_water.png');
         game.load.image('grassTile1', 'assets/images/grassy_1.png');
         game.load.image('grassTile2', 'assets/images/grassy_2.png');
@@ -109,7 +111,7 @@ window.onload = function() {
         var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
 
         // Create creatures
-        for (var i=0; i < 10; i++)
+        for (var i=0; i < 0; i++)
         {
             var creature = new GlassLab.Creature(game, "sheep");
             GLOBAL.creatureLayer.add(creature.sprite);
