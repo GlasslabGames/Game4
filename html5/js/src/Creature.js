@@ -97,9 +97,18 @@ GlassLab.Creature = function(game, typeName, initialStateName)
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
+    this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen
+
   //game.physics.isoArcade.enable(this.sprite);
     //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 };
+
+GlassLab.Creature.prototype.print = function()
+{
+  var row = Math.round(this.sprite.isoY / GLOBAL.tileSize);
+  var col = Math.round(this.sprite.isoX / GLOBAL.tileSize);
+  return "Creature("+col+", "+row+")";
+}
 
 GlassLab.Creature.prototype._onUp = function(sprite, pointer)
 {
@@ -307,11 +316,15 @@ GlassLab.CreatureStateWaitingForFood.prototype = Object.create(GlassLab.Creature
 GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaitingForFood;
 
 GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
-  var food = this.creature.pen.GetNextFoodInCreatureRow(this.creature);
+  var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
   if (!food) { // no good. Stop immediately, unsatisfied (unless this creature wanted 0 food?)
     var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
     if (satisfied) this.creature.pen.SetCreatureFinishedEating(true);
-    else this.creature.pen.FinishFeeding(false);
+    else {
+      console.log(this.creature.print(),"is hungry but has no more food to target (in StartWalking). Eaten:",this.creature.foodEaten,
+      "Desired:",this.creature.desiredAmountOfFood);
+      this.creature.pen.FinishFeeding(false);
+    }
   } else {
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
   }
@@ -367,9 +380,9 @@ GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
 
 GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 {
-  var speed = 1;
+  var speed = 1.5;
   var delta = Phaser.Point.subtract(this.food.sprite.isoPosition, this.creature.sprite.isoPosition);
-  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.3, 2)) { // we're more than one step away
+  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.3, 2)) { // we're far from the carrot
     delta.setMagnitude(speed);
     Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
     this.creature.sprite.isoX = delta.x;
@@ -430,7 +443,7 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
   if (this.creature.foodEaten > this.creature.desiredAmountOfFood) {
     this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
   } else {
-    var food = this.creature.pen.GetNextFoodInCreatureRow(this.creature);
+    var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
     if (food) {
       this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
     } else { // there's no more food
@@ -438,7 +451,11 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
       this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
       var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
       if (satisfied) this.creature.pen.SetCreatureFinishedEating(true);
-      else this.creature.pen.FinishFeeding(false);
+      else {
+        console.log(this.creature.print(),"is hungry but has no more food to target (in StopEating.) Eaten:",this.creature.foodEaten,
+          "Desired:",this.creature.desiredAmountOfFood);
+        this.creature.pen.FinishFeeding(false);
+      }
     }
   }
 };
@@ -483,6 +500,7 @@ GlassLab.CreatureStateVomiting.prototype.Update = function()
     this.food.sprite.tint = 0xB3FFBD;
 
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
+    console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
     this.creature.pen.FinishFeeding(false);
   }
 };
