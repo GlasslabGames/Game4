@@ -50,6 +50,8 @@ window.onload = function() {
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
         game.load.image('skullIcon', 'assets/images/skull-icon.png');
+        game.load.image('journalMock', 'assets/images/journal_mock.png');
+        game.load.image('orderMock', 'assets/images/order_mock.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -84,6 +86,8 @@ window.onload = function() {
         game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
         GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
+
+        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
 
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
@@ -210,6 +214,17 @@ window.onload = function() {
         topRightAnchor.addChild(table);
 
         uiElement = game.make.sprite(0,0, "ordersIcon");
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){
+            if (!GLOBAL.Orders.IsShowing())
+            {
+                GLOBAL.Orders.Show();
+            }
+            else
+            {
+                GLOBAL.Orders.Hide();
+            }
+        }, this);
         table.addManagedChild(uiElement);
 
         uiElement = game.make.sprite(0,0, "journalIcon");
@@ -273,6 +288,12 @@ window.onload = function() {
         journal.sprite.y = -300;
         centerAnchor.addChild(journal.sprite);
         GLOBAL.Journal = journal;
+
+        var orders = new GlassLab.OrdersMenu(game);
+        orders.sprite.x = -400
+        orders.sprite.y = -300;
+        centerAnchor.addChild(orders.sprite);
+        GLOBAL.Orders = orders;
     }
 
     function onEnterFullScreen() {
