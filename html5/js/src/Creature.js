@@ -307,9 +307,15 @@ GlassLab.CreatureStateWaitingForFood.prototype = Object.create(GlassLab.Creature
 GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaitingForFood;
 
 GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
-  this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game,
-    this.creature, this.creature.pen.GetNextFoodInCreatureRow(this.creature)));
-}
+  var food = this.creature.pen.GetNextFoodInCreatureRow(this.creature);
+  if (!food) { // no good. Stop immediately, unsatisfied (unless this creature wanted 0 food?)
+    var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
+    if (satisfied) this.creature.pen.SetCreatureFinishedEating(true);
+    else this.creature.pen.FinishFeeding(false);
+  } else {
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
+  }
+};
 
 /**
  * CreatureStateDragged
@@ -347,7 +353,7 @@ GlassLab.CreatureStateWalkingToFood.constructor = GlassLab.CreatureStateWalkingT
 
 GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
-  console.log(this.creature,"walking to food", this.food);
+  //console.log(this.creature,"walking to food", this.food);
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.creature.sprite.animations.play("run", 24, true);
 };
@@ -380,7 +386,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 GlassLab.CreatureStateEating = function(game, owner, food)
 {
   GlassLab.CreatureState.call(this, game, owner);
-  console.log(this.creature,"eating");
+  //console.log(this.creature,"eating");
   this.food = food;
 };
 
@@ -431,7 +437,8 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
       // end the level hungry or satisfied
       this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
       var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
-      this.creature.pen.SetCreatureFinishedEating(satisfied);
+      if (satisfied) this.creature.pen.SetCreatureFinishedEating(true);
+      else this.creature.pen.FinishFeeding(false);
     }
   }
 };
