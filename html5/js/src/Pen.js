@@ -401,9 +401,9 @@ GlassLab.FeedingPen.prototype.Resize = function() {
   this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 };
 
-function TestSetContents(numCreatures, numFood) {
+function TestSetContents(numCreatures, numFood, resize) {
   if (GLOBAL.testPen) {
-    GLOBAL.testPen.SetContents(numCreatures, numFood);
+    GLOBAL.testPen.SetContents(numCreatures, numFood, resize);
     return {height: GLOBAL.testPen.height, animalCols: GLOBAL.testPen.leftWidth, foodCols: GLOBAL.testPen.rightWidth};
   }
 }
@@ -558,23 +558,24 @@ GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
 
 GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
   console.log("Finished feeding creatures! Success?",win);
-  /*for (var i = 0; i < this.creatures.length; i++) {
-    var creature = this.creatures[i];
-    creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, creature));
-  }*/
+  if (this.finished) return;
+  this.finished = true;
 
-  if (win)
-  {
-    GLOBAL.levelManager.CompleteCurrentLevel();
+  this.game.time.events.add(Phaser.Timer.SECOND, function() {
+    if (win)
+    {
+      GLOBAL.levelManager.CompleteCurrentLevel();
 
-    GLOBAL.Journal.Show();
+      GLOBAL.Journal.Show();
 
-    GlassLab.SignalManager.levelWon.dispatch();
-  }
-  else
-  {
-    GlassLab.SignalManager.levelLost.dispatch();
-  }
+      GlassLab.SignalManager.levelWon.dispatch();
+    }
+    else
+    {
+      GlassLab.SignalManager.levelLost.dispatch();
+    }
+  }, this);
+
 };
 
 /**

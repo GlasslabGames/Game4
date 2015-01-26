@@ -14,6 +14,8 @@ window.onload = function() {
         game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal.png');
         game.load.image('food', 'assets/images/isoCarrot.png');
         game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
+        game.load.image('happyEmote', 'assets/images/happyEmote.png');
+        game.load.image('angryEmote', 'assets/images/angryEmote.png');
 
       /*
       game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');

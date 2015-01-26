@@ -153,6 +153,22 @@ GlassLab.Creature.prototype._onUpdate = function() {
   //if (this.rightKey.justDown) { }
 };
 
+GlassLab.Creature.prototype.FinishEating = function(satisfied) {
+  if (satisfied) {
+    this.pen.SetCreatureFinishedEating(true);
+    this.emote = this.game.make.sprite(0,0, "happyEmote");
+  } else {
+    this.pen.FinishFeeding(false);
+    this.emote = this.game.make.sprite(0,0, "angryEmote");
+  }
+  this.emote.y = - 2 * this.sprite.height;
+  var size = this.emote.height * 3; // assumes the height and width are the same
+  this.emote.height = this.emote.width = 0;
+  this.game.add.tween(this.emote).to( {y: -3 * this.sprite.height, height: size, width: size}, 100, Phaser.Easing.Linear.Out, true);
+  this.emote.anchor.set(0.5, 1);
+  this.sprite.addChild(this.emote);
+};
+
 GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
 {
     if (targetState == this.state)
@@ -319,11 +335,11 @@ GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
   var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
   if (!food) { // no good. Stop immediately, unsatisfied (unless this creature wanted 0 food?)
     var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
-    if (satisfied) this.creature.pen.SetCreatureFinishedEating(true);
+    if (satisfied) this.creature.FinishEating(true);
     else {
       console.log(this.creature.print(),"is hungry but has no more food to target (in StartWalking). Eaten:",this.creature.foodEaten,
       "Desired:",this.creature.desiredAmountOfFood);
-      this.creature.pen.FinishFeeding(false);
+      this.creature.FinishEating(false);
     }
   } else {
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
@@ -450,11 +466,11 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
       // end the level hungry or satisfied
       this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
       var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
-      if (satisfied) this.creature.pen.SetCreatureFinishedEating(true);
+      if (satisfied) this.creature.FinishEating(true);
       else {
         console.log(this.creature.print(),"is hungry but has no more food to target (in StopEating.) Eaten:",this.creature.foodEaten,
           "Desired:",this.creature.desiredAmountOfFood);
-        this.creature.pen.FinishFeeding(false);
+        this.creature.FinishEating(false);
       }
     }
   }
@@ -501,6 +517,6 @@ GlassLab.CreatureStateVomiting.prototype.Update = function()
 
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
     console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
-    this.creature.pen.FinishFeeding(false);
+    this.creature.FinishEating(false);
   }
 };
