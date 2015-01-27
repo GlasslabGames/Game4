@@ -167,6 +167,11 @@ window.onload = function() {
         }, topRightAnchor);
         uiGroup.add(topRightAnchor);
 
+        var topLeftAnchor = game.make.sprite(0, 0);
+        topLeftAnchor.anchor.setTo(0, 0);
+        topLeftAnchor.fixedToCamera = true;
+        uiGroup.add(topLeftAnchor);
+
         var table = new GlassLab.UITable(game, 1, 20);
         table.x = table.y = 30;
         uiGroup.add(table);
@@ -290,6 +295,12 @@ window.onload = function() {
         orders.sprite.y = -300;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
+
+        var orderFulfillment = new GlassLab.OrderFulfillment(game);
+        orderFulfillment.sprite.x = 130;
+        orderFulfillment.sprite.y = 50;
+        topLeftAnchor.addChild(orderFulfillment.sprite);
+        GLOBAL.orderFulfillment = orderFulfillment;
     }
 
     function onEnterFullScreen() {

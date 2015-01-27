@@ -16,6 +16,12 @@ GlassLab.OrdersMenu = function(game) {
     this.mock = game.make.sprite(250,0, "orderMock");
     this.mock.scale.setTo(.8,.8);
     this.sprite.addChild(this.mock);
+    this.mock.inputEnabled = true;
+    this.mock.events.onInputDown.add(function() {
+        this.Hide();
+
+        GLOBAL.orderFulfillment.Show();
+    }, this);
 
     this.closeButton = game.make.button(700, 0, "closeIcon" , this._onClosePressed, this);
     this.closeButton.anchor.setTo(.5, .5);
@@ -38,6 +44,12 @@ GlassLab.OrdersMenu.prototype.Show = function()
 GlassLab.OrdersMenu.prototype.Hide = function()
 {
     this.sprite.visible = false;
+};
+
+GlassLab.OrdersMenu.prototype.ActivateOrder = function(orderID, showPopup)
+{
+
+
 };
 
 GlassLab.OrdersMenu.prototype._onClosePressed = function()
