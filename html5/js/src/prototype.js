@@ -51,7 +51,6 @@ window.onload = function() {
         game.load.image('pauseIcon', 'assets/images/prima_HUD_pause.png');
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
-        game.load.image('skullIcon', 'assets/images/skull-icon.png');
         game.load.image('journalMock', 'assets/images/journal_mock.png');
         game.load.image('orderMock', 'assets/images/order_mock.png');
 
@@ -257,14 +256,6 @@ window.onload = function() {
         uiGroup.add(bottomRightAnchor);
 
         uiElement = game.make.sprite(-130, -130, "itemsIcon");
-        bottomRightAnchor.addChild(uiElement);
-
-        uiElement = game.make.sprite(-230, -100, "skullIcon");
-        uiElement.scale.setTo(.25, .25);
-        uiElement.inputEnabled = true;
-        uiElement.events.onInputDown.add(function(){
-            GLOBAL.FailModal.Show();
-        }, this);
         bottomRightAnchor.addChild(uiElement);
 
         game.input.onDown.add(globalDown, this); // Global input down handler
