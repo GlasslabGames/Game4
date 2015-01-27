@@ -11,8 +11,10 @@ var GlassLab = GlassLab || {};
 GlassLab.CreatureManager = function(game)
 {
     this.game = game;
+    GLOBAL.creatureManager = this;
     this.creatureDatabase = {
         rammus: {
+            spriteName: "sheep",
             desiredFoodType: "Carrots",
             desiredAmount: 3,
             discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
@@ -61,9 +63,11 @@ GlassLab.CreatureManager.prototype.GetCreatureData = function(type)
 /**
  * Creature
  */
-GlassLab.Creature = function(game, typeName, initialStateName)
+GlassLab.Creature = function(game, type, initialStateName)
 {
-    this.sprite = game.make.isoSprite(0,0,0, typeName);
+    this.type = type;
+    var info = GLOBAL.creatureManager.creatureDatabase[type];
+    this.sprite = game.make.isoSprite(0,0,0, info.spriteName);
 
     //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
@@ -92,12 +96,17 @@ GlassLab.Creature = function(game, typeName, initialStateName)
 
     this.debugAILine = new Phaser.Line();
 
-    this.desiredAmountOfFood = 3; // TODO: don't hardcode
+    this.desiredAmountOfFood = info.desiredAmount;
     this.foodEaten = 0;
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen
+
+    this.hungerBar = new GlassLab.FillBar(this.game);
+    this.sprite.addChild(this.hungerBar.sprite);
+    this.hungerBar.sprite.y = - this.sprite.height * 3;
+    this.hungerBar.sprite.visible = false;
 
   //game.physics.isoArcade.enable(this.sprite);
     //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
@@ -172,6 +181,15 @@ GlassLab.Creature.prototype.Emote = function(happy) {
   this.game.add.tween(this.emote).to( {y: -3 * this.sprite.height, height: size, width: size}, 100, Phaser.Easing.Linear.Out, true);
   this.emote.anchor.set(0.5, 1);
   this.sprite.addChild(this.emote);
+};
+
+GlassLab.Creature.prototype.ShowHungerBar = function(currentlyEating) {
+  var amountEaten = (currentlyEating)? this.foodEaten + 1 : this.foodEaten;
+  this.hungerBar.Set( amountEaten / this.desiredAmountOfFood, true ); // true -> animate change
+};
+
+GlassLab.Creature.prototype.HideHungerBar = function() {
+  this.hungerBar.sprite.visible = false;
 };
 
 GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
@@ -436,6 +454,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
   this.tween2 = this.game.add.tween(this.food.sprite).to( {alpha: 0.1 },
     GlassLab.CreatureStateEating.EATING_TIME * 1000, Phaser.Easing.Linear.None, true);
 
+  //this.creature.ShowHungerBar(true); // jk, we don't want the hunger bar while feeding in a pen
 };
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
@@ -443,7 +462,9 @@ GlassLab.CreatureStateEating.prototype.Exit = function() {
   this.tween.stop();
   this.tween2.stop();
   this.creature.sprite.scale.y = this.startScaleY;
-}
+
+  //this.creature.HideHungerBar();
+};
 
 GlassLab.CreatureStateEating.EATING_TIME = 1.5; // in secs. This can be replaced by the length of the eating anim maybe
 

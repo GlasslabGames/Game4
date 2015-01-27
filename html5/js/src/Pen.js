@@ -393,7 +393,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 
   this.FillIn(GlassLab.Food.bind(null, this.game, "food"), this.foods, this.numFood,
     this.leftWidth, this.leftWidth + this.rightWidth);
-  this.FillIn(GlassLab.Creature.bind(null, this.game, "sheep", "WaitingForFood"), this.creatures, this.numCreatures,
+  this.FillIn(GlassLab.Creature.bind(null, this.game, "rammus", "WaitingForFood"), this.creatures, this.numCreatures,
     0, this.leftWidth, true);
 
   if (this.numFood && this.numCreatures) {

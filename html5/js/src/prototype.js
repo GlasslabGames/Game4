@@ -114,7 +114,7 @@ window.onload = function() {
         // Create creatures
         for (var i=0; i < 0; i++)
         {
-            var creature = new GlassLab.Creature(game, "sheep");
+            var creature = new GlassLab.Creature(game, "rammus");
             GLOBAL.creatureLayer.add(creature.sprite);
             var randX = parseInt(Math.random() * 20);
             var randY = parseInt(Math.random() * 20);
