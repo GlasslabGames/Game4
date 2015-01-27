@@ -81,6 +81,11 @@ GlassLab.LevelManager.prototype.LoadNextLevel = function()
     this.LoadLevel(++this.currentLevel);
 };
 
+GlassLab.LevelManager.prototype.RestartLevel = function()
+{
+  this.LoadLevel(this.currentLevel);
+};
+
 GlassLab.LevelManager.prototype.GetCurrentLevel = function()
 {
     return this.levels[this.currentLevel];

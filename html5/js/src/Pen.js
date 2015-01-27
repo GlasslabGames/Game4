@@ -44,9 +44,6 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.root.addChild(this.bottomEdge.sprite);
   this.root.addChild(this.rightEdge.sprite);
 
-  this.root.isoX = 3 * GLOBAL.tileSize;
-  this.root.isoY = 3 * GLOBAL.tileSize;
-
   var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
   this.ratioLabel = game.make.text(0, 0, "1 : 2", style);
   this.ratioLabel.anchor.set(0.5, 1);

@@ -6,6 +6,7 @@ window.onload = function() {
     var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
     GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
+    GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
         game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
@@ -271,6 +272,7 @@ window.onload = function() {
 
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
+        game.camera.y = -game.camera.height/2;
 
         // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
         GLOBAL.lastMousePosition = new Phaser.Point();
