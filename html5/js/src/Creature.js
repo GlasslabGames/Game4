@@ -156,11 +156,16 @@ GlassLab.Creature.prototype._onUpdate = function() {
 GlassLab.Creature.prototype.FinishEating = function(satisfied) {
   if (satisfied) {
     this.pen.SetCreatureFinishedEating(true);
-    this.emote = this.game.make.sprite(0,0, "happyEmote");
+    this.Emote(true);
   } else {
     this.pen.FinishFeeding(false);
-    this.emote = this.game.make.sprite(0,0, "angryEmote");
+    this.Emote(false);
   }
+};
+
+GlassLab.Creature.prototype.Emote = function(happy) {
+  var spriteName = (happy)? "happyEmote" : "angryEmote";
+  this.emote = this.game.make.sprite(0,0, spriteName);
   this.emote.y = - 2 * this.sprite.height;
   var size = this.emote.height * 3; // assumes the height and width are the same
   this.emote.height = this.emote.width = 0;
@@ -440,7 +445,7 @@ GlassLab.CreatureStateEating.prototype.Exit = function() {
   this.creature.sprite.scale.y = this.startScaleY;
 }
 
-GlassLab.CreatureStateEating.EATING_TIME = 2; // in secs. This can be replaced by the length of the eating anim maybe
+GlassLab.CreatureStateEating.EATING_TIME = 1.5; // in secs. This can be replaced by the length of the eating anim maybe
 
 GlassLab.CreatureStateEating.prototype.Update = function()
 {

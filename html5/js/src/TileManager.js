@@ -55,10 +55,13 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, m
         for (var j=0; j < height; j++)
         {
             if (!this.mapData[i]) this.mapData[i] = [];
-            this.mapData[i][j] = parseInt(Math.random() * 5);
+            var centerDist = Math.sqrt( (j - height / 2)*(j - height / 2) + (i - width / 2) * (i - width / 2));
+            if (centerDist > 8 + Math.random()) this.mapData[i][j] = 0; // water
+            else this.mapData[i][j] = Math.min( parseInt(Math.random() * 12 + 1), 4);
+            // reduce shroom likeliness by collapsing higher numbers to 4 (plain grass)
         }
     }
-
+/* This made a fence
     this.mapData[10][6] = 6; // Right corner
     this.mapData[10][7] = 6;
     this.mapData[10][8] = 6;
@@ -73,6 +76,7 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, m
     this.mapData[7][6] = 6;
     this.mapData[8][6] = 6;
     this.mapData[9][6] = 6;
+   */
 };
 
 GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(parentGroup)
