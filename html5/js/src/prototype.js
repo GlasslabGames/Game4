@@ -6,14 +6,17 @@ window.onload = function() {
     var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
     GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
+    GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
         game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
         game.load.image('penBg', 'assets/images/dirtTile1_top.png');
-        game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical.png');
-        game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal.png');
+        game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical2.png');
+        game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal2.png');
         game.load.image('food', 'assets/images/isoCarrot.png');
         game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
+        game.load.image('happyEmote', 'assets/images/happyEmote.png');
+        game.load.image('angryEmote', 'assets/images/angryEmote.png');
 
       /*
       game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');
@@ -88,9 +91,6 @@ window.onload = function() {
 
         GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
 
-        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
-        GLOBAL.levelManager.LoadNextLevel(); // Load first level
-
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
         GLOBAL.tileManager.GenerateRandomMapData(20, 20);
@@ -108,7 +108,7 @@ window.onload = function() {
 
         GLOBAL.paused = false;
 
-        var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
+        //var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
 
         // Create creatures
         for (var i=0; i < 0; i++)
@@ -263,6 +263,7 @@ window.onload = function() {
 
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
+        game.camera.y = -game.camera.height/2;
 
         // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
         GLOBAL.lastMousePosition = new Phaser.Point();
@@ -290,6 +291,10 @@ window.onload = function() {
         orders.sprite.y = -300;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
+
+        // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
+        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
+        GLOBAL.levelManager.LoadNextLevel(); // Load first level
     }
 
     function onEnterFullScreen() {

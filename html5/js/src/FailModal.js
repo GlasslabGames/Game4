@@ -12,6 +12,7 @@ GlassLab.FailModal = function(game) {
     this.sprite.addChild(this.background);
 
     this.retryButton = game.make.button(200, 100, "closeIcon" , this._onRetryPressed, this);
+    this.retryButton.input.priorityID = GLOBAL.UIpriorityID;
     this.retryButton.anchor.setTo(.5, .5);
     this.retryButton.scale.setTo(.5, .5);
     this.sprite.addChild(this.retryButton);
@@ -38,5 +39,6 @@ GlassLab.FailModal.prototype.Hide = function()
 GlassLab.FailModal.prototype._onRetryPressed = function()
 {
     this.Hide();
-    GLOBAL.levelManager.LoadLevel(GLOBAL.levelManager.currentLevel);
+    console.log("retry level");
+    GLOBAL.levelManager.RestartLevel();
 };

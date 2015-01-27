@@ -29,7 +29,6 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
 
   this.edges = [ this.topEdge, this.bottomEdge, this.centerEdge, this.leftEdge, this.rightEdge ];
 
-
   this.root.addChild(this.topEdge.sprite);
   this.root.addChild(this.leftEdge.sprite);
 
@@ -44,9 +43,6 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
   this.root.addChild(this.centerEdge.sprite);
   this.root.addChild(this.bottomEdge.sprite);
   this.root.addChild(this.rightEdge.sprite);
-
-  this.root.isoX = 3 * GLOBAL.tileSize;
-  this.root.isoY = 3 * GLOBAL.tileSize;
 
   var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
   this.ratioLabel = game.make.text(0, 0, "1 : 2", style);
@@ -181,7 +177,7 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, onLeft) {
   tile.isoY = yPos;
   tile.tint = (onLeft) ? GlassLab.Pen.LEFT_COLOR : GlassLab.Pen.RIGHT_COLOR;
   tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far
-}
+};
 
 /**
  * Edge - represents the edge of a pen, made up of multiple sprites
@@ -232,13 +228,19 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
   var sprite = this.unusedSprites.pop();
   if (!sprite) {
     sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
-    sprite.alpha = 0.3;
+    //sprite.alpha = 0.3;
     sprite.anchor.set(0.5, 1.13);
     sprite.inputEnabled = true;
     sprite.events.onInputUp.add(this._onUp, this);
     sprite.events.onInputDown.add(this._onDown, this);
     sprite.events.onInputOver.add(this._onOver, this);
     sprite.events.onInputOut.add(this._onOut, this);
+    switch (this.side) {
+      case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
+      case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
+      case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 3; break;
+      case GlassLab.Edge.SIDES.right: sprite.input.priorityID = 4; break;
+    } // Note: We might have to revisit and/or add priorityIDs to other things.
     this.sprite.addChild(sprite);
   }
   sprite.visible = true;
@@ -401,9 +403,9 @@ GlassLab.FeedingPen.prototype.Resize = function() {
   this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 };
 
-function TestSetContents(numCreatures, numFood) {
+function TestSetContents(numCreatures, numFood, resize) {
   if (GLOBAL.testPen) {
-    GLOBAL.testPen.SetContents(numCreatures, numFood);
+    GLOBAL.testPen.SetContents(numCreatures, numFood, resize);
     return {height: GLOBAL.testPen.height, animalCols: GLOBAL.testPen.leftWidth, foodCols: GLOBAL.testPen.rightWidth};
   }
 }
@@ -477,6 +479,13 @@ GlassLab.FeedingPen.prototype._onUpdate = function() {
   if (this.key2.justDown && !this.feeding) {
     this.FeedCreatures();
   }
+/*
+  for (var i = 0; i < this.edges.length; i++) {
+    for (var j = 0; j < this.edges[i].sprite.children.length; j++) {
+      this.game.debug.spriteBounds(this.edges[i].sprite.getChildAt(j));
+    }
+  }
+  */
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
@@ -558,23 +567,24 @@ GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
 
 GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
   console.log("Finished feeding creatures! Success?",win);
-  /*for (var i = 0; i < this.creatures.length; i++) {
-    var creature = this.creatures[i];
-    creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, creature));
-  }*/
+  if (this.finished) return;
+  this.finished = true;
 
-  if (win)
-  {
-    GLOBAL.levelManager.CompleteCurrentLevel();
+  this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
+    if (win)
+    {
+      GLOBAL.levelManager.CompleteCurrentLevel();
 
-    GLOBAL.Journal.Show();
+      GLOBAL.Journal.Show();
 
-    GlassLab.SignalManager.levelWon.dispatch();
-  }
-  else
-  {
-    GlassLab.SignalManager.levelLost.dispatch();
-  }
+      GlassLab.SignalManager.levelWon.dispatch();
+    }
+    else
+    {
+      GlassLab.SignalManager.levelLost.dispatch();
+    }
+  }, this);
+
 };
 
 /**
