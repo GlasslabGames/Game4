@@ -17,22 +17,22 @@ GlassLab.CreatureManager = function(game)
             spriteName: "sheep",
             desiredFoodType: "Carrots",
             desiredAmount: 3,
-            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         bird: {
             desiredFoodType: "Rocks",
             desiredAmount: 5,
-            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+            discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         },
         poopmonster: {
             desiredFoodType: "Poop",
             desiredAmount: .5,
-            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+            discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         }
     };
 
-    this.LogNumCreaturesFed("rammus", 3);
-    this.LogNumCreaturesFed("rammus", 1);
+    //this.LogNumCreaturesFed("rammus", 3);
+    //this.LogNumCreaturesFed("rammus", 1);
 };
 
 /*
@@ -44,15 +44,26 @@ GlassLab.CreatureManager = function(game)
 GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function(type, num)
 {
     var creatureData = this.creatureDatabase[type];
-    if (creatureData.discoveredFeedCounts.indexOf(num) != -1)
+    if (creatureData.discoveredFoodCounts[num])
     {
         return;
     }
     else
     {
-        creatureData.discoveredFeedCounts.push(num);
-        creatureData.discoveredFeedCounts.sort();
+        creatureData.discoveredFoodCounts[num] = "new"; // set it to "new" for now so we know it was just added
     }
+};
+
+// For all the discovered food counts that are set to "new", remove that new flag
+GlassLab.CreatureManager.prototype.UnflagDiscoveredFoodCounts = function() {
+  for (var creatureType in this.creatureDatabase) {
+    var discoveredFoodCounts = this.creatureDatabase[creatureType].discoveredFoodCounts;
+    for (var index in discoveredFoodCounts) {
+      if (discoveredFoodCounts[index] == "new") {
+        discoveredFoodCounts[index] = true; // erase the new, but make sure it's still marked as discovered
+      }
+    }
+  }
 };
 
 GlassLab.CreatureManager.prototype.GetCreatureData = function(type)

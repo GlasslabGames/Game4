@@ -59,7 +59,7 @@ window.onload = function() {
         game.load.image('pauseIcon', 'assets/images/prima_HUD_pause.png');
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
-        game.load.image('journalMock', 'assets/images/journal_mock.png');
+        game.load.image('journalBg', 'assets/images/journal_bg.png');
         game.load.image('orderMock', 'assets/images/order_mock.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));

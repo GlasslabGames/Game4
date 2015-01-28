@@ -368,6 +368,9 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.foodByRow = [];
   this.feeding = false;
 
+  this.creatureType = "rammus"; // todo
+  this.foodType = "carrot"; // todo
+
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
@@ -391,9 +394,9 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 GlassLab.FeedingPen.prototype.Resize = function() {
   GlassLab.Pen.prototype.Resize.call(this);
 
-  this.FillIn(GlassLab.Food.bind(null, this.game, "carrot"), this.foods, this.numFood,
+  this.FillIn(GlassLab.Food.bind(null, this.game, this.foodType), this.foods, this.numFood,
     this.leftWidth, this.leftWidth + this.rightWidth);
-  this.FillIn(GlassLab.Creature.bind(null, this.game, "rammus", "WaitingForFood"), this.creatures, this.numCreatures,
+  this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, "WaitingForFood"), this.creatures, this.numCreatures,
     0, this.leftWidth, true);
 
   if (this.numFood && this.numCreatures) {
@@ -567,12 +570,15 @@ GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
 
 GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
   console.log("Finished feeding creatures! Success?",win);
+
   if (this.finished) return;
   this.finished = true;
 
   this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
     if (win)
     {
+      GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
+
       GLOBAL.levelManager.CompleteCurrentLevel();
 
       GLOBAL.Journal.Show();
