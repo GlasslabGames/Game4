@@ -1,0 +1,124 @@
+{"frames": [
+
+{
+	"filename": "carrot_death_VFX01.png",
+	"frame": {"x":2,"y":2,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX02.png",
+	"frame": {"x":339,"y":2,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX03.png",
+	"frame": {"x":676,"y":2,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX04.png",
+	"frame": {"x":1013,"y":2,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX05.png",
+	"frame": {"x":1350,"y":2,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX06.png",
+	"frame": {"x":2,"y":281,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX07.png",
+	"frame": {"x":339,"y":281,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX08.png",
+	"frame": {"x":676,"y":281,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX09.png",
+	"frame": {"x":1013,"y":281,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX10.png",
+	"frame": {"x":1350,"y":281,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX11.png",
+	"frame": {"x":2,"y":560,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX12.png",
+	"frame": {"x":339,"y":560,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX13.png",
+	"frame": {"x":676,"y":560,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+},
+{
+	"filename": "carrot_death_VFX14.png",
+	"frame": {"x":1013,"y":560,"w":335,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":335,"h":277},
+	"sourceSize": {"w":335,"h":277}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "carrot_death_VFX.png",
+	"format": "RGBA8888",
+	"size": {"w":1687,"h":839},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:14c105d4f076d190a6cb256f4d89b878:34f9121105fd4691ff16d775b523b5bc:edef4986b93c02b327e73f2ac8a989c7$"
+}
+}
