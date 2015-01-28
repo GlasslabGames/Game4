@@ -49,7 +49,6 @@ GlassLab.OrdersMenu.prototype.Hide = function()
 GlassLab.OrdersMenu.prototype.ActivateOrder = function(orderID, showPopup)
 {
 
-
 };
 
 GlassLab.OrdersMenu.prototype._onClosePressed = function()
