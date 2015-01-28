@@ -69,6 +69,11 @@ GlassLab.Creature = function(game, type, initialStateName)
     var info = GLOBAL.creatureManager.creatureDatabase[type];
     this.sprite = game.make.isoSprite(0,0,0, info.spriteName);
 
+    // By loading all the anims briefly, I hope to reduce lag later
+    this.sprite.loadTexture(info.spriteName+"_eat");
+    this.sprite.loadTexture(info.spriteName+"_walk");
+    this.sprite.loadTexture(info.spriteName);
+
     //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
     this.state = null;
@@ -101,7 +106,7 @@ GlassLab.Creature = function(game, type, initialStateName)
 
     this.hungerBar = new GlassLab.FillBar(this.game);
     this.sprite.addChild(this.hungerBar.sprite);
-    this.hungerBar.sprite.y = - this.sprite.height * 3;
+    this.hungerBar.sprite.y = - this.sprite.height * 4;
     this.hungerBar.sprite.visible = false;
 
   //game.physics.isoArcade.enable(this.sprite);
@@ -115,7 +120,7 @@ GlassLab.Creature.prototype.print = function()
   return "Creature("+col+", "+row+")";
 };
 
-GlassLab.Creature.prototype.PlayAnim = function(anim, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
+GlassLab.Creature.prototype.PlayAnim = function(anim, loop, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
   var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
   if (!anim) {
     this.sprite.loadTexture(spriteName);
@@ -123,7 +128,7 @@ GlassLab.Creature.prototype.PlayAnim = function(anim, framerate) { // anim shoul
     this.sprite.loadTexture(spriteName+"_"+anim);
     this.sprite.animations.add('anim'); // this animation uses the whole spritesheet
     if (!framerate) framerate = 24;
-    this.sprite.animations.play('anim', framerate, true);
+    return this.sprite.animations.play('anim', framerate, loop); // return the reference to the current animation
   }
 };
 
@@ -150,7 +155,7 @@ GlassLab.Creature.prototype._onDown = function(sprite, pointer)
 
 GlassLab.Creature.prototype._startDrag = function() {
   if (GLOBAL.dragTarget != null) return;
-  this.PlayAnim('walk', 96);
+  this.PlayAnim('walk', true, 96);
   this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
   GLOBAL.dragTarget = this;
 };
@@ -309,7 +314,7 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 
     this.findDestinationHandler = null;
 
-    this.creature.PlayAnim('walk');
+    this.creature.PlayAnim('walk', true);
 };
 
 GlassLab.CreatureStateIdle.prototype.Update = function()
@@ -416,7 +421,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
   //console.log(this.creature,"walking to food", this.food);
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.PlayAnim("walk");
+  this.creature.PlayAnim("walk", true);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
@@ -429,7 +434,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 {
   var speed = 1.5;
   var delta = Phaser.Point.subtract(this.food.sprite.isoPosition, this.creature.sprite.isoPosition);
-  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.3, 2)) { // we're far from the carrot
+  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.5, 2)) { // we're far from the carrot
     delta.setMagnitude(speed);
     Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
     this.creature.sprite.isoX = delta.x;
@@ -456,37 +461,24 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.startTime = this.game.time.totalElapsedSeconds();
-  this.startScaleY = this.creature.sprite.scale.y;
-  this.tween = this.game.add.tween(this.creature.sprite.scale).to( {y: this.startScaleY * 0.9 }, 200, Phaser.Easing.Linear.InOut, true, 0, -1, true);
-  this.tween2 = this.game.add.tween(this.food.sprite).to( {alpha: 0.1 },
-    GlassLab.CreatureStateEating.EATING_TIME * 1000, Phaser.Easing.Linear.None, true);
-
-  this.creature.ShowHungerBar(true); // jk, we don't want the hunger bar while feeding in a pen
+  var anim = this.creature.PlayAnim("eat", false);
+  anim.onComplete.add(this.StopEating, this);
+  // this is quite hacky, but for now just wait the approximate amount of time that the animation takes
+  // to wait for the exact right frame would take some more work
+  this.game.time.events.add(700, this._onChomp, this);
 };
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
   GlassLab.CreatureState.prototype.Exit.call(this);
-  this.tween.stop();
-  this.tween2.stop();
-  this.creature.sprite.scale.y = this.startScaleY;
-
-  this.creature.HideHungerBar();
 };
 
-GlassLab.CreatureStateEating.EATING_TIME = 1.5; // in secs. This can be replaced by the length of the eating anim maybe
-
-GlassLab.CreatureStateEating.prototype.Update = function()
-{
-  var timeElapsed = this.game.time.totalElapsedSeconds() - this.startTime;
-
-  if (timeElapsed > GlassLab.CreatureStateEating.EATING_TIME) {
-    this.StopEating();
-  }
+GlassLab.CreatureStateEating.prototype._onChomp = function() {
+  this.food.BeEaten();
+  this.creature.ShowHungerBar(true);
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
-  this.food.sprite.visible = false;
+  //this.food.sprite.visible = false;
   this.creature.foodEaten ++;
 
   // Choose which state to go to based on the situation...
@@ -545,10 +537,6 @@ GlassLab.CreatureStateVomiting.prototype.Update = function()
   var timeElapsed = this.game.time.totalElapsedSeconds() - this.startTime;
 
   if (timeElapsed > GlassLab.CreatureStateVomiting.VOMITING_TIME) {
-    this.food.sprite.visible = true;
-    this.food.sprite.alpha = 0.8;
-    this.food.sprite.tint = 0xB3FFBD;
-
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
     console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
     this.creature.FinishEating(false);
