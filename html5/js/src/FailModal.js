@@ -39,6 +39,5 @@ GlassLab.FailModal.prototype.Hide = function()
 GlassLab.FailModal.prototype._onRetryPressed = function()
 {
     this.Hide();
-    console.log("retry level");
     GLOBAL.levelManager.RestartLevel();
 };
