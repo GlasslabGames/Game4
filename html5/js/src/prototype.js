@@ -9,11 +9,16 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
-        game.load.atlasJSONHash('sheep', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
+        game.load.image('sheep', 'assets/images/sheep.png');
+        game.load.atlasJSONHash('sheep_walk', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
+        game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');
+
+        game.load.image('carrot', 'assets/images/isoCarrot.png');
+        game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
+
         game.load.image('penBg', 'assets/images/dirtTile1_top.png');
         game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical2.png');
         game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal2.png');
-        game.load.image('food', 'assets/images/isoCarrot.png');
         game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
         game.load.image('happyEmote', 'assets/images/happyEmote.png');
         game.load.image('angryEmote', 'assets/images/angryEmote.png');
@@ -72,6 +77,7 @@ window.onload = function() {
 
     function create()
     {
+        console.log("Creating game");
         game.stage.disableVisibilityChange = true; // Don't pause when focus is lost
 
         // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)
@@ -113,7 +119,7 @@ window.onload = function() {
         // Create creatures
         for (var i=0; i < 0; i++)
         {
-            var creature = new GlassLab.Creature(game, "sheep");
+            var creature = new GlassLab.Creature(game, "rammus");
             GLOBAL.creatureLayer.add(creature.sprite);
             var randX = parseInt(Math.random() * 20);
             var randY = parseInt(Math.random() * 20);
@@ -269,8 +275,10 @@ window.onload = function() {
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
         game.camera.y = -game.camera.height/2;
+        console.log("Camera position:",game.camera.x, game.camera.y);
 
-        // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
+
+      // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
         GLOBAL.lastMousePosition = new Phaser.Point();
 
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;

@@ -39,6 +39,7 @@ GlassLab.UIManager.prototype._createEndLevelButton = function()
     endLevelButton.scale.setTo(1,1);
     endLevelButton.visible = false;
     endLevelButton.inputEnabled = true;
+    endLevelButton.input.priorityID = GLOBAL.UIpriorityID;
     endLevelButton.events.onInputDown.add(function(){
         this.visible = false;
         GLOBAL.levelManager.LoadNextLevel();
