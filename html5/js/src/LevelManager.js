@@ -27,7 +27,11 @@ GlassLab.LevelManager = function(game)
     var level3 = this._addLevelData(new GlassLab.Level());
     level3.data = {
       orders: [
-        {numCreatures: 5}
+        {
+            numCreatures: 7,
+            type: "rammus",
+            description: "Etiam nec leo eu felis porta ornare. Proin ultricies enim sit amet mauris pulvinar, nec bibendum augue 7 Rammus. Cum sociis natos que penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi eu arcu sit amet diam placerat porta vitae."
+        }
       ]
     };
 
@@ -56,6 +60,8 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             // if we need to, set which edges are adjustable here (defaults to the right side only)
           }
         }
+
+        GlassLab.SignalManager.levelLoaded.dispatch(this.levels[levelNum]);
     }
     else
     {
@@ -68,10 +74,10 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
 {
   // For now just destroy all sprites on the pen and creature layers.
-  for (var i = 0; i < GLOBAL.penLayer.children.length; i++) {
+  for (var i = GLOBAL.penLayer.children.length-1; i>=0; i--) {
     GLOBAL.penLayer.getChildAt(i).destroy();
   }
-  for (var i = 0; i < GLOBAL.creatureLayer.children.length; i++) {
+  for (var i = GLOBAL.creatureLayer.children.length-1; i>=0; i--) {
     GLOBAL.creatureLayer.getChildAt(i).destroy();
   }
 };
