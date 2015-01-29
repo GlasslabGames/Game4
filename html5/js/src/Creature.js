@@ -14,8 +14,12 @@ GlassLab.CreatureManager = function(game)
     GLOBAL.creatureManager = this;
     this.creatureDatabase = {
         rammus: {
+            journalInfo: {
+              name: "Rammus Jerkum",
+              temperament: "Combative"
+            },
             spriteName: "sheep",
-            desiredFoodType: "Carrots",
+            desiredFoodType: "carrot",
             desiredAmount: 3,
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
