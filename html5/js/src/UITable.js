@@ -15,7 +15,7 @@ GlassLab.UITable = function(game, numColumns, padding, drawBorder)
     this.managedChildren = [];
     this.drawBorder = drawBorder || false;
 
-    this.padding = padding;
+    this.padding = padding || 0;
     this._rowHeights = [];
     this._columnLengths = [];
     this._columns = numColumns;
@@ -62,24 +62,29 @@ GlassLab.UITable.prototype._refresh = function()
         {
             var row = parseInt(i / this._columns);
             var column = i % this._columns;
+            // If we have our own height and width calculations (e.g. in UIButton) use those instead
+            var height = (child.getHeight)? child.getHeight() : child.height;
+            var width = (child.getWidth)? child.getWidth() : child.width;
+            console.log(child, height, width);
 
             // Insert element if missing
             if (this._rowHeights.length <= row)
             {
-                this._rowHeights[row] = child.height;
+                this._rowHeights[row] = height;
             }
             else // Replace element with highest value
             {
-                this._rowHeights[row] = Math.max(child.height, this._rowHeights[row]);
+                this._rowHeights[row] = Math.max(height, this._rowHeights[row]);
             }
 
+            //console.log(child, child.width);
             if (this._columnLengths.length <= column)
             {
-                this._columnLengths[column] = child.width;
+                this._columnLengths[column] = width;
             }
             else
             {
-                this._columnLengths[column] = Math.max(child.width, this._columnLengths[column]);
+                this._columnLengths[column] = Math.max(width, this._columnLengths[column]);
             }
         }
     }
@@ -166,4 +171,25 @@ GlassLab.UITable.prototype.getRowYCoord = function(rowNum) {
     while (widthIterator >= 0) totalHeight += this._rowHeights[widthIterator--];
 
     return totalHeight;
+};
+
+GlassLab.UITable.prototype.getWidth = function() {
+  var width = 0;
+  for (var j=0; j < this._columnLengths.length; j++)
+  {
+    width += this._columnLengths[j] + this.padding;
+  }
+  width -= this.padding; // because an extra was added at the end
+  return width;
+};
+
+
+GlassLab.UITable.prototype.getHeight = function() {
+  var height = 0;
+  for (var j=0; j < this._rowHeights.length; j++)
+  {
+    height += this._rowHeights[j] + this.padding;
+  }
+  height -= this.padding; // because an extra was added at the end
+  return height;
 };

@@ -228,7 +228,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
   var sprite = this.unusedSprites.pop();
   if (!sprite) {
     sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
-    sprite.alpha = 0.3;
+    //sprite.alpha = 0.3;
     sprite.anchor.set(0.5, 1.13);
     sprite.inputEnabled = true;
     sprite.events.onInputUp.add(this._onUp, this);

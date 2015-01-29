@@ -158,11 +158,9 @@ window.onload = function() {
         GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
 
         // Add UI
-        // TODO: Gross, so much crap here. How to clean?
+        // TODO: Gross, so much crap here. How to clean? We could move into UIManager at least..
         var uiGroup = game.add.group();
         GLOBAL.UIGroup = uiGroup;
-
-        GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
 
         // Anchors
         var centerAnchor = game.make.sprite(game.camera.width/2, game.camera.height/2);
@@ -186,6 +184,8 @@ window.onload = function() {
         topLeftAnchor.anchor.setTo(0, 0);
         topLeftAnchor.fixedToCamera = true;
         uiGroup.add(topLeftAnchor);
+
+        GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game, centerAnchor);
 
         var table = new GlassLab.UITable(game, 1, 20);
         table.x = table.y = 30;
@@ -298,12 +298,6 @@ window.onload = function() {
         game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
         this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-
-        var failModal = new GlassLab.FailModal(game);
-        failModal.sprite.x = -200
-        failModal.sprite.y = -150;
-        centerAnchor.addChild(failModal.sprite);
-        GLOBAL.FailModal = failModal;
 
         var journal = new GlassLab.Journal(game);
         journal.sprite.x = -400

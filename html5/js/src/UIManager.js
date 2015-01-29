@@ -4,54 +4,58 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.UIManager = function(game)
+GlassLab.UIManager = function(game, centerAnchor)
 {
     this.game = game;
+    this.centerAnchor = centerAnchor;
 
-    this.endLevelButton = this._createEndLevelButton();
-    GLOBAL.UIGroup.add(this.endLevelButton);
-    this.endLevelButton.fixedToCamera = true;
-    this.endLevelButton.cameraOffset.setTo(game.camera.width/2, 50);
-};
+    var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
+    var nextButton = new GlassLab.UIButton(this.game, 0, 0, this._onContinuePressed, this, 150, 60, 0xffffff, "Continue");
 
-GlassLab.UIManager.prototype.ShowEndLevelButton = function()
-{
-    this.endLevelButton.visible = true;
-};
-
-GlassLab.UIManager.prototype.HideEndLevelButton = function()
-{
-    this.endLevelButton.visible = false;
-};
-
-GlassLab.UIManager.prototype.ShowEndLevelButton = function()
-{
-    this.endLevelButton.visible = true;
-};
-
-GlassLab.UIManager.prototype.HideEndLevelButton = function()
-{
-    this.endLevelButton.visible = false;
-};
-
-// TODO: Replace with class?
-GlassLab.UIManager.prototype._createEndLevelButton = function()
-{
-    var endLevelButton = this.game.make.button(0,0,"nextLevelButton");
-    endLevelButton.anchor.setTo(.5,0);
-    endLevelButton.visible = false;
-    endLevelButton.inputEnabled = true;
-    endLevelButton.input.priorityID = GLOBAL.UIpriorityID;
-    endLevelButton.events.onInputDown.add(function(){
-        this.visible = false;
-        GLOBAL.levelManager.LoadNextLevel();
-    }, endLevelButton);
+    this.winModal = new GlassLab.UIModal(this.game, "Good job! You did it!", [retryButton, nextButton]);
+    this.centerAnchor.addChild(this.winModal);
+    this.winModal.visible = false;
 
     GlassLab.SignalManager.journalClosed.add(function(){
-        this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
-    }, endLevelButton);
+      this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
+    }, this.winModal);
 
-    return endLevelButton;
+    retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
+    this.loseModal = new GlassLab.UIModal(this.game, "That wasn't right. Try again?", retryButton);
+    this.centerAnchor.addChild(this.loseModal);
+    this.loseModal.visible = false;
+
+    GlassLab.SignalManager.levelLost.add(function() {
+      this.visible = true
+    }, this.loseModal);
+};
+/*
+// TODO: Replace with class  OR combine with FailModal somehow.. like reuse the same modal? (._.)a
+GlassLab.UIManager.prototype._createEndLevelModal = function()
+{
+   var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
+   var nextButton = new GlassLab.UIButton(this.game, 0, 0, this._onContinuePressed, this, 150, 60, 0xffffff, "Continue");
+   var endLevelModal = new GlassLab.UIModal(this.game, "Good job! You did it!", [retryButton, nextButton]);
+   endLevelModal.visible = false;
+
+    // This seems like a roundabout way to do it... But it makes sense for now
+    GlassLab.SignalManager.journalClosed.add(function(){
+        this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
+    }, endLevelModal);
+
+    return endLevelModal;
+};
+*/
+GlassLab.UIManager.prototype._onRetryPressed = function()
+{
+  this.winModal.visible = this.loseModal.visible = false;
+  GLOBAL.levelManager.RestartLevel();
+};
+
+GlassLab.UIManager.prototype._onContinuePressed = function()
+{
+  this.winModal.visible = this.loseModal.visible = false;
+  GLOBAL.levelManager.LoadNextLevel();
 };
 
 GlassLab.UIManager.prototype._createZoomButton = function()
