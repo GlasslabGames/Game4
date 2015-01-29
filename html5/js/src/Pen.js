@@ -581,7 +581,7 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
 
       GLOBAL.levelManager.CompleteCurrentLevel();
 
-      GLOBAL.Journal.Show();
+      GLOBAL.Journal.Show(this.creatureType);
 
       GlassLab.SignalManager.levelWon.dispatch();
     }

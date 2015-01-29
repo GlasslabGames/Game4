@@ -12,25 +12,29 @@ GlassLab.CreatureManager = function(game)
 {
     this.game = game;
     GLOBAL.creatureManager = this;
+    this.creatureList = [ "rammus", "unifox" ]; // list of creatures in the order they should appear in the journal
+    // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
         rammus: {
             journalInfo: {
               name: "Rammus Jerkum",
               temperament: "Combative"
             },
+            unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
             desiredFoodType: "carrot",
             desiredAmount: 3,
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
-        bird: {
-            desiredFoodType: "Rocks",
+        unifox: {
+            journalInfo: {
+              name: "Vulpes Unicornum",
+              temperament: "Shy"
+            },
+            unlocked: true,
+            spriteName: "fox",
+            desiredFoodType: "carrot",
             desiredAmount: 5,
-            discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
-        },
-        poopmonster: {
-            desiredFoodType: "Poop",
-            desiredAmount: .5,
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         }
     };

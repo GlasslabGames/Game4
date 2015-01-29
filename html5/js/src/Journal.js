@@ -44,7 +44,7 @@ GlassLab.Journal = function(game) {
     }
 
     // Feeding Log picture
-    this.foodLogCreatureArt = game.make.sprite(0, -42);
+    this.foodLogCreatureArt = game.make.sprite(0, -40);
     this.foodLogCreatureArt.tint = 0x000000;
     this.foodLogCreatureArt.scale.setTo(0.2, 0.2);
     this.foodLogCreatureArt.anchor.setTo(.5, 1);
@@ -56,7 +56,7 @@ GlassLab.Journal = function(game) {
     this.foodLog.addChild(this.foodLogFoodArt);
 
     // Creature Picture
-    this.creatureArt = game.make.sprite(240, 450);
+    this.creatureArt = game.make.sprite(240, 460);
     this.creatureArt.anchor.setTo(.5, 1);
     this.sprite.addChild(this.creatureArt);
 
@@ -81,6 +81,16 @@ GlassLab.Journal = function(game) {
     this.closeButton.scale.setTo(.2, .2);
     this.sprite.addChild(this.closeButton);
 
+    // Page buttons
+    this.nextPageButton = game.make.button(1010, 350, "sideArrow" , this._onNextPagePressed, this);
+    this.nextPageButton.anchor.setTo(0, 0.5);
+    this.sprite.addChild(this.nextPageButton);
+
+    this.prevPageButton = game.make.button(-10, 350, "sideArrow" , this._onPrevPagePressed, this);
+    this.prevPageButton.scale.x *= -1;
+    this.prevPageButton.anchor.setTo(0, 0.5);
+    this.sprite.addChild(this.prevPageButton);
+
     this.sprite.visible = false;
 };
 
@@ -89,11 +99,13 @@ GlassLab.Journal.prototype.IsShowing = function()
     return this.sprite.visible;
 };
 
-GlassLab.Journal.prototype.Show = function()
+GlassLab.Journal.prototype.Show = function(creatureType)
 {
     this.sprite.visible = true;
 
-    this.RefreshWithCreature("rammus");
+    if (!creatureType) creatureType = GLOBAL.creatureManager.creatureList[this.currentPage || 0];
+    // default to the page we last had open, or 0 if we haven't opened the journal yet
+    this.RefreshWithCreature(creatureType);
 };
 
 GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
@@ -149,15 +161,24 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
       }
     }
   }
+
+  // Show the next and prev buttons if applicable
+  this.currentPage = GLOBAL.creatureManager.creatureList.indexOf(creatureType);
+  // remember the current page for when we change pages
+  this.prevPageButton.visible = this.currentPage > 0;
+  this.nextPageButton.visible = this.currentPage < GLOBAL.creatureManager.creatureList.length - 1;
 };
 
 GlassLab.Journal.prototype.Hide = function()
 {
   this.sprite.visible = false;
+  this._onLeavePage();
+  GlassLab.SignalManager.journalClosed.dispatch();
+};
+
+GlassLab.Journal.prototype._onLeavePage = function() {
   this._clearAlerts(); // only show the alerts for one time the journal is up
   GLOBAL.creatureManager.UnflagDiscoveredFoodCounts();
-
-  GlassLab.SignalManager.journalClosed.dispatch();
 };
 
 GlassLab.Journal.prototype._addAlert = function(x, y) {
@@ -176,4 +197,16 @@ GlassLab.Journal.prototype._clearAlerts = function(x, y) {
 GlassLab.Journal.prototype._onClosePressed = function()
 {
     this.Hide();
+};
+
+GlassLab.Journal.prototype._onNextPagePressed = function()
+{
+  this._onLeavePage();
+  this.RefreshWithCreature(GLOBAL.creatureManager.creatureList[this.currentPage+1]);
+};
+
+GlassLab.Journal.prototype._onPrevPagePressed = function()
+{
+  this._onLeavePage();
+  this.RefreshWithCreature(GLOBAL.creatureManager.creatureList[this.currentPage-1]);
 };

@@ -14,6 +14,8 @@ window.onload = function() {
         game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');
         game.load.image('sheep_art', 'assets/images/ramArt.png');
 
+        game.load.image('fox_art', 'assets/images/foxArt.png');
+
         game.load.image('carrot', 'assets/images/isoCarrot.png');
         game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
 
@@ -62,6 +64,7 @@ window.onload = function() {
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
         game.load.image('journalBg', 'assets/images/journal_bg.png');
         game.load.image('orderMock', 'assets/images/order_mock.png');
+        game.load.image('sideArrow', 'assets/images/sideArrow.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
