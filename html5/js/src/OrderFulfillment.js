@@ -49,20 +49,8 @@ GlassLab.OrderFulfillment = function(game)
     this.dragBox.x = 50;
     this.dragBox.y = 170;
 */
-    this.submitButton = game.make.button();
-    var submitButtonGraphic = game.make.graphics();
-    submitButtonGraphic.beginFill(0xffaaff).lineStyle(3, 0x000000, 1).drawRect(0,0,180,80);
-    this.submitButton.addChild(submitButtonGraphic);
+    this.submitButton = new GlassLab.UIButton(game, 30, 280, this._onSubmit, this, 180, 80 ,0xffaaff, "Ship Crate!");
     this.sprite.addChild(this.submitButton);
-    this.submitButton.x = 30;
-    this.submitButton.y = 280;
-    this.submitButton.inputEnabled = true;
-    var submitLabel = game.make.text(0,0,"Ship Crate!");
-    submitLabel.anchor.setTo(.5, .5);
-    submitLabel.x = 90;
-    submitLabel.y = 40;
-    this.submitButton.addChild(submitLabel);
-    this.submitButton.events.onInputDown.add(this._onSubmit, this);
 
     this.orderRequirementLabel = game.make.text(0,0,"");
     this.orderRequirementLabel.anchor.setTo(1.0, 0);
