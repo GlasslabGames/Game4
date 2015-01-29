@@ -12,6 +12,9 @@ window.onload = function() {
         game.load.image('sheep', 'assets/images/sheep.png');
         game.load.atlasJSONHash('sheep_walk', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
         game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');
+        game.load.image('sheep_art', 'assets/images/ramArt.png');
+
+        game.load.image('fox_art', 'assets/images/foxArt.png');
 
         game.load.image('carrot', 'assets/images/isoCarrot.png');
         game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
@@ -59,11 +62,12 @@ window.onload = function() {
         game.load.image('pauseIcon', 'assets/images/prima_HUD_pause.png');
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
-        game.load.image('journalMock', 'assets/images/journal_mock.png');
+        game.load.image('journalBg', 'assets/images/journal_bg.png');
         game.load.image('orderMock', 'assets/images/order_mock.png');
         game.load.image('cancelButton', 'assets/images/cancel_button.png');
         game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
+        game.load.image('sideArrow', 'assets/images/sideArrow.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 

@@ -12,27 +12,35 @@ GlassLab.CreatureManager = function(game)
 {
     this.game = game;
     GLOBAL.creatureManager = this;
+    this.creatureList = [ "rammus", "unifox" ]; // list of creatures in the order they should appear in the journal
+    // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
         rammus: {
+            journalInfo: {
+              name: "Rammus Jerkum",
+              temperament: "Combative"
+            },
+            unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
-            desiredFoodType: "Carrots",
+            desiredFoodType: "carrot",
             desiredAmount: 3,
-            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
-        bird: {
-            desiredFoodType: "Rocks",
+        unifox: {
+            journalInfo: {
+              name: "Vulpes Unicornum",
+              temperament: "Shy"
+            },
+            unlocked: true,
+            spriteName: "fox",
+            desiredFoodType: "carrot",
             desiredAmount: 5,
-            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
-        },
-        poopmonster: {
-            desiredFoodType: "Poop",
-            desiredAmount: .5,
-            discoveredFeedCounts: [] // By number of creatures (food is auto-derived)
+            discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         }
     };
 
-    this.LogNumCreaturesFed("rammus", 3);
-    this.LogNumCreaturesFed("rammus", 1);
+    //this.LogNumCreaturesFed("rammus", 3);
+    //this.LogNumCreaturesFed("rammus", 1);
 };
 
 /*
@@ -44,15 +52,26 @@ GlassLab.CreatureManager = function(game)
 GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function(type, num)
 {
     var creatureData = this.creatureDatabase[type];
-    if (creatureData.discoveredFeedCounts.indexOf(num) != -1)
+    if (creatureData.discoveredFoodCounts[num])
     {
         return;
     }
     else
     {
-        creatureData.discoveredFeedCounts.push(num);
-        creatureData.discoveredFeedCounts.sort();
+        creatureData.discoveredFoodCounts[num] = "new"; // set it to "new" for now so we know it was just added
     }
+};
+
+// For all the discovered food counts that are set to "new", remove that new flag
+GlassLab.CreatureManager.prototype.UnflagDiscoveredFoodCounts = function() {
+  for (var creatureType in this.creatureDatabase) {
+    var discoveredFoodCounts = this.creatureDatabase[creatureType].discoveredFoodCounts;
+    for (var index in discoveredFoodCounts) {
+      if (discoveredFoodCounts[index] == "new") {
+        discoveredFoodCounts[index] = true; // erase the new, but make sure it's still marked as discovered
+      }
+    }
+  }
 };
 
 GlassLab.CreatureManager.prototype.GetCreatureData = function(type)
