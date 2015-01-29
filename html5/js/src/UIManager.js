@@ -10,6 +10,8 @@ GlassLab.UIManager = function(game)
 
     this.endLevelButton = this._createEndLevelButton();
     GLOBAL.UIGroup.add(this.endLevelButton);
+    this.endLevelButton.fixedToCamera = true;
+    this.endLevelButton.cameraOffset.setTo(game.camera.width/2, 50);
 };
 
 GlassLab.UIManager.prototype.ShowEndLevelButton = function()
@@ -35,8 +37,8 @@ GlassLab.UIManager.prototype.HideEndLevelButton = function()
 // TODO: Replace with class?
 GlassLab.UIManager.prototype._createEndLevelButton = function()
 {
-    var endLevelButton = this.game.make.button(0,0,"closeIcon");
-    endLevelButton.scale.setTo(1,1);
+    var endLevelButton = this.game.make.button(0,0,"nextLevelButton");
+    endLevelButton.anchor.setTo(.5,0);
     endLevelButton.visible = false;
     endLevelButton.inputEnabled = true;
     endLevelButton.input.priorityID = GLOBAL.UIpriorityID;

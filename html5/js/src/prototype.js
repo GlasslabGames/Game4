@@ -61,6 +61,9 @@ window.onload = function() {
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
         game.load.image('journalMock', 'assets/images/journal_mock.png');
         game.load.image('orderMock', 'assets/images/order_mock.png');
+        game.load.image('cancelButton', 'assets/images/cancel_button.png');
+        game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
+        game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -240,6 +243,9 @@ window.onload = function() {
                 GLOBAL.Orders.Hide();
             }
         }, this);
+        GlassLab.SignalManager.levelLoaded.add(function(level){
+            this.visible = (level.data.orders && level.data.orders.length > 0);
+        }, uiElement);
         table.addManagedChild(uiElement);
 
         uiElement = game.make.sprite(0,0, "journalIcon");
