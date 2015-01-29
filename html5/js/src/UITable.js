@@ -65,7 +65,6 @@ GlassLab.UITable.prototype._refresh = function()
             // If we have our own height and width calculations (e.g. in UIButton) use those instead
             var height = (child.getHeight)? child.getHeight() : child.height;
             var width = (child.getWidth)? child.getWidth() : child.width;
-            console.log(child, height, width);
 
             // Insert element if missing
             if (this._rowHeights.length <= row)

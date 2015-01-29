@@ -41,7 +41,6 @@ GlassLab.UIModal = function(game, text, buttons)
 
   this.x = -0.5 * width;
   this.y = -0.5 * height;
-  console.log(game.camera.width, width, this.x);
 };
 
 // Extends Sprite
