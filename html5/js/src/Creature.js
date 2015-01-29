@@ -88,11 +88,6 @@ GlassLab.Creature = function(game, type, initialStateName)
     var info = GLOBAL.creatureManager.creatureDatabase[type];
     this.sprite = game.make.isoSprite(0,0,0, info.spriteName);
 
-    // By loading all the anims briefly, I hope to reduce lag later
-    this.sprite.loadTexture(info.spriteName+"_eat");
-    this.sprite.loadTexture(info.spriteName+"_walk");
-    this.sprite.loadTexture(info.spriteName);
-
     //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
     this.state = null;
@@ -103,10 +98,10 @@ GlassLab.Creature = function(game, type, initialStateName)
       this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
     }
 
+
     this.sprite.inputEnabled = true;
     this.sprite.draggable = false; // set this in each state
 
-    // TODO: Input handling should be handled outside this class.
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
     this.sprite.anchor.setTo(0.5, 0.8);
@@ -535,29 +530,28 @@ GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
 
 GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.startTime = this.game.time.totalElapsedSeconds();
-  this.creature.sprite.tint = 0xFFE6E6;
-  this.scaleX = this.creature.sprite.scale.x;
-  this.tween = this.game.add.tween(this.creature.sprite.scale).to( {x: this.scaleX * 0.85 },
-    GlassLab.CreatureStateVomiting.VOMITING_TIME * 250, Phaser.Easing.Default, true, 0, -1, true);
+  var anim = this.creature.PlayAnim("vomit", false);
+  anim.onComplete.add(this._onFinishVomiting, this);
+  // this is quite hacky, but for now just wait the approximate amount of time that the animation takes
+  // to wait for the exact right frame would take some more work
+  this.game.time.events.add(2250, this._onSpew, this);
+};
+
+GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
+  var vomit = this.game.make.sprite(-20,-190, "vomit"); //-420,-155
+  vomit.anchor.set(1,0);
+  vomit.tint = 0xe37f54; // carrot color - if we don't want it so bright, use 0x9dad62
+  this.creature.sprite.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
+  vomit.animations.add("anim");
+  vomit.animations.play("anim", 24, false);
 };
 
 GlassLab.CreatureStateVomiting.prototype.Exit = function() {
   GlassLab.CreatureState.prototype.Exit.call(this);
-  this.tween.stop();
-  this.creature.sprite.scale.x = this.scaleX;
-  this.creature.sprite.tint = 0xffffff;
 };
 
-GlassLab.CreatureStateVomiting.VOMITING_TIME = 1; // in secs. This can be replaced by the length of the eating anim maybe
-
-GlassLab.CreatureStateVomiting.prototype.Update = function()
-{
-  var timeElapsed = this.game.time.totalElapsedSeconds() - this.startTime;
-
-  if (timeElapsed > GlassLab.CreatureStateVomiting.VOMITING_TIME) {
-    this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
-    console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
-    this.creature.FinishEating(false);
-  }
+GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
+  this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
+  console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
+  this.creature.FinishEating(false);
 };
