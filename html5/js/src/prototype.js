@@ -12,12 +12,14 @@ window.onload = function() {
         game.load.image('sheep', 'assets/images/sheep.png');
         game.load.atlasJSONHash('sheep_walk', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
         game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');
+        game.load.atlasJSONHash('sheep_vomit', 'assets/images/sheep_vomit.png', 'assets/images/sheep_vomit.json');
         game.load.image('sheep_art', 'assets/images/ramArt.png');
 
         game.load.image('fox_art', 'assets/images/foxArt.png');
 
         game.load.image('carrot', 'assets/images/isoCarrot.png');
         game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
+        game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
         game.load.image('penBg', 'assets/images/dirtTile1_top.png');
         game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical2.png');
