@@ -150,7 +150,7 @@ GlassLab.UITextInput.prototype._addCharFromKeyboardEvent = function(e)
 
 GlassLab.UITextInput.prototype.GetText = function()
 {
-    return this.textLabel.text.substring(1); // TODO: Why does textlabel append a space at the front? D:
+    return this.textLabel.text;
 };
 
 GlassLab.UITextInput.InputType = {
