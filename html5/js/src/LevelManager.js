@@ -13,10 +13,10 @@ GlassLab.LevelManager = function(game)
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
       pens: [
-        {type: "rammus", height: 1}
+        {type: "rammus", height: 3, leftWidth: 3, rightWidth: 3} // FIXME
       ],
       looseCreatures: {
-        rammus: 1
+        rammus: 0
       }
     };
 

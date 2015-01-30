@@ -43,7 +43,7 @@ GlassLab.Cloud = function(game, renderGroup)
     this.renderGroup = renderGroup;
 
     this.sprite = this.game.make.isoSprite(0,0,0,"cloudShadow");
-    this.sprite.isoX = ((Math.random() * GLOBAL.tileManager.GetMapLength()) - GLOBAL.tileManager.centerTile.x) * GLOBAL.tileManager.tileSize;
+    this.sprite.isoX = ((Math.random() * GLOBAL.tileManager.GetMapHeight()) - GLOBAL.tileManager.centerTile.x) * GLOBAL.tileManager.tileSize;
     this.sprite.isoY = (GLOBAL.tileManager.centerTile.y - GLOBAL.tileManager.GetMapWidth()) * GLOBAL.tileManager.tileSize;
     var scale = 3 - (Math.random() * Math.random() * 2);
     this.sprite.scale.setTo(scale, scale);

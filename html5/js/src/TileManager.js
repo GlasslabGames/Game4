@@ -33,7 +33,7 @@ GlassLab.TileManager.prototype.GetTile = function(x, y)
     return this.map[x][y];
 };
 
-GlassLab.TileManager.prototype.GetMapLength = function()
+GlassLab.TileManager.prototype.GetMapHeight = function()
 {
     return this.map.length;
 };
@@ -46,12 +46,6 @@ GlassLab.TileManager.prototype.GetMapWidth = function()
 GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
 {
     return type && type != GlassLab.Tile.TYPES.water; // maybe move this to Tile? or give the tile types some properties?
-};
-
-GlassLab.TileManager.prototype.ReplaceTileAt = function(x, y, newTileType)
-{
-  var tile = this.GetTile(x, y);
-  tile.Swap(newTileType);
 };
 
 GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, min, max)
@@ -216,7 +210,7 @@ GlassLab.TileManager.prototype.GetTileIndexAtWorldPosition = function(x, y, out)
     var tileX = parseInt(Math.round(x / this.tileSize)) + this.centerTile.x;
     var tileY = parseInt(Math.round(y / this.tileSize)) + this.centerTile.y;
 
-    if (out)
+    if (out && out.setTo)
     {
         out.setTo(tileX, tileY);
     }
@@ -246,6 +240,31 @@ GlassLab.TileManager.prototype.TryGetTileAtWorldPosition = function(x, y)
     return this.GetTile(tilePosition.x, tilePosition.y);
 };
 
+GlassLab.TileManager.prototype.clearPenTiles = function()
+{
+  for (var col = 0; col < this.GetMapWidth(); col++) {
+    for (var row = 0; row < this.GetMapHeight(); row++) {
+      var tile = this.GetTile(col, row);
+      tile.setInPen(false);
+      tile.unswapType();
+    }
+  }
+};
+
+GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
+  var randCol = parseInt(Math.random() * this.GetMapWidth());
+  var randRow = parseInt(Math.random() * this.GetMapHeight());
+  var targetTile = this.GetTile(randCol, randRow);
+  var n = 0;
+  while (!targetTile.getIsWalkable() && n++ < 3000) // safeguard against infinite loops
+  {
+    randCol = parseInt(Math.random() * this.GetMapWidth());
+    randRow = parseInt(Math.random() * this.GetMapHeight());
+    targetTile = this.GetTile(randCol, randRow);
+  }
+  return targetTile;
+};
+
 /**
  * Tile
  */
@@ -253,6 +272,8 @@ GlassLab.Tile = function(game, col, row, type) {
   Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-10)*GLOBAL.tileSize, (row-10)*GLOBAL.tileSize, 0, type);
   this.type = type;
   this.anchor.setTo(0.5, 0.5);
+  this.col = col;
+  this.row = row;
 };
 
 // Extends Isosprite
@@ -273,4 +294,27 @@ GlassLab.Tile.prototype.swapType = function(newType) {
   this.prevType = this.type;
   this.type = newType;
   this.loadTexture( newType );
+};
+
+GlassLab.Tile.prototype.unswapType = function() {
+  if (!this.prevType) return;
+  this.type = this.prevType;
+  this.prevType = null;
+  this.loadTexture( this.type );
+};
+
+GlassLab.Tile.prototype.setInPen = function(isIn) {
+  this.inPen = isIn;
+};
+
+GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
+  this.occupant = creature;
+};
+
+GlassLab.Tile.prototype.onCreatureExit = function(creature) {
+  if (this.occupant == creature) this.occupant = null;
+};
+
+GlassLab.Tile.prototype.getIsWalkable = function() {
+  return this.type != GlassLab.Tile.TYPES.water && !this.inPen && !this.occupant;
 };

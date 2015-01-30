@@ -12,8 +12,8 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
 {
   this.game = game;
   this.layer = layer;
-  this.root = this.game.make.isoSprite();
-  layer.add(this.root).name = "root";
+  this.sprite = this.game.make.isoSprite();
+  layer.add(this.sprite).name = "pen";
   this.tiles = [];
   this.unusedTiles = [];
 
@@ -29,25 +29,25 @@ GlassLab.Pen = function(game, layer, leftWidth, rightWidth, height )
 
   this.edges = [ this.topEdge, this.bottomEdge, this.centerEdge, this.leftEdge, this.rightEdge ];
 
-  this.root.addChild(this.topEdge.sprite);
-  this.root.addChild(this.leftEdge.sprite);
+  this.sprite.addChild(this.topEdge.sprite);
+  this.sprite.addChild(this.leftEdge.sprite);
 
   // Add a root for all tiles now so that tiles will appear under the edges
   this.tileRoot = this.game.make.isoSprite();
-  this.root.addChild(this.tileRoot).name = "tileRoot";
+  this.sprite.addChild(this.tileRoot).name = "tileRoot";
 
   // Add a root for all objects that will be added
   this.objectRoot = this.game.make.isoSprite();
-  this.root.addChild(this.objectRoot).name = "objectRoot";
+  this.sprite.addChild(this.objectRoot).name = "objectRoot";
 
-  this.root.addChild(this.centerEdge.sprite);
-  this.root.addChild(this.bottomEdge.sprite);
-  this.root.addChild(this.rightEdge.sprite);
+  this.sprite.addChild(this.centerEdge.sprite);
+  this.sprite.addChild(this.bottomEdge.sprite);
+  this.sprite.addChild(this.rightEdge.sprite);
 
   var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
   this.ratioLabel = game.make.text(0, 0, "1 : 2", style);
   this.ratioLabel.anchor.set(0.5, 1);
-  this.root.addChild(this.ratioLabel);
+  this.sprite.addChild(this.ratioLabel);
   this.ratioLabel.x = this.topEdge.sprite.x;
   this.ratioLabel.y = this.topEdge.sprite.y - GLOBAL.tileSize * 1.5;
 
@@ -92,14 +92,14 @@ GlassLab.Pen.prototype.SetSizeFromEdge = function(edge) {
   switch (edge.side) {
     case GlassLab.Edge.SIDES.top:
       this.height -= rows;
-      this.root.isoY += rows * GLOBAL.tileSize;
+      this.sprite.isoY += rows * GLOBAL.tileSize;
       break;
     case GlassLab.Edge.SIDES.bottom:
       this.height += rows;
       break;
     case GlassLab.Edge.SIDES.left:
       this.leftWidth -= cols;
-      this.root.isoX += cols * GLOBAL.tileSize;
+      this.sprite.isoX += cols * GLOBAL.tileSize;
       break;
     case GlassLab.Edge.SIDES.right:
       this.rightWidth += cols;
@@ -136,16 +136,26 @@ GlassLab.Pen.prototype._resetEdges = function() {
 };
 
 GlassLab.Pen.prototype._resetTiles = function() {
+  // if we added any tiles over the background tiles, remove them
   this.unusedTiles = [];
   for (var i = 0; i < this.tiles.length; i++) {
     this.unusedTiles.push(this.tiles[i]);
     this.tiles[i].visible = false;
   }
+
+  // if we swapped any of the background tiles and set that they were in the pen, undo it
+  GLOBAL.tileManager.clearPenTiles();
 };
 
 GlassLab.Pen.prototype._drawRow = function(yPos, leftCol, centerCol, rightCol) {
   for (var col = leftCol; col < rightCol; col++) {
-    this._placeTile(col * GLOBAL.tileSize, yPos, (col < centerCol));
+    // this part swaps whatever tile was there for a dirt tile (but remember what it was to swap it back later)
+    var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + yPos);
+    tile.setInPen(true);
+    if (col >= centerCol) tile.swapType(GlassLab.Tile.TYPES.dirt);
+
+    // This part draws an overlay tile
+    //this._placeTile(col * GLOBAL.tileSize, yPos, (col < centerCol)); // to add an image on the tile
   }
 
   this.leftEdge.PlacePieceAt( GLOBAL.tileSize * leftCol, yPos );
@@ -155,7 +165,13 @@ GlassLab.Pen.prototype._drawRow = function(yPos, leftCol, centerCol, rightCol) {
 
 GlassLab.Pen.prototype._drawCol = function(xPos, topRow, bottomRow) {
   for (var row = topRow; row < bottomRow; row++) {
-    this._placeTile(xPos, row * GLOBAL.tileSize, (col < this.leftWidth));
+    // this part swaps whatever tile was there for a dirt tile (but remember what it was to swap it back later)
+    var tile = GLOBAL.tileManager.GetTileAtCoord(this.sprite.isoX + xPos, this.sprite.isoY + (GLOBAL.tileSize * row));
+    tile.setInPen(true);
+    tile.swapType(GlassLab.Tile.TYPES.dirt);
+
+    // This part draws an overlay tile
+    //this._placeTile(xPos, row * GLOBAL.tileSize, (col < this.leftWidth));
   }
 
   this.topEdge.PlacePieceAt(xPos, topRow * GLOBAL.tileSize);
@@ -383,7 +399,7 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 0.75, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
     'button', this.FeedCreatures, this, 1, 0, 1);
   this.button.anchor.set(0.5, 1);
-  this.root.addChild(this.button);
+  this.sprite.addChild(this.button);
 
   GLOBAL.testPen = this; // for testing
 };

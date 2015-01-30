@@ -135,20 +135,12 @@ GlassLab.Creature.prototype.print = function()
 };
 
 GlassLab.Creature.prototype.moveToRandomTile = function() {
-  var randX = parseInt(Math.random() * 20);
-  var randY = parseInt(Math.random() * 20);
-  var targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
-  var n = 0;
-  while (!GLOBAL.tileManager.IsTileTypeWalkable(targetPosition) && n++ < 3000) // safeguard against infinite loops
-  {
-    randX = parseInt(Math.random() * 20);
-    randY = parseInt(Math.random() * 20);
-    targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
-  }
+  var tile = GLOBAL.tileManager.getRandomWalkableTile();
 
-  var pos = GLOBAL.tileManager.GetTileWorldPosition(randX, randY);
-  this.sprite.isoX = pos.x;
-  this.sprite.isoY = pos.y;
+  this.sprite.isoX = tile.isoX;
+  this.sprite.isoY = tile.isoY;
+  tile.onCreatureEnter(this);
+
   if (Math.random() > 0.5) // face a random direction too
   {
     this.sprite.scale.x *= -1;
@@ -319,37 +311,34 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
 
 GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 {
-    GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY, this.targetPosition);
+  var currentTile = GLOBAL.tileManager.GetTileAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY);
 
-    // Build list of possible movements
-    var possiblePositions = [];
-    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x+1, this.targetPosition.y);
-    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
-        possiblePositions.push(new Phaser.Point(this.targetPosition.x+1, this.targetPosition.y));
-    possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x-1, this.targetPosition.y);
-    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
-        possiblePositions.push(new Phaser.Point(this.targetPosition.x-1, this.targetPosition.y));
-    possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y+1);
-    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
-        possiblePositions.push(new Phaser.Point(this.targetPosition.x, this.targetPosition.y+1));
-    possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y-1);
-    if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
-        possiblePositions.push(new Phaser.Point(this.targetPosition.x, this.targetPosition.y-1));
+  // Build list of possible movements
+  var possibleTiles = [];
+  var tile = GLOBAL.tileManager.GetTile(currentTile.col - 1, currentTile.row);
+  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
 
-    if (possiblePositions.length > 0) this.targetPosition = possiblePositions[parseInt(Math.random() * possiblePositions.length)];
+  tile = GLOBAL.tileManager.GetTile(currentTile.col + 1, currentTile.row);
+  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
 
-    if (GLOBAL.tileManager.GetTileData(this.targetPosition.x, this.targetPosition.y) == 0)
-    {
-        GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY, this.targetPosition);
-    }
+  tile = GLOBAL.tileManager.GetTile(currentTile.col, currentTile.row - 1);
+  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
 
-    GLOBAL.tileManager.GetTileWorldPosition(this.targetPosition.x, this.targetPosition.y, this.targetPosition);
+  tile = GLOBAL.tileManager.GetTile(currentTile.col, currentTile.row + 1);
+  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
 
-    this.targetIsoPoint.setTo(this.targetPosition.x, this.targetPosition.y, 0);
+  if (possibleTiles.length > 0) {
+    tile = possibleTiles[parseInt(Math.random() * possibleTiles.length)];
+    currentTile.onCreatureExit(this);
+    tile.onCreatureEnter(this);
+  }
+  else tile = currentTile; // stay in place
 
-    this.findDestinationHandler = null;
+  this.targetPosition.set(tile.isoX, tile.isoY);
 
-    this.creature.PlayAnim('walk', true); // TODO: fix these event handlers if the creature was destroyed
+  this.findDestinationHandler = null;
+  this.creature.PlayAnim('walk', true); // TODO: fix these event handlers if the creature was destroyed
+
 };
 
 GlassLab.CreatureStateIdle.prototype.Update = function()
