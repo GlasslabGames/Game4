@@ -21,7 +21,7 @@ GlassLab.OrderFulfillment = function(game)
     this.packingLabel = game.make.text(30,30, "Packing List:", {font: "20px Helvetica", strokeThickness: 1});
     this.sprite.addChild(this.packingLabel);
 
-    this.answerInput = new GlassLab.UITextInput(game);
+    this.answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC);
     this.answerInput.x = 50;
     this.answerInput.y = 100;
     this.answerInput.SetInputLimit(2);
