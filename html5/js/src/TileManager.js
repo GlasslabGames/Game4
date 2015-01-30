@@ -10,8 +10,8 @@ var GlassLab = GlassLab || {};
 GlassLab.TileManager = function(game)
 {
     this.game = game;
-    this.mapData = [[]];
-    this.map = [[]];
+    this.mapData = [[]]; // array of tile type numbers
+    this.map = [[]]; // array of sprites
     this.centerTile = {x: 0, y: 0};
     this.tileSize = 1;
 };
@@ -45,7 +45,13 @@ GlassLab.TileManager.prototype.GetMapWidth = function()
 
 GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
 {
-    return type && type > 0 && type < 5;
+    return type && type != GlassLab.Tile.TYPES.water; // maybe move this to Tile? or give the tile types some properties?
+};
+
+GlassLab.TileManager.prototype.ReplaceTileAt = function(x, y, newTileType)
+{
+  var tile = this.GetTile(x, y);
+  tile.Swap(newTileType);
 };
 
 GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, min, max)
@@ -56,9 +62,9 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, m
         {
             if (!this.mapData[i]) this.mapData[i] = [];
             var centerDist = Math.sqrt( (j - height / 2.0)*(j - height / 2.0) + (i - width / 2.0) * (i - width / 2.0));
-            if (centerDist > 7.5) this.mapData[i][j] = 0; // water
-            else this.mapData[i][j] = Math.min( parseInt(Math.random() * 12 + 1), 4);
-            // reduce shroom likeliness by collapsing higher numbers to 4 (plain grass)
+            if (centerDist > 7.5) this.mapData[i][j] = GlassLab.Tile.TYPES.water; // water
+            else if (Math.random() < 0.75) this.mapData[i][j] = GlassLab.Tile.TYPES.grass;
+            else this.mapData[i][j] = GlassLab.Tile.TYPES["mushroom"+ Math.floor(Math.random() * 3)];
         }
     }
 /* This made a fence
@@ -88,7 +94,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(parentGroup
         {
             var tileType = this.GetTileData(i, j);
             var shouldFlip = false;
-            if (isFence(tileType))
+            if (isFence(tileType)) // we're not using this at all :/
             {
                 if (isFence(this.mapData[i+1][j])) // right-down
                 {
@@ -155,10 +161,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(parentGroup
                 }
             }
 
-            var assetName = "grassTile" + tileType;
-
-            var image = this.game.make.isoSprite((i-10)*GLOBAL.tileSize, (j-10)*GLOBAL.tileSize, 0, assetName);
-            image.anchor.set(0.5, 0.5);
+            var image = new GlassLab.Tile(this.game, i, j, tileType);
             if (shouldFlip) image.scale.x = -image.scale.x;
             parentGroup.add(image);
 
@@ -241,4 +244,33 @@ GlassLab.TileManager.prototype.TryGetTileAtWorldPosition = function(x, y)
     if (tilePosition.x < 0 || tilePosition.x >= this.map.length || tilePosition.y < 0 || tilePosition.y >= this.map[0].length) return null;
 
     return this.GetTile(tilePosition.x, tilePosition.y);
+};
+
+/**
+ * Tile
+ */
+GlassLab.Tile = function(game, col, row, type) {
+  Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-10)*GLOBAL.tileSize, (row-10)*GLOBAL.tileSize, 0, type);
+  this.type = type;
+  this.anchor.setTo(0.5, 0.5);
+};
+
+// Extends Isosprite
+GlassLab.Tile.prototype = Object.create(Phaser.Plugin.Isometric.IsoSprite.prototype);
+GlassLab.Tile.prototype.constructor = Phaser.Tile;
+
+GlassLab.Tile.TYPES = {
+  water : "grassTile0",
+  grass : "grassTile4",
+  mushroom0 : "grassTile3",
+  mushroom1 : "grassTile1",
+  mushroom2 : "grassTile2",
+  dirt : "dirtTile"
+};
+
+GlassLab.Tile.prototype.swapType = function(newType) {
+  if (this.type == newType) return;
+  this.prevType = this.type;
+  this.type = newType;
+  this.loadTexture( newType );
 };

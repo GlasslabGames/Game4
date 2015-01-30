@@ -138,7 +138,8 @@ GlassLab.Creature.prototype.moveToRandomTile = function() {
   var randX = parseInt(Math.random() * 20);
   var randY = parseInt(Math.random() * 20);
   var targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
-  while (!GLOBAL.tileManager.IsTileTypeWalkable(targetPosition)) // I hope we don't get stuck here
+  var n = 0;
+  while (!GLOBAL.tileManager.IsTileTypeWalkable(targetPosition) && n++ < 3000) // safeguard against infinite loops
   {
     randX = parseInt(Math.random() * 20);
     randY = parseInt(Math.random() * 20);

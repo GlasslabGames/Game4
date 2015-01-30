@@ -48,6 +48,7 @@ window.onload = function() {
         game.load.image('grassTile6', 'assets/images/grassy_fence_length.png');
         game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
         game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');
+        game.load.image('dirtTile', 'assets/images/dirtTile1.png');
 
         // Cloud shadow
         game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
