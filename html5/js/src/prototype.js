@@ -291,6 +291,8 @@ window.onload = function() {
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
         GLOBAL.levelManager.LoadNextLevel(); // Load first level
+
+        game.time.events.start();
     }
 
     function onEnterFullScreen() {
