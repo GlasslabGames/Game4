@@ -398,6 +398,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     this.leftWidth, this.leftWidth + this.rightWidth);
   this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, "WaitingForFood"), this.creatures, this.numCreatures,
     0, this.leftWidth, true);
+  // TODO
 
   if (this.numFood && this.numCreatures) {
     this.ratioLabel.text = this.numCreatures + " : " + this.numFood;

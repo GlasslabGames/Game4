@@ -134,6 +134,26 @@ GlassLab.Creature.prototype.print = function()
   return "Creature("+col+", "+row+")";
 };
 
+GlassLab.Creature.prototype.moveToRandomTile = function() {
+  var randX = parseInt(Math.random() * 20);
+  var randY = parseInt(Math.random() * 20);
+  var targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
+  while (!GLOBAL.tileManager.IsTileTypeWalkable(targetPosition)) // I hope we don't get stuck here
+  {
+    randX = parseInt(Math.random() * 20);
+    randY = parseInt(Math.random() * 20);
+    targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
+  }
+
+  var pos = GLOBAL.tileManager.GetTileWorldPosition(randX, randY);
+  this.sprite.isoX = pos.x;
+  this.sprite.isoY = pos.y;
+  if (Math.random() > 0.5) // face a random direction too
+  {
+    this.sprite.scale.x *= -1;
+  }
+};
+
 GlassLab.Creature.prototype.PlayAnim = function(anim, loop, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
   var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
   if (!anim) {
@@ -305,13 +325,13 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
     var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x+1, this.targetPosition.y);
     if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
         possiblePositions.push(new Phaser.Point(this.targetPosition.x+1, this.targetPosition.y));
-    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x-1, this.targetPosition.y);
+    possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x-1, this.targetPosition.y);
     if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
         possiblePositions.push(new Phaser.Point(this.targetPosition.x-1, this.targetPosition.y));
-    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y+1);
+    possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y+1);
     if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
         possiblePositions.push(new Phaser.Point(this.targetPosition.x, this.targetPosition.y+1));
-    var possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y-1);
+    possiblePos = GLOBAL.tileManager.TryGetTileData(this.targetPosition.x, this.targetPosition.y-1);
     if (GLOBAL.tileManager.IsTileTypeWalkable(possiblePos))
         possiblePositions.push(new Phaser.Point(this.targetPosition.x, this.targetPosition.y-1));
 
@@ -328,7 +348,7 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 
     this.findDestinationHandler = null;
 
-    this.creature.PlayAnim('walk', true);
+    this.creature.PlayAnim('walk', true); // TODO: fix these event handlers if the creature was destroyed
 };
 
 GlassLab.CreatureStateIdle.prototype.Update = function()
@@ -341,7 +361,7 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
     }
     else {
       // If the delta magnitude is less than our move speed, we're done after this frame.
-      this.creature.stopAnim();
+      this.creature.StopAnim();
       this.findDestinationHandler = this.game.time.events.add(Math.random() * 3000 + 2000, this._findNewDestination, this);
       // Physics
       if (this.creature.sprite.body) {

@@ -56,7 +56,7 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, m
         {
             if (!this.mapData[i]) this.mapData[i] = [];
             var centerDist = Math.sqrt( (j - height / 2.0)*(j - height / 2.0) + (i - width / 2.0) * (i - width / 2.0));
-            if (centerDist > 7 + Math.random()*2) this.mapData[i][j] = 0; // water
+            if (centerDist > 7.5) this.mapData[i][j] = 0; // water
             else this.mapData[i][j] = Math.min( parseInt(Math.random() * 12 + 1), 4);
             // reduce shroom likeliness by collapsing higher numbers to 4 (plain grass)
         }

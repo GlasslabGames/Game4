@@ -13,14 +13,17 @@ GlassLab.LevelManager = function(game)
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
       pens: [
-        {height: 1}
-      ]
+        {type: "rammus", height: 1}
+      ],
+      looseCreatures: {
+        rammus: 1
+      }
     };
 
     var level2 = this._addLevelData(new GlassLab.Level());
     level2.data = {
       pens: [
-        {height: 3}
+        {type: "rammus", height: 3}
       ]
     };
 
@@ -57,7 +60,17 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             var penData = data.pens[i];
             var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.leftWidth || 1),
               (penData.rightWidth || 1), (penData.height || 1));
+            pen.creatureType = penData.type;
             // if we need to, set which edges are adjustable here (defaults to the right side only)
+          }
+        }
+        if (data.looseCreatures) {
+          for (var type in data.looseCreatures) {
+            for (var j = 0; j < data.looseCreatures[type]; j++) {
+              var creature = new GlassLab.Creature(this.game, type);
+              GLOBAL.creatureLayer.add(creature.sprite);
+              creature.moveToRandomTile();
+            }
           }
         }
 
