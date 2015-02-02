@@ -35,8 +35,8 @@ GlassLab.FillBar.GOOD_COLOR = 0x3bb44a;
 GlassLab.FillBar.BAD_COLOR = 0xc0272d;
 
 // Set the fillbar to this amount (clamped to 0-1). If animate is true, it will gradually change
-GlassLab.FillBar.prototype.Set = function(amount, animate) {
-  this.priorVisibility = this.sprite.visible;
+GlassLab.FillBar.prototype.Set = function(amount, animate, resetVisibility) {
+  this.priorVisibility = !resetVisibility || this.sprite.visible;
   this.sprite.visible = true;
   amount = Math.max(amount, 0); // clamp to 0, but keep the amount the same if it's higher since we change the color later
 
@@ -48,6 +48,10 @@ GlassLab.FillBar.prototype.Set = function(amount, animate) {
     this.amount = amount;
     this._redraw();
   }
+};
+
+GlassLab.FillBar.prototype.show = function(show) {
+  this.sprite.visible = show;
 };
 
 GlassLab.FillBar.prototype._onUpdate = function() {

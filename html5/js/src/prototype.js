@@ -9,7 +9,8 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
-        game.load.image('sheep', 'assets/images/sheep.png');
+        game.load.image('sheep_idle', 'assets/images/sheep_idle.png');
+        game.load.image('sheep_idle_back', 'assets/images/sheep_idle_backfacing.png');
         game.load.atlasJSONHash('sheep_walk', 'assets/images/sheep_walk.png', 'assets/images/sheep_walk.json');
         game.load.atlasJSONHash('sheep_walk_back', 'assets/images/sheep_backfacing_walk.png', 'assets/images/sheep_backfacing_walk.json');
         game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');

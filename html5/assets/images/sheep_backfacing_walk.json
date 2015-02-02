@@ -387,10 +387,10 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "sheep_backfacing_walk.png",
+	"image": "sheep_walk.png",
 	"format": "RGBA8888",
 	"size": {"w":5418,"h":4064},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:ea89f7a52acf94b028970aac0f28fda7:8e3bfcde26eb05d5a0f42cdfe230e023:7569643b47765a0187c0f6cddd561ebd$"
+	"smartupdate": "$TexturePacker:SmartUpdate:e24fcf4e12a9029f27056144a3bbcad2:58f51258102e293ad01d4f78a2b8df65:51511eda1f77b04a6d5f4d69c0b7f75f$"
 }
 }

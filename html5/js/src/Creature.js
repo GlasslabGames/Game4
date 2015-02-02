@@ -84,58 +84,69 @@ GlassLab.CreatureManager.prototype.GetCreatureData = function(type)
  */
 GlassLab.Creature = function(game, type, initialStateName)
 {
-    this.type = type;
-    var info = GLOBAL.creatureManager.creatureDatabase[type];
-    this.sprite = game.make.isoSprite();
+  this.type = type;
+  var info = GLOBAL.creatureManager.creatureDatabase[type];
+  this.sprite = game.make.isoSprite();
 
-    //this.sprite = game.make.sprite(0,0, typeName);
-    this.game = game;
-    this.state = null;
+  //this.sprite = game.make.sprite(0,0, typeName);
+  this.game = game;
+  this.state = null;
 
-    if (initialStateName == "WaitingForFood") {
-      this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
-    } else {
-      this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
-    }
+  if (initialStateName == "WaitingForFood") {
+    this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
+  } else {
+    this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
+  }
 
 
-    this.sprite.inputEnabled = true;
-    this.sprite.draggable = false; // set this in each state
+  this.sprite.inputEnabled = true;
+  this.sprite.draggable = false; // set this in each state
 
-    this.sprite.events.onInputUp.add(this._onUp, this);
-    this.sprite.events.onInputDown.add(this._onDown, this);
-    //this.sprite.anchor.setTo(0.5, 0.8);
+  this.sprite.events.onInputUp.add(this._onUp, this);
+  this.sprite.events.onInputDown.add(this._onDown, this);
+  //this.sprite.anchor.setTo(0.5, 0.8);
 
-    this.sprite.scale.x = -0.25;
-    this.sprite.scale.y = 0.25;
+  this.sprite.scale.x = -0.25;
+  this.sprite.scale.y = 0.25;
 
-    this.debugAILine = new Phaser.Line();
+  this.debugAILine = new Phaser.Line();
 
-    this.desiredAmountOfFood = info.desiredAmount;
-    this.foodEaten = 0;
+  this.desiredAmountOfFood = info.desiredAmount;
+  this.foodEaten = 0;
 
-    this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
+  this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
-    this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen
+  this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen
 
-    this.hungerBar = new GlassLab.FillBar(this.game);
-    this.sprite.addChild(this.hungerBar.sprite);
-    this.hungerBar.sprite.visible = false;
+  this.hungerBar = new GlassLab.FillBar(this.game);
+  this.sprite.addChild(this.hungerBar.sprite);
+  this.hungerBar.sprite.visible = false;
 
-    this.shadow = this.game.make.sprite(0, 0, "shadow");
-    this.sprite.addChild(this.shadow);
-    this.shadow.anchor.setTo(0.5, 0.8);
-    this.shadow.visible = false;
+  this.shadow = this.game.make.sprite(0, 0, "shadow");
+  this.sprite.addChild(this.shadow);
+  this.shadow.anchor.setTo(0.5, 0.8);
 
-    this.animSprite = this.game.make.sprite(0, 0, info.spriteName);
-    this.sprite.addChild(this.animSprite);
-    this.animSprite.anchor.setTo(0.5, 0.8);
+  this.animSprites = {};
+  var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit"];
+  for (var i = 0; i < animNames.length; i++) {
+    var spriteName = info.spriteName + "_" + animNames[i];
+    console.log((animNames[i] || "base"), spriteName);
+    var animSprite = this.game.make.sprite(0, 0, spriteName);
+    animSprite.anchor.setTo(0.5, 0.8);
+    animSprite.animations.add('anim'); // this animation uses the whole spritesheet
+    this.sprite.addChild(animSprite);
+    animSprite.visible = false;
+    this.animSprites[animNames[i]] = animSprite;
+  }
 
-    this.hungerBar.sprite.y = - this.animSprite.height * this.sprite.scale.y * 4;
+  this.animSprites.idle.visible = true;
+  this.spriteHeight = this.animSprites.idle.height; // for future reference
 
-  //game.physics.isoArcade.enable(this.sprite);
-    //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-    this.sprite.events.onDestroy.add(this._onDestroy, this);
+  this.hungerBar.sprite.y = - this.spriteHeight * this.sprite.scale.y * 4;
+
+//game.physics.isoArcade.enable(this.sprite);
+  //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+  this.sprite.events.onDestroy.add(this._onDestroy, this);
 };
 
 GlassLab.Creature.prototype._onDestroy = function() {
@@ -166,24 +177,31 @@ GlassLab.Creature.prototype.moveToRandomTile = function() {
 };
 
 GlassLab.Creature.prototype.PlayAnim = function(anim, loop, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
+  console.log("Playing anim",anim);
   var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
-  this.shadow.visible = (anim && (anim == "walk" || anim == "walk_back"));
-  if (!anim) {
-    this.animSprite.loadTexture(spriteName);
-  } else {
-    this.animSprite.loadTexture(spriteName+"_"+anim);
-    this.animSprite.animations.add('anim'); // this animation uses the whole spritesheet
-    if (!framerate) framerate = 24;
-    return this.animSprite.animations.play('anim', framerate, loop); // return the reference to the current animation
+  if (anim) this.facingBack = anim.indexOf("back") > -1; // remember if we're facing back for next time
+  else anim = "idle" + (this.facingBack? "_back" : ""); // no anim = idle (facing back if we had been before)
+
+  this.shadow.visible = (anim != "eat" && anim != "vomit");
+  if (!framerate) framerate = 24;
+  var playedAnim;
+
+  for (var animName in this.animSprites) {
+    var animation = this.animSprites[animName];
+    if (animName == anim) {
+      animation.visible = true;
+      playedAnim = animation.animations.play('anim', framerate, loop);
+    } else {
+      animation.visible = false;
+      animation.animations.stop();
+    }
   }
+
+  return playedAnim;
 };
 
-GlassLab.Creature.prototype.StopAnim = function(pauseAtFrame) {
-  if (pauseAtFrame) {
-    this.animSprite.animations.stop();
-  } else {
-    this.PlayAnim(); // no anim -> stand still
-  }
+GlassLab.Creature.prototype.StopAnim = function() {
+  this.PlayAnim(); // no anim -> stand still
 };
 
 GlassLab.Creature.prototype._onUp = function(sprite, pointer)
@@ -236,6 +254,7 @@ GlassLab.Creature.prototype._onUpdate = function() {
 };
 
 GlassLab.Creature.prototype.FinishEating = function(satisfied) {
+  this.hungerBar.show(false);
   if (satisfied) {
     this.pen.SetCreatureFinishedEating(true);
     this.Emote(true);
@@ -248,10 +267,10 @@ GlassLab.Creature.prototype.FinishEating = function(satisfied) {
 GlassLab.Creature.prototype.Emote = function(happy) {
   var spriteName = (happy)? "happyEmote" : "angryEmote";
   this.emote = this.game.make.sprite(0,0, spriteName);
-  this.emote.y = - 2 * this.animSprite.height * this.sprite.scale.y;
+  this.emote.y = - 2 * this.spriteHeight * this.sprite.scale.y;
   var size = this.emote.height * 3; // assumes the height and width are the same
   this.emote.height = this.emote.width = 0;
-  this.game.add.tween(this.emote).to( {y: -3 * this.animSprite.height * this.sprite.scale.y, height: size, width: size}, 100, Phaser.Easing.Linear.Out, true);
+  this.game.add.tween(this.emote).to( {y: -3 * this.spriteHeight * this.sprite.scale.y, height: size, width: size}, 100, Phaser.Easing.Linear.Out, true);
   this.emote.anchor.set(0.5, 1);
   this.sprite.addChild(this.emote);
 };
@@ -388,7 +407,7 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
     }
     else {
       // If the delta magnitude is less than our move speed, we're done after this frame.
-      this.creature.StopAnim(true); // TODO: set the frame
+      this.creature.StopAnim();
       this.findDestinationHandler = this.game.time.events.add(Math.random() * 3000 + 2000, this._findNewDestination, this);
       // Physics
       if (this.creature.sprite.body) {
@@ -522,7 +541,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
   var anim = this.creature.PlayAnim("eat", false);
-  anim.onComplete.add(this.StopEating, this);
+  anim.onComplete.addOnce(this.StopEating, this);
   // this is quite hacky, but for now just wait the approximate amount of time that the animation takes
   // to wait for the exact right frame would take some more work
   this.game.time.events.add(700, this._onChomp, this);
@@ -538,6 +557,7 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
+  console.log("Finished eating anim");
   //this.food.sprite.visible = false;
   this.creature.foodEaten ++;
 
@@ -577,7 +597,7 @@ GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
 GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
   var anim = this.creature.PlayAnim("vomit", false);
-  anim.onComplete.add(this._onFinishVomiting, this);
+  anim.onComplete.addOnce(this._onFinishVomiting, this);
   // this is quite hacky, but for now just wait the approximate amount of time that the animation takes
   // to wait for the exact right frame would take some more work
   this.game.time.events.add(2250, this._onSpew, this);
