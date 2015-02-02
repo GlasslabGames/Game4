@@ -130,7 +130,6 @@ GlassLab.Creature = function(game, type, initialStateName)
   var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit"];
   for (var i = 0; i < animNames.length; i++) {
     var spriteName = info.spriteName + "_" + animNames[i];
-    console.log((animNames[i] || "base"), spriteName);
     var animSprite = this.game.make.sprite(0, 0, spriteName);
     animSprite.anchor.setTo(0.5, 0.8);
     animSprite.animations.add('anim'); // this animation uses the whole spritesheet
@@ -177,7 +176,6 @@ GlassLab.Creature.prototype.moveToRandomTile = function() {
 };
 
 GlassLab.Creature.prototype.PlayAnim = function(anim, loop, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
-  console.log("Playing anim",anim);
   var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
   if (anim) this.facingBack = anim.indexOf("back") > -1; // remember if we're facing back for next time
   else anim = "idle" + (this.facingBack? "_back" : ""); // no anim = idle (facing back if we had been before)
