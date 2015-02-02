@@ -9,13 +9,17 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
-        game.load.image('sheep', 'assets/images/sheep.png');
-        game.load.atlasJSONHash('sheep_walk', 'assets/images/sheepAnim.png', 'assets/images/sheepAnim.json');
+        game.load.image('sheep_idle', 'assets/images/sheep_idle.png');
+        game.load.image('sheep_idle_back', 'assets/images/sheep_idle_backfacing.png');
+        game.load.atlasJSONHash('sheep_walk', 'assets/images/sheep_walk.png', 'assets/images/sheep_walk.json');
+        game.load.atlasJSONHash('sheep_walk_back', 'assets/images/sheep_backfacing_walk.png', 'assets/images/sheep_backfacing_walk.json');
         game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');
         game.load.atlasJSONHash('sheep_vomit', 'assets/images/sheep_vomit.png', 'assets/images/sheep_vomit.json');
         game.load.image('sheep_art', 'assets/images/ramArt.png');
 
         game.load.image('fox_art', 'assets/images/foxArt.png');
+
+        game.load.image('shadow', 'assets/images/iso_shadow.png');
 
         game.load.image('carrot', 'assets/images/isoCarrot.png');
         game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
@@ -44,10 +48,10 @@ window.onload = function() {
         game.load.image('grassTile2', 'assets/images/grassy_2.png');
         game.load.image('grassTile3', 'assets/images/grassy_3.png');
         game.load.image('grassTile4', 'assets/images/grassy_4.png');
-        game.load.image('grassTile5', 'assets/images/grassy_fence_bottomCorner.png');
+        /*game.load.image('grassTile5', 'assets/images/grassy_fence_bottomCorner.png');
         game.load.image('grassTile6', 'assets/images/grassy_fence_length.png');
         game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
-        game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');
+        game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');*/
         game.load.image('dirtTile', 'assets/images/dirtTile1.png');
 
         // Cloud shadow

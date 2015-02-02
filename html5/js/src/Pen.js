@@ -526,7 +526,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     for (var col = 0; col < creatureRow.length; col++) {
       var creature = creatureRow[col];
       if (!creature) continue; // when there's an uneven number of creatures, the creatures might start at 1 instead of 0
-      var time = ((creatureRow.length - col) - Math.random()) * Phaser.Timer.SECOND / 2; // delay the start so that the right col moves first
+      var time = ((creatureRow.length - col) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
       this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
     }
 
