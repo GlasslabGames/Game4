@@ -48,6 +48,7 @@ window.onload = function() {
         game.load.image('grassTile6', 'assets/images/grassy_fence_length.png');
         game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
         game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');
+        game.load.image('dirtTile', 'assets/images/dirtTile1.png');
 
         // Cloud shadow
         game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
@@ -122,36 +123,6 @@ window.onload = function() {
         GLOBAL.WorldLayer.add(GLOBAL.creatureLayer);
 
         GLOBAL.paused = false;
-
-        //var pen = new GlassLab.FeedingPen(game, GLOBAL.penLayer, 1, 1, 3);
-
-        // Create creatures
-        for (var i=0; i < 0; i++)
-        {
-            var creature = new GlassLab.Creature(game, "rammus");
-            GLOBAL.creatureLayer.add(creature.sprite);
-            var randX = parseInt(Math.random() * 20);
-            var randY = parseInt(Math.random() * 20);
-            var targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
-            while (!GLOBAL.tileManager.IsTileTypeWalkable(targetPosition))
-            {
-                randX = parseInt(Math.random() * 20);
-                randY = parseInt(Math.random() * 20);
-                targetPosition = GLOBAL.tileManager.GetTileData(randX, randY);
-            }
-
-            var pos = GLOBAL.tileManager.GetTileWorldPosition(randX, randY);
-            creature.sprite.isoX = pos.x;
-            creature.sprite.isoY = pos.y;
-            creature.sprite.scale.x = creature.sprite.scale.y = .25;
-            if (i%2)
-            {
-                creature.sprite.scale.x *= -1;
-            }
-
-            //creature.sprite.events.onInputDown.add(onDown, this);
-            //creature.sprite.events.onInputUp.add(onUp, this);
-        }
 
         // Add clouds
         GLOBAL.cloudManager = new GlassLab.CloudManager(game);
