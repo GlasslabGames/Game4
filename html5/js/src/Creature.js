@@ -125,6 +125,14 @@ GlassLab.Creature = function(game, type, initialStateName)
 
   //game.physics.isoArcade.enable(this.sprite);
     //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+    this.sprite.events.onDestroy.add(this._onDestroy, this);
+};
+
+GlassLab.Creature.prototype._onDestroy = function() {
+  if (GLOBAL.dragTarget == this) GLOBAL.dragTarget = null;
+  this.sprite.events.destroy();
+  if (this.updateHandler) this.updateHandler.detach();
+  if (this.state) this.state.Exit(); // wrap up the current state
 };
 
 GlassLab.Creature.prototype.print = function()
