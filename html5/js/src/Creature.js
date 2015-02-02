@@ -540,18 +540,21 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  var anim = this.creature.PlayAnim("eat", false);
-  anim.onComplete.addOnce(this.StopEating, this);
-  // this is quite hacky, but for now just wait the approximate amount of time that the animation takes
-  // to wait for the exact right frame would take some more work
-  this.game.time.events.add(700, this._onChomp, this);
+  this.anim = this.creature.PlayAnim("eat", false);
+  this.chomped = false;
+  this.anim.onComplete.addOnce(this.StopEating, this);
 };
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
   GlassLab.CreatureState.prototype.Exit.call(this);
 };
 
+GlassLab.CreatureStateEating.prototype.Update = function() {
+  if (!this.chomped && this.anim.frame >= 16) this._onChomp(); // this is the frame index where he chomps
+};
+
 GlassLab.CreatureStateEating.prototype._onChomp = function() {
+  this.chomped = true;
   this.food.BeEaten();
   this.creature.ShowHungerBar(true);
 };
@@ -596,14 +599,17 @@ GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
 
 GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  var anim = this.creature.PlayAnim("vomit", false);
-  anim.onComplete.addOnce(this._onFinishVomiting, this);
-  // this is quite hacky, but for now just wait the approximate amount of time that the animation takes
-  // to wait for the exact right frame would take some more work
-  this.game.time.events.add(2250, this._onSpew, this);
+  this.anim = this.creature.PlayAnim("vomit", false);
+  this.anim.onComplete.addOnce(this._onFinishVomiting, this);
+  this.spewed = false;
+};
+
+GlassLab.CreatureStateVomiting.prototype.Update = function() {
+  if (!this.spewed && this.anim.frame >= 51) this._onSpew(); // this is the frame index where we should start the vomit fx
 };
 
 GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
+  this.spewed = true;
   var vomit = this.game.make.sprite(-20,-190, "vomit"); //-420,-155
   vomit.anchor.set(1,0);
   vomit.tint = 0xe37f54; // carrot color - if we don't want it so bright, use 0x9dad62
