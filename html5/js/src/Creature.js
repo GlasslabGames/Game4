@@ -86,7 +86,7 @@ GlassLab.Creature = function(game, type, initialStateName)
 {
     this.type = type;
     var info = GLOBAL.creatureManager.creatureDatabase[type];
-    this.sprite = game.make.isoSprite(0,0,0, info.spriteName);
+    this.sprite = game.make.isoSprite();
 
     //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
@@ -104,7 +104,7 @@ GlassLab.Creature = function(game, type, initialStateName)
 
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
-    this.sprite.anchor.setTo(0.5, 0.8);
+    //this.sprite.anchor.setTo(0.5, 0.8);
 
     this.sprite.scale.x = -0.25;
     this.sprite.scale.y = 0.25;
@@ -120,8 +120,18 @@ GlassLab.Creature = function(game, type, initialStateName)
 
     this.hungerBar = new GlassLab.FillBar(this.game);
     this.sprite.addChild(this.hungerBar.sprite);
-    this.hungerBar.sprite.y = - this.sprite.height * 4;
     this.hungerBar.sprite.visible = false;
+
+    this.shadow = this.game.make.sprite(0, 0, "shadow");
+    this.sprite.addChild(this.shadow);
+    this.shadow.anchor.setTo(0.5, 0.8);
+    this.shadow.visible = false;
+
+    this.animSprite = this.game.make.sprite(0, 0, info.spriteName);
+    this.sprite.addChild(this.animSprite);
+    this.animSprite.anchor.setTo(0.5, 0.8);
+
+    this.hungerBar.sprite.y = - this.animSprite.height * this.sprite.scale.y * 4;
 
   //game.physics.isoArcade.enable(this.sprite);
     //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
@@ -157,18 +167,23 @@ GlassLab.Creature.prototype.moveToRandomTile = function() {
 
 GlassLab.Creature.prototype.PlayAnim = function(anim, loop, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
   var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
+  this.shadow.visible = (anim && (anim == "walk" || anim == "walk_back"));
   if (!anim) {
-    this.sprite.loadTexture(spriteName);
+    this.animSprite.loadTexture(spriteName);
   } else {
-    this.sprite.loadTexture(spriteName+"_"+anim);
-    this.sprite.animations.add('anim'); // this animation uses the whole spritesheet
+    this.animSprite.loadTexture(spriteName+"_"+anim);
+    this.animSprite.animations.add('anim'); // this animation uses the whole spritesheet
     if (!framerate) framerate = 24;
-    return this.sprite.animations.play('anim', framerate, loop); // return the reference to the current animation
+    return this.animSprite.animations.play('anim', framerate, loop); // return the reference to the current animation
   }
 };
 
-GlassLab.Creature.prototype.StopAnim = function() {
-  this.PlayAnim(); // no anim -> stand still
+GlassLab.Creature.prototype.StopAnim = function(pauseAtFrame) {
+  if (pauseAtFrame) {
+    this.animSprite.animations.stop();
+  } else {
+    this.PlayAnim(); // no anim -> stand still
+  }
 };
 
 GlassLab.Creature.prototype._onUp = function(sprite, pointer)
@@ -190,15 +205,23 @@ GlassLab.Creature.prototype._onDown = function(sprite, pointer)
 
 GlassLab.Creature.prototype._startDrag = function() {
   if (GLOBAL.dragTarget != null) return;
-  this.PlayAnim('walk', true, 96);
+  this.PlayAnim('walk', true, 192);
+  this.shadow.y = 150;
   this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
   GLOBAL.dragTarget = this;
 };
 
 GlassLab.Creature.prototype._endDrag = function() {
   this.StopAnim();
+  //var offset = (); // offset by the shadow position
+  this.shadow.y = 0;
   this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
   GLOBAL.dragTarget = null;
+
+  var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
+  this.sprite.isoX = tile.isoX;
+  this.sprite.isoY = tile.isoY;
+  tile.onCreatureEnter(this);
 };
 
 GlassLab.Creature.prototype.OnStickyDrop = function() { // called by (atm) prototype.js
@@ -225,10 +248,10 @@ GlassLab.Creature.prototype.FinishEating = function(satisfied) {
 GlassLab.Creature.prototype.Emote = function(happy) {
   var spriteName = (happy)? "happyEmote" : "angryEmote";
   this.emote = this.game.make.sprite(0,0, spriteName);
-  this.emote.y = - 2 * this.sprite.height;
+  this.emote.y = - 2 * this.animSprite.height * this.sprite.scale.y;
   var size = this.emote.height * 3; // assumes the height and width are the same
   this.emote.height = this.emote.width = 0;
-  this.game.add.tween(this.emote).to( {y: -3 * this.sprite.height, height: size, width: size}, 100, Phaser.Easing.Linear.Out, true);
+  this.game.add.tween(this.emote).to( {y: -3 * this.animSprite.height * this.sprite.scale.y, height: size, width: size}, 100, Phaser.Easing.Linear.Out, true);
   this.emote.anchor.set(0.5, 1);
   this.sprite.addChild(this.emote);
 };
@@ -345,7 +368,13 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
   this.targetPosition.set(tile.isoX, tile.isoY);
 
   this.findDestinationHandler = null;
-  this.creature.PlayAnim('walk', true); // TODO: fix these event handlers if the creature was destroyed
+
+  var flip = tile.isoY == this.creature.sprite.isoY;
+  //console.log(tile.isoX, tile.isoY, this.creature.sprite.isoX, this.creature.sprite.isoY, flip);
+  this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
+
+  if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true, 48);
+  else this.creature.PlayAnim('walk', true, 48);
 
 };
 
@@ -359,7 +388,7 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
     }
     else {
       // If the delta magnitude is less than our move speed, we're done after this frame.
-      this.creature.StopAnim();
+      this.creature.StopAnim(true); // TODO: set the frame
       this.findDestinationHandler = this.game.time.events.add(Math.random() * 3000 + 2000, this._findNewDestination, this);
       // Physics
       if (this.creature.sprite.body) {
@@ -369,7 +398,6 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
     }
 
     var debugPoint = this.game.iso.project(delta);
-    this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (debugPoint.x > 0 ? -1 : 1);
 
     if (this.creature.sprite.body) {
       // Physics
@@ -453,7 +481,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
   //console.log(this.creature,"walking to food", this.food);
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.PlayAnim("walk", true);
+  this.creature.PlayAnim("walk", true, 48);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
