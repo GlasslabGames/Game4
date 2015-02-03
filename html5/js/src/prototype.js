@@ -3,7 +3,7 @@
  */
 var GLOBAL = GLOBAL || {};
 window.onload = function() {
-    var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
     GLOBAL.version = "0.2.0";
     GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
@@ -112,6 +112,8 @@ window.onload = function() {
         game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
         GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
+
+        GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
@@ -308,7 +310,7 @@ window.onload = function() {
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
-        inventoryMenu.x = -1000;
+        inventoryMenu.x = -700;
         inventoryMenu.y = -150;
         bottomRightAnchor.addChild(inventoryMenu);
         GLOBAL.inventoryMenu = inventoryMenu;

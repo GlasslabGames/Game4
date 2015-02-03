@@ -12,20 +12,35 @@ GlassLab.InventoryMenu = function(game)
     this.items = [];
 
     this.bg = game.make.graphics();
-    this.bg.beginFill(0xffffff).lineStyle(3, 0x000000).drawRect(-15, -15, 800, 150);
+    this.bg.beginFill(0xffffff).lineStyle(3, 0x000000).drawRect(-15, -15, 550, 150);
     this.addChild(this.bg);
+
+    this.moneyPrefixLabel = game.make.text(100,0,"Your Funds: $");
+    this.addChild(this.moneyPrefixLabel);
+    this.moneyLabel = game.make.text(this.moneyPrefixLabel.x + this.moneyPrefixLabel.getBounds().width,0,"1000");
+    this.addChild(this.moneyLabel);
+    GlassLab.SignalManager.moneyChanged.add(this._refreshCurrency, this);
 
     this.itemTable = new GlassLab.UITable(game, 5000);
     this.addChild(this.itemTable);
 
-    var child = new GlassLab.InventoryMenuSlot(game);
-    this.itemTable.addManagedChild(child);
-    var child = new GlassLab.InventoryMenuSlot(game);
-    this.itemTable.addManagedChild(child);
-    var child = new GlassLab.InventoryMenuSlot(game);
-    this.itemTable.addManagedChild(child);
+    for (var i=0; i < GlassLab.FoodTypes.length; i++)
+    {
+        var foodType = GlassLab.FoodTypes[i];
+        if (!foodType.hidden)
+        {
+            var child = new GlassLab.InventoryMenuSlot(game, foodType);
+            this.itemTable.addManagedChild(child);
+        }
+    }
 
     this.itemTable._refresh();
+    this.itemTable.x = 100;
+    this.itemTable.y = 50;
+
+    this.closeButton = game.make.button(0,50,"closeIcon", this.Hide, this);
+    this.closeButton.scale.setTo(.25, .25);
+    this.addChild(this.closeButton);
 };
 
 // Extends Sprite
@@ -34,7 +49,12 @@ GlassLab.InventoryMenu.prototype.constructor = Phaser.InventoryMenu;
 
 GlassLab.InventoryMenu.prototype.Refresh = function()
 {
+    this._refreshCurrency();
+};
 
+GlassLab.InventoryMenu.prototype._refreshCurrency = function()
+{
+    this.moneyLabel.setText(GLOBAL.inventoryManager.money);
 };
 
 GlassLab.InventoryMenu.prototype.Show = function()

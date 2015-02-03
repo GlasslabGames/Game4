@@ -234,7 +234,7 @@ GlassLab.Creature.prototype._endDrag = function() {
   this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
   GLOBAL.dragTarget = null;
 
-  var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
+  var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
   this.sprite.isoX = tile.isoX;
   this.sprite.isoY = tile.isoY;
   tile.onCreatureEnter(this);
