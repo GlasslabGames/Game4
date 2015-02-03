@@ -18,7 +18,7 @@ GlassLab.UITable = function(game, numColumns, padding, drawBorder)
     this.padding = padding || 0;
     this._rowHeights = [];
     this._columnLengths = [];
-    this._columns = numColumns;
+    this._columns = numColumns || 1;
 
     if (this.drawBorder)
     {
