@@ -279,6 +279,17 @@ window.onload = function() {
         uiGroup.add(bottomRightAnchor);
 
         uiElement = game.make.sprite(-130, -130, "itemsIcon");
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){
+            if (!GLOBAL.inventoryMenu.visible)
+            {
+                GLOBAL.inventoryMenu.Show();
+            }
+            else
+            {
+                GLOBAL.inventoryMenu.Hide();
+            }
+        }, this);
         bottomRightAnchor.addChild(uiElement);
 
         game.input.onDown.add(globalDown, this); // Global input down handler
@@ -316,6 +327,12 @@ window.onload = function() {
         orderFulfillment.sprite.y = 50;
         topLeftAnchor.addChild(orderFulfillment.sprite);
         GLOBAL.orderFulfillment = orderFulfillment;
+
+        var inventoryMenu = new GlassLab.InventoryMenu(game);
+        inventoryMenu.x = -1000;
+        inventoryMenu.y = -150;
+        bottomRightAnchor.addChild(inventoryMenu);
+        GLOBAL.inventoryMenu = inventoryMenu;
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
@@ -360,17 +377,17 @@ window.onload = function() {
         // Re-sort creatures because they probably moved
         game.iso.simpleSort(GLOBAL.creatureLayer);
 
-        if (game.input.activePointer.isDown && !GLOBAL.dragTarget)
+        if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject)
         {
             game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
             game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
-        else if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
+        else //if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
         {
             cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
             game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
             Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
-            tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
+            tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         }
 
         if (tileSprite != GLOBAL.highlightedTile)

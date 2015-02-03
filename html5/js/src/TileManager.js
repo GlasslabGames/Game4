@@ -229,15 +229,32 @@ GlassLab.TileManager.prototype.GetTileDataAtWorldPosition = function(x, y)
     return this.GetTileData(tilePosition.x, tilePosition.y);
 };
 
-GlassLab.TileManager.prototype.GetTileAtWorldPosition = function(x, y)
+GlassLab.TileManager.prototype.GetTileAtIsoWorldPosition = function(x, y)
 {
     var tilePosition = this.GetTileIndexAtWorldPosition(x,y);
+    return this.GetTile(tilePosition.x, tilePosition.y);
+};
+GlassLab.TileManager.prototype.GetTileAtWorldPosition = function(x, y)
+{
+    var isoPosition = this.game.iso.unproject(new Phaser.Point(x,y));
+    Phaser.Point.divide(isoPosition, GLOBAL.WorldLayer.scale, isoPosition);
+    var tilePosition = this.GetTileIndexAtWorldPosition(isoPosition.x, isoPosition.y);
+    return this.GetTile(tilePosition.x, tilePosition.y);
+};
+
+GlassLab.TileManager.prototype.TryGetTileAtIsoWorldPosition = function(x, y)
+{
+    var tilePosition = this.GetTileIndexAtWorldPosition(x,y);
+    if (tilePosition.x < 0 || tilePosition.x >= this.map.length || tilePosition.y < 0 || tilePosition.y >= this.map[0].length) return null;
+
     return this.GetTile(tilePosition.x, tilePosition.y);
 };
 
 GlassLab.TileManager.prototype.TryGetTileAtWorldPosition = function(x, y)
 {
-    var tilePosition = this.GetTileIndexAtWorldPosition(x,y);
+    var isoPosition = this.game.iso.unproject(new Phaser.Point(x,y));
+    Phaser.Point.divide(isoPosition, GLOBAL.WorldLayer.scale, isoPosition);
+    var tilePosition = this.GetTileIndexAtWorldPosition(isoPosition.x, isoPosition.y);
     if (tilePosition.x < 0 || tilePosition.x >= this.map.length || tilePosition.y < 0 || tilePosition.y >= this.map[0].length) return null;
 
     return this.GetTile(tilePosition.x, tilePosition.y);
