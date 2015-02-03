@@ -58,15 +58,6 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
         console.log("Starting level", levelNum);
         this._destroyCurrentLevel();
         var data = this.levels[levelNum].data;
-        if (data.pens) {
-          for (var i = 0; i < data.pens.length; i++) {
-            var penData = data.pens[i];
-            var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.leftWidth || 1),
-              (penData.rightWidth || 1), (penData.height || 1));
-            pen.creatureType = penData.type;
-            // if we need to, set which edges are adjustable here (defaults to the right side only)
-          }
-        }
         if (data.looseCreatures) {
           for (var type in data.looseCreatures) {
             for (var j = 0; j < data.looseCreatures[type]; j++) {
@@ -74,6 +65,15 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
               GLOBAL.creatureLayer.add(creature.sprite);
               creature.moveToRandomTile();
             }
+          }
+        }
+        if (data.pens) {
+          for (var i = 0; i < data.pens.length; i++) {
+            var penData = data.pens[i];
+            var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.leftWidth || 1),
+              (penData.rightWidth || 1), (penData.height || 1));
+            pen.creatureType = penData.type;
+            // if we need to, set which edges are adjustable here (defaults to the right side only)
           }
         }
 
