@@ -20,7 +20,7 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
-  this.findDestinationHandler = this.game.time.events.add(Math.random()*3000 + 2000, this._findNewDestination, this);
+  this.findDestinationHandler = this.game.time.events.add(Math.random()*1000, this._findNewDestination, this);
   this.creature.draggable = true;
 };
 

@@ -17,7 +17,7 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.anim = this.creature.PlayAnim("eat", false, 48);
+  this.anim = this.creature.PlayAnim("eat", false, 24);
   this.chomped = false;
   this.anim.onComplete.addOnce(this.StopEating, this);
   this.creature.draggable = false;

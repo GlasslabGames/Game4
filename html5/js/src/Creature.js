@@ -230,22 +230,13 @@ GlassLab.Creature.prototype._onDown = function(sprite, pointer)
 
 GlassLab.Creature.prototype._startDrag = function() {
   if (GLOBAL.dragTarget != null) return;
-  this.PlayAnim('walk', true, 192);
-  this.shadow.y = 150;
   this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
   GLOBAL.dragTarget = this;
 };
 
 GlassLab.Creature.prototype._endDrag = function() {
-  this.StopAnim();
-  //var offset = (); // offset by the shadow position
-  this.shadow.y = 0;
-  this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
   GLOBAL.dragTarget = null;
-
-  var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
-  this.sprite.isoX = tile.isoX;
-  this.sprite.isoY = tile.isoY;
+  this._onTargetsChanged(); // figure out the nearest target (will go to CreatureStateTraveling or Idle)
 };
 
 GlassLab.Creature.prototype.OnStickyDrop = function() { // called by (atm) prototype.js

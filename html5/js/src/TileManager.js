@@ -259,7 +259,7 @@ GlassLab.TileManager.prototype.clearTiles = function()
       tile.setInPen(false);
       tile.unswapType();
       tile.occupant = null;
-      tile.onCreatureEnter(null); // For now, just to trigger the color change
+      //tile.onCreatureEnter(null); // this triggers the debug color change
     }
   }
 };
@@ -338,12 +338,12 @@ GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
 
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
   this.occupant = creature;
-  this.tint = (this.occupant)? 0xffdddd : 0xffffff;
+  //this.tint = (this.occupant)? 0xffdddd : 0xffffff; // debug
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {
   if (this.occupant == creature) this.occupant = null;
-  this.tint = (this.occupant)? 0xffdddd : 0xffffff;
+  //this.tint = (this.occupant)? 0xffdddd : 0xffffff; // debug
 };
 
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {

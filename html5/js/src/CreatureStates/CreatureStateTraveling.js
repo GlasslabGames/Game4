@@ -23,16 +23,18 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
 {
   GlassLab.CreatureState.prototype.Exit.call(this);
   this.creature.StopAnim();
+  if (this.wayPoint && this.wayPoint != this.creature.prevTile) this.wayPoint.onCreatureExit(this.creature); // make sure that tile stops thinking we're entering it
   if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
 };
 
 GlassLab.CreatureStateTraveling.prototype.Update = function() {
   if (!this.wayPoint) {
     this.wayPoint = this._getWaypoint();
+    this.wayPoint.onCreatureEnter(this.creature); // mark that tile as occupied since we're about to enter it
   }
 
   var delta = Phaser.Point.subtract(this.wayPoint.isoPosition, this.creature.sprite.isoPosition);
-  var moveSpeed = 1.3;
+  var moveSpeed = 2;
   if (delta.getMagnitudeSq() >= moveSpeed * moveSpeed) { // move in the right direction, but no faster than our move speed
     // Collapse one the smaller direction so we stay on the grid (if they're equal, resolve it randomly)
     if (Math.abs(delta.x) < Math.abs(delta.y) || (Math.abs(delta.x) == Math.abs(delta.y) && Math.random() > 0.5)) delta.x = 0;
@@ -43,9 +45,9 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
 
     // Note that the animation won't start if we're already playing it, so this is no problem
     if (delta.y < 0 || delta.x < 0) {
-      this.creature.PlayAnim("walk_back", true);
+      this.creature.PlayAnim("walk_back", true, 144);
     } else {
-      this.creature.PlayAnim("walk", true);
+      this.creature.PlayAnim("walk", true, 144);
     }
     var flip = (delta.y == 0);
     this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
@@ -57,7 +59,7 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
       if (this.target.inPen) {
         console.log(this.target.inPen);
         this.creature.pen = this.target.inPen;
-        this.target.inPen.onCreatureEntered();
+        this.target.inPen.onCreatureEntered(this.creature);
         this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
       } else {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));

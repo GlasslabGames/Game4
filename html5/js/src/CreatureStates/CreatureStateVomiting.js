@@ -15,7 +15,7 @@ GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
 
 GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.anim = this.creature.PlayAnim("vomit", false, 48);
+  this.anim = this.creature.PlayAnim("vomit", false, 24);
   this.anim.onComplete.addOnce(this._onFinishVomiting, this);
   this.spewed = false;
   this.creature.draggable = false;

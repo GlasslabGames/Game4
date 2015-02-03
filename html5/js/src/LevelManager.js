@@ -16,7 +16,7 @@ GlassLab.LevelManager = function(game)
         {type: "rammus", height: 1}
       ],
       looseCreatures: {
-        rammus: 3
+        rammus: 1
       }
     };
 
@@ -26,7 +26,7 @@ GlassLab.LevelManager = function(game)
         {type: "rammus", height: 3}
       ],
       looseCreatures: {
-        rammus: 0
+        rammus: 3
       }
     };
 
