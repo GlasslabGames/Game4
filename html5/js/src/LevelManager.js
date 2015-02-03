@@ -7,7 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.LevelManager = function(game)
 {
     this.game = game;
-    this.currentLevel = 1;
+    this.currentLevel = -1;
     this.levels = [];
 
     var level1 = this._addLevelData(new GlassLab.Level());

@@ -5,6 +5,7 @@ var GLOBAL = GLOBAL || {};
 window.onload = function() {
     var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
+    GLOBAL.version = "0.2.0";
     GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
@@ -75,6 +76,7 @@ window.onload = function() {
         game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
+        game.load.image('lock', 'assets/images/HUD_items_lock.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -178,13 +180,15 @@ window.onload = function() {
         var uiElement = game.make.sprite(15, 40, "zoomInIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
-            GLOBAL.WorldLayer.scale.x *= 2;GLOBAL.WorldLayer.scale.y *= 2;
+            GLOBAL.WorldLayer.scale.x *= 2;
+            GLOBAL.WorldLayer.scale.y *= 2;
         }, this);
         zoomBG.addChild(uiElement);
         uiElement = game.make.sprite(15, 110, "zoomOutIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
-            GLOBAL.WorldLayer.scale.x /= 2;GLOBAL.WorldLayer.scale.y /= 2;
+            GLOBAL.WorldLayer.scale.x /= 2;
+            GLOBAL.WorldLayer.scale.y /= 2;
         }, this);
         zoomBG.addChild(uiElement);
 
@@ -308,6 +312,10 @@ window.onload = function() {
         inventoryMenu.y = -150;
         bottomRightAnchor.addChild(inventoryMenu);
         GLOBAL.inventoryMenu = inventoryMenu;
+
+        var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
+        versionLabel.fixedToCamera = true;
+        GLOBAL.UIGroup.add(versionLabel);
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);

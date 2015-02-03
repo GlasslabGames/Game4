@@ -359,7 +359,7 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
 
 GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 {
-  var currentTile = GLOBAL.tileManager.GetTileAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY);
+  var currentTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY);
 
   // Build list of possible movements
   var possibleTiles = [];
