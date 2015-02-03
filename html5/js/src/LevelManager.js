@@ -16,7 +16,7 @@ GlassLab.LevelManager = function(game)
         {type: "rammus", height: 1}
       ],
       looseCreatures: {
-        rammus: 10
+        rammus: 3
       }
     };
 
@@ -96,7 +96,7 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
   for (var i = GLOBAL.creatureLayer.children.length-1; i>=0; i--) {
     GLOBAL.creatureLayer.getChildAt(i).destroy();
   }
-  GLOBAL.tileManager.clearPenTiles();
+  GLOBAL.tileManager.clearTiles();
 };
 
 GlassLab.LevelManager.prototype.LoadNextLevel = function()

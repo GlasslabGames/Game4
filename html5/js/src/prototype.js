@@ -348,12 +348,15 @@ window.onload = function() {
             tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         }
 
+        // Temporarily disabling this since I'm tinting tiles for other reasons
+        /*
         if (tileSprite != GLOBAL.highlightedTile)
         {
             if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
             if (tileSprite) tileSprite.tint = 0xBFE2F2; //previous color was 0x86bfda (good for night) but I lightened it
             GLOBAL.highlightedTile = tileSprite;
         }
+        */
 
         GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
 

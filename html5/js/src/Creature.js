@@ -98,9 +98,10 @@ GlassLab.Creature = function(game, type, initialStateName)
     this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
   }
 
-
   this.sprite.inputEnabled = true;
   this.sprite.draggable = false; // set this in each state
+  this.prevIsoPos = new Phaser.Point();
+  this.prevTile = null;
 
   this.sprite.events.onInputUp.add(this._onUp, this);
   this.sprite.events.onInputDown.add(this._onDown, this);
@@ -167,7 +168,6 @@ GlassLab.Creature.prototype.moveToRandomTile = function() {
 
   this.sprite.isoX = tile.isoX;
   this.sprite.isoY = tile.isoY;
-  tile.onCreatureEnter(this);
 
   if (Math.random() > 0.5) // face a random direction too
   {
@@ -176,12 +176,15 @@ GlassLab.Creature.prototype.moveToRandomTile = function() {
 };
 
 GlassLab.Creature.prototype.PlayAnim = function(anim, loop, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
+  if (anim == this.currentAnimName) return; // no need to do anything
   var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
+
   if (anim) this.facingBack = anim.indexOf("back") > -1; // remember if we're facing back for next time
   else anim = "idle" + (this.facingBack? "_back" : ""); // no anim = idle (facing back if we had been before)
+  this.currentAnimName = anim;
 
   this.shadow.visible = (anim != "eat" && anim != "vomit");
-  if (!framerate) framerate = 24;
+  if (!framerate) framerate = 72; // ML said 48 but 72 looks better for the walk anims
   var playedAnim;
 
   for (var animName in this.animSprites) {
@@ -237,7 +240,6 @@ GlassLab.Creature.prototype._endDrag = function() {
   var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
   this.sprite.isoX = tile.isoX;
   this.sprite.isoY = tile.isoY;
-  tile.onCreatureEnter(this);
 };
 
 GlassLab.Creature.prototype.OnStickyDrop = function() { // called by (atm) prototype.js
@@ -248,6 +250,16 @@ GlassLab.Creature.prototype.OnStickyDrop = function() { // called by (atm) proto
 GlassLab.Creature.prototype._onUpdate = function() {
   if (this.state) this.state.Update();
 
+  if (this.prevIsoPos.x != this.sprite.isoX || this.prevIsoPos.y != this.sprite.isoY) {
+    this.prevIsoPos.x = this.sprite.isoX;
+    this.prevIsoPos.y = this.sprite.isoY;
+    var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    if (this.prevTile != tile) {
+      if (this.prevTile) this.prevTile.onCreatureExit(this);
+      tile.onCreatureEnter(this);
+      this.prevTile = tile;
+    }
+  }
   //if (this.rightKey.justDown) { }
 };
 
@@ -341,7 +353,7 @@ GlassLab.CreatureStateIdle.constructor = GlassLab.CreatureStateIdle;
 GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
-
+    this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
     this.findDestinationHandler = this.game.time.events.add(Math.random()*3000 + 2000, this._findNewDestination, this);
     this.creature.draggable = true;
 };
@@ -355,6 +367,7 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
         this.game.time.events.remove(this.findDestinationHandler);
         this.findDestinationHandler = null;
     }
+    if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
 };
 
 GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
@@ -377,8 +390,6 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 
   if (possibleTiles.length > 0) {
     tile = possibleTiles[parseInt(Math.random() * possibleTiles.length)];
-    currentTile.onCreatureExit(this);
-    tile.onCreatureEnter(this);
   }
   else tile = currentTile; // stay in place
 
@@ -390,8 +401,8 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
   //console.log(tile.isoX, tile.isoY, this.creature.sprite.isoX, this.creature.sprite.isoY, flip);
   this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
 
-  if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true, 48);
-  else this.creature.PlayAnim('walk', true, 48);
+  if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true);
+  else this.creature.PlayAnim('walk', true);
 
 };
 
@@ -431,6 +442,22 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
 
     debugPoint = this.game.iso.project(this.targetIsoPoint);
     this.creature.debugAILine.setTo(this.creature.sprite.x, this.creature.sprite.y, debugPoint.x, debugPoint.y);
+};
+
+GlassLab.CreatureStateIdle.prototype._onTargetsChanged = function() {
+  var targets = GLOBAL.tileManager.getTargets(this.creature.type);
+  console.log(this.creature.print(), targets);
+  var minDist = null, bestTarget;
+  for (var i = 0, len = targets.length; i < len; i++) {
+    var distSqr = Math.pow((this.creature.sprite.isoX - targets[i].isoX), 2) + Math.pow((this.creature.sprite.isoY - targets[i].isoY), 2);
+    if (minDist == null || distSqr < minDist) {
+      minDist = distSqr;
+      bestTarget = targets[i];
+    }
+  }
+  if (bestTarget) {
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this.creature, bestTarget));
+  }
 };
 
 /**
@@ -498,7 +525,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
   //console.log(this.creature,"walking to food", this.food);
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.PlayAnim("walk", true, 48);
+  this.creature.PlayAnim("walk", true);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
@@ -538,7 +565,7 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.anim = this.creature.PlayAnim("eat", false);
+  this.anim = this.creature.PlayAnim("eat", false, 48);
   this.chomped = false;
   this.anim.onComplete.addOnce(this.StopEating, this);
 };
@@ -597,7 +624,7 @@ GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
 
 GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.anim = this.creature.PlayAnim("vomit", false);
+  this.anim = this.creature.PlayAnim("vomit", false, 48);
   this.anim.onComplete.addOnce(this._onFinishVomiting, this);
   this.spewed = false;
 };
@@ -624,4 +651,81 @@ GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
   this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
   console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
   this.creature.FinishEating(false);
+};
+
+/**
+ * CreatureStateTraveling - when it's heading for a certain target (for now, a target tile, although it could be reworked)
+ */
+GlassLab.CreatureStateTraveling = function(game, owner, targetTile)
+{
+  GlassLab.CreatureState.call(this, game, owner);
+  this.target = targetTile;
+};
+
+GlassLab.CreatureStateTraveling.prototype = Object.create(GlassLab.CreatureState.prototype);
+GlassLab.CreatureStateTraveling.constructor = GlassLab.CreatureStateTraveling;
+
+GlassLab.CreatureStateTraveling.prototype.Enter = function() {
+  GlassLab.CreatureState.prototype.Enter.call(this);
+};
+
+GlassLab.CreatureStateTraveling.prototype.Update = function() {
+  if (!this.wayPoint) {
+    this.wayPoint = this._getWaypoint();
+  }
+
+  var delta = Phaser.Point.subtract(this.wayPoint.isoPosition, this.creature.sprite.isoPosition);
+  var moveSpeed = 1.3;
+  if (delta.getMagnitudeSq() >= moveSpeed * moveSpeed) { // move in the right direction, but no faster than our move speed
+    // Collapse one the smaller direction so we stay on the grid (if they're equal, resolve it randomly)
+    if (Math.abs(delta.x) < Math.abs(delta.y) || (Math.abs(delta.x) == Math.abs(delta.y) && Math.random() > 0.5)) delta.x = 0;
+    else delta.y = 0;
+    delta.setMagnitude( moveSpeed );
+    this.creature.sprite.isoX += delta.x;
+    this.creature.sprite.isoY += delta.y;
+
+    // Note that the animation won't start if we're already playing it, so this is no problem
+    if (delta.y < 0 || delta.x < 0) {
+      this.creature.PlayAnim("walk_back", true);
+    } else {
+      this.creature.PlayAnim("walk", true);
+    }
+    var flip = (delta.y == 0);
+    this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
+  } else {
+    this.creature.StopAnim();
+    // If the waypoint is the same as the original target point, stop
+    if (Phaser.Point.subtract(this.wayPoint.isoPosition, this.target.isoPosition).getMagnitude() < GLOBAL.tileSize) {
+      console.log("Reached target point");
+      if (this.target.inPen) {
+        console.log(this.target.inPen);
+        this.creature.pen = this.target.inPen;
+        this.target.inPen.onCreatureEntered();
+        this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
+      } else {
+        this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
+      }
+    } else {
+      this.wayPoint = null; // so we recalculate it next time
+    }
+  }
+
+};
+
+GlassLab.CreatureStateTraveling.prototype._getWaypoint = function() {
+  var delta = Phaser.Point.subtract(this.target.isoPosition, this.creature.sprite.isoPosition);
+  var currentTile = GLOBAL.tileManager.GetTileAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY);
+  var xTile = GLOBAL.tileManager.GetTile(currentTile.col + (delta.x < 0? -1 : 1), currentTile.row);
+  var yTile = GLOBAL.tileManager.GetTile(currentTile.col, currentTile.row + (delta.y < 0? -1 : 1));
+  // Go in the y direction if the y diff is larger (or randomly if they're the same), but only if we can walk there
+  var preferY = (Math.abs(delta.x) < Math.abs(delta.y) || (Math.abs(delta.x) == Math.abs(delta.y) && Math.random() > 0.5));
+  if ((preferY || !xTile.getIsWalkable(this.creature.type)) && yTile.getIsWalkable(this.creature.type)) { // go this way if we prefer it or if the other way is blocked
+    return yTile;
+  } else if (xTile.getIsWalkable(this.creature.type)) {
+    return xTile;
+  } else return currentTile; // stay in place for now
+};
+
+GlassLab.CreatureStateVomiting.prototype.Exit = function() {
+  GlassLab.CreatureState.prototype.Exit.call(this);
 };

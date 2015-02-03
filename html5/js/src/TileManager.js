@@ -251,6 +251,18 @@ GlassLab.TileManager.prototype.clearPenTiles = function()
   }
 };
 
+GlassLab.TileManager.prototype.clearTiles = function()
+{
+  for (var col = 0; col < this.GetMapWidth(); col++) {
+    for (var row = 0; row < this.GetMapHeight(); row++) {
+      var tile = this.GetTile(col, row);
+      tile.setInPen(false);
+      tile.unswapType();
+      tile.occupant = null;
+      tile.onCreatureEnter(null); // For now, just to trigger the color change
+    }
+  }
+};
 GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
   var randCol = parseInt(Math.random() * this.GetMapWidth());
   var randRow = parseInt(Math.random() * this.GetMapHeight());
@@ -263,6 +275,18 @@ GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
     targetTile = this.GetTile(randCol, randRow);
   }
   return targetTile;
+};
+
+GlassLab.TileManager.prototype.getTargets = function(creatureType)
+{
+  var tiles = [];
+  for (var col = 0; col < this.GetMapWidth(); col++) {
+    for (var row = 0; row < this.GetMapHeight(); row++) {
+      var tile = this.GetTile(col, row);
+      if (tile.isTarget(creatureType)) tiles.push(tile);
+    }
+  }
+  return tiles;
 };
 
 /**
@@ -303,18 +327,27 @@ GlassLab.Tile.prototype.unswapType = function() {
   this.loadTexture( this.type );
 };
 
-GlassLab.Tile.prototype.setInPen = function(isIn) {
-  this.inPen = isIn;
+GlassLab.Tile.prototype.isTarget = function(creatureType) {
+  return (!this.occupant && this.targetCreatureType == creatureType);
+};
+
+GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
+  this.inPen = pen;
+  this.targetCreatureType = pen && targetCreatureType;
 };
 
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
   this.occupant = creature;
+  this.tint = (this.occupant)? 0xffdddd : 0xffffff;
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {
   if (this.occupant == creature) this.occupant = null;
+  this.tint = (this.occupant)? 0xffdddd : 0xffffff;
 };
 
-GlassLab.Tile.prototype.getIsWalkable = function() {
-  return this.type != GlassLab.Tile.TYPES.water && !this.inPen && !this.occupant;
+GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
+  if (this.type == GlassLab.Tile.TYPES.water || this.occupant) return false;
+  else if (creatureType && this.targetCreatureType == creatureType) return true; // allow walking in pen if the creature type matches
+  else return !this.inPen;
 };
