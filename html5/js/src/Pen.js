@@ -444,10 +444,13 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     for (var col = 0; col < this.leftWidth; col++) {
       for (var row = 0; row < this.height; row++) {
         var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
-        tile.setInPen(this, this.creatureType);
-        if (tile.occupant && tile.occupant.pen != tile.inPen) { // there's a creature here that hasn't been set as in the pen, so do that
-          tile.occupant.setIsoPos( tile.isoX, tile.isoY ); // make sure it's in the right place in the pen
-          tile.occupant.enterPen(tile.inPen);
+        if (tile)
+        {
+          tile.setInPen(this, this.creatureType);
+          if (tile.occupant && tile.occupant.pen != tile.inPen) { // there's a creature here that hasn't been set as in the pen, so do that
+            tile.occupant.setIsoPos( tile.isoX, tile.isoY ); // make sure it's in the right place in the pen
+            tile.occupant.enterPen(tile.inPen);
+          }
         }
       }
     }
