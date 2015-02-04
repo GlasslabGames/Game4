@@ -246,6 +246,7 @@ GlassLab.Creature.prototype._startDrag = function() {
 
 GlassLab.Creature.prototype._endDrag = function() {
   GLOBAL.dragTarget = null;
+  this.getTile().onCreatureEnter(this);
   this._onTargetsChanged(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
