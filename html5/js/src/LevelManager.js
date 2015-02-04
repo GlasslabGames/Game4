@@ -22,7 +22,8 @@ GlassLab.LevelManager = function(game)
       ],
       looseCreatures: {
         rammus: 1
-      }
+      },
+        objective: "Feed the ram!"
     };
 
     var level2 = this._addLevelData(new GlassLab.Level());
@@ -32,7 +33,8 @@ GlassLab.LevelManager = function(game)
       ],
       looseCreatures: {
         rammus: 3
-      }
+      },
+        objective: "Feed all the rams!"
     };
 
     var level3 = this._addLevelData(new GlassLab.Level());
@@ -41,25 +43,25 @@ GlassLab.LevelManager = function(game)
         {
             numCreatures: 7,
             type: "rammus",
-            description: "Etiam nec leo eu felis porta ornare. Proin ultricies enim sit amet mauris pulvinar, nec bibendum augue 7 Rammus. Cum sociis natos que penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi eu arcu sit amet diam placerat porta vitae."
+            description: "I want [#ffffff]7 Rams[/]. Herpa derpa durr derr."
         }
       ],
       looseCreatures: {
         rammus: 0
-      }
+      },
+        objective: "Fill an order!"
     };
 
     var level4 = this._addLevelData(new GlassLab.Level());
-      level4.data = {
+        level4.data = {
         pens: [
-          {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: false} // TODO; fix issues
+            {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: false} // TODO; fix issues
         ],
         looseCreatures: {
-          rammus: 30
-        }
-      };
-
-    //this.levels.push(level1, level2, level3);
+            rammus: 30
+        },
+            objective: "Feed as many rams as you can!"
+    };
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)

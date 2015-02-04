@@ -22,9 +22,8 @@ GlassLab.OrdersMenu = function(game) {
     this.mock.scale.setTo(.8,.8);
     this.sprite.addChild(this.mock);
 
-    this.descriptionLabel = game.make.text(282, 250, "", {wordWrap: true, wordWrapWidth: 400});
-    this.descriptionLabel.fontSize = 22;
-    //this.sprite.addChild(this.descriptionLabel);
+    this.descriptionLabel = game.make.text(282, 250, "", {wordWrap: true, wordWrapWidth: 390, font:"16pt Arial"});
+    this.sprite.addChild(this.descriptionLabel);
 
     this.selectButton = game.make.button(282, 438, "selectOrderButton", function(){
         this.Hide();
@@ -50,9 +49,36 @@ GlassLab.OrdersMenu.prototype.IsShowing = function()
     return this.sprite.visible;
 };
 
+function getProcessedString(string)
+{
+    var returnString = string;
+    var replaceString = string.replace(/\[[^\]]+\]/i, "");
+    while(returnString != replaceString)
+    {
+        returnString = replaceString;
+        replaceString = replaceString.replace(/\[[^\]]+\]/i, "");
+    }
+    return returnString;
+}
+
+function getStringColorInfo(string)
+{
+    // TODO: This doesn't work at all right now.
+    var colors = [];
+    var searchString = string;
+    var colorInfo = searchString.match(/\[[^\]]+\]/i);
+    var colorData = {};
+    while (colorInfo)
+    {
+        colorData.color = colorInfo;
+        searchString
+        colors.add()
+    }
+}
+
 GlassLab.OrdersMenu.prototype.Refresh = function()
 {
-    this.descriptionLabel.setText(this.data.description);
+    this.descriptionLabel.setText(getProcessedString(this.data.description));
 };
 
 GlassLab.OrdersMenu.prototype.SetInfo = function(data)
@@ -65,12 +91,7 @@ GlassLab.OrdersMenu.prototype.Show = function()
 {
     this.sprite.visible = true;
 
-    this.SetInfo(
-        {
-            numCreatures: 7,
-            type: "rammus",
-            description: "Etiam nec leo eu felis porta ornare. Proin ultricies enim sit amet mauris pulvinar, nec bibendum augue 7 Rammus. Cum sociis natos que penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi eu arcu sit amet diam placerat porta vitae."
-        });
+    this.SetInfo(GLOBAL.levelManager.GetCurrentLevel().data.orders[0]);
 };
 
 GlassLab.OrdersMenu.prototype.Hide = function()

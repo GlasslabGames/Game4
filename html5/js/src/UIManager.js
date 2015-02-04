@@ -13,10 +13,11 @@ GlassLab.UIManager = function(game, centerAnchor)
     var nextButton = new GlassLab.UIButton(this.game, 0, 0, this._onContinuePressed, this, 150, 60, 0xffffff, "Continue");
 
     this.winModal = new GlassLab.UIModal(this.game, "Good job! You did it!", [retryButton, nextButton]);
+    this.winModal.y += 220;
     this.centerAnchor.addChild(this.winModal);
     this.winModal.visible = false;
 
-    GlassLab.SignalManager.journalClosed.add(function(){
+    GlassLab.SignalManager.levelWon.add(function(){
       this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
     }, this.winModal);
 
