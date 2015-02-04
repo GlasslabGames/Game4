@@ -44,6 +44,16 @@ GlassLab.LevelManager = function(game)
       }
     };
 
+    var level4 = this._addLevelData(new GlassLab.Level());
+      level4.data = {
+        pens: [
+          {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: false} // TODO; fix issues
+        ],
+        looseCreatures: {
+          rammus: 30
+        }
+      };
+
     //this.levels.push(level1, level2, level3);
 };
 
@@ -76,7 +86,10 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.leftWidth || 1),
               (penData.rightWidth || 1), (penData.height || 1));
             pen.creatureType = penData.type;
-            // if we need to, set which edges are adjustable here (defaults to the right side only)
+            // set which edges are adjustable here (defaults to the right side only)
+            if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left, true);
+            if (penData.bottomDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.bottom, true);
+            if (penData.topDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.top, true);
           }
         }
 

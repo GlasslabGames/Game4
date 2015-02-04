@@ -59,11 +59,14 @@ GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
 // sets only the listed edge(s) to be draggable
-GlassLab.Pen.prototype.SetDraggableOnly = function() {
-  // first make all edges undraggable, then make the specific ones listed draggable
-  for (var i = 0; i < this.edges.length; i++) {
-    this.edges[i].draggable = false;
+GlassLab.Pen.prototype.SetDraggable = function(additive) {
+  if (!additive) {
+    // first make all edges undraggable, then make the specific ones listed draggable
+    for (var i = 0; i < this.edges.length; i++) {
+      this.edges[i].draggable = false;
+    }
   }
+
   // set the listed edges to be draggable
   for(var j=0; j < arguments.length; j++) {
     for (var i = 0; i < this.edges.length; i++) {
@@ -250,6 +253,8 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
     //sprite.alpha = 0.3;
     sprite.anchor.set(0.5, 1.13);
     sprite.inputEnabled = true;
+    sprite.input.pixelPerfectOver = true;
+    sprite.input.pixelPerfectClick = true;
     sprite.events.onInputUp.add(this._onUp, this);
     sprite.events.onInputDown.add(this._onDown, this);
     sprite.events.onInputOver.add(this._onOver, this);
@@ -403,7 +408,7 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
-  this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
+  this.SetDraggable(GlassLab.Edge.SIDES.right);
 
   this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -490,7 +495,7 @@ GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5;
    7:14 still works since it's actually a (possible) correct solution.
   */
 GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood, condenseToMultipleRows) {
-  this.SetDraggableOnly(); // don't allow them to adjust the pen
+  this.SetDraggable(); // don't allow them to adjust the pen
 
   this.numCreatures = numCreatures;
   this.numFood = numFood;
@@ -553,7 +558,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
   this.feeding = true;
   this.button.visible = false;
-  this.SetDraggableOnly(); // make all edges undraggable
+  this.SetDraggable(); // make all edges undraggable
 
   // Start creatures moving and assign food to the creature that should eat it
   var foodByRow = this._sortObjectsByGrid(this.foods, false, -this.leftWidth);
