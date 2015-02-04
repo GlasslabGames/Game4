@@ -2,11 +2,19 @@
  * Created by Jerry Fu on 1/9/2015.
  */
 var GLOBAL = GLOBAL || {};
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 window.onload = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
     GLOBAL.version = "0.2.0";
-    GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
+    GLOBAL.stickyMode = getParameterByName("sticky") == "true"; // If true, click to grab something or put it down. If false, drag things around.
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
