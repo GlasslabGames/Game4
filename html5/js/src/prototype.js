@@ -313,7 +313,7 @@ window.onload = function() {
             }
         }, this);
         bottomRightAnchor.addChild(uiElement);
-        uiElement.visible = GLOBAL.stickyMode = getParameterByName("items") == "true";
+        uiElement.visible = getParameterByName("items") == "true";
 
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
