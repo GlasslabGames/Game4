@@ -395,6 +395,8 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.creatureType = "rammus"; // todo
   this.foodType = "carrot"; // todo
 
+  this.autoFill = false; // whether creatures to fill the pen are magically created
+
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
@@ -421,16 +423,17 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 
   this.FillIn(GlassLab.Food.bind(null, this.game, this.foodType), this.foods, this.numFood,
     this.leftWidth, this.leftWidth + this.rightWidth);
-  /*this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, "WaitingForFood"), this.creatures, this.numCreatures,
-    0, this.leftWidth, true);
-   */
-  // TODO
 
-  // For each tile in the creature side, mark that it's open for creatures
-  for (var col = 0; col < this.leftWidth; col++) {
-    for (var row = 0; row < this.height; row++) {
-      var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
-      tile.setInPen(this, this.creatureType);
+  if (this.autoFill) {
+    this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, "WaitingForFood"), this.creatures, this.numCreatures,
+      0, this.leftWidth, true);
+  } else {
+    // For each tile in the creature side, mark that it's open for creatures
+    for (var col = 0; col < this.leftWidth; col++) {
+      for (var row = 0; row < this.height; row++) {
+        var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
+        tile.setInPen(this, this.creatureType);
+      }
     }
   }
 
@@ -484,6 +487,7 @@ GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood, cond
 
   this.numCreatures = numCreatures;
   this.numFood = numFood;
+  this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
   if (!condenseToMultipleRows) {
     this.leftWidth = 1;
