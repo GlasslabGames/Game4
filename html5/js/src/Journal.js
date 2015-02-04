@@ -82,11 +82,11 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.closeButton);
 
     // Page buttons
-    this.nextPageButton = game.make.button(1010, 350, "sideArrow" , this._onNextPagePressed, this);
+    this.nextPageButton = game.make.button(1010, 450, "sideArrow" , this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.sprite.addChild(this.nextPageButton);
 
-    this.prevPageButton = game.make.button(-10, 350, "sideArrow" , this._onPrevPagePressed, this);
+    this.prevPageButton = game.make.button(-10, 450, "sideArrow" , this._onPrevPagePressed, this);
     this.prevPageButton.scale.x *= -1;
     this.prevPageButton.anchor.setTo(0, 0.5);
     this.sprite.addChild(this.prevPageButton);

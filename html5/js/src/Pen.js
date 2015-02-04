@@ -156,9 +156,12 @@ GlassLab.Pen.prototype._resetTiles = function() {
 GlassLab.Pen.prototype._drawRow = function(yPos, leftCol, centerCol, rightCol) {
   for (var col = leftCol; col < rightCol; col++) {
     // this part swaps whatever tile was there for a dirt tile (but remember what it was to swap it back later)
-    var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + yPos);
-    tile.setInPen(this);
-    if (col >= centerCol) tile.swapType(GlassLab.Tile.TYPES.dirt);
+    var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + yPos);
+    if (tile)
+    {
+      tile.setInPen(this);
+      if (col >= centerCol) tile.swapType(GlassLab.Tile.TYPES.dirt);
+    }
 
     // This part draws an overlay tile
     //this._placeTile(col * GLOBAL.tileSize, yPos, (col < centerCol)); // to add an image on the tile
@@ -410,7 +413,6 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
   this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
-  this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
   this.ratioLabel.x -= GLOBAL.tileSize * 0.75;
@@ -419,6 +421,10 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.button.anchor.set(0.5, 1);
   this.sprite.addChild(this.button);
   this.button.visible = false;
+
+  this.allowFeedButton = true;
+
+  this.sprite.events.onDestroy.add(this.Destroy, this);
 
   GLOBAL.testPen = this; // for testing
 };
@@ -540,9 +546,9 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount
       obj.sprite.parent.setChildIndex(obj.sprite, obj.sprite.parent.children.length - 1); // move it to the back of the children so far
       obj.pen = this;
       count++;
-      if (count >= maxCount) break;
+      if (maxCount && count >= maxCount) break;
     }
-    if (count >= maxCount) break;
+    if (maxCount && count >= maxCount) break;
   }
 
   for (var i = 0; i < unusedObjects.length; i++) {
@@ -551,16 +557,6 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount
 };
 
 GlassLab.FeedingPen.prototype._onUpdate = function() {
-  if (this.key2.justDown && !this.feeding) {
-    this.FeedCreatures();
-  }
-/*
-  for (var i = 0; i < this.edges.length; i++) {
-    for (var j = 0; j < this.edges[i].sprite.children.length; j++) {
-      this.game.debug.spriteBounds(this.edges[i].sprite.getChildAt(j));
-    }
-  }
-  */
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
@@ -605,6 +601,21 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   }
 };
 
+GlassLab.FeedingPen.prototype.Destroy = function()
+{
+  for (var col = 0; col < this.leftWidth + this.rightWidth; col++) {
+    for (var row = 0; row < this.height; row++) {
+      var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
+      if (tile)
+      {
+        tile.setInPen(false);
+        tile.unswapType();
+        tile.occupant = null;
+      }
+    }
+  }
+};
+
 GlassLab.FeedingPen.prototype.GetNextFoodInCreatureRow = function(creature) {
   if (!this.foodByRow || !this.foodByRow.length) this.foodByRow = this._sortObjectsByGrid(this.foods);
   var row = Math.round(creature.sprite.isoY / GLOBAL.tileSize);
@@ -645,7 +656,7 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
   var numCreatures = this.creatures.length;
   console.log(numCreatures,"/",this.leftWidth * this.height);
-  if (this.button) this.button.visible = (numCreatures >= this.leftWidth * this.height);
+  if (this.button) this.button.visible = this.allowFeedButton && (numCreatures >= this.leftWidth * this.height);
 };
 
 GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {

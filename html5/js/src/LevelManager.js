@@ -8,6 +8,11 @@ GlassLab.LevelManager = function(game)
 {
     this.game = game;
     this.currentLevel = -1;
+    var queryLevel = getParameterByName("level");
+    if (queryLevel != "")
+    {
+        this.currentLevel = parseInt(queryLevel)-2;
+    }
     this.levels = [];
 
     var level1 = this._addLevelData(new GlassLab.Level());
@@ -17,7 +22,8 @@ GlassLab.LevelManager = function(game)
       ],
       looseCreatures: {
         rammus: 1
-      }
+      },
+        objective: "Feed the ram!"
     };
 
     var level2 = this._addLevelData(new GlassLab.Level());
@@ -27,7 +33,8 @@ GlassLab.LevelManager = function(game)
       ],
       looseCreatures: {
         rammus: 3
-      }
+      },
+        objective: "Feed all the rams!"
     };
 
     var level3 = this._addLevelData(new GlassLab.Level());
@@ -36,25 +43,25 @@ GlassLab.LevelManager = function(game)
         {
             numCreatures: 7,
             type: "rammus",
-            description: "Etiam nec leo eu felis porta ornare. Proin ultricies enim sit amet mauris pulvinar, nec bibendum augue 7 Rammus. Cum sociis natos que penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi eu arcu sit amet diam placerat porta vitae."
+            description: "I want [#ffffff]7 Rams[/]. Herpa derpa durr derr."
         }
       ],
       looseCreatures: {
         rammus: 0
-      }
+      },
+        objective: "Fill an order!"
     };
 
     var level4 = this._addLevelData(new GlassLab.Level());
-      level4.data = {
+        level4.data = {
         pens: [
-          {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: false} // TODO: fix the rows after moving the top
+            {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: false} // TODO; fix issues
         ],
         looseCreatures: {
-          rammus: 30
-        }
-      };
-
-    //this.levels.push(level1, level2, level3);
+            rammus: 30
+        },
+            objective: "Feed as many rams as you can!"
+    };
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
@@ -71,6 +78,15 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
         console.log("Starting level", levelNum, this.levels[levelNum].data);
         this._destroyCurrentLevel();
         var data = this.levels[levelNum].data;
+        if (data.looseCreatures) {
+          for (var type in data.looseCreatures) {
+            for (var j = 0; j < data.looseCreatures[type]; j++) {
+              var creature = new GlassLab.Creature(this.game, type);
+              GLOBAL.creatureLayer.add(creature.sprite);
+              creature.moveToRandomTile();
+            }
+          }
+        }
         if (data.pens) {
           for (var i = 0; i < data.pens.length; i++) {
             var penData = data.pens[i];
@@ -81,16 +97,6 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left, true);
             if (penData.bottomDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.bottom, true);
             if (penData.topDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.top, true);
-          }
-        }
-
-        if (data.looseCreatures) {
-          for (var type in data.looseCreatures) {
-            for (var j = 0; j < data.looseCreatures[type]; j++) {
-              var creature = new GlassLab.Creature(this.game, type);
-              GLOBAL.creatureLayer.add(creature.sprite);
-              creature.moveToRandomTile();
-            }
           }
         }
 
