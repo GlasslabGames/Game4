@@ -567,8 +567,6 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   // Start creatures moving and assign food to the creature that should eat it
   var foodByRow = this._sortObjectsByGrid(this.foods, false, -this.leftWidth);
   var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
-  console.log(foodByRow);
-  console.log(creaturesByRow);
 
   for (var row = 0; row < foodByRow.length; row++) {
     var creatureRow = creaturesByRow[row];

@@ -146,8 +146,7 @@ GlassLab.Creature = function(game, type, initialStateName)
   if (initialStateName == "WaitingForFood") {
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
   } else {
-    //this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
-    this._onTargetsChanged();
+    this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
   }
 };
 
@@ -168,10 +167,12 @@ GlassLab.Creature.prototype.print = function()
 GlassLab.Creature.prototype.moveToRandomTile = function() {
   var tile = GLOBAL.tileManager.getRandomWalkableTile();
 
+  this.getTile().onCreatureExit(this);
+  tile.onCreatureEnter(this);
+
   this.sprite.isoX = tile.isoX;
   this.sprite.isoY = tile.isoY;
 
-  tile.onCreatureEnter(this);
 
   if (Math.random() > 0.5) // face a random direction too
   {
@@ -240,7 +241,7 @@ GlassLab.Creature.prototype._startDrag = function() {
 
 GlassLab.Creature.prototype._endDrag = function() {
   GLOBAL.dragTarget = null;
-  this._onTargetsChanged(); // figure out the nearest target (will go to CreatureStateTraveling or Idle)
+  this._onTargetsChanged(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
 GlassLab.Creature.prototype.OnStickyDrop = function() { // called by (atm) prototype.js
@@ -296,9 +297,9 @@ GlassLab.Creature.prototype.HideHungerBar = function() {
 };
 
 GlassLab.Creature.prototype._onTargetsChanged = function() {
-  var targets = GLOBAL.tileManager.getTargets(this.type);
-  //console.log(this.print(), targets);
-  var minDist = null, bestTarget;
+  var targets = GLOBAL.tileManager.getTargets(this);
+  console.log(this.print(), targets);
+  var minDist = null, bestTarget; // target is a tile
   for (var i = 0, len = targets.length; i < len; i++) {
     var distSqr = Math.pow((this.sprite.isoX - targets[i].isoX), 2) + Math.pow((this.sprite.isoY - targets[i].isoY), 2);
     if (minDist == null || distSqr < minDist) {
@@ -306,8 +307,13 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
       bestTarget = targets[i];
     }
   }
+
   var maxNoticeDist = GLOBAL.tileSize * 10;
-  if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
+  if (bestTarget == this.getTile() && bestTarget.inPen) { // if we're actually in the pen now
+    console.log(this.print()+" is in a pen now!", bestTarget, this.getTile());
+    this.enterPen(bestTarget.inPen);
+    this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
+  } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
     this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));
   } else {
     this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
@@ -316,8 +322,8 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
 
 GlassLab.Creature.prototype.enterPen = function(pen) {
   this.pen = pen;
-  pen.onCreatureEntered(this);
   this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
+  pen.onCreatureEntered(this);
 };
 
 GlassLab.Creature.prototype.setIsoPos = function(x, y) {
