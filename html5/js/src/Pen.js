@@ -395,7 +395,7 @@ GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
 /**
  * Feeding Pen - holds animals on the left and food on the right
  */
-GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
+GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height, autoFill) {
   this.foods = [];
   this.creatures = [];
   this.foodByRow = [];
@@ -404,7 +404,8 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.creatureType = "rammus"; // todo
   this.foodType = "carrot"; // todo
 
-  this.autoFill = false; // whether creatures to fill the pen are magically created
+  this.autoFill = autoFill; // whether creatures to fill the pen are magically created
+  this.allowFeedButton = true;
 
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
@@ -419,8 +420,7 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   this.button.anchor.set(0.5, 1);
   this.sprite.addChild(this.button);
   this.button.visible = false;
-
-  this.allowFeedButton = true;
+  this._onCreatureContentsChanged(); // refresh the button visibility
 
   this.sprite.events.onDestroy.add(this.Destroy, this);
 
@@ -568,8 +568,10 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   this.SetDraggableOnly(); // make all edges undraggable
 
   // Start creatures moving and assign food to the creature that should eat it
-  var foodByRow = this._sortObjectsByGrid(this.foods, false, -this.leftWidth);
+  var foodByRow = this._sortObjectsByGrid(this.foods, false /*, -this.leftWidth*/);
   var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
+  console.log("food", foodByRow);
+  console.log("creatures", creaturesByRow);
 
   for (var row = 0; row < foodByRow.length; row++) {
     var creatureRow = creaturesByRow[row];
@@ -630,10 +632,18 @@ GlassLab.FeedingPen.prototype.GetNextFoodInRow = function(row) {
 GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, colOffset) {
   var toList = [];
   colOffset = colOffset || 0;
+  var minCol = Number.POSITIVE_INFINITY, minRow = Number.POSITIVE_INFINITY;
   for (var i = 0; i < fromList.length; i++) {
     if (!fromList[i].sprite.visible) continue;
-    var row = Math.round((fromList[i].sprite.isoY) / GLOBAL.tileSize);
-    var col = Math.round((fromList[i].sprite.isoX) / GLOBAL.tileSize);
+    var row = Math.round(fromList[i].sprite.isoY / GLOBAL.tileSize);
+    var col = Math.round(fromList[i].sprite.isoX / GLOBAL.tileSize);
+    if (col < minCol) minCol = col;
+    if (row < minRow) minRow = row;
+  }
+  for (var i = 0; i < fromList.length; i++) {
+    if (!fromList[i].sprite.visible) continue;
+    var row = Math.round(fromList[i].sprite.isoY / GLOBAL.tileSize) - minRow;
+    var col = Math.round(fromList[i].sprite.isoX / GLOBAL.tileSize) - minCol;
     if (byCol) {
       if (!toList[col]) toList[col] = [];
       toList[col][row] = fromList[i];
@@ -662,7 +672,7 @@ GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
   var numCreatures = this.creatures.length;
-  console.log(numCreatures,"/",this.leftWidth * this.height);
+  console.log(numCreatures,"/",this.leftWidth * this.height, this.allowFeedButton, this.button);
   if (this.button) this.button.visible = this.allowFeedButton && (numCreatures >= this.leftWidth * this.height);
 };
 

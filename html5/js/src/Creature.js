@@ -246,6 +246,7 @@ GlassLab.Creature.prototype._startDrag = function() {
 
 GlassLab.Creature.prototype._endDrag = function() {
   GLOBAL.dragTarget = null;
+  this.getTile().onCreatureEnter(this);
   this._onTargetsChanged(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
@@ -362,6 +363,17 @@ GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
 
 GlassLab.Creature.prototype.getTile = function() {
   return GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+};
+
+GlassLab.Creature.prototype.getGlobalIsoPos = function() {
+  var sprite = this.sprite;
+  var pos = new Phaser.Point(sprite.isoX, sprite.isoY);
+  while (sprite.parent && sprite.parent.isoPosition) {
+    sprite = sprite.parent;
+    pos.x += sprite.isoX;
+    pos.y += sprite.isoY;
+  }
+  return pos;
 };
 
 /**
