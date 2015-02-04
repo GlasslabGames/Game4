@@ -73,7 +73,7 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
 
 GlassLab.CreatureStateTraveling.prototype._getWaypoint = function() {
   var delta = Phaser.Point.subtract(this.target.isoPosition, this.creature.sprite.isoPosition);
-  var currentTile = GLOBAL.tileManager.GetTileAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY);
+  var currentTile = this.creature.getTile();
   var xTile = GLOBAL.tileManager.GetTile(currentTile.col + (delta.x < 0? -1 : 1), currentTile.row);
   var yTile = GLOBAL.tileManager.GetTile(currentTile.col, currentTile.row + (delta.y < 0? -1 : 1));
   // Go in the y direction if the y diff is larger (or randomly if they're the same), but only if we can walk there

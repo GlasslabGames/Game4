@@ -150,7 +150,7 @@ GlassLab.Pen.prototype._resetTiles = function() {
 GlassLab.Pen.prototype._drawRow = function(yPos, leftCol, centerCol, rightCol) {
   for (var col = leftCol; col < rightCol; col++) {
     // this part swaps whatever tile was there for a dirt tile (but remember what it was to swap it back later)
-    var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + yPos);
+    var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + yPos);
     tile.setInPen(this);
     if (col >= centerCol) tile.swapType(GlassLab.Tile.TYPES.dirt);
 
@@ -376,7 +376,7 @@ GlassLab.Edge.prototype._onUpdate = function() {
 };
 
 GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
-  var originTile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
+  var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
   //console.log(tile.col, tile.row, originCol, originRow, this.leftWidth, this.height);
   if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return false;
   var leftSide = originTile.col + this.leftWidth + (leftOnly? 0 : this.rightWidth);
@@ -429,7 +429,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
   // For each tile in the creature side, mark that it's open for creatures
   for (var col = 0; col < this.leftWidth; col++) {
     for (var row = 0; row < this.height; row++) {
-      var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
+      var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
       tile.setInPen(this, this.creatureType);
     }
   }
@@ -447,7 +447,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     // Check for any creatures outside the pen and move them out
     for (var i = 0; i < this.creatures.length; i++) {
       var creature = this.creatures[i];
-      var tile = GLOBAL.tileManager.GetTileAtWorldPosition(creature.sprite.isoX, creature.sprite.isoY);
+      var tile = creature.getTile();
       if (!this._containsTile(tile, true)) {
         creature.pen = null;
         creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, creature));

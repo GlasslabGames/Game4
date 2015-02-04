@@ -250,7 +250,7 @@ GlassLab.Creature.prototype._onUpdate = function() {
   if (this.prevIsoPos.x != this.sprite.isoX || this.prevIsoPos.y != this.sprite.isoY) {
     this.prevIsoPos.x = this.sprite.isoX;
     this.prevIsoPos.y = this.sprite.isoY;
-    var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var tile = this.getTile();
     if (this.prevTile != tile) {
       if (this.prevTile) this.prevTile.onCreatureExit(this);
       tile.onCreatureEnter(this);
@@ -330,6 +330,10 @@ GlassLab.Creature.prototype.StateTransitionTo = function(targetState)
     {
         this.state.Enter();
     }
+};
+
+GlassLab.Creature.prototype.getTile = function() {
+  return GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
 };
 
 /**

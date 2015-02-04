@@ -268,6 +268,18 @@ GlassLab.TileManager.prototype.clearPenTiles = function()
   }
 };
 
+GlassLab.TileManager.prototype.clearTiles = function()
+{
+  for (var col = 0; col < this.GetMapWidth(); col++) {
+    for (var row = 0; row < this.GetMapHeight(); row++) {
+      var tile = this.GetTile(col, row);
+      tile.setInPen(false);
+      tile.unswapType();
+      tile.occupant = null;
+    }
+  }
+};
+
 GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
   var randCol = parseInt(Math.random() * this.GetMapWidth());
   var randRow = parseInt(Math.random() * this.GetMapHeight());
@@ -281,6 +293,19 @@ GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
   }
   return targetTile;
 };
+
+GlassLab.TileManager.prototype.getTargets = function(creatureType)
+{
+  var tiles = [];
+  for (var col = 0; col < this.GetMapWidth(); col++) {
+    for (var row = 0; row < this.GetMapHeight(); row++) {
+      var tile = this.GetTile(col, row);
+      if (tile.isTarget(creatureType)) tiles.push(tile);
+    }
+  }
+  return tiles;
+};
+
 
 /**
  * Tile
@@ -320,9 +345,15 @@ GlassLab.Tile.prototype.unswapType = function() {
   this.loadTexture( this.type );
 };
 
-GlassLab.Tile.prototype.setInPen = function(isIn) {
-  this.inPen = isIn;
+GlassLab.Tile.prototype.isTarget = function(creatureType) {
+  return (!this.occupant && this.targetCreatureType == creatureType);
 };
+
+GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
+  this.inPen = pen;
+  this.targetCreatureType = pen && targetCreatureType;
+};
+
 
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
   this.occupant = creature;

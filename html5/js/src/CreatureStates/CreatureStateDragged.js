@@ -24,7 +24,7 @@ GlassLab.CreatureStateDragged.prototype.Enter = function()
 GlassLab.CreatureStateDragged.prototype.Exit = function()
 {
   GlassLab.CreatureState.prototype.Exit.call(this);
-  var tile = GLOBAL.tileManager.GetTileAtWorldPosition(this.creature.sprite.isoX, this.creature.sprite.isoY);
+  var tile = this.creature.getTile();
   this.creature.sprite.isoX = tile.isoX;
   this.creature.sprite.isoY = tile.isoY;
 

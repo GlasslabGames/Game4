@@ -8,7 +8,7 @@ var GlassLab = GlassLab || {};
 GlassLab.Journal = function(game) {
     this.game = game;
     this.sprite = game.make.sprite();
-    this.sprite.scale.setTo(0.8, 0.8);
+    this.sprite.scale.setTo(0.7, 0.7);
 /*
   // Commenting this out since we're using the placeholder journal background for now, but maybe add it in the future
   this.background = game.make.graphics();
