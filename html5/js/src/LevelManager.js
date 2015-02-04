@@ -43,7 +43,7 @@ GlassLab.LevelManager = function(game)
         {
             numCreatures: 7,
             type: "rammus",
-            description: "I want [#ffffff]7 Rams[/]. Herpa derpa durr derr."
+            description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!"
         }
       ],
       looseCreatures: {
