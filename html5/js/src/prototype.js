@@ -250,7 +250,7 @@ window.onload = function() {
         uiElement.inputEnabled = true;
         var ordersAlert = game.make.sprite(0,0,"alertIcon");
         ordersAlert.anchor.setTo(.5,.5);
-        GlassLab.SignalManager.levelLoaded.add(function(leve){ this.visible = true; }, ordersAlert);
+        GlassLab.SignalManager.levelLoaded.add(function(level){ this.visible = true; }, ordersAlert);
         uiElement.addChild(ordersAlert);
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.Orders.IsShowing())
