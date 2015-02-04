@@ -20,6 +20,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.creature.PlayAnim("walk", true);
   this.creature.draggable = false;
+  this.speed = 1.25 + (Math.random() * 0.5);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
@@ -30,10 +31,9 @@ GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
 
 GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 {
-  var speed = 1.5;
   var delta = Phaser.Point.subtract(this.food.sprite.isoPosition, this.creature.sprite.isoPosition);
   if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.5, 2)) { // we're far from the carrot
-    delta.setMagnitude(speed);
+    delta.setMagnitude(this.speed);
     Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
     this.creature.sprite.isoX = delta.x;
     this.creature.sprite.isoY = delta.y;

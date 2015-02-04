@@ -96,6 +96,8 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
               var creature = new GlassLab.Creature(this.game, type);
               GLOBAL.creatureLayer.add(creature.sprite);
               creature.moveToRandomTile();
+              console.log("calling targets changed from levelM")
+              creature._onTargetsChanged();
             }
           }
         }
