@@ -38,6 +38,8 @@ GlassLab.UITextInput = function(game, inputType)
 
     this.hasFocus = false;
 
+    this.events.onTextChange = new Phaser.Signal();
+
     game.input.keyboard.addCallbacks(this, this._onKeyDown, null, null);
 };
 
@@ -48,6 +50,11 @@ GlassLab.UITextInput.prototype.constructor = Phaser.UITextInput;
 GlassLab.UITextInput.prototype._onClick = function()
 {
     this.SetFocus(true);
+};
+
+GlassLab.UITextInput.prototype.SetText = function(text)
+{
+    this.textLabel.setText(text);
 };
 
 GlassLab.UITextInput.prototype._onGlobalClick = function(pointer, DOMevent)
@@ -112,6 +119,7 @@ GlassLab.UITextInput.prototype._onKeyDown = function(e)
         if (e.keyCode == 8) // backspace
         {
             this.textLabel.setText(this.textLabel.text.substring(0, this.textLabel.text.length-1));
+            this.events.onTextChange.dispatch(this.GetText());
         }
         else if (this.inputLimit == -1 || this.textLabel.text.length < this.inputLimit) // TODO: Why is textLabel appending empty space at beginning?
         {
@@ -146,6 +154,8 @@ GlassLab.UITextInput.prototype._addCharFromKeyboardEvent = function(e)
     {
         this.textLabel.setText(this.textLabel.text + char);
     }
+
+    this.events.onTextChange.dispatch(this.GetText());
 };
 
 GlassLab.UITextInput.prototype.GetText = function()

@@ -2,11 +2,19 @@
  * Created by Jerry Fu on 1/9/2015.
  */
 var GLOBAL = GLOBAL || {};
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 window.onload = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
     GLOBAL.version = "0.2.0";
-    GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
+    GLOBAL.stickyMode = getParameterByName("sticky") == "true"; // If true, click to grab something or put it down. If false, drag things around.
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
@@ -173,11 +181,13 @@ window.onload = function() {
 
         // pause icon
         uiElement = game.make.sprite(0, 0, "pauseIcon");
+        uiElement.scale.setTo(.5, .5);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
         table.addManagedChild(uiElement);
 
         var zoomBG = game.make.sprite(0, 0, "zoomBG");
+        zoomBG.scale.setTo(.5, .5);
         table.addManagedChild(zoomBG);
         var uiElement = game.make.sprite(15, 40, "zoomInIcon");
         uiElement.inputEnabled = true;
@@ -195,6 +205,7 @@ window.onload = function() {
         zoomBG.addChild(uiElement);
 
         var fullscreenUIElement = game.make.sprite(0, 0, "fullscreenIcon");
+        fullscreenUIElement.scale.setTo(.5, .5);
         fullscreenUIElement.inputEnabled = true;
         fullscreenUIElement.events.onInputDown.add(function(){
             if (game.scale.isFullScreen)
@@ -214,11 +225,12 @@ window.onload = function() {
         table._refresh();
 
         table = new GlassLab.UITable(game, 1, 40);
-        table.x = -130;
+        table.x = -100;
         table.y = 30;
         topRightAnchor.addChild(table);
 
         uiElement = game.make.sprite(0,0, "ordersIcon");
+        uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.Orders.IsShowing())
@@ -236,6 +248,7 @@ window.onload = function() {
         table.addManagedChild(uiElement);
 
         uiElement = game.make.sprite(0,0, "journalIcon");
+        uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.Journal.IsShowing())
@@ -259,7 +272,8 @@ window.onload = function() {
         }, bottomRightAnchor);
         uiGroup.add(bottomRightAnchor);
 
-        uiElement = game.make.sprite(-130, -130, "itemsIcon");
+        uiElement = game.make.sprite(-100, -100, "itemsIcon");
+        uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.inventoryMenu.visible)
@@ -272,6 +286,7 @@ window.onload = function() {
             }
         }, this);
         bottomRightAnchor.addChild(uiElement);
+        uiElement.visible = GLOBAL.stickyMode = getParameterByName("items") == "true";
 
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
@@ -292,24 +307,28 @@ window.onload = function() {
         this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
 
         var journal = new GlassLab.Journal(game);
-        journal.sprite.x = -400
-        journal.sprite.y = -300;
+        journal.sprite.x = -320;
+        journal.sprite.y = -220;
+        journal.sprite.scale.setTo(.6, .6);
         centerAnchor.addChild(journal.sprite);
         GLOBAL.Journal = journal;
 
         var orders = new GlassLab.OrdersMenu(game);
+        orders.sprite.scale.setTo(.6, .6);
         orders.sprite.x = -400
         orders.sprite.y = -300;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
 
         var orderFulfillment = new GlassLab.OrderFulfillment(game);
+        orderFulfillment.sprite.scale.setTo(.6, .6);
         orderFulfillment.sprite.x = 130;
         orderFulfillment.sprite.y = 50;
         topLeftAnchor.addChild(orderFulfillment.sprite);
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
+        inventoryMenu.scale.setTo(.8, .8);
         inventoryMenu.x = -700;
         inventoryMenu.y = -150;
         bottomRightAnchor.addChild(inventoryMenu);

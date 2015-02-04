@@ -27,6 +27,7 @@ GlassLab.OrderFulfillment = function(game)
     this.answerInput.SetInputLimit(2);
     this.inputErrorGraphic = this.game.make.graphics();
     this.answerInput.addChild(this.inputErrorGraphic);
+    this.answerInput.events.onTextChange.add(this._onTextChange, this);
     var answerInputBounds = this.answerInput.getLocalBounds();
     this.inputErrorGraphic.beginFill(0xFF4444).drawRect(-20,-20,answerInputBounds.width+40, answerInputBounds.height+40);
     this.inputErrorGraphic.alpha = 0;
@@ -54,19 +55,35 @@ GlassLab.OrderFulfillment = function(game)
 
     this.orderRequirementLabel = game.make.text(0,0,"");
     this.orderRequirementLabel.anchor.setTo(1.0, 0);
-    this.orderRequirementLabel.x = 870;
+    this.orderRequirementLabel.x = 800;
     this.sprite.addChild(this.orderRequirementLabel);
 
-    this.cancelButton = game.make.button(900, 0, "cancelButton", function(){
-        this.Hide();
+    this.cancelButton = game.make.button(830, 0, "cancelButton", function(){
+        this.Hide(true);
     }, this);
     this.sprite.addChild(this.cancelButton);
 };
 
+// When text is UITextInput is changed
+GlassLab.OrderFulfillment.prototype._onTextChange = function(text)
+{
+    var response = parseInt(text);
+
+    if (response && response > 0)
+    {
+        if (!this.pen)
+        {
+            this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, 1, 1, 1);
+            this.pen.allowFeedButton = false;
+        }
+        this.pen.SetContents(this.data.numCreatures, response);
+    }
+};
 
 GlassLab.OrderFulfillment.prototype.Show = function(data)
 {
     this.sprite.visible = true;
+    this.answerInput.SetText("");
     if (data)
     {
         this.data = data;
@@ -74,10 +91,16 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     }
 };
 
-GlassLab.OrderFulfillment.prototype.Hide = function()
+GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
 {
     this.answerInput.SetFocus(false);
     this.sprite.visible = false;
+
+    if (destroyPen && this.pen)
+    {
+        this.pen.sprite.destroy();
+        this.pen = null;
+    }
 };
 
 GlassLab.OrderFulfillment.prototype.Refresh = function()
@@ -110,9 +133,7 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
         return;
     }
 
-    var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer);
-    pen.SetContents(this.data.numCreatures, response);
-    pen.FeedCreatures();
+    this.pen.FeedCreatures();
 
     this.Hide();
 };
