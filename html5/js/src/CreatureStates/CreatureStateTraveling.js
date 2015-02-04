@@ -17,6 +17,7 @@ GlassLab.CreatureStateTraveling.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
   this.creature.draggable = true;
+  //this.wayPoint = this.creature.getTile();
 };
 
 GlassLab.CreatureStateTraveling.prototype.Exit = function()
@@ -57,10 +58,7 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
     if (Phaser.Point.subtract(this.wayPoint.isoPosition, this.target.isoPosition).getMagnitude() < GLOBAL.tileSize) {
       console.log("Reached target point");
       if (this.target.inPen) {
-        console.log(this.target.inPen);
-        this.creature.pen = this.target.inPen;
-        this.target.inPen.onCreatureEntered(this.creature);
-        this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
+        this.creature.enterPen(this.target.inPen);
       } else {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
       }

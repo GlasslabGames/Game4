@@ -59,14 +59,17 @@ GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
 // sets only the listed edge(s) to be draggable
-GlassLab.Pen.prototype.SetDraggable = function(additive) {
-  if (!additive) {
-    // first make all edges undraggable, then make the specific ones listed draggable
-    for (var i = 0; i < this.edges.length; i++) {
-      this.edges[i].draggable = false;
-    }
+GlassLab.Pen.prototype.SetDraggableOnly = function() {
+  // first make all edges undraggable, then make the specific ones listed draggable
+  for (var i = 0; i < this.edges.length; i++) {
+    this.edges[i].draggable = false;
   }
+  console.log(arguments);
+  this.SetDraggable.apply(this, arguments);
+};
 
+GlassLab.Pen.prototype.SetDraggable = function() {
+  console.log(arguments);
   // set the listed edges to be draggable
   for(var j=0; j < arguments.length; j++) {
     for (var i = 0; i < this.edges.length; i++) {
@@ -405,7 +408,7 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height) {
   GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
-  this.SetDraggable(GlassLab.Edge.SIDES.right);
+  this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
   this.key2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
   this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -438,6 +441,10 @@ GlassLab.FeedingPen.prototype.Resize = function() {
       for (var row = 0; row < this.height; row++) {
         var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
         tile.setInPen(this, this.creatureType);
+        if (tile.occupant && tile.occupant.pen != tile.inPen) { // there's a creature here that hasn't been set as in the pen, so do that
+          tile.occupant.setIsoPos( tile.isoX, tile.isoY ); // make sure it's in the right place in the pen
+          tile.occupant.enterPen(tile.inPen);
+        }
       }
     }
   }
@@ -488,7 +495,7 @@ GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5;
    7:14 still works since it's actually a (possible) correct solution.
   */
 GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood, condenseToMultipleRows) {
-  this.SetDraggable(); // don't allow them to adjust the pen
+  this.SetDraggableOnly(); // don't allow them to adjust the pen
 
   this.numCreatures = numCreatures;
   this.numFood = numFood;
@@ -561,11 +568,13 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
   this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
   this.feeding = true;
   this.button.visible = false;
-  this.SetDraggable(); // make all edges undraggable
+  this.SetDraggableOnly(); // make all edges undraggable
 
   // Start creatures moving and assign food to the creature that should eat it
   var foodByRow = this._sortObjectsByGrid(this.foods, false, -this.leftWidth);
   var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
+  console.log(foodByRow);
+  console.log(creaturesByRow);
 
   for (var row = 0; row < foodByRow.length; row++) {
     var creatureRow = creaturesByRow[row];
@@ -583,6 +592,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     while (!creatureRow[0]) creatureRow.shift(); // the creatures might be offset b/c they are added from the right instead of the left
 
     var foodRow = foodByRow[row];
+    if (!foodRow) continue;
     var extraCols = foodRow.length % creatureRow.length; // cols that aren't evenly divided for the number of creatures
 
     for (var col = 0; col < foodRow.length; col++) {
@@ -612,8 +622,8 @@ GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, col
   colOffset = colOffset || 0;
   for (var i = 0; i < fromList.length; i++) {
     if (!fromList[i].sprite.visible) continue;
-    var row = Math.round(fromList[i].sprite.isoY / GLOBAL.tileSize);
-    var col = Math.round(fromList[i].sprite.isoX / GLOBAL.tileSize);
+    var row = Math.round((fromList[i].sprite.isoY) / GLOBAL.tileSize);
+    var col = Math.round((fromList[i].sprite.isoX) / GLOBAL.tileSize);
     if (byCol) {
       if (!toList[col]) toList[col] = [];
       toList[col][row] = fromList[i];

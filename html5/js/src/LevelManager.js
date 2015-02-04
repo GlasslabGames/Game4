@@ -47,7 +47,7 @@ GlassLab.LevelManager = function(game)
     var level4 = this._addLevelData(new GlassLab.Level());
       level4.data = {
         pens: [
-          {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: false} // TODO; fix issues
+          {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: false} // TODO: fix the rows after moving the top
         ],
         looseCreatures: {
           rammus: 30
@@ -71,15 +71,6 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
         console.log("Starting level", levelNum, this.levels[levelNum].data);
         this._destroyCurrentLevel();
         var data = this.levels[levelNum].data;
-        if (data.looseCreatures) {
-          for (var type in data.looseCreatures) {
-            for (var j = 0; j < data.looseCreatures[type]; j++) {
-              var creature = new GlassLab.Creature(this.game, type);
-              GLOBAL.creatureLayer.add(creature.sprite);
-              creature.moveToRandomTile();
-            }
-          }
-        }
         if (data.pens) {
           for (var i = 0; i < data.pens.length; i++) {
             var penData = data.pens[i];
@@ -90,6 +81,16 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left, true);
             if (penData.bottomDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.bottom, true);
             if (penData.topDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.top, true);
+          }
+        }
+
+        if (data.looseCreatures) {
+          for (var type in data.looseCreatures) {
+            for (var j = 0; j < data.looseCreatures[type]; j++) {
+              var creature = new GlassLab.Creature(this.game, type);
+              GLOBAL.creatureLayer.add(creature.sprite);
+              creature.moveToRandomTile();
+            }
           }
         }
 
