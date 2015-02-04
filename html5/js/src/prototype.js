@@ -159,6 +159,22 @@ window.onload = function() {
         }, centerAnchor);
         uiGroup.add(centerAnchor);
 
+        var objectiveLabel = game.make.text(0, -280, "Objective: ", {fill: "#ffffff", font: "20px Arial"});
+        objectiveLabel.anchor.setTo(.5, 0);
+        GlassLab.SignalManager.levelLoaded.add(function(level){
+            if (level.data.objective)
+            {
+                this.visible = true;
+                this.setText("Objective: "+level.data.objective);
+            }
+            else
+            {
+                this.visible = false;
+            }
+        }, objectiveLabel);
+        centerAnchor.addChild(objectiveLabel);
+        GLOBAL.objectiveLabel = objectiveLabel;
+
         var topRightAnchor = game.make.sprite(game.camera.width, 0);
         topRightAnchor.anchor.setTo(1, 0);
         topRightAnchor.fixedToCamera = true;
@@ -304,11 +320,9 @@ window.onload = function() {
         game.scale.enterFullScreen.add(onEnterFullScreen, this);
         game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
-        this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-
         var journal = new GlassLab.Journal(game);
         journal.sprite.x = -320;
-        journal.sprite.y = -220;
+        journal.sprite.y = -270;
         journal.sprite.scale.setTo(.6, .6);
         centerAnchor.addChild(journal.sprite);
         GLOBAL.Journal = journal;
@@ -405,11 +419,6 @@ window.onload = function() {
         */
 
         GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
-
-        if (this.toggleStickyModeKey && this.toggleStickyModeKey.justDown) {
-          GLOBAL.stickyMode = !GLOBAL.stickyMode;
-          console.log("Sticky mode:", GLOBAL.stickyMode);
-        }
     }
 
     function render() {
