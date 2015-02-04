@@ -44,6 +44,17 @@ GlassLab.Food.prototype._afterEaten = function() {
     this.game.add.tween(this.sprite).to( { alpha: 0 }, 3000, "Linear", true);
 };
 
+GlassLab.Food.prototype.getGlobalIsoPos = function() {
+  var sprite = this.sprite;
+  var pos = new Phaser.Point(sprite.isoX, sprite.isoY);
+  while (sprite.parent && sprite.parent.isoPosition) {
+    sprite = sprite.parent;
+    pos.x += sprite.isoX;
+    pos.y += sprite.isoY;
+  }
+  return pos;
+};
+
 GlassLab.Food.prototype.print = function()
 {
     var row = Math.round(this.sprite.isoY / GLOBAL.tileSize);

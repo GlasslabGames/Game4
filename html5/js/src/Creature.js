@@ -365,6 +365,17 @@ GlassLab.Creature.prototype.getTile = function() {
   return GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
 };
 
+GlassLab.Creature.prototype.getGlobalIsoPos = function() {
+  var sprite = this.sprite;
+  var pos = new Phaser.Point(sprite.isoX, sprite.isoY);
+  while (sprite.parent && sprite.parent.isoPosition) {
+    sprite = sprite.parent;
+    pos.x += sprite.isoX;
+    pos.y += sprite.isoY;
+  }
+  return pos;
+};
+
 /**
  * CreatureState
  */

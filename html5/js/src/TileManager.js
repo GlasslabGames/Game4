@@ -347,7 +347,7 @@ GlassLab.Tile.prototype.unswapType = function() {
 };
 
 GlassLab.Tile.prototype.isTarget = function(creature) {
-  return ((!this.occupant || this.occupant == creature) && this.targetCreatureType == creature.type);
+  return ((!this.occupant || this.occupant == creature) && this.targetCreatureType == creature.type && !this.inPen.feeding);
 };
 
 GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {

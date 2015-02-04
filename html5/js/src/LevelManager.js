@@ -18,7 +18,7 @@ GlassLab.LevelManager = function(game)
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
       pens: [
-        {type: "rammus", height: 1}
+        {type: "rammus"}
       ],
       looseCreatures: {
         rammus: 1
@@ -55,7 +55,7 @@ GlassLab.LevelManager = function(game)
     var level4 = this._addLevelData(new GlassLab.Level());
         level4.data = {
         pens: [
-            {type: "rammus", bottomDraggable: true, leftDraggable: false, topDraggable: false} // TODO; fix issues
+            {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
             rammus: 30
@@ -82,7 +82,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
           for (var i = 0; i < data.pens.length; i++) {
             var penData = data.pens[i];
             var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.leftWidth || 1),
-              (penData.rightWidth || 1), (penData.height || 1));
+              (penData.rightWidth || 1), (penData.height || 1), penData.autoFill);
             pen.creatureType = penData.type;
             // set which edges are adjustable here (defaults to the right side only)
             if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left, true);
