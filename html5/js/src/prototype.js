@@ -248,9 +248,14 @@ window.onload = function() {
         uiElement = game.make.sprite(0,0, "ordersIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
+        var ordersAlert = game.make.sprite(0,0,"alertIcon");
+        ordersAlert.anchor.setTo(.5,.5);
+        GlassLab.SignalManager.levelLoaded.add(function(leve){ this.visible = true; }, ordersAlert);
+        uiElement.addChild(ordersAlert);
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.Orders.IsShowing())
             {
+                ordersAlert.visible = false;
                 GLOBAL.Orders.Show();
             }
             else
@@ -266,9 +271,15 @@ window.onload = function() {
         uiElement = game.make.sprite(0,0, "journalIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
+        var journalAlert = game.make.sprite(0,0,"alertIcon");
+        journalAlert.anchor.setTo(.5,.5);
+        journalAlert.visible = false;
+        GlassLab.SignalManager.levelWon.add(function(leve){ this.visible = true; }, journalAlert);
+        uiElement.addChild(journalAlert);
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.Journal.IsShowing())
             {
+                journalAlert.visible = false;
                 GLOBAL.Journal.Show();
             }
             else
@@ -302,7 +313,7 @@ window.onload = function() {
             }
         }, this);
         bottomRightAnchor.addChild(uiElement);
-        uiElement.visible = GLOBAL.stickyMode = getParameterByName("items") == "true";
+        uiElement.visible = getParameterByName("items") == "true";
 
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler
@@ -330,7 +341,7 @@ window.onload = function() {
         var orders = new GlassLab.OrdersMenu(game);
         orders.sprite.scale.setTo(.6, .6);
         orders.sprite.x = -400
-        orders.sprite.y = -300;
+        orders.sprite.y = -250;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
 

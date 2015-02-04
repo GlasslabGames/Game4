@@ -91,7 +91,14 @@ GlassLab.Journal = function(game) {
     this.prevPageButton.anchor.setTo(0, 0.5);
     this.sprite.addChild(this.prevPageButton);
 
+    GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
+
     this.sprite.visible = false;
+};
+
+GlassLab.Journal.prototype._onLevelLoaded = function(level)
+{
+    this.Hide();
 };
 
 GlassLab.Journal.prototype.IsShowing = function()
