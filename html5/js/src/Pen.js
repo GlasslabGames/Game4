@@ -64,12 +64,10 @@ GlassLab.Pen.prototype.SetDraggableOnly = function() {
   for (var i = 0; i < this.edges.length; i++) {
     this.edges[i].draggable = false;
   }
-  console.log(arguments);
   this.SetDraggable.apply(this, arguments);
 };
 
 GlassLab.Pen.prototype.SetDraggable = function() {
-  console.log(arguments);
   // set the listed edges to be draggable
   for(var j=0; j < arguments.length; j++) {
     for (var i = 0; i < this.edges.length; i++) {
