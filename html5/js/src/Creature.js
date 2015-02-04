@@ -146,7 +146,8 @@ GlassLab.Creature = function(game, type, initialStateName)
   if (initialStateName == "WaitingForFood") {
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
   } else {
-    this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
+    //this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
+    this._onTargetsChanged();
   }
 };
 
@@ -169,6 +170,8 @@ GlassLab.Creature.prototype.moveToRandomTile = function() {
 
   this.sprite.isoX = tile.isoX;
   this.sprite.isoY = tile.isoY;
+
+  tile.onCreatureEnter(this);
 
   if (Math.random() > 0.5) // face a random direction too
   {
@@ -294,7 +297,7 @@ GlassLab.Creature.prototype.HideHungerBar = function() {
 
 GlassLab.Creature.prototype._onTargetsChanged = function() {
   var targets = GLOBAL.tileManager.getTargets(this.type);
-  console.log(this.print(), targets);
+  //console.log(this.print(), targets);
   var minDist = null, bestTarget;
   for (var i = 0, len = targets.length; i < len; i++) {
     var distSqr = Math.pow((this.sprite.isoX - targets[i].isoX), 2) + Math.pow((this.sprite.isoY - targets[i].isoY), 2);
@@ -309,6 +312,17 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
   } else {
     this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
   }
+};
+
+GlassLab.Creature.prototype.enterPen = function(pen) {
+  this.pen = pen;
+  pen.onCreatureEntered(this);
+  this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
+};
+
+GlassLab.Creature.prototype.setIsoPos = function(x, y) {
+  this.sprite.isoX = x;
+  this.sprite.isoY = y;
 };
 
 GlassLab.Creature.prototype.StateTransitionTo = function(targetState)

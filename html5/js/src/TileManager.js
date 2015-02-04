@@ -316,6 +316,7 @@ GlassLab.Tile = function(game, col, row, type) {
   this.anchor.setTo(0.5, 0.5);
   this.col = col;
   this.row = row;
+  this.occupant = null; // current creature walking here
 };
 
 // Extends Isosprite
@@ -356,7 +357,9 @@ GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
 
 
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
+  if (this.occupant) return;
   this.occupant = creature;
+  if (this.isTarget(creature.type)) creature.enterPen(this.inPen);
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {

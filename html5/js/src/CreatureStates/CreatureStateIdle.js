@@ -20,7 +20,8 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
-  this.findDestinationHandler = this.game.time.events.add(Math.random()*1000, this._findNewDestination, this);
+  //this.findDestinationHandler = this.game.time.events.add(Math.random()*1000, this._findNewDestination, this);
+  this._setNewDestination(this.creature.getTile());
   this.creature.draggable = true;
 };
 
@@ -28,6 +29,7 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
 {
   GlassLab.CreatureState.prototype.Exit.call(this);
   this.creature.StopAnim();
+  if (this.targetTile && this.targetTile != this.creature.prevTile) this.targetTile.onCreatureExit(this.creature); // make sure that tile stops thinking we're entering it
   if (this.findDestinationHandler)
   {
     this.game.time.events.remove(this.findDestinationHandler);
@@ -59,17 +61,25 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
   }
   else tile = currentTile; // stay in place
 
+  this._setNewDestination(tile);
+};
+
+GlassLab.CreatureStateIdle.prototype._setNewDestination = function(tile) {
   this.targetPosition.set(tile.isoX, tile.isoY);
+  this.targetTile = tile;
 
   this.findDestinationHandler = null;
 
-  var flip = tile.isoY == this.creature.sprite.isoY;
-  //console.log(tile.isoX, tile.isoY, this.creature.sprite.isoX, this.creature.sprite.isoY, flip);
-  this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
+  tile.onCreatureEnter(this.creature); // prevent creatures from entering the same tiles. Since we do this in both this and CSTraveling, maybe refactor more?
 
-  if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true);
-  else this.creature.PlayAnim('walk', true);
+  if (tile.isoX != this.creature.sprite.isoX || tile.isoY != this.creature.sprite.isoY) {
+    var flip = tile.isoY == this.creature.sprite.isoY;
+    //console.log(tile.isoX, tile.isoY, this.creature.sprite.isoX, this.creature.sprite.isoY, flip);
+    this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
 
+    if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true);
+    else this.creature.PlayAnim('walk', true);
+  }
 };
 
 GlassLab.CreatureStateIdle.prototype.Update = function()
@@ -83,7 +93,7 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
   else {
     // If the delta magnitude is less than our move speed, we're done after this frame.
     this.creature.StopAnim();
-    this.findDestinationHandler = this.game.time.events.add(Math.random() * 3000 + 2000, this._findNewDestination, this);
+    this.findDestinationHandler = this.game.time.events.add(Math.random() * 4000, this._findNewDestination, this);
     // Physics
     if (this.creature.sprite.body) {
       this.creature.sprite.body.velocity.setTo(0, 0);
