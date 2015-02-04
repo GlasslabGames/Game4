@@ -226,15 +226,32 @@ GlassLab.TileManager.prototype.GetTileDataAtWorldPosition = function(x, y)
     return this.GetTileData(tilePosition.x, tilePosition.y);
 };
 
-GlassLab.TileManager.prototype.GetTileAtWorldPosition = function(x, y)
+GlassLab.TileManager.prototype.GetTileAtIsoWorldPosition = function(x, y)
 {
     var tilePosition = this.GetTileIndexAtWorldPosition(x,y);
+    return this.GetTile(tilePosition.x, tilePosition.y);
+};
+GlassLab.TileManager.prototype.GetTileAtWorldPosition = function(x, y)
+{
+    var isoPosition = this.game.iso.unproject(new Phaser.Point(x,y));
+    Phaser.Point.divide(isoPosition, GLOBAL.WorldLayer.scale, isoPosition);
+    var tilePosition = this.GetTileIndexAtWorldPosition(isoPosition.x, isoPosition.y);
+    return this.GetTile(tilePosition.x, tilePosition.y);
+};
+
+GlassLab.TileManager.prototype.TryGetTileAtIsoWorldPosition = function(x, y)
+{
+    var tilePosition = this.GetTileIndexAtWorldPosition(x,y);
+    if (tilePosition.x < 0 || tilePosition.x >= this.map.length || tilePosition.y < 0 || tilePosition.y >= this.map[0].length) return null;
+
     return this.GetTile(tilePosition.x, tilePosition.y);
 };
 
 GlassLab.TileManager.prototype.TryGetTileAtWorldPosition = function(x, y)
 {
-    var tilePosition = this.GetTileIndexAtWorldPosition(x,y);
+    var isoPosition = this.game.iso.unproject(new Phaser.Point(x,y));
+    Phaser.Point.divide(isoPosition, GLOBAL.WorldLayer.scale, isoPosition);
+    var tilePosition = this.GetTileIndexAtWorldPosition(isoPosition.x, isoPosition.y);
     if (tilePosition.x < 0 || tilePosition.x >= this.map.length || tilePosition.y < 0 || tilePosition.y >= this.map[0].length) return null;
 
     return this.GetTile(tilePosition.x, tilePosition.y);
@@ -251,18 +268,6 @@ GlassLab.TileManager.prototype.clearPenTiles = function()
   }
 };
 
-GlassLab.TileManager.prototype.clearTiles = function()
-{
-  for (var col = 0; col < this.GetMapWidth(); col++) {
-    for (var row = 0; row < this.GetMapHeight(); row++) {
-      var tile = this.GetTile(col, row);
-      tile.setInPen(false);
-      tile.unswapType();
-      tile.occupant = null;
-      //tile.onCreatureEnter(null); // this triggers the debug color change
-    }
-  }
-};
 GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
   var randCol = parseInt(Math.random() * this.GetMapWidth());
   var randRow = parseInt(Math.random() * this.GetMapHeight());
@@ -275,18 +280,6 @@ GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
     targetTile = this.GetTile(randCol, randRow);
   }
   return targetTile;
-};
-
-GlassLab.TileManager.prototype.getTargets = function(creatureType)
-{
-  var tiles = [];
-  for (var col = 0; col < this.GetMapWidth(); col++) {
-    for (var row = 0; row < this.GetMapHeight(); row++) {
-      var tile = this.GetTile(col, row);
-      if (tile.isTarget(creatureType)) tiles.push(tile);
-    }
-  }
-  return tiles;
 };
 
 /**
@@ -327,23 +320,16 @@ GlassLab.Tile.prototype.unswapType = function() {
   this.loadTexture( this.type );
 };
 
-GlassLab.Tile.prototype.isTarget = function(creatureType) {
-  return (!this.occupant && this.targetCreatureType == creatureType);
-};
-
-GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
-  this.inPen = pen;
-  this.targetCreatureType = pen && targetCreatureType;
+GlassLab.Tile.prototype.setInPen = function(isIn) {
+  this.inPen = isIn;
 };
 
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
   this.occupant = creature;
-  //this.tint = (this.occupant)? 0xffdddd : 0xffffff; // debug
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {
   if (this.occupant == creature) this.occupant = null;
-  //this.tint = (this.occupant)? 0xffdddd : 0xffffff; // debug
 };
 
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {

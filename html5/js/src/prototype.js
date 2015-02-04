@@ -3,8 +3,9 @@
  */
 var GLOBAL = GLOBAL || {};
 window.onload = function() {
-    var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
+    GLOBAL.version = "0.2.0";
     GLOBAL.stickyMode = false; // If true, click to grab something or put it down. If false, drag things around.
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
@@ -75,6 +76,7 @@ window.onload = function() {
         game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
+        game.load.image('lock', 'assets/images/HUD_items_lock.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -110,6 +112,8 @@ window.onload = function() {
         game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
         GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
+
+        GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
@@ -178,13 +182,15 @@ window.onload = function() {
         var uiElement = game.make.sprite(15, 40, "zoomInIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
-            GLOBAL.WorldLayer.scale.x *= 2;GLOBAL.WorldLayer.scale.y *= 2;
+            GLOBAL.WorldLayer.scale.x *= 2;
+            GLOBAL.WorldLayer.scale.y *= 2;
         }, this);
         zoomBG.addChild(uiElement);
         uiElement = game.make.sprite(15, 110, "zoomOutIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
-            GLOBAL.WorldLayer.scale.x /= 2;GLOBAL.WorldLayer.scale.y /= 2;
+            GLOBAL.WorldLayer.scale.x /= 2;
+            GLOBAL.WorldLayer.scale.y /= 2;
         }, this);
         zoomBG.addChild(uiElement);
 
@@ -254,6 +260,17 @@ window.onload = function() {
         uiGroup.add(bottomRightAnchor);
 
         uiElement = game.make.sprite(-130, -130, "itemsIcon");
+        uiElement.inputEnabled = true;
+        uiElement.events.onInputDown.add(function(){
+            if (!GLOBAL.inventoryMenu.visible)
+            {
+                GLOBAL.inventoryMenu.Show();
+            }
+            else
+            {
+                GLOBAL.inventoryMenu.Hide();
+            }
+        }, this);
         bottomRightAnchor.addChild(uiElement);
 
         game.input.onDown.add(globalDown, this); // Global input down handler
@@ -291,6 +308,16 @@ window.onload = function() {
         orderFulfillment.sprite.y = 50;
         topLeftAnchor.addChild(orderFulfillment.sprite);
         GLOBAL.orderFulfillment = orderFulfillment;
+
+        var inventoryMenu = new GlassLab.InventoryMenu(game);
+        inventoryMenu.x = -700;
+        inventoryMenu.y = -150;
+        bottomRightAnchor.addChild(inventoryMenu);
+        GLOBAL.inventoryMenu = inventoryMenu;
+
+        var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
+        versionLabel.fixedToCamera = true;
+        GLOBAL.UIGroup.add(versionLabel);
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
@@ -335,17 +362,17 @@ window.onload = function() {
         // Re-sort creatures because they probably moved
         game.iso.simpleSort(GLOBAL.creatureLayer);
 
-        if (game.input.activePointer.isDown && !GLOBAL.dragTarget)
+        if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject)
         {
             game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
             game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         }
-        else if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
+        else //if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
         {
             cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
             game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
             Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
-            tileSprite = GLOBAL.tileManager.TryGetTileAtWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
+            tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         }
 
         // Temporarily disabling this since I'm tinting tiles for other reasons
