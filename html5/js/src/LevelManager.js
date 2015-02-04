@@ -38,10 +38,13 @@ GlassLab.LevelManager = function(game)
             type: "rammus",
             description: "Etiam nec leo eu felis porta ornare. Proin ultricies enim sit amet mauris pulvinar, nec bibendum augue 7 Rammus. Cum sociis natos que penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi eu arcu sit amet diam placerat porta vitae."
         }
-      ]
+      ],
+      looseCreatures: {
+        rammus: 0
+      }
     };
 
-    this.levels.push(level1, level2, level3);
+    //this.levels.push(level1, level2, level3);
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
@@ -55,7 +58,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 {
     if (levelNum < this.levels.length)
     {
-        console.log("Starting level", levelNum);
+        console.log("Starting level", levelNum, this.levels[levelNum].data);
         this._destroyCurrentLevel();
         var data = this.levels[levelNum].data;
         if (data.looseCreatures) {

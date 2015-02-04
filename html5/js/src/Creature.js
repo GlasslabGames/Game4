@@ -92,12 +92,6 @@ GlassLab.Creature = function(game, type, initialStateName)
   this.game = game;
   this.state = null;
 
-  if (initialStateName == "WaitingForFood") {
-    this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
-  } else {
-    this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
-  }
-
   this.sprite.inputEnabled = true;
   this.sprite.draggable = false; // set this in each state
   this.prevIsoPos = new Phaser.Point();
@@ -147,6 +141,13 @@ GlassLab.Creature = function(game, type, initialStateName)
 //game.physics.isoArcade.enable(this.sprite);
   //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
   this.sprite.events.onDestroy.add(this._onDestroy, this);
+
+  // FINALLY, start the desired state
+  if (initialStateName == "WaitingForFood") {
+    this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
+  } else {
+    this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
+  }
 };
 
 GlassLab.Creature.prototype._onDestroy = function() {
