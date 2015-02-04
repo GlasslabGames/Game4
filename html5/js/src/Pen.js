@@ -648,6 +648,14 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
   this._onCreatureContentsChanged();
 };
 
+GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
+  console.log("on creature removed");
+  var index = this.creatures.indexOf(creature);
+  if (index > -1) this.creatures.splice(index, 1);
+  this._onCreatureContentsChanged();
+  GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+};
+
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
   var numCreatures = this.creatures.length;
