@@ -235,6 +235,11 @@ GlassLab.Creature.prototype._onDown = function(sprite, pointer)
 
 GlassLab.Creature.prototype._startDrag = function() {
   if (GLOBAL.dragTarget != null) return;
+  this.getTile().onCreatureExit(this);
+  if (this.pen) {
+    this.pen.onCreatureRemoved(this);
+    this.pen = null;
+  }
   this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
   GLOBAL.dragTarget = this;
 };
@@ -255,11 +260,13 @@ GlassLab.Creature.prototype._onUpdate = function() {
   if (this.prevIsoPos.x != this.sprite.isoX || this.prevIsoPos.y != this.sprite.isoY) {
     this.prevIsoPos.x = this.sprite.isoX;
     this.prevIsoPos.y = this.sprite.isoY;
-    var tile = this.getTile();
-    if (this.prevTile != tile) {
-      if (this.prevTile) this.prevTile.onCreatureExit(this);
-      tile.onCreatureEnter(this);
-      this.prevTile = tile;
+    if (GLOBAL.dragTarget != this) {
+      var tile = this.getTile();
+      if (this.prevTile != tile) {
+        if (this.prevTile) this.prevTile.onCreatureExit(this);
+        tile.onCreatureEnter(this);
+        this.prevTile = tile;
+      }
     }
   }
   //if (this.rightKey.justDown) { }
