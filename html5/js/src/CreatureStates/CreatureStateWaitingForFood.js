@@ -17,7 +17,7 @@ GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaiting
 GlassLab.CreatureStateWaitingForFood.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.creature.standFacing("right");
-  this.creature.draggable = false;
+  this.creature.draggable = true;
 };
 
 GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {

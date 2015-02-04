@@ -294,13 +294,13 @@ GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
   return targetTile;
 };
 
-GlassLab.TileManager.prototype.getTargets = function(creatureType)
+GlassLab.TileManager.prototype.getTargets = function(creature)
 {
   var tiles = [];
   for (var col = 0; col < this.GetMapWidth(); col++) {
     for (var row = 0; row < this.GetMapHeight(); row++) {
       var tile = this.GetTile(col, row);
-      if (tile.isTarget(creatureType)) tiles.push(tile);
+      if (tile.isTarget(creature)) tiles.push(tile);
     }
   }
   return tiles;
@@ -346,8 +346,8 @@ GlassLab.Tile.prototype.unswapType = function() {
   this.loadTexture( this.type );
 };
 
-GlassLab.Tile.prototype.isTarget = function(creatureType) {
-  return (!this.occupant && this.targetCreatureType == creatureType);
+GlassLab.Tile.prototype.isTarget = function(creature) {
+  return ((!this.occupant || this.occupant == creature) && this.targetCreatureType == creature.type);
 };
 
 GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
