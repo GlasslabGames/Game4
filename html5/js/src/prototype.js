@@ -304,8 +304,6 @@ window.onload = function() {
         game.scale.enterFullScreen.add(onEnterFullScreen, this);
         game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
-        this.toggleStickyModeKey = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-
         var journal = new GlassLab.Journal(game);
         journal.sprite.x = -320;
         journal.sprite.y = -220;
@@ -405,11 +403,6 @@ window.onload = function() {
         */
 
         GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
-
-        if (this.toggleStickyModeKey && this.toggleStickyModeKey.justDown) {
-          GLOBAL.stickyMode = !GLOBAL.stickyMode;
-          console.log("Sticky mode:", GLOBAL.stickyMode);
-        }
     }
 
     function render() {

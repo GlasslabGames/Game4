@@ -8,6 +8,11 @@ GlassLab.LevelManager = function(game)
 {
     this.game = game;
     this.currentLevel = -1;
+    var queryLevel = getParameterByName("level");
+    if (queryLevel != "")
+    {
+        this.currentLevel = parseInt(queryLevel)-2;
+    }
     this.levels = [];
 
     var level1 = this._addLevelData(new GlassLab.Level());
