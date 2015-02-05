@@ -35,13 +35,21 @@ GlassLab.Food = function(game, spriteName) {
     this.sprite.anchor.setTo(0.4, 1); // this anchor is specific to the carrot, so generify later
 };
 
+GlassLab.Food.prototype.placeOnTile = function(tile) {
+  this.sprite.isoX = tile.isoX;
+  this.sprite.isoY = tile.isoY;
+  tile.onFoodAdded(this);
+};
+
 GlassLab.Food.prototype.BeEaten = function() {
-    var anim = this.sprite.animations.play('anim', 24);
-    anim.onComplete.add(this._afterEaten, this);
+  var anim = this.sprite.animations.play('anim', 24);
+  anim.onComplete.add(this._afterEaten, this);
+  this.getTile().onFoodRemoved(this);
 };
 
 GlassLab.Food.prototype._afterEaten = function() {
-    this.game.add.tween(this.sprite).to( { alpha: 0 }, 3000, "Linear", true);
+  var tween = this.game.add.tween(this.sprite).to( { alpha: 0 }, 3000, "Linear", true);
+  tween.onComplete.add( function() {this.sprite.destroy();}, this);
 };
 
 GlassLab.Food.prototype.getGlobalIsoPos = function() {
@@ -53,6 +61,11 @@ GlassLab.Food.prototype.getGlobalIsoPos = function() {
     pos.y += sprite.isoY;
   }
   return pos;
+};
+
+// These functions should definitely be in a common superclass
+GlassLab.Food.prototype.getTile = function() {
+  return GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
 };
 
 GlassLab.Food.prototype.print = function()
