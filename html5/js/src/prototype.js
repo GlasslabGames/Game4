@@ -13,7 +13,7 @@ function getParameterByName(name) {
 window.onload = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
-    GLOBAL.version = "0.2.0";
+    GLOBAL.version = "0.2.1";
     GLOBAL.stickyMode = (getParameterByName("sticky") == "true"); // If true, click to grab something or put it down. If false, drag things around.
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
