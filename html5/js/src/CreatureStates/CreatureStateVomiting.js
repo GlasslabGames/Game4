@@ -30,9 +30,19 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   var vomit = this.game.make.sprite(-20,-190, "vomit"); //-420,-155
   vomit.anchor.set(1,0);
   vomit.tint = 0xe37f54; // carrot color - if we don't want it so bright, use 0x9dad62
-  this.creature.sprite.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
+  GLOBAL.effectLayer.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
+  vomit.scale.setTo(this.creature.sprite.scale.x, this.creature.sprite.scale.y);
+  vomit.x = this.creature.sprite.x;
+  vomit.y = this.creature.sprite.y - 45;
   vomit.animations.add("anim");
   vomit.animations.play("anim", 24, false);
+  vomit.events.onAnimationComplete.add(this._onVomitAnimEnded, vomit);
+};
+
+GlassLab.CreatureStateVomiting.prototype._onVomitAnimEnded = function(vomit) {
+  GLOBAL.foodLayer.addChild(vomit); // move it to the food layer (behind the creature)
+  var tween = this.game.add.tween(vomit).to( { alpha: 0 }, 3000, "Linear", true);
+  tween.onComplete.add( function() {this.destroy();}, vomit);
 };
 
 GlassLab.CreatureStateVomiting.prototype.Exit = function() {
@@ -40,7 +50,13 @@ GlassLab.CreatureStateVomiting.prototype.Exit = function() {
 };
 
 GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
-  this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
-  console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
-  this.creature.FinishEating(false);
+  if (this.creature.pen) { // assume it was eating in the pen... this should be revised to avoid weird corner cases
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
+    console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
+    this.creature.FinishEating(false);
+  } else {
+    this.creature.Emote(false);
+    this.creature.resetFoodEaten();
+    this.creature._onTargetsChanged();
+  }
 };

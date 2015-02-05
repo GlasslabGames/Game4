@@ -62,6 +62,8 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
       if (this.target.inPen) {
         console.log("enter pen");
         this.creature.enterPen(this.target.inPen);
+      } else if (this.target.food) { // TODO: check food type
+        this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.target.food));
       } else {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
       }
