@@ -5,7 +5,7 @@
 /**
  * Feeding Pen - holds animals on the left and food on the right
  */
-GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height, autoFill) {
+GlassLab.FeedingPen = function(game, layer, height, widths, autoFill) {
   this.foods = [];
   this.creatures = [];
   this.foodByRow = [];
@@ -17,7 +17,7 @@ GlassLab.FeedingPen = function(game, layer, animalWidth, foodWidth, height, auto
   this.autoFill = autoFill; // whether creatures to fill the pen are magically created
   this.allowFeedButton = true;
 
-  GlassLab.Pen.call(this, game, layer, animalWidth, foodWidth, height);
+  GlassLab.Pen.call(this, game, layer, height, widths);
 
   this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
   this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
@@ -43,15 +43,14 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 GlassLab.FeedingPen.prototype.Resize = function() {
   GlassLab.Pen.prototype.Resize.call(this);
 
-  this.FillIn(GlassLab.Food.bind(null, this.game, this.foodType), this.foods, this.numFood,
-    this.leftWidth, this.leftWidth + this.rightWidth);
+  this.FillIn(GlassLab.Food.bind(null, this.game, this.foodType), this.foods, this.numFood, this.widths[0], this.getFullWidth());
 
   if (this.autoFill) {
     this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, "WaitingForFood"), this.creatures, this.numCreatures,
-      0, this.leftWidth, true);
+      0, this.widths[0], true);
   } else {
     // For each tile in the creature side, mark that it's open for creatures
-    for (var col = 0; col < this.leftWidth; col++) {
+    for (var col = 0; col < this.widths[0]; col++) {
       for (var row = 0; row < this.height; row++) {
         var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
         if (tile)
@@ -72,7 +71,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 
   this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 
-  if (this.prevHeight != this.height || this.prevCreatureWidth != this.leftWidth) {
+  if (this.prevHeight != this.height || this.prevCreatureWidth != this.widths[0]) {
     console.log("Creature side changed!");
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
@@ -90,16 +89,9 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 
     this._onCreatureContentsChanged();
     this.prevHeight = this.height;
-    this.prevCreatureWidth = this.leftWidth;
+    this.prevCreatureWidth = this.widths[0];
   }
 };
-
-function TestSetContents(numCreatures, numFood, resize) {
-  if (GLOBAL.testPen) {
-    GLOBAL.testPen.SetContents(numCreatures, numFood, resize);
-    return {height: GLOBAL.testPen.height, animalCols: GLOBAL.testPen.leftWidth, foodCols: GLOBAL.testPen.rightWidth};
-  }
-}
 
 // if we allow condensing odd numbers to multiple rows, this determines when to start condensing
 GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5;
@@ -119,23 +111,24 @@ GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood, cond
   this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
   if (!condenseToMultipleRows) {
-    this.leftWidth = 1;
+    this.widths[0] = 1;
     this.height = numCreatures;
   } else if (numCreatures == 9 && GlassLab.FeedingPen.MAX_PEN_HEIGHT < 9) {
     // I'm adding this one special case because 3x3 is a lot better than two columns of 4 and 5.
     // Suggestions for a general algorithm that would better deal with this case are welcome.
-    this.height = this.leftWidth = 3;
+    this.height = this.widths[0] = 3;
   } else {
     this.height = numCreatures;
-    this.leftWidth = 1;
+    this.widths[0] = 1;
 
     while (this.height > GlassLab.FeedingPen.MAX_PEN_HEIGHT) {
-      this.leftWidth++;
-      this.height = Math.ceil(numCreatures / this.leftWidth);
+      this.widths[0]++;
+      this.height = Math.ceil(numCreatures / this.widths[0]);
     }
   }
 
-  this.rightWidth = Math.ceil(numFood / this.height);
+  this.widths[1] = Math.ceil(numFood / this.height);
+  console.log(this.height, this.widths);
   this.Resize();
 };
 
@@ -214,7 +207,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 
 GlassLab.FeedingPen.prototype.Destroy = function()
 {
-  for (var col = 0; col < this.leftWidth + this.rightWidth; col++) {
+  for (var col = 0; col < this.getFullWidth(); col++) {
     for (var row = 0; row < this.height; row++) {
       var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
       if (tile)
@@ -282,8 +275,7 @@ GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
   var numCreatures = this.creatures.length;
-  console.log(numCreatures,"/",this.leftWidth * this.height, this.allowFeedButton, this.button);
-  if (this.button) this.button.visible = this.allowFeedButton && (numCreatures >= this.leftWidth * this.height);
+  if (this.button) this.button.visible = this.allowFeedButton && (numCreatures >= this.widths[0] * this.height);
 };
 
 GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {

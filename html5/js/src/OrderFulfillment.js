@@ -73,7 +73,7 @@ GlassLab.OrderFulfillment.prototype._onTextChange = function(text)
     {
         if (!this.pen)
         {
-            this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, 1, 1, 1);
+            this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, 1, [1, 1]);
             this.pen.allowFeedButton = false;
         }
         this.pen.SetContents(this.data.numCreatures, response);
