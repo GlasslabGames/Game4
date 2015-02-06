@@ -23,10 +23,13 @@ GlassLab.UIButton = function(game, x, y, callback, callbackContext, width, heigh
     this.addChild(this.label);
 
     this.input.priorityID = GLOBAL.UIpriorityID;
+
+    // TODO: This is because UIButton doesn't subclass UIElement. Find a solution!
+    this.events.uiChanged = new Phaser.Signal();
 };
 
 GlassLab.UIButton.prototype = Object.create(Phaser.Button.prototype);
-GlassLab.UIButton.prototype.constructor = Phaser.UIButton;
+GlassLab.UIButton.prototype.constructor = GlassLab.UIButton;
 
 GlassLab.UIButton.prototype.getWidth = function() {
   return this.actualWidth;

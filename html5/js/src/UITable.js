@@ -9,7 +9,7 @@ var GlassLab = GlassLab || {};
  */
 GlassLab.UITable = function(game, numColumns, padding, drawBorder)
 {
-    Phaser.Sprite.prototype.constructor.call(this, game);
+    GlassLab.UIElement.prototype.constructor.call(this, game);
 
     this.game = game;
     this.managedChildren = [];
@@ -28,18 +28,24 @@ GlassLab.UITable = function(game, numColumns, padding, drawBorder)
 };
 
 // Extends Sprite
-GlassLab.UITable.prototype = Object.create(Phaser.Sprite.prototype);
-GlassLab.UITable.prototype.constructor = Phaser.UITable;
+GlassLab.UITable.prototype = Object.create(GlassLab.UIElement.prototype);
+GlassLab.UITable.prototype.constructor = GlassLab.UITable;
 
 GlassLab.UITable.prototype.addManagedChild = function(child, refresh)
 {
     this.addChild(child);
     this.managedChildren.push(child);
+    child.events.uiChanged.add(this._onChildChanged, this);
 
     if (refresh)
     {
         this._refresh();
     }
+};
+
+GlassLab.UITable.prototype._onChildChanged = function(child)
+{
+    this._refresh();
 };
 
 GlassLab.UITable.prototype.replaceChildAt = function(x, y, child)
