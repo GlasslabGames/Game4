@@ -14,7 +14,18 @@ GlassLab.LevelManager = function(game)
         this.currentLevel = parseInt(queryLevel)-2;
     }
     this.levels = [];
-
+/* TESTING 2-section pen
+  var level4 = this._addLevelData(new GlassLab.Level());
+  level4.data = {
+    pens: [
+      {type: "rammus", height: 3, foodAWidth: 2, foodBWidth:2, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+    ],
+    looseCreatures: {
+      rammus: 6
+    },
+    objective: "Feed as many rams as you can!"
+  };
+*/
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
       pens: [

@@ -37,8 +37,9 @@ GlassLab.FoodTypes = [
 /**
  * Food - just a sprite for now
  */
-GlassLab.Food = function(game, spriteName) {
-    this.sprite = game.make.isoSprite(0,0,0, spriteName+"_eaten");
+GlassLab.Food = function(game, type) {
+    this.type = type;
+    this.sprite = game.make.isoSprite(0,0,0, type+"_eaten"); // we start with this animation but don't play it until it gets eaten
     this.sprite.animations.add('anim');
 
     this.sprite.scale.x = this.sprite.scale.y = 0.3;
