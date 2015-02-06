@@ -12,7 +12,7 @@ GlassLab.UIButton = function(game, x, y, callback, callbackContext, width, heigh
 {
     this.actualWidth = width; this.actualHeight = height; // remember these since we can't set this.width directly without affecting the scale
 
-    Phaser.Button.prototype.constructor.call(this, game, x, y, null, callback, callbackContext);
+    GlassLab.UIElement.prototype.constructor.call(this, game, x, y);//, null, callback, callbackContext);
 
     this.graphic = game.make.graphics();
     this.graphic.beginFill(color).lineStyle(3, 0x000000).drawRect(0,0,width,height);
@@ -22,13 +22,12 @@ GlassLab.UIButton = function(game, x, y, callback, callbackContext, width, heigh
     this.label.anchor.setTo(.5, .5);
     this.addChild(this.label);
 
+    this.inputEnabled = true;
     this.input.priorityID = GLOBAL.UIpriorityID;
-
-    // TODO: This is because UIButton doesn't subclass UIElement. Find a solution!
-    this.events.uiChanged = new Phaser.Signal();
+    this.events.onInputDown.add(callback, callbackContext);
 };
 
-GlassLab.UIButton.prototype = Object.create(Phaser.Button.prototype);
+GlassLab.UIButton.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIButton.prototype.constructor = GlassLab.UIButton;
 
 GlassLab.UIButton.prototype.getWidth = function() {
