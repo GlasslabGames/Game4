@@ -9,7 +9,7 @@ var GlassLab = GlassLab || {};
 // @param buttons Can be a single button or an array of them
 GlassLab.UIModal = function(game, text, buttons)
 {
-  Phaser.Sprite.prototype.constructor.call(this, game);
+  GlassLab.UIElement.prototype.constructor.call(this, game);
 
   var borderPadding = 20;
   var innerPadding = 20;
@@ -44,5 +44,5 @@ GlassLab.UIModal = function(game, text, buttons)
 };
 
 // Extends Sprite
-GlassLab.UIModal.prototype = Object.create(Phaser.Sprite.prototype);
+GlassLab.UIModal.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIModal.prototype.constructor = Phaser.UIModal;

@@ -6,7 +6,7 @@ var GlassLab = GlassLab || {};
 
 GlassLab.InventoryMenu = function(game)
 {
-    Phaser.Sprite.prototype.constructor.call(this, game);
+    GlassLab.UIElement.prototype.constructor.call(this, game);
     this.visible = false;
 
     this.items = [];
@@ -21,7 +21,7 @@ GlassLab.InventoryMenu = function(game)
     this.addChild(this.moneyLabel);
     GlassLab.SignalManager.moneyChanged.add(this._refreshCurrency, this);
 
-    this.itemTable = new GlassLab.UITable(game, 5000);
+    this.itemTable = new GlassLab.UITable(game, 5000, 5);
     this.addChild(this.itemTable);
 
     for (var i=0; i < GlassLab.FoodTypes.length; i++)
@@ -44,8 +44,8 @@ GlassLab.InventoryMenu = function(game)
 };
 
 // Extends Sprite
-GlassLab.InventoryMenu.prototype = Object.create(Phaser.Sprite.prototype);
-GlassLab.InventoryMenu.prototype.constructor = Phaser.InventoryMenu;
+GlassLab.InventoryMenu.prototype = Object.create(GlassLab.UIElement.prototype);
+GlassLab.InventoryMenu.prototype.constructor = GlassLab.InventoryMenu;
 
 GlassLab.InventoryMenu.prototype.Refresh = function()
 {

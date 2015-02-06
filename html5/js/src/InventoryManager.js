@@ -7,7 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.InventoryManager = function(game)
 {
     this.game = game;
-    this.money = 1000;
+    this.money = 10;
 };
 
 GlassLab.InventoryManager.prototype.TrySpendMoney = function(amt)
