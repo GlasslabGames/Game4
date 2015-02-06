@@ -51,11 +51,33 @@ GlassLab.LevelManager = function(game)
     var level3 = this._addLevelData(new GlassLab.Level());
     level3.data = {
       orders: [
-        {
-            numCreatures: 7,
-            type: "rammus",
-            description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!"
-        }
+          {
+              client: "Archibold Huxley III",
+              company: "Rupture Farms",
+              numCreatures: 7,
+              type: "rammus",
+              description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+              fulfilled: false,
+              reward: 200
+          },
+          {
+              client: "Archibold Huxley IV",
+              company: "Rupture Farms II",
+              numCreatures: 48,
+              type: "rammus",
+              description: "Dear Friend! I must defeat Archibold Huxley III. My island has 48 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+              fulfilled: false,
+              reward: 5000
+          },
+          {
+              client: "Ram",
+              company: "Baaa",
+              numCreatures: 1,
+              type: "rammus",
+              description: "Dear Friend! My island has 1 RAM. I have heard you know HOW MANY CARROTS I need IT. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+              fulfilled: false,
+              reward: -5
+          }
       ],
       looseCreatures: {
         rammus: 0

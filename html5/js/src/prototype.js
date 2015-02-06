@@ -79,7 +79,6 @@ window.onload = function() {
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
         game.load.image('journalBg', 'assets/images/journal_bg.png');
-        game.load.image('orderMock', 'assets/images/order_mock.png');
         game.load.image('cancelButton', 'assets/images/cancel_button.png');
         game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
@@ -348,8 +347,7 @@ window.onload = function() {
         GLOBAL.Journal = journal;
 
         var orders = new GlassLab.OrdersMenu(game);
-        orders.sprite.scale.setTo(.6, .6);
-        orders.sprite.x = -400
+        orders.sprite.x = -200
         orders.sprite.y = -250;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
