@@ -135,8 +135,15 @@ window.onload = function() {
         // Create pen
         GLOBAL.penLayer = game.make.group();
         GLOBAL.WorldLayer.add(GLOBAL.penLayer);
+
+        GLOBAL.foodLayer = game.make.group();
+        GLOBAL.WorldLayer.add(GLOBAL.foodLayer);
+
         GLOBAL.creatureLayer = game.make.group();
         GLOBAL.WorldLayer.add(GLOBAL.creatureLayer);
+
+        GLOBAL.effectLayer = game.make.group();
+        GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
 
         GLOBAL.paused = false;
 

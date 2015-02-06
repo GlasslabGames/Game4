@@ -275,13 +275,18 @@ GlassLab.Creature.prototype._onUpdate = function() {
 
 GlassLab.Creature.prototype.FinishEating = function(satisfied) {
   this.hungerBar.show(false);
+  this.Emote(satisfied);
+
   if (satisfied) {
     this.pen.SetCreatureFinishedEating(true);
-    this.Emote(true);
   } else {
     this.pen.FinishFeeding(false);
-    this.Emote(false);
   }
+};
+
+GlassLab.Creature.prototype.resetFoodEaten = function() {
+  this.foodEaten = 0;
+  this.hungerBar.amount = 0;
 };
 
 GlassLab.Creature.prototype.Emote = function(happy) {
@@ -293,11 +298,12 @@ GlassLab.Creature.prototype.Emote = function(happy) {
   this.game.add.tween(this.emote).to( {y: -3 * this.spriteHeight * this.sprite.scale.y, height: size, width: size}, 100, Phaser.Easing.Linear.Out, true);
   this.emote.anchor.set(0.5, 1);
   this.sprite.addChild(this.emote);
+  this.game.time.events.add(Phaser.Timer.SECOND * 1, function() {this.emote.destroy();}, this);
 };
 
-GlassLab.Creature.prototype.ShowHungerBar = function(currentlyEating) {
+GlassLab.Creature.prototype.ShowHungerBar = function(currentlyEating, resetVisibility) {
   var amountEaten = (currentlyEating)? this.foodEaten + 1 : this.foodEaten;
-  this.hungerBar.Set( amountEaten / this.desiredAmountOfFood, true ); // true -> animate change
+  this.hungerBar.Set( amountEaten / this.desiredAmountOfFood, true, resetVisibility ); // true -> animate change
 };
 
 GlassLab.Creature.prototype.HideHungerBar = function() {
@@ -317,12 +323,21 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
   }
 
   var maxNoticeDist = GLOBAL.tileSize * 10;
-  if (bestTarget == this.getTile() && bestTarget.inPen) { // if we're actually in the pen now
-    console.log(this.print()+" is in a pen now!", bestTarget, this.getTile());
-    this.enterPen(bestTarget.inPen);
-    this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
+  if (bestTarget == this.getTile()) {
+    if (bestTarget.inPen) { // if we're actually in the pen now
+      console.log(this.print() + " is in a pen now!", bestTarget, this.getTile());
+      this.enterPen(bestTarget.inPen);
+      this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
+    } else { // assume that we're on top of some food
+      console.log(this.print() + " is on top of food now!", bestTarget.food, this.getTile());
+      this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, bestTarget.food));
+    }
   } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
-    this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));
+    if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
+      this.state.target = bestTarget;
+    } else {
+      this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));
+    }
   } else {
     this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
   }
@@ -332,6 +347,7 @@ GlassLab.Creature.prototype.enterPen = function(pen) {
   this.pen = pen;
   this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
   pen.onCreatureEntered(this);
+  // this.resetFoodEaten(); // we actually don't want to reset the food eaten, even though it's confusing
 };
 
 GlassLab.Creature.prototype.setIsoPos = function(x, y) {
