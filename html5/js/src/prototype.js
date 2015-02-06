@@ -348,8 +348,7 @@ window.onload = function() {
         GLOBAL.Journal = journal;
 
         var orders = new GlassLab.OrdersMenu(game);
-        orders.sprite.scale.setTo(.6, .6);
-        orders.sprite.x = -400
+        orders.sprite.x = -200
         orders.sprite.y = -250;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
