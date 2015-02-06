@@ -48,12 +48,6 @@ GlassLab.OrdersMenu = function(game) {
     this.rewardAmountLabel = game.make.text(this.rewardLabel.x+5, this.rewardLabel.y + this.rewardLabel.height, "{rewardAmount}", {font: '10pt Arial'});
     this.sprite.addChild(this.rewardAmountLabel);
 
-    // PLACEHOLDER
-    this.mock = game.make.sprite(0,0, "orderMock");
-    this.mock.scale.setTo(.5,.5);
-    this.mock.alpha = .5;
-    //this.sprite.addChild(this.mock);
-
     this.descriptionLabel = game.make.text(15, 160, "", {wordWrap: true, wordWrapWidth: 250, font:"bold 10pt Arial"});
     this.sprite.addChild(this.descriptionLabel);
 

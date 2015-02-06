@@ -79,7 +79,6 @@ window.onload = function() {
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
         game.load.image('journalBg', 'assets/images/journal_bg.png');
-        game.load.image('orderMock', 'assets/images/order_mock.png');
         game.load.image('cancelButton', 'assets/images/cancel_button.png');
         game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
