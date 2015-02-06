@@ -7,49 +7,82 @@ var GlassLab = GlassLab || {};
 GlassLab.InventoryMenuSlot = function(game, foodData)
 {
     this.data = foodData;
-    Phaser.Sprite.prototype.constructor.call(this, game, 0, 0, this.data.unlocked ? this.data.spriteName : "lock");
+    GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0);
 
     this.anchor.setTo(0, 0);
-    this.scale.setTo(0.5, .5);
 
     this._dragStartLocation = new Phaser.Point();
 
     this.canInteract = true;
 
-    if (this.data.unlocked)
-    {
-        this.inputEnabled = true;
-        this.input.enableDrag(true);
+    this.inputEnabled = true;
+    this.events.onInputDown.add(this._onInputDown, this);
 
-        this.events.onInputDown.add(this._onDragStart, this);
-        this.events.onDragStop.add(this._onDragStop, this);
-    }
-
-    this.costLabel = game.make.text(0,0,"$"+this.data.cost, {fill: (this.data.unlocked ? '#000000' : '#ffffff')});
+    this.costLabel = game.make.text(0,0,"$"+this.data.cost, {fill: '#ffffff'});
+    this.costLabel.anchor.setTo(.5, 1);
     this.addChild(this.costLabel);
+
+    this.Refresh();
 };
 
 // Extends Sprite
-GlassLab.InventoryMenuSlot.prototype = Object.create(Phaser.Sprite.prototype);
-GlassLab.InventoryMenuSlot.prototype.constructor = Phaser.InventoryMenuSlot;
+GlassLab.InventoryMenuSlot.prototype = Object.create(GlassLab.UIElement.prototype);
+GlassLab.InventoryMenuSlot.prototype.constructor = GlassLab.InventoryMenuSlot;
 
-GlassLab.InventoryMenuSlot.prototype._onDragStart = function(sprite, pointer)
+GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
 {
-    this._dragStartLocation.set(this.x, this.y);
+    if (this.data.unlocked)
+    {
+        this._dragStartLocation.set(this.x, this.y);
+    }
+    else
+    {
+        if (!this.modal)
+        {
+            var yesButton = new GlassLab.UIButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
+            var noButton = new GlassLab.UIButton(this.game, 0, 0, this._onPurchaseCanceled, this, 150, 60, 0xffffff, "No");
+
+            this.modal = new GlassLab.UIModal(this.game, "Purchase for $"+this.data.cost + "?", [yesButton, noButton]);
+            GLOBAL.uiAnchors.center.addChild(this.modal);
+        }
+
+        this.modal.visible = true;
+    }
+};
+
+GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
+{
+    if (GLOBAL.inventoryManager.TrySpendMoney(this.data.cost))
+    {
+        this.data.unlocked = true;
+        this.Refresh();
+        this.modal.visible = false;
+    }
+    else
+    {
+        // Failed, not enough money
+    }
+};
+
+GlassLab.InventoryMenuSlot.prototype._onPurchaseCanceled = function()
+{
+    if (this.modal)
+    {
+        this.modal.visible = false;
+    }
 };
 
 GlassLab.InventoryMenuSlot.prototype._onDragStop = function(sprite, pointer)
 {
     // Dropped on world
     var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
-    if (tile && tile.canDropFood() && // valid tile
-        GLOBAL.inventoryManager.TrySpendMoney(this.data.cost)) // valid funds
+    if (tile && tile.canDropFood()) // valid tile
     {
             var food = new GlassLab.Food(this.game, this.data.spriteName);
             GLOBAL.foodLayer.add(food.sprite);
             food.placeOnTile(tile);
 
-            this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
+        this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
     }
     else // failed
     {
@@ -72,5 +105,35 @@ GlassLab.InventoryMenuSlot.prototype.SetData = function(data)
 
 GlassLab.InventoryMenuSlot.prototype.Refresh = function()
 {
+    if (this.data.unlocked)
+    {
+        this.costLabel.visible = false;
+        this.loadTexture(this.data.spriteName);
+        this.scale.setTo(.5, .5);
 
+        if (!this.input.draggable)
+        {
+            this.input.enableDrag(false, true);
+
+            this.events.onDragStop.add(this._onDragStop, this);
+        }
+    }
+    else
+    {
+        this.loadTexture("lock");
+        this.scale.setTo(1, 1);
+        this.costLabel.visible = true;
+        this.costLabel.setText("$"+this.data.cost);
+        this.costLabel.x = this.width/2;
+        this.costLabel.y = this.height;
+
+        if (this.input.draggable)
+        {
+            this.input.disableDrag();
+
+            this.events.onDragStop.remove(this._onDragStop, this);
+        }
+    }
+
+    this._signalChange();
 };

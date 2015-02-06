@@ -74,11 +74,21 @@ function getStringColorInfo(string)
         searchString
         colors.add()
     }
+
+    return colors;
 }
 
 GlassLab.OrdersMenu.prototype.Refresh = function()
 {
+    this.descriptionLabel.clearColors();
     this.descriptionLabel.setText(getProcessedString(this.data.description));
+
+    var colors = getStringColorInfo(this.data.description);
+    for (var i=colors.length-1; i >= 0; i++)
+    {
+        var color = colors[i];
+        this.descriptionLabel.addColor(color.color, color.position);
+    }
 };
 
 GlassLab.OrdersMenu.prototype.SetInfo = function(data)

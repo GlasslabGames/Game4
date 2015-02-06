@@ -9,7 +9,7 @@ var GlassLab = GlassLab || {};
  */
 GlassLab.UIGrid = function(game, numColumns, padding, drawBorder)
 {
-    Phaser.Sprite.prototype.constructor.call(this, game);
+    GlassLab.UIElement.prototype.constructor.call(this, game);
 
     this.game = game;
     this.managedChildren = [];
@@ -26,7 +26,7 @@ GlassLab.UIGrid = function(game, numColumns, padding, drawBorder)
 };
 
 // Extends Sprite
-GlassLab.UIGrid.prototype = Object.create(Phaser.Sprite.prototype);
+GlassLab.UIGrid.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIGrid.prototype.constructor = Phaser.UIGrid;
 
 GlassLab.UIGrid.prototype.addManagedChild = function(child, refresh)

@@ -164,6 +164,8 @@ window.onload = function() {
             this.cameraOffset.x = game.camera.width/2;
             this.cameraOffset.y = game.camera.height/2;
         }, centerAnchor);
+        GLOBAL.uiAnchors = {};
+        GLOBAL.uiAnchors.center = centerAnchor;
         uiGroup.add(centerAnchor);
 
         var objectiveLabel = game.make.text(0, -280, "Objective: ", {fill: "#ffffff", font: "20px Arial"});
@@ -203,23 +205,23 @@ window.onload = function() {
         table.fixedToCamera = true;
 
         // pause icon
-        uiElement = game.make.sprite(0, 0, "pauseIcon");
+        var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
         uiElement.scale.setTo(.5, .5);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
         table.addManagedChild(uiElement);
 
-        var zoomBG = game.make.sprite(0, 0, "zoomBG");
+        var zoomBG = new GlassLab.UIElement(game, 0, 0, "zoomBG");
         zoomBG.scale.setTo(.5, .5);
         table.addManagedChild(zoomBG);
-        var uiElement = game.make.sprite(15, 40, "zoomInIcon");
+        uiElement = new GlassLab.UIElement(game, 15, 40, "zoomInIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
             GLOBAL.WorldLayer.scale.x *= 2;
             GLOBAL.WorldLayer.scale.y *= 2;
         }, this);
         zoomBG.addChild(uiElement);
-        uiElement = game.make.sprite(15, 110, "zoomOutIcon");
+        uiElement = new GlassLab.UIElement(game, 15, 110, "zoomOutIcon");
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
             GLOBAL.WorldLayer.scale.x /= 2;
@@ -227,7 +229,7 @@ window.onload = function() {
         }, this);
         zoomBG.addChild(uiElement);
 
-        var fullscreenUIElement = game.make.sprite(0, 0, "fullscreenIcon");
+        var fullscreenUIElement = new GlassLab.UIElement(game, 0, 0, "fullscreenIcon");
         fullscreenUIElement.scale.setTo(.5, .5);
         fullscreenUIElement.inputEnabled = true;
         fullscreenUIElement.events.onInputDown.add(function(){
@@ -252,7 +254,7 @@ window.onload = function() {
         table.y = 30;
         topRightAnchor.addChild(table);
 
-        uiElement = game.make.sprite(0,0, "ordersIcon");
+        uiElement = new GlassLab.UIElement(game, 0,0, "ordersIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         var ordersAlert = game.make.sprite(0,0,"alertIcon");
@@ -275,7 +277,7 @@ window.onload = function() {
         }, uiElement);
         table.addManagedChild(uiElement);
 
-        uiElement = game.make.sprite(0,0, "journalIcon");
+        uiElement = new GlassLab.UIElement(game, 0,0, "journalIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         var journalAlert = game.make.sprite(0,0,"alertIcon");
@@ -306,7 +308,7 @@ window.onload = function() {
         }, bottomRightAnchor);
         uiGroup.add(bottomRightAnchor);
 
-        uiElement = game.make.sprite(-100, -100, "itemsIcon");
+        uiElement = new GlassLab.UIElement(game, -100, -100, "itemsIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){

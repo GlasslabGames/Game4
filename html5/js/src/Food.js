@@ -10,14 +10,26 @@ var GlassLab = GlassLab || {};
 GlassLab.FoodTypes = [
     {
         spriteName: "carrot",
-        unlocked: true,
+        unlocked: false,
         cost: 1,
         hidden: false
     },
     {
-        spriteName: "carrot_eaten",
+        spriteName: "carrot",
         unlocked: false,
         cost: 5,
+        hidden: false
+    },
+    {
+        spriteName: "carrot",
+        unlocked: false,
+        cost: 25,
+        hidden: false
+    },
+    {
+        spriteName: "carrot",
+        unlocked: false,
+        cost: 100,
         hidden: false
     }
 ];

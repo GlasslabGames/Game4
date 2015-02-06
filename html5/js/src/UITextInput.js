@@ -6,7 +6,7 @@ var GlassLab = GlassLab || {};
 
 GlassLab.UITextInput = function(game, inputType)
 {
-    Phaser.Sprite.prototype.constructor.call(this, game);
+    GlassLab.UIElement.prototype.constructor.call(this, game);
     this.game = game;
     this.data = null;
     this.container = this.game.make.group();
@@ -44,8 +44,8 @@ GlassLab.UITextInput = function(game, inputType)
 };
 
 // Extends Sprite
-GlassLab.UITextInput.prototype = Object.create(Phaser.Sprite.prototype);
-GlassLab.UITextInput.prototype.constructor = Phaser.UITextInput;
+GlassLab.UITextInput.prototype = Object.create(GlassLab.UIElement.prototype);
+GlassLab.UITextInput.prototype.constructor = GlassLab.UITextInput;
 
 GlassLab.UITextInput.prototype._onClick = function()
 {
