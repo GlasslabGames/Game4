@@ -39,7 +39,7 @@ GlassLab.CreatureStateEating.prototype.Update = function() {
 GlassLab.CreatureStateEating.prototype._onChomp = function() {
     this.chomped = true;
     this.food.BeEaten();
-    this.creature.ShowHungerBar(true, !this.creature.pen); // if we're in the pen, keep the hunger bar up. Else show it briefly.
+    this.creature.ShowHungerBar(true, this.food.type, !this.creature.pen); // if we're in the pen, keep the hunger bar up. Else show it briefly.
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {

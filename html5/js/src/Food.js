@@ -7,32 +7,34 @@ var GlassLab = GlassLab || {};
 /**
  * FoodType - types of food
  */
-GlassLab.FoodTypes = [
-    {
+GlassLab.FoodTypes = {
+    carrot: {
         spriteName: "carrot",
+        color: 0xe37f54, // associated color for the vomit and the hunger bar
         unlocked: false,
         cost: 1,
         hidden: false
     },
-    {
+    potato: {
         spriteName: "carrot",
+        color: 0x00aaff,
         unlocked: false,
         cost: 5,
         hidden: false
     },
-    {
+    carrot3: {
         spriteName: "carrot",
         unlocked: false,
         cost: 25,
         hidden: false
     },
-    {
+    carrot4: {
         spriteName: "carrot",
         unlocked: false,
         cost: 100,
         hidden: false
     }
-];
+};
 
 /**
  * Food - just a sprite for now

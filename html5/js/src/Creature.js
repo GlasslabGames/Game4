@@ -14,7 +14,7 @@ GlassLab.CreatureManager = function (game) {
     this.creatureList = ["rammus", "rammus2", "unifox"]; // list of creatures in the order they should appear in the journal
     // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
-        rammus: {
+        rammus3: {
             journalInfo: {
                 name: "Rammus Jerkum",
                 temperament: "Combative"
@@ -24,7 +24,7 @@ GlassLab.CreatureManager = function (game) {
             desiredFood: [{type: "carrot", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
-        rammus2: {
+        rammus: {
             journalInfo: {
                 name: "Rammus2",
                 temperament: "Combative"
@@ -111,18 +111,26 @@ GlassLab.Creature = function (game, type, initialStateName) {
 
     this.desiredAmountsOfFood = {};
     this.foodEaten = {};
+    var totalFoodDesired = 0; // count so that we know what percentage of the hunger bar should go to this food
     for (var i = 0, len = info.desiredFood.length; i < len; i++) {
-        this.desiredAmountsOfFood[info.desiredFood[i].type] = info.desiredFood[i].amount;
-        this.foodEaten[info.desiredFood[i].type] = 0;
+        var desiredFood = info.desiredFood[i];
+        this.desiredAmountsOfFood[desiredFood.type] = desiredFood.amount;
+        this.foodEaten[desiredFood.type] = 0;
+        totalFoodDesired += desiredFood.amount;
     }
+    var hungerBarSections = {};
+    for (var type in this.desiredAmountsOfFood) {
+        var foodInfo = GlassLab.FoodTypes[type];
+        hungerBarSections[type] = {percent: this.desiredAmountsOfFood[type] / totalFoodDesired, color: foodInfo.color };
+    };
+    console.log("Hunger bar sections:", hungerBarSections);
+    this.hungerBar = new GlassLab.FillBar(this.game, 500, 100, hungerBarSections);
+    this.sprite.addChild(this.hungerBar.sprite);
+    this.hungerBar.sprite.visible = false;
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen
-
-    this.hungerBar = new GlassLab.FillBar(this.game);
-    this.sprite.addChild(this.hungerBar.sprite);
-    this.hungerBar.sprite.visible = false;
 
     this.shadow = this.game.make.sprite(0, 0, "shadow");
     this.sprite.addChild(this.shadow);
@@ -311,11 +319,10 @@ GlassLab.Creature.prototype.Emote = function (happy) {
     }, this);
 };
 
-GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEating, resetVisibility) {
-    // TODO: adjust bar for 2 kinds of food
-    return;
-    var amountEaten = (currentlyEating) ? this.foodEaten + 1 : this.foodEaten;
-    this.hungerBar.Set(amountEaten / this.desiredAmountOfFood, true, resetVisibility); // true -> animate change
+GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEating, foodType, resetVisibility) {
+    var amountEaten = (currentlyEating) ? this.foodEaten[foodType] + 1 : this.foodEaten[foodType];
+    this.hungerBar.setAmount(foodType, amountEaten / this.desiredAmountsOfFood[foodType], true, resetVisibility); // true -> animate change
+    // TODO: reset visibility isn't working
 };
 
 GlassLab.Creature.prototype.HideHungerBar = function () {

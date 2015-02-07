@@ -29,7 +29,7 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   this.spewed = true;
   var vomit = this.game.make.sprite(-20,-190, "vomit"); //-420,-155
   vomit.anchor.set(1,0);
-  vomit.tint = 0xe37f54; // carrot color - if we don't want it so bright, use 0x9dad62
+  vomit.tint = GlassLab.FoodTypes[this.food.type].color;
   GLOBAL.effectLayer.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
   vomit.scale.setTo(this.creature.sprite.scale.x, this.creature.sprite.scale.y);
   vomit.x = this.creature.sprite.x;
