@@ -14,7 +14,7 @@ GlassLab.CreatureManager = function (game) {
     this.creatureList = ["rammus", "rammus2", "unifox"]; // list of creatures in the order they should appear in the journal
     // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
-        rammus3: {
+        rammus: {
             journalInfo: {
                 name: "Rammus Jerkum",
                 temperament: "Combative"
@@ -24,7 +24,7 @@ GlassLab.CreatureManager = function (game) {
             desiredFood: [{type: "carrot", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
-        rammus: {
+        rammus2: {
             journalInfo: {
                 name: "Rammus2",
                 temperament: "Combative"
@@ -32,7 +32,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
             spriteTint: 0xaaaaff, // for testing
-            desiredFood: [{type: "carrot", amount: 3}, {type: "potato", amount: 2}],
+            desiredFood: [{type: "carrot", amount: 2}, {type: "potato", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         unifox: {
@@ -298,7 +298,14 @@ GlassLab.Creature.prototype.FinishEating = function (satisfied) {
 
 GlassLab.Creature.prototype.resetFoodEaten = function () {
     for (var key in this.foodEaten) this.foodEaten[key] = 0;
-    this.hungerBar.amount = 0; // TODO: fix for new hunger bar
+    this.hungerBar.reset();
+};
+
+GlassLab.Creature.prototype.getIsSatisfied = function () {
+    for (var key in this.foodEaten) {
+        if (this.foodEaten[key] < this.desiredAmountsOfFood[key]) return false;
+    }
+    return true;
 };
 
 GlassLab.Creature.prototype.Emote = function (happy) {
@@ -319,10 +326,10 @@ GlassLab.Creature.prototype.Emote = function (happy) {
     }, this);
 };
 
-GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEating, foodType, resetVisibility) {
+GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEating, foodType, hideAfter) {
     var amountEaten = (currentlyEating) ? this.foodEaten[foodType] + 1 : this.foodEaten[foodType];
-    this.hungerBar.setAmount(foodType, amountEaten / this.desiredAmountsOfFood[foodType], true, resetVisibility); // true -> animate change
-    // TODO: reset visibility isn't working
+    console.log("Show hunger bar", foodType, this.foodEaten, this.desiredAmountsOfFood);
+    this.hungerBar.setAmount(foodType, amountEaten / this.desiredAmountsOfFood[foodType], true, hideAfter); // true -> animate change
 };
 
 GlassLab.Creature.prototype.HideHungerBar = function () {

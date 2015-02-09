@@ -14,18 +14,18 @@ GlassLab.LevelManager = function(game)
         this.currentLevel = parseInt(queryLevel)-2;
     }
     this.levels = [];
-/* TESTING 2-section pen
-  var level4 = this._addLevelData(new GlassLab.Level());
-  level4.data = {
+
+  this._addLevelData(new GlassLab.Level()).data = {
     pens: [
-      {type: "rammus", height: 3, foodAWidth: 2, foodBWidth:2, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+      {type: "rammus2", height: 3, foodAWidth: 2, foodBWidth:2, foodTypes: ["carrot", "potato"],
+          bottomDraggable: true, leftDraggable: true, topDraggable: true}
     ],
     looseCreatures: {
-      rammus: 6
+      rammus2: 6
     },
     objective: "Feed as many rams as you can!"
   };
-*/
+
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
       pens: [
@@ -116,10 +116,9 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             var penData = data.pens[i];
             var widths = [(penData.creatureWidth || 1), (penData.foodWidth || penData.foodAWidth || 1)];
             if (penData.foodBWidth) widths.push(penData.foodBWidth);
-            console.log(widths);
-            var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.height || 1),
-              widths, penData.autoFill);
-            pen.creatureType = penData.type;
+
+            var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.type || "rammus"),
+                (penData.foodTypes || "carrot"), (penData.height || 1), widths, penData.autoFill);
             // set which edges are adjustable here (defaults to the right side only)
             if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left, true);
             if (penData.bottomDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.bottom, true);

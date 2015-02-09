@@ -15,7 +15,6 @@ GlassLab.CreatureStateTraveling.constructor = GlassLab.CreatureStateTraveling;
 
 GlassLab.CreatureStateTraveling.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  console.log("enter creature traveling state, adding event");
   this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
   this.creature.draggable = true;
   //this.wayPoint = this.creature.getTile();
@@ -26,7 +25,6 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
   GlassLab.CreatureState.prototype.Exit.call(this);
   this.creature.StopAnim();
   if (this.wayPoint && this.wayPoint != this.creature.prevTile) this.wayPoint.onCreatureExit(this.creature); // make sure that tile stops thinking we're entering it
-  console.log("exit creature traveling state, detaching event");
   if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
 };
 

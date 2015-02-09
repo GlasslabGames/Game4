@@ -47,11 +47,9 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
     if (!this.chomped) this._onChomp();
 
     this.creature.foodEaten[this.food.type] ++;
-    var hungerRemaining = this.creature.desiredAmountsOfFood[this.food.type] - this.creature.foodEaten[this.food.type];
-    console.log("hunger remaining: ", hungerRemaining);
 
     // Choose which state to go to based on the situation...
-    if (hungerRemaining < 0) {
+    if (this.creature.foodEaten[this.food.type] > this.creature.desiredAmountsOfFood[this.food.type]) {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
     } else if (this.food.pen) { // continue to the next part of the pen
         var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
@@ -60,7 +58,7 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
         } else { // there's no more food
             // end the level hungry or satisfied
             this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
-            if (!hungerRemaining) this.creature.FinishEating(true);
+            if (this.creature.getIsSatisfied()) this.creature.FinishEating(true);
             else {
                 console.log(this.creature.print(),"is hungry but has no more food to target (in StopEating.) Eaten:",
                     this.creature.foodEaten[this.food.type], "Desired:",this.creature.desiredAmountsOfFood[this.food.type]);
@@ -68,7 +66,7 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
             }
         }
     } else { // eating outside of pen, so just continue to the next target or go to idle
-        if (!hungerRemaining) this.creature.Emote(true);
+        if (this.creature.getIsSatisfied()) this.creature.Emote(true);
         this.creature._onTargetsChanged();
     }
 };

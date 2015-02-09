@@ -38,14 +38,19 @@ GlassLab.FillBar = function(game, width, height, sections) {
     }
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
+    this.sprite.events.onDestroy.add(this._onDestroy, this);
 };
 
 GlassLab.FillBar.GOOD_COLOR = 0x3bb44a;
 GlassLab.FillBar.BAD_COLOR = 0xc0272d;
 
+GlassLab.FillBar.prototype._onDestroy = function () {
+    if (this.updateHandler) this.updateHandler.detach();
+};
+
 // Set the nth section of the fill bar to this amount (clamped to 0-1). If animate is true, it will gradually change.
 GlassLab.FillBar.prototype.setAmount = function(key, amount, animate, hideAfter) {
-    this.hideAfter = this.hideAfter;
+    this.hideAfter = hideAfter;
     amount = Math.max(amount, 0); // clamp to 0, but keep the amount the same if it's higher since we change the color later
     var section = this.sections[key];
     if (animate) {
@@ -62,6 +67,14 @@ GlassLab.FillBar.prototype.setAmount = function(key, amount, animate, hideAfter)
 
 GlassLab.FillBar.prototype.show = function(show) {
     this.sprite.visible = show;
+};
+
+GlassLab.FillBar.prototype.reset = function() {
+    for (var key in this.sections) {
+        this.sections[key].amount = 0;
+        this.sections[key].targetAmount = -1;
+        this.sections[key].dAmount = 0;
+    }
 };
 
 GlassLab.FillBar.prototype._onFinishAnim = function() {

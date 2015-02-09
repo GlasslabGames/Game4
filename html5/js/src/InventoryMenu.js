@@ -26,10 +26,10 @@ GlassLab.InventoryMenu = function(game)
 
     for (var key in GlassLab.FoodTypes)
     {
-        var foodType = GlassLab.FoodTypes[key];
-        if (!foodType.hidden)
+        var foodInfo = GlassLab.FoodTypes[key];
+        if (!foodInfo.hidden)
         {
-            var child = new GlassLab.InventoryMenuSlot(game, foodType);
+            var child = new GlassLab.InventoryMenuSlot(game, key);
             this.itemTable.addManagedChild(child);
         }
     }

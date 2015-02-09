@@ -4,9 +4,10 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.InventoryMenuSlot = function(game, foodData)
+GlassLab.InventoryMenuSlot = function(game, foodType)
 {
-    this.data = foodData;
+    this.foodType = foodType;
+    this.data = GlassLab.FoodTypes[foodType];
     GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0);
 
     this.anchor.setTo(0, 0);
@@ -78,7 +79,7 @@ GlassLab.InventoryMenuSlot.prototype._onDragStop = function(sprite, pointer)
     var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
     if (tile && tile.canDropFood()) // valid tile
     {
-            var food = new GlassLab.Food(this.game, this.data.spriteName);
+            var food = new GlassLab.Food(this.game, this.foodType);
             GLOBAL.foodLayer.add(food.sprite);
             food.placeOnTile(tile);
 
