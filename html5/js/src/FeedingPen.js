@@ -174,17 +174,17 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     this.feeding = true;
     this.button.visible = false;
     this.SetDraggableOnly(); // make all edges undraggable
+    for (var i = 0; i < this.rightEdges.length - 1; i++) {
+        this.rightEdges[i].sprite.parent.removeChild( this.rightEdges[i].sprite ); // hide the middle fences
+    }
 
     // Start creatures moving and assign food to the creature that should eat it
     var foods = [];
     for (var i = 0; i < this.foodLists.length; i++) {
         foods = foods.concat(this.foodLists[i]);
     }
-    console.log(foods);
     var foodByRow = this._sortObjectsByGrid(foods, false /*, -this.leftWidth*/);
     var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
-    console.log("food", foodByRow);
-    console.log("creatures", creaturesByRow);
 
     for (var row = 0; row < foodByRow.length; row++) {
         var creatureRow = creaturesByRow[row];

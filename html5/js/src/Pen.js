@@ -331,7 +331,7 @@ GlassLab.Edge.prototype._highlight = function(on) {
   for (var i = 0; i < this.sprite.children.length; i++) {
     this.sprite.children[i].tint = (on)? 0xeebbff : 0xffffff;
   }
-}
+};
 
 GlassLab.Edge.prototype._onUpdate = function() {
   if (this.dragging) {

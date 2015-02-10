@@ -15,17 +15,6 @@ GlassLab.LevelManager = function(game)
     }
     this.levels = [];
 
-  this._addLevelData(new GlassLab.Level()).data = {
-    pens: [
-      {type: "rammus2", height: 3, foodAWidth: 2, foodBWidth:2, foodTypes: ["carrot", "potato"],
-          bottomDraggable: true, leftDraggable: true, topDraggable: true}
-    ],
-    looseCreatures: {
-      rammus2: 6
-    },
-    objective: "Feed as many rams as you can!"
-  };
-
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
       pens: [
@@ -83,6 +72,17 @@ GlassLab.LevelManager = function(game)
         rammus: 0
       },
         objective: "Fill an order!"
+    };
+
+    this._addLevelData(new GlassLab.Level()).data = {
+        pens: [
+            {type: "rammus2", height: 3, foodAWidth: 2, foodBWidth:2, foodTypes: ["carrot", "potato"],
+                bottomDraggable: true, leftDraggable: true, topDraggable: true}
+        ],
+        looseCreatures: {
+            rammus2: 6
+        },
+        objective: "Feed the rams with 2 kinds of food!"
     };
 
     var level4 = this._addLevelData(new GlassLab.Level());

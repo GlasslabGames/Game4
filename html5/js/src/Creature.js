@@ -26,12 +26,12 @@ GlassLab.CreatureManager = function (game) {
         },
         rammus2: {
             journalInfo: {
-                name: "Rammus2",
-                temperament: "Combative"
+                name: "Aqua Rammus",
+                temperament: "Chill"
             },
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
-            spriteTint: 0xaaaaff, // for testing
+            spriteTint: 0xcceeff, // for testing
             desiredFood: [{type: "carrot", amount: 2}, {type: "potato", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
@@ -145,6 +145,7 @@ GlassLab.Creature = function (game, type, initialStateName) {
         animSprite.animations.add('anim'); // this animation uses the whole spritesheet
         this.sprite.addChild(animSprite);
         animSprite.visible = false;
+        animSprite.tint = info.spriteTint || 0xffffff; // temporary way to distinguish creatures
         this.animSprites[animNames[i]] = animSprite;
     }
 
@@ -328,7 +329,6 @@ GlassLab.Creature.prototype.Emote = function (happy) {
 
 GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEating, foodType, hideAfter) {
     var amountEaten = (currentlyEating) ? this.foodEaten[foodType] + 1 : this.foodEaten[foodType];
-    console.log("Show hunger bar", foodType, this.foodEaten, this.desiredAmountsOfFood);
     this.hungerBar.setAmount(foodType, amountEaten / this.desiredAmountsOfFood[foodType], true, hideAfter); // true -> animate change
 };
 
