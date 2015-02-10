@@ -7,38 +7,42 @@ var GlassLab = GlassLab || {};
 /**
  * FoodType - types of food
  */
-GlassLab.FoodTypes = [
-    {
+GlassLab.FoodTypes = {
+    carrot: {
         spriteName: "carrot",
-        unlocked: false,
+        color: 0xe37f54, // associated color for the vomit and the hunger bar
+        unlocked: true,
         cost: 1,
         hidden: false
     },
-    {
-        spriteName: "carrot",
-        unlocked: false,
+    potato: {
+        spriteName: "carrot2",
+        color: 0x00aaff,
+        unlocked: true,
         cost: 5,
         hidden: false
     },
-    {
+    carrot3: {
         spriteName: "carrot",
         unlocked: false,
         cost: 25,
         hidden: false
     },
-    {
+    carrot4: {
         spriteName: "carrot",
         unlocked: false,
         cost: 100,
         hidden: false
     }
-];
+};
 
 /**
  * Food - just a sprite for now
  */
-GlassLab.Food = function(game, spriteName) {
-    this.sprite = game.make.isoSprite(0,0,0, spriteName+"_eaten");
+GlassLab.Food = function(game, type) {
+    this.type = type;
+    this.info = GlassLab.FoodTypes[type];
+    this.sprite = game.make.isoSprite(0,0,0, this.info.spriteName+"_eaten"); // we start with this animation but don't play it until it gets eaten
     this.sprite.animations.add('anim');
 
     this.sprite.scale.x = this.sprite.scale.y = 0.3;
