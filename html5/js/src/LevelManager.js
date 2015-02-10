@@ -63,7 +63,7 @@ GlassLab.LevelManager = function(game)
               company: "Baaa",
               numCreatures: 1,
               type: "rammus",
-              description: "Dear Friend! My island has 1 RAM. I have heard you know HOW MANY CARROTS I need IT. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+              description: "Dear Friend! My island has 1 RAM. I have heard you know HOW MANY CARROTS I need FOR IT. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
               fulfilled: false,
               reward: -5
           }
@@ -118,7 +118,6 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
               var creature = new GlassLab.Creature(this.game, type);
               GLOBAL.creatureLayer.add(creature.sprite);
               creature.moveToRandomTile();
-              console.log("calling targets changed from levelM")
               creature._onTargetsChanged();
             }
           }

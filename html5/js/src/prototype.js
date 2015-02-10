@@ -375,6 +375,9 @@ window.onload = function() {
         GLOBAL.levelManager.LoadNextLevel(); // Load first level
 
         game.time.events.start();
+
+        GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
+        GLOBAL.questManager.gogogogogo();
     }
 
     function onEnterFullScreen() {
