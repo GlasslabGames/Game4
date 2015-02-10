@@ -31,7 +31,9 @@ window.onload = function() {
         game.load.image('shadow', 'assets/images/iso_shadow.png');
 
         game.load.image('carrot', 'assets/images/isoCarrot.png');
+        game.load.image('carrot2', 'assets/images/isoCarrot2.png');
         game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
+        game.load.atlasJSONHash('carrot2_eaten', 'assets/images/carrot2_death_vfx.png', 'assets/images/carrot_death_vfx.json');
         game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
         game.load.image('penBg', 'assets/images/dirtTile1_top.png');
@@ -373,6 +375,7 @@ window.onload = function() {
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
         GLOBAL.levelManager.LoadNextLevel(); // Load first level
+        //var pen = new GlassLab.Pen(game, GLOBAL.penLayer, 3, [1,2,3]);
 
         game.time.events.start();
 

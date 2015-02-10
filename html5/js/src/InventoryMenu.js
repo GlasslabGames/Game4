@@ -24,12 +24,12 @@ GlassLab.InventoryMenu = function(game)
     this.itemTable = new GlassLab.UITable(game, 5000, 5);
     this.addChild(this.itemTable);
 
-    for (var i=0; i < GlassLab.FoodTypes.length; i++)
+    for (var key in GlassLab.FoodTypes)
     {
-        var foodType = GlassLab.FoodTypes[i];
-        if (!foodType.hidden)
+        var foodInfo = GlassLab.FoodTypes[key];
+        if (!foodInfo.hidden)
         {
-            var child = new GlassLab.InventoryMenuSlot(game, foodType);
+            var child = new GlassLab.InventoryMenuSlot(game, key);
             this.itemTable.addManagedChild(child);
         }
     }
