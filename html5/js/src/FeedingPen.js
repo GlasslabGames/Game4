@@ -6,19 +6,13 @@
  * Feeding Pen - holds animals on the left and food on the right
  */
 GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFill) {
-    this.foodLists = []; // list of food objects, divided by type
+    this.foodLists = []; // list of food objects, divided by section
     this.creatures = [];
     this.foodByRow = [];
     this.feeding = false;
 
     this.creatureType = creatureType;
-    this.foodTypes = [];
-    if (creatureType) {
-        var creatureInfo = GLOBAL.creatureManager.GetCreatureData(creatureType);
-        for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
-            this.foodTypes.push(creatureInfo.desiredFood[i].type);
-        }
-    }
+    this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
 
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
     this.allowFeedButton = true;
@@ -51,9 +45,15 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 
     var startCol = this.widths[0];
     for (var i = 0, len = this.foodTypes.length; i < len; i++) {
-        if (this.foodLists.length <= i) this.foodLists.push([]);
+        if (!this.foodTypes[i] || !GlassLab.FoodTypes[this.foodTypes[i]]) {
+            startCol += this.widths[i+1]; // go to the next section
+            continue; // don't fill anything in
+        }
+        while (this.foodLists.length <= i) this.foodLists.push([]);
         var maxFood = (this.numFoods)? this.numFoods[i] : null;
-        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], maxFood, startCol, startCol += this.widths[i+1]);
+        var spriteName = GlassLab.FoodTypes[this.foodTypes[i]].spriteName + "_eaten"; // this is a little hacky... maybe Food should have SetSpriteName() instead
+        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], maxFood,
+            startCol, startCol += this.widths[i+1], false, spriteName);
     }
 
     if (this.autoFill) {
@@ -119,15 +119,11 @@ GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5;
  but won't be correct) looks better. If we allow 7 creatures to be split into 2 cols, we have to make sure that
  7:14 still works since it's actually a (possible) correct solution.
  */
-GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, numFoods, condenseToMultipleRows) {
+GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, condenseToMultipleRows) {
     this.SetDraggableOnly(); // don't allow them to adjust the pen
 
     this.creatureType = creatureType;
-    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(creatureType);
-    this.foodTypes = [];
-    for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
-        this.foodTypes.push(creatureInfo.desiredFood[i].type);
-    }
+    this.foodTypes = foodTypes;
 
     this.numCreatures = numCreatures;
     this.numFoods = numFoods; // should be an array
@@ -156,7 +152,7 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.Resize();
 };
 
-GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount, startCol, endCol, fromRight) {
+GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount, startCol, endCol, fromRight, targetSpriteName) {
     var unusedObjects = list.slice(); // if we didn't provide a list of unused objects, copy the whole list instead
     var count = 0;
 
@@ -168,6 +164,7 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount
                 this.objectRoot.addChild(obj.sprite);
                 list.push(obj);
             }
+            if (targetSpriteName && obj.sprite.spriteName != targetSpriteName) obj.sprite.loadTexture(targetSpriteName);
             obj.sprite.visible = true;
             obj.sprite.isoX = (fromRight? endCol - col - 1 : col) * GLOBAL.tileSize;
             obj.sprite.isoY = row * GLOBAL.tileSize;
@@ -295,7 +292,6 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
 };
 
 GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
-    console.log("on creature removed");
     var index = this.creatures.indexOf(creature);
     if (index > -1) this.creatures.splice(index, 1);
     this._onCreatureContentsChanged();
@@ -304,8 +300,23 @@ GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
 
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
-    var numCreatures = this.creatures.length;
-    if (this.button) this.button.visible = this.allowFeedButton && (numCreatures >= this.widths[0] * this.height);
+    this._refreshFeedButton();
+};
+
+GlassLab.FeedingPen.prototype._refreshFeedButton = function() {
+    if (!this.button) return;
+
+    var ok = this.allowFeedButton && (this.creatures.length >= this.widths[0] * this.height) &&
+        this.foodTypes.length == this.widths.length-1;
+    if (ok) { // check that each section has a type of food assigned
+        for (var i = 0; i < this.foodTypes.length; i++) {
+            if (!GlassLab.FoodTypes[this.foodTypes[i]]) { // this is not a valid kind of food
+                ok = false;
+                break;
+            }
+        }
+    }
+    this.button.visible = ok;
 };
 
 GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
@@ -340,4 +351,16 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
         }
     }, this);
 
+};
+
+GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
+    if (this.autoFill || this.feeding) return false;
+
+    var section = this._getSection(tile);
+    if (section < 1) return false;
+
+    while (this.foodTypes.length < section-1) this.foodTypes.push(null);
+    this.foodTypes[section - 1] = foodType;
+    this.Resize();
+    this._refreshFeedButton();
 };

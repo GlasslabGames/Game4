@@ -89,11 +89,11 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function() {
         {
             // Make a pen with the correct number of sections for the number of food types we have
             var widths = [1];
-            for (var j = 0; j < this.numFoodTypes; j++) widths.push(1);
+            for (var j = 0; j < this.foodTypes.length; j++) widths.push(1);
             this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
             this.pen.allowFeedButton = false;
         }
-        this.pen.SetContents(this.data.type, this.data.numCreatures, response);
+        this.pen.SetContents(this.data.type, this.data.numCreatures, this.foodTypes, response);
     }
 };
 
@@ -153,14 +153,20 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
 
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.type).desiredFood;
 
-    if (desiredFood.length != this.numFoodTypes && this.pen) { // destroy the pen so we can make a new one with the right # of sections
-        this.pen.sprite.destroy();
-        this.pen = null;
+    if (this.pen) {
+        if (desiredFood.length != this.foodTypes.length) { // destroy the pen so we can make a new one with the right # of sections
+            this.pen.sprite.destroy();
+            this.pen = null;
+        }
     }
-    this.numFoodTypes = desiredFood.length;
+
+    this.foodTypes = [];
+    for (var j = 0; j < desiredFood.length; j++) {
+        this.foodTypes.push( desiredFood[j].type );
+    }
 
     for (var i = 0; i < this.answerInputs.length; i++) {
-        var visible = i < this.numFoodTypes;
+        var visible = i < this.foodTypes.length;
         // Hide or show all the parts of the answer input
         for (var key in this.answerInputs[i]) {
             this.answerInputs[i][key].visible = visible;

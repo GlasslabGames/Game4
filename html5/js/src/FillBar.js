@@ -65,6 +65,14 @@ GlassLab.FillBar.prototype.setAmount = function(key, amount, animate, hideAfter)
     }
 };
 
+// turns the whole bar red. Currently unused. The bar should disappear after a bit, maybe.
+GlassLab.FillBar.prototype.showError = function() {
+    this.show(true);
+    for (var key in this.sections) {
+        this.setAmount(key, 2, false);
+    }
+};
+
 GlassLab.FillBar.prototype.show = function(show) {
     this.sprite.visible = show;
 };

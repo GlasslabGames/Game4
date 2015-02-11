@@ -152,7 +152,6 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
             } else text.text = "???";
         }
 
-        console.log(creatureData.discoveredFoodCounts[numCreatures]);
         if (creatureData.discoveredFoodCounts[numCreatures] == "new") {
             var alertY = this.foodLogGrid.y + this.foodLogGrid.rowHeight * (i + 0.5);
             this._addAlert(800, alertY); // FIXME: the alert isn't showing up...

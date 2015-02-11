@@ -16,7 +16,7 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
-    console.log("Eating food. In pen?",this.food.pen);
+    //console.log("Eating food. In pen?",this.food.pen);
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.anim = this.creature.PlayAnim("eat", false, 24);
     this.chomped = false;
@@ -43,17 +43,17 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
-    console.log("Finished eating anim");
     if (!this.chomped) this._onChomp();
 
     this.creature.foodEaten[this.food.type] ++;
+    var desiredAmount = this.creature.desiredAmountsOfFood[this.food.type] || 0;
 
     // Choose which state to go to based on the situation...
-    if (this.creature.foodEaten[this.food.type] > this.creature.desiredAmountsOfFood[this.food.type]) {
+    if (this.creature.foodEaten[this.food.type] > desiredAmount) {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
     } else if (this.food.pen) { // continue to the next part of the pen
         var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
-        if (food) {
+        if (food && this.creature.desiredAmountsOfFood[food.type]) {
             this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
         } else { // there's no more food
             // end the level hungry or satisfied
