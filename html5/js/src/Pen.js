@@ -215,6 +215,20 @@ GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
     if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return false;
     var leftSide = originTile.col + (leftOnly? this.widths[0] : this.getFullWidth());
     return tile.col < leftSide;
+    // This functionality could be replaced with _getSection
+};
+
+// Returns the index of the section that this tile is in, or -1 if it's not in the tile
+GlassLab.Pen.prototype._getSection = function(tile) {
+    if (!tile) return -1;
+    var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return -1;
+    var targetCol = originTile.col;
+    for (var i = 0; i < this.widths.length; i++) {
+        targetCol += this.widths[i];
+        if (tile.col < targetCol) return i;
+    }
+    return -1; // off the right side
 };
 
 

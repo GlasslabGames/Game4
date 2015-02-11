@@ -77,16 +77,16 @@ GlassLab.InventoryMenuSlot.prototype._onDragStop = function(sprite, pointer)
 {
     // Dropped on world
     var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
-    if (tile && tile.canDropFood()) // valid tile
-    {
+    if (tile && tile.canDropFood()) { // valid tile
             var food = new GlassLab.Food(this.game, this.foodType);
             GLOBAL.foodLayer.add(food.sprite);
             food.placeOnTile(tile);
 
         this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
     }
-    else // failed
-    {
+    else  if (tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {
+        this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
+    } else {// failed
         if (!this.returnTween)
         {
             this.returnTween = this.game.add.tween(this).to( {x: this._dragStartLocation.x, y: this._dragStartLocation.y}, 500, Phaser.Easing.Cubic.Out, true);

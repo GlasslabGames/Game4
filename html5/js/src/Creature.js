@@ -337,7 +337,6 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
 
 GlassLab.Creature.prototype._onTargetsChanged = function () {
     var targets = GLOBAL.tileManager.getTargets(this);
-    console.log(this.print(), targets);
     var minDist = null, bestTarget; // target is a tile
     for (var i = 0, len = targets.length; i < len; i++) {
         var distSqr = Math.pow((this.sprite.isoX - targets[i].isoX), 2) + Math.pow((this.sprite.isoY - targets[i].isoY), 2);
