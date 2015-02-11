@@ -36,11 +36,7 @@ GlassLab.UITextInput = function(game, inputType)
     this.clickHereLabel.alpha = .5;
     this.textLabel.addChild(this.clickHereLabel);
 
-    this.hasFocus = false;
-
     this.events.onTextChange = new Phaser.Signal();
-
-    game.input.keyboard.addCallbacks(this, this._onKeyDown, null, null);
 };
 
 // Extends Sprite
@@ -65,16 +61,16 @@ GlassLab.UITextInput.prototype._onGlobalClick = function(pointer, DOMevent)
     }
 };
 
+GlassLab.UITextInput.prototype._blinkCursor = function(positionOnly) {
+    this.textCursor.visible = !this.textCursor.visible;
+    if (this.textCursor.visible) this._updateCursor();
+};
+
 GlassLab.UITextInput.prototype._updateCursor = function()
 {
-    if (!this.textCursor.visible)
-    {
-        var localBounds = this.textLabel.getLocalBounds();
-        this.textCursor.x = localBounds.width+20; // TODO: HACK
-        this.textCursor.y = localBounds.height;
-    }
-
-    this.textCursor.visible = !this.textCursor.visible;
+    var localBounds = this.textLabel.getLocalBounds();
+    this.textCursor.x = localBounds.width+20; // TODO: HACK
+    this.textCursor.y = localBounds.height;
 };
 
 GlassLab.UITextInput.prototype.SetInputLimit = function(int)
@@ -82,39 +78,25 @@ GlassLab.UITextInput.prototype.SetInputLimit = function(int)
     this.inputLimit = int;
 };
 
-GlassLab.UITextInput.prototype.SetFocus = function(onOrOff)
+GlassLab.UITextInput.prototype._onFocusChanged = function()
 {
-    if (this.hasFocus != onOrOff)
-    {
-        if (onOrOff)
-        {
-            GLOBAL.KeyboardFocusItem = this;
-
-            this.clickHereLabel.visible = false;
-
-            this.textCursorUpdateTimer = this.game.time.events.loop(500, this._updateCursor, this);
-            this.game.input.onDown.add(this._onGlobalClick, this); // Global input down handler
-        }
-        else
-        {
-            this.game.input.onDown.remove(this._onGlobalClick, this); // Global input down handler
-
-            GLOBAL.KeyboardFocusItem = this;
-
-            this.game.time.events.remove(this.textCursorUpdateTimer);
-
-            this.textCursor.visible = false;
-
-            this.clickHereLabel.visible = !(this.textLabel.text && this.textLabel.text != "" && this.textLabel.text != " ");
-        }
-
-        this.hasFocus = onOrOff;
+    if (this.hasFocus) {
+        this.clickHereLabel.visible = false;
+        this.textCursorUpdateTimer = this.game.time.events.loop(500, this._blinkCursor, this);
+        this.game.input.onDown.add(this._onGlobalClick, this); // Global input down handler
+        this.game.input.keyboard.addCallbacks(this, this._onKeyDown); // note, there can only be one onDownCallback at a time
+    } else {
+        this.game.input.onDown.remove(this._onGlobalClick, this); // Global input down handler
+        if (this.game.input.keyboard.onDownCallback == this._onKeyDown) this.game.input.keyboard.onDownCallback = null;
+        this.game.time.events.remove(this.textCursorUpdateTimer);
+        this.textCursor.visible = false;
+        this.clickHereLabel.visible = !(this.textLabel.text && this.textLabel.text != "" && this.textLabel.text != " ");
     }
 };
 
 GlassLab.UITextInput.prototype._onKeyDown = function(e)
 {
-    if (GLOBAL.KeyboardFocusItem == this)
+    if (this.hasFocus)
     {
         if (e.keyCode == 8) // backspace
         {
@@ -136,10 +118,11 @@ GlassLab.UITextInput.prototype._onKeyDown = function(e)
             }
             else if (e.keyCode >= 96 && e.keyCode <= 105) // 0-9 (keypad)
             {
-                e.keyCode -= 48
+                e.keyCode -= 48;
                 this._addCharFromKeyboardEvent(e);
             }
         }
+        this._updateCursor(); // immediately update the cursor position
     }
 };
 

@@ -207,6 +207,17 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, onLeft) {
   tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far
 };
 
+
+GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
+    if (!tile) return false;
+    var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    //console.log(tile.col, tile.row, originCol, originRow, this.leftWidth, this.height);
+    if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return false;
+    var leftSide = originTile.col + (leftOnly? this.widths[0] : this.getFullWidth());
+    return tile.col < leftSide;
+};
+
+
 /**
  * Edge - represents the edge of a pen, made up of multiple sprites
  */
@@ -391,12 +402,4 @@ GlassLab.Edge.prototype._onUpdate = function() {
 
     // TODO: it would be nice to redraw the contents before the edge is dropped, but it's causing issues
   }
-};
-
-GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
-  var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
-  //console.log(tile.col, tile.row, originCol, originRow, this.leftWidth, this.height);
-  if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return false;
-  var leftSide = originTile.col + (leftOnly? this.widths[0] : this.getFullWidth());
-  return tile.col < leftSide;
 };
