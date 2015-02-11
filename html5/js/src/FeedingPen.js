@@ -5,15 +5,20 @@
 /**
  * Feeding Pen - holds animals on the left and food on the right
  */
-GlassLab.FeedingPen = function(game, layer, creatureType, foodTypes, height, widths, autoFill) {
+GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFill) {
     this.foodLists = []; // list of food objects, divided by type
     this.creatures = [];
     this.foodByRow = [];
     this.feeding = false;
 
     this.creatureType = creatureType;
-    this.foodTypes = [].concat(foodTypes); // make sure it's now an array if it was just a value
-    console.log(this.foodTypes);
+    this.foodTypes = [];
+    if (creatureType) {
+        var creatureInfo = GLOBAL.creatureManager.GetCreatureData(creatureType);
+        for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
+            this.foodTypes.push(creatureInfo.desiredFood[i].type);
+        }
+    }
 
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
     this.allowFeedButton = true;
@@ -47,7 +52,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     var startCol = this.widths[0];
     for (var i = 0, len = this.foodTypes.length; i < len; i++) {
         if (this.foodLists.length <= i) this.foodLists.push([]);
-        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], this.numFood, startCol, startCol += this.widths[i+1]);
+        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], this.numFoods[i], startCol, startCol += this.widths[i+1]);
     }
 
     if (this.autoFill) {
@@ -70,8 +75,13 @@ GlassLab.FeedingPen.prototype.Resize = function() {
         }
     }
 
-    if (this.numFood && this.numCreatures) {
-        this.ratioLabel.text = this.numCreatures + " : " + this.numFood;
+    // If we've set a specific number of food & creatures, use that instead of the default which was set in Pen
+    // But it would be better to rewrite the Pen one to count the number of food / creatures currently in the pen.
+    if (this.numFoods && this.numCreatures) {
+        this.ratioLabel.text = this.numCreatures;
+        for (var i = 0; i < this.numFoods.length; i++) {
+            this.ratioLabel.text += " : " + this.numFoods[i];
+        }
     }
 
     this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
@@ -108,11 +118,18 @@ GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5;
  but won't be correct) looks better. If we allow 7 creatures to be split into 2 cols, we have to make sure that
  7:14 still works since it's actually a (possible) correct solution.
  */
-GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood, condenseToMultipleRows) {
+GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, numFoods, condenseToMultipleRows) {
     this.SetDraggableOnly(); // don't allow them to adjust the pen
 
+    this.creatureType = creatureType;
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(creatureType);
+    this.foodTypes = [];
+    for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
+        this.foodTypes.push(creatureInfo.desiredFood[i].type);
+    }
+
     this.numCreatures = numCreatures;
-    this.numFood = numFood;
+    this.numFoods = numFoods; // should be an array
     this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
     if (!condenseToMultipleRows) {
@@ -132,8 +149,9 @@ GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood, cond
         }
     }
 
-    this.widths[1] = Math.ceil(numFood / this.height);
-    console.log(this.height, this.widths);
+    for (var j = 0; j < this.numFoods.length; j++) {
+        this.widths[j+1] = Math.ceil(this.numFoods[j] / this.height);
+    }
     this.Resize();
 };
 
@@ -169,7 +187,6 @@ GlassLab.FeedingPen.prototype._onUpdate = function() {
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
-    console.log("Start feeding");
     this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
     this.feeding = true;
     this.button.visible = false;

@@ -12,5 +12,6 @@ GlassLab.SignalManager = {
     levelWon: new Phaser.Signal(),
     levelLost: new Phaser.Signal(),
     creatureTargetsChanged: new Phaser.Signal(),
-    moneyChanged: new Phaser.Signal()
+    moneyChanged: new Phaser.Signal(),
+    uiFocusChanged: new Phaser.Signal()
 };

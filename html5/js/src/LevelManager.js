@@ -75,14 +75,40 @@ GlassLab.LevelManager = function(game)
     };
 
     this._addLevelData(new GlassLab.Level()).data = {
+        objective: "Feed the rams with multiple kinds of food!",
         pens: [
-            {type: "rammus2", height: 3, foodAWidth: 2, foodBWidth:2, foodTypes: ["carrot", "potato"],
-                bottomDraggable: true, leftDraggable: true, topDraggable: true}
+            {
+                type: "rammus2", height: 1, foodAWidth: 1, foodBWidth: 1,
+                bottomDraggable: true, leftDraggable: true, topDraggable: true
+            }
         ],
         looseCreatures: {
             rammus2: 6
-        },
-        objective: "Feed the rams with 2 kinds of food!"
+        }
+    };
+
+    this._addLevelData(new GlassLab.Level()).data = {
+        objective: "Fill an order!",
+        orders: [
+            {
+                client: "Archibold Huxley III",
+                company: "Rupture Farms",
+                numCreatures: 5,
+                type: "rammus2",
+                description: "Dear Friend! I want 7 AQUA RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+                fulfilled: false,
+                reward: 200
+            },
+            {
+                client: "Archibold Huxley III",
+                company: "Rupture Farms",
+                numCreatures: 7,
+                type: "rammus",
+                description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+                fulfilled: false,
+                reward: 200
+            }
+        ]
     };
 
     var level4 = this._addLevelData(new GlassLab.Level());
@@ -118,7 +144,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             if (penData.foodBWidth) widths.push(penData.foodBWidth);
 
             var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.type || "rammus"),
-                (penData.foodTypes || "carrot"), (penData.height || 1), widths, penData.autoFill);
+                (penData.height || 1), widths, penData.autoFill);
             // set which edges are adjustable here (defaults to the right side only)
             if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left, true);
             if (penData.bottomDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.bottom, true);
@@ -157,6 +183,7 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
     GLOBAL.creatureLayer.getChildAt(i).destroy();
   }
   GLOBAL.tileManager.clearTiles();
+    GLOBAL.orderFulfillment.pen = null; // clear the reference to the pen
 };
 
 GlassLab.LevelManager.prototype.LoadNextLevel = function()

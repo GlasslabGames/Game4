@@ -123,7 +123,6 @@ GlassLab.Creature = function (game, type, initialStateName) {
         var foodInfo = GlassLab.FoodTypes[type];
         hungerBarSections[type] = {percent: this.desiredAmountsOfFood[type] / totalFoodDesired, color: foodInfo.color };
     };
-    console.log("Hunger bar sections:", hungerBarSections);
     this.hungerBar = new GlassLab.FillBar(this.game, 500, 100, hungerBarSections);
     this.sprite.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
