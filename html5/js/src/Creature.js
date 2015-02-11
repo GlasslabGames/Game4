@@ -11,7 +11,7 @@ var GlassLab = GlassLab || {};
 GlassLab.CreatureManager = function (game) {
     this.game = game;
     GLOBAL.creatureManager = this;
-    this.creatureList = ["rammus", "rammus2", "unifox"]; // list of creatures in the order they should appear in the journal
+    this.creatureList = ["rammus", "unifox"]; // list of creatures in the order they should appear in the journal
     // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
         rammus: {
@@ -21,18 +21,8 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
+            fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "carrot", amount: 3}],
-            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
-        },
-        rammus2: {
-            journalInfo: {
-                name: "Aqua Rammus",
-                temperament: "Chill"
-            },
-            unlocked: true, // if the player has discovered this animal yet
-            spriteName: "sheep",
-            spriteTint: 0xcceeff, // for testing
-            desiredFood: [{type: "carrot", amount: 2}, {type: "potato", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         unifox: {
@@ -41,8 +31,10 @@ GlassLab.CreatureManager = function (game) {
                 temperament: "Shy"
             },
             unlocked: true,
-            spriteName: "fox",
-            desiredFood: [{type: "carrot", amount: 5}],
+            spriteName: "unicorn",
+            eatFxStyle: {carrot: "long", potato: "long"}, // specification for which animation to play when eating certain food
+            fxFrames: {eat: 1, vomit: 45 },
+            desiredFood: [{type: "carrot", amount: 2}, {type: "potato", amount: 3}],
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         }
     };
@@ -203,7 +195,7 @@ GlassLab.Creature.prototype.PlayAnim = function (anim, loop, framerate) { // ani
     this.currentAnimName = anim;
 
     this.shadow.visible = (anim != "eat" && anim != "vomit");
-    if (!framerate) framerate = 72; // ML said 48 but 72 looks better for the walk anims
+    if (!framerate) framerate = 48;
     var playedAnim;
 
     for (var animName in this.animSprites) {

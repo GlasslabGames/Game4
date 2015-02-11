@@ -18,22 +18,26 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
-        game.load.image('sheep_idle', 'assets/images/sheep_idle.png');
-        game.load.image('sheep_idle_back', 'assets/images/sheep_idle_backfacing.png');
-        game.load.atlasJSONHash('sheep_walk', 'assets/images/sheep_walk.png', 'assets/images/sheep_walk.json');
-        game.load.atlasJSONHash('sheep_walk_back', 'assets/images/sheep_backfacing_walk.png', 'assets/images/sheep_backfacing_walk.json');
-        game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');
-        game.load.atlasJSONHash('sheep_vomit', 'assets/images/sheep_vomit.png', 'assets/images/sheep_vomit.json');
-        game.load.image('sheep_art', 'assets/images/ramArt.png');
-
-        game.load.image('fox_art', 'assets/images/foxArt.png');
+        var creatureSpriteNames = ["sheep", "unicorn"];
+        for (var i = 0; i < creatureSpriteNames.length; i++) {
+            var spriteName = creatureSpriteNames[i];
+            game.load.image(spriteName+'_idle', 'assets/images/creatures/'+spriteName+'_idle.png');
+            game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_idle_backfacing.png');
+            game.load.atlasJSONHash(spriteName+'_walk', 'assets/images/creatures/'+spriteName+'_walk.png', 'assets/images/creatures/'+spriteName+'_walk.json');
+            game.load.atlasJSONHash(spriteName+'_walk_back', 'assets/images/creatures/'+spriteName+'_backfacing_walk.png', 'assets/images/creatures/'+spriteName+'_backfacing_walk.json');
+            game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');
+            game.load.atlasJSONHash(spriteName+'_vomit', 'assets/images/creatures/'+spriteName+'_vomit.png', 'assets/images/creatures/'+spriteName+'_vomit.json');
+            game.load.image(spriteName+'_art', 'assets/images/creatures/'+spriteName+'_art.png');
+        }
 
         game.load.image('shadow', 'assets/images/iso_shadow.png');
 
         game.load.image('carrot', 'assets/images/isoCarrot.png');
         game.load.image('carrot2', 'assets/images/isoCarrot2.png');
         game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
+        game.load.atlasJSONHash('carrot_eaten_long', 'assets/images/carrot_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
         game.load.atlasJSONHash('carrot2_eaten', 'assets/images/carrot2_death_vfx.png', 'assets/images/carrot_death_vfx.json');
+        game.load.atlasJSONHash('carrot2_eaten_long', 'assets/images/carrot2_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
         game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
         game.load.image('penBg', 'assets/images/dirtTile1_top.png');

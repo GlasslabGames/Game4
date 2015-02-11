@@ -19,10 +19,12 @@ GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   this.anim.onComplete.addOnce(this._onFinishVomiting, this);
   this.spewed = false;
   this.creature.draggable = false;
+
+    this.spewFrame = GLOBAL.creatureManager.creatureDatabase[this.creature.type].fxFrames.vomit;
 };
 
 GlassLab.CreatureStateVomiting.prototype.Update = function() {
-  if (!this.spewed && this.anim.frame >= 51) this._onSpew(); // this is the frame index where we should start the vomit fx
+  if (!this.spewed && this.anim.frame >= this.spewFrame) this._onSpew(); // this is the frame index where we should start the vomit fx
 };
 
 GlassLab.CreatureStateVomiting.prototype._onSpew = function() {

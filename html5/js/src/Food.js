@@ -63,6 +63,16 @@ GlassLab.Food.prototype.BeEaten = function() {
   this.getTile().onFoodRemoved(this);
 };
 
+GlassLab.Food.prototype.setAnimStyle = function(style) {
+  if (style) {
+      this.sprite.loadTexture(this.info.spriteName+"_eaten_"+style)
+      this.sprite.animations.add('anim');
+      if (style == "long") { // hacks b/c the animations aren't in the same place
+          this.sprite.anchor.setTo(0.45, 1.2);
+      }
+  }
+};
+
 GlassLab.Food.prototype._afterEaten = function() {
   var tween = this.game.add.tween(this.sprite).to( { alpha: 0 }, 3000, "Linear", true);
   tween.onComplete.add( function() {this.sprite.destroy();}, this);

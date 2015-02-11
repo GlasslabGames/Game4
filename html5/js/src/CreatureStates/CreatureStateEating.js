@@ -26,6 +26,10 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
         this.StopEating();
     }
     this.creature.draggable = false;
+
+    var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
+    this.chompFrame = info.fxFrames.eat;
+    if (info.eatFxStyle) this.food.setAnimStyle(info.eatFxStyle[this.food.type]);
 };
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
@@ -33,7 +37,7 @@ GlassLab.CreatureStateEating.prototype.Exit = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.Update = function() {
-    if (!this.chomped && this.anim.frame >= 16) this._onChomp(); // this is the frame index where he chomps
+    if (!this.chomped && this.anim.frame >= this.chompFrame) this._onChomp(); // this is the frame index where he chomps
 };
 
 GlassLab.CreatureStateEating.prototype._onChomp = function() {
