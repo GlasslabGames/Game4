@@ -83,7 +83,8 @@ GlassLab.LevelManager = function(game)
             }
         ],
         looseCreatures: {
-            rammus2: 6
+            rammus2: 6,
+            rammus: 3
         }
     };
 

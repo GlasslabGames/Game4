@@ -52,7 +52,8 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     var startCol = this.widths[0];
     for (var i = 0, len = this.foodTypes.length; i < len; i++) {
         if (this.foodLists.length <= i) this.foodLists.push([]);
-        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], this.numFoods[i], startCol, startCol += this.widths[i+1]);
+        var maxFood = (this.numFoods)? this.numFoods[i] : null;
+        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], maxFood, startCol, startCol += this.widths[i+1]);
     }
 
     if (this.autoFill) {
