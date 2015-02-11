@@ -31,7 +31,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.ratioLabel.x -= GLOBAL.tileSize * 0.75;
-    this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 0.75, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
+    this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 1.25, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
         'button', this.FeedCreatures, this, 1, 0, 1);
     this.button.anchor.set(0.5, 1);
     this.sprite.addChild(this.button);
