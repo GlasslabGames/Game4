@@ -40,7 +40,7 @@ window.onload = function() {
         game.load.atlasJSONHash('carrot2_eaten_long', 'assets/images/carrot2_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
         game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
-        game.load.image('penBg', 'assets/images/dirtTile1_top.png');
+        game.load.image('penBg', 'assets/images/tiles/dirtTile1_top.png');
         game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical2.png');
         game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal2.png');
         game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
@@ -58,16 +58,16 @@ window.onload = function() {
       game.load.image('autumnTile8', 'assets/images/autumn_fenceStraight.png');
       game.load.image('autumnTile9', 'assets/images/autumn_fenceTopCorner.png');
       */
-        game.load.image('grassTile0', 'assets/images/grassy_water.png');
-        game.load.image('grassTile1', 'assets/images/grassy_1.png');
-        game.load.image('grassTile2', 'assets/images/grassy_2.png');
-        game.load.image('grassTile3', 'assets/images/grassy_3.png');
-        game.load.image('grassTile4', 'assets/images/grassy_4.png');
+        game.load.image('grassTile0', 'assets/images/tiles/grassy_water.png');
+        game.load.image('grassTile1', 'assets/images/tiles/grassy_1.png');
+        game.load.image('grassTile2', 'assets/images/tiles/grassy_2.png');
+        game.load.image('grassTile3', 'assets/images/tiles/grassy_3.png');
+        game.load.image('grassTile4', 'assets/images/tiles/grassy_4.png');
         /*game.load.image('grassTile5', 'assets/images/grassy_fence_bottomCorner.png');
         game.load.image('grassTile6', 'assets/images/grassy_fence_length.png');
         game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
         game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');*/
-        game.load.image('dirtTile', 'assets/images/dirtTile1.png');
+        game.load.image('dirtTile', 'assets/images/tiles/dirtTile1.png');
 
         // Cloud shadow
         game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
@@ -90,6 +90,9 @@ window.onload = function() {
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
         game.load.image('lock', 'assets/images/HUD_items_lock.png');
+
+        game.load.image('assistant', 'assets/images/assistant.png');
+        game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -353,7 +356,7 @@ window.onload = function() {
         game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
         var journal = new GlassLab.Journal(game);
-        journal.sprite.x = -320;
+        journal.sprite.x = -300;
         journal.sprite.y = -270;
         journal.sprite.scale.setTo(.6, .6);
         centerAnchor.addChild(journal.sprite);
