@@ -26,8 +26,6 @@ GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
     var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
     if (satisfied) this.creature.FinishEating(true);
     else {
-      console.log(this.creature.print(),"is hungry but has no more food to target (in StartWalking). Eaten:",this.creature.foodEaten,
-        "Desired:",this.creature.desiredAmountOfFood);
       this.creature.FinishEating(false);
     }
   } else {

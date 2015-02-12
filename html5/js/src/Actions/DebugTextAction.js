@@ -9,7 +9,10 @@ GlassLab.DebugTextAction = function(game, text)
     GlassLab.Action.prototype.constructor.call(this);
 
     this.game = game;
-    this.textField = game.make.text(0,0, text);
+    GLOBAL.textField = game.make.text(0,0, "");
+    GLOBAL.textField.fixedToCamera = true;
+    this.game.world.add(GLOBAL.textField);
+    this.text = text;
 };
 
 GlassLab.DebugTextAction.prototype = Object.create(GlassLab.Action.prototype);
@@ -17,7 +20,6 @@ GlassLab.DebugTextAction.prototype.constructor = GlassLab.DebugTextAction;
 
 GlassLab.DebugTextAction.prototype.Do = function()
 {
-    this.game.world.add(this.textField);
-
+    GLOBAL.textField.setText(this.text);
     this._complete();
 };

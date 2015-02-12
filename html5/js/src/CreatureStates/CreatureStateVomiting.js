@@ -52,7 +52,6 @@ GlassLab.CreatureStateVomiting.prototype.Exit = function() {
 GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
   if (this.creature.pen) { // assume it was eating in the pen... this should be revised to avoid weird corner cases
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
-    console.log(this.creature.print(),"ate too much! Eaten:",this.creature.foodEaten, "Desired:",this.creature.desiredAmountOfFood);
     this.creature.FinishEating(false);
   } else {
     this.creature.Emote(false);

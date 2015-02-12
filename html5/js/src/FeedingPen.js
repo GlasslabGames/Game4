@@ -13,7 +13,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, foodTypes, height, wid
 
     this.creatureType = creatureType;
     this.foodTypes = [].concat(foodTypes); // make sure it's now an array if it was just a value
-    console.log(this.foodTypes);
 
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
     this.allowFeedButton = true;
@@ -77,7 +76,6 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 
     if (this.prevHeight != this.height || this.prevCreatureWidth != this.widths[0]) {
-        console.log("Creature side changed!");
         GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
         // Check for any creatures outside the pen and move them out
@@ -133,7 +131,6 @@ GlassLab.FeedingPen.prototype.SetContents = function(numCreatures, numFood, cond
     }
 
     this.widths[1] = Math.ceil(numFood / this.height);
-    console.log(this.height, this.widths);
     this.Resize();
 };
 
@@ -169,7 +166,6 @@ GlassLab.FeedingPen.prototype._onUpdate = function() {
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
-    console.log("Start feeding");
     this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
     this.feeding = true;
     this.button.visible = false;
@@ -277,7 +273,6 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
 };
 
 GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
-    console.log("on creature removed");
     var index = this.creatures.indexOf(creature);
     if (index > -1) this.creatures.splice(index, 1);
     this._onCreatureContentsChanged();
@@ -300,7 +295,6 @@ GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
 };
 
 GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
-    console.log("Finished feeding creatures! Success?",win);
 
     if (this.finished) return;
     this.finished = true;

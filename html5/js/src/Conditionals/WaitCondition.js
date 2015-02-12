@@ -6,12 +6,14 @@ var GlassLab = GlassLab || {};
 
 GlassLab.WaitCondition = function(game, waitTime)
 {
+    GlassLab.Conditional.prototype.constructor.call(this);
+
     this.game = game;
 
     this.waitTime = waitTime;
+
     this.timer = this.game.time.create();
     this.timer.add(this.waitTime, this._onTimerComplete, this);
-    this.timer.start();
 };
 
 GlassLab.WaitCondition.prototype = Object.create(GlassLab.Conditional.prototype);
@@ -28,4 +30,9 @@ GlassLab.WaitCondition.prototype._onTimerComplete = function()
     this.timer.destroy();
     this.timer = null;
     this.Refresh();
+};
+
+GlassLab.WaitCondition.prototype.init = function()
+{
+    this.timer.start();
 };

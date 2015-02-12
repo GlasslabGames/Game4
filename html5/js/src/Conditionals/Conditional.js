@@ -14,11 +14,18 @@ GlassLab.Conditional = function()
  * OVERRIDE THIS
  * @protected
  */
-GlassLab.Conditional.prototype._calculateIsSatisfied = function()
-{
-    return false;
-};
+GlassLab.Conditional.prototype._calculateIsSatisfied = function() { return false; };
 
+/**
+ * OVERRIDE THIS - cleanup upon completion
+ * @protected
+ */
+GlassLab.Conditional.prototype._complete = function() {};
+
+/**
+ * DO NOT OVERRIDE, instead override _calculateIsSatisfied and _complete!
+ * @public
+ */
 GlassLab.Conditional.prototype.Refresh = function()
 {
     var wasCompleted = this.isCompleted;
@@ -27,6 +34,7 @@ GlassLab.Conditional.prototype.Refresh = function()
     {
         if (this.isCompleted)
         {
+            this._complete();
             this.onSatisfiedChanged.dispatch(this);
         }
     }

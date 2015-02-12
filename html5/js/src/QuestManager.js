@@ -6,17 +6,26 @@ var GlassLab = GlassLab || {};
 
 GlassLab.QuestManager = function(game)
 {
-    this.actions = [
-        new GlassLab.WaitForCondition([new GlassLab.WaitCondition(game, 2000)]),
-        new GlassLab.DebugTextAction(game, "TESTTESTTEST")
+    this.game = game;
+    this.quests = [
+        new GlassLab.Quest([
+            new GlassLab.DisplayModalAction(game, "It's a beautiful day on Mixia!"),
+            new GlassLab.SetObjectiveAction(game, "Feed 4 rams in the pen!"),
+            new GlassLab.WaitForCondition([new GlassLab.WaitCondition(game, 2000)]),
+            new GlassLab.AdvanceDayAction(game),
+            new GlassLab.SetObjectiveAction(game, "Ship an order of carrots."),
+            new GlassLab.WaitForCondition([new GlassLab.WaitCondition(game, 2000)]),
+            new GlassLab.AdvanceDayAction(game),
+            new GlassLab.SetObjectiveAction(game, "Feed one unicorn."),
+            new GlassLab.WaitForCondition([new GlassLab.WaitCondition(game, 2000)]),
+            new GlassLab.AdvanceDayAction(game),
+            new GlassLab.DisplayModalAction(game, "The sun sets on lovely Mixia.")
+        ])
     ];
 };
 
 
 GlassLab.QuestManager.prototype.gogogogogo = function()
 {
-    if (this.actions.length == 0) return;
-    var action = this.actions.pop();
-    action.onComplete.add(this.gogogogogo);
-    action.Do();
+    this.quests[0].Start();
 };

@@ -82,7 +82,6 @@ GlassLab.UITable.prototype._refresh = function()
                 this._rowHeights[row] = Math.max(height, this._rowHeights[row]);
             }
 
-            //console.log(child, child.width);
             if (this._columnLengths.length <= column)
             {
                 this._columnLengths[column] = width;

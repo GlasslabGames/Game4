@@ -4,10 +4,11 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.WaitForCondition = function(conditions)
+GlassLab.WaitForCondition = function(conditionBlobs)
 {
     GlassLab.Action.prototype.constructor.call(this);
-    this.conditions = conditions || [];
+
+    this.conditions = conditionBlobs;
 };
 
 GlassLab.WaitForCondition.prototype = Object.create(GlassLab.Action.prototype);
@@ -19,8 +20,8 @@ GlassLab.WaitForCondition.prototype.Do = function()
     {
         var condition = this.conditions[i];
         condition.onSatisfiedChanged.add(this._onConditionChanged, this);
+        if (condition.init) condition.init();
     }
-
 };
 
 GlassLab.WaitForCondition.prototype._onConditionChanged = function(condition)

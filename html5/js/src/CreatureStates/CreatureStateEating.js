@@ -7,7 +7,6 @@
 GlassLab.CreatureStateEating = function(game, owner, food)
 {
     GlassLab.CreatureState.call(this, game, owner);
-    //console.log(this.creature,"eating");
     this.food = food;
 };
 
@@ -16,7 +15,6 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
-    console.log("Eating food. In pen?",this.food.pen);
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.anim = this.creature.PlayAnim("eat", false, 24);
     this.chomped = false;
@@ -43,7 +41,6 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
-    console.log("Finished eating anim");
     if (!this.chomped) this._onChomp();
 
     this.creature.foodEaten[this.food.type] ++;
@@ -60,8 +57,6 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
             this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
             if (this.creature.getIsSatisfied()) this.creature.FinishEating(true);
             else {
-                console.log(this.creature.print(),"is hungry but has no more food to target (in StopEating.) Eaten:",
-                    this.creature.foodEaten[this.food.type], "Desired:",this.creature.desiredAmountsOfFood[this.food.type]);
                 this.creature.FinishEating(false);
             }
         }

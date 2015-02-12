@@ -123,7 +123,6 @@ GlassLab.Creature = function (game, type, initialStateName) {
         var foodInfo = GlassLab.FoodTypes[type];
         hungerBarSections[type] = {percent: this.desiredAmountsOfFood[type] / totalFoodDesired, color: foodInfo.color };
     };
-    console.log("Hunger bar sections:", hungerBarSections);
     this.hungerBar = new GlassLab.FillBar(this.game, 500, 100, hungerBarSections);
     this.sprite.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
@@ -338,7 +337,6 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
 
 GlassLab.Creature.prototype._onTargetsChanged = function () {
     var targets = GLOBAL.tileManager.getTargets(this);
-    console.log(this.print(), targets);
     var minDist = null, bestTarget; // target is a tile
     for (var i = 0, len = targets.length; i < len; i++) {
         var distSqr = Math.pow((this.sprite.isoX - targets[i].isoX), 2) + Math.pow((this.sprite.isoY - targets[i].isoY), 2);
@@ -351,11 +349,9 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
     var maxNoticeDist = GLOBAL.tileSize * 10;
     if (bestTarget == this.getTile()) {
         if (bestTarget.inPen) { // if we're actually in the pen now
-            console.log(this.print() + " is in a pen now!", bestTarget, this.getTile());
             this.enterPen(bestTarget.inPen);
             this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
         } else { // assume that we're on top of some food
-            console.log(this.print() + " is on top of food now!", bestTarget.food, this.getTile());
             this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, bestTarget.food));
         }
     } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
@@ -383,8 +379,7 @@ GlassLab.Creature.prototype.setIsoPos = function (x, y) {
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
     if (targetState == this.state) {
-        console.warn("Target state was the same as current state, ignoring transition request...");
-        console.log(this.state);
+        console.warn("Target state was the same as current state ("+this.state+"), ignoring transition request...");
         return;
     }
 
@@ -423,11 +418,9 @@ GlassLab.CreatureState = function (game, owner) {
 };
 
 GlassLab.CreatureState.prototype.Enter = function () {
-    //console.log("Enter");
 };
 
 GlassLab.CreatureState.prototype.Exit = function () {
-    //console.log("Exit");
 };
 
 GlassLab.CreatureState.prototype.Update = function () {
