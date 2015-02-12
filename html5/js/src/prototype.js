@@ -330,10 +330,12 @@ window.onload = function() {
             if (!GLOBAL.inventoryMenu.visible)
             {
                 GLOBAL.inventoryMenu.Show();
+                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -250;
             }
             else
             {
                 GLOBAL.inventoryMenu.Hide();
+                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -100;
             }
         }, this);
         bottomLeftAnchor.addChild(uiElement);
@@ -381,6 +383,12 @@ window.onload = function() {
         inventoryMenu.y = -150;
         bottomRightAnchor.addChild(inventoryMenu);
         GLOBAL.inventoryMenu = inventoryMenu;
+
+        var assistant = new GlassLab.Assistant(game);
+        assistant.sprite.x = -100;
+        assistant.sprite.y = -100;
+        bottomRightAnchor.addChild(assistant.sprite);
+        GLOBAL.assistant = assistant;
 
         var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
         versionLabel.fixedToCamera = true;
