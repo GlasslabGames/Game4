@@ -194,7 +194,6 @@ GlassLab.Creature.prototype.PlayAnim = function (anim, loop, framerate) { // ani
     else anim = "idle" + (this.facingBack ? "_back" : ""); // no anim = idle (facing back if we had been before)
     this.currentAnimName = anim;
 
-    this.shadow.visible = (anim != "eat" && anim != "vomit");
     if (!framerate) framerate = 48;
     var playedAnim;
 
