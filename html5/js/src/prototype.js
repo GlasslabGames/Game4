@@ -322,7 +322,7 @@ window.onload = function() {
             }
         }, this);
         bottomRightAnchor.addChild(uiElement);
-        uiElement.visible = getParameterByName("items") == "true";
+        uiElement.visible = getParameterByName("items") != "false"; // default to using items
 
         game.input.onDown.add(globalDown, this); // Global input down handler
         game.input.onUp.add(globalUp, this); // Global input down handler

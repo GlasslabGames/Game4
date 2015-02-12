@@ -22,9 +22,8 @@ GlassLab.CreatureStateWaitingForFood.prototype.Enter = function() {
 
 GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
   var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
-  if (!food) { // no good. Stop immediately, unsatisfied (unless this creature wanted 0 food?)
-    var satisfied = (this.creature.foodEaten == this.creature.desiredAmountOfFood);
-    if (satisfied) this.creature.FinishEating(true);
+  if (!food || !this.creature.desiredAmountsOfFood[food.type]) { // no good. Stop immediately, unsatisfied (unless this creature wanted 0 food?)
+    if (this.creature.getIsSatisfied()) this.creature.FinishEating(true);
     else {
       this.creature.FinishEating(false);
     }
