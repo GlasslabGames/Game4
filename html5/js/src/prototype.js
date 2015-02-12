@@ -202,12 +202,29 @@ window.onload = function() {
         topLeftAnchor.fixedToCamera = true;
         uiGroup.add(topLeftAnchor);
 
+        var bottomRightAnchor = game.make.sprite(game.camera.width, game.camera.height);
+        bottomRightAnchor.anchor.setTo(1, 1);
+        bottomRightAnchor.fixedToCamera = true;
+        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
+            this.cameraOffset.x = game.camera.width;
+            this.cameraOffset.y = game.camera.height;
+        }, bottomRightAnchor);
+        uiGroup.add(bottomRightAnchor);
+
+        var bottomLeftAnchor = game.make.sprite(0, game.camera.height);
+        bottomLeftAnchor.anchor.setTo(1, 1);
+        bottomLeftAnchor.fixedToCamera = true;
+        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
+            this.cameraOffset.y = game.camera.height;
+        }, bottomLeftAnchor);
+        uiGroup.add(bottomLeftAnchor);
+
         GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game, centerAnchor);
 
         var table = new GlassLab.UITable(game, 1, 20);
-        table.x = table.y = 30;
-        uiGroup.add(table);
-        table.fixedToCamera = true;
+        table.x = -70;
+        table.y = 20;
+        topRightAnchor.addChild(table);
 
         // pause icon
         var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
@@ -255,9 +272,30 @@ window.onload = function() {
         table._refresh();
 
         table = new GlassLab.UITable(game, 1, 40);
-        table.x = -100;
-        table.y = 30;
-        topRightAnchor.addChild(table);
+        table.x = 20;
+        table.y = 20;
+        topLeftAnchor.addChild(table);
+
+        uiElement = new GlassLab.UIElement(game, 0,0, "journalIcon");
+        uiElement.scale.setTo(.6, .6);
+        uiElement.inputEnabled = true;
+        var journalAlert = game.make.sprite(0,0,"alertIcon");
+        journalAlert.anchor.setTo(.5,.5);
+        journalAlert.visible = false;
+        GlassLab.SignalManager.levelWon.add(function(leve){ this.visible = true; }, journalAlert);
+        uiElement.addChild(journalAlert);
+        uiElement.events.onInputDown.add(function(){
+            if (!GLOBAL.Journal.IsShowing())
+            {
+                journalAlert.visible = false;
+                GLOBAL.Journal.Show();
+            }
+            else
+            {
+                GLOBAL.Journal.Hide();
+            }
+        }, this);
+        table.addManagedChild(uiElement);
 
         uiElement = new GlassLab.UIElement(game, 0,0, "ordersIcon");
         uiElement.scale.setTo(.6, .6);
@@ -280,40 +318,9 @@ window.onload = function() {
         GlassLab.SignalManager.levelLoaded.add(function(level){
             this.visible = (level.data.orders && level.data.orders.length > 0);
         }, uiElement);
-        table.addManagedChild(uiElement);
+        table.addManagedChild(uiElement, true);
 
-        uiElement = new GlassLab.UIElement(game, 0,0, "journalIcon");
-        uiElement.scale.setTo(.6, .6);
-        uiElement.inputEnabled = true;
-        var journalAlert = game.make.sprite(0,0,"alertIcon");
-        journalAlert.anchor.setTo(.5,.5);
-        journalAlert.visible = false;
-        GlassLab.SignalManager.levelWon.add(function(leve){ this.visible = true; }, journalAlert);
-        uiElement.addChild(journalAlert);
-        uiElement.events.onInputDown.add(function(){
-            if (!GLOBAL.Journal.IsShowing())
-            {
-                journalAlert.visible = false;
-                GLOBAL.Journal.Show();
-            }
-            else
-            {
-                GLOBAL.Journal.Hide();
-            }
-        }, this);
-        table.addManagedChild(uiElement);
-        table._refresh();
-
-        var bottomRightAnchor = game.make.sprite(game.camera.width, game.camera.height);
-        bottomRightAnchor.anchor.setTo(1, 1);
-        bottomRightAnchor.fixedToCamera = true;
-        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
-            this.cameraOffset.x = game.camera.width;
-            this.cameraOffset.y = game.camera.height;
-        }, bottomRightAnchor);
-        uiGroup.add(bottomRightAnchor);
-
-        uiElement = new GlassLab.UIElement(game, -100, -100, "itemsIcon");
+        uiElement = new GlassLab.UIElement(game, 20, -100, "itemsIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
@@ -326,7 +333,7 @@ window.onload = function() {
                 GLOBAL.inventoryMenu.Hide();
             }
         }, this);
-        bottomRightAnchor.addChild(uiElement);
+        bottomLeftAnchor.addChild(uiElement);
         uiElement.visible = getParameterByName("items") != "false"; // default to using items
 
         game.input.onDown.add(globalDown, this); // Global input down handler
