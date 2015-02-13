@@ -1,0 +1,22 @@
+{
+  "quest1": {
+    "actions": [
+    ],
+    "complete": false
+  },
+  "quest2": {
+    "actions": [
+    ],
+    "complete": false
+  },
+  "quest3": {
+    "actions": [
+    ],
+    "complete": false
+  },
+  "quest4": {
+    "actions": [
+    ],
+    "complete": false
+  }
+}

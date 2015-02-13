@@ -340,11 +340,9 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
     var maxNoticeDist = GLOBAL.tileSize * 10;
     if (bestTarget == this.getTile()) {
         if (bestTarget.inPen) { // if we're actually in the pen now
-            console.log(this.print() + " is in a pen now!", bestTarget, this.getTile());
             this.enterPen(bestTarget.inPen);
             this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
         } else { // assume that we're on top of some food
-            console.log(this.print() + " is on top of food now!", bestTarget.food, this.getTile());
             this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, bestTarget.food));
         }
     } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
@@ -372,8 +370,7 @@ GlassLab.Creature.prototype.setIsoPos = function (x, y) {
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
     if (targetState == this.state) {
-        console.warn("Target state was the same as current state, ignoring transition request...");
-        console.log(this.state);
+        console.warn("Target state was the same as current state ("+this.state+"), ignoring transition request...");
         return;
     }
 
@@ -412,11 +409,9 @@ GlassLab.CreatureState = function (game, owner) {
 };
 
 GlassLab.CreatureState.prototype.Enter = function () {
-    //console.log("Enter");
 };
 
 GlassLab.CreatureState.prototype.Exit = function () {
-    //console.log("Exit");
 };
 
 GlassLab.CreatureState.prototype.Update = function () {

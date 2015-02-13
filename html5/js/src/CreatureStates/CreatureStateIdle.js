@@ -74,7 +74,6 @@ GlassLab.CreatureStateIdle.prototype._setNewDestination = function(tile) {
 
   if (tile.isoX != this.creature.sprite.isoX || tile.isoY != this.creature.sprite.isoY) {
     var flip = tile.isoY == this.creature.sprite.isoY;
-    //console.log(tile.isoX, tile.isoY, this.creature.sprite.isoX, this.creature.sprite.isoY, flip);
     this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
 
     if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true);

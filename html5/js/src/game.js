@@ -22,7 +22,6 @@ window.onload = function() {
   var dragOrigin;
   function conseClick()
   {
-    console.log("TEST");
   };
 
   function create()
