@@ -394,6 +394,12 @@ window.onload = function() {
         versionLabel.fixedToCamera = true;
         GLOBAL.UIGroup.add(versionLabel);
 
+        /* TODO
+        GLOBAL.sortingGame = new GlassLab.SortingGame(game);
+        GLOBAL.sortingGame.sprite.fixedToCamera = true;
+        GLOBAL.UIGroup.add(GLOBAL.sortingGame.sprite);
+        */
+
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
         GLOBAL.levelManager.LoadNextLevel(); // Load first level
