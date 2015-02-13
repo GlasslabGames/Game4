@@ -90,21 +90,18 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function() {
     var response = this._getResponse();
 
     if (response) {
-        if (!this.pen)
-        {
-            // Make a pen with the correct number of sections for the number of food types we have
-            var widths = [1];
-            for (var j = 0; j < this.foodTypes.length; j++) widths.push(1);
-            this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
-            this.pen.allowFeedButton = false;
-        }
+        this._createPen(this.foodTypes.length);
         this.pen.SetContents(this.data.type, this.data.numCreatures, this.foodTypes, response);
 
-        // Center the pen at the top of the screen, and zoom out if required
-        this.game.camera.x = -this.game.camera.width/2;
-        this.game.camera.y = -this.game.camera.height/5;
-        // TODO: zoom appropriately
+        this._focusCamera();
     }
+};
+
+GlassLab.OrderFulfillment.prototype._focusCamera = function() {
+    // Center the pen at the top of the screen, and zoom out if required
+    this.game.camera.x = -this.game.camera.width * 0.7;
+    this.game.camera.y = -this.game.camera.height * 0.2;
+    // TODO: zoom appropriately
 };
 
 GlassLab.OrderFulfillment.prototype._getResponse = function(flashErrorGraphics) {
@@ -126,6 +123,21 @@ GlassLab.OrderFulfillment.prototype._getResponse = function(flashErrorGraphics) 
     else return response;
 };
 
+GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
+    if (numFoodTypes && this.pen && this.pen.widths.length != numFoodTypes) {
+        this.pen.sprite.destroy();
+        this.pen = null;
+    }
+    if (!this.pen) {
+        // Make a pen with the correct number of sections for the number of food types we have
+        var widths = [1];
+        for (var j = 0; j < numFoodTypes; j++) widths.push(0);
+        this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
+        this.pen.allowFeedButton = false;
+    }
+    this._focusCamera();
+};
+
 GlassLab.OrderFulfillment.prototype.Show = function(data)
 {
     this.sprite.visible = true;
@@ -139,7 +151,10 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
         this.Refresh();
     }
     this.crateLoaded = false;
-    
+
+    this._createPen();
+    this.pen.SetContents(this.data.type, this.data.numCreatures);
+
     GLOBAL.assistant.startOrder(data);
 
     GLOBAL.ordersButton.visible = false;
@@ -173,17 +188,12 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
 
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.type).desiredFood;
 
-    if (this.pen) {
-        if (desiredFood.length != this.foodTypes.length) { // destroy the pen so we can make a new one with the right # of sections
-            this.pen.sprite.destroy();
-            this.pen = null;
-        }
-    }
-
     this.foodTypes = [];
     for (var j = 0; j < desiredFood.length; j++) {
         this.foodTypes.push( desiredFood[j].type );
     }
+
+    this._createPen(this.foodTypes.length);
 
     for (var i = 0; i < this.answerInputs.length; i++) {
         var visible = i < this.foodTypes.length;
@@ -228,10 +238,11 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
 // From the assistant's dialogue
 GlassLab.OrderFulfillment.prototype.restartLoading = function()
 {
-    this.pen.sprite.destroy();
-    this.pen = null;
     this.submitButton.label.text = "Load Crate";
     this.crateLoaded = false;
+    var numFoods = [];
+    for (var j = 0; j < this.foodTypes.length; j++) numFoods.push(0);
+    this.pen.SetContents(this.data.type, this.data.numCreatures, this.foodTypes, numFoods);
     for (var i = 0; i < this.answerInputs.length; i++) {
         this.answerInputs[i].input.SetText("");
         this.answerInputs[i].input.setEnabled(true);

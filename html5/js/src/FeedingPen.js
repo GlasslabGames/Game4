@@ -123,10 +123,10 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.SetDraggableOnly(); // don't allow them to adjust the pen
 
     this.creatureType = creatureType;
-    this.foodTypes = foodTypes;
+    this.foodTypes = foodTypes || [];
 
-    this.numCreatures = numCreatures;
-    this.numFoods = numFoods; // should be an array
+    this.numCreatures = numCreatures || 0;
+    this.numFoods = numFoods || []; // should be an array
     this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
     if (!condenseToMultipleRows) {
