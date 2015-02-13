@@ -138,6 +138,8 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
         this.data = data;
         this.Refresh();
     }
+    this.crateLoaded = false;
+    
     GLOBAL.assistant.startOrder(data);
 
     GLOBAL.ordersButton.visible = false;
