@@ -123,6 +123,8 @@ window.onload = function() {
 
         GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
+        GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
+
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
         GLOBAL.tileManager.GenerateRandomMapData(20, 20);
@@ -274,6 +276,9 @@ window.onload = function() {
         }, this);
         GlassLab.SignalManager.levelLoaded.add(function(level){
             this.visible = (level.data.orders && level.data.orders.length > 0);
+        }, uiElement);
+        GlassLab.SignalManager.orderAdded.add(function(order){
+            this.visible = true;
         }, uiElement);
         table.addManagedChild(uiElement);
 

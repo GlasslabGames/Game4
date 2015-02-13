@@ -22,14 +22,6 @@ GlassLab.AdvanceDayAction.prototype.constructor = GlassLab.AdvanceDayAction;
 
 GlassLab.AdvanceDayAction.prototype.Do = function()
 {
-    GLOBAL.advanceDayTextField.setText("Advance Day");
-    this.timer = this.game.time.create();
-    this.timer.add(1000, function(){
-        GLOBAL.advanceDayTextField.setText("");
-        this.timer.stop(true);
-        this.timer.destroy();
-        this.timer = null;
-        this._complete();
-    }, this);
-    this.timer.start();
+    GLOBAL.dayManager.Advance();
+    this._complete();
 };

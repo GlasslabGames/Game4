@@ -332,23 +332,24 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
     if (this.finished) return;
     this.finished = true;
 
+    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win);
+
     this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
         if (win)
         {
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
 
-            GLOBAL.levelManager.CompleteCurrentLevel();
+            //GLOBAL.levelManager.CompleteCurrentLevel();
 
             GLOBAL.Journal.Show(this.creatureType);
 
-            GlassLab.SignalManager.levelWon.dispatch();
+            //GlassLab.SignalManager.levelWon.dispatch();
         }
         else
         {
-            GlassLab.SignalManager.levelLost.dispatch();
+            //GlassLab.SignalManager.levelLost.dispatch();
         }
     }, this);
-
 };
 
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {

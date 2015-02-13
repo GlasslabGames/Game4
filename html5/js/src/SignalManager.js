@@ -13,6 +13,8 @@ GlassLab.SignalManager = {
     levelLost: new Phaser.Signal(),
     creatureTargetsChanged: new Phaser.Signal(),
     creatureFed: new Phaser.Signal(),
+    feedingPenResolved: new Phaser.Signal(), // (FeedingPen, bool) => (source, win/loss)
+    orderAdded: new Phaser.Signal(), // (order) => (added order)
     moneyChanged: new Phaser.Signal(),
     uiFocusChanged: new Phaser.Signal()
 };

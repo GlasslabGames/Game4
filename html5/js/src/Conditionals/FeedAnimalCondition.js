@@ -34,7 +34,18 @@ GlassLab.FeedAnimalCondition.prototype._onCreatureFed = function(creature)
     this.Refresh();
 };
 
+GlassLab.FeedAnimalCondition.prototype._onFeedPenResolved = function(pen, win)
+{
+    if (win)
+    {
+        this.numFed = this.numRequired;
+    }
+
+    this.Refresh();
+};
+
 GlassLab.FeedAnimalCondition.prototype.init = function()
 {
     GlassLab.SignalManager.creatureFed.add(this._onCreatureFed, this);
+    GlassLab.SignalManager.feedingPenResolved.add(this._onFeedPenResolved, this);
 };
