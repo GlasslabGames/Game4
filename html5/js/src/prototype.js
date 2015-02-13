@@ -303,6 +303,7 @@ window.onload = function() {
         uiElement = new GlassLab.UIElement(game, 0,0, "ordersIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
+        GLOBAL.ordersButton = uiElement;
         var ordersAlert = game.make.sprite(0,0,"alertIcon");
         ordersAlert.anchor.setTo(.5,.5);
         GlassLab.SignalManager.levelLoaded.add(function(level){ this.visible = true; }, ordersAlert);
@@ -330,7 +331,7 @@ window.onload = function() {
             if (!GLOBAL.inventoryMenu.visible)
             {
                 GLOBAL.inventoryMenu.Show();
-                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -250;
+                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -200;
             }
             else
             {
@@ -347,7 +348,6 @@ window.onload = function() {
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
         game.camera.y = -game.camera.height/2;
-        console.log("Camera position:",game.camera.x, game.camera.y);
 
 
       // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
@@ -365,28 +365,28 @@ window.onload = function() {
         GLOBAL.Journal = journal;
 
         var orders = new GlassLab.OrdersMenu(game);
-        orders.sprite.x = -200
+        orders.sprite.x = -200;
         orders.sprite.y = -250;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
 
         var orderFulfillment = new GlassLab.OrderFulfillment(game);
         orderFulfillment.sprite.scale.setTo(.6, .6);
-        orderFulfillment.sprite.x = 130;
-        orderFulfillment.sprite.y = 50;
-        topLeftAnchor.addChild(orderFulfillment.sprite);
+        orderFulfillment.sprite.x = 20;
+        orderFulfillment.sprite.y = -250; // in the future use -380 (above the inventory)
+        bottomLeftAnchor.addChild(orderFulfillment.sprite);
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
         inventoryMenu.scale.setTo(.8, .8);
         inventoryMenu.x = -700;
-        inventoryMenu.y = -150;
+        inventoryMenu.y = -120;
         bottomRightAnchor.addChild(inventoryMenu);
         GLOBAL.inventoryMenu = inventoryMenu;
 
         var assistant = new GlassLab.Assistant(game);
-        assistant.sprite.x = -100;
-        assistant.sprite.y = -100;
+        assistant.sprite.x = -80;
+        assistant.sprite.y = -80;
         bottomRightAnchor.addChild(assistant.sprite);
         GLOBAL.assistant = assistant;
 

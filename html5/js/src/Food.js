@@ -60,7 +60,8 @@ GlassLab.Food.prototype.placeOnTile = function(tile) {
 GlassLab.Food.prototype.BeEaten = function() {
   var anim = this.sprite.animations.play('anim', 24);
   anim.onComplete.add(this._afterEaten, this);
-  this.getTile().onFoodRemoved(this);
+    var tile = this.getTile();
+    if (tile) tile.onFoodRemoved(this);
 };
 
 GlassLab.Food.prototype.setAnimStyle = function(style) {
