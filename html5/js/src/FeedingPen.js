@@ -339,15 +339,13 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
         {
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
 
-            //GLOBAL.levelManager.CompleteCurrentLevel();
-
             GLOBAL.Journal.Show(this.creatureType);
 
-            //GlassLab.SignalManager.levelWon.dispatch();
+            GLOBAL.levelManager.CompleteCurrentLevel();
         }
         else
         {
-            //GlassLab.SignalManager.levelLost.dispatch();
+            GlassLab.SignalManager.levelLost.dispatch();
         }
     }, this);
 };

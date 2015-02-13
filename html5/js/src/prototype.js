@@ -130,8 +130,6 @@ window.onload = function() {
 
         GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
-        GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
-
         // Create TileManager and map
         GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
         GLOBAL.tileManager.GenerateRandomMapData(20, 20);
@@ -165,70 +163,12 @@ window.onload = function() {
         var uiGroup = game.add.group();
         GLOBAL.UIGroup = uiGroup;
 
-        // Anchors
-        var centerAnchor = game.make.sprite(game.camera.width/2, game.camera.height/2);
-        centerAnchor.anchor.setTo(.5, .5);
-        centerAnchor.fixedToCamera = true;
-        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
-            this.cameraOffset.x = game.camera.width/2;
-            this.cameraOffset.y = game.camera.height/2;
-        }, centerAnchor);
-        GLOBAL.uiAnchors = {};
-        GLOBAL.uiAnchors.center = centerAnchor;
-        uiGroup.add(centerAnchor);
-
-        var objectiveLabel = game.make.text(0, -280, "Objective: ", {fill: "#ffffff", font: "20px Arial"});
-        objectiveLabel.anchor.setTo(.5, 0);
-        GlassLab.SignalManager.levelLoaded.add(function(level){
-            if (level.data.objective)
-            {
-                this.visible = true;
-                this.setText("Objective: "+level.data.objective);
-            }
-            else
-            {
-                this.visible = false;
-            }
-        }, objectiveLabel);
-        centerAnchor.addChild(objectiveLabel);
-        GLOBAL.objectiveLabel = objectiveLabel;
-
-        var topRightAnchor = game.make.sprite(game.camera.width, 0);
-        topRightAnchor.anchor.setTo(1, 0);
-        topRightAnchor.fixedToCamera = true;
-        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
-            this.cameraOffset.x = game.camera.width;
-        }, topRightAnchor);
-        uiGroup.add(topRightAnchor);
-
-        var topLeftAnchor = game.make.sprite(0, 0);
-        topLeftAnchor.anchor.setTo(0, 0);
-        topLeftAnchor.fixedToCamera = true;
-        uiGroup.add(topLeftAnchor);
-
-        var bottomRightAnchor = game.make.sprite(game.camera.width, game.camera.height);
-        bottomRightAnchor.anchor.setTo(1, 1);
-        bottomRightAnchor.fixedToCamera = true;
-        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
-            this.cameraOffset.x = game.camera.width;
-            this.cameraOffset.y = game.camera.height;
-        }, bottomRightAnchor);
-        uiGroup.add(bottomRightAnchor);
-
-        var bottomLeftAnchor = game.make.sprite(0, game.camera.height);
-        bottomLeftAnchor.anchor.setTo(1, 1);
-        bottomLeftAnchor.fixedToCamera = true;
-        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
-            this.cameraOffset.y = game.camera.height;
-        }, bottomLeftAnchor);
-        uiGroup.add(bottomLeftAnchor);
-
-        GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game, centerAnchor);
+        GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
 
         var table = new GlassLab.UITable(game, 1, 20);
         table.x = -70;
         table.y = 20;
-        topRightAnchor.addChild(table);
+        GLOBAL.UIManager.topRightAnchor.addChild(table);
 
         // pause icon
         var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
@@ -278,7 +218,7 @@ window.onload = function() {
         table = new GlassLab.UITable(game, 1, 40);
         table.x = 20;
         table.y = 20;
-        topLeftAnchor.addChild(table);
+        GLOBAL.UIManager.topLeftAnchor.addChild(table);
 
         uiElement = new GlassLab.UIElement(game, 0,0, "journalIcon");
         uiElement.scale.setTo(.6, .6);
@@ -343,7 +283,7 @@ window.onload = function() {
                 if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -100;
             }
         }, this);
-        bottomLeftAnchor.addChild(uiElement);
+        GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
         uiElement.visible = getParameterByName("items") != "false"; // default to using items
 
         game.input.onDown.add(globalDown, this); // Global input down handler
@@ -364,38 +304,42 @@ window.onload = function() {
         journal.sprite.x = -300;
         journal.sprite.y = -270;
         journal.sprite.scale.setTo(.6, .6);
-        centerAnchor.addChild(journal.sprite);
+        GLOBAL.UIManager.centerAnchor.addChild(journal.sprite);
         GLOBAL.Journal = journal;
 
         var orders = new GlassLab.OrdersMenu(game);
         orders.sprite.x = -200;
         orders.sprite.y = -250;
-        centerAnchor.addChild(orders.sprite);
+        GLOBAL.UIManager.centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
 
         var orderFulfillment = new GlassLab.OrderFulfillment(game);
         orderFulfillment.sprite.scale.setTo(.6, .6);
         orderFulfillment.sprite.x = 20;
         orderFulfillment.sprite.y = -250; // in the future use -380 (above the inventory)
-        bottomLeftAnchor.addChild(orderFulfillment.sprite);
+        GLOBAL.UIManager.bottomLeftAnchor.addChild(orderFulfillment.sprite);
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
         inventoryMenu.scale.setTo(.8, .8);
         inventoryMenu.x = -700;
         inventoryMenu.y = -120;
-        bottomRightAnchor.addChild(inventoryMenu);
+        GLOBAL.UIManager.bottomRightAnchor.addChild(inventoryMenu);
         GLOBAL.inventoryMenu = inventoryMenu;
 
         var assistant = new GlassLab.Assistant(game);
         assistant.sprite.x = -80;
         assistant.sprite.y = -80;
-        bottomRightAnchor.addChild(assistant.sprite);
+        GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
         GLOBAL.assistant = assistant;
 
         var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
         versionLabel.fixedToCamera = true;
         GLOBAL.UIGroup.add(versionLabel);
+
+        GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
+
+        GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
@@ -403,9 +347,6 @@ window.onload = function() {
         //var pen = new GlassLab.Pen(game, GLOBAL.penLayer, 3, [1,2,3]);
 
         game.time.events.start();
-
-        GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
-        GLOBAL.questManager.gogogogogo();
     }
 
     function onEnterFullScreen() {

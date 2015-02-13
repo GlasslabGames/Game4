@@ -17,6 +17,6 @@ GlassLab.SetObjectiveAction.prototype.constructor = GlassLab.SetObjectiveAction;
 
 GlassLab.SetObjectiveAction.prototype.Do = function()
 {
-    GLOBAL.objectiveLabel.setText(this.text);
+    GLOBAL.questManager.UpdateObjective(this.text);
     this._complete();
 };

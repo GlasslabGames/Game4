@@ -113,14 +113,19 @@ GlassLab.LevelManager = function(game)
     };
 
     var level4 = this._addLevelData(new GlassLab.Level());
-        level4.data = {
+    level4.data = {
         pens: [
             {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
             rammus: 30
         },
-            objective: "Feed as many rams as you can!"
+        objective: "Feed as many rams as you can!"
+    };
+
+    var level5 = this._addLevelData(new GlassLab.Level());
+    level5.data = {
+        quest: 0
     };
 };
 
@@ -163,6 +168,16 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
           }
         }
 
+        if (typeof data.quest != 'undefined')
+        {
+            GLOBAL.questManager.quests[data.quest].Start();
+        }
+
+        if (typeof data.objective != 'undefined')
+        {
+            GLOBAL.questManager.UpdateObjective(data.objective);
+        }
+
         GlassLab.SignalManager.levelLoaded.dispatch(this.levels[levelNum]);
     }
     else
@@ -203,7 +218,14 @@ GlassLab.LevelManager.prototype.GetCurrentLevel = function()
 
 GlassLab.LevelManager.prototype.CompleteCurrentLevel = function()
 {
-    return this.GetCurrentLevel().isCompleted = true;
+    if (typeof this.GetCurrentLevel().quests != 'undefined')
+    {
+        return false;
+    }
+
+    this.GetCurrentLevel().isCompleted = true;
+
+    GlassLab.SignalManager.levelWon.dispatch();
 };
 
 /**
