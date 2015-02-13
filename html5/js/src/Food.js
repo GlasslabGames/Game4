@@ -60,7 +60,18 @@ GlassLab.Food.prototype.placeOnTile = function(tile) {
 GlassLab.Food.prototype.BeEaten = function() {
   var anim = this.sprite.animations.play('anim', 24);
   anim.onComplete.add(this._afterEaten, this);
-  this.getTile().onFoodRemoved(this);
+    var tile = this.getTile();
+    if (tile) tile.onFoodRemoved(this);
+};
+
+GlassLab.Food.prototype.setAnimStyle = function(style) {
+  if (style) {
+      this.sprite.loadTexture(this.info.spriteName+"_eaten_"+style)
+      this.sprite.animations.add('anim');
+      if (style == "long") { // hacks b/c the animations aren't in the same place
+          this.sprite.anchor.setTo(0.45, 1.2);
+      }
+  }
 };
 
 GlassLab.Food.prototype._afterEaten = function() {

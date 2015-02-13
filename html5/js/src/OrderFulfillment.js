@@ -24,7 +24,7 @@ GlassLab.OrderFulfillment = function(game)
     this.answerInputs = []; // array of answer inputs (for each kind of food)
 
     for (var i = 0; i < 2; i++) { // for now, assume that we don't have creatures that eat more than 2 kinds of food
-        var rowY = 100 + 80 * i;
+        var rowY = 120 + 70 * i;
         var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC);
         answerInput.x = 50;
         answerInput.y = rowY;
@@ -34,7 +34,7 @@ GlassLab.OrderFulfillment = function(game)
         var inputErrorGraphic = this.game.make.graphics();
         answerInput.events.onTextChange.add(this._onTextChange, this);
         var answerInputBounds = answerInput.getLocalBounds();
-        inputErrorGraphic.beginFill(0xFF4444).drawRect(-20,-20,answerInputBounds.width+60, answerInputBounds.height+40);
+        inputErrorGraphic.drawRect(-20,-20,answerInputBounds.width+60, answerInputBounds.height+40); // was .beginFill(0xFF4444)
         inputErrorGraphic.alpha = 0;
         answerInput.addChild(inputErrorGraphic);
 
@@ -59,15 +59,17 @@ GlassLab.OrderFulfillment = function(game)
     this.dragBox.x = 50;
     this.dragBox.y = 170;
 */
-    this.submitButton = new GlassLab.UIButton(game, 30, 280, this._onSubmit, this, 180, 80 ,0xffaaff, "Ship Crate!");
+    this.crateLoaded = false;
+    this.submitButton = new GlassLab.UIButton(game, 30, 280, this._onSubmit, this, 180, 80, 0xffffff, "Load Crate"); // was 0xffaaff
     this.sprite.addChild(this.submitButton);
+    this.submitButton.setEnabled(false);
 
-    this.orderRequirementLabel = game.make.text(0,0,"");
-    this.orderRequirementLabel.anchor.setTo(1.0, 0);
-    this.orderRequirementLabel.x = 800;
+    this.orderRequirementLabel = game.make.text(0,0,"",{font: "20px Helvetica", strokeThickness: 1});
+    this.orderRequirementLabel.x = 30;
+    this.orderRequirementLabel.y = 70;
     this.sprite.addChild(this.orderRequirementLabel);
 
-    this.cancelButton = game.make.button(830, 0, "cancelButton", function(){
+    this.cancelButton = game.make.button(0, -100, "cancelButton", function(){
         this.Hide(true);
     }, this);
     this.sprite.addChild(this.cancelButton);
@@ -78,7 +80,10 @@ GlassLab.OrderFulfillment = function(game)
 // When text is UITextInput is changed
 GlassLab.OrderFulfillment.prototype._onTextChange = function(text)
 {
-    this._refreshPen();
+    // this._refreshPen();
+    // Currently we don't refresh the pen until the player hits "Load Crate". Possibly we'll want to toggle the behavior in the future.
+
+    this.submitButton.setEnabled( this._getResponse() ); // enable the submit button when they've entered all numbers
 };
 
 GlassLab.OrderFulfillment.prototype._refreshPen = function() {
@@ -94,6 +99,11 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function() {
             this.pen.allowFeedButton = false;
         }
         this.pen.SetContents(this.data.type, this.data.numCreatures, this.foodTypes, response);
+
+        // Center the pen at the top of the screen, and zoom out if required
+        this.game.camera.x = -this.game.camera.width/2;
+        this.game.camera.y = -this.game.camera.height/5;
+        // TODO: zoom appropriately
     }
 };
 
@@ -121,12 +131,17 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     this.sprite.visible = true;
     for (var i = 0; i < this.answerInputs.length; i++) {
         this.answerInputs[i].input.SetText("");
+        this.answerInputs[i].input.setEnabled(true);
     }
     if (data)
     {
         this.data = data;
         this.Refresh();
     }
+    GLOBAL.assistant.startOrder(data);
+
+    GLOBAL.ordersButton.visible = false;
+    GLOBAL.inventoryMenu.Hide(); // in the future show it, but for now we can't drag the food anyway
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
@@ -141,6 +156,9 @@ GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
         this.pen.sprite.destroy();
         this.pen = null;
     }
+
+    GLOBAL.assistant.endOrder();
+    GLOBAL.ordersButton.visible = true;
 };
 
 GlassLab.OrderFulfillment.prototype.Refresh = function()
@@ -177,15 +195,43 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
         }
     }
     // num creatures
-    this.orderRequirementLabel.setText("Order Requirements: " + this.data.numCreatures + " " + this.data.type);
+    this.orderRequirementLabel.setText(this.data.numCreatures + " " + this.data.type);
 };
 
 GlassLab.OrderFulfillment.prototype._onSubmit = function()
 {
-    var response = this._getResponse(true);
+    if (!this.crateLoaded) {
+        var response = this._getResponse(true);
+        if (response) {
+            this._refreshPen();
+            this.submitButton.label.text = "Ship Crate!";
+            this.submitButton.setEnabled(false);
+            for (var i = 0; i < this.answerInputs.length; i++) {
+                this.answerInputs[i].input.setEnabled(false);
+            }
+            GLOBAL.assistant.onPenLoaded();
+            this.crateLoaded = true;
+        }
+    } else {
+        var response = this._getResponse(true);
 
-    if (response) {
-        this.pen.FeedCreatures();
-        this.Hide();
+        if (response) {
+            this.pen.FeedCreatures();
+            this.Hide();
+        }
+    }
+
+};
+
+// From the assistant's dialogue
+GlassLab.OrderFulfillment.prototype.restartLoading = function()
+{
+    this.pen.sprite.destroy();
+    this.pen = null;
+    this.submitButton.label.text = "Load Crate";
+    this.crateLoaded = false;
+    for (var i = 0; i < this.answerInputs.length; i++) {
+        this.answerInputs[i].input.SetText("");
+        this.answerInputs[i].input.setEnabled(true);
     }
 };

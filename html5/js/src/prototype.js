@@ -18,25 +18,29 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
-        game.load.image('sheep_idle', 'assets/images/sheep_idle.png');
-        game.load.image('sheep_idle_back', 'assets/images/sheep_idle_backfacing.png');
-        game.load.atlasJSONHash('sheep_walk', 'assets/images/sheep_walk.png', 'assets/images/sheep_walk.json');
-        game.load.atlasJSONHash('sheep_walk_back', 'assets/images/sheep_backfacing_walk.png', 'assets/images/sheep_backfacing_walk.json');
-        game.load.atlasJSONHash('sheep_eat', 'assets/images/sheep_eat.png', 'assets/images/sheep_eat.json');
-        game.load.atlasJSONHash('sheep_vomit', 'assets/images/sheep_vomit.png', 'assets/images/sheep_vomit.json');
-        game.load.image('sheep_art', 'assets/images/ramArt.png');
-
-        game.load.image('fox_art', 'assets/images/foxArt.png');
+        var creatureSpriteNames = ["sheep", "unicorn"];
+        for (var i = 0; i < creatureSpriteNames.length; i++) {
+            var spriteName = creatureSpriteNames[i];
+            game.load.image(spriteName+'_idle', 'assets/images/creatures/'+spriteName+'_idle.png');
+            game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_idle_backfacing.png');
+            game.load.atlasJSONHash(spriteName+'_walk', 'assets/images/creatures/'+spriteName+'_walk.png', 'assets/images/creatures/'+spriteName+'_walk.json');
+            game.load.atlasJSONHash(spriteName+'_walk_back', 'assets/images/creatures/'+spriteName+'_backfacing_walk.png', 'assets/images/creatures/'+spriteName+'_backfacing_walk.json');
+            game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');
+            game.load.atlasJSONHash(spriteName+'_vomit', 'assets/images/creatures/'+spriteName+'_vomit.png', 'assets/images/creatures/'+spriteName+'_vomit.json');
+            game.load.image(spriteName+'_art', 'assets/images/creatures/'+spriteName+'_art.png');
+        }
 
         game.load.image('shadow', 'assets/images/iso_shadow.png');
 
         game.load.image('carrot', 'assets/images/isoCarrot.png');
         game.load.image('carrot2', 'assets/images/isoCarrot2.png');
         game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
+        game.load.atlasJSONHash('carrot_eaten_long', 'assets/images/carrot_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
         game.load.atlasJSONHash('carrot2_eaten', 'assets/images/carrot2_death_vfx.png', 'assets/images/carrot_death_vfx.json');
+        game.load.atlasJSONHash('carrot2_eaten_long', 'assets/images/carrot2_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
         game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
-        game.load.image('penBg', 'assets/images/dirtTile1_top.png');
+        game.load.image('penBg', 'assets/images/tiles/dirtTile1_top.png');
         game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical2.png');
         game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal2.png');
         game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
@@ -54,16 +58,16 @@ window.onload = function() {
       game.load.image('autumnTile8', 'assets/images/autumn_fenceStraight.png');
       game.load.image('autumnTile9', 'assets/images/autumn_fenceTopCorner.png');
       */
-        game.load.image('grassTile0', 'assets/images/grassy_water.png');
-        game.load.image('grassTile1', 'assets/images/grassy_1.png');
-        game.load.image('grassTile2', 'assets/images/grassy_2.png');
-        game.load.image('grassTile3', 'assets/images/grassy_3.png');
-        game.load.image('grassTile4', 'assets/images/grassy_4.png');
+        game.load.image('grassTile0', 'assets/images/tiles/grassy_water.png');
+        game.load.image('grassTile1', 'assets/images/tiles/grassy_1.png');
+        game.load.image('grassTile2', 'assets/images/tiles/grassy_2.png');
+        game.load.image('grassTile3', 'assets/images/tiles/grassy_3.png');
+        game.load.image('grassTile4', 'assets/images/tiles/grassy_4.png');
         /*game.load.image('grassTile5', 'assets/images/grassy_fence_bottomCorner.png');
         game.load.image('grassTile6', 'assets/images/grassy_fence_length.png');
         game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
         game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');*/
-        game.load.image('dirtTile', 'assets/images/dirtTile1.png');
+        game.load.image('dirtTile', 'assets/images/tiles/dirtTile1.png');
 
         // Cloud shadow
         game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
@@ -86,6 +90,9 @@ window.onload = function() {
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
         game.load.image('lock', 'assets/images/HUD_items_lock.png');
+
+        game.load.image('assistant', 'assets/images/assistant.png');
+        game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -198,12 +205,29 @@ window.onload = function() {
         topLeftAnchor.fixedToCamera = true;
         uiGroup.add(topLeftAnchor);
 
+        var bottomRightAnchor = game.make.sprite(game.camera.width, game.camera.height);
+        bottomRightAnchor.anchor.setTo(1, 1);
+        bottomRightAnchor.fixedToCamera = true;
+        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
+            this.cameraOffset.x = game.camera.width;
+            this.cameraOffset.y = game.camera.height;
+        }, bottomRightAnchor);
+        uiGroup.add(bottomRightAnchor);
+
+        var bottomLeftAnchor = game.make.sprite(0, game.camera.height);
+        bottomLeftAnchor.anchor.setTo(1, 1);
+        bottomLeftAnchor.fixedToCamera = true;
+        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
+            this.cameraOffset.y = game.camera.height;
+        }, bottomLeftAnchor);
+        uiGroup.add(bottomLeftAnchor);
+
         GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game, centerAnchor);
 
         var table = new GlassLab.UITable(game, 1, 20);
-        table.x = table.y = 30;
-        uiGroup.add(table);
-        table.fixedToCamera = true;
+        table.x = -70;
+        table.y = 20;
+        topRightAnchor.addChild(table);
 
         // pause icon
         var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
@@ -251,32 +275,9 @@ window.onload = function() {
         table._refresh();
 
         table = new GlassLab.UITable(game, 1, 40);
-        table.x = -100;
-        table.y = 30;
-        topRightAnchor.addChild(table);
-
-        uiElement = new GlassLab.UIElement(game, 0,0, "ordersIcon");
-        uiElement.scale.setTo(.6, .6);
-        uiElement.inputEnabled = true;
-        var ordersAlert = game.make.sprite(0,0,"alertIcon");
-        ordersAlert.anchor.setTo(.5,.5);
-        GlassLab.SignalManager.levelLoaded.add(function(level){ this.visible = true; }, ordersAlert);
-        uiElement.addChild(ordersAlert);
-        uiElement.events.onInputDown.add(function(){
-            if (!GLOBAL.Orders.IsShowing())
-            {
-                ordersAlert.visible = false;
-                GLOBAL.Orders.Show();
-            }
-            else
-            {
-                GLOBAL.Orders.Hide();
-            }
-        }, this);
-        GlassLab.SignalManager.levelLoaded.add(function(level){
-            this.visible = (level.data.orders && level.data.orders.length > 0);
-        }, uiElement);
-        table.addManagedChild(uiElement);
+        table.x = 20;
+        table.y = 20;
+        topLeftAnchor.addChild(table);
 
         uiElement = new GlassLab.UIElement(game, 0,0, "journalIcon");
         uiElement.scale.setTo(.6, .6);
@@ -298,31 +299,47 @@ window.onload = function() {
             }
         }, this);
         table.addManagedChild(uiElement);
-        table._refresh();
 
-        var bottomRightAnchor = game.make.sprite(game.camera.width, game.camera.height);
-        bottomRightAnchor.anchor.setTo(1, 1);
-        bottomRightAnchor.fixedToCamera = true;
-        game.scale.onSizeChange.add(function(){ // Add listener to reposition whenever screen scale is changed.
-            this.cameraOffset.x = game.camera.width;
-            this.cameraOffset.y = game.camera.height;
-        }, bottomRightAnchor);
-        uiGroup.add(bottomRightAnchor);
+        uiElement = new GlassLab.UIElement(game, 0,0, "ordersIcon");
+        uiElement.scale.setTo(.6, .6);
+        uiElement.inputEnabled = true;
+        GLOBAL.ordersButton = uiElement;
+        var ordersAlert = game.make.sprite(0,0,"alertIcon");
+        ordersAlert.anchor.setTo(.5,.5);
+        GlassLab.SignalManager.levelLoaded.add(function(level){ this.visible = true; }, ordersAlert);
+        uiElement.addChild(ordersAlert);
+        uiElement.events.onInputDown.add(function(){
+            if (!GLOBAL.Orders.IsShowing())
+            {
+                ordersAlert.visible = false;
+                GLOBAL.Orders.Show();
+            }
+            else
+            {
+                GLOBAL.Orders.Hide();
+            }
+        }, this);
+        GlassLab.SignalManager.levelLoaded.add(function(level){
+            this.visible = (level.data.orders && level.data.orders.length > 0);
+        }, uiElement);
+        table.addManagedChild(uiElement, true);
 
-        uiElement = new GlassLab.UIElement(game, -100, -100, "itemsIcon");
+        uiElement = new GlassLab.UIElement(game, 20, -100, "itemsIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.inventoryMenu.visible)
             {
                 GLOBAL.inventoryMenu.Show();
+                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -200;
             }
             else
             {
                 GLOBAL.inventoryMenu.Hide();
+                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -100;
             }
         }, this);
-        bottomRightAnchor.addChild(uiElement);
+        bottomLeftAnchor.addChild(uiElement);
         uiElement.visible = getParameterByName("items") != "false"; // default to using items
 
         game.input.onDown.add(globalDown, this); // Global input down handler
@@ -331,7 +348,6 @@ window.onload = function() {
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
         game.camera.y = -game.camera.height/2;
-        console.log("Camera position:",game.camera.x, game.camera.y);
 
 
       // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
@@ -342,31 +358,37 @@ window.onload = function() {
         game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
         var journal = new GlassLab.Journal(game);
-        journal.sprite.x = -320;
+        journal.sprite.x = -300;
         journal.sprite.y = -270;
         journal.sprite.scale.setTo(.6, .6);
         centerAnchor.addChild(journal.sprite);
         GLOBAL.Journal = journal;
 
         var orders = new GlassLab.OrdersMenu(game);
-        orders.sprite.x = -200
+        orders.sprite.x = -200;
         orders.sprite.y = -250;
         centerAnchor.addChild(orders.sprite);
         GLOBAL.Orders = orders;
 
         var orderFulfillment = new GlassLab.OrderFulfillment(game);
         orderFulfillment.sprite.scale.setTo(.6, .6);
-        orderFulfillment.sprite.x = 130;
-        orderFulfillment.sprite.y = 50;
-        topLeftAnchor.addChild(orderFulfillment.sprite);
+        orderFulfillment.sprite.x = 20;
+        orderFulfillment.sprite.y = -250; // in the future use -380 (above the inventory)
+        bottomLeftAnchor.addChild(orderFulfillment.sprite);
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
         inventoryMenu.scale.setTo(.8, .8);
         inventoryMenu.x = -700;
-        inventoryMenu.y = -150;
+        inventoryMenu.y = -120;
         bottomRightAnchor.addChild(inventoryMenu);
         GLOBAL.inventoryMenu = inventoryMenu;
+
+        var assistant = new GlassLab.Assistant(game);
+        assistant.sprite.x = -80;
+        assistant.sprite.y = -80;
+        bottomRightAnchor.addChild(assistant.sprite);
+        GLOBAL.assistant = assistant;
 
         var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
         versionLabel.fixedToCamera = true;
