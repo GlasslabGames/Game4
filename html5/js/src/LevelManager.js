@@ -75,15 +75,15 @@ GlassLab.LevelManager = function(game)
     };
 
     this._addLevelData(new GlassLab.Level()).data = {
-        objective: "Feed the rams with multiple kinds of food!",
+        objective: "Feed the foxes with multiple kinds of food!",
         pens: [
             {
-                type: "rammus2", height: 1, foodAWidth: 1, foodBWidth: 1,
+                type: "unifox", height: 1, foodAWidth: 1, foodBWidth: 1,
                 bottomDraggable: true, leftDraggable: true, topDraggable: true
             }
         ],
         looseCreatures: {
-            rammus2: 6,
+            unifox: 6,
             rammus: 3
         }
     };
@@ -95,8 +95,8 @@ GlassLab.LevelManager = function(game)
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
                 numCreatures: 5,
-                type: "rammus2",
-                description: "Dear Friend! I want 7 AQUA RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+                type: "unifox",
+                description: "Dear Friend! I want 5 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
                 fulfilled: false,
                 reward: 200
             },

@@ -16,7 +16,7 @@ GlassLab.CreatureStateDragged.constructor = GlassLab.CreatureStateDragged;
 GlassLab.CreatureStateDragged.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.PlayAnim('walk', true, 192);
+  this.creature.PlayAnim('walk', true, 48 * 3);
   this.creature.shadow.y = 150;
 };
 

@@ -46,9 +46,9 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
 
     // Note that the animation won't start if we're already playing it, so this is no problem
     if (delta.y < 0 || delta.x < 0) {
-      this.creature.PlayAnim("walk_back", true, 144);
+      this.creature.PlayAnim("walk_back", true, 48 * 1.5);
     } else {
-      this.creature.PlayAnim("walk", true, 144);
+      this.creature.PlayAnim("walk", true, 48 * 1.5);
     }
     var flip = (delta.y == 0);
     this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);

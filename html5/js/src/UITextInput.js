@@ -17,8 +17,9 @@ GlassLab.UITextInput = function(game, inputType)
     this.inputEnabled = true;
     this.events.onInputDown.add(this._onClick, this);
 
+    this.color = 0xCCCCFF;
     this.bg = game.make.graphics();
-    this.bg.beginFill(0xAAAAFF).lineStyle(3, 0x000000, 1).drawRect(0,0,60,36);
+    this.bg.beginFill(this.color).lineStyle(3, 0x000000, 1).drawRect(0,0,60,36);
     this.addChild(this.bg);
 
     this.textLabel = game.make.text(30,this.getLocalBounds().height/2,"");
@@ -37,6 +38,7 @@ GlassLab.UITextInput = function(game, inputType)
     this.textLabel.addChild(this.clickHereLabel);
 
     this.events.onTextChange = new Phaser.Signal();
+    this.enabled = true;
 };
 
 // Extends Sprite
@@ -45,7 +47,9 @@ GlassLab.UITextInput.prototype.constructor = GlassLab.UITextInput;
 
 GlassLab.UITextInput.prototype._onClick = function()
 {
-    this.SetFocus(true);
+    if (this.enabled) {
+        this.SetFocus(true);
+    }
 };
 
 GlassLab.UITextInput.prototype.SetText = function(text)
@@ -150,4 +154,10 @@ GlassLab.UITextInput.InputType = {
     ALPHANUMERIC: "alphanumeric",
     NUMERIC: "numeric",
     FULL: "full"
+};
+
+GlassLab.UITextInput.prototype.setEnabled = function(enabled) {
+    this.bg.beginFill(0xffffff).lineStyle(3, (enabled? 0x000000 : 0xbbbbbb), 1).drawRect(0,0,60,36);
+    this.enabled = enabled;
+    if (!this.enabled) this.SetFocus(false);
 };
