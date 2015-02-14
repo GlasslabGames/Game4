@@ -57,8 +57,11 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     }
 
     if (this.autoFill) {
-        this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, "WaitingForFood"), this.creatures, this.numCreatures,
+        this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatures, this.numCreatures,
             0, this.widths[0], true);
+        for (var i = 0; i < this.creatures.length; i++) {
+            this.creatures[i].draggable = false;
+        }
     } else {
         // For each tile in the creature side, mark that it's open for creatures
         for (var col = 0; col < this.widths[0]; col++) {
@@ -128,6 +131,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.numCreatures = numCreatures || 0;
     this.numFoods = numFoods || []; // should be an array
     this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
+
+    console.log(creatureType, numCreatures, foodTypes, numFoods);
 
     if (!condenseToMultipleRows) {
         this.widths[0] = 1;

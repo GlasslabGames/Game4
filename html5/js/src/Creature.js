@@ -78,7 +78,7 @@ GlassLab.CreatureManager.prototype.GetCreatureData = function (type) {
 /**
  * Creature
  */
-GlassLab.Creature = function (game, type, initialStateName) {
+GlassLab.Creature = function (game, type, startInPen) {
     this.type = type;
     var info = GLOBAL.creatureManager.creatureDatabase[type];
     this.sprite = game.make.isoSprite();
@@ -150,7 +150,8 @@ GlassLab.Creature = function (game, type, initialStateName) {
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 
     // FINALLY, start the desired state
-    if (initialStateName == "WaitingForFood") {
+    if (startInPen) {
+        this.pen = startInPen;
         this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
     } else {
         this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));

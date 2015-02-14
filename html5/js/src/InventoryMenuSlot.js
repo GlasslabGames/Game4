@@ -75,6 +75,11 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseCanceled = function()
 
 GlassLab.InventoryMenuSlot.prototype._onDragStop = function(sprite, pointer)
 {
+    if (GLOBAL.UIManager.tryDropOntoDragTargets(this)) {
+        this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
+        return;
+    }
+
     // Dropped on world
     var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
     if (tile && tile.canDropFood()) { // valid tile
@@ -84,7 +89,7 @@ GlassLab.InventoryMenuSlot.prototype._onDragStop = function(sprite, pointer)
 
         this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
     }
-    else  if (tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {
+    else  if (tile && tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {
         this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
     } else {// failed
         if (!this.returnTween)
