@@ -9,7 +9,7 @@ GlassLab.UITextInput = function(game, inputType)
     GlassLab.UIElement.prototype.constructor.call(this, game);
     this.game = game;
     this.data = null;
-    this.container = this.game.make.group();
+    //this.container = this.game.make.group();
 
     this.inputType = inputType || GlassLab.UITextInput.InputType.FULL;
 

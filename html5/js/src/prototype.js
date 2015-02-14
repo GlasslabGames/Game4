@@ -316,7 +316,7 @@ window.onload = function() {
         var orderFulfillment = new GlassLab.OrderFulfillment(game);
         orderFulfillment.sprite.scale.setTo(.6, .6);
         orderFulfillment.sprite.x = 20;
-        orderFulfillment.sprite.y = -250; // in the future use -380 (above the inventory)
+        orderFulfillment.sprite.y = -380; // or 250 if the inventory is closed?
         GLOBAL.UIManager.bottomLeftAnchor.addChild(orderFulfillment.sprite);
         GLOBAL.orderFulfillment = orderFulfillment;
 
@@ -329,13 +329,19 @@ window.onload = function() {
 
         var assistant = new GlassLab.Assistant(game);
         assistant.sprite.x = -80;
-        assistant.sprite.y = -80;
+        assistant.sprite.y = -200;
         GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
         GLOBAL.assistant = assistant;
 
         var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
         versionLabel.fixedToCamera = true;
         GLOBAL.UIGroup.add(versionLabel);
+
+        /* TODO
+        GLOBAL.sortingGame = new GlassLab.SortingGame(game);
+        GLOBAL.sortingGame.sprite.fixedToCamera = true;
+        GLOBAL.UIGroup.add(GLOBAL.sortingGame.sprite);
+        */
 
         GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 

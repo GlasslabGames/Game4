@@ -8,6 +8,7 @@
 GlassLab.CreatureStateDragged = function(game, owner)
 {
   GlassLab.CreatureState.call(this, game, owner);
+  //console.log(this.creature,"dragged");
 };
 
 GlassLab.CreatureStateDragged.prototype = Object.create(GlassLab.CreatureState.prototype);
