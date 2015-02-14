@@ -63,7 +63,7 @@ GlassLab.LevelManager = function(game)
               company: "Baaa",
               numCreatures: 1,
               type: "rammus",
-              description: "Dear Friend! My island has 1 RAM. I have heard you know HOW MANY CARROTS I need IT. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+              description: "Dear Friend! My island has 1 RAM. I have heard you know HOW MANY CARROTS I need FOR IT. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
               fulfilled: false,
               reward: -5
           }
@@ -113,14 +113,19 @@ GlassLab.LevelManager = function(game)
     };
 
     var level4 = this._addLevelData(new GlassLab.Level());
-        level4.data = {
+    level4.data = {
         pens: [
             {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
             rammus: 30
         },
-            objective: "Feed as many rams as you can!"
+        objective: "Feed as many rams as you can!"
+    };
+
+    var level5 = this._addLevelData(new GlassLab.Level());
+    level5.data = {
+        quest: 0
     };
 };
 
@@ -158,10 +163,19 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
               var creature = new GlassLab.Creature(this.game, type);
               GLOBAL.creatureLayer.add(creature.sprite);
               creature.moveToRandomTile();
-              console.log("calling targets changed from levelM")
               creature._onTargetsChanged();
             }
           }
+        }
+
+        if (typeof data.quest != 'undefined')
+        {
+            GLOBAL.questManager.quests[data.quest].Start();
+        }
+
+        if (typeof data.objective != 'undefined')
+        {
+            GLOBAL.questManager.UpdateObjective(data.objective);
         }
 
         GlassLab.SignalManager.levelLoaded.dispatch(this.levels[levelNum]);
@@ -204,7 +218,14 @@ GlassLab.LevelManager.prototype.GetCurrentLevel = function()
 
 GlassLab.LevelManager.prototype.CompleteCurrentLevel = function()
 {
-    return this.GetCurrentLevel().isCompleted = true;
+    if (typeof this.GetCurrentLevel().quests != 'undefined')
+    {
+        return false;
+    }
+
+    this.GetCurrentLevel().isCompleted = true;
+
+    GlassLab.SignalManager.levelWon.dispatch();
 };
 
 /**

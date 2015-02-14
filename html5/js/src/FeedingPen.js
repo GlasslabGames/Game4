@@ -91,7 +91,6 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 
     if (this.prevHeight != this.height || this.prevCreatureWidth != this.widths[0]) {
-        console.log("Creature side changed!");
         GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
         // Check for any creatures outside the pen and move them out
@@ -334,28 +333,26 @@ GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
 };
 
 GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
-    console.log("Finished feeding creatures! Success?",win);
 
     if (this.finished) return;
     this.finished = true;
+
+    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win);
 
     this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
         if (win)
         {
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
 
-            GLOBAL.levelManager.CompleteCurrentLevel();
-
             GLOBAL.Journal.Show(this.creatureType);
 
-            GlassLab.SignalManager.levelWon.dispatch();
+            GLOBAL.levelManager.CompleteCurrentLevel();
         }
         else
         {
             GlassLab.SignalManager.levelLost.dispatch();
         }
     }, this);
-
 };
 
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {

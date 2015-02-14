@@ -4,11 +4,11 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.UIManager = function(game, centerAnchor)
+GlassLab.UIManager = function(game)
 {
     this.game = game;
     this.dragTargets = [];
-    this.centerAnchor = centerAnchor;
+    this._createAnchors();
 
     var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
     var nextButton = new GlassLab.UIButton(this.game, 0, 0, this._onContinuePressed, this, 150, 60, 0xffffff, "Continue");
@@ -31,6 +31,39 @@ GlassLab.UIManager = function(game, centerAnchor)
       this.visible = true
     }, this.loseModal);
 };
+
+GlassLab.UIManager.prototype._createAnchors = function()
+{
+    // Top left
+    this.topLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 0);
+    GLOBAL.UIGroup.add(this.topLeftAnchor);
+    // Top center
+    this.topAnchor = new GlassLab.UIAnchor(this.game, .5, 0);
+    GLOBAL.UIGroup.add(this.topAnchor);
+    // Top right
+    this.topRightAnchor = new GlassLab.UIAnchor(this.game, 1, 0);
+    GLOBAL.UIGroup.add(this.topRightAnchor);
+
+    // Left
+    this.leftAnchor = new GlassLab.UIAnchor(this.game, 0, .5);
+    GLOBAL.UIGroup.add(this.leftAnchor);
+    // Center
+    this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
+    GLOBAL.UIGroup.add(this.centerAnchor);
+    // Right
+    this.rightAnchor = new GlassLab.UIAnchor(this.game, 1, .5);
+    GLOBAL.UIGroup.add(this.rightAnchor);
+
+    // Bottom left
+    this.bottomLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 1);
+    GLOBAL.UIGroup.add(this.bottomLeftAnchor);
+    // Bottom center
+    this.bottomAnchor = new GlassLab.UIAnchor(this.game, .5, 1);
+    GLOBAL.UIGroup.add(this.bottomAnchor);
+    // Bottom right
+    this.bottomRightAnchor = new GlassLab.UIAnchor(this.game, 1, 1);
+    GLOBAL.UIGroup.add(this.bottomRightAnchor);
+}
 /*
 // TODO: Replace with class  OR combine with FailModal somehow.. like reuse the same modal? (._.)a
 GlassLab.UIManager.prototype._createEndLevelModal = function()

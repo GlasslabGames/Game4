@@ -97,9 +97,6 @@ GlassLab.Pen.prototype.SetDraggable = function() {
 GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
   var rows = Math.round(edge.sprite.isoY / GLOBAL.tileSize);
   var cols = Math.round(edge.sprite.isoX / GLOBAL.tileSize);
-  //console.log("left:",this.leftWidth,"right:",this.rightWidth,"height:",this.height);
-  //console.log("cols:", cols, "rows:", rows);
-  console.log("setSizeFromEdge");
 
   switch (edge.side) {
     case GlassLab.Edge.SIDES.top:

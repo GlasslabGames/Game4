@@ -389,7 +389,6 @@ AE.Layer.prototype.goToFrame = function(frameNum)
     if (this.skeletalContainer.parent)
     {
         var globalSkeletalPosition = this.skeletalContainer.world;
-        console.log(this.sprite.key + " - (" + globalSkeletalPosition.x + ", " + globalSkeletalPosition.y + ")");
         if (this.sprite.parent)
         {
             var localDeltaVector = this.sprite.toLocal(globalSkeletalPosition);

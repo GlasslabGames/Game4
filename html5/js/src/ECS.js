@@ -25,7 +25,7 @@ GlassLab.Entity.prototype.removeComponent = function(component) {
     delete this.components[component.name];
     component.setTarget(null);
   } else {
-    console.log("WARNNING: Tried to remove a component which wasn't attached.");
+    console.warn("Tried to remove a component which wasn't attached.");
   }
   return component;
 };
@@ -34,7 +34,7 @@ GlassLab.Entity.prototype.removeComponentByName = function(componentName) {
   if (this.components[componentName]) {
     this.removeComponent(this.components[componentName]);
   } else {
-    console.log("WARNNING: Tried to remove a component which wasn't attached.");
+    console.warn("Tried to remove a component which wasn't attached.");
   }
 };
 

@@ -56,9 +56,7 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
     this.creature.StopAnim();
     // If the waypoint is the same as the original target point, stop
     if (Phaser.Point.subtract(this.wayPoint.isoPosition, this.target.isoPosition).getMagnitude() < GLOBAL.tileSize) {
-      console.log("Reached target point");
       if (this.target.inPen) {
-        console.log("enter pen");
         this.creature.enterPen(this.target.inPen);
       } else if (this.target.food) { // TODO: check food type
         this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.target.food));

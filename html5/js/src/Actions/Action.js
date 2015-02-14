@@ -1,0 +1,32 @@
+/**
+ * Created by Jerry Fu on 2/9/2015.
+ */
+
+var GlassLab = GlassLab || {};
+
+GlassLab.Action = function()
+{
+    this.completed = false;
+
+    this.onComplete = new Phaser.Signal();
+};
+
+/**
+ * OVERRIDE THIS, call _complete() when finished!
+ * @protected
+ */
+GlassLab.Action.prototype.Do = function()
+{
+    console.error("Action.Do was not overridden, completing Action without doing anything");
+    this._complete();
+};
+
+/**
+ *
+ * @protected
+ */
+GlassLab.Action.prototype._complete = function()
+{
+    this.completed = true;
+    this.onComplete.dispatch(this);
+};
