@@ -128,6 +128,9 @@ window.onload = function() {
 
         game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
+        // Save Manager
+        GLOBAL.saveManager = new GlassLab.SaveManager(game);
+
         GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
 
         GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
@@ -159,9 +162,6 @@ window.onload = function() {
         // Add clouds
         GLOBAL.cloudManager = new GlassLab.CloudManager(game);
         GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
-
-        // Save Manager
-        GLOBAL.saveManager = new GlassLab.SaveManager(game);
 
         // Add UI
         // TODO: Gross, so much crap here. How to clean? We could move into UIManager at least..
@@ -231,7 +231,7 @@ window.onload = function() {
         var journalAlert = game.make.sprite(0,0,"alertIcon");
         journalAlert.anchor.setTo(.5,.5);
         journalAlert.visible = false;
-        GlassLab.SignalManager.levelWon.add(function(leve){ this.visible = true; }, journalAlert);
+        GlassLab.SignalManager.levelWon.add(function(level){ this.visible = true; }, journalAlert);
         uiElement.addChild(journalAlert);
         uiElement.events.onInputDown.add(function(){
             if (!GLOBAL.Journal.IsShowing())
@@ -247,14 +247,14 @@ window.onload = function() {
         table.addManagedChild(uiElement);
 
         uiElement = new GlassLab.UIButton(game, 0,0, function(){
-            if (!GLOBAL.Orders.IsShowing())
+            if (!GLOBAL.mailManager.IsMailShowing())
             {
                 ordersAlert.visible = false;
-                GLOBAL.Orders.Show();
+                GLOBAL.mailManager.ShowMail();
             }
             else
             {
-                GLOBAL.Orders.Hide();
+                GLOBAL.mailManager.HideMail();
             }
         }, this, 60, 60, 0xffffff, "Mail", 16);
         uiElement.inputEnabled = true;
@@ -310,11 +310,7 @@ window.onload = function() {
         GLOBAL.UIManager.centerAnchor.addChild(journal.sprite);
         GLOBAL.Journal = journal;
 
-        var orders = new GlassLab.OrdersMenu(game);
-        orders.sprite.x = -200;
-        orders.sprite.y = -250;
-        GLOBAL.UIManager.centerAnchor.addChild(orders.sprite);
-        GLOBAL.Orders = orders;
+        GLOBAL.mailManager = new GlassLab.MailManager(game);
 
         var orderFulfillment = new GlassLab.OrderFulfillment(game);
         orderFulfillment.sprite.scale.setTo(.6, .6);
@@ -353,7 +349,6 @@ window.onload = function() {
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager.LoadNextLevel(); // Load first level
-        //var pen = new GlassLab.Pen(game, GLOBAL.penLayer, 3, [1,2,3]);
 
         game.time.events.start();
     }
@@ -407,15 +402,12 @@ window.onload = function() {
             tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         }
 
-        // Temporarily disabling this since I'm tinting tiles for other reasons
-        /*
         if (tileSprite != GLOBAL.highlightedTile)
         {
             if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
             if (tileSprite) tileSprite.tint = 0xBFE2F2; //previous color was 0x86bfda (good for night) but I lightened it
             GLOBAL.highlightedTile = tileSprite;
         }
-        */
 
         GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
     }

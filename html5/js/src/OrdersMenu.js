@@ -4,9 +4,11 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.OrdersMenu = function(game) {
+GlassLab.OrdersMenu = function(game, x, y) {
     this.game = game;
     this.sprite = game.make.sprite();
+    this.sprite.x = x;
+    this.sprite.y = y;
 
     this.bg = game.make.graphics();
     this.sprite.addChild(this.bg);

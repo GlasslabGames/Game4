@@ -7,11 +7,18 @@ var GlassLab = GlassLab || {};
 GlassLab.SaveManager = function(game)
 {
     this.game = game;
-    this.dataBlob = JSON.parse(document.cookie) || {};
+    this.dataBlob = {};
 
-    if (getParameterByName("reset") == "true")
+    // Try load from cookie
+    if (getParameterByName("reset") != "true")
     {
-        this.dataBlob = {};
+        try {
+            this.dataBlob = JSON.parse(document.cookie);
+        }
+        catch (e)
+        {
+            console.error("Error parsing cookie: "+e+"\n",document.cookie);
+        }
     }
 
     this.saveRequested = false;
@@ -19,6 +26,16 @@ GlassLab.SaveManager = function(game)
 };
 
 GlassLab.SaveManager.SAVE_DELAY = 5; // Minimum time in seconds to wait between saves.
+
+GlassLab.SaveManager.prototype.Save = function(key, targetBlob)
+{
+    key = key || "default";
+    targetBlob = targetBlob || {};
+    GlassLab.SignalManager.saveRequested.dispatch(targetBlob);
+
+    this.SaveData(key, targetBlob);
+    return targetBlob;
+};
 
 GlassLab.SaveManager.prototype.SaveData = function(key, value)
 {
