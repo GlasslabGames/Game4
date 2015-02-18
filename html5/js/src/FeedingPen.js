@@ -197,39 +197,79 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         this.rightEdges[i].sprite.parent.removeChild( this.rightEdges[i].sprite ); // hide the middle fences
     }
 
-    // Start creatures moving and assign food to the creature that should eat it
-    var foods = [];
-    for (var i = 0; i < this.foodLists.length; i++) {
-        foods = foods.concat(this.foodLists[i]);
-    }
-    var foodByRow = this._sortObjectsByGrid(foods, false /*, -this.leftWidth*/);
     var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
 
+    // For each section of food, calculate which foods should go to which creatures
+    for (var i = 0; i < this.foodTypes.length; i++) {
+        var foodByRow = this._sortObjectsByGrid(this.foodLists[i], false);
+        console.log("foodByRow:", foodByRow);
+        var desiredAmount = this.creatures[0].desiredAmountsOfFood[this.foodTypes[i]]; // assume that all the creatures in the pen are the same kind as the first one
+        var remainder = desiredAmount % 1;
+
+        /* The general idea of assigning food to creatures:
+         * In the base case, the food is assigned evenly, so if there are 2 creatures (0, 1) and 4 foods (0 - 3), 0 will eat food 0 and 2, and 1 will eat 1 and 3
+         * If the number of food is uneven (like 5 food for 2 creatures), that "extra" food is assigned to the creatures closest to the center so that they can keep walking
+         *      while the creatures behind them stop. (We don't want creatures to walk on top of each other.)
+         * If the creatures want a fractional amount of food (like 2/3), we figure out how many foods they're going to share. These are the initial foods, so that the creatures
+         *      can keep walking to "whole foods" and leave space for other creatures who want to share those foods.
+         * If the fractional amount of food is greater than 1/2, then a creature will have to eat bits of multiple shared food to get enough (e.g. if the amount is 2/3,
+         *      two creatures eat 2/3 of a food and the last creature has to eat 1/3 of each to make the 2/3. These are called cleanup creatures.
+         * Creature should pause to avoid walking into each other, so this system will avoid creatures walking on top of each other EXCEPT when there's no foods
+         *      that aren't shared (e.g. each creature wants just 1/2 of a food - then in a 2:1 pen the creatures have to stand in the same place to share the food.
+         *      If cases like this are included, we'll have to deal with it somehow.
+         */
+        for (var row = 0; row < foodByRow.length; row++) {
+            var foodRow = foodByRow[row];
+            var creatureRow = creaturesByRow[row];
+
+            if (!foodRow || !creatureRow) continue; // ignore any empty rows
+            while (!creatureRow[0]) creatureRow.shift(); // the creatures might be offset b/c they are added from the right instead of the left
+
+            var sharedCols = Math.floor(remainder * creatureRow.length); // cols of food that multiple creatures will take a bite of
+            var extraCols = (foodRow.length - sharedCols) % creatureRow.length; // cols that aren't evenly divided for the number of creatures
+            var cleanupCreatures = creatureRow.length % sharedCols; // number of creatures that don't fall into the normal flow of sharing food
+            //console.log("Row:",row,"desired remainder:",remainder,"numCreatures:",creatureRow.length,"numFoods:",foodRow.length, "sharedCols:",sharedCols,"cleanupCreatures:",cleanupCreatures,"extraCols:",extraCols,"sharingCreatures:",(sharedCols / remainder));
+
+            // To assign the shared cols, we walk through the creatures and try to give them all the right food
+            for (var col = 0; col < (sharedCols / remainder); col++) {
+                if (col < cleanupCreatures) {
+                    // this creature gets to clean up several uneaten bits of food (they don't need .eatFoodPartially set b/c they will eat everything remaining)
+                    for (var i = 0; i < (sharedCols / cleanupCreatures); i++) {
+                        var index = (i * cleanupCreatures) + col;
+                        creatureRow[col].targetFood.push( foodRow[index] );
+                        //console.log("SharedFood",index,"to cleanup creature",col);
+                    }
+                } else {
+                    // no other creatures eat more than one shared food
+                    creatureRow[col].targetFood.push( foodRow[ (col - cleanupCreatures) % sharedCols ] );
+                    creatureRow[col].eatFoodPartially = true;
+                    //console.log("SharedFood",(col - cleanupCreatures) % sharedCols ,"to creature",col);
+                }
+            }
+
+            // assign the rest of the cols, which can be done independently from the shared cols
+            for (var col = sharedCols; col < foodRow.length; col++) {
+                var index = (col - sharedCols) % creatureRow.length; // divide up the food among the cols of creatures
+                if (col >= foodRow.length - extraCols) { // assign this food differently since it can't be evenly divided
+                    index += creatureRow.length - extraCols; // skip the columns of creatures who don't fit in these extra cols
+                }
+                creatureRow[ index ].targetFood.push( foodRow[col] ); // tell the creature at that index to eat this food
+                //console.log("Food",col,"to",index);
+            }
+
+        }
+    }
+
+    // Start the creatures eating, staggering them a little by column // TODO: have creatures pause if there's one in front of them
     for (var row = 0; row < foodByRow.length; row++) {
         var creatureRow = creaturesByRow[row];
         if (!creatureRow) continue;
 
-        // 1. start the creatures eating
         for (var col = 0; col < creatureRow.length; col++) {
             var creature = creatureRow[col];
             if (!creature) continue; // when there's an uneven number of creatures, the creatures might start at 1 instead of 0
             var time = ((creatureRow.length - col) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
             this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
-        }
-
-        // 2. assign the food to the creature that should eat it
-        while (!creatureRow[0]) creatureRow.shift(); // the creatures might be offset b/c they are added from the right instead of the left
-
-        var foodRow = foodByRow[row];
-        if (!foodRow) continue;
-        var extraCols = foodRow.length % creatureRow.length; // cols that aren't evenly divided for the number of creatures
-
-        for (var col = 0; col < foodRow.length; col++) {
-            var index = col % creatureRow.length; // divide up the food among the cols of creatures
-            if (col >= foodRow.length - extraCols) { // assign this food differently since it can't be evenly divided
-                index += creatureRow.length - extraCols; // skip the columns of creatures who don't fit in these extra cols
-            }
-            creatureRow[ index ].targetFood.push( foodRow[col] ); // tell the creature at that index to eat this food
         }
     }
 };

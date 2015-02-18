@@ -49,6 +49,8 @@ GlassLab.Food = function(game, type) {
     this.sprite.scale.x *= -1;
     this.game = game;
     this.sprite.anchor.setTo(0.4, 1); // this anchor is specific to the carrot, so generify later
+
+    this.health = 1; // food can be partially eaten. health 0 means it's totally eaten.
 };
 
 GlassLab.Food.prototype.placeOnTile = function(tile) {
@@ -57,11 +59,18 @@ GlassLab.Food.prototype.placeOnTile = function(tile) {
   tile.onFoodAdded(this);
 };
 
-GlassLab.Food.prototype.BeEaten = function() {
-  var anim = this.sprite.animations.play('anim', 24);
-  anim.onComplete.add(this._afterEaten, this);
-    var tile = this.getTile();
-    if (tile) tile.onFoodRemoved(this);
+GlassLab.Food.prototype.BeEaten = function(amount) {
+    amount = Math.min(amount, this.health); // can't eat more than we have left
+    this.health -= amount;
+    if (this.health > 0) {
+        this.sprite.alpha = this.health; // TODO: show some partially eaten food
+    } else {
+        var anim = this.sprite.animations.play('anim', 24);
+        anim.onComplete.add(this._afterEaten, this);
+        var tile = this.getTile();
+        if (tile) tile.onFoodRemoved(this);
+    }
+    return amount; // return the actual amount that was eaten
 };
 
 GlassLab.Food.prototype.setAnimStyle = function(style) {

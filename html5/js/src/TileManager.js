@@ -30,7 +30,7 @@ GlassLab.TileManager.prototype.GetTileData = function(x, y)
 
 GlassLab.TileManager.prototype.GetTile = function(x, y)
 {
-    return this.map[x][y];
+    return (this.map[x])? this.map[x][y] : null;
 };
 
 GlassLab.TileManager.prototype.GetMapHeight = function()

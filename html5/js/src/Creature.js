@@ -11,7 +11,7 @@ var GlassLab = GlassLab || {};
 GlassLab.CreatureManager = function (game) {
     this.game = game;
     GLOBAL.creatureManager = this;
-    this.creatureList = ["rammus", "unifox"]; // list of creatures in the order they should appear in the journal
+    this.creatureList = ["rammus", "rammus2", "unifox"]; // list of creatures in the order they should appear in the journal
     // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
         rammus: {
@@ -23,6 +23,18 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "carrot", amount: 3}],
+            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
+        },
+        rammus2: {
+            journalInfo: {
+                name: "Aqua Rammus",
+                temperament: "Combative"
+            },
+            unlocked: true, // if the player has discovered this animal yet
+            spriteName: "sheep",
+            fxFrames: {eat: 16, vomit: 60 },
+            spriteTint: 0xddffff,
+            desiredFood: [{type: "carrot", amount: (4/3)}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         unifox: {
@@ -295,9 +307,16 @@ GlassLab.Creature.prototype.resetFoodEaten = function () {
 
 GlassLab.Creature.prototype.getIsSatisfied = function () {
     for (var key in this.foodEaten) {
-        if (this.foodEaten[key] < this.desiredAmountsOfFood[key]) return false;
+        if (this.foodEaten[key] + 0.01 < this.desiredAmountsOfFood[key]) return false; // add a little padding
     }
     return true;
+};
+
+GlassLab.Creature.prototype.getIsSick = function () {
+    for (var key in this.foodEaten) {
+        if (this.foodEaten[key] - 0.01 > this.desiredAmountsOfFood[key]) return true; // add a little padding
+    }
+    return false;
 };
 
 GlassLab.Creature.prototype.Emote = function (happy) {
@@ -318,8 +337,8 @@ GlassLab.Creature.prototype.Emote = function (happy) {
     }, this);
 };
 
-GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEating, foodType, hideAfter) {
-    var amountEaten = (currentlyEating) ? this.foodEaten[foodType] + 1 : this.foodEaten[foodType];
+GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEatingAmount, foodType, hideAfter) {
+    var amountEaten = this.foodEaten[foodType] + currentlyEatingAmount;
     this.hungerBar.setAmount(foodType, amountEaten / this.desiredAmountsOfFood[foodType], true, hideAfter); // true -> animate change
 };
 
