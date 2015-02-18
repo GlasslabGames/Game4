@@ -7,7 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.LevelManager = function(game)
 {
     this.game = game;
-    this.currentLevel = GLOBAL.saveManager.LoadData("currentLevel")-1 || -1;
+    this.currentLevel = GLOBAL.saveManager.LoadData("currentLevel") || -1;
     var queryLevel = getParameterByName("level");
     if (queryLevel != "")
     {

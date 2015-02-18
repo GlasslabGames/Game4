@@ -4,9 +4,11 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.OrdersMenu = function(game) {
+GlassLab.OrdersMenu = function(game, x, y) {
     this.game = game;
     this.sprite = game.make.sprite();
+    this.sprite.x = x;
+    this.sprite.y = y;
 
     this.bg = game.make.graphics();
     this.sprite.addChild(this.bg);
@@ -39,9 +41,9 @@ GlassLab.OrdersMenu = function(game) {
     this.sprite.addChild(this.clientNameLabel);
 
     this.companyLabel = game.make.text(120,78, "Company:", {font: 'bold 10pt Arial'});
-    this.sprite.addChild(this.companyLabel);
+    //this.sprite.addChild(this.companyLabel);
     this.companyNameLabel = game.make.text(this.companyLabel.x+5,this.companyLabel.y + this.companyLabel.height, "{companyName}", {font: '10pt Arial'});
-    this.sprite.addChild(this.companyNameLabel);
+    //this.sprite.addChild(this.companyNameLabel);
 
     this.rewardLabel = game.make.text(120,115, "Payment:", {font: 'bold 10pt Arial'});
     this.sprite.addChild(this.rewardLabel);
@@ -139,7 +141,7 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.companyNameLabel.setText(this.data.company);
     this.rewardAmountLabel.setText("$"+this.data.reward);
 
-    this.menuLabel.setText("Order "+ (this.currentPage+1) + "/" + GLOBAL.levelManager.GetCurrentLevel().data.orders.length)
+    this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.levelManager.GetCurrentLevel().data.orders.length)
 
     var colors = getStringColorInfo(this.data.description);
     for (var i=colors.length-1; i >= 0; i++)
