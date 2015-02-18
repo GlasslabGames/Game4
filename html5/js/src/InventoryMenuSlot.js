@@ -44,7 +44,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             var noButton = new GlassLab.UIButton(this.game, 0, 0, this._onPurchaseCanceled, this, 150, 60, 0xffffff, "No");
 
             this.modal = new GlassLab.UIModal(this.game, "Purchase for $"+this.data.cost + "?", [yesButton, noButton]);
-            GLOBAL.uiAnchors.center.addChild(this.modal);
+            GLOBAL.UIManager.centerAnchor.addChild(this.modal);
         }
 
         this.modal.visible = true;
