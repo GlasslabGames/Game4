@@ -7,12 +7,13 @@ var GlassLab = GlassLab || {};
 GlassLab.LevelManager = function(game)
 {
     this.game = game;
-    this.currentLevel = -1;
+    this.currentLevel = GLOBAL.saveManager.LoadData("currentLevel")-1 || -1;
     var queryLevel = getParameterByName("level");
     if (queryLevel != "")
     {
         this.currentLevel = parseInt(queryLevel)-2;
     }
+
     this.levels = [];
 
     var level1 = this._addLevelData(new GlassLab.Level());
@@ -112,8 +113,8 @@ GlassLab.LevelManager = function(game)
         ]
     };
 
-    var level4 = this._addLevelData(new GlassLab.Level());
-    level4.data = {
+    var level6 = this._addLevelData(new GlassLab.Level());
+    level6.data = {
         pens: [
             {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
@@ -123,13 +124,12 @@ GlassLab.LevelManager = function(game)
         objective: "Feed as many rams as you can!"
     };
 
-    // Level 7
-    var level5 = this._addLevelData(new GlassLab.Level());
-    level5.data = {
+    var level7 = this._addLevelData(new GlassLab.Level());
+    level7.data = {
         quest: 0
     };
 
-    // Level 8
+    // level 8
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
             {type: "rammus2", foodAWidth: 1, foodBWidth:1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
@@ -182,13 +182,21 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 
         if (typeof data.quest != 'undefined')
         {
-            GLOBAL.questManager.quests[data.quest].Start();
+            var quest = GLOBAL.questManager.quests[data.quest];
+            if (quest.isStarted)
+            {
+                quest.Reset();
+            }
+
+            quest.Start();
         }
 
         if (typeof data.objective != 'undefined')
         {
             GLOBAL.questManager.UpdateObjective(data.objective);
         }
+
+        GLOBAL.saveManager.SaveData("currentLevel", this.currentLevel);
 
         GlassLab.SignalManager.levelLoaded.dispatch(this.levels[levelNum]);
     }
@@ -230,7 +238,9 @@ GlassLab.LevelManager.prototype.GetCurrentLevel = function()
 
 GlassLab.LevelManager.prototype.CompleteCurrentLevel = function()
 {
-    if (typeof this.GetCurrentLevel().quests != 'undefined')
+    var level = this.GetCurrentLevel();
+    var type = typeof level.data.quest;
+    if ((typeof level.data.quest) != 'undefined')
     {
         return false;
     }

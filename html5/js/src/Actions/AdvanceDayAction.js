@@ -4,15 +4,15 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.AdvanceDayAction = function(game)
+GlassLab.AdvanceDayAction = function()
 {
     GlassLab.Action.prototype.constructor.call(this);
 
     if (!GLOBAL.advanceDayTextField)
     {
-        GLOBAL.advanceDayTextField = game.make.text(0,0, "");
+        GLOBAL.advanceDayTextField = GLOBAL.game.make.text(0,0, "");
         GLOBAL.advanceDayTextField.fixedToCamera = true;
-        game.world.add(GLOBAL.advanceDayTextField);
+        GLOBAL.game.world.add(GLOBAL.advanceDayTextField);
     }
 };
 

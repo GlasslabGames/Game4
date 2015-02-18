@@ -6,13 +6,9 @@ var GlassLab = GlassLab || {};
 
 GlassLab.DisplayModalAction = function(game, text)
 {
-    GlassLab.Action.prototype.constructor.call(this, game);
-
-    this.button = new GlassLab.UIButton(game, 0, 0, this._onButtonPressed, this, 150, 60, 0xffffff, "Ok");
-
-    this.modal = new GlassLab.UIModal(game, text, [this.button]);
-    GLOBAL.UIManager.centerAnchor.addChild(this.modal);
-    this.modal.visible = false;
+    GlassLab.Action.prototype.constructor.call(this);
+    this.game = game || GLOBAL.game;
+    this.text = text;
 };
 
 GlassLab.DisplayModalAction.prototype = Object.create(GlassLab.Action.prototype);
@@ -20,7 +16,9 @@ GlassLab.DisplayModalAction.prototype.constructor = GlassLab.DisplayModalAction;
 
 GlassLab.DisplayModalAction.prototype.Do = function()
 {
-    this.modal.visible = true;
+    this.button = new GlassLab.UIButton(this.game, 0, 0, this._onButtonPressed, this, 150, 60, 0xffffff, "Ok");
+    this.modal = new GlassLab.UIModal(this.game, this.text, [this.button]);
+    GLOBAL.UIManager.centerAnchor.addChild(this.modal);
 };
 
 GlassLab.DisplayModalAction.prototype._onButtonPressed = function()

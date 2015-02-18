@@ -8,7 +8,6 @@ GlassLab.SetObjectiveAction = function(game, text)
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.game = game;
     this.text = text;
 };
 
