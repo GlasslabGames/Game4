@@ -8,8 +8,8 @@ GlassLab.AddOrderAction = function(game, data)
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.game = game;
-    this.orderData = data;
+    this.game = game || GLOBAL.game;
+    this.data = data;
 };
 
 GlassLab.AddOrderAction.prototype = Object.create(GlassLab.Action.prototype);
@@ -19,7 +19,7 @@ GlassLab.AddOrderAction.prototype.Do = function()
 {
     var level = GLOBAL.levelManager.GetCurrentLevel();
     if (!level.data.orders) level.data.orders = [];
-    level.data.orders.push(this.orderData);
+    level.data.orders.push(this.data);
     GlassLab.SignalManager.orderAdded.dispatch(this.orderData);
     this._complete();
 };

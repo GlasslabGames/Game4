@@ -8,8 +8,8 @@ GlassLab.CreateCreaturesAction = function(game, data)
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.game = game;
-    this.looseCreatureData = data;
+    this.game = game || GLOBAL.game;
+    this.data = data;
 };
 
 GlassLab.CreateCreaturesAction.prototype = Object.create(GlassLab.Action.prototype);
@@ -17,8 +17,8 @@ GlassLab.CreateCreaturesAction.prototype.constructor = GlassLab.CreateCreaturesA
 
 GlassLab.CreateCreaturesAction.prototype.Do = function()
 {
-    for (var type in this.looseCreatureData) {
-        for (var j = 0; j < this.looseCreatureData[type]; j++) {
+    for (var type in this.data) {
+        for (var j = 0; j < this.data[type]; j++) {
             var creature = new GlassLab.Creature(this.game, type);
             GLOBAL.creatureLayer.add(creature.sprite);
             creature.moveToRandomTile();

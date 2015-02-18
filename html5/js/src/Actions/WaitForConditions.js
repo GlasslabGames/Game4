@@ -4,11 +4,11 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.WaitForCondition = function(conditionBlobs)
+GlassLab.WaitForCondition = function(conditions)
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.conditions = conditionBlobs;
+    this.conditions = conditions;
 };
 
 GlassLab.WaitForCondition.prototype = Object.create(GlassLab.Action.prototype);
@@ -19,6 +19,13 @@ GlassLab.WaitForCondition.prototype.Do = function()
     for (var i=0, j=this.conditions.length; i < j; i++)
     {
         var condition = this.conditions[i];
+
+        // Deserialize if serialized blob
+        if (condition.hasOwnProperty("__type"))
+        {
+            this.conditions[i] = condition = GlassLab.Deserializer.deserializeObj(condition);
+        }
+
         condition.onSatisfiedChanged.add(this._onConditionChanged, this);
         if (condition.init) condition.init();
     }
