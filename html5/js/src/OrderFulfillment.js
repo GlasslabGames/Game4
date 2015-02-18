@@ -21,10 +21,11 @@ GlassLab.OrderFulfillment = function(game)
     this.packingLabel = game.make.text(30,30, "Packing List:", {font: "20px Helvetica", strokeThickness: 1});
     this.sprite.addChild(this.packingLabel);
 
+    this.foodTypes = [];
     this.answerInputs = []; // array of answer inputs (for each kind of food)
 
     for (var i = 0; i < 2; i++) { // for now, assume that we don't have creatures that eat more than 2 kinds of food
-        var rowY = 120 + 70 * i;
+        var rowY = 120 + 80 * i;
         var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC);
         answerInput.x = 50;
         answerInput.y = rowY;
@@ -46,8 +47,16 @@ GlassLab.OrderFulfillment = function(game)
         foodSprite.scale.setTo(.4, .4);
         this.sprite.addChild(foodSprite);
 
+        var dragTarget = new GlassLab.UIDragTarget(game, 200, 60, "drag food type here");
+        dragTarget.x = 25;
+        dragTarget.y = rowY - 5;
+        dragTarget.objectValidator = function(obj) { return (obj instanceof GlassLab.InventoryMenuSlot);};
+        dragTarget.addObjectAsChild = false;
+        dragTarget.events.onObjectDropped.add(this.onFoodSet, this);
+        this.sprite.addChild(dragTarget).name = "foodSlot"+i;
+
         this.answerInputs.push({ input: answerInput, errorGraphic: inputErrorGraphic,
-            foodSprite: foodSprite, xLabel: xLabel});
+            foodSprite: foodSprite, xLabel: xLabel, dragTarget: dragTarget});
     }
 
 /*
@@ -90,21 +99,18 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function() {
     var response = this._getResponse();
 
     if (response) {
-        if (!this.pen)
-        {
-            // Make a pen with the correct number of sections for the number of food types we have
-            var widths = [1];
-            for (var j = 0; j < this.foodTypes.length; j++) widths.push(1);
-            this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
-            this.pen.allowFeedButton = false;
-        }
+        this._createPen(this.foodTypes.length);
         this.pen.SetContents(this.data.type, this.data.numCreatures, this.foodTypes, response);
 
-        // Center the pen at the top of the screen, and zoom out if required
-        this.game.camera.x = -this.game.camera.width/2;
-        this.game.camera.y = -this.game.camera.height/5;
-        // TODO: zoom appropriately
+        this._focusCamera();
     }
+};
+
+GlassLab.OrderFulfillment.prototype._focusCamera = function() {
+    // Center the pen at the top of the screen, and zoom out if required
+    this.game.camera.x = -this.game.camera.width * 0.7;
+    this.game.camera.y = -this.game.camera.height * 0.2;
+    // TODO: zoom appropriately
 };
 
 GlassLab.OrderFulfillment.prototype._getResponse = function(flashErrorGraphics) {
@@ -126,6 +132,21 @@ GlassLab.OrderFulfillment.prototype._getResponse = function(flashErrorGraphics) 
     else return response;
 };
 
+GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
+    if (numFoodTypes && this.pen && this.pen.widths.length != numFoodTypes+1) {
+        this.pen.sprite.destroy();
+        this.pen = null;
+    }
+    if (!this.pen) {
+        // Make a pen with the correct number of sections for the number of food types we have
+        var widths = [1];
+        for (var j = 0; j < numFoodTypes; j++) widths.push(0);
+        this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
+        this.pen.allowFeedButton = false;
+    }
+    this._focusCamera();
+};
+
 GlassLab.OrderFulfillment.prototype.Show = function(data)
 {
     this.sprite.visible = true;
@@ -139,11 +160,14 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
         this.Refresh();
     }
     this.crateLoaded = false;
-    
+
+    this._createPen();
+    this.pen.SetContents(this.data.type, this.data.numCreatures);
+
     GLOBAL.assistant.startOrder(data);
 
     GLOBAL.ordersButton.visible = false;
-    GLOBAL.inventoryMenu.Hide(); // in the future show it, but for now we can't drag the food anyway
+    GLOBAL.inventoryMenu.Show();
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
@@ -161,6 +185,7 @@ GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
 
     GLOBAL.assistant.endOrder();
     GLOBAL.ordersButton.visible = true;
+    GLOBAL.inventoryMenu.Hide();
 };
 
 GlassLab.OrderFulfillment.prototype.Refresh = function()
@@ -173,31 +198,37 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
 
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.type).desiredFood;
 
-    if (this.pen) {
-        if (desiredFood.length != this.foodTypes.length) { // destroy the pen so we can make a new one with the right # of sections
-            this.pen.sprite.destroy();
-            this.pen = null;
-        }
-    }
-
     this.foodTypes = [];
-    for (var j = 0; j < desiredFood.length; j++) {
+    /*for (var j = 0; j < desiredFood.length; j++) {
         this.foodTypes.push( desiredFood[j].type );
-    }
+    }*/
 
-    for (var i = 0; i < this.answerInputs.length; i++) {
-        var visible = i < this.foodTypes.length;
-        // Hide or show all the parts of the answer input
-        for (var key in this.answerInputs[i]) {
-            this.answerInputs[i][key].visible = visible;
-        }
-        // Set the correct sprite
-        if (visible) {
-            this.answerInputs[i].foodSprite.loadTexture(GlassLab.FoodTypes[desiredFood[i].type].spriteName);
-        }
-    }
+    this._createPen(this.foodTypes.length);
+
+    this._refreshAnswerInputs();
+
     // num creatures
     this.orderRequirementLabel.setText(this.data.numCreatures + " " + this.data.type);
+};
+
+GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
+    var visibleDragTargets = 0;
+    for (var i = 0; i < this.answerInputs.length; i++) {
+        var foodType = this.foodTypes[i];
+        if (foodType) {
+            for (var key in this.answerInputs[i]) {
+                this.answerInputs[i][key].visible = (key != "dragTarget");
+            }
+            var spriteName = GlassLab.FoodTypes[foodType].spriteName;
+            if (this.answerInputs[i].foodSprite.spriteName != spriteName) this.answerInputs[i].foodSprite.loadTexture( spriteName );
+        } else {
+            // Hide everything except the drag target, and only show that if we don't have one already
+            for (var key in this.answerInputs[i]) {
+                this.answerInputs[i][key].visible = (key == "dragTarget" && visibleDragTargets == 0);
+            }
+            visibleDragTargets ++;
+        }
+    }
 };
 
 GlassLab.OrderFulfillment.prototype._onSubmit = function()
@@ -228,12 +259,22 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
 // From the assistant's dialogue
 GlassLab.OrderFulfillment.prototype.restartLoading = function()
 {
-    this.pen.sprite.destroy();
-    this.pen = null;
     this.submitButton.label.text = "Load Crate";
     this.crateLoaded = false;
+    var numFoods = [];
+    for (var j = 0; j < this.foodTypes.length; j++) numFoods.push(0);
+    this.pen.SetContents(this.data.type, this.data.numCreatures, this.foodTypes, numFoods);
     for (var i = 0; i < this.answerInputs.length; i++) {
         this.answerInputs[i].input.SetText("");
         this.answerInputs[i].input.setEnabled(true);
     }
+};
+
+GlassLab.OrderFulfillment.prototype.onFoodSet = function(inventorySlot, dragTarget) {
+    for (var i = 0; i < this.answerInputs.length; i++) {
+        if (this.answerInputs[i].dragTarget == dragTarget) {
+            this.foodTypes[i] = inventorySlot.foodType;
+        }
+    }
+    this._refreshAnswerInputs();
 };

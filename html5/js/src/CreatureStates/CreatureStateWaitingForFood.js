@@ -8,7 +8,6 @@
 GlassLab.CreatureStateWaitingForFood = function(game, owner)
 {
   GlassLab.CreatureState.call(this, game, owner);
-  // Do nothing
 };
 
 GlassLab.CreatureStateWaitingForFood.prototype = Object.create(GlassLab.CreatureState.prototype);

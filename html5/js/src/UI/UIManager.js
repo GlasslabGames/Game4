@@ -7,6 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.UIManager = function(game)
 {
     this.game = game;
+    this.dragTargets = [];
     this._createAnchors();
 
     var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
@@ -95,4 +96,12 @@ GlassLab.UIManager.prototype._onContinuePressed = function()
 GlassLab.UIManager.prototype._createZoomButton = function()
 {
 
+};
+
+// General function to check if something was dropped onto a drag target that wants it
+GlassLab.UIManager.prototype.tryDropOntoDragTargets = function(draggedObj) {
+    for (var i = 0; i < this.dragTargets.length; i++) {
+        if (this.dragTargets[i].enabled && this.dragTargets[i].tryDrop(draggedObj)) return true;
+    }
+    return false;
 };
