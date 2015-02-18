@@ -228,7 +228,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             var sharedCols = Math.floor(remainder * creatureRow.length); // cols of food that multiple creatures will take a bite of
             var extraCols = (foodRow.length - sharedCols) % creatureRow.length; // cols that aren't evenly divided for the number of creatures
             var cleanupCreatures = creatureRow.length % sharedCols; // number of creatures that don't fall into the normal flow of sharing food
-            //console.log("Row:",row,"desired remainder:",remainder,"numCreatures:",creatureRow.length,"numFoods:",foodRow.length, "sharedCols:",sharedCols,"cleanupCreatures:",cleanupCreatures,"extraCols:",extraCols,"sharingCreatures:",(sharedCols / remainder));
+            console.log("Row:",row,"desired remainder:",remainder,"numCreatures:",creatureRow.length,"numFoods:",foodRow.length, "sharedCols:",sharedCols,"cleanupCreatures:",cleanupCreatures,"extraCols:",extraCols,"sharingCreatures:",(sharedCols / remainder));
 
             // To assign the shared cols, we walk through the creatures and try to give them all the right food
             for (var col = 0; col < (sharedCols / remainder); col++) {
@@ -236,14 +236,13 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                     // this creature gets to clean up several uneaten bits of food (they don't need .eatFoodPartially set b/c they will eat everything remaining)
                     for (var i = 0; i < (sharedCols / cleanupCreatures); i++) {
                         var index = (i * cleanupCreatures) + col;
-                        creatureRow[col].targetFood.push( foodRow[index] );
-                        //console.log("SharedFood",index,"to cleanup creature",col);
+                        creatureRow[col].addTargetFood( foodRow[index] );
+                        console.log("SharedFood",index,"to cleanup creature",col);
                     }
                 } else {
                     // no other creatures eat more than one shared food
-                    creatureRow[col].targetFood.push( foodRow[ (col - cleanupCreatures) % sharedCols ] );
-                    creatureRow[col].eatFoodPartially = true;
-                    //console.log("SharedFood",(col - cleanupCreatures) % sharedCols ,"to creature",col);
+                    creatureRow[col].addTargetFood( foodRow[ (col - cleanupCreatures) % sharedCols ], true ); // true = we only eat some of the food
+                    console.log("SharedFood",(col - cleanupCreatures) % sharedCols ,"to creature",col);
                 }
             }
 
@@ -253,7 +252,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                 if (col >= foodRow.length - extraCols) { // assign this food differently since it can't be evenly divided
                     index += creatureRow.length - extraCols; // skip the columns of creatures who don't fit in these extra cols
                 }
-                creatureRow[ index ].targetFood.push( foodRow[col] ); // tell the creature at that index to eat this food
+                creatureRow[ index ].addTargetFood( foodRow[col] ); // tell the creature at that index to eat this food
                 //console.log("Food",col,"to",index);
             }
 

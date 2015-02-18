@@ -11,7 +11,7 @@ var GlassLab = GlassLab || {};
 GlassLab.CreatureManager = function (game) {
     this.game = game;
     GLOBAL.creatureManager = this;
-    this.creatureList = ["rammus", "rammus2", "unifox"]; // list of creatures in the order they should appear in the journal
+    this.creatureList = ["rammus", "unifox"]; // list of creatures in the order they should appear in the journal
     // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
         rammus: {
@@ -25,7 +25,7 @@ GlassLab.CreatureManager = function (game) {
             desiredFood: [{type: "carrot", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
-        rammus2: {
+        rammus2: { // For testing fractional food
             journalInfo: {
                 name: "Aqua Rammus",
                 temperament: "Combative"
@@ -34,7 +34,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
             spriteTint: 0xddffff,
-            desiredFood: [{type: "carrot", amount: (4/3)}],
+            desiredFood: [{type: "carrot", amount: (1/2)}, {type: "potato", amount: (5/4)}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         unifox: {
@@ -133,7 +133,7 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
-    this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen
+    this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen. Each food is like {food: f, eatPartially: true}
 
     this.shadow = this.game.make.sprite(0, 0, "shadow");
     this.sprite.addChild(this.shadow);
@@ -281,8 +281,10 @@ GlassLab.Creature.prototype._onUpdate = function () {
             var tile = this.getTile();
             if (this.prevTile != tile) {
                 if (this.prevTile) this.prevTile.onCreatureExit(this);
-                tile.onCreatureEnter(this);
-                this.prevTile = tile;
+                if (tile) {
+                    tile.onCreatureEnter(this);
+                    this.prevTile = tile;
+                }
             }
         }
     }
@@ -317,6 +319,10 @@ GlassLab.Creature.prototype.getIsSick = function () {
         if (this.foodEaten[key] - 0.01 > this.desiredAmountsOfFood[key]) return true; // add a little padding
     }
     return false;
+};
+
+GlassLab.Creature.prototype.addTargetFood = function(food, eatPartially) {
+    this.targetFood.push({food: food, eatPartially: eatPartially});
 };
 
 GlassLab.Creature.prototype.Emote = function (happy) {

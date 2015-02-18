@@ -4,10 +4,11 @@
 /**
  * CreatureStateEating - chewing on some food
  */
-GlassLab.CreatureStateEating = function(game, owner, food)
+GlassLab.CreatureStateEating = function(game, owner, foodInfo)
 {
     GlassLab.CreatureState.call(this, game, owner);
-    this.food = food;
+    this.eatPartially = foodInfo.eatPartially;
+    this.food = foodInfo.food;
 };
 
 GlassLab.CreatureStateEating.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -30,9 +31,8 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
     if (info.eatFxStyle) this.food.setAnimStyle(info.eatFxStyle[this.food.type]);
 
     this.amountToEat = 1;
-    if (this.creature.eatFoodPartially) {
+    if (this.eatPartially) {
         this.amountToEat = this.creature.desiredAmountsOfFood[this.food.type] % 1;
-        this.creature.eatFoodPartially = false; // only eat partial food once
     }
 };
 
@@ -59,9 +59,9 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
     if (this.creature.getIsSick()) {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
     } else if (this.food.pen) { // continue to the next part of the pen
-        var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
-        if (food && this.creature.desiredAmountsOfFood[food.type]) {
-            this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
+        var foodInfo = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
+        if (foodInfo && foodInfo.food && this.creature.desiredAmountsOfFood[foodInfo.food.type]) {
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, foodInfo));
         } else { // there's no more food
             // end the level hungry or satisfied
             this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
