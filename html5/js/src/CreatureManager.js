@@ -24,6 +24,18 @@ GlassLab.CreatureManager = function (game) {
             desiredFood: [{type: "carrot", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
+        rammus2: { // For testing fractional food
+            journalInfo: {
+                name: "Aqua Rammus",
+                temperament: "Combative"
+            },
+            unlocked: true, // if the player has discovered this animal yet
+            spriteName: "sheep",
+            fxFrames: {eat: 16, vomit: 60 },
+            spriteTint: 0xddffff,
+            desiredFood: [{type: "carrot", amount: (1/2)}, {type: "potato", amount: (5/4)}],
+            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
+        },
         unifox: {
             journalInfo: {
                 name: "Vulpes Unicornum",
