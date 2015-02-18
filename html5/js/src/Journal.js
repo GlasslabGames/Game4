@@ -148,7 +148,7 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
             this.foodLogGrid.insertManagedChild(text, j, i);
             if (creatureData.discoveredFoodCounts[numCreatures]) {
                 if (j == 0) text.text = numCreatures;
-                else text.text = numCreatures * creatureData.desiredFood[j - 1].amount;
+                else text.text = Math.round(numCreatures * creatureData.desiredFood[j - 1].amount * 10) / 10;
             } else text.text = "???";
         }
 

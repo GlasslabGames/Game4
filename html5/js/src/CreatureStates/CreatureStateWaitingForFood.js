@@ -20,17 +20,17 @@ GlassLab.CreatureStateWaitingForFood.prototype.Enter = function() {
 };
 
 GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
-  var food = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
-  if (!food || !this.creature.desiredAmountsOfFood[food.type]) { // no good. Stop immediately, unsatisfied (unless this creature wanted 0 food?)
+  var foodInfo = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
+  if (!foodInfo || !this.creature.desiredAmountsOfFood[foodInfo.food.type]) { // no good. Stop immediately, unsatisfied (unless this creature wanted 0 food?)
     if (this.creature.getIsSatisfied()) this.creature.FinishEating(true);
     else {
-        if (food) {
+        if (foodInfo) {
             console.log(this.creature.print(), "is hungry but has no more food to target (in StartWalking). Eaten:", this.creature.foodEaten,
-                "Desired:", this.creature.desiredAmountsOfFood[food.type]);
+                "Desired:", this.creature.desiredAmountsOfFood[foodInfo.food.type]);
         }
       this.creature.FinishEating(false);
     }
   } else {
-    this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, food));
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, foodInfo));
   }
 };
