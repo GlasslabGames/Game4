@@ -369,7 +369,7 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
             this.enterPen(bestTarget.inPen);
             this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
         } else { // assume that we're on top of some food
-            this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, bestTarget.food));
+            this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: bestTarget.food}));
         }
     } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
         if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
