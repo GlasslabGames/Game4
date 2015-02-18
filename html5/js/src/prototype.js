@@ -246,15 +246,7 @@ window.onload = function() {
         }, this);
         table.addManagedChild(uiElement);
 
-        uiElement = new GlassLab.UIElement(game, 0,0, "ordersIcon");
-        uiElement.scale.setTo(.6, .6);
-        uiElement.inputEnabled = true;
-        GLOBAL.ordersButton = uiElement;
-        var ordersAlert = game.make.sprite(0,0,"alertIcon");
-        ordersAlert.anchor.setTo(.5,.5);
-        GlassLab.SignalManager.levelLoaded.add(function(level){ this.visible = true; }, ordersAlert);
-        uiElement.addChild(ordersAlert);
-        uiElement.events.onInputDown.add(function(){
+        uiElement = new GlassLab.UIButton(game, 0,0, function(){
             if (!GLOBAL.Orders.IsShowing())
             {
                 ordersAlert.visible = false;
@@ -264,7 +256,13 @@ window.onload = function() {
             {
                 GLOBAL.Orders.Hide();
             }
-        }, this);
+        }, this, 60, 60, 0xffffff, "Mail", 16);
+        uiElement.inputEnabled = true;
+        GLOBAL.ordersButton = uiElement;
+        var ordersAlert = game.make.sprite(0,0,"alertIcon");
+        ordersAlert.anchor.setTo(.5,.5);
+        ordersAlert.scale.setTo(.6, .6);
+        uiElement.addChild(ordersAlert);
         GlassLab.SignalManager.levelLoaded.add(function(level){
             this.visible = (level.data.orders && level.data.orders.length > 0);
         }, uiElement);
