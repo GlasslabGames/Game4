@@ -50,6 +50,7 @@ GlassLab.FillBar.prototype._onDestroy = function () {
 
 // Set the nth section of the fill bar to this amount (clamped to 0-1). If animate is true, it will gradually change.
 GlassLab.FillBar.prototype.setAmount = function(key, amount, animate, hideAfter) {
+    console.log("key:", key, "amount:", amount, "animate:", animate, "hideAfter:", hideAfter);
     this.hideAfter = hideAfter;
     amount = Math.max(amount, 0); // clamp to 0, but keep the amount the same if it's higher since we change the color later
     var section = this.sections[key];
@@ -58,6 +59,7 @@ GlassLab.FillBar.prototype.setAmount = function(key, amount, animate, hideAfter)
         var changeDuration = 50; // default time
         section.targetAmount = amount;
         section.dAmount = (section.targetAmount - section.amount) / changeDuration;
+        console.log(section.amount, section.targetAmount, section.dAmount);
         this.animating = true;
     } else {
         section.amount = amount;
@@ -93,16 +95,20 @@ GlassLab.FillBar.prototype._onFinishAnim = function() {
 GlassLab.FillBar.prototype._onUpdate = function() {
     if (this.animating) {
         this.animating = false; // it will only stay false if all animations are done
+        console.log("Updating bar with sections",this.sections);
         for (var key in this.sections) {
             var section = this.sections[key];
+            console.log("key:",key,"dAmount:",section.dAmount,"amount:",section.amount);
             if (section.dAmount != 0 && section.targetAmount >= 0) {
                 section.amount += section.dAmount;
-                if (section.targetAmount - section.amount < section.dAmount) {
+                if (Math.abs(section.targetAmount - section.amount) < Math.abs(section.dAmount)) {
                     section.amount = section.targetAmount;
                     section.dAmount = 0;
                     section.targetAmount = -1;
+                    console.log("finish animating. amount:",section.amount);
                 } else {
                     this.animating = true;
+                    console.log("now amount:",section.amount);
                 }
                 this._redraw();
             }
