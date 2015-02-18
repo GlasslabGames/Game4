@@ -4,11 +4,11 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.FeedAnimalCondition = function(game, creatureTypes, numCreatures)
+GlassLab.FeedAnimalCondition = function(game, creatureType, numCreatures)
 {
     GlassLab.Conditional.prototype.constructor.call(this);
 
-    this.acceptedTypes = creatureTypes;
+    this.acceptedType = creatureType;
     this.numRequired = numCreatures;
 
     this.numFed = 0;
@@ -21,12 +21,12 @@ GlassLab.FeedAnimalCondition.prototype.constructor = GlassLab.FeedAnimalConditio
 
 GlassLab.FeedAnimalCondition.prototype._calculateIsSatisfied = function()
 {
-    return this.numRequired >= this.numFed;
+    return this.numFed >= this.numRequired;
 };
 
 GlassLab.FeedAnimalCondition.prototype._onCreatureFed = function(creature)
 {
-    if (this.acceptedTypes.indexOf(creature.type) != -1)
+    if (this.acceptedType.indexOf(creature.type) != -1)
     {
         this.numFed++;
     }
@@ -36,9 +36,12 @@ GlassLab.FeedAnimalCondition.prototype._onCreatureFed = function(creature)
 
 GlassLab.FeedAnimalCondition.prototype._onFeedPenResolved = function(pen, win)
 {
-    if (win)
+    if (this.acceptedType.indexOf(pen.creatureType) != -1)
     {
-        this.numFed = this.numRequired;
+        if (win)
+        {
+            this.numFed = pen.creatures.length;
+        }
     }
 
     this.Refresh();

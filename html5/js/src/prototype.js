@@ -94,6 +94,8 @@ window.onload = function() {
         game.load.image('assistant', 'assets/images/assistant.png');
         game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
 
+        game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
+
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
         var loadingText = game.add.text(32, 32, "Loading...", { fill: '#ffffff' } );
@@ -157,6 +159,9 @@ window.onload = function() {
         // Add clouds
         GLOBAL.cloudManager = new GlassLab.CloudManager(game);
         GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
+
+        // Save Manager
+        GLOBAL.saveManager = new GlassLab.SaveManager(game);
 
         // Add UI
         // TODO: Gross, so much crap here. How to clean? We could move into UIManager at least..
@@ -337,12 +342,13 @@ window.onload = function() {
         versionLabel.fixedToCamera = true;
         GLOBAL.UIGroup.add(versionLabel);
 
+        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
+
         GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
         GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
-        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
         GLOBAL.levelManager.LoadNextLevel(); // Load first level
         //var pen = new GlassLab.Pen(game, GLOBAL.penLayer, 3, [1,2,3]);
 

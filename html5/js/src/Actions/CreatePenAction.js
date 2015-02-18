@@ -8,7 +8,7 @@ GlassLab.CreatePenAction = function(game, data)
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.game = game;
+    this.game = game || GLOBAL.game;
     this.penData = data;
 };
 

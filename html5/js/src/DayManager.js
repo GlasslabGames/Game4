@@ -8,7 +8,6 @@ GlassLab.DayManager = function(game)
 {
     this.game = game;
 
-    this.currentDay = 0;
     this.currentSection = 0;
     this.totalSections = 3;
 
@@ -24,6 +23,8 @@ GlassLab.DayManager = function(game)
     this.dayText.anchor.setTo(.5, .5);
     this.dayTextBg.addChild(this.dayText);
 
+    GlassLab.SignalManager.levelLoaded.add(this._refresh, this);
+
     this._refresh();
 };
 
@@ -35,13 +36,12 @@ GlassLab.DayManager.prototype.Advance = function()
 
 GlassLab.DayManager.prototype.AdvanceDay = function()
 {
-    this.currentDay++;
     this._refresh();
 };
 
 GlassLab.DayManager.prototype._refresh = function()
 {
-    this.dayText.setText( "Day " + (this.currentDay+1) );
+    this.dayText.setText( "Day " + (GLOBAL.levelManager.currentLevel+1) );
     if (this.currentSection == 0)
     {
         this.dayMeter.SetSunToPositionIndex(this.currentSection);

@@ -1,0 +1,125 @@
+[
+  {
+    "__type": "GlassLab.DisplayModalAction",
+    "text": "It's a beautiful day on Mixia!"
+  },
+  {
+    "__type": "GlassLab.SetObjectiveAction",
+    "text": "Feed 4 rams in the pen!"
+  },
+  {
+    "__type": "GlassLab.ClearWorldAction"
+  },
+  {
+    "__type": "GlassLab.CreatePenAction",
+    "penData": {
+      "type": "rammus",
+      "bottomDraggable": true,
+      "leftDraggable": true,
+      "topDraggable": true
+    }
+  },
+  {
+    "__type": "GlassLab.CreateCreaturesAction",
+    "data": {"rammus": 4}
+  },
+  {
+    "__type": "GlassLab.WaitForCondition",
+    "conditions": [
+      {
+        "__type": "GlassLab.FeedAnimalCondition",
+        "acceptedType": "rammus",
+        "numRequired": 4
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.WaitForCondition",
+    "conditions": [
+      {
+        "__type": "GlassLab.SignalCondition",
+        "signalName": "GlassLab.SignalManager.journalClosed"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ClearWorldAction"
+  },
+  {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SetObjectiveAction",
+    "text": "Ship an order of carrots."
+  },
+  {
+    "__type": "GlassLab.AddOrderAction",
+    "data": {
+      "client": "Archibold Huxley III",
+      "company": "Rupture Farms",
+      "numCreatures": 5,
+      "type": "rammus",
+      "description": "Dear Friend! I want 5 AQUA RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+      "fulfilled": false,
+      "reward": 200
+    }
+  },
+  {
+    "__type": "GlassLab.WaitForCondition",
+    "conditions": [
+      {
+        "__type": "GlassLab.FeedAnimalCondition",
+        "acceptedType": "rammus",
+        "numRequired": 5
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.WaitForCondition",
+    "conditions": [
+      {
+        "__type": "GlassLab.SignalCondition",
+        "signalName": "GlassLab.SignalManager.journalClosed"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ClearWorldAction"
+  },
+  {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SetObjectiveAction",
+    "text": "Feed one unicorn."
+  },
+  {
+    "__type": "GlassLab.CreatePenAction",
+    "penData": {"type": "unifox"}
+  },
+  {
+    "__type": "GlassLab.CreateCreaturesAction",
+    "data": {"unifox": 1}
+  },
+  {
+    "__type": "GlassLab.WaitForCondition",
+    "conditions": [
+      {
+        "__type": "GlassLab.FeedAnimalCondition",
+        "acceptedType": "unifox",
+        "numRequired": 1
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.WaitForCondition",
+    "conditions": [{
+      "__type": "GlassLab.SignalCondition",
+      "signalName": "GlassLab.SignalManager.journalClosed"
+    }]
+  },
+  {
+    "__type": "GlassLab.DisplayModalAction",
+    "text": "The sun sets on lovely Mixia."
+  }
+]

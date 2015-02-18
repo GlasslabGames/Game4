@@ -10,7 +10,13 @@ var GlassLab = GlassLab || {};
 
 GlassLab.Quest = function(actions)
 {
+    /**
+     * @readonly
+     * @type {boolean}
+     * @private
+     */
     this._isStarted = false;
+
     this._isComplete = false;
     this.actions = actions;
     this._currentActionIndex = -1;
@@ -18,8 +24,28 @@ GlassLab.Quest = function(actions)
 
 GlassLab.Quest.prototype.Start = function()
 {
-    this._isStarted = true;
-    this._procNextStep();
+    if (!this._isStarted)
+    {
+        this._isStarted = true;
+        this._procNextStep();
+    }
+};
+
+Object.defineProperty(GlassLab.Quest.prototype, 'isStarted', {
+    get: function() {
+        return this._isStarted;
+    }
+});
+
+GlassLab.Quest.prototype.Reset = function()
+{
+    this._isStarted = false;
+    for (var i=0, j=this.actions.length; i < j; i++)
+    {
+        var action = this.actions[i];
+        action.completed = false;
+    }
+    this._currentActionIndex = -1;
 };
 
 GlassLab.Quest.prototype._procNextStep = function()
@@ -39,6 +65,12 @@ GlassLab.Quest.prototype._procNextStep = function()
     }
 
     this.currentAction = this.actions[this._currentActionIndex];
+
+    if (this.currentAction.hasOwnProperty("__type"))
+    {
+        this.currentAction = GlassLab.Deserializer.deserializeObj(this.currentAction);
+    }
+
     this.currentAction.onComplete.add(this._procNextStep, this);
     this.currentAction.Do();
 };
