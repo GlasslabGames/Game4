@@ -58,8 +58,8 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
     if (Phaser.Point.subtract(this.wayPoint.isoPosition, this.target.isoPosition).getMagnitude() < GLOBAL.tileSize) {
       if (this.target.inPen) {
         this.creature.enterPen(this.target.inPen);
-      } else if (this.target.food) { // TODO: check food type
-        this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.target.food));
+      } else if (this.target.food && this.creature.desiredAmountsOfFood[this.target.food.type] ) {
+        this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, {food: this.target.food}));
       } else {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
       }

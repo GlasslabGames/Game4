@@ -128,6 +128,17 @@ GlassLab.LevelManager = function(game)
     level7.data = {
         quest: 0
     };
+
+    // level 8
+    this._addLevelData(new GlassLab.Level()).data = {
+        pens: [
+            {type: "rammus2", foodAWidth: 1, foodBWidth:1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+        ],
+        looseCreatures: {
+            rammus2: 16
+        },
+        objective: "Feed the rams!"
+    };
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)

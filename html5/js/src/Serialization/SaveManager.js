@@ -7,7 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.SaveManager = function(game)
 {
     this.game = game;
-    this.dataBlob = JSON.parse(document.cookie) || {};
+    this.dataBlob = JSON.parse(document.cookie || "{}");
 
     if (getParameterByName("reset") == "true")
     {

@@ -5,10 +5,10 @@
 /**
  * CreatureStateWalkingToFood - moving to the next piece of food in the pen
  */
-GlassLab.CreatureStateWalkingToFood = function(game, owner, food)
+GlassLab.CreatureStateWalkingToFood = function(game, owner, foodInfo)
 {
   GlassLab.CreatureState.call(this, game, owner);
-  this.food = food;
+  this.foodInfo = foodInfo;
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -30,7 +30,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
 
 GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 {
-  var delta = Phaser.Point.subtract(this.food.getGlobalIsoPos(), this.creature.getGlobalIsoPos());
+  var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalIsoPos(), this.creature.getGlobalIsoPos());
   if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.5, 2)) { // we're far from the carrot
     delta.setMagnitude(this.speed);
     Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
@@ -38,6 +38,6 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
     this.creature.sprite.isoY = delta.y;
   }
   else {
-    this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.food));
+    this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.foodInfo));
   }
 };

@@ -25,6 +25,18 @@ GlassLab.CreatureManager = function (game) {
             desiredFood: [{type: "carrot", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
+        rammus2: { // For testing fractional food
+            journalInfo: {
+                name: "Aqua Rammus",
+                temperament: "Combative"
+            },
+            unlocked: true, // if the player has discovered this animal yet
+            spriteName: "sheep",
+            fxFrames: {eat: 16, vomit: 60 },
+            spriteTint: 0xddffff,
+            desiredFood: [{type: "carrot", amount: (1/2)}, {type: "potato", amount: (5/4)}],
+            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
+        },
         unifox: {
             journalInfo: {
                 name: "Vulpes Unicornum",
@@ -121,7 +133,7 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
-    this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen
+    this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen. Each food is like {food: f, eatPartially: true}
 
     this.shadow = this.game.make.sprite(0, 0, "shadow");
     this.sprite.addChild(this.shadow);
@@ -269,8 +281,10 @@ GlassLab.Creature.prototype._onUpdate = function () {
             var tile = this.getTile();
             if (this.prevTile != tile) {
                 if (this.prevTile) this.prevTile.onCreatureExit(this);
-                tile.onCreatureEnter(this);
-                this.prevTile = tile;
+                if (tile) {
+                    tile.onCreatureEnter(this);
+                    this.prevTile = tile;
+                }
             }
         }
     }
@@ -295,9 +309,20 @@ GlassLab.Creature.prototype.resetFoodEaten = function () {
 
 GlassLab.Creature.prototype.getIsSatisfied = function () {
     for (var key in this.foodEaten) {
-        if (this.foodEaten[key] < this.desiredAmountsOfFood[key]) return false;
+        if (this.foodEaten[key] + 0.01 < this.desiredAmountsOfFood[key]) return false; // add a little padding
     }
     return true;
+};
+
+GlassLab.Creature.prototype.getIsSick = function () {
+    for (var key in this.foodEaten) {
+        if (this.foodEaten[key] - 0.01 > this.desiredAmountsOfFood[key]) return true; // add a little padding
+    }
+    return false;
+};
+
+GlassLab.Creature.prototype.addTargetFood = function(food, eatPartially) {
+    this.targetFood.push({food: food, eatPartially: eatPartially});
 };
 
 GlassLab.Creature.prototype.Emote = function (happy) {
@@ -318,8 +343,8 @@ GlassLab.Creature.prototype.Emote = function (happy) {
     }, this);
 };
 
-GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEating, foodType, hideAfter) {
-    var amountEaten = (currentlyEating) ? this.foodEaten[foodType] + 1 : this.foodEaten[foodType];
+GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEatingAmount, foodType, hideAfter) {
+    var amountEaten = this.foodEaten[foodType] + currentlyEatingAmount;
     this.hungerBar.setAmount(foodType, amountEaten / this.desiredAmountsOfFood[foodType], true, hideAfter); // true -> animate change
 };
 
@@ -344,7 +369,7 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
             this.enterPen(bestTarget.inPen);
             this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
         } else { // assume that we're on top of some food
-            this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, bestTarget.food));
+            this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: bestTarget.food}));
         }
     } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
         if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target

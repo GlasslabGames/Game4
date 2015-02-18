@@ -50,6 +50,7 @@ GlassLab.FillBar.prototype._onDestroy = function () {
 
 // Set the nth section of the fill bar to this amount (clamped to 0-1). If animate is true, it will gradually change.
 GlassLab.FillBar.prototype.setAmount = function(key, amount, animate, hideAfter) {
+    //console.log("key:", key, "amount:", amount, "animate:", animate, "hideAfter:", hideAfter);
     this.hideAfter = hideAfter;
     amount = Math.max(amount, 0); // clamp to 0, but keep the amount the same if it's higher since we change the color later
     var section = this.sections[key];
@@ -97,7 +98,7 @@ GlassLab.FillBar.prototype._onUpdate = function() {
             var section = this.sections[key];
             if (section.dAmount != 0 && section.targetAmount >= 0) {
                 section.amount += section.dAmount;
-                if (section.targetAmount - section.amount < section.dAmount) {
+                if (Math.abs(section.targetAmount - section.amount) < Math.abs(section.dAmount)) {
                     section.amount = section.targetAmount;
                     section.dAmount = 0;
                     section.targetAmount = -1;
