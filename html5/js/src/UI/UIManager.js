@@ -47,9 +47,6 @@ GlassLab.UIManager.prototype._createAnchors = function()
     // Left
     this.leftAnchor = new GlassLab.UIAnchor(this.game, 0, .5);
     GLOBAL.UIGroup.add(this.leftAnchor);
-    // Center
-    this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
-    GLOBAL.UIGroup.add(this.centerAnchor);
     // Right
     this.rightAnchor = new GlassLab.UIAnchor(this.game, 1, .5);
     GLOBAL.UIGroup.add(this.rightAnchor);
@@ -63,6 +60,10 @@ GlassLab.UIManager.prototype._createAnchors = function()
     // Bottom right
     this.bottomRightAnchor = new GlassLab.UIAnchor(this.game, 1, 1);
     GLOBAL.UIGroup.add(this.bottomRightAnchor);
+
+    // Center - above the rest for convenient use with modals, etc
+    this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
+    GLOBAL.UIGroup.add(this.centerAnchor);
 }
 /*
 // TODO: Replace with class  OR combine with FailModal somehow.. like reuse the same modal? (._.)a

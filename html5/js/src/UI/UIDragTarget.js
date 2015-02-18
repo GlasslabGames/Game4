@@ -2,7 +2,7 @@
  * Created by Rose Abernathy on 2/13/2015.
  */
 
-GlassLab.UIDragTarget = function(game, width, height, hint) {
+GlassLab.UIDragTarget = function(game, width, height, hint, solidLines) {
     GlassLab.UIElement.prototype.constructor.call(this, game);
     this.game = game;
 
@@ -11,6 +11,7 @@ GlassLab.UIDragTarget = function(game, width, height, hint) {
 
     this.enabled = true;
     this.highlighted = false;
+    this.dashedLines = !solidLines;
 
     this.graphics = game.make.graphics();
     this.addChild(this.graphics);
@@ -38,11 +39,11 @@ GlassLab.UIDragTarget = function(game, width, height, hint) {
 };
 
 GlassLab.UIDragTarget.prototype = Object.create(GlassLab.UIElement.prototype);
-GlassLab.UIDragTarget.prototype.constructor = GlassLab.UITextInput;
+GlassLab.UIDragTarget.prototype.constructor = GlassLab.UIDragTarget;
 
 GlassLab.UIDragTarget.prototype._onDestroy = function() {
     GLOBAL.UIManager.dragTargets.splice( GLOBAL.UIManager.dragTargets.indexOf(this), 1 );
-}
+};
 
 GlassLab.UIDragTarget.prototype.tryDragOver = function(obj) {
   if (this.objectValidator && this.objectValidator(obj) && (this.objectsOn.length < this.maxObjects || this.replace)) {
@@ -111,17 +112,22 @@ GlassLab.UIDragTarget.prototype._removeObject = function(obj) {
 
 GlassLab.UIDragTarget.prototype._redraw = function() {
     this.graphics.clear();
-    this.graphics.beginFill(this.highlighted? 0x444444 : 0xffffff).drawRect(0,0,this.actualWidth,this.actualHeight);
-    this.graphics.lineStyle(3, (this.enabled? 0x000000 : 0xbbbbbb), 1);
-    var dashLen = 10;
-    for (var x = 0; x < this.actualWidth; x += dashLen * 2) {
-        this.graphics.moveTo(x, 0).lineTo(x + dashLen, 0);
-        this.graphics.moveTo(x, this.actualHeight).lineTo(x + dashLen, this.actualHeight);
+    if (this.dashedLines) {
+        this.graphics.beginFill(this.highlighted? 0x444444 : 0xffffff).drawRect(0,0,this.actualWidth,this.actualHeight);
+        this.graphics.lineStyle(3, (this.enabled? 0x000000 : 0xbbbbbb), 1);
+        var dashLen = 10;
+        for (var x = 0; x < this.actualWidth; x += dashLen * 2) {
+            this.graphics.moveTo(x, 0).lineTo(x + dashLen, 0);
+            this.graphics.moveTo(x, this.actualHeight).lineTo(x + dashLen, this.actualHeight);
+        }
+        for (var y = 0; y < this.actualHeight; y += dashLen * 2) {
+            this.graphics.moveTo(0, y).lineTo(0, y + dashLen);
+            this.graphics.moveTo(this.actualWidth, y).lineTo(this.actualWidth, y + dashLen);
+        }
+    } else {
+        this.graphics.lineStyle(3, (this.enabled? 0x000000 : 0xbbbbbb), 1).beginFill(this.highlighted? 0x444444 : 0xffffff).drawRect(0,0,this.actualWidth,this.actualHeight);
     }
-    for (var y = 0; y < this.actualHeight; y += dashLen * 2) {
-        this.graphics.moveTo(0, y).lineTo(0, y + dashLen);
-        this.graphics.moveTo(this.actualWidth, y).lineTo(this.actualWidth, y + dashLen);
-    }
+
 };
 
 GlassLab.UIDragTarget.prototype.setEnabled = function(enabled) {

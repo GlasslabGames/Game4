@@ -343,11 +343,11 @@ window.onload = function() {
         GLOBAL.UIGroup.add(versionLabel);
 
         GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
-        /* TODO
+
         GLOBAL.sortingGame = new GlassLab.SortingGame(game);
-        GLOBAL.sortingGame.sprite.fixedToCamera = true;
-        GLOBAL.UIGroup.add(GLOBAL.sortingGame.sprite);
-        */
+        GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame.sprite);
+        GLOBAL.sortingGame.sprite.x = -GLOBAL.sortingGame.width / 2;
+        GLOBAL.sortingGame.sprite.y = -GLOBAL.sortingGame.height / 2;
 
         GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
