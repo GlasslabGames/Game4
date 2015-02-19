@@ -90,6 +90,7 @@ window.onload = function() {
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
         game.load.image('lock', 'assets/images/HUD_items_lock.png');
+        game.load.image('dashedCircle', 'assets/images/dashedCircle.png');
 
         game.load.image('assistant', 'assets/images/assistant.png');
         game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
