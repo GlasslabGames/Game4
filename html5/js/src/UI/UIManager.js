@@ -30,6 +30,18 @@ GlassLab.UIManager = function(game)
     GlassLab.SignalManager.levelLost.add(function() {
       this.visible = true
     }, this.loseModal);
+
+    //game.input.onDown.add(this._globalDown, this); // Global input down handler
+    game.input.onUp.add(this._onGlobalUp, this); // Global input down handler
+};
+
+GlassLab.UIManager.prototype._onGlobalUp = function(pointer, DOMevent)
+{
+    if (GLOBAL.stickyMode && GLOBAL.dragTarget) { // if we were dragging something with sticky mode, release it when we click
+        if (GLOBAL.dragTarget.OnStickyDrop) GLOBAL.dragTarget.OnStickyDrop(); // e.g. UIDraggable
+        GLOBAL.dragTarget = null;
+        GLOBAL.justDropped = true;
+    }
 };
 
 GlassLab.UIManager.prototype._createAnchors = function()

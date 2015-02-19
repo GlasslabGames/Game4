@@ -95,6 +95,9 @@ window.onload = function() {
         game.load.image('assistant', 'assets/images/assistant.png');
         game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
 
+        game.load.image('bigO', 'assets/images/matchingGame_o.png');
+        game.load.image('bigX', 'assets/images/matchingGame_x.png');
+
         game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
@@ -290,9 +293,6 @@ window.onload = function() {
         GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
         uiElement.visible = getParameterByName("items") != "false"; // default to using items
 
-        game.input.onDown.add(globalDown, this); // Global input down handler
-        game.input.onUp.add(globalUp, this); // Global input down handler
-
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
         game.camera.y = -game.camera.height/2;
@@ -360,21 +360,6 @@ window.onload = function() {
     function onLeaveFullScreen() {
     }
 
-    function globalDown(pointer, DOMevent)
-    {
-        if (!pointer.targetObject) // if nothing clicked on
-        {
-        }
-    }
-
-  function globalUp(pointer, DOMevent)
-  {
-    if (GLOBAL.stickyMode && GLOBAL.dragTarget) {
-      if (GLOBAL.dragTarget.OnStickyDrop) GLOBAL.dragTarget.OnStickyDrop();
-      GLOBAL.dragTarget = null;
-      GLOBAL.justDropped = true;
-    }
-  }
 
     function update(game)
     {

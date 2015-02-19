@@ -68,3 +68,12 @@ GlassLab.UIElement.prototype._onUIFocusChanged = function(focusedElement)
 
 // This will be deal with the results of this element actually changing focus, so subclasses should override it.
 GlassLab.UIElement.prototype._onFocusChanged = function() {};
+
+// If we've specified an "actual width" (like when we're using graphics), use that. Otherwise try the width property.
+GlassLab.UIElement.prototype.getWidth = function() {
+    return this.actualWidth || this.width;
+};
+
+GlassLab.UIElement.prototype.getHeight = function() {
+    return this.actualHeight || this.height;
+};
