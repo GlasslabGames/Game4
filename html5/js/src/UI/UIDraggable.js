@@ -57,8 +57,18 @@ GlassLab.UIDraggable.prototype._onUp = function(sprite, pointer) {
 GlassLab.UIDraggable.prototype._onUpdate = function() {
     if (this.dragging) {
         // TODO: deal with scaled/offset parents
-        this.x = this.game.input.activePointer.x + this.mouseOffset.x;
-        this.y = this.game.input.activePointer.y + this.mouseOffset.y;
+        var mousePoint = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
+
+        // loop through and apply the scale from each parent
+        // FIXME: doing the loop helps, but it's not right yet. To test, try changing the scale of the InventoryMenu in prototype.js and then dragging food from it.
+        var sprite = this.parent;
+        while (sprite && sprite.scale) {
+            Phaser.Point.divide(mousePoint, sprite.scale, mousePoint);
+            //Phaser.Point.subtract(mousePoint, sprite.position, mousePoint); // I think we need to use position somehow, but this isn't it
+            sprite = sprite.parent;
+        }
+        this.x = mousePoint.x + this.mouseOffset.x;
+        this.y = mousePoint.y + this.mouseOffset.y;
     }
 };
 
@@ -74,6 +84,7 @@ GlassLab.UIDraggable.prototype.canDropOnto = function(target) {
 GlassLab.UIDraggable.prototype._startDrag = function(pointer) {
     this.dragStartPoint = new Phaser.Point(this.x, this.y);
     this.mouseOffset = (this.snap? new Phaser.Point() : new Phaser.Point(this.x - pointer.x, this.y - pointer.y));
+    // Note: not sure if mouseOffset will work as intended when parents are scaled/positioned weirdly
     this.dragging = true;
     GLOBAL.dragTarget = this;
     this._applyDragEffect();

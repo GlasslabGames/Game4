@@ -8,6 +8,7 @@ GlassLab.UIDragTarget = function(game, width, height, hint, solidLines) {
 
     this.actualWidth = width;
     this.actualHeight = height;
+    this.hitArea = new Phaser.Rectangle(0, 0, width, height); // Note, if you extend this and redraw it, make sure to set the hitArea!
 
     this.enabled = true;
     this.highlighted = false;
@@ -91,6 +92,7 @@ GlassLab.UIDragTarget.prototype.drop = function(obj) {
 };
 
 GlassLab.UIDragTarget.prototype._checkOverlap = function(sprite) {
+    // TODO: revise this to be cleaner using hitArea
     if (!sprite.getBounds) return false;
     var objBounds = sprite.getBounds();
     var center = new Phaser.Point(objBounds.x + objBounds.width / 2, objBounds.y + objBounds.height / 2);
