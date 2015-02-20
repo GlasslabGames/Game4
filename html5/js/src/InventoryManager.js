@@ -7,14 +7,39 @@ var GlassLab = GlassLab || {};
 GlassLab.InventoryManager = function(game)
 {
     this.game = game;
-    this.money = GLOBAL.saveManager.LoadData("money") || 10;
+    this.money = 10;
+
+    this.unlockedItems = {};
+
+    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
 };
 
 GlassLab.InventoryManager.prototype._onSaveRequested = function(blob)
 {
     blob.money = this.money;
+
+    for (var type in GlassLab.FoodTypes)
+    {
+        if (GlassLab.FoodTypes[type].unlocked)
+        {
+            this.unlockedItems[type] = true;
+        }
+    }
+
+    blob.unlockedItems = this.unlockedItems;
 };
 
+GlassLab.InventoryManager.prototype._onGameLoaded = function(blob)
+{
+    this.money = blob.money;
+
+    for (var type in blob.unlockedItems)
+    {
+        GlassLab.FoodTypes[type].unlocked = blob.unlockedItems[type];
+    }
+
+    this.unlockedItems = blob.unlockedItems;
+};
 
 GlassLab.InventoryManager.prototype.TrySpendMoney = function(amt)
 {
@@ -26,7 +51,6 @@ GlassLab.InventoryManager.prototype.TrySpendMoney = function(amt)
     {
         this.money -= amt;
         GlassLab.SignalManager.moneyChanged.dispatch(-amt);
-        GLOBAL.saveManager.SaveData("money", this.money);
         return true;
     }
 };
@@ -36,5 +60,4 @@ GlassLab.InventoryManager.prototype.MoneyRewarded = function(amt)
     this.money += amt;
 
     GlassLab.SignalManager.moneyChanged.dispatch(amt);
-    GLOBAL.saveManager.SaveData("money", this.money);
 };

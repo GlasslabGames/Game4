@@ -12,16 +12,17 @@ GlassLab.MailManager = function(game)
 {
     this.game = game;
 
-    this.ordersMenu = new GlassLab.OrdersMenu(game, -200, -300);
+    this.ordersMenu = new GlassLab.OrdersMenu(game, -250, -210);
     GLOBAL.UIManager.centerAnchor.addChild(this.ordersMenu.sprite);
 
-    this.rewardsPopup = new GlassLab.RewardPopup(game, -200, -300);
+    this.rewardsPopup = new GlassLab.RewardPopup(game, -250, -210);
     GLOBAL.UIManager.centerAnchor.addChild(this.rewardsPopup);
 
     this.availableOrders = [];
     this.rewards = [];
 
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
+    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 GlassLab.MailManager.prototype.ShowMail = function()
@@ -46,9 +47,18 @@ GlassLab.MailManager.prototype.IsMailShowing = function()
     return this.ordersMenu.IsShowing();
 }
 
-GlassLab.MailManager.prototype.AddOrder = function(order)
+/**
+ * @param args Takes in any number of order blob arguments
+ * @public
+ */
+GlassLab.MailManager.prototype.AddOrders = function()
 {
-    this.availableOrders.push(order);
+    for (var i=0; i < arguments.length; i++)
+    {
+        this.availableOrders.push(arguments[i]);
+    }
+
+    GlassLab.SignalManager.orderAdded.dispatch(arguments);
 };
 
 GlassLab.MailManager.prototype.ClearOrders = function()
@@ -75,4 +85,17 @@ GlassLab.MailManager.prototype._onOrderCompleted = function(order)
     }
 
     this.rewards.add(order);
+};
+
+GlassLab.MailManager.prototype._onGameLoaded = function(blob)
+{
+    this.availableOrders = blob.availableOrders || [];
+
+    this.rewards = blob.rewards || [];
+
+    if (this.availableOrders.length > 0 || this.rewards.length > 0)
+    {
+        GlassLab.SignalManager.orderAdded.dispatch(arguments);
+        console.log("!!!");
+    }
 };

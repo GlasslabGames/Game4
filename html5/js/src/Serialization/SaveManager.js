@@ -27,6 +27,14 @@ GlassLab.SaveManager = function(game)
 
 GlassLab.SaveManager.SAVE_DELAY = 5; // Minimum time in seconds to wait between saves.
 
+GlassLab.SaveManager.prototype.Load = function(key)
+{
+    key = key || "default";
+    GlassLab.SignalManager.gameLoaded.dispatch(this.dataBlob[key]);
+
+    console.log("Game loaded: \n", this.dataBlob[key]);
+};
+
 GlassLab.SaveManager.prototype.Save = function(key, targetBlob)
 {
     key = key || "default";

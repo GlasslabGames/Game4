@@ -10,9 +10,7 @@ GlassLab.FeedAnimalCondition = function(game, creatureType, numCreatures)
 
     this.acceptedType = creatureType;
     this.numRequired = numCreatures;
-
     this.numFed = 0;
-
     this.game = game;
 };
 
@@ -49,6 +47,14 @@ GlassLab.FeedAnimalCondition.prototype._onFeedPenResolved = function(pen, win)
 
 GlassLab.FeedAnimalCondition.prototype.init = function()
 {
+    this.numFed = 0;
+
     GlassLab.SignalManager.creatureFed.add(this._onCreatureFed, this);
     GlassLab.SignalManager.feedingPenResolved.add(this._onFeedPenResolved, this);
+};
+
+GlassLab.FeedAnimalCondition.prototype._doDestroy = function()
+{
+    GlassLab.SignalManager.creatureFed.remove(this._onCreatureFed, this);
+    GlassLab.SignalManager.feedingPenResolved.remove(this._onFeedPenResolved, this);
 };

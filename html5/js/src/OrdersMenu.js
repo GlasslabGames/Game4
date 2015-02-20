@@ -141,7 +141,7 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.companyNameLabel.setText(this.data.company);
     this.rewardAmountLabel.setText("$"+this.data.reward);
 
-    this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.levelManager.GetCurrentLevel().data.orders.length)
+    this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.mailManager.availableOrders.length)
 
     var colors = getStringColorInfo(this.data.description);
     for (var i=colors.length-1; i >= 0; i++)
@@ -151,7 +151,7 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     }
 
     this.prevPageButton.visible = this.currentPage > 0;
-    this.nextPageButton.visible = this.currentPage < GLOBAL.levelManager.GetCurrentLevel().data.orders.length - 1;
+    this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1;
 };
 
 GlassLab.OrdersMenu.prototype.SetInfo = function(data)
@@ -167,7 +167,7 @@ GlassLab.OrdersMenu.prototype.Show = function(orderNum)
     this.sprite.visible = true;
     this.currentPage = orderNum;
 
-    this.SetInfo(GLOBAL.levelManager.GetCurrentLevel().data.orders[orderNum]);
+    this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
 };
 
 GlassLab.OrdersMenu.prototype.Hide = function()

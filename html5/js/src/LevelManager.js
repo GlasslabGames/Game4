@@ -155,20 +155,14 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
         console.log("Starting level", levelNum, this.levels[levelNum].data);
         this._destroyCurrentLevel();
         var data = this.levels[levelNum].data;
-        if (data.pens) {
-          for (var i = 0; i < data.pens.length; i++) {
-            var penData = data.pens[i];
-            var widths = [(penData.creatureWidth || 1), (penData.foodWidth || penData.foodAWidth || 1)];
-            if (penData.foodBWidth) widths.push(penData.foodBWidth);
 
-            var pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, (penData.type || "rammus"),
-                (penData.height || 1), widths, penData.autoFill);
-            // set which edges are adjustable here (defaults to the right side only)
-            if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left, true);
-            if (penData.bottomDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.bottom, true);
-            if (penData.topDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.top, true);
-          }
+        if (data.pens) {
+            for (var i = 0; i < data.pens.length; i++) {
+                var penData = data.pens[i];
+                GLOBAL.penManager.CreatePen(penData);
+            }
         }
+
         if (data.looseCreatures) {
           for (var type in data.looseCreatures) {
             for (var j = 0; j < data.looseCreatures[type]; j++) {
@@ -178,6 +172,11 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
               creature._onTargetsChanged();
             }
           }
+        }
+
+        if (data.orders)
+        {
+            GLOBAL.mailManager.AddOrders.apply(GLOBAL.mailManager, data.orders);
         }
 
         if (typeof data.quest != 'undefined')
@@ -210,14 +209,12 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 
 GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
 {
-  // For now just destroy all sprites on the pen and creature layers.
-  for (var i = GLOBAL.penLayer.children.length-1; i>=0; i--) {
-    GLOBAL.penLayer.getChildAt(i).destroy();
-  }
-  for (var i = GLOBAL.creatureLayer.children.length-1; i>=0; i--) {
-    GLOBAL.creatureLayer.getChildAt(i).destroy();
-  }
-  GLOBAL.tileManager.clearTiles();
+    GLOBAL.penManager.DestroyAllPens();
+
+    GLOBAL.creatureManager.DestroyAllCreatures();
+
+    GLOBAL.tileManager.clearTiles();
+
     GLOBAL.orderFulfillment.pen = null; // clear the reference to the pen
 };
 
@@ -228,7 +225,7 @@ GlassLab.LevelManager.prototype.LoadNextLevel = function()
 
 GlassLab.LevelManager.prototype.RestartLevel = function()
 {
-  this.LoadLevel(this.currentLevel);
+    this.LoadLevel(this.currentLevel);
 };
 
 GlassLab.LevelManager.prototype.GetCurrentLevel = function()

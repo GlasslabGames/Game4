@@ -30,3 +30,19 @@ GlassLab.Action.prototype._complete = function()
     this.completed = true;
     this.onComplete.dispatch(this);
 };
+
+/**
+ * @public
+ */
+GlassLab.Action.prototype.Destroy = function()
+{
+    this._onDestroy();
+
+    this.onComplete.dispose();
+};
+
+/**
+ * OVERRIDE
+ * @protected
+ */
+GlassLab.Action.prototype._onDestroy = function() {};
