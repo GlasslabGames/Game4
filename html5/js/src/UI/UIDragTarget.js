@@ -53,6 +53,7 @@ GlassLab.UIDragTarget.prototype.canDrop = function(obj) {
     return (this.objectValidator && this.objectValidator(obj) && (this.objectsOn.length < this.maxObjects || this.replace));
 };
 
+/* TODO
 GlassLab.UIDragTarget.prototype.tryDragOver = function(obj) {
   if (this.objectValidator && this.objectValidator(obj) && (this.objectsOn.length < this.maxObjects || this.replace)) {
       this.setHighlighted(true);
@@ -66,21 +67,7 @@ GlassLab.UIDragTarget.prototype.tryDragOut = function(obj) {
     if (index > -1) this.objectsOver.splice(index, 1);
     this.setHighlighted(this.objectsOver.length > 0);
 };
-
-GlassLab.UIDragTarget.prototype.tryDrop = function(obj) {
-    // due to graphics not working with bounds, we need to check directly for overlap
-    if (this._checkOverlap(obj.sprite || obj) && this.objectValidator && this.objectValidator(obj) && (this.objectsOn.length < this.maxObjects || this.replace)) {
-        if (this.objectsOn.length < this.maxObjects) {
-            this._addObject(obj);
-            return true;
-        } else if (this.replace) {
-            this._removeObject(this.objectsOn.shift());
-            this._addObject(obj);
-            return true;
-        }
-    }
-    return false;
-};
+*/
 
 GlassLab.UIDragTarget.prototype.drop = function(obj) {
     if (this.objectsOn.length < this.maxObjects) {

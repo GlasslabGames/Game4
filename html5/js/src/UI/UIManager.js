@@ -131,7 +131,7 @@ GlassLab.UIManager.prototype._createZoomButton = function()
 GlassLab.UIManager.prototype.getDragTarget = function(draggedObj) {
     for (var i = 0; i < this.dragTargets.length; i++) {
         var target = this.dragTargets[i];
-        if (target.enabled && target.visible && target._checkOverlap(draggedObj) && // TODO: fix checking the overlap
+        if (target.enabled && target._checkOverlap(draggedObj) && // TODO: fix checking the overlap
             target.canDrop(draggedObj) && draggedObj.canDropOnto(target)) {
             return target;
         }

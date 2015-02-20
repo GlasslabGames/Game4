@@ -12,8 +12,6 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
 
     this.anchor.setTo(0, 0);
 
-    this.inputEnabled = true;
-
     this.events.onInputDown.add(this._onInputDown, this);
     this.events.onEndDrag.add(this._onEndDrag, this);
 

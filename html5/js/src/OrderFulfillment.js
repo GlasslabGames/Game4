@@ -59,15 +59,6 @@ GlassLab.OrderFulfillment = function(game)
             foodSprite: foodSprite, xLabel: xLabel, dragTarget: dragTarget});
     }
 
-/*
-    this.dragBox = game.make.sprite();
-    var dragBoxGraphic = game.make.graphics();
-    dragBoxGraphic.beginFill(0xffaaaa).drawRect(0,0,170,100);
-    this.dragBox.addChild(dragBoxGraphic);
-    this.sprite.addChild(this.dragBox);
-    this.dragBox.x = 50;
-    this.dragBox.y = 170;
-*/
     this.crateLoaded = false;
     this.submitButton = new GlassLab.UIButton(game, 30, 280, this._onSubmit, this, 180, 80, 0xffffff, "Load Crate"); // was 0xffaaff
     this.sprite.addChild(this.submitButton);
