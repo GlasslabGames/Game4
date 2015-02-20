@@ -34,17 +34,27 @@ GlassLab.MailManager = function(game)
 
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
+    GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
 };
 
 GlassLab.MailManager.prototype.ShowMail = function()
 {
     if (this.rewards.length == 0)
     {
-        this.ordersMenu.Show();
+        if (this.availableOrders.length != 0)
+        {
+            this.ordersMenu.Show();
+        }
+        else
+        {
+            console.error("No orders to show!");
+        }
     }
     else
     {
-        this.rewardsPopup.Show(this.rewards.shift());
+        var rewardOrder = this.rewards.shift();
+        GLOBAL.inventoryManager.AddMoney(rewardOrder.reward);
+        this.rewardsPopup.Show(rewardOrder);
     }
 };
 
@@ -95,7 +105,7 @@ GlassLab.MailManager.prototype._onOrderCompleted = function(order)
         this.availableOrders.splice(orderIndex, 1);
     }
 
-    this.rewards.add(order);
+    this.rewards.push(order);
 };
 
 GlassLab.MailManager.prototype._onGameLoaded = function(blob)
@@ -107,6 +117,5 @@ GlassLab.MailManager.prototype._onGameLoaded = function(blob)
     if (this.availableOrders.length > 0 || this.rewards.length > 0)
     {
         GlassLab.SignalManager.orderAdded.dispatch(arguments);
-        console.log("!!!");
     }
 };
