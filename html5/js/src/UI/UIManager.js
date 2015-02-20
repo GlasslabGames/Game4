@@ -138,3 +138,22 @@ GlassLab.UIManager.prototype.getDragTarget = function(draggedObj) {
     }
     return null;
 };
+
+// Static function that figures out where to put line breaks in order to wrap a segment of text.
+// It sets the text in the provided label but also return the string
+GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
+
+    // Try adding the words one by one
+    var words = text.split(" ");
+    label.text = words[0];
+    var prevText, testWord;
+    for (var i = 1; i < words.length; i++) {
+        prevText = label.text;
+        label.text += " " + words[i]; // test what happens if we append the word
+        if (label.width > maxWidth) { // if that makes the label too wide
+            label.text = prevText + "\n" + words[i]; // make a new line instead
+        }
+    }
+
+    return label.text; // returns the text with newlines inserted
+};
