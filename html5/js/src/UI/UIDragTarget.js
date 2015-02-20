@@ -109,7 +109,7 @@ GlassLab.UIDragTarget.prototype._checkOverlap = function(sprite) {
 
 GlassLab.UIDragTarget.prototype._addObject = function(obj) {
     this.objectsOn.push(obj);
-    console.log(obj, "added");
+    //console.log(obj, "added");
     if (this.addObjectAsChild) {
         var sprite = obj.sprite || obj;
         sprite.parent = this;

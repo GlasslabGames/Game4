@@ -339,12 +339,12 @@ window.onload = function() {
         versionLabel.fixedToCamera = true;
         GLOBAL.UIGroup.add(versionLabel);
 
-        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
-
         GLOBAL.sortingGame = new GlassLab.SortingGame(game);
-        GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame.sprite);
-        GLOBAL.sortingGame.sprite.x = -GLOBAL.sortingGame.width / 2;
-        GLOBAL.sortingGame.sprite.y = -GLOBAL.sortingGame.height / 2;
+        GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame);
+        //GLOBAL.sortingGame.x = -GLOBAL.sortingGame.width / 2;
+        GLOBAL.sortingGame.y = -GLOBAL.sortingGame.height / 2;
+
+        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
 
         GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
