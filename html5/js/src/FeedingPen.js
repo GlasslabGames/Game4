@@ -24,6 +24,8 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
+    this.onResolved = new Phaser.Signal();
+
     this.ratioLabel.x -= GLOBAL.tileSize * 0.75;
     this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 1.25, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
         'button', this.FeedCreatures, this, 1, 0, 1);
@@ -283,6 +285,8 @@ GlassLab.FeedingPen.prototype.Destroy = function()
     }
 
     GLOBAL.penManager.RemovePen(this);
+
+    this.onResolved.dispose();
 };
 
 /* Not used, outdated
@@ -374,6 +378,8 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
     this.finished = true;
 
     GlassLab.SignalManager.feedingPenResolved.dispatch(this, win);
+
+    this.onResolved.dispatch(win);
 
     this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
         if (win)
