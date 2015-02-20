@@ -18,16 +18,6 @@ GlassLab.MailManager = function(game)
     this.rewardsPopup = new GlassLab.RewardPopup(game, -120, 20);
     GLOBAL.UIManager.centerAnchor.addChild(this.rewardsPopup);
     this.rewardsPopup.Hide();
-    /* Test rewards popup:
-    this.rewardsPopup.Show({
-        client: "Archibold Huxley III",
-        company: "Rupture Farms",
-        numCreatures: 7,
-        type: "rammus",
-        description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
-        fulfilled: true,
-        reward: 200
-    }); */
 
     this.availableOrders = [];
     this.rewards = [];
@@ -53,7 +43,6 @@ GlassLab.MailManager.prototype.ShowMail = function()
     else
     {
         var rewardOrder = this.rewards.shift();
-        GLOBAL.inventoryManager.AddMoney(rewardOrder.reward);
         this.rewardsPopup.Show(rewardOrder);
     }
 };
