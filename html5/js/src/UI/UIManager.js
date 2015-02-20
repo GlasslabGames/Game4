@@ -127,17 +127,13 @@ GlassLab.UIManager.prototype._createZoomButton = function()
 
 };
 
-GlassLab.UIManager.prototype.tryDropOntoDragTargets = function(draggedObj) {
-    return false; // TODO: inventoryMenuSlot
-};
-
 // General function to check if something was dropped onto a drag target that wants it
 GlassLab.UIManager.prototype.getDragTarget = function(draggedObj) {
     for (var i = 0; i < this.dragTargets.length; i++) {
-        //console.log(this.dragTargets[i], this.dragTargets[i]._checkOverlap(draggedObj), this.dragTargets[i].canDrop(draggedObj), draggedObj.canDropOnto(this.dragTargets[i]));
-        if (this.dragTargets[i].enabled && this.dragTargets[i]._checkOverlap(draggedObj) && // TODO: fix checking the overlap
-            this.dragTargets[i].canDrop(draggedObj) && draggedObj.canDropOnto(this.dragTargets[i])) {
-            return this.dragTargets[i];
+        var target = this.dragTargets[i];
+        if (target.enabled && target.visible && target._checkOverlap(draggedObj) && // TODO: fix checking the overlap
+            target.canDrop(draggedObj) && draggedObj.canDropOnto(target)) {
+            return target;
         }
     }
     return null;

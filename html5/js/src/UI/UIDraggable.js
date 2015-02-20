@@ -84,9 +84,10 @@ GlassLab.UIDraggable.prototype._endDrag = function() {
     this.dragging = false;
     if (GLOBAL.dragTarget == this) GLOBAL.dragTarget = null; // it should be this, but check just in case so we don't screw up something else
     this._removeDragEffect();
-    this.events.onEndDrag.dispatch();
 
     var target = GLOBAL.UIManager.getDragTarget(this);
+    this.events.onEndDrag.dispatch(target);
+
     if (!target) {
         // fly back to the starting place
         if (!this.returnTween) this.returnTween = this.game.add.tween(this).to( {x: this.dragStartPoint.x, y: this.dragStartPoint.y}, 500, Phaser.Easing.Cubic.Out);

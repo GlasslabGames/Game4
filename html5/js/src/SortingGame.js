@@ -119,7 +119,7 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
 
     // If we answered all the cards, close after a short delay
     if (this.cardsAnswered >= this.cards.length) {
-        this.game.time.events.add( Phaser.Timer.SECOND * 2, function() { this.finish() }, this);
+        this.game.time.events.add( Phaser.Timer.SECOND, function() { this.finish() }, this);
     }
 };
 
