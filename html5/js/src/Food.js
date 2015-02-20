@@ -11,7 +11,7 @@ GlassLab.FoodTypes = {
     carrot: {
         spriteName: "carrot",
         color: 0xe37f54, // associated color for the vomit and the hunger bar
-        unlocked: true,
+        unlocked: true, // Default value, unlock tracked by InventoryManager
         cost: 1,
         hidden: false
     },

@@ -136,6 +136,7 @@ window.onload = function() {
         GLOBAL.saveManager = new GlassLab.SaveManager(game);
 
         GLOBAL.creatureManager = new GlassLab.CreatureManager(GLOBAL.game);
+        GLOBAL.penManager = new GlassLab.PenManager(GLOBAL.game);
 
         GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
@@ -272,6 +273,7 @@ window.onload = function() {
         }, uiElement);
         GlassLab.SignalManager.orderAdded.add(function(order){
             this.visible = true;
+            ordersAlert.visible = true;
         }, uiElement);
         table.addManagedChild(uiElement, true);
 

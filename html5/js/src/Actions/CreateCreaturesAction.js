@@ -19,10 +19,7 @@ GlassLab.CreateCreaturesAction.prototype.Do = function()
 {
     for (var type in this.data) {
         for (var j = 0; j < this.data[type]; j++) {
-            var creature = new GlassLab.Creature(this.game, type);
-            GLOBAL.creatureLayer.add(creature.sprite);
-            creature.moveToRandomTile();
-            creature._onTargetsChanged();
+            GLOBAL.creatureManager.CreateCreature(type);
         }
     }
 

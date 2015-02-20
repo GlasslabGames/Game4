@@ -26,6 +26,7 @@ GlassLab.DayMeter = function(game)
     this.sun.addChild(this.sunLabel);
 
     this.dots = [];
+    this.dotPositions = [];
     this.SetDots([0, .5, 1]);
 
     this.objectiveElement = game.make.graphics(0,this.bar.y+40);
@@ -162,6 +163,8 @@ GlassLab.DayMeter.prototype.SetSunToPositionIndex = function(index, animate)
 
 GlassLab.DayMeter.prototype.SetDots = function(positions)
 {
+    this.dotPositions = positions;
+
     var dotIndex = 0;
     var numDotsBeforeSet = this.dots.length;
     var numPositions = positions.length;

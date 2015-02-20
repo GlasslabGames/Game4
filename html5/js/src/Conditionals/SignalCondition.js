@@ -10,6 +10,8 @@ GlassLab.SignalCondition = function(signal)
 
     this.signal = signal;
     this.signalName = "";
+
+    this.signalBinding = null;
 };
 
 GlassLab.SignalCondition.prototype = Object.create(GlassLab.Conditional.prototype);
@@ -26,6 +28,14 @@ GlassLab.SignalCondition.prototype._onSignalReceived = function()
     this.Refresh();
 };
 
+GlassLab.SignalCondition.prototype._doDestroy = function()
+{
+    if (this.signalBinding && this.signalBinding.signal)
+    {
+        this.signal.remove(this._onSignalReceived, this);
+    }
+};
+
 GlassLab.SignalCondition.prototype.init = function()
 {
     // Init from deserialization
@@ -33,5 +43,6 @@ GlassLab.SignalCondition.prototype.init = function()
     {
         this.signal = GlassLab.Deserializer.getClassFromTypeName(this.signalName);
     }
-    this.signal.addOnce(this._onSignalReceived, this);
+
+    this.signalBinding = this.signal.addOnce(this._onSignalReceived, this);
 };

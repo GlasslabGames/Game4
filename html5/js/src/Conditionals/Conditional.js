@@ -23,6 +23,29 @@ GlassLab.Conditional.prototype._calculateIsSatisfied = function() { return false
 GlassLab.Conditional.prototype._complete = function() {};
 
 /**
+ * OVERRIDE THIS - initialization function
+ * @public
+ */
+GlassLab.Conditional.prototype.init = function() {};
+
+/**
+ * destructor
+ * @public
+ */
+GlassLab.Conditional.prototype.Destroy = function()
+{
+    this._doDestroy();
+
+    this.onSatisfiedChanged.dispose();
+};
+
+/**
+ * OVERRIDE THIS - destructor
+ * @protected
+ */
+GlassLab.Conditional.prototype._doDestroy = function() {};
+
+/**
  * DO NOT OVERRIDE, instead override _calculateIsSatisfied and _complete!
  * @public
  */
