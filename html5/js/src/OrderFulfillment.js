@@ -84,6 +84,8 @@ GlassLab.OrderFulfillment = function(game)
     this.sprite.addChild(this.cancelButton);
 
     this.sprite.visible = false;
+
+    GlassLab.SignalManager.feedingPenResolved.add(this._onPenResolved, this);
 };
 
 // When text is UITextInput is changed
@@ -145,6 +147,21 @@ GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
         this.pen.allowFeedButton = false;
     }
     this._focusCamera();
+};
+
+GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct)
+{
+    if (pen == this.pen)
+    {
+        if (correct)
+        {
+            GlassLab.SignalManager.orderCompleted.dispatch(this.data);
+        }
+        else
+        {
+            GlassLab.SignalManager.orderFailed.dispatch(this.data);
+        }
+    }
 };
 
 GlassLab.OrderFulfillment.prototype.Show = function(data)

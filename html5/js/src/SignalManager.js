@@ -31,6 +31,8 @@ GlassLab.SignalManager = {
 
     // Order Events
     orderAdded: new Phaser.Signal(), // (order) => added order
+    orderCompleted: new Phaser.Signal(), // (order) => order that was completed
+    orderFailed: new Phaser.Signal(), // (order) => order that was failed
 
     // Quest Events
     objectiveUpdated: new Phaser.Signal(), // (string) => new objective

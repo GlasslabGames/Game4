@@ -55,7 +55,7 @@ GlassLab.InventoryManager.prototype.TrySpendMoney = function(amt)
     }
 };
 
-GlassLab.InventoryManager.prototype.MoneyRewarded = function(amt)
+GlassLab.InventoryManager.prototype.AddMoney = function(amt)
 {
     this.money += amt;
 
