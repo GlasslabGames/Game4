@@ -88,6 +88,8 @@ GlassLab.RewardPopup.prototype.Show = function(data)
 
     this.closeButton.x = 0.5 * this.modal.getWidth() - 30;
 
+    this.headerLabel.text = (data.fulfilled? "Order Fulfilled!" : "Order Failed!");
+
     if (this.creature.spriteName != creatureInfo.spriteName + "_idle") this.creature.loadTexture(creatureInfo.spriteName + "_idle");
     var emoteSpriteName = (data.fulfilled? "happyEmote" : "angryEmote");
     if (this.emote.spriteName != emoteSpriteName) this.emote.loadTexture(emoteSpriteName);
