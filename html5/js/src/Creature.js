@@ -85,6 +85,8 @@ GlassLab.Creature = function (game, type, startInPen) {
     } else {
         this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
     }
+
+    GLOBAL.creatureManager.AddCreature(this);
 };
 
 GlassLab.Creature.prototype._onDestroy = function () {
@@ -92,6 +94,8 @@ GlassLab.Creature.prototype._onDestroy = function () {
     this.sprite.events.destroy();
     if (this.updateHandler) this.updateHandler.detach();
     if (this.state) this.state.Exit(); // wrap up the current state
+
+    GLOBAL.creatureManager.RemoveCreature(this);
 };
 
 GlassLab.Creature.prototype.print = function () {

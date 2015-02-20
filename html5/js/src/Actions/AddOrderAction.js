@@ -17,9 +17,6 @@ GlassLab.AddOrderAction.prototype.constructor = GlassLab.AddOrderAction;
 
 GlassLab.AddOrderAction.prototype.Do = function()
 {
-    var level = GLOBAL.levelManager.GetCurrentLevel();
-    if (!level.data.orders) level.data.orders = [];
-    level.data.orders.push(this.data);
-    GlassLab.SignalManager.orderAdded.dispatch(this.orderData);
+    GLOBAL.mailManager.AddOrders(this.data);
     this._complete();
 };

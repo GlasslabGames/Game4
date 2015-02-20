@@ -4,7 +4,19 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.GlasslabSDKHandler = function()
+GlassLab.TelemetryManager = function()
+{
+    this._initializeSDK();
+
+    GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
+
+    GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
+    GlassLab.SignalManager.levelWon.add(this._onLevelWon, this);
+    GlassLab.SignalManager.levelLost.add(this._onLevelLost, this);
+    GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
+};
+
+GlassLab.TelemetryManager.prototype._initializeSDK = function()
 {
     // First check if the GlassLab SDK object is even defined.
     if( typeof GlassLabSDK == "undefined" ) {
@@ -20,15 +32,32 @@ GlassLab.GlasslabSDKHandler = function()
 
     // Attempt to connect to the server. Set the URI if the host is not playfully.org
     // TODO: check if the host is playfully.org and ignore setting the URI
-    GlassLabSDK.connect( "TEST", "http://127.0.0.1:8001", function( data ) {
+    GlassLabSDK.connect( "TEST", "http://dev.playfully.org:8001", function( data ) {
         console.log( "[GlassLab SDK] Connection successful: " + data );
         _this._sdk_connection_state = _this.sdkConnectionState.active;
     }, function( data ) {
         console.log( "[GlassLab SDK] FAILURE! Connection failed: " + data );
         _this._sdk_connection_state = _this.sdkConnectionState.failed;
     });
+};
 
-    GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
+GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
+{
     GlassLabSDK.startSession();
+};
+
+GlassLab.TelemetryManager.prototype._onLevelWon = function()
+{
+
+};
+
+GlassLab.TelemetryManager.prototype._onLevelLost = function()
+{
+
+};
+
+GlassLab.TelemetryManager.prototype._onFeedingPenResolved = function()
+{
+
 };
 

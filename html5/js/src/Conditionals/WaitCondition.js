@@ -36,3 +36,15 @@ GlassLab.WaitCondition.prototype.init = function()
 {
     this.timer.start();
 };
+
+GlassLab.WaitCondition.prototype._doDestroy = function()
+{
+    if (this.timer)
+    {
+        this.timer.stop(true);
+        this.timer.destroy();
+        this.timer = null;
+    }
+
+    this.game = null;
+};

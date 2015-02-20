@@ -50,8 +50,10 @@ GlassLab.CreatureManager = function (game) {
         }
     };
 
-    //this.LogNumCreaturesFed("rammus", 3);
-    //this.LogNumCreaturesFed("rammus", 1);
+    this.creatures = [];
+
+    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
+    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 /*
@@ -82,10 +84,73 @@ GlassLab.CreatureManager.prototype.UnflagDiscoveredFoodCounts = function () {
     }
 };
 
+GlassLab.CreatureManager.prototype.AddCreature = function(creature)
+{
+    this.creatures.push(creature);
+};
+
+GlassLab.CreatureManager.prototype.RemoveCreature = function(creature)
+{
+    var creatureIndex = this.creatures.indexOf(creature);
+    if (creatureIndex != -1)
+    {
+        this.creatures.splice(creatureIndex, 1);
+    }
+    else
+    {
+        console.error("Tried to remove a creature that wasn't tracked");
+    }
+};
+
 GlassLab.CreatureManager.prototype.GetCreatureData = function (type) {
     return this.creatureDatabase[type];
 };
 
+GlassLab.CreatureManager.prototype.DestroyAllCreatures = function() {
+    for (var i = GLOBAL.creatureLayer.children.length-1; i>=0; i--) {
+        GLOBAL.creatureLayer.getChildAt(i).destroy();
+    }
+
+    this.creatures = [];
+};
+
 GlassLab.CreatureManager.prototype._onSaveRequested = function(blob) {
     blob.creatures = [];
+
+    for (var i=0, j=this.creatures.length; i < j; i++)
+    {
+        var creature = this.creatures[i];
+        blob.creatures.push({
+            x: creature.sprite.x,
+            y: creature.sprite.y,
+            type: creature.type
+        });
+    }
+};
+
+GlassLab.CreatureManager.prototype.CreateCreature = function(type)
+{
+    var creature = new GlassLab.Creature(this.game, type);
+    GLOBAL.creatureLayer.add(creature.sprite);
+    creature.moveToRandomTile();
+    creature._onTargetsChanged();
+
+    return creature;
+};
+
+GlassLab.CreatureManager.prototype._onGameLoaded = function(blob)
+{
+    this.DestroyAllCreatures();
+
+    var creatures = blob.creatures;
+    if (creatures)
+    {
+        for (var i = 0, j = creatures.length; i < j; i++)
+        {
+            var creatureData = creatures[i];
+            var creature = this.CreateCreature(creatureData.type);
+            creature.sprite.x = creatureData.x;
+            creature.sprite.y = creatureData.y;
+        }
+    }
 };

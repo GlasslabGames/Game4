@@ -9,7 +9,6 @@ GlassLab.CreatureStateEating = function(game, owner, foodInfo)
     GlassLab.CreatureState.call(this, game, owner);
     this.eatPartially = foodInfo.eatPartially;
     this.food = foodInfo.food;
-    console.log("creatureStateEating",foodInfo);
 };
 
 GlassLab.CreatureStateEating.prototype = Object.create(GlassLab.CreatureState.prototype);
