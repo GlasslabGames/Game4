@@ -323,7 +323,7 @@ window.onload = function() {
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
-        inventoryMenu.scale.setTo(1, 1); // if we reduce the scale, UIDraggable doesn't work :(
+        inventoryMenu.scale.setTo(0.7, 0.7);
         inventoryMenu.x = -700;
         inventoryMenu.y = -120;
         GLOBAL.UIManager.bottomRightAnchor.addChild(inventoryMenu);

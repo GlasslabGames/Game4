@@ -23,6 +23,7 @@ GlassLab.UIDraggable = function(game) {
     this.dropValidator = function(target) { return true; }; // overwrite this with a custom function
     this.destroyOnSuccessfulDrop = false; // if true, if we're able to validate the drop, destroy ourselves
     this.snap = false; // if true, we center over the mouse instead of keeping an offset
+    this.dynamicParents = false; // if true, we recalculate the scale & position of all the parents every update. Should be false mostly.
 };
 
 GlassLab.UIDraggable.prototype = Object.create(GlassLab.UIElement.prototype);
@@ -56,19 +57,16 @@ GlassLab.UIDraggable.prototype._onUp = function(sprite, pointer) {
 
 GlassLab.UIDraggable.prototype._onUpdate = function() {
     if (this.dragging) {
-        // TODO: deal with scaled/offset parents
         var mousePoint = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
 
-        // loop through and apply the scale from each parent
-        // FIXME: doing the loop helps, but it's not right yet. To test, try changing the scale of the InventoryMenu in prototype.js and then dragging food from it.
-        var sprite = this.parent;
-        while (sprite && sprite.scale) {
-            Phaser.Point.divide(mousePoint, sprite.scale, mousePoint);
-            //Phaser.Point.subtract(mousePoint, sprite.position, mousePoint); // I think we need to use position somehow, but this isn't it
-            sprite = sprite.parent;
-        }
-        this.x = mousePoint.x + this.mouseOffset.x;
-        this.y = mousePoint.y + this.mouseOffset.y;
+        if (this.dynamicParents) this._calculateAdjustments(); // else, continue to use the adjustment we calculated when starting drag
+
+        Phaser.Point.add(mousePoint, this.positionAdjustment, mousePoint); // adjust the position to account for parent positions
+        Phaser.Point.multiply(mousePoint, this.scaleAdjustment, mousePoint); // scale to account for parent scales
+        Phaser.Point.add(mousePoint, this.mouseOffset, mousePoint); // add the initial mouse offset (will be 0 if snap is on)
+
+        this.x = mousePoint.x;// + this.mouseOffset.x;
+        this.y = mousePoint.y;// + this.mouseOffset.y;
     }
 };
 
@@ -83,8 +81,7 @@ GlassLab.UIDraggable.prototype.canDropOnto = function(target) {
 
 GlassLab.UIDraggable.prototype._startDrag = function(pointer) {
     this.dragStartPoint = new Phaser.Point(this.x, this.y);
-    this.mouseOffset = (this.snap? new Phaser.Point() : new Phaser.Point(this.x - pointer.x, this.y - pointer.y));
-    // Note: not sure if mouseOffset will work as intended when parents are scaled/positioned weirdly
+    this._calculateAdjustments(); // calculate the parent's position/scale once per drag
     this.dragging = true;
     GLOBAL.dragTarget = this;
     this._applyDragEffect();
@@ -124,4 +121,33 @@ GlassLab.UIDraggable.prototype._applyDragEffect = function() {
 GlassLab.UIDraggable.prototype._removeDragEffect = function() {
     this.scale.x /= 1.05;
     this.scale.y /= 1.05;
+};
+
+// When we start dragging, we need to check for position and scale of parents in order to stay attached to the mouse
+GlassLab.UIDraggable.prototype._calculateAdjustments = function() {
+    this.positionAdjustment = new Phaser.Point(0, 0);
+    var sprite = this.parent;
+    while (sprite && sprite.position) {
+        Phaser.Point.subtract(this.positionAdjustment, sprite.position, this.positionAdjustment);
+        sprite = sprite.parent;
+    }
+
+    this.scaleAdjustment = new Phaser.Point(1, 1);
+    sprite = this.parent;
+    while (sprite && sprite.scale) {
+        Phaser.Point.divide(this.scaleAdjustment, sprite.scale, this.scaleAdjustment);
+        sprite = sprite.parent;
+    }
+
+    if (this.snap) {
+        this.mouseOffset = new Phaser.Point(); // don't remember any offset so that object snaps to the middle of the mouse
+    } else {
+        // Calculate the offset in local coordinates
+        var mousePoint = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
+        Phaser.Point.add(mousePoint, this.positionAdjustment, mousePoint);
+        Phaser.Point.multiply(mousePoint, this.scaleAdjustment, mousePoint);
+
+        this.mouseOffset = Phaser.Point.subtract(this.position, mousePoint);
+    }
+
 };
