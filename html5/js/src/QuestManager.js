@@ -29,6 +29,7 @@ GlassLab.QuestManager.prototype._onQuestStarted = function(quest)
     if (this.activeQuests.indexOf(quest) != -1)
     {
         console.error("Tried adding quest when it was already added!");
+        return;
     }
 
     this.activeQuests.push(quest);
