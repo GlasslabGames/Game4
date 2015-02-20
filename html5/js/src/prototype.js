@@ -95,6 +95,7 @@ window.onload = function() {
         game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
 
         game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
+        game.load.json('alpha_quest', 'assets/quests/alpha.json');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 

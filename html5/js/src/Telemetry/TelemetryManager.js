@@ -12,13 +12,13 @@ GlassLab.TelemetryManager = function()
 
     this.ordersCompleted = 0;
 
-
     GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
 
     GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
     GlassLab.SignalManager.levelWon.add(this._onLevelWon, this);
     GlassLab.SignalManager.levelLost.add(this._onLevelLost, this);
     GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
+    GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
 };
 
 GlassLab.TelemetryManager.prototype._initializeSDK = function()
@@ -48,17 +48,24 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
 
 GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
 {
+    this.attemptsOnLastProblem = 0;
+    this.ordersCompleted = 0;
+
     GlassLabSDK.startSession();
 };
 
 GlassLab.TelemetryManager.prototype._onLevelWon = function()
 {
+};
 
+GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)
+{
+    this.ordersCompleted++;
 };
 
 GlassLab.TelemetryManager.prototype._onLevelLost = function()
 {
-
+    this.attemptsOnLastProblem++;
 };
 
 GlassLab.TelemetryManager.prototype._onFeedingPenResolved = function()
