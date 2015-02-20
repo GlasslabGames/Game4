@@ -8,6 +8,7 @@ GlassLab.UIManager = function(game)
 {
     this.game = game;
     this.dragTargets = [];
+
     this._createAnchors();
 
     var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
@@ -76,7 +77,7 @@ GlassLab.UIManager.prototype._createAnchors = function()
     // Center - above the rest for convenient use with modals, etc
     this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
     GLOBAL.UIGroup.add(this.centerAnchor);
-}
+};
 /*
 // TODO: Replace with class  OR combine with FailModal somehow.. like reuse the same modal? (._.)a
 GlassLab.UIManager.prototype._createEndLevelModal = function()
@@ -111,10 +112,18 @@ GlassLab.UIManager.prototype._createZoomButton = function()
 
 };
 
-// General function to check if something was dropped onto a drag target that wants it
 GlassLab.UIManager.prototype.tryDropOntoDragTargets = function(draggedObj) {
+    return false; // TODO: inventoryMenuSlot
+};
+
+// General function to check if something was dropped onto a drag target that wants it
+GlassLab.UIManager.prototype.getDragTarget = function(draggedObj) {
     for (var i = 0; i < this.dragTargets.length; i++) {
-        if (this.dragTargets[i].enabled && this.dragTargets[i].tryDrop(draggedObj)) return true;
+        //console.log(this.dragTargets[i], this.dragTargets[i]._checkOverlap(draggedObj), this.dragTargets[i].canDrop(draggedObj), draggedObj.canDropOnto(this.dragTargets[i]));
+        if (this.dragTargets[i].enabled && this.dragTargets[i]._checkOverlap(draggedObj) && // TODO: fix checking the overlap
+            this.dragTargets[i].canDrop(draggedObj) && draggedObj.canDropOnto(this.dragTargets[i])) {
+            return this.dragTargets[i];
+        }
     }
-    return false;
+    return null;
 };

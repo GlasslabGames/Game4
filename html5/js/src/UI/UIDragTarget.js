@@ -32,17 +32,24 @@ GlassLab.UIDragTarget = function(game, width, height, hint, solidLines) {
     this.maxObjects = 1;
     this.replace = true;
     this.addObjectAsChild = true;
+    this.childObjectOffset = new Phaser.Point();
 
     this.events.onObjectDropped = new Phaser.Signal();
     GLOBAL.UIManager.dragTargets.push( this );
-    this.events.onDestroy.add(this._onDestroy, this);
 };
 
 GlassLab.UIDragTarget.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIDragTarget.prototype.constructor = GlassLab.UIDragTarget;
 
 GlassLab.UIDragTarget.prototype._onDestroy = function() {
+    GlassLab.UIElement.prototype._onDestroy.call(this);
     GLOBAL.UIManager.dragTargets.splice( GLOBAL.UIManager.dragTargets.indexOf(this), 1 );
+    this.events.onObjectDropped.dispose();
+};
+
+// Return whether the specified object can be dropped onto this target
+GlassLab.UIDragTarget.prototype.canDrop = function(obj) {
+    return (this.objectValidator && this.objectValidator(obj) && (this.objectsOn.length < this.maxObjects || this.replace));
 };
 
 GlassLab.UIDragTarget.prototype.tryDragOver = function(obj) {
@@ -74,6 +81,15 @@ GlassLab.UIDragTarget.prototype.tryDrop = function(obj) {
     return false;
 };
 
+GlassLab.UIDragTarget.prototype.drop = function(obj) {
+    if (this.objectsOn.length < this.maxObjects) {
+        this._addObject(obj);
+    } else if (this.replace) {
+        this._removeObject(this.objectsOn.shift());
+        this._addObject(obj);
+    }
+};
+
 GlassLab.UIDragTarget.prototype._checkOverlap = function(sprite) {
     if (!sprite.getBounds) return false;
     var objBounds = sprite.getBounds();
@@ -97,7 +113,8 @@ GlassLab.UIDragTarget.prototype._addObject = function(obj) {
     if (this.addObjectAsChild) {
         var sprite = obj.sprite || obj;
         sprite.parent = this;
-        sprite.x = 0; sprite.y = 0;
+        sprite.x = this.childObjectOffset.x;
+        sprite.y = this.childObjectOffset.y;
     }
     this.events.onObjectDropped.dispatch(obj, this);
 };
