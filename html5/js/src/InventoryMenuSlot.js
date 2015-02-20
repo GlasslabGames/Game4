@@ -8,16 +8,12 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
 {
     this.foodType = foodType;
     this.data = GlassLab.FoodTypes[foodType];
-    GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0);
+    GlassLab.UIDraggable.prototype.constructor.call(this, game, 0, 0);
 
     this.anchor.setTo(0, 0);
 
-    this._dragStartLocation = new Phaser.Point();
-
-    this.canInteract = true;
-
-    this.inputEnabled = true;
     this.events.onInputDown.add(this._onInputDown, this);
+    this.events.onEndDrag.add(this._onEndDrag, this);
 
     this.costLabel = game.make.text(0,0,"$"+this.data.cost, {fill: '#ffffff'});
     this.costLabel.anchor.setTo(.5, 1);
@@ -27,17 +23,12 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
 };
 
 // Extends Sprite
-GlassLab.InventoryMenuSlot.prototype = Object.create(GlassLab.UIElement.prototype);
+GlassLab.InventoryMenuSlot.prototype = Object.create(GlassLab.UIDraggable.prototype);
 GlassLab.InventoryMenuSlot.prototype.constructor = GlassLab.InventoryMenuSlot;
 
 GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
 {
-    if (this.data.unlocked)
-    {
-        this._dragStartLocation.set(this.x, this.y);
-    }
-    else
-    {
+    if (!this.data.unlocked) {
         if (!this.modal)
         {
             var yesButton = new GlassLab.UIButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
@@ -73,34 +64,31 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseCanceled = function()
     }
 };
 
-GlassLab.InventoryMenuSlot.prototype._onDragStop = function(sprite, pointer)
+GlassLab.InventoryMenuSlot.prototype._jumpToStart = function() {
+    this.position.setTo(this.dragStartPoint.x, this.dragStartPoint.y); // jump back into the inventory
+};
+
+GlassLab.InventoryMenuSlot.prototype._onEndDrag = function(target)
 {
-    if (GLOBAL.UIManager.tryDropOntoDragTargets(this)) {
-        this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
+    if (target) {
+        this._jumpToStart();
         return;
     }
 
     // Dropped on world
+    var pointer = this.game.input.activePointer;
     var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
     if (tile && tile.canDropFood()) { // valid tile
             var food = new GlassLab.Food(this.game, this.foodType);
             GLOBAL.foodLayer.add(food.sprite);
             food.placeOnTile(tile);
 
-        this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
+        this._jumpToStart();
     }
     else  if (tile && tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {
-        this.position.setTo(this._dragStartLocation.x, this._dragStartLocation.y);
-    } else {// failed
-        if (!this.returnTween)
-        {
-            this.returnTween = this.game.add.tween(this).to( {x: this._dragStartLocation.x, y: this._dragStartLocation.y}, 500, Phaser.Easing.Cubic.Out, true);
-        }
-        else
-        {
-            this.returnTween.start();
-        }
+        this._jumpToStart();
     }
+    // else, it will fly back thanks to uiDraggable
 };
 
 GlassLab.InventoryMenuSlot.prototype.SetData = function(data)
@@ -117,12 +105,13 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
         this.loadTexture(this.data.spriteName);
         this.scale.setTo(.5, .5);
 
-        if (!this.input.draggable)
+        /*if (!this.input.draggable)
         {
             this.input.enableDrag(false, true);
 
             this.events.onDragStop.add(this._onDragStop, this);
-        }
+        }*/
+        this.draggable = true;
     }
     else
     {
@@ -133,12 +122,13 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
         this.costLabel.x = this.width/2;
         this.costLabel.y = this.height;
 
-        if (this.input.draggable)
+        /*if (this.input.draggable)
         {
             this.input.disableDrag();
 
             this.events.onDragStop.remove(this._onDragStop, this);
-        }
+        }*/
+        this.draggable = false;
     }
 
     this._signalChange();

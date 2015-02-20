@@ -90,9 +90,13 @@ window.onload = function() {
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
         game.load.image('lock', 'assets/images/HUD_items_lock.png');
+        game.load.image('dashedCircle', 'assets/images/dashedCircle.png');
 
         game.load.image('assistant', 'assets/images/assistant.png');
         game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
+
+        game.load.image('bigO', 'assets/images/matchingGame_o.png');
+        game.load.image('bigX', 'assets/images/matchingGame_x.png');
 
         game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
         game.load.json('alpha_quest', 'assets/quests/alpha.json');
@@ -292,9 +296,6 @@ window.onload = function() {
         GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
         uiElement.visible = getParameterByName("items") != "false"; // default to using items
 
-        game.input.onDown.add(globalDown, this); // Global input down handler
-        game.input.onUp.add(globalUp, this); // Global input down handler
-
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
         game.camera.y = -game.camera.height/2;
@@ -323,7 +324,7 @@ window.onload = function() {
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
-        inventoryMenu.scale.setTo(.8, .8);
+        inventoryMenu.scale.setTo(0.7, 0.7);
         inventoryMenu.x = -700;
         inventoryMenu.y = -120;
         GLOBAL.UIManager.bottomRightAnchor.addChild(inventoryMenu);
@@ -339,12 +340,12 @@ window.onload = function() {
         versionLabel.fixedToCamera = true;
         GLOBAL.UIGroup.add(versionLabel);
 
-        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
-        /* TODO
         GLOBAL.sortingGame = new GlassLab.SortingGame(game);
-        GLOBAL.sortingGame.sprite.fixedToCamera = true;
-        GLOBAL.UIGroup.add(GLOBAL.sortingGame.sprite);
-        */
+        GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame);
+        //GLOBAL.sortingGame.x = -GLOBAL.sortingGame.width / 2;
+        GLOBAL.sortingGame.y = -GLOBAL.sortingGame.height / 2;
+
+        GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
 
         GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
@@ -362,21 +363,6 @@ window.onload = function() {
     function onLeaveFullScreen() {
     }
 
-    function globalDown(pointer, DOMevent)
-    {
-        if (!pointer.targetObject) // if nothing clicked on
-        {
-        }
-    }
-
-  function globalUp(pointer, DOMevent)
-  {
-    if (GLOBAL.stickyMode && GLOBAL.dragTarget) {
-      if (GLOBAL.dragTarget.OnStickyDrop) GLOBAL.dragTarget.OnStickyDrop();
-      GLOBAL.dragTarget = null;
-      GLOBAL.justDropped = true;
-    }
-  }
 
     function update(game)
     {

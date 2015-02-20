@@ -139,6 +139,29 @@ GlassLab.LevelManager = function(game)
         },
         objective: "Feed the rams!"
     };
+
+    // Add Bonus Game data here for now
+    this.bonusIndex = -1;
+    this.bonusData = [
+        [
+            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 4, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 2, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 3, displayMode: "spritesOnly"}
+        ],
+        [
+            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 3, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 4, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 2, numFoodsPerCreature: 2, displayMode: "spritesOnly"}
+        ],
+        [
+            { creatureType: "rammus", numCreatures: 2, numFoodsPerCreature: 4, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 3, numFoodsPerCreature: 2, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 2, numFoodsPerCreature: 3, displayMode: "spritesOnly"}
+        ]
+    ];
+
+    // When we finish a bonus game, continue to the next level
+    GlassLab.SignalManager.bonusGameComplete.add(this.LoadNextLevel, this);
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
@@ -246,6 +269,14 @@ GlassLab.LevelManager.prototype.CompleteCurrentLevel = function()
 
     GlassLab.SignalManager.levelWon.dispatch();
 };
+
+GlassLab.LevelManager.prototype.LoadNextBonusGame = function() {
+    if (this.bonusIndex < this.bonusData.length - 1) this.bonusIndex++; // else stay on the last one
+    var data = this.bonusData[this.bonusIndex];
+    console.log(data);
+    GLOBAL.sortingGame.start(data);
+};
+
 
 /**
  * Level
