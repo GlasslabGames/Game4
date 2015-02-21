@@ -34,23 +34,39 @@ GlassLab.ConditionalAction.prototype.Do = function()
 
     this.condition.Refresh();
 
-    if (this.condition.isSatisfied)
+    if (this.condition.isComplete)
     {
-        if (!this.trueAction)
+        if (this.trueAction)
+        {
+            this._doAction(this.trueAction);
+        }
+        else if (this.serializedTrueAction)
         {
             this.trueAction = GlassLab.Deserializer.deserializeObj(this.serializedTrueAction);
+            this._doAction(this.trueAction);
         }
-
-        this._doAction(this.trueAction);
+        else
+        {
+            // No action, complete immediately
+            this._complete();
+        }
     }
     else
     {
-        if (!this.falseAction)
+        if (this.falseAction)
+        {
+            this._doAction(this.falseAction);
+        }
+        else if (this.serializedFalseAction)
         {
             this.falseAction = GlassLab.Deserializer.deserializeObj(this.serializedFalseAction);
+            this._doAction(this.falseAction);
         }
-
-        this._doAction(this.falseAction);
+        else
+        {
+            // No action, complete immediately
+            this._complete();
+        }
     }
 };
 
@@ -72,4 +88,22 @@ GlassLab.ConditionalAction.prototype._doAction = function(action)
 GlassLab.ConditionalAction.prototype._onActionComplete = function()
 {
     this._complete();
+};
+
+GlassLab.ConditionalAction.prototype._onDestroy = function()
+{
+    if (this.falseAction)
+    {
+        this.falseAction.Destroy();
+    }
+
+    if (this.trueAction)
+    {
+        this.trueAction.Destroy();
+    }
+
+    if (this.condition)
+    {
+        this.condition.Destroy();
+    }
 };

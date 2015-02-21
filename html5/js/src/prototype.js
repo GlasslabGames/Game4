@@ -176,6 +176,8 @@ window.onload = function() {
 
         GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
 
+        GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
+
         var table = new GlassLab.UITable(game, 1, 20);
         table.x = -70;
         table.y = 20;

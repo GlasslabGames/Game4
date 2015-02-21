@@ -71,7 +71,11 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
             }
         }
     } else { // eating outside of pen, so just continue to the next target or go to idle
-        if (this.creature.getIsSatisfied()) this.creature.Emote(true);
+        if (this.creature.getIsSatisfied())
+        {
+            GlassLab.SignalManager.creatureFed.dispatch(this.creature);
+            this.creature.Emote(true);
+        }
         this.creature._onTargetsChanged();
     }
 };

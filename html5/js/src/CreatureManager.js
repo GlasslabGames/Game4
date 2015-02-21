@@ -13,7 +13,7 @@ GlassLab.CreatureManager = function (game) {
     this.creatureList = ["rammus", "unifox"]; // list of creatures in the order they should appear in the journal
     // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
-        rammus: {
+        baby_rammus: {
             journalInfo: {
                 name: "Rammus Jerkum",
                 temperament: "Combative"
@@ -22,6 +22,17 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "carrot", amount: 3}],
+            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
+        },
+        rammus: {
+            journalInfo: {
+                name: "Rammus Jerkum",
+                temperament: "Combative"
+            },
+            unlocked: true, // if the player has discovered this animal yet
+            spriteName: "sheep",
+            fxFrames: {eat: 16, vomit: 60 },
+            desiredFood: [{type: "carrot", amount: 3}, {type: "potato", amount: 5}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         rammus2: { // For testing fractional food
@@ -35,6 +46,18 @@ GlassLab.CreatureManager = function (game) {
             spriteTint: 0xddffff,
             desiredFood: [{type: "carrot", amount: (1/2)}, {type: "potato", amount: (5/4)}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
+        },
+        baby_unifox: {
+            journalInfo: {
+                name: "Vulpes Unicornum",
+                temperament: "Shy"
+            },
+            unlocked: true,
+            spriteName: "unicorn",
+            eatFxStyle: {carrot: "long", potato: "long"}, // specification for which animation to play when eating certain food
+            fxFrames: {eat: 1, vomit: 45 },
+            desiredFood: [{type: "potato", amount: 4}],
+            discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         },
         unifox: {
             journalInfo: {

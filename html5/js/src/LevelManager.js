@@ -16,6 +16,11 @@ GlassLab.LevelManager = function(game)
 
     this.levels = [];
 
+    var level0 = this._addLevelData(new GlassLab.Level());
+    level0.data = {
+        quest: "Alpha"
+    };
+
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
       pens: [
@@ -126,7 +131,7 @@ GlassLab.LevelManager = function(game)
 
     var level7 = this._addLevelData(new GlassLab.Level());
     level7.data = {
-        quest: 0
+        quest: "Vertical Slice"
     };
 
     // level 8
@@ -204,7 +209,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 
         if (typeof data.quest != 'undefined')
         {
-            var quest = GLOBAL.questManager.quests[data.quest];
+            var quest = GLOBAL.questManager.questsByName[data.quest];
             if (quest.isStarted)
             {
                 quest.Reset();

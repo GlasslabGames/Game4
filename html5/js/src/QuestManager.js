@@ -16,7 +16,8 @@ GlassLab.QuestManager = function(game)
     this.activeQuests = [];
 
     this.quests = [
-        new GlassLab.Quest("Vertical Slice", this.game.cache.getJSON("vs_quest"))
+        new GlassLab.Quest("Vertical Slice", this.game.cache.getJSON("vs_quest")),
+        new GlassLab.Quest("Alpha", this.game.cache.getJSON("alpha_quest"))
     ];
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);

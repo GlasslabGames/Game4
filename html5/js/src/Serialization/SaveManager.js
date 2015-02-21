@@ -27,6 +27,11 @@ GlassLab.SaveManager = function(game)
 
 GlassLab.SaveManager.SAVE_DELAY = 5; // Minimum time in seconds to wait between saves.
 
+GlassLab.SaveManager.prototype.HasData = function(key)
+{
+    return this.dataBlob.hasOwnProperty(key);
+};
+
 GlassLab.SaveManager.prototype.Load = function(key)
 {
     key = key || "default";
@@ -56,6 +61,19 @@ GlassLab.SaveManager.prototype.SaveData = function(key, value)
 GlassLab.SaveManager.prototype.LoadData = function(key)
 {
     return this.dataBlob[key];
+};
+
+GlassLab.SaveManager.prototype.DeleteData = function(key)
+{
+    if (this.HasData(key))
+    {
+        delete this.dataBlob[key];
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 };
 
 GlassLab.SaveManager.prototype.onDataChanged = function()

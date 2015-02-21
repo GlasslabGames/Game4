@@ -48,6 +48,8 @@ GlassLab.DayManager.prototype.Advance = function()
 {
     this.currentSection++;
     this._refresh();
+
+
 };
 
 GlassLab.DayManager.prototype.AdvanceDay = function()

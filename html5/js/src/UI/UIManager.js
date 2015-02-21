@@ -107,7 +107,15 @@ GlassLab.UIManager.prototype._createEndLevelModal = function()
 GlassLab.UIManager.prototype._onRetryPressed = function()
 {
   this.winModal.visible = this.loseModal.visible = false;
-  GLOBAL.levelManager.RestartLevel();
+
+  if (GLOBAL.saveManager.HasData("default_checkpoint"))
+  {
+      GLOBAL.saveManager.Load("default_checkpoint");
+  }
+    else
+  {
+      GLOBAL.levelManager.RestartLevel();
+  }
 };
 
 GlassLab.UIManager.prototype._onContinuePressed = function()
