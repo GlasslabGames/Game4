@@ -144,6 +144,8 @@ GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct)
 {
     if (pen == this.pen)
     {
+        this.data.fulfilled = correct;
+
         if (correct)
         {
             GlassLab.SignalManager.orderCompleted.dispatch(this.data);

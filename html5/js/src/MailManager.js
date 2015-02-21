@@ -15,8 +15,9 @@ GlassLab.MailManager = function(game)
     this.ordersMenu = new GlassLab.OrdersMenu(game, -250, -210);
     GLOBAL.UIManager.centerAnchor.addChild(this.ordersMenu.sprite);
 
-    this.rewardsPopup = new GlassLab.RewardPopup(game, -250, -210);
+    this.rewardsPopup = new GlassLab.RewardPopup(game, -120, 20);
     GLOBAL.UIManager.centerAnchor.addChild(this.rewardsPopup);
+    this.rewardsPopup.Hide();
 
     this.availableOrders = [];
     this.rewards = [];
@@ -42,7 +43,6 @@ GlassLab.MailManager.prototype.ShowMail = function()
     else
     {
         var rewardOrder = this.rewards.shift();
-        GLOBAL.inventoryManager.AddMoney(rewardOrder.reward);
         this.rewardsPopup.Show(rewardOrder);
     }
 };

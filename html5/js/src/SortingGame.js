@@ -64,8 +64,8 @@ GlassLab.SortingGame.prototype.constructor = GlassLab.SortingGame;
 GlassLab.SortingGame.COMPARISON_VALUES = {tooLittle: "TOO\nLITTLE", justRight: "JUST\nRIGHT", tooMuch: "TOO\nMUCH"};
 GlassLab.SortingGame.REWARD_PER_CARD = 10;
 
-GlassLab.SortingGame.prototype.addCard = function(creatureType, numCreatures, numFoodsPerCreature, displayMode) {
-    var card = new GlassLab.SortingGameCard(this, creatureType, numCreatures, numFoodsPerCreature, displayMode);
+GlassLab.SortingGame.prototype.addCard = function(creatureType, numCreatures, numFood, displayMode) {
+    var card = new GlassLab.SortingGameCard(this, creatureType, numCreatures, numFood, displayMode);
     this.root.addChild(card);
     card.x = 15 + this.cards.length * 245;
     card.y = 50;
@@ -133,7 +133,7 @@ GlassLab.SortingGame.prototype.start = function(data) {
     }
     // Note: we could, if desired, randomly order the cards here
     for (var i = 0; i < data.length; i++) {
-        this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFoodsPerCreature, data[i].displayMode );
+        this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFood, data[i].displayMode );
     }
 
     // Add tokens if we don't have any or some were used last time
@@ -165,21 +165,21 @@ GlassLab.SortingGame.prototype.finish = function() {
  * SortingGameCard
  */
 
-GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFoodsPerCreature, displayMode) {
+GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFood, displayMode) {
     GlassLab.UIDragTarget.prototype.constructor.call(this, sortingGame.game, 230, 350, "", true);
 
     this.sortingGame = sortingGame;
     this.creatureType = creatureType;
     this.numCreatures = numCreatures;
-    this.numFoodsPerCreature = [].concat(numFoodsPerCreature); // make sure it's an array
+    this.numFood = [].concat(numFood); // make sure it's an array
 
     // Calculate the correct answer to this card. For now, creatures with multiple kinds of food just look at the total food.
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
     var totalFoodDesired = 0;
     var totalFoodShown = 0;
     for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
-        totalFoodDesired += creatureInfo.desiredFood[i].amount;
-        totalFoodShown += this.numFoodsPerCreature[i] || 0;
+        totalFoodDesired += creatureInfo.desiredFood[i].amount * this.numCreatures;
+        totalFoodShown += this.numFood || 0;
     }
 
     if (totalFoodShown < totalFoodDesired) this.targetValue = GlassLab.SortingGame.COMPARISON_VALUES.tooLittle;
@@ -274,9 +274,11 @@ GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
 GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
 
-    var colWidth = 55, rowHeight = 40;
+    var colWidth = 55, rowHeight = 35;
     this.displaySprite = this.game.make.sprite((this.actualWidth - colWidth * this.numCreatures) / 2 + colWidth / 2, rowHeight / 2 + 15);
     this.addChild(this.displaySprite);
+
+    var foodLeft = {}; // track the total number of food left to split among all creatures
 
     for (var col = 0; col < this.numCreatures; col++) {
         var creature = this.game.make.sprite(col * colWidth, 0, creatureInfo.spriteName+"_idle");
@@ -286,13 +288,17 @@ GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
 
         var row = 1;
         for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
-            var foodInfo = GlassLab.FoodTypes[creatureInfo.desiredFood[i].type];
-            var numFoods = this.numFoodsPerCreature[i] || 0;
-            for (var j = 0; j < numFoods; j++) {
+            var foodType = creatureInfo.desiredFood[i].type;
+            var foodInfo = GlassLab.FoodTypes[foodType];
+            if (!(foodType in foodLeft)) foodLeft[foodType] = this.numFood[i]; // start tracking the amount of food left
+            var n = Math.min(Math.ceil(this.numFood[i] / this.numCreatures), foodLeft[foodType]);
+            // the amount of food to show is usually just the total divided among the creatures, but reduce it if we have an odd amount of food left
+            for (var j = 0; j < n; j++) {
                 var food = this.game.make.sprite(col * colWidth, (row++) * rowHeight + 10, foodInfo.spriteName);
                 food.scale.setTo(0.3, 0.3);
                 food.anchor.setTo(0.5, 0.5);
                 this.displaySprite.addChild(food);
+                foodLeft[foodType] --;
             }
         }
     }
@@ -316,14 +322,14 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
 
     for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
         var foodInfo = GlassLab.FoodTypes[creatureInfo.desiredFood[i].type];
-        var numFoods = this.numFoodsPerCreature[i] || 0;
+        var numFoods = this.numFood[i] || 0;
         if (numFoods) {
             var food = this.game.make.sprite(0, (i+1) * rowHeight + 10, foodInfo.spriteName);
             food.scale.setTo(0.45, 0.45);
             food.anchor.setTo(0.5, 0.5);
             this.displaySprite.addChild(food);
 
-            label = this.game.make.text(60, (i+1) * rowHeight, "x"+(numFoods * this.numCreatures), {font: "bold 30pt arial"});
+            label = this.game.make.text(60, (i+1) * rowHeight, "x"+numFoods, {font: "bold 30pt arial"});
             label.anchor.setTo(0, 0.5);
             this.displaySprite.addChild(label);
         }

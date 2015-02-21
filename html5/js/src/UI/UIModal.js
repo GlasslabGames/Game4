@@ -9,40 +9,64 @@ var GlassLab = GlassLab || {};
 // @param buttons Can be a single button or an array of them
 GlassLab.UIModal = function(game, text, buttons)
 {
-  GlassLab.UIElement.prototype.constructor.call(this, game);
+    GlassLab.UIElement.prototype.constructor.call(this, game);
 
-  var borderPadding = 20;
-  var innerPadding = 20;
+    this.borderPadding = 20;
+    this.innerPadding = 20;
 
-  buttons = [].concat(buttons); // if buttons isn't an array, put it in one
+    this.root = this.game.make.sprite(); // allows us to offset all the other components
+    this.addChild(this.root);
 
-  var table = new GlassLab.UITable(this.game, buttons.length, innerPadding);
-  for (var i = 0, len = buttons.length; i < len; i++) {
-    table.addManagedChild(buttons[i], i == len-1); // refresh on the last one
-  }
+    buttons = [].concat(buttons); // if buttons isn't an array, put it in one
 
-  var label = game.make.text(0, borderPadding, text);
-  label.anchor.setTo(.5, 0);
+    this.table = new GlassLab.UITable(this.game, buttons.length, this.innerPadding);
+    for (var i = 0, len = buttons.length; i < len; i++) {
+        this.table.addManagedChild(buttons[i], i == len-1); // refresh on the last one
+    }
 
-  var width = Math.max( table.getWidth(), label.width) + borderPadding * 2;
-  var height = table.getHeight() + borderPadding * 2 + ((label.height > 0)? label.height + innerPadding : 0);
+    this.label = game.make.text(0, this.borderPadding, text);
+    this.label.anchor.setTo(.5, 0);
 
-  label.x = width / 2;
-  table.x = 0.5 * (width - table.getWidth()); // center the table
+    this.bg = game.make.graphics();
 
-  if (label.height > 0) table.y = borderPadding + label.height + innerPadding;
+    this.root.addChild(this.bg);
+    this.root.addChild(this.label);
+    this.root.addChild(this.table);
 
-  var bg = game.make.graphics();
-  bg.beginFill(0xffffff).lineStyle(3, 0x000000).drawRect(0,0,width,height);
+    this.maxLabelWidth = 400; // only relevant when wrapText is on
 
-  this.addChild(bg);
-  this.addChild(label);
-  this.addChild(table);
-
-  this.x = -0.5 * width;
-  this.y = -0.5 * height;
+    this.resize();
 };
 
 // Extends Sprite
 GlassLab.UIModal.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIModal.prototype.constructor = Phaser.UIModal;
+
+GlassLab.UIModal.prototype.setText = function(text, wrap) {
+    if (wrap) {
+        GlassLab.UIManager.wrapText(this.label, text, this.maxLabelWidth);
+    } else {
+        this.label.text = text;
+    }
+
+    this.resize();
+};
+
+GlassLab.UIModal.prototype.resize = function() {
+    var width = Math.max( this.table.getWidth(), this.label.width) + this.borderPadding * 2;
+    var height = this.table.getHeight() + this.borderPadding * 2 + ((this.label.height > 0)? this.label.height + this.innerPadding : 0);
+
+    this.label.x = width / 2;
+    this.table.x = 0.5 * (width - this.table.getWidth()); // center the table
+
+    if (this.label.height > 0) this.table.y = this.borderPadding + this.label.height + this.innerPadding;
+
+    this.bg.clear();
+    this.bg.beginFill(0xffffff).lineStyle(3, 0x000000).drawRect(0,0,width,height);
+
+    this.root.x = -0.5 * width;
+    this.root.y = -0.5 * height;
+
+    this.actualHeight = height;
+    this.actualWidth = width;
+};

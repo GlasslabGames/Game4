@@ -149,19 +149,19 @@ GlassLab.LevelManager = function(game)
     this.bonusIndex = -1;
     this.bonusData = [
         [
-            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 4, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 2, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 3, displayMode: "spritesOnly"}
+            { creatureType: "rammus", numCreatures: 1, numFood: 4, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 1, numFood: 2, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 1, numFood: 3, displayMode: "spritesOnly"}
         ],
         [
-            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 3, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 1, numFoodsPerCreature: 4, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 2, numFoodsPerCreature: 2, displayMode: "spritesOnly"}
+            { creatureType: "rammus", numCreatures: 1, numFood: 3, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 1, numFood: 4, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 2, numFood: 2, displayMode: "spritesOnly"}
         ],
         [
-            { creatureType: "rammus", numCreatures: 2, numFoodsPerCreature: 4, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 3, numFoodsPerCreature: 2, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 2, numFoodsPerCreature: 3, displayMode: "spritesOnly"}
+            { creatureType: "rammus", numCreatures: 2, numFood: 4, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 3, numFood: 2, displayMode: "spritesOnly"},
+            { creatureType: "rammus", numCreatures: 2, numFood: 3, displayMode: "spritesOnly"}
         ]
     ];
 
