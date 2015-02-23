@@ -12,8 +12,7 @@ GlassLab.TelemetryManager = function()
 
     this.ordersCompleted = 0;
 
-
-    GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
+    //GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
 
     GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
     GlassLab.SignalManager.levelWon.add(this._onLevelWon, this);

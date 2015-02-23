@@ -91,6 +91,8 @@ window.onload = function() {
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
         game.load.image('lock', 'assets/images/HUD_items_lock.png');
         game.load.image('dashedCircle', 'assets/images/dashedCircle.png');
+        game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
+        game.load.image('penArrowUp', 'assets/images/penArrow_upward.png');
 
         game.load.image('assistant', 'assets/images/assistant.png');
         game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
@@ -349,6 +351,9 @@ window.onload = function() {
         GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
         GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
+
+        // Create a telemetry manager
+        GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager.LoadNextLevel(); // Load first level

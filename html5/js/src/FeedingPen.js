@@ -36,7 +36,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.sprite.events.onDestroy.add(this.Destroy, this);
 
-    GLOBAL.testPen = this; // for testing
 
     GLOBAL.penManager.AddPen(this);
 };
