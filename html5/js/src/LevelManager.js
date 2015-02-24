@@ -18,7 +18,7 @@ GlassLab.LevelManager = function(game)
 
     var level0 = this._addLevelData(new GlassLab.Level());
     level0.data = {
-        quest: "Alpha"
+        quest: "alpha1"
     };
 
     var level1 = this._addLevelData(new GlassLab.Level());
@@ -181,51 +181,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
     if (levelNum < this.levels.length)
     {
         console.log("Starting level", levelNum, this.levels[levelNum].data);
-        this._destroyCurrentLevel();
-        var data = this.levels[levelNum].data;
-
-        if (data.pens) {
-            for (var i = 0; i < data.pens.length; i++) {
-                var penData = data.pens[i];
-                GLOBAL.penManager.CreatePen(penData);
-            }
-        }
-
-        if (data.looseCreatures) {
-          for (var type in data.looseCreatures) {
-            for (var j = 0; j < data.looseCreatures[type]; j++) {
-              var creature = new GlassLab.Creature(this.game, type);
-              GLOBAL.creatureLayer.add(creature.sprite);
-              creature.moveToRandomTile();
-              creature._onTargetsChanged();
-            }
-          }
-        }
-
-        if (data.orders)
-        {
-            GLOBAL.mailManager.AddOrders.apply(GLOBAL.mailManager, data.orders);
-        }
-
-        if (typeof data.quest != 'undefined')
-        {
-            var quest = GLOBAL.questManager.questsByName[data.quest];
-            if (quest.isStarted)
-            {
-                quest.Reset();
-            }
-
-            quest.Start();
-        }
-
-        if (typeof data.objective != 'undefined')
-        {
-            GLOBAL.questManager.UpdateObjective(data.objective);
-        }
-
-        GLOBAL.saveManager.SaveData("currentLevel", this.currentLevel);
-
-        GlassLab.SignalManager.levelLoaded.dispatch(this.levels[levelNum]);
+        this.LoadLevelFromData(this.levels[levelNum].data);
     }
     else
     {
@@ -233,6 +189,57 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
         console.log("Loading last level...");
         this.LoadLevel(this.levels.length-1);
     }
+};
+
+GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
+{
+    this._destroyCurrentLevel();
+
+    if (levelData.pens) {
+        for (var i = 0; i < levelData.pens.length; i++) {
+            var penData = levelData.pens[i];
+            GLOBAL.penManager.CreatePen(penData);
+        }
+    }
+
+    if (levelData.looseCreatures) {
+        for (var type in levelData.looseCreatures) {
+            for (var j = 0; j < levelData.looseCreatures[type]; j++) {
+                var creature = new GlassLab.Creature(this.game, type);
+                GLOBAL.creatureLayer.add(creature.sprite);
+                creature.moveToRandomTile();
+                creature._onTargetsChanged();
+            }
+        }
+    }
+
+    if (levelData.orders)
+    {
+        GLOBAL.mailManager.AddOrders.apply(GLOBAL.mailManager, levelData.orders);
+    }
+
+    if (typeof levelData.quest != 'undefined')
+    {
+        var quest = GLOBAL.questManager.questsByName[levelData.quest];
+        if (quest.isStarted)
+        {
+            quest.Reset();
+        }
+
+        quest.Start();
+    }
+
+    if (typeof levelData.objective != 'undefined')
+    {
+        GLOBAL.questManager.UpdateObjective(levelData.objective);
+    }
+
+    GLOBAL.saveManager.SaveData("currentLevel", this.currentLevel);
+
+    // TODO: HACK
+    var level = new GlassLab.Level();
+    level.data = levelData;
+    GlassLab.SignalManager.levelLoaded.dispatch(level);
 };
 
 GlassLab.LevelManager.prototype._destroyCurrentLevel = function()

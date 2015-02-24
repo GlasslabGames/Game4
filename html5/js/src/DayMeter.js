@@ -194,4 +194,6 @@ GlassLab.DayMeter.prototype.SetDots = function(positions)
         var dot = this.dots[dotIndex];
         dot.visible = false;
     }
+
+    this.barContainer.visible = (this.dotPositions.length > 1);
 };

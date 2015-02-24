@@ -1,5 +1,15 @@
 [
   {
+    "__type": "GlassLab.SetDayIncrementsAction",
+    "numDots": 2
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ResetTelemetryAction"
+  },
+  {
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
@@ -47,6 +57,12 @@
         "__type": "GlassLab.ClearWorldAction"
       }
     ]
+  },
+  {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
   },
   {
     "__type": "GlassLab.ActionGroup",

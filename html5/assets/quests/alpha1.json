@@ -1,5 +1,15 @@
 [
   {
+    "__type": "GlassLab.SetDayIncrementsAction",
+    "numDots": 0
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ResetTelemetryAction"
+  },
+  {
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
@@ -39,31 +49,28 @@
     "data": [
       {
         "creatureType": "baby_rammus",
-        "numCreatures": 2,
-        "numFoodsPerCreature": 4,
+        "numCreatures": 1,
+        "numFood": 2,
         "displayMode": "spritesOnly"
       },
       {
         "creatureType": "baby_rammus",
-        "numCreatures": 2,
-        "numFoodsPerCreature": 4,
+        "numCreatures": 1,
+        "numFood": 3,
         "displayMode": "spritesOnly"
       },
       {
         "creatureType": "baby_rammus",
-        "numCreatures": 2,
-        "numFoodsPerCreature": 4,
+        "numCreatures": 1,
+        "numFood": 4,
         "displayMode": "spritesOnly"
       }
     ]
   },
   {
-    "__type": "GlassLab.AdvanceDayAction"
-  },
-  {
-    "__type": "GlassLab.SaveCheckpointAction"
-  },
-  {
-    "__type": "GlassLab.ResetTelemetryAction"
+    "__type": "GlassLab.LoadLevelAction",
+    "levelData": {
+      "quest": "alpha2"
+    }
   }
 ]
