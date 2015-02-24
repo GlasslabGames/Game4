@@ -683,7 +683,7 @@ either expressed or implied, of the FreeBSD Project.
         },
         success: function( responseData ) {
             if( GlassLabSDK._displayLogs ) {
-                console.log("- Saved telem event",name,":",data);
+                console.log(">>>",name,":",data);
             }
           defaultSuccessCallback( success, responseData );
 
@@ -1010,7 +1010,7 @@ either expressed or implied, of the FreeBSD Project.
       callback( data );
     }
     else if( GlassLabSDK._displayLogs ) {
-      console.log( "[GlassLab SDK] default success callback: " + data );
+      //FIXME: shouldn't be commented console.log( "[GlassLab SDK] default success callback: " + data );
     }
   }
 

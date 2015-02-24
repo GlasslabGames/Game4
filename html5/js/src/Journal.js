@@ -209,9 +209,9 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     this.nextPageButton.visible = this.currentPage < GLOBAL.creatureManager.creatureList.length - 1;
 };
 
-GlassLab.Journal.prototype.Hide = function()
+GlassLab.Journal.prototype.Hide = function(auto)
 {
-    GlassLabSDK.saveTelemEvent("close_journal", {});
+    if (auto !== true) GlassLabSDK.saveTelemEvent("close_journal", {});
 
     this.sprite.visible = false;
     this._onLeavePage();

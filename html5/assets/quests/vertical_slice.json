@@ -4,8 +4,11 @@
     "text": "It's a beautiful day on Mixia!"
   },
   {
-    "__type": "GlassLab.SetObjectiveAction",
-    "text": "Feed 4 rams in the pen!"
+    "__type": "GlassLab.StartChallengeAction",
+    "id": "1.1",
+    "problem_type": "TBD",
+    "challenge_type": "pen",
+    "objective": "Feed 4 rams in the pen!"
   },
   {
     "__type": "GlassLab.ClearWorldAction"
@@ -49,8 +52,11 @@
     "__type": "GlassLab.AdvanceDayAction"
   },
   {
-    "__type": "GlassLab.SetObjectiveAction",
-    "text": "Ship an order of carrots."
+    "__type": "GlassLab.StartChallengeAction",
+    "id": "2.1",
+    "problem_type": "TBD",
+    "challenge_type": "order",
+    "objective": "Ship an order of carrots."
   },
   {
     "__type": "GlassLab.AddOrderAction",
@@ -90,8 +96,11 @@
     "__type": "GlassLab.AdvanceDayAction"
   },
   {
-    "__type": "GlassLab.SetObjectiveAction",
-    "text": "Feed one unicorn."
+    "__type": "GlassLab.StartChallengeAction",
+    "id": "2.2",
+    "problem_type": "TBD",
+    "challenge_type": "pen",
+    "objective": "Feed one unicorn."
   },
   {
     "__type": "GlassLab.CreatePenAction",

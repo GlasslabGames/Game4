@@ -117,6 +117,9 @@ window.onload = function() {
 
     function create()
     {
+        // Create a telemetry manager
+        GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
+
         game.stage.disableVisibilityChange = true; // Don't pause when focus is lost
 
         // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)
@@ -351,9 +354,6 @@ window.onload = function() {
         GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
         GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
-
-        // Create a telemetry manager
-        GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
         GLOBAL.levelManager.LoadNextLevel(); // Load first level
