@@ -682,6 +682,9 @@ either expressed or implied, of the FreeBSD Project.
           eventData: data
         },
         success: function( responseData ) {
+            if( GlassLabSDK._displayLogs ) {
+                console.log("- Saved telem event",name,":",data);
+            }
           defaultSuccessCallback( success, responseData );
 
           // Send the next item in the message queue

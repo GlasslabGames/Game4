@@ -57,14 +57,18 @@ GlassLab.InventoryMenu.prototype._refreshCurrency = function()
     this.moneyLabel.setText(GLOBAL.inventoryManager.money);
 };
 
-GlassLab.InventoryMenu.prototype.Show = function()
+GlassLab.InventoryMenu.prototype.Show = function(auto)
 {
+    if (auto !== true) GlassLabSDK.saveTelemEvent("open_inventory", {});
+
     this.Refresh();
 
     this.visible = true;
 };
 
-GlassLab.InventoryMenu.prototype.Hide = function()
+GlassLab.InventoryMenu.prototype.Hide = function(auto)
 {
+    if (auto !== true) GlassLabSDK.saveTelemEvent("close_inventory", {});
+
     this.visible = false;
 };

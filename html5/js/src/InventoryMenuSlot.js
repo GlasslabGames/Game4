@@ -83,6 +83,8 @@ GlassLab.InventoryMenuSlot.prototype._onEndDrag = function(target)
             GLOBAL.foodLayer.add(food.sprite);
             food.placeOnTile(tile);
 
+        GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
+
         this._jumpToStart();
     }
     else  if (tile && tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {

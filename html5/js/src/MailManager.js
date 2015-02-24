@@ -27,7 +27,7 @@ GlassLab.MailManager = function(game)
     GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
 };
 
-GlassLab.MailManager.prototype.ShowMail = function()
+GlassLab.MailManager.prototype.ShowMail = function(auto)
 {
     if (this.rewards.length == 0)
     {
@@ -47,7 +47,7 @@ GlassLab.MailManager.prototype.ShowMail = function()
     }
 };
 
-GlassLab.MailManager.prototype.HideMail = function()
+GlassLab.MailManager.prototype.HideMail = function(auto)
 {
     this.ordersMenu.Hide();
 };

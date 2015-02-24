@@ -385,7 +385,7 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
         {
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
 
-            GLOBAL.Journal.Show(this.creatureType);
+            GLOBAL.Journal.Show(true, this.creatureType);
 
             GLOBAL.levelManager.CompleteCurrentLevel();
         }
