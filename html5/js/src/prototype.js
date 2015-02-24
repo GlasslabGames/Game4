@@ -91,6 +91,8 @@ window.onload = function() {
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
         game.load.image('lock', 'assets/images/HUD_items_lock.png');
         game.load.image('dashedCircle', 'assets/images/dashedCircle.png');
+        game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
+        game.load.image('penArrowUp', 'assets/images/penArrow_upward.png');
 
         game.load.image('assistant', 'assets/images/assistant.png');
         game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
@@ -116,6 +118,9 @@ window.onload = function() {
 
     function create()
     {
+        // Create a telemetry manager
+        GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
+
         game.stage.disableVisibilityChange = true; // Don't pause when focus is lost
 
         // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)

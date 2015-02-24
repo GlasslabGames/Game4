@@ -59,7 +59,7 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
       if (this.target.inPen) {
         this.creature.enterPen(this.target.inPen);
       } else if (this.target.food && this.creature.desiredAmountsOfFood[this.target.food.type] ) {
-        this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, {food: this.target.food}));
+          this.creature.eatFreeFood(this.target.food);
       } else {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
       }

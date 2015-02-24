@@ -682,6 +682,9 @@ either expressed or implied, of the FreeBSD Project.
           eventData: data
         },
         success: function( responseData ) {
+            if( GlassLabSDK._displayLogs ) {
+                console.log(">>>",name,":",data);
+            }
           defaultSuccessCallback( success, responseData );
 
           // Send the next item in the message queue
@@ -1007,7 +1010,7 @@ either expressed or implied, of the FreeBSD Project.
       callback( data );
     }
     else if( GlassLabSDK._displayLogs ) {
-      console.log( "[GlassLab SDK] default success callback: " + data );
+      //FIXME: shouldn't be commented console.log( "[GlassLab SDK] default success callback: " + data );
     }
   }
 

@@ -177,7 +177,7 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     GLOBAL.assistant.startOrder(data);
 
     GLOBAL.ordersButton.visible = false;
-    GLOBAL.inventoryMenu.Show();
+    GLOBAL.inventoryMenu.Show(true);
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
@@ -195,7 +195,7 @@ GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
 
     GLOBAL.assistant.endOrder();
     GLOBAL.ordersButton.visible = true;
-    GLOBAL.inventoryMenu.Hide();
+    GLOBAL.inventoryMenu.Hide(true);
 };
 
 GlassLab.OrderFulfillment.prototype.Refresh = function()

@@ -36,7 +36,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.sprite.events.onDestroy.add(this.Destroy, this);
 
-    GLOBAL.testPen = this; // for testing
 
     GLOBAL.penManager.AddPen(this);
 };
@@ -386,7 +385,7 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
         {
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
 
-            GLOBAL.Journal.Show(this.creatureType);
+            GLOBAL.Journal.Show(true, this.creatureType);
 
             GLOBAL.levelManager.CompleteCurrentLevel();
         }
