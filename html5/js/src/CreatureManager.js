@@ -20,6 +20,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
+            spriteTint: 0xddffff,
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "carrot", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures

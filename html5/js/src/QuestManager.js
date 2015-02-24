@@ -68,7 +68,7 @@ GlassLab.QuestManager.prototype._onGameLoaded = function(blob)
     {
         var questData = blob.activeQuests[i];
         var quest = this.questsByName[questData.name];
-        quest._complete = questData.complete;
+        quest._isComplete = questData.complete;
 
         quest._currentActionIndex = questData.currentActionIndex-1;
         quest._isStarted = false;

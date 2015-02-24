@@ -61,11 +61,13 @@ GlassLab.TelemetryManager.prototype._onLevelWon = function()
 GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)
 {
     this.ordersCompleted++;
+    console.log("Orders completed: "+this.ordersCompleted);
 };
 
 GlassLab.TelemetryManager.prototype._onLevelLost = function()
 {
     this.attemptsOnLastProblem++;
+    console.log("Attempts: "+this.attemptsOnLastProblem);
 };
 
 GlassLab.TelemetryManager.prototype._onFeedingPenResolved = function()

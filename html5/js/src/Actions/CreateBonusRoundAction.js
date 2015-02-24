@@ -4,11 +4,12 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.CreateBonusRoundAction = function(game, data)
+GlassLab.CreateBonusRoundAction = function(data)
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.game = game || GLOBAL.game;
+    this.completeListenerBinding = null;
+    this.data = data;
 };
 
 GlassLab.CreateBonusRoundAction.prototype = Object.create(GlassLab.Action.prototype);
@@ -16,5 +17,15 @@ GlassLab.CreateBonusRoundAction.prototype.constructor = GlassLab.CreateBonusRoun
 
 GlassLab.CreateBonusRoundAction.prototype.Do = function()
 {
-    this._complete();
+    GLOBAL.sortingGame.start(this.data);
+
+    this.completeListenerBinding = GlassLab.SignalManager.bonusGameComplete.addOnce(this._complete, this);
+};
+
+GlassLab.CreateBonusRoundAction.prototype._onDestroy = function()
+{
+    if (this.completeListenerBinding)
+    {
+        GlassLab.SignalManager.bonusGameComplete.remove(this._complete, this);
+    }
 };

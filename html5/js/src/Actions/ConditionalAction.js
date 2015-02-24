@@ -34,7 +34,7 @@ GlassLab.ConditionalAction.prototype.Do = function()
 
     this.condition.Refresh();
 
-    if (this.condition.isComplete)
+    if (this.condition.isCompleted)
     {
         if (this.trueAction)
         {

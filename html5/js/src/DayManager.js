@@ -49,7 +49,7 @@ GlassLab.DayManager.prototype.Advance = function()
     this.currentSection++;
     this._refresh();
 
-
+    GLOBAL.saveManager.Save("current_section");
 };
 
 GlassLab.DayManager.prototype.AdvanceDay = function()
@@ -60,12 +60,20 @@ GlassLab.DayManager.prototype.AdvanceDay = function()
 GlassLab.DayManager.prototype._refresh = function()
 {
     this.dayText.setText( "Day " + (GLOBAL.levelManager.currentLevel+1) );
-    if (this.currentSection == 0)
+
+    if (this.currentSection < this.dayMeter.dots.length)
     {
-        this.dayMeter.SetSunToPositionIndex(this.currentSection);
+        if (this.currentSection == 0)
+        {
+            this.dayMeter.SetSunToPositionIndex(this.currentSection);
+        }
+        else
+        {
+            this.dayMeter.AnimateSunToPositionIndex(this.currentSection);
+        }
     }
     else
     {
-        this.dayMeter.AnimateSunToPositionIndex(this.currentSection);
+        console.error("Not enough dots to display day position");
     }
 };

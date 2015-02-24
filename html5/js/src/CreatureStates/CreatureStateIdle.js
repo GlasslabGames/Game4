@@ -65,19 +65,22 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 };
 
 GlassLab.CreatureStateIdle.prototype._setNewDestination = function(tile) {
-  this.targetPosition.set(tile.isoX, tile.isoY);
   this.targetTile = tile;
 
   this.findDestinationHandler = null;
 
-  tile.onCreatureEnter(this.creature); // prevent creatures from entering the same tiles. Since we do this in both this and CSTraveling, maybe refactor more?
+  if (tile)
+  {
+    this.targetPosition.set(tile.isoX, tile.isoY);
+    tile.onCreatureEnter(this.creature); // prevent creatures from entering the same tiles. Since we do this in both this and CSTraveling, maybe refactor more?
 
-  if (tile.isoX != this.creature.sprite.isoX || tile.isoY != this.creature.sprite.isoY) {
-    var flip = tile.isoY == this.creature.sprite.isoY;
-    this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
+    if (tile.isoX != this.creature.sprite.isoX || tile.isoY != this.creature.sprite.isoY) {
+      var flip = tile.isoY == this.creature.sprite.isoY;
+      this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
 
-    if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true);
-    else this.creature.PlayAnim('walk', true);
+      if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true);
+      else this.creature.PlayAnim('walk', true);
+    }
   }
 };
 

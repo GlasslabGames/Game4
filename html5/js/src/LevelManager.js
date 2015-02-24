@@ -166,7 +166,7 @@ GlassLab.LevelManager = function(game)
     ];
 
     // When we finish a bonus game, continue to the next level
-    GlassLab.SignalManager.bonusGameComplete.add(this.LoadNextLevel, this);
+    //GlassLab.SignalManager.bonusGameComplete.add(this.LoadNextLevel, this);
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
