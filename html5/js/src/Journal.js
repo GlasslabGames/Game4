@@ -91,7 +91,7 @@ GlassLab.Journal = function(game) {
 
 GlassLab.Journal.prototype._onLevelLoaded = function(level)
 {
-    this.Hide();
+    this.Hide(true);
 };
 
 GlassLab.Journal.prototype.IsShowing = function()
@@ -99,8 +99,18 @@ GlassLab.Journal.prototype.IsShowing = function()
     return this.sprite.visible;
 };
 
-GlassLab.Journal.prototype.Show = function(creatureType)
+GlassLab.Journal.prototype.Open = function() {
+    this.sprite.visible = true;
+
+    if (!creatureType) creatureType = GLOBAL.creatureManager.creatureList[this.currentPage || 0];
+    // default to the page we last had open, or 0 if we haven't opened the journal yet
+    this.RefreshWithCreature(creatureType);
+};
+
+GlassLab.Journal.prototype.Show = function(auto, creatureType)
 {
+    GlassLabSDK.saveTelemEvent((auto? "journal_shown" : "open_journal"), {});
+
     this.sprite.visible = true;
 
     if (!creatureType) creatureType = GLOBAL.creatureManager.creatureList[this.currentPage || 0];
@@ -199,8 +209,10 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     this.nextPageButton.visible = this.currentPage < GLOBAL.creatureManager.creatureList.length - 1;
 };
 
-GlassLab.Journal.prototype.Hide = function()
+GlassLab.Journal.prototype.Hide = function(auto)
 {
+    if (auto !== true) GlassLabSDK.saveTelemEvent("close_journal", {});
+
     this.sprite.visible = false;
     this._onLeavePage();
     GlassLab.SignalManager.journalClosed.dispatch();

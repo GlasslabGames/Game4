@@ -54,7 +54,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.sprite.addChild(this.descriptionLabel);
 
     this.selectButton = game.make.button(this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
-        this.Hide();
+        this.Hide(true);
 
         GLOBAL.orderFulfillment.Show(this.data);
     }, this);
@@ -162,6 +162,8 @@ GlassLab.OrdersMenu.prototype.SetInfo = function(data)
 
 GlassLab.OrdersMenu.prototype.Show = function(orderNum)
 {
+    if (!this.sprite.visible) GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
+
     if (typeof orderNum == 'undefined') orderNum = 0;
 
     this.sprite.visible = true;
@@ -170,8 +172,10 @@ GlassLab.OrdersMenu.prototype.Show = function(orderNum)
     this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
 };
 
-GlassLab.OrdersMenu.prototype.Hide = function()
+GlassLab.OrdersMenu.prototype.Hide = function(auto)
 {
+    if (auto !== true) GlassLabSDK.saveTelemEvent("close_orders", {});
+
     this.sprite.visible = false;
 };
 

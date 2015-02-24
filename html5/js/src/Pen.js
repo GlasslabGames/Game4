@@ -64,6 +64,10 @@ GlassLab.Pen = function(game, layer, height, widths)
 GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
+GlassLab.Pen.prototype.getDimensionEncoding = function() {
+    return this.height + "_" + this.widths[0] + "_" + this.widths[1] + "_" + (this.widths[2] || 0);
+};
+
 GlassLab.Pen.prototype.getFullWidth = function() {
     var width = 0;
     for (var i = 0, len = this.widths.length; i < len; i++) {

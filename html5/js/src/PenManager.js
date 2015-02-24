@@ -58,6 +58,24 @@ GlassLab.PenManager.prototype.CreatePen = function(penData)
     if (penData.topDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.top);
     if (penData.draggableEdges) pen.SetDraggable.call(pen, penData.draggableEdges);
 
+    // Record that the details of the pen for the challenge info. If this function stops being 1:1 to a pen challenge we'll have to change it
+    GlassLabSDK.saveTelemEvent("pen_initialized", {
+        creatureType: pen.creatureType || "",
+        foodAType: pen.foodTypes[0] || "",
+        foodBType: pen.foodTypes[1] || "",
+        rows: pen.height,
+        creature_columns: pen.widths[0],
+        foodA_columns: pen.widths[1],
+        foodB_columns: pen.widths[2] || 0,
+        pen_dimensions: pen.getDimensionEncoding(),
+        target_pen_dimensions: "TBD", // TODO
+        pen_id: 0, // fix if we have multiple pens
+        top_moveable: pen.topEdge.draggable,
+        left_moveable: pen.leftEdge.draggable,
+        right_moveable: pen.rightEdges[0].draggable, // even if there are multiple right edges, we can just check one
+        bottom_moveable: pen.bottomEdge.draggable
+    });
+
 };
 
 GlassLab.PenManager.prototype.DestroyAllPens = function()

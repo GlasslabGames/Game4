@@ -86,6 +86,7 @@ GlassLab.Creature = function (game, type, startInPen) {
         this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
     }
 
+    this.id = GLOBAL.creatureManager.creatures.length; // used for telemetry
     GLOBAL.creatureManager.AddCreature(this);
 };
 
@@ -290,7 +291,7 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
             this.enterPen(bestTarget.inPen);
             this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
         } else { // assume that we're on top of some food
-            this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: bestTarget.food}));
+            this.eatFreeFood(bestTarget.food);
         }
     } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
         if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
@@ -301,6 +302,24 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
     } else {
         this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
     }
+};
+
+// call this to eat some food outside of a pen
+GlassLab.Creature.prototype.eatFreeFood = function (food) {
+    var result = "hungry";
+    // check what the result will be when we add 1 whole food
+    this.foodEaten[food.type] += 1;
+    if (this.getIsSick()) result = "sick";
+    else if (this.getIsSatisfied()) result = "satisfied";
+    this.foodEaten[food.type] -= 1; // revert, since we haven't actually eaten the food yet
+
+    GlassLabSDK.saveTelemEvent("creature_eats", {
+        creature_id: this.id,
+        creature_type: this.type,
+        food_type: food.type,
+        result: result
+    });
+    this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food}));
 };
 
 GlassLab.Creature.prototype.enterPen = function (pen) {
