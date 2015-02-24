@@ -71,6 +71,7 @@ GlassLab.OrderFulfillment = function(game)
 
     this.cancelButton = game.make.button(0, -100, "cancelButton", function(){
         this.Hide(true);
+        GlassLabSDK.saveTelemEvent("cancel_order", {});
     }, this);
     this.sprite.addChild(this.cancelButton);
 
@@ -164,11 +165,10 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
         this.answerInputs[i].input.SetText("");
         this.answerInputs[i].input.setEnabled(true);
     }
-    if (data)
-    {
-        this.data = data;
-        this.Refresh();
-    }
+
+    this.data = data;
+    this.Refresh();
+
     this.crateLoaded = false;
 
     this._createPen();
@@ -178,6 +178,8 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
 
     GLOBAL.ordersButton.visible = false;
     GLOBAL.inventoryMenu.Show(true);
+
+    this._sendTelemetry("start_order");
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
@@ -254,6 +256,8 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
             }
             GLOBAL.assistant.onPenLoaded();
             this.crateLoaded = true;
+
+            this._sendTelemetry("pack_order", true);
         }
     } else {
         var response = this._getResponse(true);
@@ -261,13 +265,16 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
         if (response) {
             this.pen.FeedCreatures();
             this.Hide();
+
+            this._sendTelemetry("submit_order_answer", true);
+
         }
     }
 
 };
 
 // From the assistant's dialogue
-GlassLab.OrderFulfillment.prototype.restartLoading = function()
+GlassLab.OrderFulfillment.prototype.restartLoading = function(numAttempts)
 {
     this.submitButton.label.text = "Load Crate";
     this.crateLoaded = false;
@@ -278,6 +285,7 @@ GlassLab.OrderFulfillment.prototype.restartLoading = function()
         this.answerInputs[i].input.SetText("");
         this.answerInputs[i].input.setEnabled(true);
     }
+    GlassLabSDK.saveTelemEvent("retry_order", {retry_count: numAttempts});
 };
 
 GlassLab.OrderFulfillment.prototype.onFoodSet = function(inventorySlot, dragTarget) {
@@ -287,4 +295,32 @@ GlassLab.OrderFulfillment.prototype.onFoodSet = function(inventorySlot, dragTarg
         }
     }
     this._refreshAnswerInputs();
+};
+
+GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calculateSuccess) {
+    // Telemetry - for now we only allow them to set the food, not to set the number of creatures. FIXME later.
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.data.type);
+    var response = this._getResponse();
+    var data = {
+        creature_type: this.data.type,
+        creature_count: this.data.numCreatures,
+        target_creature_count: this.data.numCreatures,
+        foodA_type: this.foodTypes[0] || "",
+        target_foodA_type: creatureInfo.desiredFood[0].type || "",
+        foodB_type: this.foodTypes[1] || "",
+        target_foodB_type: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].type : ""),
+        foodA_count: response[0] || 0,
+        target_foodA_count: creatureInfo.desiredFood[0].amount * this.data.numCreatures,
+        foodB_count: response[1] || 0,
+        target_foodB_count: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) * this.data.numCreatures
+    };
+    if (calculateSuccess) {
+        // check that the food type & counts match the target, or are swapped (A matches B, etc)
+        data.success = data.creature_count == data.target_creature_count && (
+        (data.foodA_type == data.target_foodA_type && data.foodB_type == data.target_foodB_type
+            && data.foodA_count == data.target_foodA_count && data.foodB_count == data.target_foodB_count) ||
+        (data.foodA_type == data.target_foodB_type && data.foodB_type == data.target_foodA_type
+        && data.foodA_count == data.target_foodB_count && data.foodB_count == data.target_foodA_count));
+    }
+    GlassLabSDK.saveTelemEvent(eventName, data);
 };

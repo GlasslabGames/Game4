@@ -36,7 +36,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.sprite.events.onDestroy.add(this.Destroy, this);
 
-
+    this.id = GLOBAL.penManager.pens.length;
     GLOBAL.penManager.AddPen(this);
 };
 
@@ -232,7 +232,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             // To assign the shared cols, we walk through the creatures and try to give them all the right food
             for (var col = 0; col < (sharedCols / remainder); col++) {
                 if (col < cleanupCreatures) {
-                    // this creature gets to clean up several uneaten bits of food (they don't need .eatFoodPartially set b/c they will eat everything remaining)
+                    // this creature gets to clean up several uneaten bits of food
                     for (var i = 0; i < (sharedCols / cleanupCreatures); i++) {
                         var index = (i * cleanupCreatures) + col;
                         creatureRow[col].addTargetFood( foodRow[index] );
@@ -267,6 +267,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
         }
     }
+
 };
 
 GlassLab.FeedingPen.prototype.Destroy = function()
@@ -367,14 +368,28 @@ GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
     if (satisfied) this.unsatisfiedCreatures --;
     if (this.unfedCreatures <= 0) {
         var success = this.unsatisfiedCreatures <= 0;
-        this.FinishFeeding(success);
+        this.FinishFeeding("satisfied");
     }
 };
 
-GlassLab.FeedingPen.prototype.FinishFeeding = function(win) {
+GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
 
     if (this.finished) return;
     this.finished = true;
+
+    var win = (result == "satisfied");
+
+    // Telemetry
+    GlassLabSDK.saveTelemEvent("submit_pen_answer", {
+        pen_id: this.id,
+        pen_dimensions: this.getDimensionEncoding(),
+        target_pen_dimensions: "TBD", // TODO
+        foodA_type: this.foodTypes[0],
+        foodB_type: this.foodTypes[1] || "",
+        creature_type: this.creatureType,
+        result: result,
+        success: win
+    });
 
     GlassLab.SignalManager.feedingPenResolved.dispatch(this, win);
 
@@ -402,8 +417,19 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
     var section = this._getSection(tile);
     if (section < 1) return false;
 
+    var prevFoodType = this.foodTypes[section - 1];
+
     while (this.foodTypes.length < section-1) this.foodTypes.push(null);
     this.foodTypes[section - 1] = foodType;
     this.Resize();
     this._refreshFeedButton();
+
+    GlassLabSDK.saveTelemEvent("set_pen_food", {
+        pen_id: this.id,
+        previous_food_type: prevFoodType || "",
+        new_food_type: foodType,
+        food_section: (section == 1? "A" : "B")
+    });
+
+    return true;
 };

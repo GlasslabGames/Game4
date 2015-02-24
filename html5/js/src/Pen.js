@@ -101,6 +101,8 @@ GlassLab.Pen.prototype.SetDraggable = function() {
 
 
 GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
+    var prevDimensions = this.getDimensionEncoding();
+
     var rows = Math.round(edge.sprite.isoY / GLOBAL.tileSize);
     var cols = Math.round(edge.sprite.isoX / GLOBAL.tileSize);
 
@@ -125,7 +127,19 @@ GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
             if (this.widths.length > edge.sideIndex + 2) this.widths[edge.sideIndex + 2] -= cols;
             break;
     }
+
     this.Resize();
+
+    GlassLabSDK.saveTelemEvent("resize_pen", {
+        rows: this.height,
+        creature_columns: this.widths[0],
+        foodA_columns: this.widths[1],
+        foodB_columns: this.widths[2] || 0,
+        pen_dimensions: this.getDimensionEncoding(),
+        previous_pen_dimensions: prevDimensions,
+        pen_id: this.id,
+        side_moved: edge.side + (edge.side == GlassLab.Edge.SIDES.right? edge.sideIndex : "")
+    });
 };
 
 GlassLab.Pen.prototype.Resize = function() {

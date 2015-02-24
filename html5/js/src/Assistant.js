@@ -172,8 +172,8 @@ GlassLab.Assistant.prototype._setText = function(text) {
 GlassLab.Assistant.prototype._onCancelPressed = function() {
     console.log("Cancel");
     if (this.state == GlassLab.Assistant.STATES.ORDER_CRATE_LOADED) {
-        GLOBAL.orderFulfillment.restartLoading();
-        this.numberOfReloads ++;
+        this.numberOfReloads ++
+        GLOBAL.orderFulfillment.restartLoading(this.numberOfReloads);
         var lastChance = (this.numberOfReloads >= this.maxReloads);
         this._enterStateOrderFoodChosen(null, lastChance); // TODO - set food
     }

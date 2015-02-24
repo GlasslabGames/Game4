@@ -213,14 +213,14 @@ GlassLab.Creature.prototype._onUpdate = function () {
     //if (this.rightKey.justDown) { }
 };
 
-GlassLab.Creature.prototype.FinishEating = function (satisfied) {
+GlassLab.Creature.prototype.FinishEating = function (result) {
     this.hungerBar.show(false);
-    this.Emote(satisfied);
+    this.Emote(result == "satisfied");
 
-    if (satisfied) {
+    if (result == "satisfied") {
         this.pen.SetCreatureFinishedEating(true);
     } else {
-        this.pen.FinishFeeding(false);
+        this.pen.FinishFeeding(result);
     }
 };
 

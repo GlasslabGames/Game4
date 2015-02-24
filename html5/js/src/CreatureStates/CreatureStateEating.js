@@ -65,9 +65,9 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
         } else { // there's no more food
             // end the level hungry or satisfied
             this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature));
-            if (this.creature.getIsSatisfied()) this.creature.FinishEating(true);
+            if (this.creature.getIsSatisfied()) this.creature.FinishEating("satisfied");
             else {
-                this.creature.FinishEating(false);
+                this.creature.FinishEating("hungry");
             }
         }
     } else { // eating outside of pen, so just continue to the next target or go to idle

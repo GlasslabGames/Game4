@@ -69,7 +69,7 @@ GlassLab.PenManager.prototype.CreatePen = function(penData)
         foodB_columns: pen.widths[2] || 0,
         pen_dimensions: pen.getDimensionEncoding(),
         target_pen_dimensions: "TBD", // TODO
-        pen_id: 0, // fix if we have multiple pens
+        pen_id: pen.id, // fix if we have multiple pens
         top_moveable: pen.topEdge.draggable,
         left_moveable: pen.leftEdge.draggable,
         right_moveable: pen.rightEdges[0].draggable, // even if there are multiple right edges, we can just check one
