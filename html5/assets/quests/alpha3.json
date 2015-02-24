@@ -1,5 +1,15 @@
 [
   {
+    "__type": "GlassLab.SetDayIncrementsAction",
+    "numDots": 2
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ResetTelemetryAction"
+  },
+  {
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
@@ -40,6 +50,9 @@
         "__type": "GlassLab.ClearWorldAction"
       }
     ]
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
   },
   {
     "__type": "GlassLab.ConditionalAction",
@@ -139,6 +152,12 @@
     ]
   },
   {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
@@ -151,7 +170,7 @@
           "client": "Archibold Huxley III",
           "company": "Rupture Farms",
           "numCreatures": 12,
-          "type": "unifox",
+          "type": "baby_unifox",
           "description": "Dear Friend! I want 12 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
           "fulfilled": false,
           "reward": 200
@@ -162,7 +181,7 @@
         "conditions": [
           {
             "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "unifox",
+            "acceptedType": "baby_unifox",
             "numRequired": 12
           }
         ]
@@ -180,12 +199,34 @@
   },
   {
     "__type": "GlassLab.CreateBonusRoundAction",
-    "data": {"baby_rammus": 3}
+    "data": [
+      {
+        "creatureType": "baby_unifox",
+        "numCreatures": 6,
+        "numFood": 12,
+        "displayMode": "numbersOnly"
+      },
+      {
+        "creatureType": "baby_unifox",
+        "numCreatures": 6,
+        "numFood": 24,
+        "displayMode": "numbersOnly"
+      },
+      {
+        "creatureType": "baby_unifox",
+        "numCreatures": 6,
+        "numFood": 20,
+        "displayMode": "numbersOnly"
+      }
+    ]
   },
   {
     "__type": "GlassLab.ClearWorldAction"
   },
   {
-    "__type": "GlassLab.AdvanceDayAction"
+    "__type": "GlassLab.LoadLevelAction",
+    "levelData": {
+      "quest": "alpha4"
+    }
   }
 ]
