@@ -276,8 +276,13 @@ GlassLab.TileManager.prototype.clearTiles = function()
       tile.setInPen(false);
       tile.unswapType();
       tile.occupant = null;
+        tile.food = null;
     }
   }
+
+    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+        GLOBAL.foodLayer.getChildAt(i).destroy();
+    }
 };
 
 GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
