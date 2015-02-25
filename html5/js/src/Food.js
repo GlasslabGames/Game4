@@ -65,6 +65,11 @@ GlassLab.FoodTypes = {
     }
 };
 
+GlassLab.FoodTypes.getName = function(type, plural) {
+    var key = (plural? "plural" : "singular");
+    return GlassLab.FoodTypes[type].displayNames[key];
+};
+
 /**
  * Food - just a sprite for now
  */

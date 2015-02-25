@@ -62,8 +62,10 @@ GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
     console.log("order intro");
     this.state = GlassLab.Assistant.STATES.ORDER_INTRO;
     this.showButtons(false);
-    this._setText("I see, an order from "+order.client+" for *enough food to feed each of "+
-        order.numCreatures+" "+order.type+"es*. What shall I load the crate with?");
+    var creatureSegment;
+    if (order.numCreatures == 1) creatureSegment = "1 " + GLOBAL.creatureManager.GetCreatureName(order.type);
+    else creatureSegment = "each of "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.type, true);
+    this._setText("I see, an order from "+order.client+" for *enough food to feed "+creatureSegment+"*. What shall I load the crate with?");
 };
 
 GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, lastChance) {
@@ -82,11 +84,11 @@ GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, la
     if (foodTypes.length > 2) {
         food += ",";
         for (var i = 1; i < foodTypes.length - 1; i++) {
-            food += " " + foodTypes[i] + "s,";
+            food += " " + GlassLab.FoodTypes.getName(foodTypes[i], true);
         }
     }
     if (foodTypes.length > 1) {
-        food += " and " + foodTypes[foodTypes.length-1] + "s";
+        food += " and " + GlassLab.FoodTypes.getName(foodTypes[foodTypes.length-1], true);
     }
 
     var text = "*How many* "+ food + " shall I load into the crate?";

@@ -145,6 +145,11 @@ GlassLab.CreatureManager.prototype.GetCreatureData = function (type) {
     return this.creatureDatabase[type];
 };
 
+GlassLab.CreatureManager.prototype.GetCreatureName = function (type, plural) {
+    var key = (plural? "plural" : "singular");
+    return this.creatureDatabase[type].displayNames[key];
+};
+
 GlassLab.CreatureManager.prototype.DestroyAllCreatures = function() {
     for (var i = GLOBAL.creatureLayer.children.length-1; i>=0; i--) {
         GLOBAL.creatureLayer.getChildAt(i).destroy();

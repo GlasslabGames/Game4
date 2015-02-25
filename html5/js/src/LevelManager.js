@@ -33,6 +33,7 @@ GlassLab.LevelManager = function(game)
         quest: "alpha4"
     };
 
+    // 5
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
         //{type: "baby_unifox", bottomDraggable: true, leftDraggable: true, topDraggable: true}
@@ -47,6 +48,7 @@ GlassLab.LevelManager = function(game)
         objective: "Feed the ram!"
     };
 
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Feed the foxes with multiple kinds of food!",
         pens: [
