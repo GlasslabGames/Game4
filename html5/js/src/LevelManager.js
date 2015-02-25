@@ -192,8 +192,15 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 {
     if (levelNum < this.levels.length)
     {
+        if (typeof this.currentLevel != "undefined" && this.currentLevel > -1) {
+            GlassLabSDK.saveTelemEvent("finish_day", {day: this.currentLevel + 1});
+        }
+
         console.log("Starting level", levelNum, this.levels[levelNum].data);
         this.currentLevel = levelNum;
+
+        GlassLabSDK.saveTelemEvent("start_day", {day: this.currentLevel + 1});
+
         this.LoadLevelFromData(this.levels[levelNum].data);
     }
     else

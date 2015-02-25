@@ -13,8 +13,11 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Feed 3 baby rams."
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "2.1",
+        "problemType": "MD",
+        "challengeType": "pen",
+        "objective": "Feed 3 baby rams."
       },
       {
         "__type": "GlassLab.CreatePenAction",
@@ -22,7 +25,8 @@
           "type": "baby_rammus",
           "bottomDraggable": true,
           "leftDraggable": true,
-          "topDraggable": true
+          "topDraggable": true,
+          "targetNumCreatures": 3
         }
       },
       {
@@ -70,8 +74,11 @@
       "__type": "GlassLab.ActionGroup",
       "serializedActions": [
         {
-          "__type": "GlassLab.SetObjectiveAction",
-          "text": "Feed 4 baby rams."
+          "__type": "GlassLab.StartChallengeAction",
+          "id": "2.2",
+          "problemType": "MD",
+          "challengeType": "pen",
+          "objective": "Feed 4 baby rams in the pen."
         },
         {
           "__type": "GlassLab.CreatePenAction",
@@ -79,7 +86,8 @@
             "type": "baby_rammus",
             "bottomDraggable": true,
             "leftDraggable": true,
-            "topDraggable": true
+            "topDraggable": true,
+            "targetNumCreatures": 4
           }
         },
         {
@@ -121,8 +129,11 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Complete a shipment of 7 baby rams!"
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "2.3",
+        "problemType": "MS",
+        "challengeType": "order",
+        "objective": "Complete a shipment of 7 baby rams!"
       },
       {
         "__type": "GlassLab.AddOrderAction",
@@ -174,8 +185,11 @@
       "__type": "GlassLab.ActionGroup",
       "serializedActions": [
         {
-          "__type": "GlassLab.SetObjectiveAction",
-          "text": "Feed 4 baby rams."
+          "__type": "GlassLab.StartChallengeAction",
+          "id": "2.2",
+          "problemType": "MD",
+          "challengeType": "pen",
+          "objective": "Feed 4 baby rams in the pen."
         },
         {
           "__type": "GlassLab.CreatePenAction",
@@ -183,7 +197,8 @@
             "type": "baby_rammus",
             "bottomDraggable": true,
             "leftDraggable": true,
-            "topDraggable": true
+            "topDraggable": true,
+            "targetNumCreatures": 4
           }
         },
         {
@@ -222,19 +237,22 @@
         "creatureType": "baby_rammus",
         "numCreatures": 2,
         "numFood": 4,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "CS"
       },
       {
         "creatureType": "baby_rammus",
         "numCreatures": 2,
         "numFood": 6,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "CE"
       },
       {
         "creatureType": "baby_rammus",
         "numCreatures": 2,
         "numFood": 9,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "CD"
       }
     ]
   },

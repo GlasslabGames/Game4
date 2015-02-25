@@ -175,8 +175,9 @@ GlassLab.Creature.prototype._startDrag = function () {
     if (GLOBAL.dragTarget != null) return;
     this.getTile().onCreatureExit(this);
     if (this.pen) {
-        this.pen.onCreatureRemoved(this);
-        this.pen = null;
+        var pen = this.pen;
+        this.pen = null; // set our pen to null first so that creature_population telemetry works better
+        pen.onCreatureRemoved(this);
     }
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     GLOBAL.dragTarget = this;
@@ -213,14 +214,14 @@ GlassLab.Creature.prototype._onUpdate = function () {
     //if (this.rightKey.justDown) { }
 };
 
-GlassLab.Creature.prototype.FinishEating = function (satisfied) {
+GlassLab.Creature.prototype.FinishEating = function (result) {
     this.hungerBar.show(false);
-    this.Emote(satisfied);
+    this.Emote(result == "satisfied");
 
-    if (satisfied) {
+    if (result == "satisfied") {
         this.pen.SetCreatureFinishedEating(true);
     } else {
-        this.pen.FinishFeeding(false);
+        this.pen.FinishFeeding(result);
     }
 };
 

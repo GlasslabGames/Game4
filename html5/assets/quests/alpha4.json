@@ -17,8 +17,11 @@
         "__type": "GlassLab.ClearWorldAction"
       },
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Feed 5 adult rams."
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "4.1",
+        "problemType": "MD",
+        "challengeType": "pen",
+        "objective": "Feed 5 adult rams in the pen."
       },
       {
         "__type": "GlassLab.CreatePenAction",
@@ -28,7 +31,8 @@
           "leftDraggable": true,
           "topDraggable": true,
           "foodAWidth": 1,
-          "foodBWidth": 1
+          "foodBWidth": 1,
+          "targetNumCreatures": 5
         }
       },
       {
@@ -69,8 +73,11 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Complete a shipment of 8 rams!"
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "4.2",
+        "problemType": "MD",
+        "challengeType": "order",
+        "objective": "Complete a shipment of 8 rams!"
       },
       {
         "__type": "GlassLab.AddOrderAction",
