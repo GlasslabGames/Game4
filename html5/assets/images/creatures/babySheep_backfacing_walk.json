@@ -1,0 +1,204 @@
+{"frames": [
+
+{
+	"filename": "isoBabySheep_backfacing_walk_00000.png",
+	"frame": {"x":2,"y":2,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00001.png",
+	"frame": {"x":679,"y":2,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00002.png",
+	"frame": {"x":1356,"y":2,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00003.png",
+	"frame": {"x":2033,"y":2,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00004.png",
+	"frame": {"x":2,"y":679,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00005.png",
+	"frame": {"x":679,"y":679,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00006.png",
+	"frame": {"x":1356,"y":679,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00007.png",
+	"frame": {"x":2033,"y":679,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00008.png",
+	"frame": {"x":2,"y":1356,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00009.png",
+	"frame": {"x":679,"y":1356,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00010.png",
+	"frame": {"x":1356,"y":1356,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00011.png",
+	"frame": {"x":2033,"y":1356,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00012.png",
+	"frame": {"x":2,"y":2033,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00013.png",
+	"frame": {"x":679,"y":2033,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00014.png",
+	"frame": {"x":1356,"y":2033,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00015.png",
+	"frame": {"x":2033,"y":2033,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00016.png",
+	"frame": {"x":2,"y":2710,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00017.png",
+	"frame": {"x":679,"y":2710,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00018.png",
+	"frame": {"x":1356,"y":2710,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00019.png",
+	"frame": {"x":2033,"y":2710,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00020.png",
+	"frame": {"x":2,"y":3387,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00021.png",
+	"frame": {"x":679,"y":3387,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00022.png",
+	"frame": {"x":1356,"y":3387,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabySheep_backfacing_walk_00023.png",
+	"frame": {"x":2033,"y":3387,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "babySheep_backfacing_walk.png",
+	"format": "RGBA8888",
+	"size": {"w":2710,"h":4064},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7e63e2826907ba76f998f31789b49b1a:ecdc7d238af0e9009b85320c07a59ecd:6681c264e7d5f63d034baf2f5374cdbf$"
+}
+}

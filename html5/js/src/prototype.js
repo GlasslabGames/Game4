@@ -18,11 +18,11 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
-        var creatureSpriteNames = ["sheep", "unicorn"];
+        var creatureSpriteNames = ["sheep", "unicorn", "babySheep", "babyUnicorn"];
         for (var i = 0; i < creatureSpriteNames.length; i++) {
             var spriteName = creatureSpriteNames[i];
             game.load.image(spriteName+'_idle', 'assets/images/creatures/'+spriteName+'_idle.png');
-            game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_idle_backfacing.png');
+            game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_backfacing_idle.png');
             game.load.atlasJSONHash(spriteName+'_walk', 'assets/images/creatures/'+spriteName+'_walk.png', 'assets/images/creatures/'+spriteName+'_walk.json');
             game.load.atlasJSONHash(spriteName+'_walk_back', 'assets/images/creatures/'+spriteName+'_backfacing_walk.png', 'assets/images/creatures/'+spriteName+'_backfacing_walk.json');
             game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');

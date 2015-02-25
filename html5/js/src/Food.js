@@ -13,35 +13,55 @@ GlassLab.FoodTypes = {
         color: 0xc03b30, // associated color for the vomit and the hunger bar
         unlocked: true, // Default value, unlock tracked by InventoryManager
         cost: 1,
-        hidden: false
+        hidden: false,
+        displayNames: {
+            singular: "apple",
+            plural: "apples"
+        }
     },
     carrot: {
         spriteName: "carrot",
         color: 0xe37f54, // associated color for the vomit and the hunger bar
         unlocked: true, // Default value, unlock tracked by InventoryManager
         cost: 1,
-        hidden: false
+        hidden: false,
+        displayNames: {
+            singular: "carrot",
+            plural: "carrots"
+        }
     },
     strawberry: {
         spriteName: "strawberry",
         color: 0xef5067,
         unlocked: true,
         cost: 5,
-        hidden: false
+        hidden: false,
+        displayNames: {
+            singular: "strawberry",
+            plural: "strawberries"
+        }
     },
     broccoli: {
         spriteName: "broccoli",
         color: 0x8cb149,
         unlocked: false,
         cost: 25,
-        hidden: false
+        hidden: false,
+        displayNames: {
+            singular: "broccoli",
+            plural: "broccoli"
+        }
     },
     tincan: {
         spriteName: "tincan",
         color: 0x99a2ac,
         unlocked: false,
         cost: 100,
-        hidden: false
+        hidden: false,
+        displayNames: {
+            singular: "tin can",
+            plural: "tin cans"
+        }
     }
 };
 

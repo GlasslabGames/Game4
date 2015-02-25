@@ -1,7 +1,7 @@
 {"frames": [
 
 {
-	"filename": "isoUnicorn_backfacing_walk_00025.png",
+	"filename": "isoBabyUnicorn_vomit_00000.png",
 	"frame": {"x":2,"y":2,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -9,7 +9,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00026.png",
+	"filename": "isoBabyUnicorn_vomit_00001.png",
 	"frame": {"x":679,"y":2,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -17,7 +17,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00027.png",
+	"filename": "isoBabyUnicorn_vomit_00002.png",
 	"frame": {"x":1356,"y":2,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -25,7 +25,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00028.png",
+	"filename": "isoBabyUnicorn_vomit_00003.png",
 	"frame": {"x":2033,"y":2,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -33,7 +33,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00029.png",
+	"filename": "isoBabyUnicorn_vomit_00004.png",
 	"frame": {"x":2710,"y":2,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -41,7 +41,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00030.png",
+	"filename": "isoBabyUnicorn_vomit_00005.png",
 	"frame": {"x":3387,"y":2,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -49,55 +49,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00031.png",
-	"frame": {"x":4064,"y":2,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00032.png",
-	"frame": {"x":4741,"y":2,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00033.png",
-	"frame": {"x":5418,"y":2,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00034.png",
-	"frame": {"x":6095,"y":2,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00035.png",
-	"frame": {"x":6772,"y":2,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00036.png",
-	"frame": {"x":7449,"y":2,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00037.png",
+	"filename": "isoBabyUnicorn_vomit_00006.png",
 	"frame": {"x":2,"y":679,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -105,7 +57,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00038.png",
+	"filename": "isoBabyUnicorn_vomit_00007.png",
 	"frame": {"x":679,"y":679,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -113,7 +65,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00039.png",
+	"filename": "isoBabyUnicorn_vomit_00008.png",
 	"frame": {"x":1356,"y":679,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -121,7 +73,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00040.png",
+	"filename": "isoBabyUnicorn_vomit_00009.png",
 	"frame": {"x":2033,"y":679,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -129,7 +81,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00041.png",
+	"filename": "isoBabyUnicorn_vomit_00010.png",
 	"frame": {"x":2710,"y":679,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -137,7 +89,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00042.png",
+	"filename": "isoBabyUnicorn_vomit_00011.png",
 	"frame": {"x":3387,"y":679,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -145,63 +97,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00043.png",
-	"frame": {"x":4064,"y":679,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00044.png",
-	"frame": {"x":4741,"y":679,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00045.png",
-	"frame": {"x":5418,"y":679,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00046.png",
-	"frame": {"x":6095,"y":679,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00047.png",
-	"frame": {"x":6772,"y":679,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00048.png",
-	"frame": {"x":7449,"y":679,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00049.png",
-	"frame": {"x":2,"y":2,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00050.png",
+	"filename": "isoBabyUnicorn_vomit_00012.png",
 	"frame": {"x":2,"y":1356,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -209,7 +105,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00051.png",
+	"filename": "isoBabyUnicorn_vomit_00013.png",
 	"frame": {"x":679,"y":1356,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -217,7 +113,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00052.png",
+	"filename": "isoBabyUnicorn_vomit_00014.png",
 	"frame": {"x":1356,"y":1356,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -225,7 +121,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00053.png",
+	"filename": "isoBabyUnicorn_vomit_00015.png",
 	"frame": {"x":2033,"y":1356,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -233,7 +129,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00054.png",
+	"filename": "isoBabyUnicorn_vomit_00016.png",
 	"frame": {"x":2710,"y":1356,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -241,7 +137,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00055.png",
+	"filename": "isoBabyUnicorn_vomit_00017.png",
 	"frame": {"x":3387,"y":1356,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -249,55 +145,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00056.png",
-	"frame": {"x":4064,"y":1356,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00057.png",
-	"frame": {"x":4741,"y":1356,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00058.png",
-	"frame": {"x":5418,"y":1356,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00059.png",
-	"frame": {"x":6095,"y":1356,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00060.png",
-	"frame": {"x":6772,"y":1356,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00061.png",
-	"frame": {"x":7449,"y":1356,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00062.png",
+	"filename": "isoBabyUnicorn_vomit_00018.png",
 	"frame": {"x":2,"y":2033,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -305,7 +153,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00063.png",
+	"filename": "isoBabyUnicorn_vomit_00019.png",
 	"frame": {"x":679,"y":2033,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -313,7 +161,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00064.png",
+	"filename": "isoBabyUnicorn_vomit_00020.png",
 	"frame": {"x":1356,"y":2033,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -321,7 +169,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00065.png",
+	"filename": "isoBabyUnicorn_vomit_00021.png",
 	"frame": {"x":2033,"y":2033,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -329,7 +177,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00066.png",
+	"filename": "isoBabyUnicorn_vomit_00022.png",
 	"frame": {"x":2710,"y":2033,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -337,7 +185,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00067.png",
+	"filename": "isoBabyUnicorn_vomit_00023.png",
 	"frame": {"x":3387,"y":2033,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -345,55 +193,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00068.png",
-	"frame": {"x":4064,"y":2033,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00069.png",
-	"frame": {"x":4741,"y":2033,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00070.png",
-	"frame": {"x":5418,"y":2033,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00071.png",
-	"frame": {"x":6095,"y":2033,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00072.png",
-	"frame": {"x":6772,"y":2033,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00073.png",
-	"frame": {"x":7449,"y":2033,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00074.png",
+	"filename": "isoBabyUnicorn_vomit_00024.png",
 	"frame": {"x":2,"y":2710,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -401,7 +201,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00075.png",
+	"filename": "isoBabyUnicorn_vomit_00025.png",
 	"frame": {"x":679,"y":2710,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -409,7 +209,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00076.png",
+	"filename": "isoBabyUnicorn_vomit_00026.png",
 	"frame": {"x":1356,"y":2710,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -417,7 +217,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00077.png",
+	"filename": "isoBabyUnicorn_vomit_00027.png",
 	"frame": {"x":2033,"y":2710,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -425,7 +225,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00078.png",
+	"filename": "isoBabyUnicorn_vomit_00028.png",
 	"frame": {"x":2710,"y":2710,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -433,7 +233,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00079.png",
+	"filename": "isoBabyUnicorn_vomit_00029.png",
 	"frame": {"x":3387,"y":2710,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -441,55 +241,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00080.png",
-	"frame": {"x":4064,"y":2710,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00081.png",
-	"frame": {"x":4741,"y":2710,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00082.png",
-	"frame": {"x":5418,"y":2710,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00083.png",
-	"frame": {"x":6095,"y":2710,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00084.png",
-	"frame": {"x":6772,"y":2710,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00085.png",
-	"frame": {"x":7449,"y":2710,"w":675,"h":675},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
-	"sourceSize": {"w":675,"h":675}
-},
-{
-	"filename": "isoUnicorn_backfacing_walk_00086.png",
+	"filename": "isoBabyUnicorn_vomit_00030.png",
 	"frame": {"x":2,"y":3387,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -497,7 +249,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00087.png",
+	"filename": "isoBabyUnicorn_vomit_00031.png",
 	"frame": {"x":679,"y":3387,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -505,7 +257,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00088.png",
+	"filename": "isoBabyUnicorn_vomit_00032.png",
 	"frame": {"x":1356,"y":3387,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -513,7 +265,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00089.png",
+	"filename": "isoBabyUnicorn_vomit_00033.png",
 	"frame": {"x":2033,"y":3387,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -521,7 +273,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00090.png",
+	"filename": "isoBabyUnicorn_vomit_00034.png",
 	"frame": {"x":2710,"y":3387,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -529,7 +281,7 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00091.png",
+	"filename": "isoBabyUnicorn_vomit_00035.png",
 	"frame": {"x":3387,"y":3387,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
@@ -537,40 +289,296 @@
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00092.png",
-	"frame": {"x":4064,"y":3387,"w":675,"h":675},
+	"filename": "isoBabyUnicorn_vomit_00036.png",
+	"frame": {"x":2,"y":4064,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00093.png",
-	"frame": {"x":4741,"y":3387,"w":675,"h":675},
+	"filename": "isoBabyUnicorn_vomit_00037.png",
+	"frame": {"x":679,"y":4064,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00094.png",
-	"frame": {"x":5418,"y":3387,"w":675,"h":675},
+	"filename": "isoBabyUnicorn_vomit_00038.png",
+	"frame": {"x":1356,"y":4064,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00095.png",
-	"frame": {"x":6095,"y":3387,"w":675,"h":675},
+	"filename": "isoBabyUnicorn_vomit_00039.png",
+	"frame": {"x":2033,"y":4064,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
 	"sourceSize": {"w":675,"h":675}
 },
 {
-	"filename": "isoUnicorn_backfacing_walk_00096.png",
-	"frame": {"x":6772,"y":3387,"w":675,"h":675},
+	"filename": "isoBabyUnicorn_vomit_00040.png",
+	"frame": {"x":2710,"y":4064,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00041.png",
+	"frame": {"x":3387,"y":4064,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00042.png",
+	"frame": {"x":2,"y":4741,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00043.png",
+	"frame": {"x":679,"y":4741,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00044.png",
+	"frame": {"x":1356,"y":4741,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00045.png",
+	"frame": {"x":2033,"y":4741,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00046.png",
+	"frame": {"x":2710,"y":4741,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00047.png",
+	"frame": {"x":3387,"y":4741,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00048.png",
+	"frame": {"x":2,"y":5418,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00049.png",
+	"frame": {"x":679,"y":5418,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00050.png",
+	"frame": {"x":1356,"y":5418,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00051.png",
+	"frame": {"x":2033,"y":5418,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00052.png",
+	"frame": {"x":2710,"y":5418,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00053.png",
+	"frame": {"x":3387,"y":5418,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00054.png",
+	"frame": {"x":2,"y":6095,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00055.png",
+	"frame": {"x":679,"y":6095,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00056.png",
+	"frame": {"x":1356,"y":6095,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00057.png",
+	"frame": {"x":2033,"y":6095,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00058.png",
+	"frame": {"x":2710,"y":6095,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00059.png",
+	"frame": {"x":3387,"y":6095,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00060.png",
+	"frame": {"x":2,"y":6772,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00061.png",
+	"frame": {"x":679,"y":6772,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00062.png",
+	"frame": {"x":1356,"y":6772,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00063.png",
+	"frame": {"x":2033,"y":6772,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00064.png",
+	"frame": {"x":2710,"y":6772,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00065.png",
+	"frame": {"x":3387,"y":6772,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00066.png",
+	"frame": {"x":2,"y":7449,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00067.png",
+	"frame": {"x":679,"y":7449,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00068.png",
+	"frame": {"x":1356,"y":7449,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00069.png",
+	"frame": {"x":2033,"y":7449,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00070.png",
+	"frame": {"x":2710,"y":7449,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00071.png",
+	"frame": {"x":2710,"y":7449,"w":675,"h":675},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
+	"sourceSize": {"w":675,"h":675}
+},
+{
+	"filename": "isoBabyUnicorn_vomit_00072.png",
+	"frame": {"x":2710,"y":7449,"w":675,"h":675},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":675,"h":675},
@@ -579,10 +587,10 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "unicorn_backfacing_walk.png",
+	"image": "babyUnicorn_vomit.png",
 	"format": "RGBA8888",
-	"size": {"w":8126,"h":4064},
+	"size": {"w":4064,"h":8126},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:b718046676c9969a3b9248f0bd920a5a:942adbcf178057cc27eaf0cca9b9e466:371b1709b5315d7f1e2876c46666573d$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ea68945e6b7696b3db92a3f8abb12b4d:18488a6be2209719f08591596a148bd6:d196a9d023e7a6896bc88c3da9718f6a$"
 }
 }
