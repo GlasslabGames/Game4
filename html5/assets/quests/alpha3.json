@@ -1,8 +1,7 @@
 [
   {
     "__type": "GlassLab.SetDayAction",
-    "numDots": 2,
-    "dayNum": 3
+    "numDots": 2
   },
   {
     "__type": "GlassLab.SaveCheckpointAction"
@@ -226,8 +225,6 @@
   },
   {
     "__type": "GlassLab.LoadLevelAction",
-    "levelData": {
-      "quest": "alpha4"
-    }
+    "level": 3
   }
 ]

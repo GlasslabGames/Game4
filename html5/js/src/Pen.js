@@ -13,6 +13,7 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.game = game;
     this.layer = layer;
     this.sprite = this.game.make.isoSprite();
+    this.sprite.isoY = -Math.floor(height / 2.0) * GLOBAL.tileManager.tileSize; // TODO: HACK FOR CENTER PLACEMENT
     layer.add(this.sprite).name = "pen";
     this.tiles = [];
     this.unusedTiles = [];
