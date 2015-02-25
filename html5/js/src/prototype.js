@@ -80,7 +80,6 @@ window.onload = function() {
         game.load.image('fullscreenOffIcon', 'assets/images/prima_HUD_exitFullScreen.png');
         game.load.image('itemsIcon', 'assets/images/prima_HUD_items.png');
         game.load.image('journalIcon', 'assets/images/prima_HUD_journal.png');
-        game.load.image('ordersIcon', 'assets/images/prima_HUD_orders.png');
         game.load.image('pauseIcon', 'assets/images/prima_HUD_pause.png');
         game.load.image('closeIcon', 'assets/images/Close-button.png');
         game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
