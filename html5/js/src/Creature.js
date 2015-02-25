@@ -247,6 +247,13 @@ GlassLab.Creature.prototype.getIsSick = function () {
     return false;
 };
 
+GlassLab.Creature.prototype.getIsEmpty = function () {
+    for (var key in this.foodEaten) {
+        if (this.foodEaten[key] > 0) return false;
+    }
+    return true;
+};
+
 GlassLab.Creature.prototype.addTargetFood = function(food, eatPartially) {
     this.targetFood.push({food: food, eatPartially: eatPartially});
 };
@@ -298,7 +305,9 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
             this.eatFreeFood(bestTarget.food);
         }
     } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
-        if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
+        if (bestTarget.inPen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
+            this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this));
+        } else if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
             this.state.target = bestTarget;
         } else {
             this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));

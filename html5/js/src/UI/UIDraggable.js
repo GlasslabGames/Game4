@@ -7,6 +7,7 @@ GlassLab.UIDraggable = function(game) {
 
     // Note that if you use this class with graphics, you have to specify the hitArea for input to work correctly
     this.inputEnabled = true;
+    this.input.priorityID = GLOBAL.UIpriorityID;
     this.events.onInputUp.add(this._onUp, this);
     this.events.onInputDown.add(this._onDown, this);
     GlassLab.SignalManager.update.add(this._onUpdate, this);

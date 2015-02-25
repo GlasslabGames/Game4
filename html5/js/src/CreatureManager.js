@@ -71,7 +71,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: true,
             spriteName: "unicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
-            fxFrames: {eat: 1, vomit: 45 },
+            fxFrames: {eat: 1, vomit: 40 },
             desiredFood: [{type: "carrot", amount: 2}, {type: "apple", amount: 3}],
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         } /*,
