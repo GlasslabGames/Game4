@@ -101,6 +101,11 @@ window.onload = function() {
         game.load.image('bigX', 'assets/images/matchingGame_x.png');
 
         game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
+        game.load.json('alpha_quest', 'assets/quests/alpha.json');
+        game.load.json('alpha1', 'assets/quests/alpha1.json');
+        game.load.json('alpha2', 'assets/quests/alpha2.json');
+        game.load.json('alpha3', 'assets/quests/alpha3.json');
+        game.load.json('alpha4', 'assets/quests/alpha.json');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
@@ -179,6 +184,8 @@ window.onload = function() {
         GLOBAL.UIGroup = uiGroup;
 
         GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
+
+        GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
 
         var table = new GlassLab.UITable(game, 1, 20);
         table.x = -70;

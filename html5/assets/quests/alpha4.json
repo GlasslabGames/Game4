@@ -1,0 +1,108 @@
+[
+  {
+    "__type": "GlassLab.SetDayAction",
+    "numDots": 2,
+    "dayNum": 4
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ResetTelemetryAction"
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      },
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Feed 5 adult rams."
+      },
+      {
+        "__type": "GlassLab.CreatePenAction",
+        "penData": {
+          "type": "rammus",
+          "bottomDraggable": true,
+          "leftDraggable": true,
+          "topDraggable": true,
+          "foodAWidth": 1,
+          "foodBWidth": 1
+        }
+      },
+      {
+        "__type": "GlassLab.CreateCreaturesAction",
+        "data": {"rammus": 5}
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "rammus",
+            "numRequired": 5
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Complete a shipment of 8 rams!"
+      },
+      {
+        "__type": "GlassLab.AddOrderAction",
+        "data": {
+          "client": "Archibold Huxley III",
+          "company": "Rupture Farms",
+          "numCreatures": 8,
+          "type": "rammus",
+          "description": "Dear Friend! I want 8 ADULT RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "fulfilled": false,
+          "reward": 200
+        }
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "rammus",
+            "numRequired": 8
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
+          }
+        ]
+      }
+    ]
+  }
+]

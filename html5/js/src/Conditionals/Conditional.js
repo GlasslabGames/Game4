@@ -58,7 +58,14 @@ GlassLab.Conditional.prototype.Refresh = function()
         if (this.isCompleted)
         {
             this._complete();
-            this.onSatisfiedChanged.dispatch(this);
         }
+
+        this.onSatisfiedChanged.dispatch(this);
     }
 };
+
+Object.defineProperty(GlassLab.Conditional.prototype, 'isSatisfied', {
+    get: function() {
+        return this._isCompleted;
+    }
+});

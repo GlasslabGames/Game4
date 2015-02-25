@@ -1,0 +1,77 @@
+[
+  {
+    "__type": "GlassLab.SetDayAction",
+    "numDots": 0,
+    "dayNum": 1
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ResetTelemetryAction"
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Hand-feed 1 baby ram!"
+      },
+      {
+        "__type": "GlassLab.CreateCreaturesAction",
+        "data": {"baby_rammus": 1}
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_rammus",
+            "numRequired": 1
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.WaitCondition",
+            "waitTime": 2000
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.CreateBonusRoundAction",
+    "data": [
+      {
+        "creatureType": "baby_rammus",
+        "numCreatures": 1,
+        "numFood": 2,
+        "displayMode": "spritesOnly"
+      },
+      {
+        "creatureType": "baby_rammus",
+        "numCreatures": 1,
+        "numFood": 3,
+        "displayMode": "spritesOnly"
+      },
+      {
+        "creatureType": "baby_rammus",
+        "numCreatures": 1,
+        "numFood": 4,
+        "displayMode": "spritesOnly"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.LoadLevelAction",
+    "levelData": {
+      "quest": "alpha2"
+    }
+  }
+]

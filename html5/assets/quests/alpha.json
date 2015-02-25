@@ -1,0 +1,597 @@
+[
+  {
+    "__type": "GlassLab.SetDayAction",
+    "numDots": 4,
+    "dayNum": 0
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Hand-feed 1 baby ram!"
+      },
+      {
+        "__type": "GlassLab.CreateCreaturesAction",
+        "data": {"baby_rammus": 1}
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_rammus",
+            "numRequired": 1
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.WaitCondition",
+            "waitTime": 2000
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.CreateBonusRoundAction",
+    "data": [
+        {
+          "creatureType": "baby_rammus",
+          "numCreatures": 1,
+          "numFood": 2,
+          "displayMode": "spritesOnly"
+        },
+        {
+          "creatureType": "baby_rammus",
+          "numCreatures": 1,
+          "numFood": 3,
+          "displayMode": "spritesOnly"
+        },
+        {
+          "creatureType": "baby_rammus",
+          "numCreatures": 1,
+          "numFood": 4,
+          "displayMode": "spritesOnly"
+        }
+      ]
+  },
+  {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ResetTelemetryAction"
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Feed 3 baby rams."
+      },
+      {
+        "__type": "GlassLab.CreatePenAction",
+        "penData": {
+          "type": "baby_rammus",
+          "bottomDraggable": true,
+          "leftDraggable": true,
+          "topDraggable": true
+        }
+      },
+      {
+        "__type": "GlassLab.CreateCreaturesAction",
+        "data": {"baby_rammus": 3}
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_rammus",
+            "numRequired": 3
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.WaitCondition",
+            "waitTime": 2000
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ConditionalAction",
+    "serializedCondition": {
+      "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+      "variableName": "GLOBAL.telemetryManager.attemptsOnLastProblem",
+      "number": 3
+    },
+    "serializedTrueAction": {
+      "__type": "GlassLab.ActionGroup",
+      "serializedActions": [
+        {
+          "__type": "GlassLab.SetObjectiveAction",
+          "text": "Feed 4 baby rams."
+        },
+        {
+          "__type": "GlassLab.CreatePenAction",
+          "penData": {
+            "type": "baby_rammus",
+            "bottomDraggable": true,
+            "leftDraggable": true,
+            "topDraggable": true
+          }
+        },
+        {
+          "__type": "GlassLab.CreateCreaturesAction",
+          "data": {"baby_rammus": 4}
+        },
+        {
+          "__type": "GlassLab.WaitForCondition",
+          "conditions": [
+            {
+              "__type": "GlassLab.FeedAnimalCondition",
+              "acceptedType": "baby_rammus",
+              "numRequired": 4
+            }
+          ]
+        },
+        {
+          "__type": "GlassLab.WaitForCondition",
+          "conditions": [
+            {
+              "__type": "GlassLab.WaitCondition",
+              "waitTime": 2000
+            }
+          ]
+        },
+        {
+          "__type": "GlassLab.ClearWorldAction"
+        }
+      ]
+    }
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Complete a shipment of 7 baby rams!"
+      },
+      {
+        "__type": "GlassLab.AddOrderAction",
+        "data": {
+          "client": "Archibold Huxley III",
+          "company": "Rupture Farms",
+          "numCreatures": 7,
+          "type": "baby_rammus",
+          "description": "Dear Friend! I want 8 BABY RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "fulfilled": false,
+          "reward": 200
+        }
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_rammus",
+            "numRequired": 7
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ConditionalAction",
+    "serializedCondition": {
+      "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+      "variableName": "GLOBAL.telemetryManager.attemptsOnLastProblem",
+      "number": 3
+    },
+    "serializedTrueAction": {
+      "__type": "GlassLab.ActionGroup",
+      "serializedActions": [
+        {
+          "__type": "GlassLab.SetObjectiveAction",
+          "text": "Feed 4 baby rams."
+        },
+        {
+          "__type": "GlassLab.CreatePenAction",
+          "penData": {
+            "type": "baby_rammus",
+            "bottomDraggable": true,
+            "leftDraggable": true,
+            "topDraggable": true
+          }
+        },
+        {
+          "__type": "GlassLab.CreateCreaturesAction",
+          "data": {"baby_rammus": 4}
+        },
+        {
+          "__type": "GlassLab.WaitForCondition",
+          "conditions": [
+            {
+              "__type": "GlassLab.FeedAnimalCondition",
+              "acceptedType": "baby_rammus",
+              "numRequired": 4
+            }
+          ]
+        },
+        {
+          "__type": "GlassLab.WaitForCondition",
+          "conditions": [
+            {
+              "__type": "GlassLab.WaitCondition",
+              "waitTime": 2000
+            }
+          ]
+        },
+        {
+          "__type": "GlassLab.ClearWorldAction"
+        }
+      ]
+    }
+  },
+  {
+    "__type": "GlassLab.CreateBonusRoundAction",
+    "data": [
+      {
+        "creatureType": "baby_rammus",
+        "numCreatures": 2,
+        "numFood": 4,
+        "displayMode": "spritesOnly"
+      },
+      {
+        "creatureType": "baby_rammus",
+        "numCreatures": 2,
+        "numFood": 6,
+        "displayMode": "spritesOnly"
+      },
+      {
+        "creatureType": "baby_rammus",
+        "numCreatures": 2,
+        "numFood": 9,
+        "displayMode": "spritesOnly"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ClearWorldAction"
+  },
+  {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ResetTelemetryAction"
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Feed 3 baby unifoxes."
+      },
+      {
+        "__type": "GlassLab.CreatePenAction",
+        "penData": {
+          "type": "baby_unifox",
+          "height": 3
+        }
+      },
+      {
+        "__type": "GlassLab.CreateCreaturesAction",
+        "data": {"baby_unifox": 3}
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_unifox",
+            "numRequired": 3
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.WaitCondition",
+            "waitTime": 2000
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ConditionalAction",
+    "serializedCondition": {
+      "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+      "variableName": "GLOBAL.telemetryManager.attemptsOnLastProblem",
+      "number": 3
+    },
+    "serializedTrueAction": {
+      "__type": "GlassLab.ActionGroup",
+      "serializedActions": [
+        {
+          "__type": "GlassLab.ClearWorldAction"
+        },
+        {
+          "__type": "GlassLab.SetObjectiveAction",
+          "text": "Feed 4 baby unifoxes."
+        },
+        {
+          "__type": "GlassLab.CreatePenAction",
+          "penData": {
+            "type": "baby_unifox",
+            "height": 4
+          }
+        },
+        {
+          "__type": "GlassLab.CreateCreaturesAction",
+          "data": {"baby_unifox": 4}
+        },
+        {
+          "__type": "GlassLab.WaitForCondition",
+          "conditions": [
+            {
+              "__type": "GlassLab.FeedAnimalCondition",
+              "acceptedType": "baby_unifox",
+              "numRequired": 4
+            }
+          ]
+        },
+        {
+          "__type": "GlassLab.WaitForCondition",
+          "conditions": [
+            {
+              "__type": "GlassLab.WaitCondition",
+              "waitTime": 2000
+            }
+          ]
+        },
+        {
+          "__type": "GlassLab.ClearWorldAction"
+        }
+      ]
+    }
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Feed 10 baby unifoxes."
+      },
+      {
+        "__type": "GlassLab.CreatePenAction",
+        "penData": {
+          "type": "baby_unifox",
+          "bottomDraggable": true,
+          "leftDraggable": true,
+          "topDraggable": true
+        }
+      },
+      {
+        "__type": "GlassLab.CreateCreaturesAction",
+        "data": {"baby_unifox": 10}
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_unifox",
+            "numRequired": 10
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.WaitCondition",
+            "waitTime": 2000
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Complete a shipment of Unifoxes!"
+      },
+      {
+        "__type": "GlassLab.AddOrderAction",
+        "data": {
+          "client": "Archibold Huxley III",
+          "company": "Rupture Farms",
+          "numCreatures": 12,
+          "type": "baby_unifox",
+          "description": "Dear Friend! I want 12 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "fulfilled": false,
+          "reward": 200
+        }
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_unifox",
+            "numRequired": 12
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.CreateBonusRoundAction",
+    "data": [
+      {
+        "creatureType": "baby_unifox",
+        "numCreatures": 6,
+        "numFood": 12,
+        "displayMode": "numbersOnly"
+      },
+      {
+        "creatureType": "baby_unifox",
+        "numCreatures": 6,
+        "numFood": 24,
+        "displayMode": "numbersOnly"
+      },
+      {
+        "creatureType": "baby_unifox",
+        "numCreatures": 6,
+        "numFood": 20,
+        "displayMode": "numbersOnly"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ClearWorldAction"
+  },
+  {
+    "__type": "GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type": "GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      },
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Feed 5 adult rams."
+      },
+      {
+        "__type": "GlassLab.CreatePenAction",
+        "penData": {
+          "type": "rammus",
+          "bottomDraggable": true,
+          "leftDraggable": true,
+          "topDraggable": true,
+          "foodAWidth": 1,
+          "foodBWidth": 1
+        }
+      },
+      {
+        "__type": "GlassLab.CreateCreaturesAction",
+        "data": {"rammus": 5}
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "rammus",
+            "numRequired": 5
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type": "GlassLab.ActionGroup",
+    "serializedActions": [
+      {
+        "__type": "GlassLab.SetObjectiveAction",
+        "text": "Complete a shipment of 8 rams!"
+      },
+      {
+        "__type": "GlassLab.AddOrderAction",
+        "data": {
+          "client": "Archibold Huxley III",
+          "company": "Rupture Farms",
+          "numCreatures": 8,
+          "type": "rammus",
+          "description": "Dear Friend! I want 8 ADULT RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "fulfilled": false,
+          "reward": 200
+        }
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "rammus",
+            "numRequired": 8
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
+          }
+        ]
+      }
+    ]
+  }
+]

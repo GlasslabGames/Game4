@@ -16,7 +16,12 @@ GlassLab.QuestManager = function(game)
     this.activeQuests = [];
 
     this.quests = [
-        new GlassLab.Quest("Vertical Slice", this.game.cache.getJSON("vs_quest"))
+        new GlassLab.Quest("Vertical Slice", this.game.cache.getJSON("vs_quest")),
+        new GlassLab.Quest("alpha1", this.game.cache.getJSON("alpha1")),
+        new GlassLab.Quest("alpha2", this.game.cache.getJSON("alpha2")),
+        new GlassLab.Quest("alpha3", this.game.cache.getJSON("alpha3")),
+        new GlassLab.Quest("alpha4", this.game.cache.getJSON("alpha4")),
+        new GlassLab.Quest("Alpha", this.game.cache.getJSON("alpha_quest"))
     ];
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
@@ -67,7 +72,7 @@ GlassLab.QuestManager.prototype._onGameLoaded = function(blob)
     {
         var questData = blob.activeQuests[i];
         var quest = this.questsByName[questData.name];
-        quest._complete = questData.complete;
+        quest._isComplete = questData.complete;
 
         quest._currentActionIndex = questData.currentActionIndex-1;
         quest._isStarted = false;

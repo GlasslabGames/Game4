@@ -42,14 +42,18 @@ GlassLab.Deserializer.getClassFromTypeName = function(typeName)
         return classType;
     }
 
-    // If we don't have the type cached, look it up
-    var typeComponents = typeName.split(".");
-    classType = window[typeComponents[0]];
-    for (var i=1, j=typeComponents.length; i < j; i++)
+    // Store into cache and return
+    return GlassLab.Deserializer._typeNameCache[typeName] = GlassLab.Deserializer.getPropertyFromName(typeName);
+};
+
+GlassLab.Deserializer.getPropertyFromName = function(propertyName)
+{
+    var nameComponents = propertyName.split(".");
+    var property = window[nameComponents[0]];
+    for (var i=1, j=nameComponents.length; i < j; i++)
     {
-        classType = classType[typeComponents[i]];
+        property = property[nameComponents[i]];
     }
 
-    // Store into cache and return
-    return GlassLab.Deserializer._typeNameCache[typeName] = classType;
+    return property;
 };
