@@ -16,10 +16,16 @@ GlassLab.SetDayAction.prototype.constructor = GlassLab.SetDayAction;
 
 GlassLab.SetDayAction.prototype.Do = function()
 {
+    if (this.numDots <= 1)
+    {
+        console.error("Could not set dots because numDots must be greater than 1. (numDots: "+this.numDots+")")
+        this._complete();
+        return;
+    }
     var dotPositions = [];
     for (var i=0; i < this.numDots; i++)
     {
-        dotPositions.push(i/this.numDots);
+        dotPositions.push(i/(this.numDots-1));
     }
 
     GLOBAL.dayManager.dayMeter.SetDots(dotPositions);
