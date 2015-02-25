@@ -31,7 +31,8 @@
           "leftDraggable": true,
           "topDraggable": true,
           "foodAWidth": 1,
-          "foodBWidth": 1
+          "foodBWidth": 1,
+          "targetNumCreatures": 5
         }
       },
       {

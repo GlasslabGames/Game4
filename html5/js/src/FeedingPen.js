@@ -381,12 +381,15 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     var win = (result == "satisfied");
 
     // Telemetry
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
     GlassLabSDK.saveTelemEvent("submit_pen_answer", {
         pen_id: this.id,
         pen_dimensions: this.getDimensionEncoding(),
-        target_pen_dimensions: "TBD", // TODO
+        target_pen_dimensions: this.getTargetDimensionEncoding(),
         foodA_type: this.foodTypes[0],
         foodB_type: this.foodTypes[1] || "",
+        target_foodA_type: creatureInfo.desiredFood[0].type,
+        target_foodB_type: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].type : ""),
         creature_type: this.creatureType,
         result: result,
         success: win
@@ -433,4 +436,11 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
     });
 
     return true;
+};
+
+GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
+    // TODO: this assumes just one column of creatures. Fix it when the correct encoding is resolved with Seth.
+    return GlassLab.Pen.encodeDimensions(this.targetNumCreatures, 1, creatureInfo.desiredFood[0].amount,
+        (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) );
 };

@@ -24,7 +24,8 @@
         "__type": "GlassLab.CreatePenAction",
         "penData": {
           "type": "baby_unifox",
-          "height": 3
+          "height": 3,
+          "targetNumCreatures": 3
         }
       },
       {
@@ -82,7 +83,8 @@
           "__type": "GlassLab.CreatePenAction",
           "penData": {
             "type": "baby_unifox",
-            "height": 4
+            "height": 4,
+            "targetNumCreatures": 4
           }
         },
         {

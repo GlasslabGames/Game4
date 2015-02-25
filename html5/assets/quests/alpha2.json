@@ -26,7 +26,8 @@
           "type": "baby_rammus",
           "bottomDraggable": true,
           "leftDraggable": true,
-          "topDraggable": true
+          "topDraggable": true,
+          "targetNumCreatures": 3
         }
       },
       {
@@ -86,7 +87,8 @@
             "type": "baby_rammus",
             "bottomDraggable": true,
             "leftDraggable": true,
-            "topDraggable": true
+            "topDraggable": true,
+            "targetNumCreatures": 4
           }
         },
         {
@@ -196,7 +198,8 @@
             "type": "baby_rammus",
             "bottomDraggable": true,
             "leftDraggable": true,
-            "topDraggable": true
+            "topDraggable": true,
+            "targetNumCreatures": 4
           }
         },
         {
