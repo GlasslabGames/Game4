@@ -35,7 +35,7 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
   }
 
   var delta = Phaser.Point.subtract(this.wayPoint.isoPosition, this.creature.sprite.isoPosition);
-  var moveSpeed = 2;
+  var moveSpeed = this.creature.moveSpeed;
   if (delta.getMagnitudeSq() >= moveSpeed * moveSpeed) { // move in the right direction, but no faster than our move speed
     // Collapse one the smaller direction so we stay on the grid (if they're equal, resolve it randomly)
     if (Math.abs(delta.x) < Math.abs(delta.y) || (Math.abs(delta.x) == Math.abs(delta.y) && Math.random() > 0.5)) delta.x = 0;
@@ -46,9 +46,9 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
 
     // Note that the animation won't start if we're already playing it, so this is no problem
     if (delta.y < 0 || delta.x < 0) {
-      this.creature.PlayAnim("walk_back", true, 48 * 1.5);
+      this.creature.PlayAnim("walk_back", true, this.creature.baseAnimSpeed * moveSpeed);
     } else {
-      this.creature.PlayAnim("walk", true, 48 * 1.5);
+      this.creature.PlayAnim("walk", true, this.creature.baseAnimSpeed * moveSpeed);
     }
     var flip = (delta.y == 0);
     this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
