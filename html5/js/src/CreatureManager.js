@@ -178,3 +178,13 @@ GlassLab.CreatureManager.prototype._onGameLoaded = function(blob)
         }
     }
 };
+
+GlassLab.CreatureManager.prototype.creaturePopulationUpdate = function() {
+    var inPen = 0;
+    for (var i = 0, j = this.creatures.length; i < j; i++)
+    {
+        if (this.creatures[i].pen) inPen++;
+    }
+    GlassLabSDK.saveTelemEvent("creature_population", {total: this.creatures.length, in_pen: inPen});
+};
+

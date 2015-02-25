@@ -13,14 +13,18 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Feed 3 baby unifoxes."
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "3.1",
+        "problemType": "MD",
+        "challengeType": "pen",
+        "objective": "Feed 3 baby unifoxes in the pen."
       },
       {
         "__type": "GlassLab.CreatePenAction",
         "penData": {
           "type": "baby_unifox",
-          "height": 3
+          "height": 3,
+          "targetNumCreatures": 3
         }
       },
       {
@@ -68,14 +72,18 @@
           "__type": "GlassLab.ClearWorldAction"
         },
         {
-          "__type": "GlassLab.SetObjectiveAction",
-          "text": "Feed 4 baby unifoxes."
+          "__type": "GlassLab.StartChallengeAction",
+          "id": "3.2",
+          "problemType": "MD",
+          "challengeType": "pen",
+          "objective": "Feed 4 baby unifoxes in the pen."
         },
         {
           "__type": "GlassLab.CreatePenAction",
           "penData": {
             "type": "baby_unifox",
-            "height": 4
+            "height": 4,
+            "targetNumCreatures": 4
           }
         },
         {
@@ -111,8 +119,11 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Feed 10 baby unifoxes."
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "3.3",
+        "problemType": "ND",
+        "challengeType": "pen",
+        "objective": "Feed 10 baby unifoxes in the pen."
       },
       {
         "__type": "GlassLab.CreatePenAction",
@@ -161,8 +172,11 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Complete a shipment of Unifoxes!"
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "3.4",
+        "problemType": "MS",
+        "challengeType": "order",
+        "objective": "Complete a shipment of Unifoxes!"
       },
       {
         "__type": "GlassLab.AddOrderAction",
@@ -204,19 +218,22 @@
         "creatureType": "baby_unifox",
         "numCreatures": 6,
         "numFood": 12,
-        "displayMode": "numbersOnly"
+        "displayMode": "numbersOnly",
+        "challengeType": "CS"
       },
       {
         "creatureType": "baby_unifox",
         "numCreatures": 6,
         "numFood": 24,
-        "displayMode": "numbersOnly"
+        "displayMode": "numbersOnly",
+        "challengeType": "CE"
       },
       {
         "creatureType": "baby_unifox",
         "numCreatures": 6,
         "numFood": 20,
-        "displayMode": "numbersOnly"
+        "displayMode": "numbersOnly",
+        "challengeType": "CD"
       }
     ]
   },

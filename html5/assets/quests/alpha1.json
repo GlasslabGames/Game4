@@ -13,8 +13,11 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Hand-feed 1 baby ram!"
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "1.1",
+        "problemType": "MD",
+        "challengeType": "handfeeding",
+        "objective": "Hand-feed 1 baby ram!"
       },
       {
         "__type": "GlassLab.CreateCreaturesAction",
@@ -51,19 +54,22 @@
         "creatureType": "baby_rammus",
         "numCreatures": 1,
         "numFood": 2,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "D"
       },
       {
         "creatureType": "baby_rammus",
         "numCreatures": 1,
         "numFood": 3,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "E"
       },
       {
         "creatureType": "baby_rammus",
         "numCreatures": 1,
         "numFood": 4,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "D"
       }
     ]
   },

@@ -66,7 +66,11 @@ GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
 GlassLab.Pen.prototype.getDimensionEncoding = function() {
-    return this.height + "_" + this.widths[0] + "_" + this.widths[1] + "_" + (this.widths[2] || 0);
+    return GlassLab.Pen.encodeDimensions(this.height, this.widths[0], this.widths[1], this.widths[2]);
+};
+
+GlassLab.Pen.encodeDimensions = function(height, width0, width1, width2) {
+    return (height || 0) + "_" + (width0 || 0) + "_" + (width1 || 0) + "_" + (width2 || 0);
 };
 
 GlassLab.Pen.prototype.getFullWidth = function() {
@@ -102,6 +106,8 @@ GlassLab.Pen.prototype.SetDraggable = function() {
 
 
 GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
+    var prevDimensions = this.getDimensionEncoding();
+
     var rows = Math.round(edge.sprite.isoY / GLOBAL.tileSize);
     var cols = Math.round(edge.sprite.isoX / GLOBAL.tileSize);
 
@@ -126,7 +132,21 @@ GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
             if (this.widths.length > edge.sideIndex + 2) this.widths[edge.sideIndex + 2] -= cols;
             break;
     }
+
     this.Resize();
+
+    GlassLab.SignalManager.penResized.dispatch(this, prevDimensions, this.getDimensionEncoding());
+
+    GlassLabSDK.saveTelemEvent("resize_pen", {
+        rows: this.height,
+        creature_columns: this.widths[0],
+        foodA_columns: this.widths[1],
+        foodB_columns: this.widths[2] || 0,
+        pen_dimensions: this.getDimensionEncoding(),
+        previous_pen_dimensions: prevDimensions,
+        pen_id: this.id,
+        side_moved: edge.side + (edge.side == GlassLab.Edge.SIDES.right? edge.sideIndex : "")
+    });
 };
 
 GlassLab.Pen.prototype.Resize = function() {
