@@ -14,8 +14,11 @@
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.SetObjectiveAction",
-        "text": "Hand-feed 1 baby ram!"
+        "__type": "GlassLab.StartChallengeAction",
+        "id": "1.1",
+        "problem_type": "MD",
+        "challenge_type": "handfeeding",
+        "objective": "Hand-feed 1 baby ram!"
       },
       {
         "__type": "GlassLab.CreateCreaturesAction",

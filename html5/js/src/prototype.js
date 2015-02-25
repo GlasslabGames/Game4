@@ -363,8 +363,7 @@ window.onload = function() {
         GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
 
         // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
-        //GLOBAL.levelManager.LoadNextLevel(); // Load first level
-        GLOBAL.levelManager.LoadNextBonusGame(); // Load first level
+        GLOBAL.levelManager.LoadNextLevel(); // Load first level
 
         game.time.events.start();
     }
