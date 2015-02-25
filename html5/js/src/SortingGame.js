@@ -64,8 +64,8 @@ GlassLab.SortingGame.prototype.constructor = GlassLab.SortingGame;
 GlassLab.SortingGame.COMPARISON_VALUES = {tooLittle: "TOO\nLITTLE", justRight: "JUST\nRIGHT", tooMuch: "TOO\nMUCH"};
 GlassLab.SortingGame.REWARD_PER_CARD = 10;
 
-GlassLab.SortingGame.prototype.addCard = function(creatureType, numCreatures, numFood, displayMode) {
-    var card = new GlassLab.SortingGameCard(this, creatureType, numCreatures, numFood, displayMode);
+GlassLab.SortingGame.prototype.addCard = function(creatureType, numCreatures, numFood, displayMode, challengeType) {
+    var card = new GlassLab.SortingGameCard(this, creatureType, numCreatures, numFood, displayMode, challengeType);
     this.root.addChild(card);
     card.x = 15 + this.cards.length * 245;
     card.y = 50;
@@ -136,7 +136,7 @@ GlassLab.SortingGame.prototype.start = function(data) {
     // Insert cards in a random order
     while (data.length) {
         var i = Math.floor( Math.random() * data.length );
-        var card = this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFood, data[i].displayMode );
+        var card = this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFood, data[i].displayMode, data[i].challengeType );
         data.splice(i, 1);
     }
 
@@ -174,7 +174,7 @@ GlassLab.SortingGame.prototype.finish = function() {
  * SortingGameCard
  */
 
-GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFood, displayMode) {
+GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFood, displayMode, challengeType) {
     GlassLab.UIDragTarget.prototype.constructor.call(this, sortingGame.game, 230, 350, "", true);
 
     this.sortingGame = sortingGame;
@@ -183,6 +183,7 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
     this.numFood = [].concat(numFood); // make sure it's an array
     this.id = sortingGame.cards.length;
     this.displayMode = displayMode;
+    this.challengeType = challengeType;
 
     // Calculate the correct answer to this card. For now, creatures with multiple kinds of food just look at the total food.
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
@@ -249,14 +250,14 @@ GlassLab.SortingGameCard.prototype._onObjectDropped = function(obj) {
 
     GlassLabSDK.saveTelemEvent("bonus_game_answer", {
         card_id: this.id,
-        target_value: this.targetValue.toLowerCase().replace("\n"," "),
+        target_value: this.targetValue.toLowerCase().replace("\n"," "), // "TOO\nMUCH" -> "too much"
         answer_value: obj.value.toLowerCase().replace("\n"," "),
         success: this.correct,
         creature_type: this.creatureType,
         creature_count: this.numCreatures,
         foodA_count: this.numFood[0],
         foodB_count: this.numFood[1] || 0,
-        challenge_type: "TBD",
+        challenge_type: this.challengeType,
         format: this.displayMode
     });
 

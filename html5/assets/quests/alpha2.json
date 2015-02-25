@@ -16,8 +16,8 @@
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "2.1",
-        "problem_type": "MD",
-        "challenge_type": "pen",
+        "problemType": "MD",
+        "challengeType": "pen",
         "objective": "Feed 3 baby rams."
       },
       {
@@ -76,8 +76,8 @@
         {
           "__type": "GlassLab.StartChallengeAction",
           "id": "2.2",
-          "problem_type": "MD",
-          "challenge_type": "pen",
+          "problemType": "MD",
+          "challengeType": "pen",
           "objective": "Feed 4 baby rams in the pen."
         },
         {
@@ -130,8 +130,8 @@
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "2.3",
-        "problem_type": "MS",
-        "challenge_type": "order",
+        "problemType": "MS",
+        "challengeType": "order",
         "objective": "Complete a shipment of 7 baby rams!"
       },
       {
@@ -186,8 +186,8 @@
         {
           "__type": "GlassLab.StartChallengeAction",
           "id": "2.2",
-          "problem_type": "MD",
-          "challenge_type": "pen",
+          "problemType": "MD",
+          "challengeType": "pen",
           "objective": "Feed 4 baby rams in the pen."
         },
         {
@@ -235,19 +235,22 @@
         "creatureType": "baby_rammus",
         "numCreatures": 2,
         "numFood": 4,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "CS"
       },
       {
         "creatureType": "baby_rammus",
         "numCreatures": 2,
         "numFood": 6,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "CE"
       },
       {
         "creatureType": "baby_rammus",
         "numCreatures": 2,
         "numFood": 9,
-        "displayMode": "spritesOnly"
+        "displayMode": "spritesOnly",
+        "challengeType": "CD"
       }
     ]
   },

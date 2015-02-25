@@ -16,8 +16,8 @@
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "3.1",
-        "problem_type": "MD",
-        "challenge_type": "pen",
+        "problemType": "MD",
+        "challengeType": "pen",
         "objective": "Feed 3 baby unifoxes in the pen."
       },
       {
@@ -74,8 +74,8 @@
         {
           "__type": "GlassLab.StartChallengeAction",
           "id": "3.2",
-          "problem_type": "MD",
-          "challenge_type": "pen",
+          "problemType": "MD",
+          "challengeType": "pen",
           "objective": "Feed 4 baby unifoxes in the pen."
         },
         {
@@ -120,8 +120,8 @@
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "3.3",
-        "problem_type": "ND",
-        "challenge_type": "pen",
+        "problemType": "ND",
+        "challengeType": "pen",
         "objective": "Feed 10 baby unifoxes in the pen."
       },
       {
@@ -173,8 +173,8 @@
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "3.4",
-        "problem_type": "MS",
-        "challenge_type": "order",
+        "problemType": "MS",
+        "challengeType": "order",
         "objective": "Complete a shipment of Unifoxes!"
       },
       {
@@ -217,19 +217,22 @@
         "creatureType": "baby_unifox",
         "numCreatures": 6,
         "numFood": 12,
-        "displayMode": "numbersOnly"
+        "displayMode": "numbersOnly",
+        "challengeType": "CS"
       },
       {
         "creatureType": "baby_unifox",
         "numCreatures": 6,
         "numFood": 24,
-        "displayMode": "numbersOnly"
+        "displayMode": "numbersOnly",
+        "challengeType": "CE"
       },
       {
         "creatureType": "baby_unifox",
         "numCreatures": 6,
         "numFood": 20,
-        "displayMode": "numbersOnly"
+        "displayMode": "numbersOnly",
+        "challengeType": "CD"
       }
     ]
   },

@@ -19,8 +19,8 @@
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "4.1",
-        "problem_type": "MD",
-        "challenge_type": "pen",
+        "problemType": "MD",
+        "challengeType": "pen",
         "objective": "Feed 5 adult rams in the pen."
       },
       {
@@ -74,8 +74,8 @@
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "4.2",
-        "problem_type": "MD",
-        "challenge_type": "order",
+        "problemType": "MD",
+        "challengeType": "order",
         "objective": "Complete a shipment of 8 rams!"
       },
       {
