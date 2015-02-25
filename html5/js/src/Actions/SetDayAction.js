@@ -8,7 +8,6 @@ GlassLab.SetDayAction = function()
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.dayNum = 0;
     this.numDots = 0;
 };
 
@@ -17,8 +16,6 @@ GlassLab.SetDayAction.prototype.constructor = GlassLab.SetDayAction;
 
 GlassLab.SetDayAction.prototype.Do = function()
 {
-    GLOBAL.dayManager.SetDay(this.dayNum);
-
     var dotPositions = [];
     for (var i=0; i < this.numDots; i++)
     {
