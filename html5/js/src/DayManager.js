@@ -23,6 +23,8 @@ GlassLab.DayManager = function(game)
     this.dayText.anchor.setTo(.5, .5);
     this.dayTextBg.addChild(this.dayText);
 
+    this.dayNum = 0;
+
     GlassLab.SignalManager.levelLoaded.add(this._refresh, this);
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
@@ -57,9 +59,15 @@ GlassLab.DayManager.prototype.AdvanceDay = function()
     this._refresh();
 };
 
+GlassLab.DayManager.prototype.SetDay = function(dayNum)
+{
+    this.dayNum = dayNum;
+    this._refresh();
+};
+
 GlassLab.DayManager.prototype._refresh = function()
 {
-    this.dayText.setText( "Day " + (GLOBAL.levelManager.currentLevel+1) );
+    this.dayText.setText( "Day " + this.dayNum );
 
     if (this.currentSection < this.dayMeter.dots.length)
     {

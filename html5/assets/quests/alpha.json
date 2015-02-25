@@ -1,7 +1,8 @@
 [
   {
-    "__type": "GlassLab.SetDayIncrementsAction",
-    "numDots": 4
+    "__type": "GlassLab.SetDayAction",
+    "numDots": 4,
+    "dayNum": 0
   },
   {
     "__type": "GlassLab.ActionGroup",
