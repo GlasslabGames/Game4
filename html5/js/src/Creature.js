@@ -352,7 +352,8 @@ GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
 };
 
 GlassLab.Creature.prototype.getTile = function () {
-    return GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var isoPosition = this.getGlobalIsoPos();
+    return GLOBAL.tileManager.GetTileAtIsoWorldPosition(isoPosition.x, isoPosition.y);
 };
 
 GlassLab.Creature.prototype.getGlobalIsoPos = function () {

@@ -154,6 +154,7 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     for (var j = 0; j < this.numFoods.length; j++) {
         this.widths[j+1] = Math.ceil(this.numFoods[j] / this.height);
     }
+    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize; // TODO: HACK FOR CENTER PLACEMENT
     this.Resize();
 };
 
@@ -330,7 +331,11 @@ GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, col
 
 GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
-    if (this.creatures.indexOf(creature) == -1) this.creatures.push(creature);
+    if (this.creatures.indexOf(creature) == -1)
+    {
+        this.creatures.push(creature);
+    }
+
     this._onCreatureContentsChanged();
 };
 

@@ -234,14 +234,30 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, onLeft) {
     tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far
 };
 
-
+/**
+ * Checks whether or not tile is within this pen
+ * @param tile
+ * @param leftOnly
+ * @returns {boolean}
+ * @private
+ */
 GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
-    if (!tile) return false;
+    // If no tile, return false
+    if (!tile)
+    {
+        return false;
+    }
+
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
-    //console.log(tile.col, tile.row, originCol, originRow, this.leftWidth, this.height);
-    if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return false;
-    var leftSide = originTile.col + (leftOnly? this.widths[0] : this.getFullWidth());
-    return tile.col < leftSide;
+
+    // All cases outside
+    if (tile.col < originTile.col || tile.row < originTile.row || tile.row > originTile.row + this.height)
+    {
+        return false;
+    }
+
+    var rightSide = originTile.col + (leftOnly? this.widths[0] : this.getFullWidth());
+    return tile.col < rightSide;
     // This functionality could be replaced with _getSection
 };
 
