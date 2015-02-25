@@ -1,7 +1,8 @@
 [
   {
-    "__type": "GlassLab.SetDayIncrementsAction",
-    "numDots": 2
+    "__type": "GlassLab.SetDayAction",
+    "numDots": 2,
+    "dayNum": 4
   },
   {
     "__type": "GlassLab.SaveCheckpointAction"
