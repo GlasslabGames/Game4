@@ -28,7 +28,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 
     var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
     this.chompFrame = info.fxFrames.eat;
-    if (info.eatFxStyle) this.food.setAnimStyle(info.eatFxStyle[this.food.type]);
+    if (info.eatFxStyle) this.food.setAnimStyle(info.eatFxStyle);
 
     this.amountToEat = 1;
     if (this.eatPartially) {

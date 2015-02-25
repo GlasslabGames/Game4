@@ -8,6 +8,13 @@ var GlassLab = GlassLab || {};
  * FoodType - types of food
  */
 GlassLab.FoodTypes = {
+    apple: {
+        spriteName: "apple",
+        color: 0xc03b30, // associated color for the vomit and the hunger bar
+        unlocked: true, // Default value, unlock tracked by InventoryManager
+        cost: 1,
+        hidden: false
+    },
     carrot: {
         spriteName: "carrot",
         color: 0xe37f54, // associated color for the vomit and the hunger bar
@@ -15,21 +22,23 @@ GlassLab.FoodTypes = {
         cost: 1,
         hidden: false
     },
-    potato: {
-        spriteName: "carrot2",
-        color: 0x00aaff,
+    strawberry: {
+        spriteName: "strawberry",
+        color: 0xef5067,
         unlocked: true,
         cost: 5,
         hidden: false
     },
-    carrot3: {
-        spriteName: "carrot",
+    broccoli: {
+        spriteName: "broccoli",
+        color: 0x8cb149,
         unlocked: false,
         cost: 25,
         hidden: false
     },
-    carrot4: {
-        spriteName: "carrot",
+    tincan: {
+        spriteName: "tincan",
+        color: 0x99a2ac,
         unlocked: false,
         cost: 100,
         hidden: false
@@ -88,9 +97,6 @@ GlassLab.Food.prototype.setAnimStyle = function(style) {
   if (style) {
       this.sprite.loadTexture(this.info.spriteName+"_eaten_"+style)
       this.sprite.animations.add('anim');
-      if (style == "long") { // hacks b/c the animations aren't in the same place
-          this.sprite.anchor.setTo(0.45, 1.2);
-      }
   }
 };
 

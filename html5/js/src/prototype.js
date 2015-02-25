@@ -30,14 +30,16 @@ window.onload = function() {
             game.load.image(spriteName+'_art', 'assets/images/creatures/'+spriteName+'_art.png');
         }
 
-        game.load.image('shadow', 'assets/images/iso_shadow.png');
 
-        game.load.image('carrot', 'assets/images/isoCarrot.png');
-        game.load.image('carrot2', 'assets/images/isoCarrot2.png');
-        game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
-        game.load.atlasJSONHash('carrot_eaten_long', 'assets/images/carrot_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
-        game.load.atlasJSONHash('carrot2_eaten', 'assets/images/carrot2_death_vfx.png', 'assets/images/carrot_death_vfx.json');
-        game.load.atlasJSONHash('carrot2_eaten_long', 'assets/images/carrot2_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
+        var foodSpriteNames = ["carrot", "apple", "strawberry", "tincan", "broccoli"];
+        for (var i = 0; i < foodSpriteNames.length; i++) {
+            spriteName = foodSpriteNames[i];
+            game.load.image(spriteName, 'assets/images/food/'+spriteName+'.png');
+            game.load.atlasJSONHash(spriteName+'_eaten', 'assets/images/food/'+spriteName+'_death_vfx.png', 'assets/images/food/'+spriteName+'_death_vfx.json');
+            game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_vfx.png', 'assets/images/food/'+spriteName+'_long_death_vfx.json');
+        }
+
+        game.load.image('shadow', 'assets/images/iso_shadow.png');
         game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
         game.load.image('penBg', 'assets/images/tiles/dirtTile1_top.png');

@@ -33,7 +33,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
-            desiredFood: [{type: "carrot", amount: 3}, {type: "potato", amount: 5}],
+            desiredFood: [{type: "carrot", amount: 3}, {type: "apple", amount: 5}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         rammus2: { // For testing fractional food
@@ -45,7 +45,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
             spriteTint: 0xddffff,
-            desiredFood: [{type: "carrot", amount: (1/2)}, {type: "potato", amount: (5/4)}],
+            desiredFood: [{type: "carrot", amount: (1/2)}, {type: "apple", amount: (5/4)}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         baby_unifox: {
@@ -55,9 +55,9 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: true,
             spriteName: "unicorn",
-            eatFxStyle: {carrot: "long", potato: "long"}, // specification for which animation to play when eating certain food
+            eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 45 },
-            desiredFood: [{type: "potato", amount: 4}],
+            desiredFood: [{type: "apple", amount: 4}],
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         },
         unifox: {
@@ -67,9 +67,9 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: true,
             spriteName: "unicorn",
-            eatFxStyle: {carrot: "long", potato: "long"}, // specification for which animation to play when eating certain food
+            eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 45 },
-            desiredFood: [{type: "carrot", amount: 2}, {type: "potato", amount: 3}],
+            desiredFood: [{type: "carrot", amount: 2}, {type: "apple", amount: 3}],
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         }
     };
