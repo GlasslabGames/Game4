@@ -15,7 +15,7 @@ GlassLab.StartChallengeAction.prototype.constructor = GlassLab.StartChallengeAct
 GlassLab.StartChallengeAction.prototype.Do = function()
 {
     GlassLabSDK.setOptions({gameLevel: this.id});
-    GlassLabSDK.saveTelemEvent("start_challenge", {problem_type: this.problem_type, challenge_type: this.challenge_type});
+    GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.problem_type, this.challenge_type);
 
     GLOBAL.questManager.UpdateObjective(this.objective);
     this._complete();

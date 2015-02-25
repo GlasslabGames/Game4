@@ -61,7 +61,14 @@ GlassLab.DayManager.prototype.AdvanceDay = function()
 
 GlassLab.DayManager.prototype.SetDay = function(dayNum)
 {
+    if (this.dayNum) {
+        GlassLabSDK.saveTelemEvent("finish_day", {day: this.dayNum});
+    }
+
     this.dayNum = dayNum;
+
+    GlassLabSDK.saveTelemEvent("start_day", {day: this.dayNum});
+
     this._refresh();
 };
 

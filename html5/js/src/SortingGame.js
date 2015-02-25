@@ -105,7 +105,7 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
 
         this.bonusAmountLabel.text = "$" + this.bonusAmount;
 
-        if (this.cardsCorrect == this.cardsAnswered) { // if they got them all right
+        if (this.cardsCorrect == this.cards.length) { // if they got them all right
             this.bonusAmountLabel.style.fill = "#39b54a";
         }
 
