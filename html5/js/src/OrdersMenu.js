@@ -30,7 +30,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.portraitFrame.y = 48;
     this.sprite.addChild(this.portraitFrame);
 
-    this.portrait = game.make.sprite(this.portraitFrame.width/2, this.portraitFrame.height/2, "carrot");
+    this.portrait = game.make.sprite(this.portraitFrame.width/2, this.portraitFrame.height/2, "assistant");
     this.portrait.anchor.setTo(.5, .5);
     this.portrait.scale.setTo(.5, .5);
     this.portraitFrame.addChild(this.portrait);

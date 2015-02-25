@@ -66,11 +66,12 @@ GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
 GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
 
 GlassLab.Pen.prototype.getDimensionEncoding = function() {
-    return GlassLab.Pen.encodeDimensions(this.height, this.widths[0], this.widths[1], this.widths[2]);
+    return GlassLab.Pen.encodeDimensions(this.height || 0, this.widths[0] || 0, this.widths[1] || 0, this.widths[2] || 0);
 };
 
 GlassLab.Pen.encodeDimensions = function(height, width0, width1, width2) {
-    return (height || 0) + "_" + (width0 || 0) + "_" + (width1 || 0) + "_" + (width2 || 0);
+
+    return (height * width0) + "_" + (height * width1) + "_" + (height * width2);
 };
 
 GlassLab.Pen.prototype.getFullWidth = function() {

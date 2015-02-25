@@ -321,7 +321,7 @@ GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
             // the amount of food to show is usually just the total divided among the creatures, but reduce it if we have an odd amount of food left
             for (var j = 0; j < n; j++) {
                 var food = this.game.make.sprite(col * colWidth, (row++) * rowHeight + 10, foodInfo.spriteName);
-                food.scale.setTo(0.3, 0.3);
+                food.scale.setTo(0.15, 0.15);
                 food.anchor.setTo(0.5, 0.5);
                 this.displaySprite.addChild(food);
                 foodLeft[foodType] --;
@@ -351,7 +351,7 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
         var numFoods = this.numFood[i] || 0;
         if (numFoods) {
             var food = this.game.make.sprite(0, (i+1) * rowHeight + 10, foodInfo.spriteName);
-            food.scale.setTo(0.45, 0.45);
+            food.scale.setTo(0.25, 0.25);
             food.anchor.setTo(0.5, 0.5);
             this.displaySprite.addChild(food);
 

@@ -105,7 +105,7 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
     {
         this.costLabel.visible = false;
         this.loadTexture(this.data.spriteName);
-        this.scale.setTo(.5, .5);
+        this.scale.setTo(.3, .3);
 
         /*if (!this.input.draggable)
         {

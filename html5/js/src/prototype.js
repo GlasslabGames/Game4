@@ -18,26 +18,29 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
-        var creatureSpriteNames = ["sheep", "unicorn"];
+        var creatureSpriteNames = ["sheep", "unicorn", "babySheep", "babyUnicorn"];
         for (var i = 0; i < creatureSpriteNames.length; i++) {
             var spriteName = creatureSpriteNames[i];
             game.load.image(spriteName+'_idle', 'assets/images/creatures/'+spriteName+'_idle.png');
-            game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_idle_backfacing.png');
+            game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_backfacing_idle.png');
             game.load.atlasJSONHash(spriteName+'_walk', 'assets/images/creatures/'+spriteName+'_walk.png', 'assets/images/creatures/'+spriteName+'_walk.json');
             game.load.atlasJSONHash(spriteName+'_walk_back', 'assets/images/creatures/'+spriteName+'_backfacing_walk.png', 'assets/images/creatures/'+spriteName+'_backfacing_walk.json');
             game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');
             game.load.atlasJSONHash(spriteName+'_vomit', 'assets/images/creatures/'+spriteName+'_vomit.png', 'assets/images/creatures/'+spriteName+'_vomit.json');
-            game.load.image(spriteName+'_art', 'assets/images/creatures/'+spriteName+'_art.png');
+            game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
+            game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
+        }
+
+
+        var foodSpriteNames = ["carrot", "apple", "strawberry", "tincan", "broccoli"];
+        for (var i = 0; i < foodSpriteNames.length; i++) {
+            spriteName = foodSpriteNames[i];
+            game.load.image(spriteName, 'assets/images/food/'+spriteName+'.png');
+            game.load.atlasJSONHash(spriteName+'_eaten', 'assets/images/food/'+spriteName+'_death_vfx.png', 'assets/images/food/'+spriteName+'_death_vfx.json');
+            game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_vfx.png', 'assets/images/food/'+spriteName+'_long_death_vfx.json');
         }
 
         game.load.image('shadow', 'assets/images/iso_shadow.png');
-
-        game.load.image('carrot', 'assets/images/isoCarrot.png');
-        game.load.image('carrot2', 'assets/images/isoCarrot2.png');
-        game.load.atlasJSONHash('carrot_eaten', 'assets/images/carrot_death_vfx.png', 'assets/images/carrot_death_vfx.json');
-        game.load.atlasJSONHash('carrot_eaten_long', 'assets/images/carrot_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
-        game.load.atlasJSONHash('carrot2_eaten', 'assets/images/carrot2_death_vfx.png', 'assets/images/carrot_death_vfx.json');
-        game.load.atlasJSONHash('carrot2_eaten_long', 'assets/images/carrot2_long_death_vfx.png', 'assets/images/carrot_long_death_vfx.json');
         game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
         game.load.image('penBg', 'assets/images/tiles/dirtTile1_top.png');
