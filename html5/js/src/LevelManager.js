@@ -20,6 +20,18 @@ GlassLab.LevelManager = function(game)
     level0.data = {
         quest: "alpha1"
     };
+    var level01 = this._addLevelData(new GlassLab.Level());
+    level01.data = {
+        quest: "alpha2"
+    };
+    var level02 = this._addLevelData(new GlassLab.Level());
+    level02.data = {
+        quest: "alpha3"
+    };
+    var level03 = this._addLevelData(new GlassLab.Level());
+    level03.data = {
+        quest: "alpha4"
+    };
 
     var level1 = this._addLevelData(new GlassLab.Level());
     level1.data = {
@@ -181,6 +193,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
     if (levelNum < this.levels.length)
     {
         console.log("Starting level", levelNum, this.levels[levelNum].data);
+        this.currentLevel = levelNum;
         this.LoadLevelFromData(this.levels[levelNum].data);
     }
     else
@@ -255,7 +268,7 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
 
 GlassLab.LevelManager.prototype.LoadNextLevel = function()
 {
-    this.LoadLevel(++this.currentLevel);
+    this.LoadLevel(this.currentLevel+1);
 };
 
 GlassLab.LevelManager.prototype.RestartLevel = function()
