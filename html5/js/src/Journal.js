@@ -34,27 +34,27 @@ GlassLab.Journal = function(game) {
     // Feeding Log picture
     this.foodLogCreatureArt = game.make.sprite(0, 160);
     this.foodLogCreatureArt.tint = 0x000000;
-    this.foodLogCreatureArt.scale.setTo(0.2, 0.2);
+    this.foodLogCreatureArt.scale.setTo(0.4, 0.4);
     this.foodLogCreatureArt.anchor.setTo(.5, 1);
     this.sprite.addChild(this.foodLogCreatureArt);
 
-    this.foodLogFoodAArt = game.make.sprite(0, 220);
-    this.foodLogFoodAArt.scale.setTo(0.55, 0.55);
+    this.foodLogFoodAArt = game.make.sprite(0, 160);
+    this.foodLogFoodAArt.scale.setTo(0.4, 0.4);
     this.foodLogFoodAArt.anchor.setTo(.5, 1);
     this.sprite.addChild(this.foodLogFoodAArt);
 
-    this.foodLogFoodBArt = game.make.sprite(0, 220);
-    this.foodLogFoodBArt.scale.setTo(0.55, 0.55);
+    this.foodLogFoodBArt = game.make.sprite(0, 160);
+    this.foodLogFoodBArt.scale.setTo(0.4, 0.4);
     this.foodLogFoodBArt.anchor.setTo(.5, 1);
     this.sprite.addChild(this.foodLogFoodBArt);
 
     // Creature Picture
-    this.creatureArt = game.make.sprite(240, 460);
+    this.creatureArt = game.make.sprite(240, 430);
     this.creatureArt.anchor.setTo(.5, 1);
     this.sprite.addChild(this.creatureArt);
 
     // Creature info
-    this.creatureInfo = game.make.text(30, 500);
+    this.creatureInfo = game.make.text(30, 480);
     this.creatureInfo.anchor.setTo(0, 0);
     this.sprite.addChild(this.creatureInfo);
 

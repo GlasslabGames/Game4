@@ -15,7 +15,7 @@ GlassLab.CreatureManager = function (game) {
     this.creatureDatabase = {
         baby_rammus: {
             journalInfo: {
-                name: "Rammus Jerkum (juvenile)",
+                name: "Rammus Jerkum\n(juvenile)",
                 temperament: "Combative"
             },
             displayNames: {
@@ -30,7 +30,7 @@ GlassLab.CreatureManager = function (game) {
         },
         rammus: {
             journalInfo: {
-                name: "Rammus Jerkum (adult)",
+                name: "Rammus Jerkum\n(adult)",
                 temperament: "Combative"
             },
             displayNames: {
@@ -45,7 +45,7 @@ GlassLab.CreatureManager = function (game) {
         },
         baby_unifox: {
             journalInfo: {
-                name: "Vulpes Unicornum (juvenile)",
+                name: "Vulpes Unicornum\n(juvenile)",
                 temperament: "Shy"
             },
             displayNames: {
@@ -61,7 +61,7 @@ GlassLab.CreatureManager = function (game) {
         },
         unifox: {
             journalInfo: {
-                name: "Vulpes Unicornum (juvenile)",
+                name: "Vulpes Unicornum\n(adult)",
                 temperament: "Shy"
             },
             displayNames: {

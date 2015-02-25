@@ -27,7 +27,8 @@ window.onload = function() {
             game.load.atlasJSONHash(spriteName+'_walk_back', 'assets/images/creatures/'+spriteName+'_backfacing_walk.png', 'assets/images/creatures/'+spriteName+'_backfacing_walk.json');
             game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');
             game.load.atlasJSONHash(spriteName+'_vomit', 'assets/images/creatures/'+spriteName+'_vomit.png', 'assets/images/creatures/'+spriteName+'_vomit.json');
-            game.load.image(spriteName+'_art', 'assets/images/creatures/'+spriteName+'_art.png');
+            game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
+            game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
         }
 
 
