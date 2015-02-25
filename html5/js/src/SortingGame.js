@@ -100,11 +100,12 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
     this.cardsAnswered ++;
 
     if (correct) {
+        this.cardsCorrect ++;
         this.bonusAmount += GlassLab.SortingGame.REWARD_PER_CARD;
 
         this.bonusAmountLabel.text = "$" + this.bonusAmount;
 
-        if (this.bonusAmount / GlassLab.SortingGame.REWARD_PER_CARD >= this.cardsAnswered) { // if they got them all right
+        if (this.cardsCorrect == this.cardsAnswered) { // if they got them all right
             this.bonusAmountLabel.style.fill = "#39b54a";
         }
 
@@ -131,9 +132,12 @@ GlassLab.SortingGame.prototype.start = function(data) {
         var card = this.cards.pop();
         card.destroy();
     }
-    // Note: we could, if desired, randomly order the cards here
-    for (var i = 0; i < data.length; i++) {
-        this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFood, data[i].displayMode );
+
+    // Insert cards in a random order
+    while (data.length) {
+        var i = Math.floor( Math.random() * data.length );
+        var card = this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFood, data[i].displayMode );
+        data.splice(i, 1);
     }
 
     // Add tokens if we don't have any or some were used last time
@@ -152,10 +156,15 @@ GlassLab.SortingGame.prototype.start = function(data) {
     this.bonusAmount = 0;
     this.bonusAmountLabel.text = "$0";
     this.cardsAnswered = 0;
+    this.cardsCorrect = 0;
+
+    GlassLabSDK.saveTelemEvent("bonus_game_start", {});
 };
 
 GlassLab.SortingGame.prototype.finish = function() {
     GLOBAL.inventoryManager.AddMoney(this.bonusAmount);
+
+    GlassLabSDK.saveTelemEvent("bonus_game_end", {proportion_correct: this.cardsCorrect / this.cardsAnswered});
 
     this.visible = false;
     GlassLab.SignalManager.bonusGameComplete.dispatch();
@@ -172,6 +181,8 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
     this.creatureType = creatureType;
     this.numCreatures = numCreatures;
     this.numFood = [].concat(numFood); // make sure it's an array
+    this.id = sortingGame.cards.length;
+    this.displayMode = displayMode;
 
     // Calculate the correct answer to this card. For now, creatures with multiple kinds of food just look at the total food.
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
@@ -235,6 +246,20 @@ GlassLab.SortingGameCard.prototype._onObjectDropped = function(obj) {
     this.correct = obj.value == this.targetValue;
     this.token = obj;
     this._animateResult();
+
+    GlassLabSDK.saveTelemEvent("bonus_game_answer", {
+        card_id: this.id,
+        target_value: this.targetValue.toLowerCase().replace("\n"," "),
+        answer_value: obj.value.toLowerCase().replace("\n"," "),
+        success: this.correct,
+        creature_type: this.creatureType,
+        creature_count: this.numCreatures,
+        foodA_count: this.numFood[0],
+        foodB_count: this.numFood[1] || 0,
+        challenge_type: "TBD",
+        format: this.displayMode
+    });
+
 };
 
 GlassLab.SortingGameCard.prototype._animateResult = function(obj) {

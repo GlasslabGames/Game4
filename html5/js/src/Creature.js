@@ -175,8 +175,9 @@ GlassLab.Creature.prototype._startDrag = function () {
     if (GLOBAL.dragTarget != null) return;
     this.getTile().onCreatureExit(this);
     if (this.pen) {
-        this.pen.onCreatureRemoved(this);
-        this.pen = null;
+        var pen = this.pen;
+        this.pen = null; // set our pen to null first so that creature_population telemetry works better
+        pen.onCreatureRemoved(this);
     }
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     GLOBAL.dragTarget = this;

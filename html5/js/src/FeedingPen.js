@@ -345,6 +345,7 @@ GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
     this._refreshFeedButton();
+    GLOBAL.creatureManager.creaturePopulationUpdate();
 };
 
 GlassLab.FeedingPen.prototype._refreshFeedButton = function() {
