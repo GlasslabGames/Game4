@@ -134,6 +134,8 @@ GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
 
     this.Resize();
 
+    GlassLab.SignalManager.penResized.dispatch(this, prevDimensions, this.getDimensionEncoding());
+
     GlassLabSDK.saveTelemEvent("resize_pen", {
         rows: this.height,
         creature_columns: this.widths[0],

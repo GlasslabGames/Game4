@@ -30,6 +30,7 @@ GlassLab.SignalManager = {
     creatureFed: new Phaser.Signal(),
 
     // Pen Events
+    penResized: new Phaser.Signal(), // (FeedingPen, string, string) => source, prevDimensions, newDimensions // only when the player resizes it
     feedingPenResolved: new Phaser.Signal(), // (FeedingPen, bool) => source, win/loss
 
     // Order Events

@@ -12,6 +12,12 @@ GlassLab.TelemetryManager = function()
 
     this.ordersCompleted = 0;
 
+    this.challengesCompleted = 0;
+    this.challengesCompletedOnFirstAttempt = 0;
+    this.challengeLatencySum = 0;
+
+    this.penResizes = [];
+
     //GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
 
     // FIXME: These may not be that useful. A level is currently connected to a day but we care more about challenges
@@ -20,6 +26,7 @@ GlassLab.TelemetryManager = function()
     GlassLab.SignalManager.levelLost.add(this._onLevelLost, this);
 
     GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
+    GlassLab.SignalManager.penResized.add(this._onFeedingPenResized, this);
     GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
@@ -82,6 +89,22 @@ GlassLab.TelemetryManager.prototype._onFeedingPenResolved = function(pen, succes
     // This whole structure is weird. The telemetry manager shouldn't be making decisions about what's a success or failure.
 };
 
+GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDimensions, newDimensions)
+{
+    if (!this.penResizes.length) this.originalPenDimensions = prevDimensions;
+
+    this.penResizes.push(newDimensions);
+
+    if (this.penResizes.length == 3) {
+        GlassLabSDK.saveTelemEvent("first_3_moves", {
+            pen_dimensions0: this.originalPenDimensions,
+            pen_dimensions1: this.penResizes[0],
+            pen_dimensions2: this.penResizes[1],
+            pen_dimensions3: this.penResizes[2]
+        });
+    }
+};
+
 
 GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, problemType, challengeType)
 {
@@ -91,6 +114,7 @@ GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, problemTy
     this.challengeAttempts = 0;
     this.challengeOriginalStartTime = GLOBAL.game.time.now;
     this.challengeAttemptStartTime = GLOBAL.game.time.now;
+    this.feedingPenResizes = [];
 
     GlassLabSDK.saveTelemEvent("start_challenge", {problem_type: problemType, challenge_type: challengeType});
 };
@@ -115,17 +139,41 @@ GlassLab.TelemetryManager.prototype._onChallengeAnswered = function(success)
 GlassLab.TelemetryManager.prototype._onChallengeRestarted = function()
 {
     this.challengeAttemptStartTime = GLOBAL.game.time.now;
+    this.feedingPenResizes = [];
 
     GlassLabSDK.saveTelemEvent("restart_challenge", {});
 };
 
 GlassLab.TelemetryManager.prototype._onChallengeComplete = function()
 {
+    var latency = (GLOBAL.game.time.now - this.challengeOriginalStartTime) / 1000;
     GlassLabSDK.saveTelemEvent("complete_challenge", {
         problem_type: this.currentProblemType,
         challenge_type: this.currentChallengeType,
         attempt_count: this.challengeAttempts,
-        total_latency: (GLOBAL.game.time.now - this.challengeOriginalStartTime) / 1000
+        total_latency: latency
+    });
+
+    if (this.currentChallengeType == "pen") {
+        var steps = this.penResizes.length;
+        var data = { pen_dimensions: this.penResizes[steps-1], challenge_type: this.currentChallengeType };
+        if (steps == 1) {
+            GlassLabSDK.saveTelemEvent("solve_in_1_step", data);
+        } else {
+            data.step_count = steps;
+            GlassLabSDK.saveTelemEvent("solve_in_n_steps", data);
+        }
+    }
+
+    this.challengesCompleted ++;
+    if (this.challengeAttempts == 1) this.challengesCompletedOnFirstAttempt ++;
+    GlassLabSDK.saveTelemEvent("proportion_completed_on_first_attempt", {
+        value: this.challengesCompletedOnFirstAttempt / this.challengesCompleted
+    });
+
+    this.challengeLatencySum += latency;
+    GlassLabSDK.saveTelemEvent("mean_challenge_latency", {
+        value: this.challengeLatencySum / this.challengesCompleted
     });
 };
 
