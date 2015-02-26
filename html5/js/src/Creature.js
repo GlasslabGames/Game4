@@ -165,7 +165,7 @@ GlassLab.Creature.prototype._onUp = function (sprite, pointer) {
     } else if (!GLOBAL.stickyMode && GLOBAL.dragTarget == this) {
         this._endDrag();
     }
-    if (GLOBAL.dragTarget != this) this.hungerBar.show(true, 1); // if we're not currently dragging, show the hunger bar for 1 sec
+    if (GLOBAL.dragTarget != this && !this.getIsEmpty()) this.hungerBar.show(true, 1); // if we're not currently dragging, show the hunger bar for 1 sec
 };
 
 GlassLab.Creature.prototype._onDown = function (sprite, pointer) {
