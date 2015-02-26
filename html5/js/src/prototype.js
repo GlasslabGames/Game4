@@ -18,6 +18,13 @@ window.onload = function() {
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
 
     function preload() {
+        game.stage.disableVisibilityChange = true; // Don't pause when focus is lost
+        if (game.paused)
+        {
+            console.warn("Game was paused during preload. Since this is likely undesired, unpausing...");
+            game.paused = false;
+        }
+
         var creatureSpriteNames = ["sheep", "unicorn", "babySheep", "babyUnicorn"];
         for (var i = 0; i < creatureSpriteNames.length; i++) {
             var spriteName = creatureSpriteNames[i];
@@ -124,8 +131,6 @@ window.onload = function() {
 
     function create()
     {
-        game.stage.disableVisibilityChange = true; // Don't pause when focus is lost
-
         // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)
         game.world.setBounds(-1000,-1000,2000, 2000);
 
