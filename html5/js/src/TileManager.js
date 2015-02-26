@@ -56,7 +56,7 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, m
         {
             if (!this.mapData[i]) this.mapData[i] = [];
             var centerDist = Math.sqrt( (j - height / 2.0)*(j - height / 2.0) + (i - width / 2.0) * (i - width / 2.0));
-            if (centerDist > 7.5) this.mapData[i][j] = GlassLab.Tile.TYPES.water; // water
+            if (centerDist > 8.5) this.mapData[i][j] = GlassLab.Tile.TYPES.water; // water
             else if (Math.random() < 0.75) this.mapData[i][j] = GlassLab.Tile.TYPES.grass;
             else this.mapData[i][j] = GlassLab.Tile.TYPES["mushroom"+ Math.floor(Math.random() * 3)];
         }

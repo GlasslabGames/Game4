@@ -54,14 +54,13 @@ GlassLab.FeedingPen.prototype.Resize = function() {
         }
         while (this.foodLists.length <= i) this.foodLists.push([]);
         var maxFood = (this.numFoods)? this.numFoods[i] : null;
-        var spriteName = GlassLab.FoodTypes[this.foodTypes[i]].spriteName + "_eaten"; // this is a little hacky... maybe Food should have SetSpriteName() instead
         this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], maxFood,
-            startCol, startCol += this.widths[i+1], false, spriteName);
+            startCol, startCol += this.widths[i+1], false, this.foodTypes[i]);
     }
 
     if (this.autoFill) {
         this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatures, this.numCreatures,
-            0, this.widths[0], true);
+            0, this.widths[0], true, this.creatureType);
         for (var i = 0; i < this.creatures.length; i++) {
             this.creatures[i].draggable = false;
         }
@@ -158,7 +157,7 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.Resize();
 };
 
-GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount, startCol, endCol, fromRight, targetSpriteName) {
+GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount, startCol, endCol, fromRight, targetType) {
     var unusedObjects = list.slice(); // if we didn't provide a list of unused objects, copy the whole list instead
     var count = 0;
 
@@ -170,7 +169,7 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount
                 this.objectRoot.addChild(obj.sprite);
                 list.push(obj);
             }
-            if (targetSpriteName && obj.sprite.spriteName != targetSpriteName) obj.sprite.loadTexture(targetSpriteName);
+            obj.setType(targetType);
             obj.sprite.visible = true;
             obj.sprite.isoX = (fromRight? endCol - col - 1 : col) * GLOBAL.tileSize;
             obj.sprite.isoY = row * GLOBAL.tileSize;
@@ -201,11 +200,15 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 
     var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
 
+    console.log("feeding creatures", this.foodTypes, this.foodLists);
+
     // For each section of food, calculate which foods should go to which creatures
     for (var i = 0; i < this.foodTypes.length; i++) {
         var foodByRow = this._sortObjectsByGrid(this.foodLists[i], false);
         var desiredAmount = this.creatures[0].desiredAmountsOfFood[this.foodTypes[i]]; // assume that all the creatures in the pen are the same kind as the first one
         var remainder = desiredAmount % 1;
+
+        console.log(foodByRow);
 
         /* The general idea of assigning food to creatures:
          * In the base case, the food is assigned evenly, so if there are 2 creatures (0, 1) and 4 foods (0 - 3), 0 will eat food 0 and 2, and 1 will eat 1 and 3
