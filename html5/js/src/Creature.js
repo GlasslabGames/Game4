@@ -108,6 +108,16 @@ GlassLab.Creature.prototype.print = function () {
     return "Creature(" + col + ", " + row + ")";
 };
 
+GlassLab.Creature.prototype.setType = function (type) {
+    if (this.type == type) return;
+    this.type = type;
+    var info = GLOBAL.creatureManager.creatureDatabase[type];
+    for (var key in this.animSprites) {
+        this.animSprites[key].loadTexture(info.spriteName + "_" + key);
+    }
+    // This hasn't been tested yet!
+};
+
 GlassLab.Creature.prototype.moveToRandomTile = function () {
     var tile = GLOBAL.tileManager.getRandomWalkableTile();
 
