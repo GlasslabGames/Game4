@@ -307,7 +307,7 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
         }
     }
 
-    var maxNoticeDist = GLOBAL.tileSize * 10;
+    var maxNoticeDist = GLOBAL.tileSize * 20;
     if (bestTarget == this.getTile()) {
         if (bestTarget.inPen) { // if we're actually in the pen now
             this.enterPen(bestTarget.inPen);
