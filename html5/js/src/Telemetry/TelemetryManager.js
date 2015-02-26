@@ -40,6 +40,12 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
         return;
     }
 
+    GlassLabSDK.setOptions( {
+        gameId: "PRIMA",
+        gameVersion: "0.2.1",
+        gameLevel: "Ben 'Pinnacle of Rage' Dapkiewicz"
+    } );
+
     // Manually set local logging for the SDK
     GlassLabSDK.setOptions( { localLogging: true, dispatchQueueUpdateInterval: 500 } );
 
@@ -48,9 +54,15 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
 
     // Attempt to connect to the server. Set the URI if the host is not playfully.org
     // TODO: check if the host is playfully.org and ignore setting the URI
-    GlassLabSDK.connect( "TEST", "http://dev.playfully.org:8001", function( data ) {
+    GlassLabSDK.connect( "PRIMA", "http://stage.playfully.org:8001", function( data ) {
         console.log( "[GlassLab SDK] Connection successful: " + data );
         _this._sdk_connection_state = _this.sdkConnectionState.active;
+
+        GlassLabSDK.getUserInfo(function( data ){
+            console.log("[GlassLabSDK] Get User Info Successful: "+data+"data");
+        }, function( data ){
+            console.log("[GlassLabSDK] Get User Info Failed: "+data+"data");
+        });
     }, function( data ) {
         console.log( "[GlassLab SDK] FAILURE! Connection failed: " + data );
         _this._sdk_connection_state = _this.sdkConnectionState.failed;
