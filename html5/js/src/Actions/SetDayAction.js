@@ -19,7 +19,7 @@ GlassLab.SetDayAction.prototype.Do = function()
     var dotPositions = [];
     for (var i=0; i < this.numDots; i++)
     {
-        dotPositions.push(i/this.numDots);
+        dotPositions.push(i/Math.max(this.numDots-1, 1));
     }
 
     GLOBAL.dayManager.dayMeter.SetDots(dotPositions);
