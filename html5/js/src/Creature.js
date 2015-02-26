@@ -28,6 +28,9 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.sprite.scale.x = -0.25;
     this.sprite.scale.y = 0.25;
 
+    this.moveSpeed = 2.75;
+    this.baseAnimSpeed = 36; // 36 per moveSpeed
+
     this.debugAILine = new Phaser.Line();
 
     this.desiredAmountsOfFood = {};

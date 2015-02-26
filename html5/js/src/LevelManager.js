@@ -7,7 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.LevelManager = function(game)
 {
     this.game = game;
-    this.currentLevel = GLOBAL.saveManager.LoadData("currentLevel") || -1;
+    this.currentLevel = -1; //GLOBAL.saveManager.LoadData("currentLevel") || -1;
     var queryLevel = getParameterByName("level");
     if (queryLevel != "")
     {
@@ -33,65 +33,22 @@ GlassLab.LevelManager = function(game)
         quest: "alpha4"
     };
 
-    var level1 = this._addLevelData(new GlassLab.Level());
-    level1.data = {
+    // 5
+    this._addLevelData(new GlassLab.Level()).data = {
       pens: [
-        {type: "rammus"}
+        //{type: "baby_unifox", bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],
       looseCreatures: {
-        rammus: 1
+          baby_unifox: 3,
+          baby_rammus: 3,
+          unifox: 3,
+          rammus: 3
+
       },
         objective: "Feed the ram!"
     };
 
-    var level2 = this._addLevelData(new GlassLab.Level());
-    level2.data = {
-      pens: [
-        {type: "rammus", height: 3}
-      ],
-      looseCreatures: {
-        rammus: 3
-      },
-        objective: "Feed all the rams!"
-    };
-
-    var level3 = this._addLevelData(new GlassLab.Level());
-    level3.data = {
-      orders: [
-          {
-              client: "Archibold Huxley III",
-              company: "Rupture Farms",
-              numCreatures: 7,
-              type: "rammus",
-              description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
-              fulfilled: false,
-              reward: 200
-          },
-          {
-              client: "Archibold Huxley IV",
-              company: "Rupture Farms II",
-              numCreatures: 48,
-              type: "rammus",
-              description: "Dear Friend! I must defeat Archibold Huxley III. My island has 48 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
-              fulfilled: false,
-              reward: 5000
-          },
-          {
-              client: "Ram",
-              company: "Baaa",
-              numCreatures: 1,
-              type: "rammus",
-              description: "Dear Friend! My island has 1 RAM. I have heard you know HOW MANY CARROTS I need FOR IT. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
-              fulfilled: false,
-              reward: -5
-          }
-      ],
-      looseCreatures: {
-        rammus: 0
-      },
-        objective: "Fill an order!"
-    };
-
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Feed the foxes with multiple kinds of food!",
         pens: [
@@ -130,23 +87,7 @@ GlassLab.LevelManager = function(game)
         ]
     };
 
-    var level6 = this._addLevelData(new GlassLab.Level());
-    level6.data = {
-        pens: [
-            {type: "rammus", bottomDraggable: true, leftDraggable: true, topDraggable: true}
-        ],
-        looseCreatures: {
-            rammus: 30
-        },
-        objective: "Feed as many rams as you can!"
-    };
 
-    var level7 = this._addLevelData(new GlassLab.Level());
-    level7.data = {
-        quest: "Vertical Slice"
-    };
-
-    // level 8
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
             {type: "rammus2", foodAWidth: 1, foodBWidth:1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
@@ -157,28 +98,6 @@ GlassLab.LevelManager = function(game)
         objective: "Feed the rams!"
     };
 
-    // Add Bonus Game data here for now
-    this.bonusIndex = -1;
-    this.bonusData = [
-        [
-            { creatureType: "rammus", numCreatures: 1, numFood: 4, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 1, numFood: 2, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 1, numFood: 3, displayMode: "spritesOnly"}
-        ],
-        [
-            { creatureType: "rammus", numCreatures: 1, numFood: 3, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 1, numFood: 4, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 2, numFood: 2, displayMode: "spritesOnly"}
-        ],
-        [
-            { creatureType: "rammus", numCreatures: 2, numFood: 4, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 3, numFood: 2, displayMode: "spritesOnly"},
-            { creatureType: "rammus", numCreatures: 2, numFood: 3, displayMode: "spritesOnly"}
-        ]
-    ];
-
-    // When we finish a bonus game, continue to the next level
-    //GlassLab.SignalManager.bonusGameComplete.add(this.LoadNextLevel, this);
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)

@@ -15,7 +15,7 @@ GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
 
 GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.anim = this.creature.PlayAnim("vomit", false, 24);
+  this.anim = this.creature.PlayAnim("vomit", false, this.creature.baseAnimSpeed);
   this.anim.onComplete.addOnce(this._onFinishVomiting, this);
   this.spewed = false;
   this.creature.draggable = false;
@@ -37,7 +37,7 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   vomit.x = this.creature.sprite.x;
   vomit.y = this.creature.sprite.y - 45;
   vomit.animations.add("anim");
-  vomit.animations.play("anim", 24, false);
+  vomit.animations.play("anim", this.creature.baseAnimSpeed, false);
   vomit.events.onAnimationComplete.add(this._onVomitAnimEnded, vomit);
 };
 

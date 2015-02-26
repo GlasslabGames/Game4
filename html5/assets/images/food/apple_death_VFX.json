@@ -1,0 +1,124 @@
+{"frames": [
+
+{
+	"filename": "apple_death_VFX_00015.png",
+	"frame": {"x":2,"y":2,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00016.png",
+	"frame": {"x":311,"y":2,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00017.png",
+	"frame": {"x":620,"y":2,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00018.png",
+	"frame": {"x":2,"y":188,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00019.png",
+	"frame": {"x":311,"y":188,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00020.png",
+	"frame": {"x":620,"y":188,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00021.png",
+	"frame": {"x":2,"y":374,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00022.png",
+	"frame": {"x":311,"y":374,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00023.png",
+	"frame": {"x":620,"y":374,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00024.png",
+	"frame": {"x":2,"y":560,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00025.png",
+	"frame": {"x":311,"y":560,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00026.png",
+	"frame": {"x":620,"y":560,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00027.png",
+	"frame": {"x":2,"y":746,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "apple_death_VFX_00028.png",
+	"frame": {"x":311,"y":746,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "apple_death_VFX.png",
+	"format": "RGBA8888",
+	"size": {"w":929,"h":932},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:bba5072b2af99fbb9558a5f70da15987:6797ef5d28f165270aa4bdbaccd80439:d3dd594a3394cb3c2f2668a26b1174c6$"
+}
+}

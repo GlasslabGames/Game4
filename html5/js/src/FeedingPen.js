@@ -445,7 +445,7 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
 
 GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
-    // TODO: this assumes just one column of creatures. Fix it when the correct encoding is resolved with Seth.
+    // We assume a single column of creatures, but currently the encoding uses area so it's not a problem
     return GlassLab.Pen.encodeDimensions(this.targetNumCreatures, 1, creatureInfo.desiredFood[0].amount,
         (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) );
 };

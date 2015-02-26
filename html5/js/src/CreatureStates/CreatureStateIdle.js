@@ -23,6 +23,8 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
   //this.findDestinationHandler = this.game.time.events.add(Math.random()*1000, this._findNewDestination, this);
   this._setNewDestination(this.creature.getTile());
   this.creature.draggable = true;
+
+    this.speed = this.creature.moveSpeed / 2;
 };
 
 GlassLab.CreatureStateIdle.prototype.Exit = function()
@@ -78,8 +80,8 @@ GlassLab.CreatureStateIdle.prototype._setNewDestination = function(tile) {
       var flip = tile.isoY == this.creature.sprite.isoY;
       this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
 
-      if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true);
-      else this.creature.PlayAnim('walk', true);
+      if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true, this.creature.baseAnimSpeed * this.speed);
+      else this.creature.PlayAnim('walk', true, this.creature.baseAnimSpeed * this.speed);
     }
   }
 };
@@ -89,8 +91,8 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
   if (this.findDestinationHandler) return; // still waiting to pick a new destination
 
   var delta = Phaser.Point.subtract(this.targetPosition, this.creature.sprite.isoPosition);
-  if (delta.getMagnitudeSq() > 1) {
-    delta.setMagnitude(1);
+  if (delta.getMagnitudeSq() > this.speed) {
+    delta.setMagnitude(this.speed);
   }
   else {
     // If the delta magnitude is less than our move speed, we're done after this frame.

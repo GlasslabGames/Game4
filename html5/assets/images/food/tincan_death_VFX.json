@@ -1,0 +1,124 @@
+{"frames": [
+
+{
+	"filename": "tinCan_death_VFX_00015.png",
+	"frame": {"x":2,"y":2,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00016.png",
+	"frame": {"x":311,"y":2,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00017.png",
+	"frame": {"x":620,"y":2,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00018.png",
+	"frame": {"x":2,"y":188,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00019.png",
+	"frame": {"x":311,"y":188,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00020.png",
+	"frame": {"x":620,"y":188,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00021.png",
+	"frame": {"x":2,"y":374,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00022.png",
+	"frame": {"x":311,"y":374,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00023.png",
+	"frame": {"x":620,"y":374,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00024.png",
+	"frame": {"x":2,"y":560,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00025.png",
+	"frame": {"x":311,"y":560,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00026.png",
+	"frame": {"x":620,"y":560,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00027.png",
+	"frame": {"x":2,"y":746,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+},
+{
+	"filename": "tinCan_death_VFX_00028.png",
+	"frame": {"x":311,"y":746,"w":307,"h":184},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":307,"h":184},
+	"sourceSize": {"w":307,"h":184}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "tincan_death_VFX.png",
+	"format": "RGBA8888",
+	"size": {"w":929,"h":932},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:86ef58823897a67c0c908ae077c8d6f1:55f0ed55515c81b7b8817004227fa20d:6d02d262dad86e3a8e5a927d95abe45c$"
+}
+}

@@ -106,15 +106,6 @@ GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDim
     if (!this.penResizes.length) this.originalPenDimensions = prevDimensions;
 
     this.penResizes.push(newDimensions);
-
-    if (this.penResizes.length == 3) {
-        GlassLabSDK.saveTelemEvent("first_3_moves", {
-            pen_dimensions0: this.originalPenDimensions,
-            pen_dimensions1: this.penResizes[0],
-            pen_dimensions2: this.penResizes[1],
-            pen_dimensions3: this.penResizes[2]
-        });
-    }
 };
 
 
@@ -175,6 +166,13 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function()
             data.step_count = steps;
             GlassLabSDK.saveTelemEvent("solve_in_n_steps", data);
         }
+
+        GlassLabSDK.saveTelemEvent("first_3_moves", {
+            pen_dimensions0: this.originalPenDimensions || "",
+            pen_dimensions1: this.penResizes[0] || "",
+            pen_dimensions2: this.penResizes[1] || "",
+            pen_dimensions3: this.penResizes[2] || ""
+        });
     }
 
     this.challengesCompleted ++;

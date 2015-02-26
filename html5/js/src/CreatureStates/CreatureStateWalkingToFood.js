@@ -17,9 +17,9 @@ GlassLab.CreatureStateWalkingToFood.constructor = GlassLab.CreatureStateWalkingT
 GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.PlayAnim("walk", true);
+    this.speed = this.creature.moveSpeed - 0.25 + (Math.random() * 0.5); // adjust by +- 0.25
+    this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
   this.creature.draggable = false;
-  this.speed = 1.25 + (Math.random() * 0.5);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
