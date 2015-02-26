@@ -31,7 +31,7 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   this.spewed = true;
   var vomit = this.game.make.sprite(-20,-190, "vomit"); //-420,-155
   vomit.anchor.set(1,0);
-  vomit.tint = this.food.info.color;
+  vomit.tint = this.creature.lastEatenFoodInfo? this.creature.lastEatenFoodInfo.color : 0xBFDB9A; // default vomit color
   GLOBAL.effectLayer.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
   vomit.scale.setTo(this.creature.sprite.scale.x, this.creature.sprite.scale.y);
   vomit.x = this.creature.sprite.x;

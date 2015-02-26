@@ -165,6 +165,7 @@ GlassLab.Creature.prototype._onUp = function (sprite, pointer) {
     } else if (!GLOBAL.stickyMode && GLOBAL.dragTarget == this) {
         this._endDrag();
     }
+    if (GLOBAL.dragTarget != this && !this.getIsEmpty()) this.hungerBar.show(true, 1); // if we're not currently dragging, show the hunger bar for 1 sec
 };
 
 GlassLab.Creature.prototype._onDown = function (sprite, pointer) {
@@ -247,6 +248,13 @@ GlassLab.Creature.prototype.getIsSick = function () {
     return false;
 };
 
+GlassLab.Creature.prototype.getIsEmpty = function () {
+    for (var key in this.foodEaten) {
+        if (this.foodEaten[key] > 0) return false;
+    }
+    return true;
+};
+
 GlassLab.Creature.prototype.addTargetFood = function(food, eatPartially) {
     this.targetFood.push({food: food, eatPartially: eatPartially});
 };
@@ -298,7 +306,9 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
             this.eatFreeFood(bestTarget.food);
         }
     } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
-        if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
+        if (bestTarget.inPen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
+            this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this));
+        } else if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
             this.state.target = bestTarget;
         } else {
             this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));

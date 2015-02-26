@@ -19,13 +19,13 @@ GlassLab.CreatureManager = function (game) {
                 temperament: "Combative"
             },
             displayNames: {
-                singular: "baby rammus",
-                plural: "baby rammi"
+                singular: "baby ram",
+                plural: "baby rams"
             },
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "babySheep",
             fxFrames: {eat: 14, vomit: 21 },
-            desiredFood: [{type: "carrot", amount: 3}],
+            desiredFood: [{type: "broccoli", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         rammus: {
@@ -34,13 +34,13 @@ GlassLab.CreatureManager = function (game) {
                 temperament: "Combative"
             },
             displayNames: {
-                singular: "rammus",
-                plural: "rammi"
+                singular: "ram",
+                plural: "rams"
             },
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
-            desiredFood: [{type: "carrot", amount: 3}, {type: "apple", amount: 5}],
+            desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
         },
         baby_unifox: {
@@ -56,7 +56,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "babyUnicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 22, vomit: 36 },
-            desiredFood: [{type: "apple", amount: 4}],
+            desiredFood: [{type: "strawberry", amount: 4}],
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         },
         unifox: {
@@ -71,8 +71,8 @@ GlassLab.CreatureManager = function (game) {
             unlocked: true,
             spriteName: "unicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
-            fxFrames: {eat: 1, vomit: 45 },
-            desiredFood: [{type: "carrot", amount: 2}, {type: "apple", amount: 3}],
+            fxFrames: {eat: 1, vomit: 40 },
+            desiredFood: [{type: "strawberry", amount: 4}, {type: "carrot", amount: 2}],
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         } /*,
         rammus2: { // For testing fractional food
@@ -205,6 +205,7 @@ GlassLab.CreatureManager.prototype.creaturePopulationUpdate = function() {
     {
         if (this.creatures[i].pen) inPen++;
     }
+    this.numCreaturesInPen = inPen;
     GlassLabSDK.saveTelemEvent("creature_population", {total: this.creatures.length, in_pen: inPen});
 };
 
