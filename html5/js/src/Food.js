@@ -11,9 +11,9 @@ GlassLab.FoodTypes = {
     apple: {
         spriteName: "apple",
         color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: true, // Default value, unlock tracked by InventoryManager
+        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 1,
-        hidden: false,
+        hidden: true,
         displayNames: {
             singular: "apple",
             plural: "apples"
@@ -44,7 +44,7 @@ GlassLab.FoodTypes = {
     broccoli: {
         spriteName: "broccoli",
         color: 0x8cb149,
-        unlocked: false,
+        unlocked: true,
         cost: 25,
         hidden: false,
         displayNames: {
