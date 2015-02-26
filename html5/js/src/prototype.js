@@ -296,12 +296,10 @@ window.onload = function() {
             if (!GLOBAL.inventoryMenu.visible)
             {
                 GLOBAL.inventoryMenu.Show();
-                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -200;
             }
             else
             {
                 GLOBAL.inventoryMenu.Hide();
-                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -100;
             }
         }, this);
         GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
@@ -344,7 +342,7 @@ window.onload = function() {
 
         var assistant = new GlassLab.Assistant(game);
         assistant.sprite.x = -80;
-        assistant.sprite.y = -200;
+        assistant.sprite.y = -100;
         GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
         GLOBAL.assistant = assistant;
 

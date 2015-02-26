@@ -13,7 +13,11 @@ GlassLab.ShowArrowAction.prototype.constructor = GlassLab.ShowArrowAction;
 
 GlassLab.ShowArrowAction.prototype.Do = function()
 {
-    GLOBAL.UIManager.showArrow(this.direction, this.anchor, this.xPosition, this.yPosition);
+    if (this.anchor) GLOBAL.UIManager.showAnchoredArrow(this.direction, this.anchor, this.xPosition, this.yPosition);
+    else if (this.target) {
+        var target = GlassLab.Deserializer.getPropertyFromName(this.target, true);
+        GLOBAL.UIManager.showArrow(this.direction, target, this.xPosition, this.yPosition);
+    }
     this._complete();
 };
 

@@ -72,5 +72,7 @@ GlassLab.InventoryMenu.prototype.Hide = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_inventory", {});
 
+    GlassLab.SignalManager.inventoryClosed.dispatch(auto === true);
+
     this.visible = false;
 };

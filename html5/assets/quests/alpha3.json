@@ -23,7 +23,8 @@
         "__type": "GlassLab.CreatePenAction",
         "penData": {
           "type": "baby_unifox",
-          "height": 3,
+          "height": 1,
+          "creatureWidth": 3,
           "targetNumCreatures": 3
         }
       },

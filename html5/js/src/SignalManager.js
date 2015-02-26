@@ -14,9 +14,15 @@ GlassLab.SignalManager = {
     gameLoaded: new Phaser.Signal(), // (obj) => save blob - load any data from the save blob
 
     // UI Events
+    journalOpened: new Phaser.Signal(),
     journalClosed: new Phaser.Signal(),
     uiFocusChanged: new Phaser.Signal(),
     inventoryOpened: new Phaser.Signal(),
+    inventoryClosed: new Phaser.Signal(),
+    mailOpened: new Phaser.Signal(),
+
+    // Tutorial
+    tutorialAdvanced: new Phaser.Signal(),
 
     // Level Events
     levelLoaded: new Phaser.Signal(),
@@ -33,9 +39,12 @@ GlassLab.SignalManager = {
     // Pen Events
     penResized: new Phaser.Signal(), // (FeedingPen, string, string) => source, prevDimensions, newDimensions // only when the player resizes it
     feedingPenResolved: new Phaser.Signal(), // (FeedingPen, bool) => source, win/loss
+    penFeedingStarted: new Phaser.Signal(),
+    penFoodTypeSet: new Phaser.Signal(),
 
     // Order Events
     orderAdded: new Phaser.Signal(), // (order) => added order
+    orderStarted: new Phaser.Signal(), // (order) => order that was started
     orderCompleted: new Phaser.Signal(), // (order) => order that was completed
     orderFailed: new Phaser.Signal(), // (order) => order that was failed
 

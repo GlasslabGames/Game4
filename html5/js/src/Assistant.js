@@ -25,13 +25,19 @@ GlassLab.Assistant = function(game) {
 
     this.cancelButton = new GlassLab.UIButton(this.game, -500, 10, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
     this.continueButton = new GlassLab.UIButton(this.game, -310, 10, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
+    this.advanceTutorialButton = new GlassLab.UIButton(this.game, -200, 10, this._onAdvanceTutorialPressed, this, 75, 40, 0xffffff, "OK", 18);
+    this.advanceTutorialButton.visible = false;
     this.sprite.addChild(this.cancelButton);
     this.sprite.addChild(this.continueButton);
+    this.sprite.addChild(this.advanceTutorialButton);
 
     this.numberOfReloads = 0;
     this.maxReloads = 3;
 
     this.sprite.visible = false;
+
+    GlassLab.SignalManager.inventoryOpened.add(this._onInventoryOpened, this);
+    GlassLab.SignalManager.inventoryClosed.add(this._onInventoryClosed, this);
 };
 
 GlassLab.Assistant.STATES = {ORDER_INTRO: "ORDER_INTRO", ORDER_FOOD_CHOSEN: "ORDER_FOOD_CHOSEN", ORDER_CRATE_LOADED: "ORDER_CRATE_LOADED", ORDER_CRATE_READY: "ORDER_CRATE_READY"};
@@ -39,24 +45,30 @@ GlassLab.Assistant.STATES = {ORDER_INTRO: "ORDER_INTRO", ORDER_FOOD_CHOSEN: "ORD
 GlassLab.Assistant.TEXT_COLOR = "#000000"; // base color, used to stop highlights
 GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR = "#FFB300"; // used to color parts of the text
 
-GlassLab.Assistant.prototype.show = function(text) {
+// For tutorial popup
+GlassLab.Assistant.prototype.show = function(text, showButton) {
     this.sprite.visible = true;
     this.showButtons(false);
+    this.advanceTutorialButton.visible = showButton;
     this._setText(text);
 };
 
 GlassLab.Assistant.prototype.hide = function() {
-    this.sprite.visible = false;
+    if (!this.order) this.sprite.visible = false; // hide ourselves UNLESS we already started an order
+    this.advanceTutorialButton.visible = false;
 };
 
+// For use when completing an order
 GlassLab.Assistant.prototype.startOrder = function(order) {
     this.sprite.visible = true;
     this.numberOfReloads = 0;
     this._enterStateOrderIntro(order);
+    this.order = order;
 };
 
 GlassLab.Assistant.prototype.endOrder = function(order) {
     this.sprite.visible = false;
+    this.order = null;
 };
 
 GlassLab.Assistant.prototype.onPenLoaded = function() {
@@ -139,7 +151,7 @@ GlassLab.Assistant.prototype._setText = function(text) {
         return;
     }
 
-    text = "Assistant:\n" + text; // add the assistant label (for now)
+    //text = "Assistant:\n" + text; // add the assistant label (for now)
 
     // Split the text into lines by making sure it doesn't get too wide
     var words = text.split(" ");
@@ -182,9 +194,8 @@ GlassLab.Assistant.prototype._setText = function(text) {
 };
 
 GlassLab.Assistant.prototype._onCancelPressed = function() {
-    console.log("Cancel");
     if (this.state == GlassLab.Assistant.STATES.ORDER_CRATE_LOADED) {
-        this.numberOfReloads ++
+        this.numberOfReloads ++;
         GLOBAL.orderFulfillment.restartLoading(this.numberOfReloads);
         var lastChance = (this.numberOfReloads >= this.maxReloads);
         this._enterStateOrderFoodChosen(null, lastChance); // TODO - set food
@@ -192,15 +203,27 @@ GlassLab.Assistant.prototype._onCancelPressed = function() {
 };
 
 GlassLab.Assistant.prototype._onContinuePressed = function() {
-    console.log("Continue");
     if (this.state == GlassLab.Assistant.STATES.ORDER_CRATE_LOADED) {
         this._enterStateOrderCrateReady();
     }
 };
 
+GlassLab.Assistant.prototype._onAdvanceTutorialPressed = function() {
+    console.log("Next");
+    GlassLab.SignalManager.tutorialAdvanced.dispatch();
+};
+
 GlassLab.Assistant.prototype.showButtons = function(show) {
     this.cancelButton.visible = show;
     this.continueButton.visible = show;
+};
+
+GlassLab.Assistant.prototype._onInventoryOpened = function() {
+    this.sprite.y = -200;
+};
+
+GlassLab.Assistant.prototype._onInventoryClosed = function() {
+    this.sprite.y = -100;
 };
 
 /*

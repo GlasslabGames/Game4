@@ -180,6 +180,7 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     GLOBAL.inventoryMenu.Show(true);
 
     this._sendTelemetry("start_order");
+    GlassLab.SignalManager.orderStarted.dispatch(this.data);
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
@@ -220,7 +221,7 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
     this._refreshAnswerInputs();
 
     // num creatures
-    this.orderRequirementLabel.setText(this.data.numCreatures + " " + this.data.type);
+    this.orderRequirementLabel.setText(this.data.numCreatures + " " + GLOBAL.creatureManager.GetCreatureName(this.data.type, this.data.numCreatures > 1));
 };
 
 GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {

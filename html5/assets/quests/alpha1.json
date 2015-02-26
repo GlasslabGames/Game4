@@ -61,15 +61,15 @@
       },
       {
         "__type": "GlassLab.ShowAssistantDialogueAction",
-        "text": "Great! In Mixia you'll be *feeding* lots of creatures. *How many carrots* did that *baby ram* need?"
+        "text": "Great! In Mixia you'll be *feeding* lots of creatures. Now show me *how much food* that *baby ram* needed.",
+        "showButton": true
       },
       {
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.WaitCondition",
-            "waitTime": 6000,
-             "_comment": "TODO: Instead wait for them to hit the continue button on the assistant"
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.tutorialAdvanced"
           }
         ]
       },

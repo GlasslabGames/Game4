@@ -95,7 +95,13 @@ GlassLab.UIManager.prototype._createAnchors = function()
     GLOBAL.UIGroup.add(this.centerAnchor);
 };
 
-GlassLab.UIManager.prototype.showArrow = function(direction, anchorName, x, y) {
+GlassLab.UIManager.prototype.showAnchoredArrow = function(direction, anchorName, x, y) {
+    this.showArrow(direction, this[anchorName], x, y);
+};
+
+GlassLab.UIManager.prototype.showArrow = function(direction, parent, x, y) {
+    if (!parent) return;
+
     this.tutorialArrowTween.resume();
     var angle = 0;
     switch (direction) {
@@ -104,7 +110,7 @@ GlassLab.UIManager.prototype.showArrow = function(direction, anchorName, x, y) {
         case "down": angle = 90; break;
     }
     this.tutorialArrow.visible = true;
-    this.tutorialArrow.parent = this[anchorName];
+    this.tutorialArrow.parent = parent;
     this.tutorialArrow.angle = angle;
     this.tutorialArrow.x = x;
     this.tutorialArrow.y = y;

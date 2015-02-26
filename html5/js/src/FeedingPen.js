@@ -268,6 +268,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         }
     }
 
+    GlassLab.SignalManager.penFeedingStarted.dispatch(this);
 };
 
 GlassLab.FeedingPen.prototype.Destroy = function()
@@ -434,6 +435,8 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
         new_food_type: foodType,
         food_section: (section == 1? "A" : "B")
     });
+
+    GlassLab.SignalManager.penFoodTypeSet.dispatch(this, foodType);
 
     return true;
 };

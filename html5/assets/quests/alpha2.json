@@ -24,7 +24,6 @@
         "penData": {
           "type": "baby_rammus",
           "bottomDraggable": true,
-          "leftDraggable": true,
           "topDraggable": true,
           "targetNumCreatures": 3
         }
@@ -49,7 +48,7 @@
       },
       {
         "__type": "GlassLab.ShowAssistantDialogueAction",
-        "text": "Great! Now open your *inventory* and drag *carrots* into the pen!"
+        "text": "Great! Now open your *inventory* and drag *broccoli* into the pen!"
       },
       {
         "__type": "GlassLab.ShowArrowAction",
@@ -63,7 +62,27 @@
         "conditions": [
           {
             "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.inventoryOpened"
+            "signalName": "GlassLab.SignalManager.penFoodTypeSet"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "Very nice. Now click the *FEED button* to feed them."
+      },
+      {
+        "__type": "GlassLab.ShowArrowAction",
+        "direction": "left",
+        "target": "GLOBAL.penManager.pens[0].button",
+        "xPosition": 100,
+        "yPosition": -30
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.penFeedingStarted"
           }
         ]
       },
@@ -77,20 +96,26 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_rammus",
-            "numRequired": 3
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalOpened"
           }
         ]
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "You've mastered the *baby ram*! This is your *journal*. You can open it any time to check what creatures eat."
       },
       {
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.WaitCondition",
-            "waitTime": 2000
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
           }
         ]
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
       },
       {
         "__type": "GlassLab.ClearWorldAction"
@@ -186,6 +211,45 @@
           "fulfilled": false,
           "reward": 200
         }
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "You've got *mail*! Click on the button to open it."
+      },
+      {
+        "__type": "GlassLab.ShowArrowAction",
+        "direction": "up",
+        "anchor": "topLeftAnchor",
+        "xPosition": 50,
+        "yPosition": 200
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.mailOpened"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideArrowAction"
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "This is an *order*! Your neighbor wants to feed some *baby rams*. Click the button to fill the order."
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.orderStarted"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
       },
       {
         "__type": "GlassLab.WaitForCondition",

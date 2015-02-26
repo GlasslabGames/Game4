@@ -112,10 +112,13 @@ GlassLab.Journal.prototype.Show = function(auto, creatureType)
     GlassLabSDK.saveTelemEvent((auto? "journal_shown" : "open_journal"), {});
 
     this.sprite.visible = true;
+    GLOBAL.inventoryMenu.Hide(true);
 
     if (!creatureType) creatureType = GLOBAL.creatureManager.creatureList[this.currentPage || 0];
     // default to the page we last had open, or 0 if we haven't opened the journal yet
     this.RefreshWithCreature(creatureType);
+
+    GlassLab.SignalManager.journalOpened.dispatch(auto, creatureType);
 };
 
 GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)

@@ -19,8 +19,8 @@ GlassLab.CreatureManager = function (game) {
                 temperament: "Combative"
             },
             displayNames: {
-                singular: "baby rammus",
-                plural: "baby rammi"
+                singular: "baby ram",
+                plural: "baby rams"
             },
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "babySheep",
@@ -34,8 +34,8 @@ GlassLab.CreatureManager = function (game) {
                 temperament: "Combative"
             },
             displayNames: {
-                singular: "rammus",
-                plural: "rammi"
+                singular: "ram",
+                plural: "rams"
             },
             unlocked: true, // if the player has discovered this animal yet
             spriteName: "sheep",
