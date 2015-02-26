@@ -48,11 +48,13 @@ GlassLab.Deserializer.getClassFromTypeName = function(typeName)
 
 GlassLab.Deserializer.getPropertyFromName = function(propertyName)
 {
-    var nameComponents = propertyName.split(".");
+    var nameComponents = propertyName.split(/[\[\]\.]/); // split on . and [ and ]
     var property = window[nameComponents[0]];
     for (var i=1, j=nameComponents.length; i < j; i++)
     {
+        if (nameComponents[i] === "") continue; // empty strings get added e.g. in prop[0].prop
         property = property[nameComponents[i]];
+        if (!property) break;
     }
 
     return property;

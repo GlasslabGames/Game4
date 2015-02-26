@@ -11,9 +11,9 @@ GlassLab.FoodTypes = {
     apple: {
         spriteName: "apple",
         color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: true, // Default value, unlock tracked by InventoryManager
+        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 1,
-        hidden: false,
+        hidden: true,
         displayNames: {
             singular: "apple",
             plural: "apples"
@@ -44,7 +44,7 @@ GlassLab.FoodTypes = {
     broccoli: {
         spriteName: "broccoli",
         color: 0x8cb149,
-        unlocked: false,
+        unlocked: true,
         cost: 25,
         hidden: false,
         displayNames: {
@@ -109,7 +109,7 @@ GlassLab.Food.prototype.BeEaten = function(amount) {
         console.log("- Animating bar to health",this.health);
         this.hungerBar.setAmount(0, this.health, true);
     } else {
-        if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, true);
+        if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
         var anim = this.sprite.animations.play('anim', 24);
         anim.onComplete.add(this._afterEaten, this);
         var tile = this.getTile();

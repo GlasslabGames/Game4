@@ -45,6 +45,8 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
         var rewardOrder = this.rewards.shift();
         this.rewardsPopup.Show(rewardOrder);
     }
+
+    GlassLab.SignalManager.mailOpened.dispatch(this.data);
 };
 
 GlassLab.MailManager.prototype.HideMail = function(auto)

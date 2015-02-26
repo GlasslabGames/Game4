@@ -108,6 +108,7 @@ window.onload = function() {
 
         game.load.image('bigO', 'assets/images/matchingGame_o.png');
         game.load.image('bigX', 'assets/images/matchingGame_x.png');
+        game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
 
         game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
         game.load.json('alpha_quest', 'assets/quests/alpha.json');
@@ -300,16 +301,15 @@ window.onload = function() {
             if (!GLOBAL.inventoryMenu.visible)
             {
                 GLOBAL.inventoryMenu.Show();
-                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -200;
             }
             else
             {
                 GLOBAL.inventoryMenu.Hide();
-                if (GLOBAL.assistant) GLOBAL.assistant.sprite.y = -100;
             }
         }, this);
         GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
         uiElement.visible = getParameterByName("items") != "false"; // default to using items
+        GLOBAL.itemsButton = uiElement;
 
         // Move camera so center of iso world is in middle of screen
         game.camera.x = -game.camera.width/2;
@@ -347,7 +347,7 @@ window.onload = function() {
 
         var assistant = new GlassLab.Assistant(game);
         assistant.sprite.x = -80;
-        assistant.sprite.y = -200;
+        assistant.sprite.y = -100;
         GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
         GLOBAL.assistant = assistant;
 
