@@ -61,6 +61,8 @@ GlassLab.InventoryMenu.prototype.Show = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("open_inventory", {});
 
+    GlassLab.SignalManager.inventoryOpened.dispatch(auto === true);
+
     this.Refresh();
 
     this.visible = true;

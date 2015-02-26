@@ -24,6 +24,32 @@
         "data": {"baby_rammus": 1}
       },
       {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "There you are! These creatures need your help! Open your *inventory* to feed this *baby ram.*"
+      },
+      {
+        "__type": "GlassLab.ShowArrowAction",
+        "direction": "down",
+        "anchor": "bottomLeftAnchor",
+        "xPosition": 50,
+        "yPosition": -110
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.inventoryOpened"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
+      },
+      {
+        "__type": "GlassLab.HideArrowAction"
+      },
+      {
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
@@ -34,16 +60,24 @@
         ]
       },
       {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "Great! In Mixia you'll be *feeding* lots of creatures. *How many carrots* did that *baby ram* need?"
+      },
+      {
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
             "__type": "GlassLab.WaitCondition",
-            "waitTime": 2000
+            "waitTime": 6000,
+             "_comment": "TODO: Instead wait for them to hit the continue button on the assistant"
           }
         ]
       },
       {
         "__type": "GlassLab.ClearWorldAction"
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
       }
     ]
   },

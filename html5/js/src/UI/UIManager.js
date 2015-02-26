@@ -43,6 +43,13 @@ GlassLab.UIManager = function(game)
 
     //game.input.onDown.add(this._globalDown, this); // Global input down handler
     game.input.onUp.add(this._onGlobalUp, this); // Global input down handler
+
+    this.tutorialArrow = this.game.add.sprite(0,0,"tutorialArrow");
+    this.tutorialArrow.scale.set(0.5, 0.5);
+    this.tutorialArrow.anchor.set(1.1, 0.5);
+    this.tutorialArrowTween = game.add.tween(this.tutorialArrow.scale).to( { x: 0.55 }, 300, Phaser.Easing.Linear.InOut, true, 0, 150, true);
+    this.tutorialArrowTween.pause();
+    this.tutorialArrow.visible = false;
 };
 
 GlassLab.UIManager.prototype._onGlobalUp = function(pointer, DOMevent)
@@ -87,6 +94,27 @@ GlassLab.UIManager.prototype._createAnchors = function()
     this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
     GLOBAL.UIGroup.add(this.centerAnchor);
 };
+
+GlassLab.UIManager.prototype.showArrow = function(direction, anchorName, x, y) {
+    this.tutorialArrowTween.resume();
+    var angle = 0;
+    switch (direction) {
+        case "left": angle = 180; break
+        case "up": angle = -90; break;
+        case "down": angle = 90; break;
+    }
+    this.tutorialArrow.visible = true;
+    this.tutorialArrow.parent = this[anchorName];
+    this.tutorialArrow.angle = angle;
+    this.tutorialArrow.x = x;
+    this.tutorialArrow.y = y;
+};
+
+GlassLab.UIManager.prototype.hideArrow = function() {
+    this.tutorialArrowTween.pause();
+    this.tutorialArrow.visible = false;
+};
+
 /*
 // TODO: Replace with class  OR combine with FailModal somehow.. like reuse the same modal? (._.)a
 GlassLab.UIManager.prototype._createEndLevelModal = function()

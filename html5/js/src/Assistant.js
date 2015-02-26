@@ -39,6 +39,16 @@ GlassLab.Assistant.STATES = {ORDER_INTRO: "ORDER_INTRO", ORDER_FOOD_CHOSEN: "ORD
 GlassLab.Assistant.TEXT_COLOR = "#000000"; // base color, used to stop highlights
 GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR = "#FFB300"; // used to color parts of the text
 
+GlassLab.Assistant.prototype.show = function(text) {
+    this.sprite.visible = true;
+    this.showButtons(false);
+    this._setText(text);
+};
+
+GlassLab.Assistant.prototype.hide = function() {
+    this.sprite.visible = false;
+};
+
 GlassLab.Assistant.prototype.startOrder = function(order) {
     this.sprite.visible = true;
     this.numberOfReloads = 0;

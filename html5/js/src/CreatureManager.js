@@ -205,6 +205,7 @@ GlassLab.CreatureManager.prototype.creaturePopulationUpdate = function() {
     {
         if (this.creatures[i].pen) inPen++;
     }
+    this.numCreaturesInPen = inPen;
     GlassLabSDK.saveTelemEvent("creature_population", {total: this.creatures.length, in_pen: inPen});
 };
 

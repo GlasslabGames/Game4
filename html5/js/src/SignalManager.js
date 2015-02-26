@@ -16,6 +16,7 @@ GlassLab.SignalManager = {
     // UI Events
     journalClosed: new Phaser.Signal(),
     uiFocusChanged: new Phaser.Signal(),
+    inventoryOpened: new Phaser.Signal(),
 
     // Level Events
     levelLoaded: new Phaser.Signal(),

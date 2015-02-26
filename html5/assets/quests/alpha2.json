@@ -34,6 +34,46 @@
         "data": {"baby_rammus": 3}
       },
       {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "To *feed many rams* at once, *drag the sides* of this pen to make it bigger."
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+            "variableName": "GLOBAL.creatureManager.numCreaturesInPen",
+            "number": 2
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "Great! Now open your *inventory* and drag *carrots* into the pen!"
+      },
+      {
+        "__type": "GlassLab.ShowArrowAction",
+        "direction": "down",
+        "anchor": "bottomLeftAnchor",
+        "xPosition": 50,
+        "yPosition": -110
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.inventoryOpened"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
+      },
+      {
+        "__type": "GlassLab.HideArrowAction"
+      },
+      {
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
