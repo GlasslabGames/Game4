@@ -244,6 +244,7 @@ either expressed or implied, of the FreeBSD Project.
   }
 
   function _pollMatches() {
+      return;
     // Only proceed if we're authenticated. We don't want to send requests we
     // know will return invalid.
     if( !GlassLabSDK._isAuthenticated ) {
