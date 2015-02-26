@@ -152,3 +152,12 @@ GlassLab.Food.prototype.print = function()
     var col = Math.round(this.sprite.isoX / GLOBAL.tileSize);
     return "Food("+col+", "+row+")";
 };
+
+GlassLab.Food.prototype.setType = function(type)
+{
+    if (type == this.type) return;
+
+    this.type = type;
+    this.info = GlassLab.FoodTypes[type];
+    this.sprite.loadTexture(this.info.spriteName+"_eaten");
+};

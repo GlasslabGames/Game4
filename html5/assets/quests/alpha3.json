@@ -26,7 +26,8 @@
           "height": 1,
           "creatureWidth": 3,
           "targetNumCreatures": 3
-        }
+        },
+        "penStartCol": -7
       },
       {
         "__type": "GlassLab.CreateCreaturesAction",
