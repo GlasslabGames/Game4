@@ -45,7 +45,6 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 
 GlassLab.FeedingPen.prototype.Resize = function() {
     GlassLab.Pen.prototype.Resize.call(this);
-    console.log("resize", this.foodTypes);
 
     var startCol = this.widths[0];
     for (var i = 0, len = this.foodTypes.length; i < len; i++) {

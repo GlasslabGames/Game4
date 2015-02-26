@@ -35,7 +35,7 @@ GlassLab.PenManager.prototype.RemovePen = function(pen)
     }
 };
 
-GlassLab.PenManager.prototype.CreatePen = function(penData)
+GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
 {
     var widths = [
         (penData.creatureWidth || 1),
@@ -51,6 +51,10 @@ GlassLab.PenManager.prototype.CreatePen = function(penData)
         widths,
         penData.autoFill
     );
+
+    if (col) pen.sprite.isoX = col * GLOBAL.tileSize;
+    if (row) pen.sprite.isoY = row * GLOBAL.tileSize;
+    if (col || row) pen.Resize();
 
     pen.targetNumCreatures = penData.targetNumCreatures;
 
@@ -80,6 +84,8 @@ GlassLab.PenManager.prototype.CreatePen = function(penData)
         right_moveable: pen.rightEdges[0].draggable, // even if there are multiple right edges, we can just check one
         bottom_moveable: pen.bottomEdge.draggable
     });
+
+    return pen;
 
 };
 

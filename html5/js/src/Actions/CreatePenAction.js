@@ -17,7 +17,6 @@ GlassLab.CreatePenAction.prototype.constructor = GlassLab.CreatePenAction;
 
 GlassLab.CreatePenAction.prototype.Do = function()
 {
-    GLOBAL.penManager.CreatePen(this.penData);
-
+    var pen = GLOBAL.penManager.CreatePen(this.penData, this.penStartCol, this.penStartRow);
     this._complete();
 };
