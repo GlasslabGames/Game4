@@ -49,6 +49,7 @@ GlassLab.FillBar.prototype._onDestroy = function () {
 };
 
 // Set the nth section of the fill bar to this amount (clamped to 0-1). If animate is true, it will gradually change.
+// If hideafter is set to a number, it will hide after that much time in seconds
 GlassLab.FillBar.prototype.setAmount = function(key, amount, animate, hideAfter) {
     //console.log("key:", key, "amount:", amount, "animate:", animate, "hideAfter:", hideAfter);
     this.hideAfter = hideAfter;
@@ -74,8 +75,12 @@ GlassLab.FillBar.prototype.showError = function() {
     }
 };
 
-GlassLab.FillBar.prototype.show = function(show) {
+GlassLab.FillBar.prototype.show = function(show, hideAfter) {
     this.sprite.visible = show;
+
+    if (hideAfter) {
+        this.game.time.events.add(Phaser.Timer.SECOND * hideAfter, function(){ this.show(false); }, this);
+    }
 };
 
 GlassLab.FillBar.prototype.reset = function() {
@@ -87,7 +92,12 @@ GlassLab.FillBar.prototype.reset = function() {
 };
 
 GlassLab.FillBar.prototype._onFinishAnim = function() {
-    if (this.hideAfter) this.show(false);
+    if (this.hideAfter) {
+        this.game.time.events.add(Phaser.Timer.SECOND * this.hideAfter, function(){ this.show(false); }, this);
+    } else if (this.hideAfter === 0) {
+        this.show(false);
+    }
+    // else stay visible
 };
 
 

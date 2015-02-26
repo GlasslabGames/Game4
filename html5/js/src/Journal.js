@@ -187,7 +187,7 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
                 if (!child) {
                     child = this.game.make.sprite();
                     child.anchor.setTo(0.5, 0);
-                    child.scale.setTo(0.4, 0.4);
+                    child.scale.setTo(0.25, 0.25);
                     this.dailyDiet.addChild(child);
                 }
                 child.visible = true;

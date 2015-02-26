@@ -109,7 +109,7 @@ GlassLab.Food.prototype.BeEaten = function(amount) {
         console.log("- Animating bar to health",this.health);
         this.hungerBar.setAmount(0, this.health, true);
     } else {
-        if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, true);
+        if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
         var anim = this.sprite.animations.play('anim', 24);
         anim.onComplete.add(this._afterEaten, this);
         var tile = this.getTile();
