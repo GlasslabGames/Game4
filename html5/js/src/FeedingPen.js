@@ -387,7 +387,9 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     if (this.finished) return;
     this.finished = true;
 
-    var win = (result == "satisfied");
+    var numCreatures = this.height * this.widths[0];
+    console.log("target",this.targetNumCreatures,"have",numCreatures);
+    var win = (result == "satisfied" && (!this.targetNumCreatures || numCreatures >= this.targetNumCreatures));
 
     // Telemetry
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);

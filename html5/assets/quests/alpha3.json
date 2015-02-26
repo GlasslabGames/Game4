@@ -139,7 +139,8 @@
           "type": "baby_unifox",
           "bottomDraggable": true,
           "leftDraggable": true,
-          "topDraggable": true
+          "topDraggable": true,
+          "targetNumCreatures": 10
         }
       },
       {
