@@ -35,13 +35,15 @@ GlassLab.InventoryMenu = function(game)
     label.anchor.setTo(.5, 1);
     this.closeButton.addChild(label);
 
+    this.inventorySlots = [];
+
     for (var key in GlassLab.FoodTypes)
     {
-        console.log(key);
         var foodInfo = GlassLab.FoodTypes[key];
         if (!foodInfo.hidden)
         {
             var child = new GlassLab.InventoryMenuSlot(game, key);
+            this.inventorySlots.push(child);
             this.itemTable.addManagedChild(child);
         }
     }
@@ -60,6 +62,9 @@ GlassLab.InventoryMenu.prototype.constructor = GlassLab.InventoryMenu;
 GlassLab.InventoryMenu.prototype.Refresh = function()
 {
     this._refreshCurrency();
+    for (var i = 0; i < this.inventorySlots.length; i++) {
+        this.inventorySlots[i].Refresh();
+    }
 };
 
 GlassLab.InventoryMenu.prototype._refreshCurrency = function()

@@ -11,7 +11,7 @@ GlassLab.FoodTypes = {
     apple: {
         spriteName: "apple",
         color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: true, // Default value, unlock tracked by InventoryManager
+        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: -1,
         hidden: false,
         displayNames: {
@@ -19,10 +19,21 @@ GlassLab.FoodTypes = {
             plural: "apples"
         }
     },
+    broccoli: {
+        spriteName: "broccoli",
+        color: 0x8cb149,
+        unlocked: false,
+        cost: -1,
+        hidden: false,
+        displayNames: {
+            singular: "broccoli",
+            plural: "broccoli"
+        }
+    },
     carrot: {
         spriteName: "carrot",
         color: 0xe37f54, // associated color for the vomit and the hunger bar
-        unlocked: true, // Default value, unlock tracked by InventoryManager
+        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: -1,
         hidden: false,
         displayNames: {
@@ -33,7 +44,7 @@ GlassLab.FoodTypes = {
     strawberry: {
         spriteName: "strawberry",
         color: 0xef5067,
-        unlocked: true,
+        unlocked: false,
         cost: -1,
         hidden: false,
         displayNames: {
@@ -41,21 +52,10 @@ GlassLab.FoodTypes = {
             plural: "strawberries"
         }
     },
-    broccoli: {
-        spriteName: "broccoli",
-        color: 0x8cb149,
-        unlocked: true,
-        cost: -1,
-        hidden: false,
-        displayNames: {
-            singular: "broccoli",
-            plural: "broccoli"
-        }
-    },
     tincan: {
         spriteName: "tincan",
         color: 0x99a2ac,
-        unlocked: true,
+        unlocked: false,
         cost: -1,
         hidden: false,
         displayNames: {
