@@ -4,6 +4,10 @@
     "numDots": 0
   },
   {
+    "__type": "GlassLab.UnlockItemsAction",
+    "items": ["broccoli", "apple"]
+  },
+  {
     "__type": "GlassLab.SaveCheckpointAction"
   },
   {
@@ -25,7 +29,8 @@
           "type": "baby_rammus",
           "bottomDraggable": true,
           "topDraggable": true,
-          "targetNumCreatures": 3
+          "targetNumCreatures": 3,
+          "maxHeight": 3
         }
       },
       {
@@ -35,6 +40,18 @@
       {
         "__type": "GlassLab.ShowAssistantDialogueAction",
         "text": "To *feed many rams* at once, *drag the sides* of this pen to make it bigger."
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.penResized"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
       },
       {
         "__type": "GlassLab.WaitForCondition",

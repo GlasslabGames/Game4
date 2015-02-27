@@ -106,11 +106,11 @@ GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, la
     if (foodTypes.length > 2) {
         food += ",";
         for (var i = 1; i < foodTypes.length - 1; i++) {
-            food += " " + GlassLab.FoodTypes.getName(foodTypes[i], true);
+            food += " " + GlassLab.Food.getName(foodTypes[i], true);
         }
     }
     if (foodTypes.length > 1) {
-        food += " and " + GlassLab.FoodTypes.getName(foodTypes[foodTypes.length-1], true);
+        food += " and " + GlassLab.Food.getName(foodTypes[foodTypes.length-1], true);
     }
 
     var text = "*How many* "+ food + " shall I load into the crate?";

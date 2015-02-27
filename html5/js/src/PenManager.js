@@ -57,6 +57,7 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     if (col || row) pen.Resize();
 
     pen.targetNumCreatures = penData.targetNumCreatures;
+    pen.maxHeight = penData.maxHeight;
 
     // set which edges are adjustable here (defaults to the right side only)
     if (penData.leftDraggable) pen.SetDraggable(GlassLab.Edge.SIDES.left);
