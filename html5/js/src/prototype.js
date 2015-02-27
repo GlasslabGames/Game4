@@ -11,6 +11,8 @@ function getParameterByName(name) {
 }
 
 window.onload = function() {
+    GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
+
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update, render: render});
     GLOBAL.game = game;
     GLOBAL.version = "0.2.1";
@@ -127,6 +129,11 @@ window.onload = function() {
             loadingText.setText("Loading... "+progress+"%");
         }, this);
         game.load.onLoadComplete.add(function() {
+            if (!GLOBAL.telemetryManager.initialized) {
+                loadingText.setText("Waiting on SDK initialization...");
+                while (!GLOBAL.telemetryManager.initialized) {}
+            }
+
             loadingText.destroy();
             loadingText = null;
         }, this);
@@ -191,8 +198,6 @@ window.onload = function() {
         GLOBAL.UIGroup = uiGroup;
 
         GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
-
-        GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
 
         var table = new GlassLab.UITable(game, 1, 20);
         table.x = -70;

@@ -241,7 +241,8 @@
         "id": "2.3",
         "problemType": "MS",
         "challengeType": "order",
-        "objective": "Complete a shipment of 7 baby rams!"
+        "objective": "Complete a shipment of 7 baby rams!",
+        "bossLevel": true
       },
       {
         "__type": "GlassLab.AddOrderAction",
