@@ -29,7 +29,8 @@
           "type": "baby_rammus",
           "bottomDraggable": true,
           "topDraggable": true,
-          "targetNumCreatures": 3
+          "targetNumCreatures": 3,
+          "maxHeight": 3
         }
       },
       {
