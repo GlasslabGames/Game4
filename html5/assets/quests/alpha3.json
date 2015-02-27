@@ -17,21 +17,21 @@
         "id": "3.1",
         "problemType": "MD",
         "challengeType": "pen",
-        "objective": "Feed 3 baby unifoxes in the pen."
+        "objective": "Feed 2 baby unifoxes in the pen."
       },
       {
         "__type": "GlassLab.CreatePenAction",
         "penData": {
           "type": "baby_unifox",
           "height": 1,
-          "creatureWidth": 3,
-          "targetNumCreatures": 3
+          "creatureWidth": 2,
+          "targetNumCreatures": 2
         },
-        "penStartCol": -7
+        "penStartCol": -4
       },
       {
         "__type": "GlassLab.CreateCreaturesAction",
-        "data": {"baby_unifox": 3}
+        "data": {"baby_unifox": 2}
       },
       {
         "__type": "GlassLab.WaitForCondition",
@@ -39,7 +39,7 @@
           {
             "__type": "GlassLab.FeedAnimalCondition",
             "acceptedType": "baby_unifox",
-            "numRequired": 3
+            "numRequired": 2
           }
         ]
       },
@@ -78,19 +78,21 @@
           "id": "3.2",
           "problemType": "MD",
           "challengeType": "pen",
-          "objective": "Feed 4 baby unifoxes in the pen."
+          "objective": "Feed 3 baby unifoxes in the pen."
         },
         {
           "__type": "GlassLab.CreatePenAction",
           "penData": {
             "type": "baby_unifox",
-            "height": 4,
-            "targetNumCreatures": 4
-          }
+            "height": 1,
+            "creatureWidth": 3,
+            "targetNumCreatures": 3
+          },
+          "penStartCol": -7
         },
         {
           "__type": "GlassLab.CreateCreaturesAction",
-          "data": {"baby_unifox": 4}
+          "data": {"baby_unifox": 3}
         },
         {
           "__type": "GlassLab.WaitForCondition",
@@ -98,7 +100,7 @@
             {
               "__type": "GlassLab.FeedAnimalCondition",
               "acceptedType": "baby_unifox",
-              "numRequired": 4
+              "numRequired": 3
             }
           ]
         },

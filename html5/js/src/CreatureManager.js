@@ -15,14 +15,14 @@ GlassLab.CreatureManager = function (game) {
     this.creatureDatabase = {
         baby_rammus: {
             journalInfo: {
-                name: "Rammus Jerkum\n(juvenile)",
+                name: "Rammus Jerkum (juvenile)",
                 temperament: "Combative"
             },
             displayNames: {
                 singular: "baby ram",
                 plural: "baby rams"
             },
-            unlocked: true, // if the player has discovered this animal yet
+            unlocked: false, // if the player has discovered this animal yet
             spriteName: "babySheep",
             fxFrames: {eat: 14, vomit: 21 },
             desiredFood: [{type: "broccoli", amount: 3}],
@@ -30,14 +30,14 @@ GlassLab.CreatureManager = function (game) {
         },
         rammus: {
             journalInfo: {
-                name: "Rammus Jerkum\n(adult)",
+                name: "Rammus Jerkum (adult)",
                 temperament: "Combative"
             },
             displayNames: {
                 singular: "ram",
                 plural: "rams"
             },
-            unlocked: true, // if the player has discovered this animal yet
+            unlocked: false, // if the player has discovered this animal yet
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}],
@@ -45,14 +45,14 @@ GlassLab.CreatureManager = function (game) {
         },
         baby_unifox: {
             journalInfo: {
-                name: "Vulpes Unicornum\n(juvenile)",
+                name: "Vulpes Unicornum (juvenile)",
                 temperament: "Shy"
             },
             displayNames: {
                 singular: "baby unifox",
                 plural: "baby unifoxes"
             },
-            unlocked: true,
+            unlocked: false,
             spriteName: "babyUnicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 22, vomit: 36 },
@@ -61,18 +61,18 @@ GlassLab.CreatureManager = function (game) {
         },
         unifox: {
             journalInfo: {
-                name: "Vulpes Unicornum\n(adult)",
+                name: "Vulpes Unicornum (adult)",
                 temperament: "Shy"
             },
             displayNames: {
                 singular: "unifox",
                 plural: "unifoxes"
             },
-            unlocked: true,
+            unlocked: false,
             spriteName: "unicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40 },
-            desiredFood: [{type: "strawberry", amount: 4}, {type: "carrot", amount: 2}],
+            desiredFood: [{type: "strawberry", amount: 5}, {type: "carrot", amount: 4}],
             discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
         } /*,
         rammus2: { // For testing fractional food
@@ -103,6 +103,10 @@ GlassLab.CreatureManager = function (game) {
  */
 GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function (type, num) {
     var creatureData = this.creatureDatabase[type];
+    if (!creatureData.unlocked) {
+        creatureData.unlocked = "new"; // note the fact that it's newly unlocked
+        GLOBAL.Journal.Show(true, type); // only show the journal if we just unlocked something
+    }
     if (creatureData.discoveredFoodCounts[num]) {
         return;
     }
