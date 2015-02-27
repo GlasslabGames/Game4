@@ -22,7 +22,7 @@ GlassLab.CreatureManager = function (game) {
                 singular: "baby ram",
                 plural: "baby rams"
             },
-            unlocked: "new", // if the player has discovered this animal yet
+            unlocked: false, // if the player has discovered this animal yet
             spriteName: "babySheep",
             fxFrames: {eat: 14, vomit: 21 },
             desiredFood: [{type: "broccoli", amount: 3}],
@@ -37,7 +37,7 @@ GlassLab.CreatureManager = function (game) {
                 singular: "ram",
                 plural: "rams"
             },
-            unlocked: "new", // if the player has discovered this animal yet
+            unlocked: false, // if the player has discovered this animal yet
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}],
@@ -52,7 +52,7 @@ GlassLab.CreatureManager = function (game) {
                 singular: "baby unifox",
                 plural: "baby unifoxes"
             },
-            unlocked: "new",
+            unlocked: false,
             spriteName: "babyUnicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 22, vomit: 36 },
@@ -68,7 +68,7 @@ GlassLab.CreatureManager = function (game) {
                 singular: "unifox",
                 plural: "unifoxes"
             },
-            unlocked: "new",
+            unlocked: false,
             spriteName: "unicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40 },
@@ -103,7 +103,10 @@ GlassLab.CreatureManager = function (game) {
  */
 GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function (type, num) {
     var creatureData = this.creatureDatabase[type];
-    if (!creatureData.unlocked) creatureData.unlocked = "new"; // note the fact that it's newly unlocked
+    if (!creatureData.unlocked) {
+        creatureData.unlocked = "new"; // note the fact that it's newly unlocked
+        GLOBAL.Journal.Show(true, type); // only show the journal if we just unlocked something
+    }
     if (creatureData.discoveredFoodCounts[num]) {
         return;
     }

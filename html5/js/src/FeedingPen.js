@@ -200,15 +200,12 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 
     var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
 
-    console.log("feeding creatures", this.foodTypes, this.foodLists);
-
     // For each section of food, calculate which foods should go to which creatures
     for (var i = 0; i < this.foodTypes.length; i++) {
         var foodByRow = this._sortObjectsByGrid(this.foodLists[i], false);
         var desiredAmount = this.creatures[0].desiredAmountsOfFood[this.foodTypes[i]]; // assume that all the creatures in the pen are the same kind as the first one
         var remainder = desiredAmount % 1;
 
-        console.log(foodByRow);
 
         /* The general idea of assigning food to creatures:
          * In the base case, the food is assigned evenly, so if there are 2 creatures (0, 1) and 4 foods (0 - 3), 0 will eat food 0 and 2, and 1 will eat 1 and 3
@@ -414,8 +411,6 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
         if (win)
         {
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
-
-            GLOBAL.Journal.Show(true, this.creatureType);
 
             GLOBAL.levelManager.CompleteCurrentLevel();
         }

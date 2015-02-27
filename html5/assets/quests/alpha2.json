@@ -265,8 +265,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.journalClosed"
+            "__type": "GlassLab.WaitCondition",
+            "waitTime": 2000
           }
         ]
       }
