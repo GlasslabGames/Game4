@@ -198,7 +198,8 @@
         "id": "2.3",
         "problemType": "MS",
         "challengeType": "order",
-        "objective": "Complete a shipment of 7 baby rams!"
+        "objective": "Complete a shipment of 7 baby rams!",
+        "bossLevel": true
       },
       {
         "__type": "GlassLab.AddOrderAction",
@@ -207,7 +208,7 @@
           "company": "Rupture Farms",
           "numCreatures": 7,
           "type": "baby_rammus",
-          "description": "Dear Friend! I want 8 BABY RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "description": "Dear Friend! I want 7 BABY RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
           "fulfilled": false,
           "reward": 200
         }
