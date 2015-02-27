@@ -4,6 +4,10 @@
     "numDots": 3
   },
   {
+    "__type": "GlassLab.UnlockItemsAction",
+    "items": ["broccoli", "strawberry", "carrot", "apple"]
+  },
+  {
     "__type": "GlassLab.SaveCheckpointAction"
   },
   {

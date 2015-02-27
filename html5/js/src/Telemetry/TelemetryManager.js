@@ -119,6 +119,8 @@ GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDim
 
 GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, problemType, challengeType)
 {
+    if (this.currentChallengeId == id) return; // no need for a challenge started since this is actually a restart
+
     this.currentChallengeId = id;
     this.currentProblemType = problemType;
     this.currentChallengeType = challengeType;

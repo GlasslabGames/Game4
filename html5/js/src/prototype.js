@@ -100,7 +100,9 @@ window.onload = function() {
         game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
         game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
         game.load.image('sideArrow', 'assets/images/sideArrow.png');
-        game.load.image('lock', 'assets/images/HUD_items_lock.png');
+        game.load.image('inventoryLock', 'assets/images/HUD_items_lock.png');
+        game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
+        game.load.image('inventoryClose', 'assets/images/HUD_close.png');
         game.load.image('dashedCircle', 'assets/images/dashedCircle.png');
         game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
         game.load.image('penArrowUp', 'assets/images/penArrow_upward.png');
@@ -299,7 +301,7 @@ window.onload = function() {
         }, uiElement);
         table.addManagedChild(uiElement, true);
 
-        uiElement = new GlassLab.UIElement(game, 20, -100, "itemsIcon");
+        uiElement = new GlassLab.UIElement(game, 20, -90, "itemsIcon");
         uiElement.scale.setTo(.6, .6);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){
@@ -342,10 +344,7 @@ window.onload = function() {
         GLOBAL.orderFulfillment = orderFulfillment;
 
         var inventoryMenu = new GlassLab.InventoryMenu(game);
-        inventoryMenu.scale.setTo(0.7, 0.7);
-        inventoryMenu.x = -700;
-        inventoryMenu.y = -120;
-        GLOBAL.UIManager.bottomRightAnchor.addChild(inventoryMenu);
+        GLOBAL.UIManager.bottomLeftAnchor.addChild(inventoryMenu);
         GLOBAL.inventoryMenu = inventoryMenu;
 
         var assistant = new GlassLab.Assistant(game);

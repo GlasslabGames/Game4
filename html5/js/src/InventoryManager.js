@@ -14,6 +14,12 @@ GlassLab.InventoryManager = function(game)
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
 };
 
+GlassLab.InventoryManager.prototype.unlock = function(type) {
+    if (GlassLab.FoodTypes[type]) GlassLab.FoodTypes[type].unlocked = true;
+    console.log("unlocked",type,GlassLab.FoodTypes[type]);
+
+};
+
 GlassLab.InventoryManager.prototype._onSaveRequested = function(blob)
 {
     blob.money = this.money;
