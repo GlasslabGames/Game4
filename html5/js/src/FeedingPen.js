@@ -99,7 +99,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
         for (var i = 0; i < this.creatures.length; i++) {
             var creature = this.creatures[i];
             var tile = creature.getTile();
-            if (!this._containsTile(tile, true)) {
+            if (this._getSection(tile) != 0) { // if it's not in the creature section of the pen
                 creature.pen = null;
                 creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, creature));
                 this.creatures.splice(i, 1);
