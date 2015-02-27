@@ -44,6 +44,18 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.penResized"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
             "__type": "GlassLab.GlobalVariableGreaterThanCondition",
             "variableName": "GLOBAL.creatureManager.numCreaturesInPen",
             "number": 2
