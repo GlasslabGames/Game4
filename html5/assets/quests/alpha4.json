@@ -1,8 +1,7 @@
 [
   {
     "__type": "GlassLab.SetDayAction",
-    "numDots": 2,
-    "dayNum": 4
+    "numDots": 2
   },
   {
     "__type": "GlassLab.SaveCheckpointAction"
@@ -13,9 +12,6 @@
   {
     "__type": "GlassLab.ActionGroup",
     "serializedActions": [
-      {
-        "__type": "GlassLab.ClearWorldAction"
-      },
       {
         "__type": "GlassLab.StartChallengeAction",
         "id": "4.1",

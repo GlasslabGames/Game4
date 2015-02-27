@@ -131,7 +131,7 @@ GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
         this.pen.sprite.destroy();
         this.pen = null;
     }
-    if (!this.pen) {
+    if (!this.pen || !this.pen.sprite.game) { // TODO check for game is a hack since sprite may have been destroyed by level loading
         // Make a pen with the correct number of sections for the number of food types we have
         var widths = [1];
         for (var j = 0; j < numFoodTypes; j++) widths.push(0);

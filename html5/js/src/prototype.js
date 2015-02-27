@@ -115,7 +115,7 @@ window.onload = function() {
         game.load.json('alpha1', 'assets/quests/alpha1.json');
         game.load.json('alpha2', 'assets/quests/alpha2.json');
         game.load.json('alpha3', 'assets/quests/alpha3.json');
-        game.load.json('alpha4', 'assets/quests/alpha.json');
+        game.load.json('alpha4', 'assets/quests/alpha4.json');
 
         game.plugins.add(new Phaser.Plugin.Isometric(game));
 
