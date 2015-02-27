@@ -50,7 +50,7 @@ GlassLab.OrderFulfillment = function(game)
         var dragTarget = new GlassLab.UIDragTarget(game, 200, 60, "drag food type here");
         dragTarget.x = 25;
         dragTarget.y = rowY - 5;
-        dragTarget.objectValidator = function(obj) { return (obj instanceof GlassLab.InventoryMenuSlot);};
+        dragTarget.objectValidator = function(obj) { return obj.foodType; };
         dragTarget.addObjectAsChild = false;
         dragTarget.events.onObjectDropped.add(this.onFoodSet, this);
         this.sprite.addChild(dragTarget).name = "foodSlot"+i;
