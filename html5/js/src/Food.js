@@ -11,9 +11,9 @@ GlassLab.FoodTypes = {
     apple: {
         spriteName: "apple",
         color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: 1,
-        hidden: true,
+        unlocked: true, // Default value, unlock tracked by InventoryManager
+        cost: -1,
+        hidden: false,
         displayNames: {
             singular: "apple",
             plural: "apples"
@@ -23,7 +23,7 @@ GlassLab.FoodTypes = {
         spriteName: "carrot",
         color: 0xe37f54, // associated color for the vomit and the hunger bar
         unlocked: true, // Default value, unlock tracked by InventoryManager
-        cost: 1,
+        cost: -1,
         hidden: false,
         displayNames: {
             singular: "carrot",
@@ -34,7 +34,7 @@ GlassLab.FoodTypes = {
         spriteName: "strawberry",
         color: 0xef5067,
         unlocked: true,
-        cost: 5,
+        cost: -1,
         hidden: false,
         displayNames: {
             singular: "strawberry",
@@ -45,7 +45,7 @@ GlassLab.FoodTypes = {
         spriteName: "broccoli",
         color: 0x8cb149,
         unlocked: true,
-        cost: 25,
+        cost: -1,
         hidden: false,
         displayNames: {
             singular: "broccoli",
@@ -55,19 +55,14 @@ GlassLab.FoodTypes = {
     tincan: {
         spriteName: "tincan",
         color: 0x99a2ac,
-        unlocked: false,
-        cost: 100,
+        unlocked: true,
+        cost: -1,
         hidden: false,
         displayNames: {
             singular: "tin can",
             plural: "tin cans"
         }
     }
-};
-
-GlassLab.FoodTypes.getName = function(type, plural) {
-    var key = (plural? "plural" : "singular");
-    return GlassLab.FoodTypes[type].displayNames[key];
 };
 
 /**
@@ -80,7 +75,6 @@ GlassLab.Food = function(game, type) {
     this.sprite.animations.add('anim');
 
     this.sprite.scale.x = this.sprite.scale.y = 0.3;
-    this.sprite.scale.x *= -1;
     this.game = game;
     this.sprite.anchor.setTo(0.4, 1); // this anchor is specific to the carrot, so generify later
 
@@ -93,6 +87,12 @@ GlassLab.Food = function(game, type) {
     this.hungerBar.sprite.x = -130;
     this.hungerBar.sprite.y = -150;
     this.sprite.addChild(this.hungerBar.sprite);
+};
+
+// static function
+GlassLab.Food.getName = function(type, plural) {
+    var key = (plural? "plural" : "singular");
+    return GlassLab.FoodTypes[type].displayNames[key];
 };
 
 GlassLab.Food.prototype.placeOnTile = function(tile) {
