@@ -25,6 +25,7 @@ GlassLab.QuestManager = function(game)
     ];
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
+    GlassLab.SignalManager.questEnded.add(this._onQuestEnded, this);
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 
@@ -37,15 +38,37 @@ GlassLab.QuestManager.prototype._onChallengeStarted = function(id, problemType, 
     this.challengeIsBossLevel = isBoss;
 };
 
+GlassLab.QuestManager.prototype.GetCurrentQuest = function()
+{
+    return this.activeQuests.length > 0 ? this.activeQuests[0] : null;
+};
+
 GlassLab.QuestManager.prototype._onQuestStarted = function(quest)
 {
     if (this.activeQuests.indexOf(quest) != -1)
     {
-        console.error("Tried adding quest when it was already added!");
+        console.warn("Tried adding quest when it was already added! (Right now this happens on load, needs fixing)");
         return;
     }
 
     this.activeQuests.push(quest);
+
+    if (this.activeQuests.length > 1)
+    {
+        console.warn("Current quest system works under the assumption of a single active quest. Expect bugs!");
+    }
+};
+
+GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
+{
+    var questIndex = this.activeQuests.indexOf(quest);
+    if (questIndex == -1)
+    {
+        console.error("A quest ended but it wasn't tracked by QuestManager");
+        return;
+    }
+
+    this.activeQuests.splice(questIndex, 1);
 };
 
 GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)

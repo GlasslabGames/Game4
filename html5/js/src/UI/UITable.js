@@ -35,7 +35,7 @@ GlassLab.UITable.prototype.addManagedChild = function(child, refresh)
 {
     this.addChild(child);
     this.managedChildren.push(child);
-    child.events.uiChanged.add(this._onChildChanged, this);
+    if (child.events.uiChanged) child.events.uiChanged.add(this._onChildChanged, this);
 
     if (refresh)
     {

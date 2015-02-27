@@ -97,8 +97,8 @@ GlassLab.Quest.prototype.ForceComplete = function()
 {
     if (this.currentAction != null)
     {
-        // Cancel action
-        console.error("Forcing a quest to complete hasn't been fully implemented yet. You may see bugs...");
+        // Cancel action?
+        //console.error("Forcing a quest to complete hasn't been fully implemented yet. You may see bugs...");
     }
 
     this._complete();
@@ -106,8 +106,13 @@ GlassLab.Quest.prototype.ForceComplete = function()
 
 GlassLab.Quest.prototype._complete = function()
 {
-    this.currentAction = null;
-    this._isComplete = true;
-    this._isStarted = false;
+    if (!this._isComplete)
+    {
+        this.currentAction = null;
+        this._isComplete = true;
+        this._isStarted = false;
+
+        GlassLab.SignalManager.questEnded.dispatch(this);
+    }
 };
 

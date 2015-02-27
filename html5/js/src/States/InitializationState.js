@@ -11,6 +11,13 @@ GlassLab.State.Init.prototype.preload = function()
 {
     var game = this.game;
 
+    game.stage.disableVisibilityChange = true; // Don't pause when focus is lost
+    if (game.paused)
+    {
+        console.warn("Game was paused during preload. Since this is likely undesired, unpausing...");
+        game.paused = false;
+    }
+
     var creatureSpriteNames = ["sheep", "unicorn", "babySheep", "babyUnicorn"];
     for (var i = 0; i < creatureSpriteNames.length; i++) {
         var spriteName = creatureSpriteNames[i];
@@ -84,7 +91,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
     game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
     game.load.image('sideArrow', 'assets/images/sideArrow.png');
-    game.load.image('lock', 'assets/images/HUD_items_lock.png');
+    game.load.image('inventoryLock', 'assets/images/HUD_items_lock.png');
+    game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
+    game.load.image('inventoryClose', 'assets/images/HUD_close.png');
     game.load.image('dashedCircle', 'assets/images/dashedCircle.png');
     game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
     game.load.image('penArrowUp', 'assets/images/penArrow_upward.png');
@@ -184,12 +193,14 @@ GlassLab.State.Init.prototype.create = function()
     table.y = 20;
     GLOBAL.UIManager.topRightAnchor.addChild(table);
 
+    /*
     // pause icon
     var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
     uiElement.scale.setTo(.5, .5);
     uiElement.inputEnabled = true;
     uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
     table.addManagedChild(uiElement);
+    */
 
     var zoomBG = new GlassLab.UIElement(game, 0, 0, "zoomBG");
     zoomBG.scale.setTo(.5, .5);
@@ -320,10 +331,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.orderFulfillment = orderFulfillment;
 
     var inventoryMenu = new GlassLab.InventoryMenu(game);
-    inventoryMenu.scale.setTo(0.7, 0.7);
-    inventoryMenu.x = -700;
-    inventoryMenu.y = -120;
-    GLOBAL.UIManager.bottomRightAnchor.addChild(inventoryMenu);
+    GLOBAL.UIManager.bottomLeftAnchor.addChild(inventoryMenu);
     GLOBAL.inventoryMenu = inventoryMenu;
 
     var assistant = new GlassLab.Assistant(game);

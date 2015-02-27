@@ -8,27 +8,34 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
 {
     this.foodType = foodType;
     this.data = GlassLab.FoodTypes[foodType];
-    GlassLab.UIDraggable.prototype.constructor.call(this, game, 0, 0);
+    GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0);
 
-    this.anchor.setTo(0, 0);
+    this.anchor.setTo(0.5, 0.5);
+    this.scale.setTo(0.8, 0.8);
 
+    this.inputEnabled = true;
     this.events.onInputDown.add(this._onInputDown, this);
-    this.events.onEndDrag.add(this._onEndDrag, this);
 
-    this.costLabel = game.make.text(0,0,"$"+this.data.cost, {fill: '#ffffff'});
-    this.costLabel.anchor.setTo(.5, 1);
-    this.addChild(this.costLabel);
+    this.loadTexture("inventoryBg");
+
+    this.foodSprite = new GlassLab.InventoryMenuItem(this.game, this.foodType);
+    this.foodSprite.y = -10;
+    this.addChild(this.foodSprite);
+
+    this.label = game.make.text(0, this.height / 2,"$"+this.data.cost, {fill: '#ffffff', font: "bold 10.5pt Arial"});
+    this.label.anchor.setTo(.5, 1);
+    this.addChild(this.label);
 
     this.Refresh();
 };
 
 // Extends Sprite
-GlassLab.InventoryMenuSlot.prototype = Object.create(GlassLab.UIDraggable.prototype);
+GlassLab.InventoryMenuSlot.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.InventoryMenuSlot.prototype.constructor = GlassLab.InventoryMenuSlot;
 
 GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
 {
-    if (!this.data.unlocked) {
+    if (!this.data.unlocked && this.data.cost > 0) {
         if (!this.modal)
         {
             var yesButton = new GlassLab.UIButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
@@ -64,11 +71,50 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseCanceled = function()
     }
 };
 
-GlassLab.InventoryMenuSlot.prototype._jumpToStart = function() {
-    this.position.setTo(this.dragStartPoint.x, this.dragStartPoint.y); // jump back into the inventory
+GlassLab.InventoryMenuSlot.prototype.Refresh = function()
+{
+    if (this.data.unlocked)
+    {
+        this.loadTexture("inventoryBg");
+        this.label.visible = true;
+        this.label.setText(this.data.displayNames["singular"]);
+        this.label.style.fill = '#000000';
+        this.foodSprite.visible = true;
+    }
+    else
+    {
+        this.loadTexture("inventoryLock");
+        if (this.data.cost > 0) {
+            this.label.visible = true;
+            this.label.setText("$"+this.data.cost);
+            this.label.style.fill = '#ffffff';
+        } else {
+            this.label.visible = false;
+        }
+        this.foodSprite.visible = false;
+    }
+
+    this._signalChange();
 };
 
-GlassLab.InventoryMenuSlot.prototype._onEndDrag = function(target)
+// This is the piece that actually gets dragged out
+GlassLab.InventoryMenuItem = function(game, foodType)
+{
+    this.foodType = foodType;
+    this.data = GlassLab.FoodTypes[foodType];
+    GlassLab.UIDraggable.prototype.constructor.call(this, game, 0, 0);
+
+    this.events.onEndDrag.add(this._onEndDrag, this);
+
+    this.loadTexture( this.data.spriteName );
+    this.anchor.setTo(0.5, 0.5);
+    this.scale.setTo(0.25, 0.25);
+};
+
+GlassLab.InventoryMenuItem.prototype = Object.create(GlassLab.UIDraggable.prototype);
+GlassLab.InventoryMenuItem.prototype.constructor = GlassLab.InventoryMenuItem;
+
+GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
 {
     if (target) { // we dropped it on an acceptable uiDragTarget
         this._jumpToStart(); // move the sprite back
@@ -79,9 +125,9 @@ GlassLab.InventoryMenuSlot.prototype._onEndDrag = function(target)
     var pointer = this.game.input.activePointer;
     var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
     if (tile && tile.canDropFood()) { // valid tile
-            var food = new GlassLab.Food(this.game, this.foodType);
-            GLOBAL.foodLayer.add(food.sprite);
-            food.placeOnTile(tile);
+        var food = new GlassLab.Food(this.game, this.foodType);
+        GLOBAL.foodLayer.add(food.sprite);
+        food.placeOnTile(tile);
 
         GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
 
@@ -93,45 +139,6 @@ GlassLab.InventoryMenuSlot.prototype._onEndDrag = function(target)
     // else, it will fly back thanks to uiDraggable
 };
 
-GlassLab.InventoryMenuSlot.prototype.SetData = function(data)
-{
-    this.data = data;
-    this.Refresh();
-};
-
-GlassLab.InventoryMenuSlot.prototype.Refresh = function()
-{
-    if (this.data.unlocked)
-    {
-        this.costLabel.visible = false;
-        this.loadTexture(this.data.spriteName);
-        this.scale.setTo(.3, .3);
-
-        /*if (!this.input.draggable)
-        {
-            this.input.enableDrag(false, true);
-
-            this.events.onDragStop.add(this._onDragStop, this);
-        }*/
-        this.draggable = true;
-    }
-    else
-    {
-        this.loadTexture("lock");
-        this.scale.setTo(1, 1);
-        this.costLabel.visible = true;
-        this.costLabel.setText("$"+this.data.cost);
-        this.costLabel.x = this.width/2;
-        this.costLabel.y = this.height;
-
-        /*if (this.input.draggable)
-        {
-            this.input.disableDrag();
-
-            this.events.onDragStop.remove(this._onDragStop, this);
-        }*/
-        this.draggable = false;
-    }
-
-    this._signalChange();
+GlassLab.InventoryMenuItem.prototype._jumpToStart = function() {
+    this.position.setTo(this.dragStartPoint.x, this.dragStartPoint.y); // jump back into the inventory
 };

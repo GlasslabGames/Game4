@@ -219,9 +219,14 @@ GlassLab.Pen.prototype._drawRow = function(yPos, firstCol, tileSwapCol, lastCol,
 GlassLab.Pen.prototype._placeArrows = function() {
     for (var i = 0; i < this.edges.length; i++) {
         var draggable = this.edges[i].draggable;
-        // if there's no space to drag an edge out, don't show the arrow
-        if (draggable && this.edges[i].side == GlassLab.Edge.SIDES.center && this.widths[1] <= 1) draggable = false;
-        else if (draggable && this.edges[i].side == GlassLab.Edge.SIDES.right && this.widths[this.edges[i].sideIndex + 2] <= 1) draggable = false;
+
+        if (draggable) { // if there's no space to drag an edge out, don't show the arrow
+            var side = this.edges[i].side;
+            if (side == GlassLab.Edge.SIDES.center && this.widths[1] <= 1) draggable = false;
+            else if (side == GlassLab.Edge.SIDES.right && this.widths[this.edges[i].sideIndex + 2] <= 1) draggable = false;
+            else if ((side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) &&
+                this.maxHeight && this.height >= this.maxHeight) draggable = false;
+        }
         this.edges[i].showArrow(draggable);
     }
 
@@ -467,11 +472,17 @@ GlassLab.Edge.prototype._onUpdate = function() {
         switch (this.side) {
             case GlassLab.Edge.SIDES.top:
                 targetPos.y = Math.min( cursorDifference.y, (this.pen.height - 1) * ts);
+                if (this.pen.maxHeight) {
+                    targetPos.y = Math.max( targetPos.y, (this.pen.height - this.pen.maxHeight) * ts);
+                }
                 closestGridPos = Math.round(targetPos.y / ts);
                 flooredGridPos = Math.ceil(targetPos.y / ts);
                 break;
             case GlassLab.Edge.SIDES.bottom:
                 targetPos.y = Math.max( cursorDifference.y, -(this.pen.height - 1) * ts);
+                if (this.pen.maxHeight) {
+                    targetPos.y = Math.min( targetPos.y, (this.pen.maxHeight - this.pen.height) * ts);
+                }
                 closestGridPos = Math.round(targetPos.y / ts);
                 flooredGridPos = Math.floor(targetPos.y / ts);
                 break;
