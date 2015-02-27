@@ -27,6 +27,14 @@ GlassLab.QuestManager = function(game)
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
+
+    this.challengeIsBossLevel = false;
+    GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
+};
+
+GlassLab.QuestManager.prototype._onChallengeStarted = function(id, problemType, challengeType, isBoss)
+{
+    this.challengeIsBossLevel = isBoss;
 };
 
 GlassLab.QuestManager.prototype._onQuestStarted = function(quest)

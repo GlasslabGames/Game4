@@ -6,6 +6,7 @@ var GlassLab = GlassLab || {};
 
 GlassLab.TelemetryManager = function()
 {
+    this.initialized = false;
     this._initializeSDK();
 
     this.attemptsOnLastProblem = 0;
@@ -52,20 +53,27 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     // Turn on console logging
     GlassLabSDK.displayLogs();
 
-    // Attempt to connect to the server.
-    GlassLabSDK.connect( "PRIMA", "http://stage.playfully.org", function( data ) {
-        console.log( "[GlassLabSDK] Connection successful: " + data );
+    if (GlassLabSDK.getOptions().localLogging)
+    {
+        this.initialized = true;
+    }
+    else
+    {
+        // Attempt to connect to the server.
+        GlassLabSDK.connect( "PRIMA", "http://stage.playfully.org", function( data ) {
+            console.log( "[GlassLabSDK] Connection successful: " + data );
 
-        GlassLabSDK.getUserInfo(function( data ){
-            console.log("[GlassLabSDK] Get User Info Successful: "+data);
+            GlassLabSDK.getUserInfo(function( data ){
+                console.log("[GlassLabSDK] Get User Info Successful: "+data);
 
-            GlassLabSDK.startSession();
-        }, function( data ){
-            console.log("[GlassLabSDK] Get User Info Failed: "+data);
+                this.initialized = true;
+            }.bind(this), function( data ){
+                console.log("[GlassLabSDK] Get User Info Failed: "+data);
+            });
+        }, function( data ) {
+            console.error( "[GlassLabSDK] FAILURE! Connection failed: " + data );
         });
-    }, function( data ) {
-        console.error( "[GlassLabSDK] FAILURE! Connection failed: " + data );
-    });
+    }
 };
 
 GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
@@ -78,6 +86,7 @@ GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
 
 GlassLab.TelemetryManager.prototype._onLevelWon = function()
 {
+    GlassLabSDK.endSession();
 };
 
 GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)

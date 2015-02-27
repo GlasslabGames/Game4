@@ -142,7 +142,7 @@ GlassLab.UIManager.prototype._onRetryPressed = function()
 {
   this.winModal.visible = this.loseModal.visible = false;
 
-  if (GLOBAL.saveManager.HasData("default_checkpoint"))
+  if (!GLOBAL.questManager.challengeIsBossLevel && GLOBAL.saveManager.HasData("default_checkpoint"))
   {
       GLOBAL.saveManager.Load("default_checkpoint");
   }

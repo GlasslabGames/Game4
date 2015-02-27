@@ -14,6 +14,6 @@ GlassLab.ResetTelemetryAction.prototype.constructor = GlassLab.ResetTelemetryAct
 
 GlassLab.ResetTelemetryAction.prototype.Do = function()
 {
-
+    GLOBAL.telemetryManager.attemptsOnLastProblem = 0;
     this._complete();
 };
