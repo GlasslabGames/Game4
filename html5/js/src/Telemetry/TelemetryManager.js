@@ -48,7 +48,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     } );
 
     // Manually set local logging for the SDK
-    GlassLabSDK.setOptions( { localLogging: true, dispatchQueueUpdateInterval: 500 } );
+    //GlassLabSDK.setOptions( { localLogging: true, dispatchQueueUpdateInterval: 500 } );
 
     // Turn on console logging
     GlassLabSDK.displayLogs();
@@ -60,19 +60,23 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     else
     {
         // Attempt to connect to the server.
-        GlassLabSDK.connect( "PRIMA", "http://stage.playfully.org", function( data ) {
+        //GlassLabSDK.connect( "PRIMA", "http://stage.playfully.org", function( data ) {
+        GlassLabSDK.connect( "PRIMA", "http://localhost:8001", function( data ) {
             console.log( "[GlassLabSDK] Connection successful: " + data );
 
-            GlassLabSDK.getUserInfo(function( data ){
-                console.log("[GlassLabSDK] Get User Info Successful: "+data);
+            GlassLabSDK.getUserInfo(
+                function( data ){
+                    console.log("[GlassLabSDK] Get User Info Successful: "+data);
 
-                this.initialized = true;
-            }.bind(this), function( data ){
-                console.log("[GlassLabSDK] Get User Info Failed: "+data);
-            });
-        }, function( data ) {
+                    this.initialized = true;
+                }.bind(this),
+                function( data ){
+                    console.log("[GlassLabSDK] Get User Info Failed: "+data);
+                }.bind(this)
+            );
+        }.bind(this), function( data ) {
             console.error( "[GlassLabSDK] FAILURE! Connection failed: " + data );
-        });
+        }.bind(this));
     }
 };
 
@@ -81,12 +85,20 @@ GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
     this.attemptsOnLastProblem = 0;
     this.ordersCompleted = 0;
 
-    GlassLabSDK.startSession();
+    GlassLabSDK.startSession(function(data){
+        console.log("Session started: "+data);
+    }.bind(this), function(data) {
+        console.log("Session start failed: "+data);
+    }.bind(this));
 };
 
 GlassLab.TelemetryManager.prototype._onLevelWon = function()
 {
-    GlassLabSDK.endSession();
+    GlassLabSDK.endSession(function(data){
+        console.log("Session ended: "+data);
+    }.bind(this), function(data) {
+        console.log("Session end failed: "+data);
+    }.bind(this));
 };
 
 GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)
