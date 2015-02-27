@@ -111,5 +111,8 @@
         ]
       }
     ]
+  },
+  {
+    "__type": "GlassLab.EndQuestAction"
   }
 ]

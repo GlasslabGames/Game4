@@ -51,6 +51,7 @@ GlassLab.SignalManager = {
     // Quest Events
     objectiveUpdated: new Phaser.Signal(), // (string) => new objective
     questStarted: new Phaser.Signal(), // (Quest) => quest that was started
+    questEnded: new Phaser.Signal(), // (Quest) => quest that ended
     dayReset: new Phaser.Signal(),
     challengeStarted: new Phaser.Signal(),
     challengeSubmitted: new Phaser.Signal(),
