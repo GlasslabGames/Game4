@@ -108,6 +108,9 @@
     ]
   },
   {
+    "__type": "GlassLab.EndQuestAction"
+  },
+  {
     "__type": "GlassLab.LoadLevelAction",
     "level": 1
   }

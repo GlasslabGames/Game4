@@ -11,6 +11,13 @@ GlassLab.State.Init.prototype.preload = function()
 {
     var game = this.game;
 
+    game.stage.disableVisibilityChange = true; // Don't pause when focus is lost
+    if (game.paused)
+    {
+        console.warn("Game was paused during preload. Since this is likely undesired, unpausing...");
+        game.paused = false;
+    }
+
     var creatureSpriteNames = ["sheep", "unicorn", "babySheep", "babyUnicorn"];
     for (var i = 0; i < creatureSpriteNames.length; i++) {
         var spriteName = creatureSpriteNames[i];
