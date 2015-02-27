@@ -205,11 +205,13 @@ window.onload = function() {
         GLOBAL.UIManager.topRightAnchor.addChild(table);
 
         // pause icon
+        /*
         var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
         uiElement.scale.setTo(.5, .5);
         uiElement.inputEnabled = true;
         uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
         table.addManagedChild(uiElement);
+        */
 
         var zoomBG = new GlassLab.UIElement(game, 0, 0, "zoomBG");
         zoomBG.scale.setTo(.5, .5);
