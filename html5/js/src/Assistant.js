@@ -223,7 +223,7 @@ GlassLab.Assistant.prototype._onInventoryOpened = function() {
 };
 
 GlassLab.Assistant.prototype._onInventoryClosed = function() {
-    this.sprite.y = -100;
+    this.sprite.y = -90;
 };
 
 /*
