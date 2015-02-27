@@ -256,6 +256,9 @@
     "__type": "GlassLab.ClearWorldAction"
   },
   {
+    "__type": "GlassLab.EndQuestAction"
+  },
+  {
     "__type": "GlassLab.LoadLevelAction",
     "level": 3
   }

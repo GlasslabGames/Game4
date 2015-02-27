@@ -48,7 +48,8 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     } );
 
     // Manually set local logging for the SDK
-    GlassLabSDK.setOptions( { localLogging: true, dispatchQueueUpdateInterval: 500 } );
+    var hasServer = getParameterByName("telemetry") != "false" && (getParameterByName("sdkURL") != "" || location.hostname.indexOf("playfully.org") != -1);
+    GlassLabSDK.setOptions( { localLogging: !hasServer, dispatchQueueUpdateInterval: 500 } );
 
     // Turn on console logging
     GlassLabSDK.displayLogs();
@@ -60,7 +61,8 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     else
     {
         // Attempt to connect to the server.
-        GlassLabSDK.connect( "PRIMA", "http://stage.playfully.org", function( data ) {
+        var connectURL = getParameterByName("sdkURL") || "http://stage.playfully.org";
+        GlassLabSDK.connect( "PRIMA", connectURL, function( data ) {
             console.log( "[GlassLabSDK] Connection successful: " + data );
 
             GlassLabSDK.getUserInfo(function( data ){
