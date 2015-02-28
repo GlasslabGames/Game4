@@ -214,15 +214,6 @@
             "numRequired": 12
           }
         ]
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
-          {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.journalClosed"
-          }
-        ]
       }
     ]
   },

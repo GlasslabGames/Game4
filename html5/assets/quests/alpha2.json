@@ -1,7 +1,7 @@
 [
   {
     "__type": "GlassLab.SetDayAction",
-    "numDots": 0
+    "numDots": 2
   },
   {
     "__type": "GlassLab.UnlockItemsAction",
@@ -190,9 +190,6 @@
     ]
   },
   {
-    "__type": "GlassLab.AdvanceDayAction"
-  },
-  {
     "__type": "GlassLab.SaveCheckpointAction"
   },
   {
@@ -339,9 +336,6 @@
         ]
       }
     ]
-  },
-  {
-    "__type": "GlassLab.AdvanceDayAction"
   },
   {
     "__type": "GlassLab.SaveCheckpointAction"

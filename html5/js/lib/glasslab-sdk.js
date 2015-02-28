@@ -202,6 +202,9 @@ either expressed or implied, of the FreeBSD Project.
         // If the gameSessionId doesn't exist, exit the dispatch queue
         // We'll come back to the queue another time when the value exists
         if( GlassLabSDK._activeGameSessionId == "" ) {
+            console.warn("_activeGameSessionId not set. Skipping event: "+dispatch);
+            GlassLabSDK._dispatchQueue.shift();
+            _dispatchNextRequest();
           return;
         }
         // The gameSessionId does exist, so we need to replace all instances of
