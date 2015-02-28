@@ -72,11 +72,13 @@ GlassLab.RewardPopup.prototype.Show = function(data)
     this.button.label.text = (data.fulfilled? "Collect Payment!" : "I'll do better next time!");
 
     var string = "From the desk of:\n" + data.client + "\n\n";
+    var name = creatureInfo.displayNames.plural;
+
     if (data.fulfilled) {
         // TODO: include display name in creature info, and use it here
-        string += "All my "+ data.type + "es arrived safe and sound! Your full payment is enclosed. It was a pleasure doing business with you."
+        string += "All my "+ name + " arrived safe and sound! Your full payment is enclosed. It was a pleasure doing business with you."
     } else {
-        string += "The "+ data.type + "es you sent weren't fed correctly, and now they're all angry! I won't be paying you for this unacceptable situation. Next time, please make sure the amount of food is appropriate for the number of creatures you send."
+        string += "The "+ name + " you sent weren't fed correctly, and now they're all angry! I won't be paying you for this unacceptable situation. Next time, please make sure the amount of food is appropriate for the number of creatures you send."
     }
     string += "\n\nPayment received:\n$" + this.reward;
 
