@@ -118,6 +118,21 @@ GlassLab.Creature.prototype.setType = function (type) {
     // This hasn't been tested yet!
 };
 
+GlassLab.Creature.prototype.moveToTile = function (col, row) {
+    var tile = GLOBAL.tileManager.GetTile(col, row);
+
+    this.getTile().onCreatureExit(this);
+    tile.onCreatureEnter(this);
+
+    this.sprite.isoX = tile.isoX;
+    this.sprite.isoY = tile.isoY;
+
+    if (Math.random() > 0.5) // face a random direction too
+    {
+        this.sprite.scale.x *= -1;
+    }
+};
+
 GlassLab.Creature.prototype.moveToRandomTile = function () {
     var tile = GLOBAL.tileManager.getRandomWalkableTile();
 

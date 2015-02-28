@@ -25,7 +25,10 @@
       },
       {
         "__type": "GlassLab.CreateCreaturesAction",
-        "data": {"baby_rammus": 1}
+        "data": {
+          "baby_rammus": 1
+        },
+        "centered": true
       },
       {
         "__type": "GlassLab.ShowAssistantDialogueAction",

@@ -19,7 +19,11 @@ GlassLab.CreateCreaturesAction.prototype.Do = function()
 {
     for (var type in this.data) {
         for (var j = 0; j < this.data[type]; j++) {
-            GLOBAL.creatureManager.CreateCreature(type);
+            var creature = GLOBAL.creatureManager.CreateCreature(type);
+            if (this.centered) { // kinda hacky way to make sure the creatues we create are in the middle of the map
+                creature.moveToTile( 10, 10 );
+                creature._onTargetsChanged();
+            }
         }
     }
 
