@@ -11,6 +11,9 @@
     "__type": "GlassLab.ResetTelemetryAction"
   },
   {
+    "__type": "GlassLab.ClearOrdersAction"
+  },
+  {
     "__type": "GlassLab.SaveCheckpointAction"
   },
   {

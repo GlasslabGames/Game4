@@ -166,6 +166,8 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
         this.answerInputs[i].input.setEnabled(true);
     }
 
+    this.submitButton.label.text = "Load Crate";
+
     this.data = data;
     this.Refresh();
 
