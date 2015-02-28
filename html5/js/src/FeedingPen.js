@@ -407,18 +407,16 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
 
     this.onResolved.dispatch(win);
 
-    this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
-        if (win)
-        {
-            GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
+    if (win)
+    {
+        GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
 
-            GLOBAL.levelManager.CompleteCurrentLevel();
-        }
-        else
-        {
-            GlassLab.SignalManager.levelLost.dispatch();
-        }
-    }, this);
+        GLOBAL.levelManager.CompleteCurrentLevel();
+    }
+    else
+    {
+        GlassLab.SignalManager.levelLost.dispatch();
+    }
 };
 
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {

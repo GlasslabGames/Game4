@@ -139,26 +139,50 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.journalOpened"
+            "__type": "GlassLab.FeedAnimalCondition",
+            "acceptedType": "baby_rammus",
+            "numRequired": 3
           }
         ]
-      },
-      {
-        "__type": "GlassLab.ShowAssistantDialogueAction",
-        "text": "You've mastered the *baby ram*! This is your *journal*. You can open it any time to check what creatures eat."
       },
       {
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.journalClosed"
+            "__type": "GlassLab.WaitCondition",
+            "waitTime": 1000,
+            "_comment": "If we don't wait, bad things happen."
           }
         ]
       },
       {
-        "__type": "GlassLab.HideAssistantDialogueAction"
+        "__type": "GlassLab.ConditionalAction",
+        "serializedCondition": {
+          "__type": "GlassLab.GlobalVariableEqualsCondition",
+          "variableName": "GLOBAL.Journal.sprite.visible",
+          "target": true
+        },
+        "serializedTrueAction": {
+          "__type": "GlassLab.ActionGroup",
+          "serializedActions": [
+            {
+              "__type": "GlassLab.ShowAssistantDialogueAction",
+              "text": "You've mastered the *baby ram*! This is your *journal*. You can open it any time to check what creatures eat."
+            },
+            {
+              "__type": "GlassLab.WaitForCondition",
+              "conditions": [
+                {
+                  "__type": "GlassLab.SignalCondition",
+                  "signalName": "GlassLab.SignalManager.journalClosed"
+                }
+              ]
+            },
+            {
+              "__type": "GlassLab.HideAssistantDialogueAction"
+            }
+          ]
+        }
       },
       {
         "__type": "GlassLab.ClearWorldAction"

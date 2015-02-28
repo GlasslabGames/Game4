@@ -226,6 +226,7 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
 
 GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
     var visibleDragTargets = 0;
+    var maxFoods = GLOBAL.creatureManager.GetCreatureData(this.data.type).desiredFood.length;
     for (var i = 0; i < this.answerInputs.length; i++) {
         var foodType = this.foodTypes[i];
         if (foodType) {
@@ -237,7 +238,7 @@ GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
         } else {
             // Hide everything except the drag target, and only show that if we don't have one already
             for (var key in this.answerInputs[i]) {
-                this.answerInputs[i][key].visible = (key == "dragTarget" && visibleDragTargets == 0);
+                this.answerInputs[i][key].visible = (key == "dragTarget" && visibleDragTargets == 0 && i < maxFoods);
             }
             visibleDragTargets ++;
         }
