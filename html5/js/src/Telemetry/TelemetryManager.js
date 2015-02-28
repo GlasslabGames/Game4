@@ -49,6 +49,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
 
     // Manually set local logging for the SDK
     var hasServer = getParameterByName("telemetry") != "false" && (getParameterByName("sdkURL") != "" || location.hostname.indexOf("playfully.org") != -1);
+    //var hasServer = true; // Baked for stage builds
     GlassLabSDK.setOptions( { localLogging: !hasServer, dispatchQueueUpdateInterval: 500 } );
 
     // Turn on console logging
