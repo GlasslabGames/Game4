@@ -8,10 +8,10 @@
     "items": ["broccoli", "strawberry", "carrot", "apple"]
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "GlassLab.ResetTelemetryAction"
   },
   {
-    "__type": "GlassLab.ResetTelemetryAction"
+    "__type": "GlassLab.SaveCheckpointAction"
   },
   {
     "__type": "GlassLab.ActionGroup",
