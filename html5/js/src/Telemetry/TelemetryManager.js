@@ -23,8 +23,10 @@ GlassLab.TelemetryManager = function()
 
     // FIXME: These may not be that useful. A level is currently connected to a day but we care more about challenges
     GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
-    GlassLab.SignalManager.levelWon.add(this._onLevelWon, this);
     GlassLab.SignalManager.levelLost.add(this._onLevelLost, this);
+
+    GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
+    GlassLab.SignalManager.questEnded.add(this._onQuestEnded, this);
 
     GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
     GlassLab.SignalManager.penResized.add(this._onFeedingPenResized, this);
@@ -86,7 +88,10 @@ GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
 {
     this.attemptsOnLastProblem = 0;
     this.ordersCompleted = 0;
+};
 
+GlassLab.TelemetryManager.prototype._onQuestStarted = function()
+{
     GlassLabSDK.startSession(function(data){
         console.log("Session started: "+data);
     }.bind(this), function(data) {
@@ -94,9 +99,9 @@ GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
     }.bind(this));
 };
 
-GlassLab.TelemetryManager.prototype._onLevelWon = function()
+GlassLab.TelemetryManager.prototype._onQuestEnded = function()
 {
-    GlassLabSDK.endSession(function(data){
+    GlassLabSDK.endSessionAndFlush(function(data){
         console.log("Session ended: "+data);
     }.bind(this), function(data) {
         console.log("Session end failed: "+data);
