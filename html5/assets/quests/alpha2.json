@@ -234,15 +234,6 @@
           ]
         },
         {
-          "__type": "GlassLab.WaitForCondition",
-          "conditions": [
-            {
-              "__type": "GlassLab.WaitCondition",
-              "waitTime": 2000
-            }
-          ]
-        },
-        {
           "__type": "GlassLab.ClearWorldAction"
         }
       ]
@@ -325,15 +316,6 @@
             "numRequired": 7
           }
         ]
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
-          {
-            "__type": "GlassLab.WaitCondition",
-            "waitTime": 2000
-          }
-        ]
       }
     ]
   },
@@ -378,15 +360,6 @@
               "__type": "GlassLab.FeedAnimalCondition",
               "acceptedType": "baby_rammus",
               "numRequired": 4
-            }
-          ]
-        },
-        {
-          "__type": "GlassLab.WaitForCondition",
-          "conditions": [
-            {
-              "__type": "GlassLab.WaitCondition",
-              "waitTime": 2000
             }
           ]
         },
