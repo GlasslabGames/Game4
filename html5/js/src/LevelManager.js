@@ -33,6 +33,7 @@ GlassLab.LevelManager = function(game)
         quest: "alpha4"
     };
 
+    /*
     // 5
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
@@ -79,7 +80,7 @@ GlassLab.LevelManager = function(game)
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
                 numCreatures: 7,
-                type: "rammus",
+                type: "baby_rammus",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
                 reward: 200
@@ -97,7 +98,7 @@ GlassLab.LevelManager = function(game)
         },
         objective: "Feed the rams!"
     };
-
+    */
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
