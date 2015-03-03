@@ -56,6 +56,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('crateFrontRight', 'assets/images/crate/crate_front_right.png');
     game.load.image('crateFloor', 'assets/images/crate/crate_floor.png');
 
+    game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
+    game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');
+
     game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
     game.load.image('happyEmote', 'assets/images/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/angryEmote.png');
@@ -81,6 +84,7 @@ GlassLab.State.Init.prototype.preload = function()
      game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
      game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');*/
     game.load.image('dirtTile', 'assets/images/tiles/dirtTile1.png');
+    game.load.image('placeholderTile', 'assets/images/tiles/penTile_placeholder2.png');
 
     // Cloud shadow
     game.load.image('cloudShadow', 'assets/images/cloudShadow.png');

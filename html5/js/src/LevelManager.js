@@ -37,7 +37,8 @@ GlassLab.LevelManager = function(game)
     // 5
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
-        //{type: "baby_unifox", bottomDraggable: true, leftDraggable: true, topDraggable: true}
+        {type: "baby_unifox", height: 1, foodAWidth: 1,
+            bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],
       looseCreatures: {
           baby_unifox: 3,
@@ -88,16 +89,17 @@ GlassLab.LevelManager = function(game)
         ]
     };
 
-
+    // 8
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
-            {type: "rammus2", foodAWidth: 1, foodBWidth:1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+            {type: "rammus", foodAWidth: 1, height:1}//, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            rammus2: 16
+            //rammus: 16
         },
         objective: "Feed the rams!"
     };
+
 
 };
 

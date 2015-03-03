@@ -91,7 +91,7 @@ GlassLab.Journal = function(game) {
 
     GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
 
-    this.sprite.visible = true;
+    this.sprite.visible = false;
 };
 
 GlassLab.Journal.prototype._onLevelLoaded = function(level)

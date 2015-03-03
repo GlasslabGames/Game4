@@ -14,13 +14,12 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.creatureType = creatureType;
     this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
 
-    this.forShipment = false; // whether this pen is for a shipment, vs a normal draggable pen
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
     this.allowFeedButton = true;
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
-    this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
+    //this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -134,6 +133,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.numFoods = numFoods || []; // should be an array
     this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
+    this.penStyle = GlassLab.Pen.STYLES.crate;
+
     if (!condenseToMultipleRows) {
         this.widths[0] = 1;
         this.height = numCreatures;
@@ -153,8 +154,12 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
 
     for (var j = 0; j < this.numFoods.length; j++) {
         this.widths[j+1] = Math.ceil(this.numFoods[j] / this.height);
+        if (j < this.numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
     }
+    this.centerEdge.sprite.visible = false;
+
     this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize; // TODO: HACK FOR CENTER PLACEMENT
+
     this.Resize();
 };
 

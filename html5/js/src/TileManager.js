@@ -318,6 +318,7 @@ GlassLab.TileManager.prototype.getTargets = function(creature)
 GlassLab.Tile = function(game, col, row, type) {
   Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-10)*GLOBAL.tileSize, (row-10)*GLOBAL.tileSize, 0, type);
   this.type = type;
+  //this.tint = Phaser.Color.getColor(Math.random() * 255, Math.random() * 255, Math.random() * 255); // for testing with clearly distinguished tiles (change type to placeholderTile)
   this.anchor.setTo(0.5, 0.5);
   this.col = col;
   this.row = row;
