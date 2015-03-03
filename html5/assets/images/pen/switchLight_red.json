@@ -1,0 +1,180 @@
+{"frames": [
+
+{
+	"filename": "switchLight_red_000.png",
+	"frame": {"x":2,"y":2,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_001.png",
+	"frame": {"x":2,"y":75,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_002.png",
+	"frame": {"x":2,"y":148,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_003.png",
+	"frame": {"x":2,"y":221,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_004.png",
+	"frame": {"x":2,"y":294,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_005.png",
+	"frame": {"x":2,"y":2,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_006.png",
+	"frame": {"x":2,"y":2,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_007.png",
+	"frame": {"x":2,"y":2,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_008.png",
+	"frame": {"x":2,"y":75,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_009.png",
+	"frame": {"x":2,"y":148,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_010.png",
+	"frame": {"x":2,"y":221,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_011.png",
+	"frame": {"x":2,"y":367,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_012.png",
+	"frame": {"x":2,"y":440,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_013.png",
+	"frame": {"x":2,"y":513,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_014.png",
+	"frame": {"x":2,"y":586,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_015.png",
+	"frame": {"x":2,"y":294,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_016.png",
+	"frame": {"x":2,"y":659,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_017.png",
+	"frame": {"x":2,"y":732,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_018.png",
+	"frame": {"x":2,"y":805,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_019.png",
+	"frame": {"x":2,"y":878,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_red_020.png",
+	"frame": {"x":2,"y":2,"w":58,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":146,"w":58,"h":71},
+	"sourceSize": {"w":300,"h":270}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "switchLight_red.png",
+	"format": "RGBA8888",
+	"size": {"w":62,"h":951},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:b6003a058a703b5789cd29983f10eac6:cba8166bb1c845dd9eff769f78150462:9a991a026f80610f9a3ec176c3c45294$"
+}
+}

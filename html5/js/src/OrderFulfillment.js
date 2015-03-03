@@ -137,6 +137,7 @@ GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
         for (var j = 0; j < numFoodTypes; j++) widths.push(0);
         this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
         this.pen.allowFeedButton = false;
+        this.pen.forShipment = true;
     }
     this._focusCamera();
 };

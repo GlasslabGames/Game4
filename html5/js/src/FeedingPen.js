@@ -14,6 +14,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.creatureType = creatureType;
     this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
 
+    this.forShipment = false; // whether this pen is for a shipment, vs a normal draggable pen
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
     this.allowFeedButton = true;
 

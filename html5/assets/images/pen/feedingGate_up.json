@@ -1,0 +1,308 @@
+{"frames": [
+
+{
+	"filename": "feedingGate_up_001.png",
+	"frame": {"x":326,"y":2,"w":160,"h":98},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":103,"w":160,"h":98},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_002.png",
+	"frame": {"x":2,"y":2,"w":160,"h":98},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":103,"w":160,"h":98},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_003.png",
+	"frame": {"x":164,"y":2,"w":160,"h":98},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":103,"w":160,"h":98},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_004.png",
+	"frame": {"x":326,"y":102,"w":160,"h":99},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":102,"w":160,"h":99},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_005.png",
+	"frame": {"x":164,"y":102,"w":160,"h":99},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":102,"w":160,"h":99},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_006.png",
+	"frame": {"x":2,"y":102,"w":160,"h":99},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":102,"w":160,"h":99},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_007.png",
+	"frame": {"x":326,"y":203,"w":160,"h":100},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":101,"w":160,"h":100},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_008.png",
+	"frame": {"x":164,"y":203,"w":160,"h":100},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":101,"w":160,"h":100},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_009.png",
+	"frame": {"x":2,"y":203,"w":160,"h":100},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":101,"w":160,"h":100},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_010.png",
+	"frame": {"x":2,"y":305,"w":160,"h":101},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":100,"w":160,"h":101},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_011.png",
+	"frame": {"x":164,"y":305,"w":160,"h":102},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":99,"w":160,"h":102},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_012.png",
+	"frame": {"x":326,"y":305,"w":160,"h":102},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":99,"w":160,"h":102},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_013.png",
+	"frame": {"x":2,"y":409,"w":160,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":98,"w":160,"h":103},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_014.png",
+	"frame": {"x":164,"y":409,"w":160,"h":104},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":97,"w":160,"h":104},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_015.png",
+	"frame": {"x":326,"y":409,"w":160,"h":105},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":96,"w":160,"h":105},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_016.png",
+	"frame": {"x":2,"y":516,"w":160,"h":106},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":95,"w":160,"h":106},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_017.png",
+	"frame": {"x":164,"y":516,"w":160,"h":107},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":94,"w":160,"h":107},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_018.png",
+	"frame": {"x":326,"y":516,"w":160,"h":108},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":93,"w":160,"h":108},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_019.png",
+	"frame": {"x":2,"y":626,"w":160,"h":110},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":91,"w":160,"h":110},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_020.png",
+	"frame": {"x":164,"y":626,"w":160,"h":111},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":90,"w":160,"h":111},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_021.png",
+	"frame": {"x":326,"y":626,"w":160,"h":113},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":88,"w":160,"h":113},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_022.png",
+	"frame": {"x":2,"y":741,"w":160,"h":115},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":86,"w":160,"h":115},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_023.png",
+	"frame": {"x":164,"y":741,"w":160,"h":117},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":84,"w":160,"h":117},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_024.png",
+	"frame": {"x":326,"y":741,"w":160,"h":119},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":82,"w":160,"h":119},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_025.png",
+	"frame": {"x":2,"y":862,"w":160,"h":122},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":79,"w":160,"h":122},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_026.png",
+	"frame": {"x":164,"y":862,"w":160,"h":124},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":77,"w":160,"h":124},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_027.png",
+	"frame": {"x":326,"y":862,"w":160,"h":128},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":73,"w":160,"h":128},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_028.png",
+	"frame": {"x":2,"y":992,"w":160,"h":131},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":70,"w":160,"h":131},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_029.png",
+	"frame": {"x":164,"y":992,"w":160,"h":136},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":65,"w":160,"h":136},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_030.png",
+	"frame": {"x":326,"y":992,"w":160,"h":141},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":60,"w":160,"h":141},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_031.png",
+	"frame": {"x":2,"y":1135,"w":160,"h":148},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":53,"w":160,"h":148},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_032.png",
+	"frame": {"x":164,"y":1135,"w":160,"h":158},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":43,"w":160,"h":158},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_033.png",
+	"frame": {"x":164,"y":1306,"w":160,"h":172},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":29,"w":160,"h":172},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_034.png",
+	"frame": {"x":326,"y":1135,"w":160,"h":169},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":32,"w":160,"h":169},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_035.png",
+	"frame": {"x":2,"y":1306,"w":160,"h":170},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":31,"w":160,"h":170},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_036.png",
+	"frame": {"x":2,"y":1480,"w":160,"h":173},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":28,"w":160,"h":173},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "feedingGate_up_037.png",
+	"frame": {"x":326,"y":1306,"w":160,"h":172},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":29,"w":160,"h":172},
+	"sourceSize": {"w":300,"h":270}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "feedingGate_up.png",
+	"format": "RGBA8888",
+	"size": {"w":488,"h":1655},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c53cc975c1d8bfd40b329ee64a175cd6:37efbd8e10d1906edb673adfa4964dcb:4a0a531673e78c995ed19065c83ce825$"
+}
+}

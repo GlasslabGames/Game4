@@ -33,7 +33,7 @@ GlassLab.LevelManager = function(game)
         quest: "alpha4"
     };
 
-    /*
+    // TESTING LEVELS:
     // 5
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
@@ -98,7 +98,7 @@ GlassLab.LevelManager = function(game)
         },
         objective: "Feed the rams!"
     };
-    */
+
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)

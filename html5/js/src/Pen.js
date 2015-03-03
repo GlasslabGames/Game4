@@ -58,12 +58,12 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.ratioLabel.x = this.topEdge.sprite.x;
     this.ratioLabel.y = this.topEdge.sprite.y - GLOBAL.tileSize * 1.5;
 
+    this.penStyle =
     this.Resize();
 };
 
-
-GlassLab.Pen.LEFT_COLOR = 0xF0E4E1; //0xA8C2EF;
-GlassLab.Pen.RIGHT_COLOR = 0xFFFFFF; //0xF0C5CA;
+// Enum of the various styles for drawing the fence
+GlassLab.Pen.STYLES = {fence: "fence", crate: "crate", gate: "gate"};
 
 GlassLab.Pen.prototype.getDimensionEncoding = function() {
     return GlassLab.Pen.encodeDimensions(this.height || 0, this.widths[0] || 0, this.widths[1] || 0, this.widths[2] || 0);
@@ -156,14 +156,19 @@ GlassLab.Pen.prototype.Resize = function() {
     this._resetTiles();
     var fullWidth = this.getFullWidth();
 
-    for (var row = 0; row < this.height; row++) {
-        this._drawRow(row * GLOBAL.tileSize, 0, this.widths[0], fullWidth, this.widths);
+    this._drawBg();
+
+    var col = 0;
+    this._drawVerticalEdge(this.leftEdge, col, 0, this.height);
+    col += this.widths[0];
+    this._drawVerticalEdge(this.centerEdge, col, 0, this.height);
+    for (var i = 1, len = this.widths.length; i < len; i++) {
+        col += this.widths[i];
+        this._drawVerticalEdge(this.rightEdges[i-1], col, 0, this.height);
     }
 
-    for (var col = 0; col < fullWidth; col++) {
-        this.topEdge.PlacePiece(col, 0);
-        this.bottomEdge.PlacePiece(col, this.height);
-    }
+    this._drawHorizontalEdge(this.topEdge, 0, fullWidth, 0);
+    this._drawHorizontalEdge(this.bottomEdge, 0, fullWidth, this.height);
 
     this._placeArrows();
 
@@ -191,28 +196,28 @@ GlassLab.Pen.prototype._resetTiles = function() {
     GLOBAL.tileManager.clearPenTiles();
 };
 
-// tiles after the tileSwapCol will be replaced with dirt tiles.
-GlassLab.Pen.prototype._drawRow = function(yPos, firstCol, tileSwapCol, lastCol, widths) {
-    for (var col = firstCol; col < lastCol; col++) {
-        // this part swaps whatever tile was there for a dirt tile (but remember what it was to swap it back later)
-        var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + yPos);
-        if (tile)
-        {
-            tile.setInPen(this);
-            if (col >= tileSwapCol) tile.swapType(GlassLab.Tile.TYPES.dirt);
-        }
-
-        // This part draws an overlay tile
-        //this._placeTile(col * GLOBAL.tileSize, yPos, (col < centerCol)); // to add an image on the tile
+// The following functions can be overwritten to show different pens (e.g. the crate for shipping)
+GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow) {
+    for (var row = startRow; row < endRow; row++) {
+        targetEdge.PlacePiece(col, row, "penLeftEdge");
     }
+};
 
-    col = firstCol;
-    this.leftEdge.PlacePieceAt( GLOBAL.tileSize * col, yPos );
-    col += widths[0];
-    this.centerEdge.PlacePieceAt( GLOBAL.tileSize * col, yPos );
-    for (var i = 1, len = widths.length; i < len; i++) {
-        col += widths[i];
-        this.rightEdges[i - 1].PlacePieceAt( GLOBAL.tileSize * col, yPos);
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row) {
+    for (var col = startCol; col < endCol; col++) {
+        targetEdge.PlacePiece(col, row, "penRightEdge");
+    }
+};
+
+GlassLab.Pen.prototype._drawBg = function() {
+    for (var col = 0; col < this.getFullWidth(); col++) {
+        for (var row = 0; row < this.height; row++) {
+            var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
+            if (tile) {
+                tile.setInPen(this);
+                if (col >= this.widths[0]) tile.swapType(GlassLab.Tile.TYPES.dirt);
+            }
+        }
     }
 };
 
@@ -315,11 +320,11 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.sprite.addChild(this.pieces);
 
     if (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) {
-        this.spriteName = "penRightEdge";
+        //this.spriteName = "penRightEdge";
         this.sprite.isoX = 0.5 * GLOBAL.tileSize;
         this.horizontal = true;
     } else {
-        this.spriteName = "penLeftEdge";
+        //this.spriteName = "penLeftEdge";
         this.sprite.isoY = 0.5 * GLOBAL.tileSize;
         this.horizontal = false;
     }
@@ -352,17 +357,16 @@ GlassLab.Edge.prototype.Reset = function() {
 GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "right", center: "center" }; // enum
 
 // add a new piece or recycle one
-GlassLab.Edge.prototype.PlacePiece = function(col, row) {
-    this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize);
+GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName) {
+    this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName);
 };
 
-GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
+GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName) {
     var sprite = this.unusedSprites.pop();
     if (!sprite) {
-        sprite = this.game.make.isoSprite(0, 0, 0, this.spriteName);
-        //sprite.alpha = 0.3;
+        sprite = this.game.make.isoSprite(0, 0, 0, spriteName);
         sprite.anchor.set(0.5, 1.13);
-        this._setInputHandlers(sprite); // note: is this ok?
+        this._setInputHandlers(sprite);
         switch (this.side) {
             case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
             case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
@@ -372,6 +376,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y) {
         this.pieces.addChild(sprite);
     }
     sprite.visible = true;
+    if (sprite.spriteName != spriteName) sprite.loadTexture(spriteName);
     sprite.isoX = x;
     sprite.isoY = y;
     sprite.parent.setChildIndex(sprite, sprite.parent.children.length - 1); // move it to the back of the children so far
