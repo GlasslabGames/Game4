@@ -111,6 +111,9 @@ GlassLab.Pen.prototype.SetDraggable = function() {
 
 GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
     var prevDimensions = this.getDimensionEncoding();
+    if (!this.prevIsoPos) this.prevIsoPos = new Phaser.Point();
+    this.sprite.isoPosition.copyTo(this.prevIsoPos);
+    console.log("Setting previous position to",this.prevIsoPos);
 
     var rows = Math.round(edge.sprite.isoY / GLOBAL.tileSize);
     var cols = Math.round(edge.sprite.isoX / GLOBAL.tileSize);

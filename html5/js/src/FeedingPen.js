@@ -65,6 +65,18 @@ GlassLab.FeedingPen.prototype.Resize = function() {
             this.creatures[i].draggable = false;
         }
     } else {
+        // Move all the creatures
+        if (this.prevIsoPos) {
+            console.log("prevPos:",this.prevIsoPos,"currentPos:",this.sprite.isoPosition);
+            var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
+            console.log("dif:",posDif.x, posDif.y);
+
+            for (var i = 0; i < this.creatures.length; i++) {
+                var creature = this.creatures[i];
+                creature.setIsoPos( creature.sprite.isoX - posDif.x, creature.sprite.isoY - posDif.y);
+            }
+        }
+
         // For each tile in the creature side, mark that it's open for creatures
         for (var col = 0; col < this.widths[0]; col++) {
             for (var row = 0; row < this.height; row++) {
@@ -100,8 +112,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
             var creature = this.creatures[i];
             var tile = creature.getTile();
             if (this._getSection(tile) != 0) { // if it's not in the creature section of the pen
-                creature.pen = null;
-                creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, creature));
+                creature.exitPen(this);
                 this.creatures.splice(i, 1);
                 i --;
             }
@@ -351,6 +362,7 @@ GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
     var index = this.creatures.indexOf(creature);
     if (index > -1) this.creatures.splice(index, 1);
     this._onCreatureContentsChanged();
+
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 

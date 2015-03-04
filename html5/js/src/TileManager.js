@@ -355,7 +355,7 @@ GlassLab.Tile.prototype.unswapType = function() {
 };
 
 GlassLab.Tile.prototype.isTarget = function(creature) {
-  if (this.occupant && this.occupant != creature) return false; // nope, someone's here already
+  if (this.occupant && this.occupant != creature ) return false; // nope, someone's here already
   else if (this.targetCreatureType == creature.type && !this.inPen.feeding) return true; // yes, this is a target pen slot
   else if (this.food && creature.desiredAmountsOfFood && (this.food.type in creature.desiredAmountsOfFood)) return true; // yes, there's food we want here
   else return false; // boring
@@ -370,11 +370,13 @@ GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
   if (this.occupant) return;
   this.occupant = creature;
-  if (this.isTarget(creature.type)) creature.enterPen(this.inPen);
+    creature.tile = this;
+  //if (this.isTarget(creature.type)) creature.enterPen(this.inPen);
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {
   if (this.occupant == creature) this.occupant = null;
+    if (creature.tile == this) creature.tile = null;
 };
 
 GlassLab.Tile.prototype.onFoodAdded = function(food) {
