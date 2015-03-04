@@ -1,0 +1,132 @@
+{"frames": [
+
+{
+	"filename": "switchFlip_fail_000.png",
+	"frame": {"x":2,"y":2,"w":58,"h":73},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":98,"w":58,"h":73},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_001.png",
+	"frame": {"x":2,"y":77,"w":57,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":46,"y":97,"w":57,"h":74},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_002.png",
+	"frame": {"x":2,"y":153,"w":56,"h":78},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":48,"y":93,"w":56,"h":78},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_003.png",
+	"frame": {"x":2,"y":233,"w":49,"h":81},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":90,"w":49,"h":81},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_004.png",
+	"frame": {"x":2,"y":316,"w":45,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":91,"w":45,"h":80},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_005.png",
+	"frame": {"x":2,"y":316,"w":45,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":91,"w":45,"h":80},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_006.png",
+	"frame": {"x":2,"y":316,"w":45,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":91,"w":45,"h":80},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_007.png",
+	"frame": {"x":2,"y":316,"w":45,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":91,"w":45,"h":80},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_008.png",
+	"frame": {"x":2,"y":316,"w":45,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":91,"w":45,"h":80},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_009.png",
+	"frame": {"x":2,"y":398,"w":47,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":91,"w":47,"h":80},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_010.png",
+	"frame": {"x":2,"y":480,"w":54,"h":79},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":49,"y":93,"w":54,"h":79},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_011.png",
+	"frame": {"x":2,"y":561,"w":57,"h":75},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":46,"y":96,"w":57,"h":75},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_012.png",
+	"frame": {"x":2,"y":638,"w":58,"h":73},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":98,"w":58,"h":73},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_013.png",
+	"frame": {"x":2,"y":713,"w":58,"h":72},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":99,"w":58,"h":72},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_fail_014.png",
+	"frame": {"x":2,"y":787,"w":58,"h":72},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":99,"w":58,"h":72},
+	"sourceSize": {"w":300,"h":270}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "switch_fail.png",
+	"format": "RGBA8888",
+	"size": {"w":62,"h":861},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:1537ef6bd735414887d672dd5bc34c2c:28a6aa3073db8450bf94cf8ff570dc53:f30ce6c053f730011de1caa24621a42c$"
+}
+}

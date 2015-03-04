@@ -19,7 +19,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
-    this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
+    //this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -65,6 +65,19 @@ GlassLab.FeedingPen.prototype.Resize = function() {
             this.creatures[i].draggable = false;
         }
     } else {
+        // Move all the creatures
+        if (this.prevIsoPos) {
+            var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
+            console.log("dif:",posDif.x, posDif.y);
+
+            for (var i = 0; i < this.creatures.length; i++) {
+                var creature = this.creatures[i];
+                creature.setIsoPos( creature.sprite.isoX - posDif.x, creature.sprite.isoY - posDif.y);
+            }
+
+            this.prevIsoPos = null;
+        }
+
         // For each tile in the creature side, mark that it's open for creatures
         for (var col = 0; col < this.widths[0]; col++) {
             for (var row = 0; row < this.height; row++) {
@@ -100,8 +113,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
             var creature = this.creatures[i];
             var tile = creature.getTile();
             if (this._getSection(tile) != 0) { // if it's not in the creature section of the pen
-                creature.pen = null;
-                creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, creature));
+                creature.exitPen(this);
                 this.creatures.splice(i, 1);
                 i --;
             }
@@ -133,6 +145,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.numFoods = numFoods || []; // should be an array
     this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
+    this.penStyle = GlassLab.Pen.STYLES.crate;
+
     if (!condenseToMultipleRows) {
         this.widths[0] = 1;
         this.height = numCreatures;
@@ -152,8 +166,12 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
 
     for (var j = 0; j < this.numFoods.length; j++) {
         this.widths[j+1] = Math.ceil(this.numFoods[j] / this.height);
+        if (j < this.numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
     }
+    this.centerEdge.sprite.visible = false;
+
     this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize; // TODO: HACK FOR CENTER PLACEMENT
+
     this.Resize();
 };
 
@@ -345,6 +363,7 @@ GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
     var index = this.creatures.indexOf(creature);
     if (index > -1) this.creatures.splice(index, 1);
     this._onCreatureContentsChanged();
+
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 

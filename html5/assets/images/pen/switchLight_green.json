@@ -1,0 +1,164 @@
+{"frames": [
+
+{
+	"filename": "switchLight_green_000.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_001.png",
+	"frame": {"x":2,"y":75,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_002.png",
+	"frame": {"x":2,"y":148,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_003.png",
+	"frame": {"x":2,"y":221,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_004.png",
+	"frame": {"x":2,"y":294,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_005.png",
+	"frame": {"x":2,"y":367,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_006.png",
+	"frame": {"x":2,"y":440,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_007.png",
+	"frame": {"x":2,"y":367,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_008.png",
+	"frame": {"x":2,"y":513,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_009.png",
+	"frame": {"x":2,"y":586,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_010.png",
+	"frame": {"x":2,"y":659,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_011.png",
+	"frame": {"x":2,"y":732,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_012.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_013.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_014.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_015.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_016.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_017.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchLight_green_018.png",
+	"frame": {"x":2,"y":2,"w":59,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":146,"w":59,"h":71},
+	"sourceSize": {"w":300,"h":270}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "switchLight_green.png",
+	"format": "RGBA8888",
+	"size": {"w":63,"h":805},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:11b7124aa34a3b3960ae3b8f57744aac:bc170d1cee0be61dc903d0f4f69c1300:9de8ded82f5f00e627f05bbed57d1d1b$"
+}
+}

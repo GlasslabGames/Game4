@@ -202,12 +202,8 @@ GlassLab.Creature.prototype._onDown = function (sprite, pointer) {
 
 GlassLab.Creature.prototype._startDrag = function () {
     if (GLOBAL.dragTarget != null) return;
-    this.getTile().onCreatureExit(this);
-    if (this.pen) {
-        var pen = this.pen;
-        this.pen = null; // set our pen to null first so that creature_population telemetry works better
-        pen.onCreatureRemoved(this);
-    }
+    if (this.pen) this.exitPen(this.pen);
+    if (this.tile) this.tile.onCreatureExit(this);
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     GLOBAL.dragTarget = this;
 };
@@ -365,12 +361,28 @@ GlassLab.Creature.prototype.enterPen = function (pen) {
     this.pen = pen;
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
     pen.onCreatureEntered(this);
-    // this.resetFoodEaten(); // we actually don't want to reset the food eaten, even though it's confusing
+    pen.objectRoot.addChild(this.sprite); // parent it in the pen so that the ordering works correctly
+    this.setIsoPos( this.sprite.isoX - pen.sprite.isoX, this.sprite.isoY - pen.sprite.isoY);
+};
+
+GlassLab.Creature.prototype.exitPen = function (pen) {
+    console.log("exitPen",pen == this.pen);
+    if (this.pen != pen) return;
+
+    GLOBAL.creatureLayer.add(this.sprite); // parent it back to the creature layer
+    //this.setIsoPos( this.sprite.isoX + pen.sprite.isoX, this.sprite.isoY + pen.sprite.isoY); // FIXME
+    this.pen = null;
+    pen.onCreatureRemoved(this); // do this after setting this.pen to null for telemetry purposes
+    this._onTargetsChanged();
 };
 
 GlassLab.Creature.prototype.setIsoPos = function (x, y) {
     this.sprite.isoX = x;
     this.sprite.isoY = y;
+
+    if (this.tile) this.tile.onCreatureExit(this);
+    var tile = this.getTile();
+    if (tile) tile.onCreatureEnter(this);
 };
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {

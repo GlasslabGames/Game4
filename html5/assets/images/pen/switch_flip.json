@@ -1,0 +1,172 @@
+{"frames": [
+
+{
+	"filename": "switchFlip_000.png",
+	"frame": {"x":2,"y":2,"w":58,"h":73},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":98,"w":58,"h":73},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_001.png",
+	"frame": {"x":2,"y":77,"w":58,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":46,"y":97,"w":58,"h":74},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_002.png",
+	"frame": {"x":2,"y":153,"w":56,"h":78},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":48,"y":93,"w":56,"h":78},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_003.png",
+	"frame": {"x":2,"y":233,"w":49,"h":81},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":90,"w":49,"h":81},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_004.png",
+	"frame": {"x":2,"y":316,"w":39,"h":81},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":69,"y":90,"w":39,"h":81},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_005.png",
+	"frame": {"x":2,"y":399,"w":42,"h":73},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":89,"y":98,"w":42,"h":73},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_006.png",
+	"frame": {"x":2,"y":474,"w":49,"h":55},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":101,"y":117,"w":49,"h":55},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_007.png",
+	"frame": {"x":2,"y":531,"w":57,"h":36},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":102,"y":138,"w":57,"h":36},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_008.png",
+	"frame": {"x":2,"y":569,"w":59,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":102,"y":146,"w":59,"h":32},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_009.png",
+	"frame": {"x":2,"y":603,"w":58,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":102,"y":146,"w":58,"h":32},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_010.png",
+	"frame": {"x":2,"y":637,"w":58,"h":35},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":101,"y":139,"w":58,"h":35},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_011.png",
+	"frame": {"x":2,"y":674,"w":52,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":101,"y":125,"w":52,"h":46},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_012.png",
+	"frame": {"x":2,"y":722,"w":42,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":100,"y":110,"w":42,"h":62},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_013.png",
+	"frame": {"x":2,"y":786,"w":41,"h":75},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":84,"y":96,"w":41,"h":75},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_014.png",
+	"frame": {"x":2,"y":863,"w":44,"h":82},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":90,"w":44,"h":82},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_015.png",
+	"frame": {"x":2,"y":947,"w":58,"h":77},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":95,"w":58,"h":77},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_016.png",
+	"frame": {"x":2,"y":1026,"w":57,"h":75},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":47,"y":96,"w":57,"h":75},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_017.png",
+	"frame": {"x":2,"y":1103,"w":57,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":46,"y":97,"w":57,"h":74},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_018.png",
+	"frame": {"x":2,"y":1179,"w":58,"h":73},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":98,"w":58,"h":73},
+	"sourceSize": {"w":300,"h":270}
+},
+{
+	"filename": "switchFlip_019.png",
+	"frame": {"x":2,"y":1254,"w":58,"h":72},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":99,"w":58,"h":72},
+	"sourceSize": {"w":300,"h":270}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "switch_flip.png",
+	"format": "RGBA8888",
+	"size": {"w":63,"h":1328},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:e272da55afe6a99f1995e1ec87c0697d:22bd4cae6a1b81b28f2fc860ec7ed911:dc2aaa6fda8e3b63ef530c31bb8bbc4f$"
+}
+}
