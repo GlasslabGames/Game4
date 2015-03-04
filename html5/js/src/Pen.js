@@ -45,7 +45,6 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.sprite.addChild(this.objectRoot).name = "objectRoot";
 
     this.sprite.addChild(this.centerEdge.sprite);
-    this.sprite.addChild(this.bottomEdge.sprite);
 
     for (var i = 0; i < this.widths.length-1; i++) {
         var edge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, i);
@@ -53,6 +52,8 @@ GlassLab.Pen = function(game, layer, height, widths)
         this.edges.push(edge);
         this.sprite.addChild(edge.sprite);
     }
+
+    this.sprite.addChild(this.bottomEdge.sprite);
 
     var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
     this.ratioLabel = game.make.text(0, 0, "1 : 2", style);
@@ -183,8 +184,15 @@ GlassLab.Pen.prototype.Resize = function() {
         if (this.rightEdges[i-1].sprite.visible) this._drawVerticalEdge(this.rightEdges[i-1], col, 0, this.height);
     }
 
-    this._drawHorizontalEdge(this.topEdge, (this.cornerSprite.visible? 1 : 0), fullWidth, 0);
-    this._drawHorizontalEdge(this.bottomEdge, 0, fullWidth, this.height);
+    if (this.penStyle == GlassLab.Pen.STYLES.gate) {
+        this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLineLeft");
+        this._drawHorizontalEdge(this.topEdge, this.widths[0], fullWidth, 0, "penFenceRight");
+        this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0], this.height, "dottedLineLeft");
+        this._drawHorizontalEdge(this.bottomEdge, this.widths[0], fullWidth, this.height, "penFenceRight");
+    } else {
+        this._drawHorizontalEdge(this.topEdge, (this.cornerSprite.visible? 1 : 0), fullWidth, 0);
+        this._drawHorizontalEdge(this.bottomEdge, 0, fullWidth, this.height);
+    }
 
     this._placeArrows();
 
@@ -226,8 +234,17 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
         endRow --;
         anchor = new Phaser.Point(0.075, 0.04);
     } else {
-        spriteName = "penFenceLeft";
-        anchor = new Phaser.Point(0.1, 0.15);
+        if (targetEdge.side == GlassLab.Edge.SIDES.left ||
+            (targetEdge.side == GlassLab.Edge.SIDES.right && targetEdge.sideIndex < this.widths.length - 2)) {
+            spriteName = "dottedLineRight";
+            anchor = new Phaser.Point(0.1, 0.15);
+        } else if (targetEdge.side == GlassLab.Edge.SIDES.center) {
+            spriteName = "gateDown";
+            anchor = new Phaser.Point(0.1, 0.3);
+        } else {
+            spriteName = "penFenceLeft";
+            anchor = new Phaser.Point(0.1, 0.15);
+        }
     }
 
     for (var row = startRow; row < endRow; row++) {
@@ -235,8 +252,8 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     }
 };
 
-GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row) {
-    var spriteName, anchor;
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName) {
+    var anchor;
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
         if (targetEdge.side == GlassLab.Edge.SIDES.bottom) {
             spriteName = "crateFrontLeft";
@@ -247,7 +264,7 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
         endCol --;
         anchor = new Phaser.Point(0.075, 0.04);
     } else {
-        spriteName = "penFenceRight";
+        // spriteName = "penFenceRight"; // just use the passed-in spritename
         anchor = new Phaser.Point(0.1, 0.15);
     }
 

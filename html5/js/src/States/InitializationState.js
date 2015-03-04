@@ -58,6 +58,11 @@ GlassLab.State.Init.prototype.preload = function()
 
     game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
     game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');
+    game.load.image('dottedLineLeft', 'assets/images/pen/dotted_line_left.png');
+    game.load.image('dottedLineRight', 'assets/images/pen/dotted_line_right.png');
+
+    game.load.atlasJSONHash('gateDown', 'assets/images/pen/feeding_gate_down.png', 'assets/images/pen/feeding_gate_down.json');
+    game.load.atlasJSONHash('gateUp', 'assets/images/pen/feeding_gate_up.png', 'assets/images/pen/feeding_gate_up.json');
 
     game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
     game.load.image('happyEmote', 'assets/images/happyEmote.png');

@@ -67,7 +67,6 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     } else {
         // Move all the creatures
         if (this.prevIsoPos) {
-            console.log("prevPos:",this.prevIsoPos,"currentPos:",this.sprite.isoPosition);
             var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
             console.log("dif:",posDif.x, posDif.y);
 
@@ -75,6 +74,8 @@ GlassLab.FeedingPen.prototype.Resize = function() {
                 var creature = this.creatures[i];
                 creature.setIsoPos( creature.sprite.isoX - posDif.x, creature.sprite.isoY - posDif.y);
             }
+
+            this.prevIsoPos = null;
         }
 
         // For each tile in the creature side, mark that it's open for creatures
