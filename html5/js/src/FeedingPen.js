@@ -362,6 +362,8 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
 GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
     var index = this.creatures.indexOf(creature);
     if (index > -1) this.creatures.splice(index, 1);
+    console.log("OnCreatureRemoved",index, this.creatures.length);
+
     this._onCreatureContentsChanged();
 
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
@@ -374,7 +376,7 @@ GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
 };
 
 GlassLab.FeedingPen.prototype._refreshFeedButton = function() {
-    if (!this.button) return;
+    //if (!this.button) return;
 
     var ok = this.allowFeedButton && (this.creatures.length >= this.widths[0] * this.height) &&
         this.foodTypes.length == this.widths.length-1;
@@ -386,7 +388,17 @@ GlassLab.FeedingPen.prototype._refreshFeedButton = function() {
             }
         }
     }
-    this.button.visible = ok;
+    //this.button.visible = ok;
+    this.canFeed = ok;
+    if (this.gateLight) {
+        if (ok) {
+            if (this.gateLight.spriteName != "gateLightGreen") this.gateLight.loadTexture("gateLightGreen");
+            this.gateLight.animations.add('anim');
+            this.gateLight.animations.play('anim', 48, true);
+        } else {
+            this.gateLight.animations.stop(true);
+        }
+    }
 };
 
 GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {

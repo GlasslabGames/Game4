@@ -63,6 +63,13 @@ GlassLab.State.Init.prototype.preload = function()
 
     game.load.atlasJSONHash('gateDown', 'assets/images/pen/feeding_gate_down.png', 'assets/images/pen/feeding_gate_down.json');
     game.load.atlasJSONHash('gateUp', 'assets/images/pen/feeding_gate_up.png', 'assets/images/pen/feeding_gate_up.json');
+    game.load.image('gateCapNear', 'assets/images/pen/feeding_gate_endcap_near.png');
+    game.load.image('gateCapFar', 'assets/images/pen/feeding_gate_endcap_far.png');
+    game.load.image('gateSwitchBack', 'assets/images/pen/gate_switch_back.png');
+    game.load.atlasJSONHash('gateSwitchFlip', 'assets/images/pen/switch_flip.png', 'assets/images/pen/switch_flip.json');
+    game.load.atlasJSONHash('gateSwitchFail', 'assets/images/pen/switch_fail.png', 'assets/images/pen/switch_fail.json');
+    game.load.atlasJSONHash('gateLightGreen', 'assets/images/pen/switch_light_green.png', 'assets/images/pen/switch_light_green.json');
+    game.load.atlasJSONHash('gateLightRed', 'assets/images/pen/switch_light_red.png', 'assets/images/pen/switch_light_red.json');
 
     game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
     game.load.image('happyEmote', 'assets/images/happyEmote.png');
