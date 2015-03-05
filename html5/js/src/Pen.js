@@ -204,9 +204,9 @@ GlassLab.Pen.prototype.Resize = function() {
     }
 
     if (this.penStyle == GlassLab.Pen.STYLES.gate) {
-        //FIXME this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLineLeft");
+        // this._drawHorizontalEdge(this.topEdge, 0, this.widths[0] - 1, 0, "dottedLineLeft"); // right now this doesn't work... this part needs to be behind the creatures but the fence needs to be in front
         this._drawHorizontalEdge(this.topEdge, this.widths[0], fullWidth, 0, "penFenceRight");
-        //this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0], this.height, "dottedLineLeft");
+        //this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0] - 1, this.height, "dottedLineLeft"); // width - 1 so it doesn't interfere with the gate :?
         this._drawHorizontalEdge(this.bottomEdge, this.widths[0], fullWidth, this.height, "penFenceRight");
     } else {
         this._drawHorizontalEdge(this.topEdge, (this.cornerSprite.visible? 1 : 0), fullWidth, 0);

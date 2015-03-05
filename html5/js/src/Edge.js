@@ -104,10 +104,19 @@ GlassLab.Edge.prototype.showArrow = function(visible) {
 GlassLab.Edge.prototype.placeArrow = function(col, row) {
     if (!this.arrow.visible) return;
 
-    if (this.side == GlassLab.Edge.SIDES.top) row -= 1.25;
-    else if (this.side == GlassLab.Edge.SIDES.left) col -= 1.25;
-    else if (this.side == GlassLab.Edge.SIDES.bottom) row -= 0.25;
-    else col -= 0.25;
+    if (this.side == GlassLab.Edge.SIDES.top) {
+        row -= 1.5;
+        col += 0.5;
+    } else if (this.side == GlassLab.Edge.SIDES.left) {
+        col -= 1;
+        row += 0.5;
+    } else if (this.side == GlassLab.Edge.SIDES.bottom) {
+        row -= 0;
+        col += 0.5;
+    } else { // center / right
+        col -= 0;
+        row += 0.5;
+    }
 
     this.arrow.isoX = col * GLOBAL.tileSize;
     this.arrow.isoY = row * GLOBAL.tileSize;
