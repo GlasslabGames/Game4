@@ -52,7 +52,11 @@ GlassLab.Pen = function(game, layer, height, widths)
         this.sprite.addChild(edge.sprite);
     }
 
-    this.sprite.addChild(this.topEdge.sprite); // note, the order of all this might have to change
+    this.sprite.addChild(this.topEdge.sprite);
+
+    this.gateFront = this.game.make.isoSprite();
+    this.sprite.addChild(this.gateFront).name = "gateFront";
+
     this.sprite.addChild(this.bottomEdge.sprite);
 
     var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
@@ -175,21 +179,10 @@ GlassLab.Pen.prototype.Resize = function() {
 
     // if this has a gate that can go up and down, we need to add/show various other pieces
     if (this.penStyle == GlassLab.Pen.STYLES.gate) {
-        if (!this.gateBack) {
-            var anchorX = 0.15, anchorY = 0.28; // should match the anchor given for the gate in "drawVerticalEdge"
-            this.gateBack = this.game.make.isoSprite(0, 0, 0, "gateCapFar");
-            this.gateBack.anchor.setTo(anchorX, anchorY);
-            this.centerEdge.sprite.addChildAt(this.gateBack, 0);
-            this.gateFront = this.game.make.isoSprite();
-            this.centerEdge.sprite.addChild(this.gateFront, 0);
+        if (!this.gateBack) this._makeGatePieces();
 
-            this.gateLever = this.game.make.sprite(0, 0, "gateSwitchFail");
-            this.gateLight = this.game.make.sprite(0, 0, "gateLightRed");
-            this.gateFront.addChild(this.gateLever).anchor.setTo(anchorX, anchorY);
-            this.gateFront.addChild(this.gateLight).anchor.setTo(anchorX, anchorY);
-            this.gateFront.addChild(this.game.make.sprite(0, 0, "gateCapNear")).anchor.setTo(anchorX, anchorY);
-            this.gateFront.addChild(this.game.make.sprite(0, 0, "gateSwitchBack")).anchor.setTo(anchorX, anchorY);
-        }
+        this.gateBack.visible = true;
+        this.gateFront.visible = true;
 
         this.gateBack.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), 0);
         this.gateFront.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), GLOBAL.tileSize * (this.height - 1));
@@ -399,3 +392,24 @@ GlassLab.Pen.prototype._getSection = function(tile) {
     }
     return -1; // off the right side
 };
+
+GlassLab.Pen.prototype._makeGatePieces = function() {
+    var anchorX = 0.15, anchorY = 0.28; // should match the anchor given for the gate in "drawVerticalEdge"
+    this.gateBack = this.game.make.isoSprite(0, 0, 0, "gateCapFar");
+    this.gateBack.anchor.setTo(anchorX, anchorY);
+    this.centerEdge.sprite.addChildAt(this.gateBack, 0);
+
+    this.gateFront.addChild(this.game.make.sprite(0, 0, "gateCapNear")).anchor.setTo(anchorX, anchorY);
+    this.gateFront.addChild(this.game.make.sprite(0, 0, "gateSwitchBack")).anchor.setTo(anchorX, anchorY);
+
+    this.gateLever = this.game.make.sprite(0, 0, "gateSwitchFail");
+    this.gateLever.inputEnabled = true;
+    this.gateLever.events.onInputDown.add(this._onLeverPulled, this);
+    this.gateFront.addChild(this.gateLever).anchor.setTo(anchorX, anchorY);
+
+    this.gateLight = this.game.make.sprite(0, 0, "gateLightRed");
+    this.gateFront.addChild(this.gateLight).anchor.setTo(anchorX, anchorY);
+};
+
+// this is overwritten in Feeding Pen
+GlassLab.Pen.prototype._onLeverPulled = function() {};

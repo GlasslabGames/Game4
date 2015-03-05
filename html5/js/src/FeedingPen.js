@@ -215,6 +215,8 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     for (var i = 0; i < this.rightEdges.length - 1; i++) {
         this.rightEdges[i].sprite.parent.removeChild( this.rightEdges[i].sprite ); // hide the middle fences
     }
+    // move the creatures to be in front of the centerEdge
+    this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
 
     var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
 
@@ -480,4 +482,34 @@ GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
     // We assume a single column of creatures, but currently the encoding uses area so it's not a problem
     return GlassLab.Pen.encodeDimensions(this.targetNumCreatures, 1, creatureInfo.desiredFood[0].amount,
         (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) );
+};
+
+GlassLab.FeedingPen.prototype._onLeverPulled = function() {
+    this._refreshFeedButton();
+    if (!this.canFeed || this.feeding) {
+        if (this.gateLight.spriteName != "gateLightRed") this.gateLight.loadTexture("gateLightRed");
+        this.gateLight.animations.add('anim');
+        this.gateLight.animations.play('anim', 48);
+
+        if (this.gateLever.spriteName != "gateSwitchFail") this.gateLever.loadTexture("gateSwitchFail");
+        this.gateLever.animations.add('anim');
+        this.gateLever.animations.play('anim', 48);
+    } else {
+        this.gateLight.animations.stop(true);
+
+        if (this.gateLever.spriteName != "gateSwitchFlip") this.gateLever.loadTexture("gateSwitchFlip");
+        this.gateLever.animations.add('anim');
+        this.gateLever.animations.play('anim', 48);
+
+        var centerPieces = this.centerEdge.pieces.children;
+        for (var i = 0; i < centerPieces.length; i++) {
+            centerPieces[i].animations.add('anim');
+            var anim = centerPieces[i].animations.play('anim', 48);
+            if (i == 0) { // add an event to the first animation to trigger the feeding once the gate is donw
+                anim.onComplete.addOnce(function() {
+                    this.game.time.events.add(0, this.FeedCreatures, this); // if we do it immediately it interrupts the update loop
+                    }, this);
+            }
+        }
+    }
 };
