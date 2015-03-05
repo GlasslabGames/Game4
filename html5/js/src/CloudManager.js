@@ -62,10 +62,6 @@ GlassLab.Cloud.prototype._onUpdate = function(dt)
     {
         this.destroy();
     }
-    else if (GLOBAL.debug)
-    {
-        this.game.debug.spriteBounds(this.sprite, 0x00ff00, false);
-    }
 };
 
 GlassLab.Cloud.prototype.destroy = function()

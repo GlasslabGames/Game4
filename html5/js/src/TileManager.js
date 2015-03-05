@@ -371,12 +371,16 @@ GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
   if (this.occupant) return;
   this.occupant = creature;
     creature.tile = this;
+
+    if (GLOBAL.debug) this.tint = 0xff0000;
   //if (this.isTarget(creature.type)) creature.enterPen(this.inPen);
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {
   if (this.occupant == creature) this.occupant = null;
     if (creature.tile == this) creature.tile = null;
+
+    if (GLOBAL.debug) this.tint = 0xffffff;
 };
 
 GlassLab.Tile.prototype.onFoodAdded = function(food) {

@@ -12,7 +12,6 @@ GlassLab.Creature = function (game, type, startInPen) {
     var info = GLOBAL.creatureManager.creatureDatabase[type];
     this.sprite = game.make.isoSprite();
 
-    //this.sprite = game.make.sprite(0,0, typeName);
     this.game = game;
     this.state = null;
 
@@ -23,10 +22,11 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
-    //this.sprite.anchor.setTo(0.5, 0.8);
 
-    this.sprite.scale.x = -0.25;
-    this.sprite.scale.y = 0.25;
+    this.sprite.scale.setTo(-0.25, 0.25);
+
+    this.targetPosition = null;
+    this.currentPath = [];
 
     this.moveSpeed = 2.75;
     this.baseAnimSpeed = 36; // 36 per moveSpeed
@@ -78,7 +78,6 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * 4;
 
     //game.physics.isoArcade.enable(this.sprite);
-    //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 
     // FINALLY, start the desired state
@@ -142,7 +141,6 @@ GlassLab.Creature.prototype.moveToRandomTile = function () {
     this.sprite.isoX = tile.isoX;
     this.sprite.isoY = tile.isoY;
 
-
     if (Math.random() > 0.5) // face a random direction too
     {
         this.sprite.scale.x *= -1;
@@ -199,6 +197,115 @@ GlassLab.Creature.prototype._onDown = function (sprite, pointer) {
     }
 };
 
+GlassLab.Creature.prototype.PathToTileCoordinate = function(col, row)
+{
+    var tile = GLOBAL.tileManager.GetTile(col, row);
+    this.PathToTile(tile);
+};
+
+// A*
+GlassLab.Creature.prototype.PathToTile = function(goalTile)
+{
+    this.currentPath = [new Phaser.Point(goalTile.isoX, goalTile.isoY)];
+    return;
+
+    var pathNode = function(h, tile)
+    {
+        this.h = h || Number.MAX_VALUE;
+        this.tile = tile || null;
+    };
+
+    var pathMap = [[]]; // {x, y} map of explored tiles, marked by tiles they were explored FROM (for backtracing)
+    this.currentPath = [];
+
+    this.currentSweep = []; // Array of locations currently being scanned by A*
+    this.nextSweep = []; // Array of locations to be scanned next sweep by A*
+    if (!this.tile) this.tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    exploreTile(this.tile, pathMap, 0);
+
+    function exploreTile(tile, pathMap, distance)
+    {
+        var currentColumn = tile.col;
+        var currentRow = tile.row+1;
+        if (!pathMap[currentColumn])
+        {
+            pathMap[currentColumn] = [];
+        }
+
+        if (!pathMap[currentColumn][currentRow] || pathMap[currentColumn][currentRow].h > distance)
+        {
+            var nextTile = GLOBAL.tileManager.GetTile(currentColumn, currentRow);
+            if (nextTile && nextTile.getIsWalkable())
+            {
+                pathMap[currentColumn][currentRow] = new pathNode(distance, tile);
+                exploreTile(nextTile, pathMap, distance+1);
+            }
+        }
+        var currentRow = tile.row-1;
+        if (!pathMap[currentColumn][currentRow] || pathMap[currentColumn][currentRow].h > distance)
+        {
+            var nextTile = GLOBAL.tileManager.GetTile(currentColumn, currentRow);
+            if (nextTile && nextTile.getIsWalkable())
+            {
+                pathMap[currentColumn][currentRow] = new pathNode(distance, tile);
+                exploreTile(nextTile, pathMap, distance+1);
+            }
+        }
+
+        currentColumn = tile.col+1;
+        currentRow = tile.row;
+        if (!pathMap[currentColumn])
+        {
+            pathMap[currentColumn] = [];
+        }
+        if (!pathMap[currentColumn][currentRow] || pathMap[currentColumn][currentRow].h > distance)
+        {
+            var nextTile = GLOBAL.tileManager.GetTile(currentColumn, currentRow);
+            if (nextTile && nextTile.getIsWalkable())
+            {
+                pathMap[currentColumn][currentRow] = new pathNode(distance, tile);
+                exploreTile(nextTile, pathMap, distance+1);
+            }
+        }
+
+        currentColumn = tile.col-1;
+        if (!pathMap[currentColumn])
+        {
+            pathMap[currentColumn] = [];
+        }
+        if (!pathMap[currentColumn][currentRow] || pathMap[currentColumn][currentRow].h > distance)
+        {
+            var nextTile = GLOBAL.tileManager.GetTile(currentColumn, currentRow);
+            if (nextTile && nextTile.getIsWalkable())
+            {
+                pathMap[currentColumn][currentRow] = new pathNode(distance, tile);
+                exploreTile(nextTile, pathMap, distance+1);
+            }
+        }
+    }
+
+    this.currentPath.unshift(goalTile);
+    if (!pathMap[goalTile.col] || !pathMap[goalTile.col][goalTile.row])
+    {
+        this.currentPath = [];
+        console.warn("Couldn't find path to ", goalTile.col, goalTile.row);
+        return;
+    }
+
+    var traceback = pathMap[goalTile.col][goalTile.row];
+    this.currentPath.unshift(traceback.tile);
+    while (traceback.tile != this.tile)
+    {
+        traceback = pathMap[traceback.tile.col][traceback.tile.row];
+        this.currentPath.unshift(traceback.tile);
+    }
+
+    console.log(this.currentPath);
+    for(var i=0; i < this.currentPath.length; i++)
+    {
+        console.log(this.currentPath[i].col + "\t-\t" + this.currentPath[i].row);
+    }
+};
 
 GlassLab.Creature.prototype._startDrag = function () {
     if (GLOBAL.dragTarget != null) return;
@@ -236,7 +343,74 @@ GlassLab.Creature.prototype._onUpdate = function () {
             }
         }
     }
-    //if (this.rightKey.justDown) { }
+};
+
+GlassLab.Creature.prototype._move = function() {
+    if (!this.targetPosition)
+    {
+        if (this.currentPath.length > 0)
+        {
+            this.targetPosition = this.currentPath[0];
+
+            var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);
+            var debugPoint = this.game.iso.project(new Phaser.Plugin.Isometric.Point3(delta.x, delta.y, 0));
+            console.log(debugPoint);
+            if (debugPoint.y < 0)
+            {
+                this.PlayAnim('walk_back', true, this.baseAnimSpeed * this.moveSpeed);
+                this.sprite.scale.x = Math.abs(this.sprite.scale.x) * (debugPoint.x < 0 ? -1 : 1);
+            }
+            else
+            {
+                this.PlayAnim('walk', true, this.baseAnimSpeed * this.moveSpeed);
+
+                this.sprite.scale.x = Math.abs(this.sprite.scale.x) * (debugPoint.x > 0 ? -1 : 1);
+            }
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    // Move towards current point
+    var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);
+    if (delta.getMagnitudeSq() > this.moveSpeed * this.moveSpeed) {
+        delta.setMagnitude(this.moveSpeed);
+    }
+    else {
+        // If the delta magnitude is less than our move speed, we're done after this frame.
+
+        // Find new point along path
+        this.currentPath.shift();
+        if (this.currentPath.length > 0)
+        {
+            this.targetPosition = this.currentPath[0];
+        }
+        else
+        {
+            this.StopAnim();
+            this.targetPosition = null;
+        }
+
+        // Physics
+        if (this.sprite.body) {
+            this.sprite.body.velocity.setTo(0, 0);
+            return;
+        }
+    }
+
+    if (this.sprite.body) {
+        // Physics
+        this.sprite.body.velocity.x = delta.x * 100.0;
+        this.sprite.body.velocity.y = delta.y * 100.0;
+    }
+    else {
+        Phaser.Point.add(this.sprite.isoPosition, delta, delta);
+
+        this.sprite.isoX = delta.x;
+        this.sprite.isoY = delta.y;
+    }
 };
 
 GlassLab.Creature.prototype.FinishEating = function (result) {
@@ -416,21 +590,4 @@ GlassLab.Creature.prototype.getGlobalIsoPos = function () {
         pos.y += sprite.isoY;
     }
     return pos;
-};
-
-/**
- * CreatureState
- */
-GlassLab.CreatureState = function (game, owner) {
-    this.creature = owner;
-    this.game = game;
-};
-
-GlassLab.CreatureState.prototype.Enter = function () {
-};
-
-GlassLab.CreatureState.prototype.Exit = function () {
-};
-
-GlassLab.CreatureState.prototype.Update = function () {
 };
