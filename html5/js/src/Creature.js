@@ -373,7 +373,6 @@ GlassLab.Creature.prototype.exitPen = function (pen) {
     //this.setIsoPos( this.sprite.isoX + pen.sprite.isoX, this.sprite.isoY + pen.sprite.isoY); // FIXME
     this.pen = null;
     pen.onCreatureRemoved(this); // do this after setting this.pen to null for telemetry purposes
-    this._onTargetsChanged();
 };
 
 GlassLab.Creature.prototype.setIsoPos = function (x, y) {
