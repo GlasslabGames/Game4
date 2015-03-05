@@ -15,6 +15,11 @@ GlassLab.ClearWorldAction.prototype.constructor = GlassLab.ClearWorldAction;
 
 GlassLab.ClearWorldAction.prototype.Do = function()
 {
+    GlassLab.SignalManager.update.addOnce(this._onUpdate, this);
+};
+
+GlassLab.ClearWorldAction.prototype._onUpdate = function()
+{
     GLOBAL.levelManager._destroyCurrentLevel();
 
     this._complete();

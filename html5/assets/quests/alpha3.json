@@ -11,6 +11,9 @@
     "__type": "GlassLab.ResetTelemetryAction"
   },
   {
+    "__type": "GlassLab.ClearOrdersAction"
+  },
+  {
     "__type": "GlassLab.SaveCheckpointAction"
   },
   {
@@ -44,15 +47,6 @@
             "__type": "GlassLab.FeedAnimalCondition",
             "acceptedType": "baby_unifox",
             "numRequired": 2
-          }
-        ]
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
-          {
-            "__type": "GlassLab.WaitCondition",
-            "waitTime": 2000
           }
         ]
       },
@@ -109,15 +103,6 @@
           ]
         },
         {
-          "__type": "GlassLab.WaitForCondition",
-          "conditions": [
-            {
-              "__type": "GlassLab.WaitCondition",
-              "waitTime": 2000
-            }
-          ]
-        },
-        {
           "__type": "GlassLab.ClearWorldAction"
         }
       ]
@@ -160,15 +145,6 @@
             "__type": "GlassLab.FeedAnimalCondition",
             "acceptedType": "baby_unifox",
             "numRequired": 10
-          }
-        ]
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
-          {
-            "__type": "GlassLab.WaitCondition",
-            "waitTime": 2000
           }
         ]
       },

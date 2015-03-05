@@ -11,6 +11,9 @@
     "__type": "GlassLab.ResetTelemetryAction"
   },
   {
+    "__type": "GlassLab.ClearOrdersAction"
+  },
+  {
     "__type": "GlassLab.SaveCheckpointAction"
   },
   {
@@ -100,19 +103,17 @@
             "numRequired": 8
           }
         ]
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
-          {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.journalClosed"
-          }
-        ]
       }
     ]
   },
   {
     "__type": "GlassLab.EndQuestAction"
+  },
+  {
+    "__type": "GlassLab.ClearWorldAction"
+  },
+  {
+    "__type": "GlassLab.DisplayModalAction",
+    "text": "Congrats! You Win! Thanks for playing!"
   }
 ]
