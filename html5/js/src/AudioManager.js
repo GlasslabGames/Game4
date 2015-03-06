@@ -47,6 +47,23 @@ GlassLab.AudioManager.prototype.revertMusic = function() {
   if (this.prevMusic) this.switchMusic(this.prevMusic);
 };
 
+GlassLab.AudioManager.prototype.toggleSoundEffects = function(on)
+{
+    if (typeof on == 'undefined') on = !this.soundEffectsOn;
+    this.soundEffectsOn = on;
+    this.soundEffectsVolume = (on)? 1 : 0;
+
+    // if any sound effects are currently playing, set the correct volume
+    for (var key in this.sounds) {
+        for (var i = 0; i < this.sounds[key].length; i++) {
+            if (this.sounds[key][i].isPlaying) {
+                this.sounds[key][i].volume = this.soundEffectsVolume;
+            }
+        }
+    }
+};
+
+
 // plays a sound from our pool
 GlassLab.AudioManager.prototype.playSound = function(key, randomStart, loop)
 {
@@ -72,7 +89,7 @@ GlassLab.AudioManager.prototype.playSound = function(key, randomStart, loop)
 };
 
 GlassLab.AudioManager.prototype._playSound = function(sound, key, randomStart, loop) {
-    var volume = (key.indexOf("vomit") > -1)? 0.5 : 1; // hacks because the vomit sound is too gross
+    var volume = (key.indexOf("vomit") > -1)? this.soundEffectsVolume / 2 : this.soundEffectsVolume; // hacks because the vomit sound is too gross
 
     var start = 0;
     if (randomStart) {

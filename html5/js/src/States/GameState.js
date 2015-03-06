@@ -24,7 +24,9 @@ GlassLab.State.Game.prototype.create = function()
     game.camera.x = -game.camera.width/2;
     game.camera.y = -game.camera.height/2;
 
-    GLOBAL.audioManager.toggleMusic(true);
+    // start with the sound effects off during development.
+    GLOBAL.audioManager.toggleMusic(false);
+    GLOBAL.audioManager.toggleSoundEffects(false);
 };
 
 GlassLab.State.Game.prototype.update = function()

@@ -228,14 +228,12 @@ GlassLab.State.Init.prototype.create = function()
     table.y = 20;
     GLOBAL.UIManager.topRightAnchor.addChild(table);
 
-    /*
     // pause icon
-    var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
+    var uiElement = new GlassLab.UIButton(game, 0, 0, "pauseIcon", function() {
+        GLOBAL.pauseMenu.toggle();
+    }, this);
     uiElement.scale.setTo(.5, .5);
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
     table.addManagedChild(uiElement);
-    */
 
     var zoomBG = new GlassLab.UIElement(game, 0, 0, "zoomBG");
     zoomBG.scale.setTo(.5, .5);
@@ -368,8 +366,10 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.sortingGame = new GlassLab.SortingGame(game);
     GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame);
-    //GLOBAL.sortingGame.x = -GLOBAL.sortingGame.width / 2;
     GLOBAL.sortingGame.y = -GLOBAL.sortingGame.height / 2;
+
+    GLOBAL.pauseMenu = new GlassLab.PauseMenu(game);
+    GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.pauseMenu);
 
     GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
 
