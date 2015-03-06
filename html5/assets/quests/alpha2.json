@@ -111,7 +111,7 @@
           "serializedActions": [
             {
               "__type": "GlassLab.ShowAssistantDialogueAction",
-              "text": "Very nice. Now click the *FEED button* to feed them."
+              "text": "Very nice. Now *pull the lever* to feed them."
             },
             {
               "__type": "GlassLab.ShowArrowAction",
@@ -140,23 +140,18 @@
       },
       {
         "__type": "GlassLab.WaitForCondition",
+        "operator": "or",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_rammus",
-            "numRequired": 3
-          }
-        ]
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalOpened"
+          },
           {
-            "__type": "GlassLab.WaitCondition",
-            "waitTime": 1000,
-            "_comment": "If we don't wait, bad things happen."
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
-        ]
+        ],
+        "_comment": "We're not sure if we're going to show the journal or not. If we do, journalOpened will happen before challengeComplete."
       },
       {
         "__type": "GlassLab.ConditionalAction",
@@ -230,9 +225,8 @@
           "__type": "GlassLab.WaitForCondition",
           "conditions": [
             {
-              "__type": "GlassLab.FeedAnimalCondition",
-              "acceptedType": "baby_rammus",
-              "numRequired": 4
+              "__type": "GlassLab.SignalCondition",
+              "signalName": "GlassLab.SignalManager.challengeComplete"
             }
           ]
         },
@@ -314,9 +308,44 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_rammus",
-            "numRequired": 7
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.orderAdded",
+            "_comment": "We're waiting for the orderAdded event because that event will be set when the reward message is added."
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "Great job! Now open your *mail* to see the client's response."
+      },
+      {
+        "__type": "GlassLab.ShowArrowAction",
+        "direction": "up",
+        "anchor": "topLeftAnchor",
+        "xPosition": 50,
+        "yPosition": 200
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.mailOpened"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideArrowAction"
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       }
@@ -360,9 +389,8 @@
           "__type": "GlassLab.WaitForCondition",
           "conditions": [
             {
-              "__type": "GlassLab.FeedAnimalCondition",
-              "acceptedType": "baby_rammus",
-              "numRequired": 4
+              "__type": "GlassLab.SignalCondition",
+              "signalName": "GlassLab.SignalManager.challengeComplete"
             }
           ]
         },

@@ -65,6 +65,7 @@ GlassLab.RewardPopup.prototype.constructor = GlassLab.RewardPopup;
 
 GlassLab.RewardPopup.prototype.Show = function(data)
 {
+    this.data = data;
     this.visible = true;
     this.reward = (data.fulfilled? data.reward : 0);
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.type);
@@ -101,6 +102,9 @@ GlassLab.RewardPopup.prototype.Show = function(data)
 GlassLab.RewardPopup.prototype.Hide = function()
 {
     this.visible = false;
+    if (this.data && this.data.fulfilled) { // they closed it after successfully filling in order, so count it as a completed challenge
+        GLOBAL.questManager.completeChallenge();
+    }
 };
 
 GlassLab.RewardPopup.prototype.finish = function() {

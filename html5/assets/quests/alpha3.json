@@ -44,9 +44,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_unifox",
-            "numRequired": 2
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       },
@@ -96,9 +95,8 @@
           "__type": "GlassLab.WaitForCondition",
           "conditions": [
             {
-              "__type": "GlassLab.FeedAnimalCondition",
-              "acceptedType": "baby_unifox",
-              "numRequired": 3
+              "__type": "GlassLab.SignalCondition",
+              "signalName": "GlassLab.SignalManager.challengeComplete"
             }
           ]
         },
@@ -142,9 +140,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_unifox",
-            "numRequired": 10
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       },
@@ -185,9 +182,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_unifox",
-            "numRequired": 12
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       }

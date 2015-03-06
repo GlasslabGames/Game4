@@ -123,6 +123,8 @@ GlassLab.Journal.prototype.Show = function(auto, creatureType)
     // default to the page we last had open, or 0 if we haven't opened the journal yet
     this.RefreshWithCreature(creatureType);
 
+    this.wantToShow = false; // only show it once per "wantToShow"
+
     GlassLab.SignalManager.journalOpened.dispatch(auto, creatureType);
 };
 

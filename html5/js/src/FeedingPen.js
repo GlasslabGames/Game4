@@ -19,7 +19,13 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
-    //this.centerEdge.sprite.parent.removeChild( this.centerEdge.sprite ); // for now don't draw the center
+    // Instead of adding everything to objectRoot, make parents for the food and creatures so we can order them
+    this.foodRoot = this.game.make.isoSprite();
+    this.objectRoot.addChild(this.foodRoot);
+
+    this.creatureRoot = this.game.make.isoSprite();
+    this.objectRoot.addChild(this.creatureRoot);
+
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -54,12 +60,12 @@ GlassLab.FeedingPen.prototype.Resize = function() {
         }
         while (this.foodLists.length <= i) this.foodLists.push([]);
         var maxFood = (this.numFoods)? this.numFoods[i] : null;
-        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodLists[i], maxFood,
+        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodRoot, this.foodLists[i], maxFood,
             startCol, startCol += this.widths[i+1], false, this.foodTypes[i]);
     }
 
     if (this.autoFill) {
-        this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatures, this.numCreatures,
+        this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatures, this.numCreatures,
             0, this.widths[0], true, this.creatureType);
         for (var i = 0; i < this.creatures.length; i++) {
             this.creatures[i].draggable = false;
@@ -68,7 +74,6 @@ GlassLab.FeedingPen.prototype.Resize = function() {
         // Move all the creatures
         if (this.prevIsoPos) {
             var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
-            console.log("dif:",posDif.x, posDif.y);
 
             for (var i = 0; i < this.creatures.length; i++) {
                 var creature = this.creatures[i];
@@ -175,7 +180,7 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.Resize();
 };
 
-GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount, startCol, endCol, fromRight, targetType) {
+GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
     var unusedObjects = list.slice(); // if we didn't provide a list of unused objects, copy the whole list instead
     var count = 0;
 
@@ -184,7 +189,7 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, list, maxCount
             var obj  = unusedObjects.pop();
             if (!obj) { // we ran out of existing tiles, so make a new one
                 obj = new boundConstructor();
-                this.objectRoot.addChild(obj.sprite);
+                parent.addChild(obj.sprite);
                 list.push(obj);
             }
             obj.setType(targetType);
@@ -217,6 +222,9 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     }
     // move the creatures to be in front of the centerEdge
     this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
+
+    // close the items
+    GLOBAL.inventoryMenu.Hide(true);
 
     var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
 
@@ -436,20 +444,21 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
         success: win
     });
 
-    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win);
-
-    this.onResolved.dispatch(win);
 
     if (win)
     {
         GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
-
-        GLOBAL.levelManager.CompleteCurrentLevel();
+        console.log("Logged number of creatures fed",GLOBAL.Journal.wantToShow);
+        // If this creature is new, Journal.wantToShow will be set to true and the journal will open later
     }
     else
     {
         GlassLab.SignalManager.levelLost.dispatch();
     }
+
+    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
+
+    this.onResolved.dispatch(win); // Currently nothing is listening to this signal. It's a red herring.
 };
 
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
