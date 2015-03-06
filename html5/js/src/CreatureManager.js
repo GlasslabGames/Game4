@@ -105,7 +105,8 @@ GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function (type, num) {
     var creatureData = this.creatureDatabase[type];
     if (!creatureData.unlocked) {
         creatureData.unlocked = "new"; // note the fact that it's newly unlocked
-        GLOBAL.Journal.Show(true, type); // only show the journal if we just unlocked something
+        // Delay showing the journal GLOBAL.Journal.Show(true, type); // only show the journal if we just unlocked something
+        GLOBAL.Journal.wantToShow = type; // remember the creature we want to show in the journal
     }
     if (creatureData.discoveredFoodCounts[num]) {
         return;

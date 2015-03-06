@@ -30,6 +30,8 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     this.edges = [ this.topEdge, this.bottomEdge, this.leftEdge, this.centerEdge ];
 
+    // Now start adding all the edges and other pieces in a certain order. Don't change the order or things will layer incorrectly.
+
     // Add a root for all tiles now so that tiles will appear under the edges
     this.tileRoot = this.game.make.isoSprite();
     this.sprite.addChild(this.tileRoot).name = "tileRoot";
@@ -45,17 +47,24 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     this.sprite.addChild(this.centerEdge.sprite);
 
+    var rightmostEdge;
     for (var i = 0; i < this.widths.length-1; i++) {
         var edge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, i);
         this.rightEdges.push(edge);
         this.edges.push(edge);
-        this.sprite.addChild(edge.sprite);
+        if (i == this.widths.length - 2) {
+            rightmostEdge = edge; // remember this edge and we'll add it later in the heirarchy
+        } else {
+            this.sprite.addChild(edge.sprite);
+        }
     }
 
     this.sprite.addChild(this.topEdge.sprite);
 
     this.gateFront = this.game.make.isoSprite();
     this.sprite.addChild(this.gateFront).name = "gateFront";
+
+    if (rightmostEdge) this.sprite.addChild(rightmostEdge.sprite);
 
     this.sprite.addChild(this.bottomEdge.sprite);
 

@@ -444,20 +444,21 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
         success: win
     });
 
-    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win);
-
-    this.onResolved.dispatch(win);
 
     if (win)
     {
         GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
-
-        GLOBAL.levelManager.CompleteCurrentLevel();
+        console.log("Logged number of creatures fed",GLOBAL.Journal.wantToShow);
+        // If this creature is new, Journal.wantToShow will be set to true and the journal will open later
     }
     else
     {
         GlassLab.SignalManager.levelLost.dispatch();
     }
+
+    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
+
+    this.onResolved.dispatch(win); // Currently nothing is listening to this signal. It's a red herring.
 };
 
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {

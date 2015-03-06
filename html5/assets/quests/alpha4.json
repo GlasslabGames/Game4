@@ -57,7 +57,7 @@
         "conditions": [
           {
             "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.journalClosed"
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       },
@@ -98,9 +98,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "rammus",
-            "numRequired": 8
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       }

@@ -97,6 +97,7 @@ GlassLab.MailManager.prototype._onOrderCompleted = function(order)
     }
 
     this.rewards.push(order);
+    GlassLab.SignalManager.orderAdded.dispatch(order); // dispatch this so that the alert shows up on the mail
 };
 
 GlassLab.MailManager.prototype._onGameLoaded = function(blob)

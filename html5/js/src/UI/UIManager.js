@@ -12,16 +12,13 @@ GlassLab.UIManager = function(game)
     this._createAnchors();
 
     // Create the modal that shows when you win a level
-    var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
     var nextButton = new GlassLab.UIButton(this.game, 0, 0, this._onContinuePressed, this, 150, 60, 0xffffff, "Continue");
-
-    this.winModal = new GlassLab.UIModal(this.game, "Good job! You did it!", [retryButton, nextButton]);
-    this.winModal.y += 220;
+    this.winModal = new GlassLab.UIModal(this.game, "Good job! You did it!", nextButton);
     this.centerAnchor.addChild(this.winModal);
     this.winModal.visible = false;
 
     // Create the modal that shows when you lose a level
-    retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
+    var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
     this.loseModal = new GlassLab.UIModal(this.game, "That wasn't right. Try again?", retryButton);
     this.centerAnchor.addChild(this.loseModal);
     this.loseModal.visible = false;
@@ -121,23 +118,6 @@ GlassLab.UIManager.prototype.hideArrow = function() {
     this.tutorialArrow.visible = false;
 };
 
-/*
-// TODO: Replace with class  OR combine with FailModal somehow.. like reuse the same modal? (._.)a
-GlassLab.UIManager.prototype._createEndLevelModal = function()
-{
-   var retryButton = new GlassLab.UIButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
-   var nextButton = new GlassLab.UIButton(this.game, 0, 0, this._onContinuePressed, this, 150, 60, 0xffffff, "Continue");
-   var endLevelModal = new GlassLab.UIModal(this.game, "Good job! You did it!", [retryButton, nextButton]);
-   endLevelModal.visible = false;
-
-    // This seems like a roundabout way to do it... But it makes sense for now
-    GlassLab.SignalManager.journalClosed.add(function(){
-        this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
-    }, endLevelModal);
-
-    return endLevelModal;
-};
-*/
 GlassLab.UIManager.prototype._onRetryPressed = function()
 {
   this.winModal.visible = this.loseModal.visible = false;
@@ -154,8 +134,8 @@ GlassLab.UIManager.prototype._onRetryPressed = function()
 
 GlassLab.UIManager.prototype._onContinuePressed = function()
 {
-  this.winModal.visible = this.loseModal.visible = false;
-  GLOBAL.levelManager.LoadNextLevel();
+    this.winModal.visible = this.loseModal.visible = false;
+    GLOBAL.questManager.completeChallenge();
 };
 
 GlassLab.UIManager.prototype._onBonusPressed = function()

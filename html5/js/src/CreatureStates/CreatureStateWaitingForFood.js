@@ -5,9 +5,10 @@
 /**
  * CreatureStateWaitingForFood
  */
-GlassLab.CreatureStateWaitingForFood = function(game, owner)
+GlassLab.CreatureStateWaitingForFood = function(game, owner, afterEating)
 {
   GlassLab.CreatureState.call(this, game, owner);
+  this.afterEating = afterEating;
 };
 
 GlassLab.CreatureStateWaitingForFood.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -16,7 +17,7 @@ GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaiting
 GlassLab.CreatureStateWaitingForFood.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.creature.standFacing("right");
-  this.creature.draggable = true;
+  this.creature.draggable = !this.afterEating; // you can drag them out of the pen before you start feeding them, but not after they're done
 };
 
 GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
