@@ -18,6 +18,8 @@ GlassLab.CreatureStateTraveling.prototype.Enter = function() {
   this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
   this.creature.draggable = true;
   //this.wayPoint = this.creature.getTile();
+
+    this.footstepSound = GLOBAL.audioManager.playSound("footsteps", true, true);
 };
 
 GlassLab.CreatureStateTraveling.prototype.Exit = function()
@@ -26,6 +28,8 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
   this.creature.StopAnim();
   if (this.wayPoint && this.wayPoint != this.creature.prevTile) this.wayPoint.onCreatureExit(this.creature); // make sure that tile stops thinking we're entering it
   if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
+
+    this.footstepSound.destroy(); // TODO: the audioManager should probably pool sounds
 };
 
 GlassLab.CreatureStateTraveling.prototype.Update = function() {

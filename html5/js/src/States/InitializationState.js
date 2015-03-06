@@ -131,6 +131,11 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bigX', 'assets/images/matchingGame_x.png');
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
 
+    game.load.audio('music1', 'assets/audio/gameplaybgm1.mp3');
+    game.load.audio('eatingSound', 'assets/audio/eating.mp3');
+    game.load.audio('footstepsSound', 'assets/audio/footsteps.mp3');
+    game.load.audio('vomitSound', 'assets/audio/vomit.mp3');
+
     game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
     game.load.json('alpha_quest', 'assets/quests/alpha.json');
     game.load.json('alpha1', 'assets/quests/alpha1.json');
@@ -380,6 +385,8 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
     GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
+
+    GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
 
     this.initComplete = true;
 };

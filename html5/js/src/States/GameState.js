@@ -24,7 +24,9 @@ GlassLab.State.Game.prototype.create = function()
     game.camera.x = -game.camera.width/2;
     game.camera.y = -game.camera.height/2;
 
+    GLOBAL.audioManager.toggleMusic(true);
 };
+
 GlassLab.State.Game.prototype.update = function()
 {
     var game = this.game;
