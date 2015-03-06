@@ -31,7 +31,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
 GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 {
   var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalIsoPos(), this.creature.getGlobalIsoPos());
-  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.5, 2)) { // we're far from the carrot
+  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're far from the carrot
     delta.setMagnitude(this.speed);
     Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
     this.creature.sprite.isoX = delta.x;

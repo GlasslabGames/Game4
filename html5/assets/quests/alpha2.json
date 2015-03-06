@@ -309,6 +309,42 @@
         "conditions": [
           {
             "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.orderAdded",
+            "_comment": "We're waiting for the orderAdded event because that event will be set when the reward message is added."
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "Great job! Now open your *mail* to see the client's response."
+      },
+      {
+        "__type": "GlassLab.ShowArrowAction",
+        "direction": "up",
+        "anchor": "topLeftAnchor",
+        "xPosition": 50,
+        "yPosition": 200
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.mailOpened"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideArrowAction"
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
             "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]

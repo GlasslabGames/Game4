@@ -74,7 +74,7 @@ GlassLab.Food = function(game, type) {
     this.sprite = game.make.isoSprite(0,0,0, this.info.spriteName+"_eaten"); // we start with this animation but don't play it until it gets eaten
     this.sprite.animations.add('anim');
 
-    this.sprite.scale.x = this.sprite.scale.y = 0.3;
+    this.sprite.scale.x = this.sprite.scale.y = 0.4;
     this.game = game;
     this.sprite.anchor.setTo(0.4, 1); // this anchor is specific to the carrot, so generify later
 
