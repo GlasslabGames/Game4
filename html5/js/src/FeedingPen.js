@@ -151,6 +151,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
     this.penStyle = GlassLab.Pen.STYLES.crate;
+    // move the creatures to be in front of the topEdge
+    this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
 
     if (!condenseToMultipleRows) {
         this.widths[0] = 1;
