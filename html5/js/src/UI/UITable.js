@@ -61,6 +61,8 @@ GlassLab.UITable.prototype._refresh = function()
     // TODO: Possible to optimize the loops to not calculate row/column every iteration
     // First refresh column and row sizes
     var numChildren = this.managedChildren.length;
+    this._rowHeights = [];
+    this._columnLengths = [];
     for (var i=0; i < numChildren; i++)
     {
         var child = this.managedChildren[i];
@@ -196,4 +198,9 @@ GlassLab.UITable.prototype.getHeight = function() {
   }
   height -= this.padding; // because an extra was added at the end
   return height;
+};
+
+GlassLab.UITable.prototype.setNumColumns = function(n) {
+    this._columns = n;
+    this._refresh();
 };

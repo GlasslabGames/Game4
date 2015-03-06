@@ -60,7 +60,7 @@ GlassLab.OrderFulfillment = function(game)
     }
 
     this.crateLoaded = false;
-    this.submitButton = new GlassLab.UIButton(game, 30, 280, this._onSubmit, this, 180, 80, 0xffffff, "Load Crate"); // was 0xffaaff
+    this.submitButton = new GlassLab.UIRectButton(game, 30, 280, this._onSubmit, this, 180, 80, 0xffffff, "Load Crate"); // was 0xffaaff
     this.sprite.addChild(this.submitButton);
     this.submitButton.setEnabled(false);
 

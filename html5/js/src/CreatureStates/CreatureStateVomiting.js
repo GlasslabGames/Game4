@@ -39,6 +39,9 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   vomit.animations.add("anim");
   vomit.animations.play("anim", this.creature.baseAnimSpeed, false);
   vomit.events.onAnimationComplete.add(this._onVomitAnimEnded, vomit);
+
+    // if (this is on screen) // TODO
+    GLOBAL.audioManager.playSound("vomit");
 };
 
 GlassLab.CreatureStateVomiting.prototype._onVomitAnimEnded = function(vomit) {

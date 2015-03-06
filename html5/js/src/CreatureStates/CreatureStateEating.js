@@ -50,6 +50,8 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
     this.creature.lastEatenFoodInfo = this.food.info;
     var hideBarAfter = (this.creature.pen? null : 1); // if we're in the pen, keep the hunger bar up. Else show it briefly.
     this.creature.ShowHungerBar(this.amountEaten, this.food.type, hideBarAfter);
+    // if (this is on screen) // TODO
+    GLOBAL.audioManager.playSound("eating");
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {

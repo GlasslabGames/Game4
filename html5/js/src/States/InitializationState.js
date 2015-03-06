@@ -131,6 +131,15 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bigX', 'assets/images/matchingGame_x.png');
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
 
+    game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
+    game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
+    game.load.audio('eatingSound', 'assets/audio/eating.mp3');
+    game.load.audio('footstepsSound', 'assets/audio/footsteps.mp3');
+    game.load.audio('vomitSound', 'assets/audio/vomit.mp3');
+    game.load.audio('failSound', 'assets/audio/fail.mp3');
+    game.load.audio('successSound', 'assets/audio/success.mp3');
+    game.load.audio('clickSound', 'assets/audio/button_click.mp3');
+
     game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
     game.load.json('alpha_quest', 'assets/quests/alpha.json');
     game.load.json('alpha1', 'assets/quests/alpha1.json');
@@ -219,50 +228,40 @@ GlassLab.State.Init.prototype.create = function()
     table.y = 20;
     GLOBAL.UIManager.topRightAnchor.addChild(table);
 
-    /*
     // pause icon
-    var uiElement = new GlassLab.UIElement(game, 0, 0, "pauseIcon");
+    var uiElement = new GlassLab.UIButton(game, 0, 0, "pauseIcon", function() {
+        GLOBAL.pauseMenu.toggle();
+    }, this);
     uiElement.scale.setTo(.5, .5);
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){ GLOBAL.paused = !GLOBAL.paused; }, this);
     table.addManagedChild(uiElement);
-    */
 
     var zoomBG = new GlassLab.UIElement(game, 0, 0, "zoomBG");
     zoomBG.scale.setTo(.5, .5);
     table.addManagedChild(zoomBG);
-    uiElement = new GlassLab.UIElement(game, 15, 40, "zoomInIcon");
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 15, 40, "zoomInIcon", function() {
         GLOBAL.WorldLayer.scale.x *= 2;
         GLOBAL.WorldLayer.scale.y *= 2;
     }, this);
     zoomBG.addChild(uiElement);
-    uiElement = new GlassLab.UIElement(game, 15, 110, "zoomOutIcon");
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 15, 110, "zoomOutIcon", function() {
         GLOBAL.WorldLayer.scale.x /= 2;
         GLOBAL.WorldLayer.scale.y /= 2;
     }, this);
     zoomBG.addChild(uiElement);
 
-    var fullscreenUIElement = new GlassLab.UIElement(game, 0, 0, "fullscreenIcon");
-    fullscreenUIElement.scale.setTo(.5, .5);
-    fullscreenUIElement.inputEnabled = true;
-    fullscreenUIElement.events.onInputDown.add(function(){
+    var fullscreenUIElement = new GlassLab.UIButton(game, 0, 0, "fullscreenIcon", function() {
         if (game.scale.isFullScreen)
         {
             game.scale.stopFullScreen();
-            var texture = game.cache.getRenderTexture("fullscreenIcon");
             fullscreenUIElement.loadTexture("fullscreenIcon");
         }
         else
         {
             game.scale.startFullScreen(false);
-            var texture = game.cache.getRenderTexture("fullscreenOffIcon");
             fullscreenUIElement.loadTexture("fullscreenOffIcon");
         }
     }, this);
+    fullscreenUIElement.scale.setTo(.5, .5);
     table.addManagedChild(fullscreenUIElement);
     table._refresh();
 
@@ -271,15 +270,7 @@ GlassLab.State.Init.prototype.create = function()
     table.y = 20;
     GLOBAL.UIManager.topLeftAnchor.addChild(table);
 
-    uiElement = new GlassLab.UIElement(game, 0,0, "journalIcon");
-    uiElement.scale.setTo(.6, .6);
-    uiElement.inputEnabled = true;
-    var journalAlert = game.make.sprite(0,0,"alertIcon");
-    journalAlert.anchor.setTo(.5,.5);
-    journalAlert.visible = false;
-    GlassLab.SignalManager.levelWon.add(function(level){ this.visible = true; }, journalAlert);
-    uiElement.addChild(journalAlert);
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 0,0, "journalIcon", function() {
         if (!GLOBAL.Journal.IsShowing())
         {
             journalAlert.visible = false;
@@ -289,10 +280,16 @@ GlassLab.State.Init.prototype.create = function()
         {
             GLOBAL.Journal.Hide();
         }
-    }, this);
+    }, this );
+    uiElement.scale.setTo(.6, .6);
+    var journalAlert = game.make.sprite(0,0,"alertIcon");
+    journalAlert.anchor.setTo(.5,.5);
+    journalAlert.visible = false;
+    GlassLab.SignalManager.levelWon.add(function(level){ this.visible = true; }, journalAlert);
+    uiElement.addChild(journalAlert);
     table.addManagedChild(uiElement);
 
-    uiElement = new GlassLab.UIButton(game, 0,0, function(){
+    uiElement = new GlassLab.UIRectButton(game, 0,0, function(){
         if (!GLOBAL.mailManager.IsMailShowing())
         {
             ordersAlert.visible = false;
@@ -318,10 +315,7 @@ GlassLab.State.Init.prototype.create = function()
     }, uiElement);
     table.addManagedChild(uiElement, true);
 
-    uiElement = new GlassLab.UIElement(game, 20, -100, "itemsIcon");
-    uiElement.scale.setTo(.6, .6);
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 20, -100, "itemsIcon", function() {
         if (!GLOBAL.inventoryMenu.visible)
         {
             GLOBAL.inventoryMenu.Show();
@@ -331,8 +325,8 @@ GlassLab.State.Init.prototype.create = function()
             GLOBAL.inventoryMenu.Hide();
         }
     }, this);
+    uiElement.scale.setTo(.6, .6);
     GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
-    uiElement.visible = getParameterByName("items") != "false"; // default to using items
     GLOBAL.itemsButton = uiElement;
 
     // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
@@ -372,14 +366,18 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.sortingGame = new GlassLab.SortingGame(game);
     GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame);
-    //GLOBAL.sortingGame.x = -GLOBAL.sortingGame.width / 2;
     GLOBAL.sortingGame.y = -GLOBAL.sortingGame.height / 2;
+
+    GLOBAL.pauseMenu = new GlassLab.PauseMenu(game);
+    GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.pauseMenu);
 
     GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
 
     GLOBAL.questManager = new GlassLab.QuestManager(GLOBAL.game);
 
     GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
+
+    GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
 
     this.initComplete = true;
 };

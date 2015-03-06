@@ -38,8 +38,8 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
     if (!this.data.unlocked && this.data.cost > 0) {
         if (!this.modal)
         {
-            var yesButton = new GlassLab.UIButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
-            var noButton = new GlassLab.UIButton(this.game, 0, 0, this._onPurchaseCanceled, this, 150, 60, 0xffffff, "No");
+            var yesButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
+            var noButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseCanceled, this, 150, 60, 0xffffff, "No");
 
             this.modal = new GlassLab.UIModal(this.game, "Purchase for $"+this.data.cost + "?", [yesButton, noButton]);
             GLOBAL.UIManager.centerAnchor.addChild(this.modal);
@@ -116,6 +116,8 @@ GlassLab.InventoryMenuItem.prototype.constructor = GlassLab.InventoryMenuItem;
 
 GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
 {
+    GLOBAL.audioManager.playSound("click"); // generic interaction sound
+
     if (target) { // we dropped it on an acceptable uiDragTarget
         this._jumpToStart(); // move the sprite back
         return;
