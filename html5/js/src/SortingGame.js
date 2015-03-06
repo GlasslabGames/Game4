@@ -158,6 +158,8 @@ GlassLab.SortingGame.prototype.start = function(data) {
     this.cardsAnswered = 0;
     this.cardsCorrect = 0;
 
+    GLOBAL.audioManager.switchMusic("bonus");
+
     GlassLabSDK.saveTelemEvent("bonus_game_start", {});
 };
 
@@ -167,6 +169,7 @@ GlassLab.SortingGame.prototype.finish = function() {
     GlassLabSDK.saveTelemEvent("bonus_game_end", {proportion_correct: this.cardsCorrect / this.cardsAnswered});
 
     this.visible = false;
+    GLOBAL.audioManager.revertMusic();
     GlassLab.SignalManager.bonusGameComplete.dispatch();
 };
 

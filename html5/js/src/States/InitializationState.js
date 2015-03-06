@@ -131,10 +131,14 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bigX', 'assets/images/matchingGame_x.png');
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
 
-    game.load.audio('music1', 'assets/audio/gameplaybgm1.mp3');
+    game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
+    game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
     game.load.audio('eatingSound', 'assets/audio/eating.mp3');
     game.load.audio('footstepsSound', 'assets/audio/footsteps.mp3');
     game.load.audio('vomitSound', 'assets/audio/vomit.mp3');
+    game.load.audio('failSound', 'assets/audio/fail.mp3');
+    game.load.audio('successSound', 'assets/audio/success.mp3');
+    game.load.audio('clickSound', 'assets/audio/button_click.mp3');
 
     game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
     game.load.json('alpha_quest', 'assets/quests/alpha.json');
@@ -297,7 +301,7 @@ GlassLab.State.Init.prototype.create = function()
     }, this);
     table.addManagedChild(uiElement);
 
-    uiElement = new GlassLab.UIButton(game, 0,0, function(){
+    uiElement = new GlassLab.UIRectButton(game, 0,0, function(){
         if (!GLOBAL.mailManager.IsMailShowing())
         {
             ordersAlert.visible = false;

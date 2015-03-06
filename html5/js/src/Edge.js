@@ -69,8 +69,8 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, anchor) {
         switch (this.side) {
             case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
             case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
-            case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 3; break;
-            default: sprite.input.priorityID = 4; break;
+            case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 4; break;
+            default: sprite.input.priorityID = 3; break;
         } // Note: We might have to revisit and/or add priorityIDs to other things.
         this.pieces.addChild(sprite);
     }

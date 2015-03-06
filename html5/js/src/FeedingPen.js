@@ -494,6 +494,8 @@ GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
 };
 
 GlassLab.FeedingPen.prototype._onLeverPulled = function() {
+    GLOBAL.audioManager.playSound("click"); // generic interaction sound
+
     this._refreshFeedButton();
     if (!this.canFeed || this.feeding) {
         if (this.gateLight.spriteName != "gateLightRed") this.gateLight.loadTexture("gateLightRed");

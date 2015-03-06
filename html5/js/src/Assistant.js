@@ -23,9 +23,9 @@ GlassLab.Assistant = function(game) {
     this.sprite.addChild(this.label);
     this.labelWidth = 370;
 
-    this.cancelButton = new GlassLab.UIButton(this.game, -500, 10, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
-    this.continueButton = new GlassLab.UIButton(this.game, -310, 10, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
-    this.advanceTutorialButton = new GlassLab.UIButton(this.game, -200, 10, this._onAdvanceTutorialPressed, this, 75, 40, 0xffffff, "OK", 18);
+    this.cancelButton = new GlassLab.UIRectButton(this.game, -500, 10, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
+    this.continueButton = new GlassLab.UIRectButton(this.game, -310, 10, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
+    this.advanceTutorialButton = new GlassLab.UIRectButton(this.game, -200, 10, this._onAdvanceTutorialPressed, this, 75, 40, 0xffffff, "OK", 18);
     this.advanceTutorialButton.visible = false;
     this.sprite.addChild(this.cancelButton);
     this.sprite.addChild(this.continueButton);

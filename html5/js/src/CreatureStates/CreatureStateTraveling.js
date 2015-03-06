@@ -29,7 +29,7 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
   if (this.wayPoint && this.wayPoint != this.creature.prevTile) this.wayPoint.onCreatureExit(this.creature); // make sure that tile stops thinking we're entering it
   if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
 
-    this.footstepSound.destroy(); // TODO: the audioManager should probably pool sounds
+    if (this.footstepSound) this.footstepSound.stop();
 };
 
 GlassLab.CreatureStateTraveling.prototype.Update = function() {

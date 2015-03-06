@@ -119,6 +119,7 @@ GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
 {
     if (win && this.challengeType == "pen") {
         GLOBAL.UIManager.winModal.visible = true;
+        GLOBAL.audioManager.playSound("success");
         // this.completeChallenge will be called when they close the popup
     }
 };
