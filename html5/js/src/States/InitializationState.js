@@ -240,38 +240,30 @@ GlassLab.State.Init.prototype.create = function()
     var zoomBG = new GlassLab.UIElement(game, 0, 0, "zoomBG");
     zoomBG.scale.setTo(.5, .5);
     table.addManagedChild(zoomBG);
-    uiElement = new GlassLab.UIElement(game, 15, 40, "zoomInIcon");
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 15, 40, "zoomInIcon", function() {
         GLOBAL.WorldLayer.scale.x *= 2;
         GLOBAL.WorldLayer.scale.y *= 2;
     }, this);
     zoomBG.addChild(uiElement);
-    uiElement = new GlassLab.UIElement(game, 15, 110, "zoomOutIcon");
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 15, 110, "zoomOutIcon", function() {
         GLOBAL.WorldLayer.scale.x /= 2;
         GLOBAL.WorldLayer.scale.y /= 2;
     }, this);
     zoomBG.addChild(uiElement);
 
-    var fullscreenUIElement = new GlassLab.UIElement(game, 0, 0, "fullscreenIcon");
-    fullscreenUIElement.scale.setTo(.5, .5);
-    fullscreenUIElement.inputEnabled = true;
-    fullscreenUIElement.events.onInputDown.add(function(){
+    var fullscreenUIElement = new GlassLab.UIButton(game, 0, 0, "fullscreenIcon", function() {
         if (game.scale.isFullScreen)
         {
             game.scale.stopFullScreen();
-            var texture = game.cache.getRenderTexture("fullscreenIcon");
             fullscreenUIElement.loadTexture("fullscreenIcon");
         }
         else
         {
             game.scale.startFullScreen(false);
-            var texture = game.cache.getRenderTexture("fullscreenOffIcon");
             fullscreenUIElement.loadTexture("fullscreenOffIcon");
         }
     }, this);
+    fullscreenUIElement.scale.setTo(.5, .5);
     table.addManagedChild(fullscreenUIElement);
     table._refresh();
 
@@ -280,15 +272,7 @@ GlassLab.State.Init.prototype.create = function()
     table.y = 20;
     GLOBAL.UIManager.topLeftAnchor.addChild(table);
 
-    uiElement = new GlassLab.UIElement(game, 0,0, "journalIcon");
-    uiElement.scale.setTo(.6, .6);
-    uiElement.inputEnabled = true;
-    var journalAlert = game.make.sprite(0,0,"alertIcon");
-    journalAlert.anchor.setTo(.5,.5);
-    journalAlert.visible = false;
-    GlassLab.SignalManager.levelWon.add(function(level){ this.visible = true; }, journalAlert);
-    uiElement.addChild(journalAlert);
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 0,0, "journalIcon", function() {
         if (!GLOBAL.Journal.IsShowing())
         {
             journalAlert.visible = false;
@@ -298,7 +282,13 @@ GlassLab.State.Init.prototype.create = function()
         {
             GLOBAL.Journal.Hide();
         }
-    }, this);
+    }, this );
+    uiElement.scale.setTo(.6, .6);
+    var journalAlert = game.make.sprite(0,0,"alertIcon");
+    journalAlert.anchor.setTo(.5,.5);
+    journalAlert.visible = false;
+    GlassLab.SignalManager.levelWon.add(function(level){ this.visible = true; }, journalAlert);
+    uiElement.addChild(journalAlert);
     table.addManagedChild(uiElement);
 
     uiElement = new GlassLab.UIRectButton(game, 0,0, function(){
@@ -327,10 +317,7 @@ GlassLab.State.Init.prototype.create = function()
     }, uiElement);
     table.addManagedChild(uiElement, true);
 
-    uiElement = new GlassLab.UIElement(game, 20, -100, "itemsIcon");
-    uiElement.scale.setTo(.6, .6);
-    uiElement.inputEnabled = true;
-    uiElement.events.onInputDown.add(function(){
+    uiElement = new GlassLab.UIButton(game, 20, -100, "itemsIcon", function() {
         if (!GLOBAL.inventoryMenu.visible)
         {
             GLOBAL.inventoryMenu.Show();
@@ -340,8 +327,8 @@ GlassLab.State.Init.prototype.create = function()
             GLOBAL.inventoryMenu.Hide();
         }
     }, this);
+    uiElement.scale.setTo(.6, .6);
     GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
-    uiElement.visible = getParameterByName("items") != "false"; // default to using items
     GLOBAL.itemsButton = uiElement;
 
     // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)

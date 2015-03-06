@@ -26,7 +26,7 @@ GlassLab.InventoryMenu = function(game)
     this.addChild(this.itemTable);
 
     // Make the close button to match the inventoryMenuSlots (this could be done more robustly)
-    this.closeButton = game.make.button(0,0,"inventoryClose", this.Hide, this);
+    this.closeButton = new GlassLab.UIButton(this.game, 0,0,"inventoryClose", this.Hide, this);
     this.closeButton.scale.setTo(.8, .8);
     this.closeButton.anchor.setTo(0.5, 0.5);
     this.itemTable.addManagedChild(this.closeButton);

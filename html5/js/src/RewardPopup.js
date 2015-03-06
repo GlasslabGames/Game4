@@ -97,6 +97,12 @@ GlassLab.RewardPopup.prototype.Show = function(data)
     var emoteSpriteName = (data.fulfilled? "happyEmote" : "angryEmote");
     if (this.emote.spriteName != emoteSpriteName) this.emote.loadTexture(emoteSpriteName);
 
+    if (data.fulfilled) {
+        GLOBAL.audioManager.playSound("success");
+    } else {
+        GLOBAL.audioManager.playSound("fail");
+    }
+
 };
 
 GlassLab.RewardPopup.prototype.Hide = function()

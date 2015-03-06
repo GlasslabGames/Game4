@@ -30,7 +30,7 @@ GlassLab.UIButton.prototype.setEnabled = function(enabled) {
 
 GlassLab.UIButton.prototype._onDown = function() {
     GLOBAL.audioManager.playSound("click");
-    this.callback.apply(this.callbackContext, arguments);
+    if (this.callback) this.callback.apply(this.callbackContext, arguments);
 };
 
 /**
