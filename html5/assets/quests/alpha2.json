@@ -258,9 +258,9 @@
         "data": {
           "client": "Archibold Huxley III",
           "company": "Rupture Farms",
-          "numCreatures": 7,
+          "numFoodA": 21,
           "type": "baby_rammus",
-          "description": "Dear Friend! I want 7 BABY RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "description": "Dear Friend! I have 21 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
           "fulfilled": false,
           "reward": 200
         }

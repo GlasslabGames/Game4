@@ -151,6 +151,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
 
     this.penStyle = GlassLab.Pen.STYLES.crate;
+    // move the creatures to be in front of the topEdge
+    this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
 
     if (!condenseToMultipleRows) {
         this.widths[0] = 1;
@@ -220,8 +222,11 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     for (var i = 0; i < this.rightEdges.length - 1; i++) {
         this.rightEdges[i].sprite.parent.removeChild( this.rightEdges[i].sprite ); // hide the middle fences
     }
-    // move the creatures to be in front of the centerEdge
-    this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
+
+    // if there's a gate, move the creatures to be in front of the centerEdge
+    if (this.penStyle == GlassLab.Pen.STYLES.gate) {
+        this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
+    }
 
     // close the items
     GLOBAL.inventoryMenu.Hide(true);
@@ -230,6 +235,8 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 
     // For each section of food, calculate which foods should go to which creatures
     for (var i = 0; i < this.foodTypes.length; i++) {
+        if (!this.foodTypes[i] || !this.foodLists[i]) continue;
+
         var foodByRow = this._sortObjectsByGrid(this.foodLists[i], false);
         var desiredAmount = this.creatures[0].desiredAmountsOfFood[this.foodTypes[i]]; // assume that all the creatures in the pen are the same kind as the first one
         var remainder = desiredAmount % 1;
