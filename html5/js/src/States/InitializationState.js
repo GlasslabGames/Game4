@@ -124,6 +124,10 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bigX', 'assets/images/matchingGame_x.png');
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
 
+    // Tilemap
+    game.load.tilemap('testTileMap', 'assets/tilemaps/test.json');
+
+    // Quests
     game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
     game.load.json('alpha_quest', 'assets/quests/alpha.json');
     game.load.json('alpha1', 'assets/quests/alpha1.json');
@@ -174,11 +178,13 @@ GlassLab.State.Init.prototype.create = function()
 
     // Create TileManager and map
     GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
-    GLOBAL.tileManager.GenerateRandomMapData(20, 20);
+    var tileData = game.cache.getTilemapData("testTileMap");
+
+    var mapData = GLOBAL.tileManager.GenerateRandomMapData(20, 20);
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
     GLOBAL.tileManager.SetCenter(10,10);
     GLOBAL.grassGroup = game.make.group();
-    GLOBAL.tileManager.GenerateMapFromDataToGroup(GLOBAL.grassGroup);
+    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
     // Create pen

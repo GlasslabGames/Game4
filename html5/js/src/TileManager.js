@@ -48,17 +48,22 @@ GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
     return type && type != GlassLab.Tile.TYPES.water; // maybe move this to Tile? or give the tile types some properties?
 };
 
-GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, min, max)
+GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
 {
+    var tilemap = new Phaser.Tilemap(this.game, "testTileMap");
+    var mapData = [[]];
     for (var i=0; i < width; i++)
     {
         for (var j=0; j < height; j++)
         {
-            if (!this.mapData[i]) this.mapData[i] = [];
+            if (!mapData[i]) mapData[i] = [];
             var centerDist = Math.sqrt( (j - height / 2.0)*(j - height / 2.0) + (i - width / 2.0) * (i - width / 2.0));
-            if (centerDist > 8.5) this.mapData[i][j] = GlassLab.Tile.TYPES.water; // water
-            else if (Math.random() < 0.75) this.mapData[i][j] = GlassLab.Tile.TYPES.grass;
-            else this.mapData[i][j] = GlassLab.Tile.TYPES["mushroom"+ Math.floor(Math.random() * 3)];
+            if (centerDist > 8.5) mapData[i][j] = GlassLab.Tile.TYPES.water; // water
+            else if (Math.random() < 0.75) mapData[i][j] = GlassLab.Tile.TYPES.grass;
+            else mapData[i][j] = GlassLab.Tile.TYPES["mushroom"+ Math.floor(Math.random() * 3)];
+
+            //var tile = new Phaser.Tile(null, mapData[i][j], i, j, 1, 1);
+            //tilemap.putTile(mapData[i][j], i, j, 0);
         }
     }
 /* This made a fence
@@ -77,10 +82,14 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, m
     this.mapData[8][6] = 6;
     this.mapData[9][6] = 6;
    */
+
+    console.log(tilemap);
+    return mapData;
 };
 
-GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(parentGroup)
+GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(data, parentGroup)
 {
+    this.mapData = data;
     function isFence(num) { return num >= 5 && num <= 8; }
     for (var i=this.mapData.length-1; i>=0; i--)
     {
