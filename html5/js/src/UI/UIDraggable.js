@@ -87,6 +87,7 @@ GlassLab.UIDraggable.prototype._startDrag = function(pointer) {
     GLOBAL.dragTarget = this;
     this._applyDragEffect();
     this.events.onStartDrag.dispatch();
+    GLOBAL.audioManager.playSound("click");
 };
 
 GlassLab.UIDraggable.prototype._endDrag = function() {
@@ -106,6 +107,8 @@ GlassLab.UIDraggable.prototype._endDrag = function() {
         this.events.onDrop.dispatch(target);
         if (this.destroyOnSuccessfulDrop) this.destroy();
     }
+    GLOBAL.audioManager.playSound("click");
+
 };
 
 GlassLab.UIDraggable.prototype.OnStickyDrop = function () { // called by (atm) prototype.js

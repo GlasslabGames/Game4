@@ -38,7 +38,7 @@ GlassLab.RewardPopup = function(game, x, y)
     this.emote.anchor.setTo(0.5, 0.5);
     photo.addChild(this.emote);
 
-    this.button = new GlassLab.UIButton(this.game, 0, 0, this.finish, this, 250, 50, 0xffffff, "Collect Payment!");//, fontsize);
+    this.button = new GlassLab.UIRectButton(this.game, 0, 0, this.finish, this, 250, 50, 0xffffff, "Collect Payment!");//, fontsize);
     this.modal = new GlassLab.UIModal(this.game, "", this.button);
     this.modal.label.style.font = "bold 14pt Arial";
     this.addChild(this.modal);
@@ -65,6 +65,7 @@ GlassLab.RewardPopup.prototype.constructor = GlassLab.RewardPopup;
 
 GlassLab.RewardPopup.prototype.Show = function(data)
 {
+    this.data = data;
     this.visible = true;
     this.reward = (data.fulfilled? data.reward : 0);
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.type);
@@ -96,11 +97,20 @@ GlassLab.RewardPopup.prototype.Show = function(data)
     var emoteSpriteName = (data.fulfilled? "happyEmote" : "angryEmote");
     if (this.emote.spriteName != emoteSpriteName) this.emote.loadTexture(emoteSpriteName);
 
+    if (data.fulfilled) {
+        GLOBAL.audioManager.playSound("success");
+    } else {
+        GLOBAL.audioManager.playSound("fail");
+    }
+
 };
 
 GlassLab.RewardPopup.prototype.Hide = function()
 {
     this.visible = false;
+    if (this.data && this.data.fulfilled) { // they closed it after successfully filling in order, so count it as a completed challenge
+        GLOBAL.questManager.completeChallenge();
+    }
 };
 
 GlassLab.RewardPopup.prototype.finish = function() {

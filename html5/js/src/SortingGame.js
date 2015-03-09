@@ -120,6 +120,7 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
 
     // If we answered all the cards, close after a short delay
     if (this.cardsAnswered >= this.cards.length) {
+        if (this.bonusAmount) GLOBAL.audioManager.playSound("success");
         this.game.time.events.add( Phaser.Timer.SECOND, function() { this.finish() }, this);
     }
 };
@@ -158,6 +159,8 @@ GlassLab.SortingGame.prototype.start = function(data) {
     this.cardsAnswered = 0;
     this.cardsCorrect = 0;
 
+    GLOBAL.audioManager.switchMusic("bonus");
+
     GlassLabSDK.saveTelemEvent("bonus_game_start", {});
 };
 
@@ -167,6 +170,7 @@ GlassLab.SortingGame.prototype.finish = function() {
     GlassLabSDK.saveTelemEvent("bonus_game_end", {proportion_correct: this.cardsCorrect / this.cardsAnswered});
 
     this.visible = false;
+    GLOBAL.audioManager.revertMusic();
     GlassLab.SignalManager.bonusGameComplete.dispatch();
 };
 

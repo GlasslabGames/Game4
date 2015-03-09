@@ -44,9 +44,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_unifox",
-            "numRequired": 2
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       },
@@ -96,9 +95,8 @@
           "__type": "GlassLab.WaitForCondition",
           "conditions": [
             {
-              "__type": "GlassLab.FeedAnimalCondition",
-              "acceptedType": "baby_unifox",
-              "numRequired": 3
+              "__type": "GlassLab.SignalCondition",
+              "signalName": "GlassLab.SignalManager.challengeComplete"
             }
           ]
         },
@@ -142,9 +140,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_unifox",
-            "numRequired": 10
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       },
@@ -174,9 +171,9 @@
         "data": {
           "client": "Archibold Huxley III",
           "company": "Rupture Farms",
-          "numCreatures": 12,
+          "numFoodA": 48,
           "type": "baby_unifox",
-          "description": "Dear Friend! I want 12 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "description": "Dear Friend! I have 48 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
           "fulfilled": false,
           "reward": 200
         }
@@ -185,9 +182,8 @@
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "baby_unifox",
-            "numRequired": 12
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.challengeComplete"
           }
         ]
       }

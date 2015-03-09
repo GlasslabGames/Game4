@@ -69,6 +69,16 @@ GlassLab.LevelManager = function(game)
         objective: "Fill an order!",
         orders: [
             {
+                "client": "Archibold Huxley III",
+                "company": "Rupture Farms",
+                //"numCreatures": 12,
+                "numFoodB": 4,
+                "type": "unifox",
+                "description": "Dear Friend! I have space for 48 STRAWBERRIES. Can you send me ENOUGH UNIFOXES to eat that much food?",
+                "fulfilled": false,
+                "reward": 200
+            },
+            {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
                 numCreatures: 5,

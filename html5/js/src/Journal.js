@@ -74,17 +74,17 @@ GlassLab.Journal = function(game) {
     this.unknownDietLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.unknownDietLabel);
 
-    this.closeButton = game.make.button(145, -175, "closeIcon" , this._onClosePressed, this);
+    this.closeButton = new GlassLab.UIButton(this.game, 145, -175, "closeIcon" , this._onClosePressed, this);
     this.closeButton.anchor.setTo(0.5, 0.5);
     this.closeButton.scale.setTo(.15, .15);
     this.sprite.addChild(this.closeButton);
 
     // Page buttons
-    this.nextPageButton = game.make.button(190, 0, "sideArrow" , this._onNextPagePressed, this);
+    this.nextPageButton = new GlassLab.UIButton(this.game, 190, 0, "sideArrow" , this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.sprite.addChild(this.nextPageButton);
 
-    this.prevPageButton = game.make.button(-210, 0, "sideArrow" , this._onPrevPagePressed, this);
+    this.prevPageButton = new GlassLab.UIButton(this.game, -210, 0, "sideArrow" , this._onPrevPagePressed, this);
     this.prevPageButton.scale.x *= -1;
     this.prevPageButton.anchor.setTo(0, 0.5);
     this.sprite.addChild(this.prevPageButton);
@@ -122,6 +122,8 @@ GlassLab.Journal.prototype.Show = function(auto, creatureType)
     if (!creatureType) creatureType = GLOBAL.creatureManager.creatureList[this.currentPage || 0];
     // default to the page we last had open, or 0 if we haven't opened the journal yet
     this.RefreshWithCreature(creatureType);
+
+    this.wantToShow = false; // only show it once per "wantToShow"
 
     GlassLab.SignalManager.journalOpened.dispatch(auto, creatureType);
 };

@@ -4,11 +4,10 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.WaitForCondition = function(serializedConditions)
+GlassLab.WaitForCondition = function()
 {
     GlassLab.Action.prototype.constructor.call(this);
 
-    this.conditions = serializedConditions; // serialized conditions
     this._deserializedConditions = []; // deserialized conditions
 };
 
@@ -36,17 +35,22 @@ GlassLab.WaitForCondition.prototype.Do = function()
 
 GlassLab.WaitForCondition.prototype._onConditionChanged = function(condition)
 {
+    var complete = (this.operator == 'or')? false: true;
+
     for (var i=this._deserializedConditions.length-1; i >= 0; i--)
     {
         var condition = this._deserializedConditions[i];
-        if (!condition.isCompleted)
-        {
-            return;
+        if (this.operator == 'or') {
+            complete = complete || condition.isCompleted;
+            if (complete) break;
+        } else {
+            complete = complete && condition.isCompleted;
+            if (!complete) break;
         }
     }
 
     // Should have exited early if any conditions were not met.
-    this._complete();
+    if (complete) this._complete();
 };
 
 GlassLab.WaitForCondition.prototype._onDestroy = function()

@@ -535,7 +535,7 @@ GlassLab.Creature.prototype.enterPen = function (pen) {
     this.pen = pen;
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
     pen.onCreatureEntered(this);
-    pen.objectRoot.addChild(this.sprite); // parent it in the pen so that the ordering works correctly
+    pen.creatureRoot.addChild(this.sprite); // parent it in the pen so that the ordering works correctly
     this.setIsoPos( this.sprite.isoX - pen.sprite.isoX, this.sprite.isoY - pen.sprite.isoY);
 };
 
@@ -547,7 +547,6 @@ GlassLab.Creature.prototype.exitPen = function (pen) {
     //this.setIsoPos( this.sprite.isoX + pen.sprite.isoX, this.sprite.isoY + pen.sprite.isoY); // FIXME
     this.pen = null;
     pen.onCreatureRemoved(this); // do this after setting this.pen to null for telemetry purposes
-    this._onTargetsChanged();
 };
 
 GlassLab.Creature.prototype.setIsoPos = function (x, y) {

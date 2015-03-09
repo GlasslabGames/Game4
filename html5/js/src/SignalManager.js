@@ -31,6 +31,7 @@ GlassLab.SignalManager = {
     bonusGameComplete: new Phaser.Signal(),
 
     challengeStarted: new Phaser.Signal(),
+    challengeComplete: new Phaser.Signal(),
 
     // Creature Events
     creatureTargetsChanged: new Phaser.Signal(),

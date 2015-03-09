@@ -53,7 +53,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.descriptionLabel = game.make.text(15, 160, "", {wordWrap: true, wordWrapWidth: 250, font:"bold 10pt Arial"});
     this.sprite.addChild(this.descriptionLabel);
 
-    this.selectButton = game.make.button(this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
+    this.selectButton = new GlassLab.UIButton(this.game, this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
         this.Hide(true);
 
         GLOBAL.orderFulfillment.Show(this.data);
@@ -68,18 +68,18 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.currentPage = 0;
     //this.sprite.addChild(this.paymentLabel);
 
-    this.closeButton = game.make.button(this.bg.width-17, 15, "closeIcon" , this._onClosePressed, this);
+    this.closeButton = new GlassLab.UIButton(this.game, this.bg.width-17, 15, "closeIcon" , this._onClosePressed, this);
     this.closeButton.anchor.setTo(.5, .5);
     this.closeButton.scale.setTo(.1, .1);
     this.sprite.addChild(this.closeButton);
 
     // Page buttons
-    this.nextPageButton = game.make.button(this.bg.width + 10, 200, "sideArrow" , this._onNextPagePressed, this);
+    this.nextPageButton = new GlassLab.UIButton(this.game, this.bg.width + 10, 200, "sideArrow" , this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.nextPageButton.scale.setTo(0.7, 0.7);
     this.sprite.addChild(this.nextPageButton);
 
-    this.prevPageButton = game.make.button(-10, 200, "sideArrow" , this._onPrevPagePressed, this);
+    this.prevPageButton = new GlassLab.UIButton(this.game, -10, 200, "sideArrow" , this._onPrevPagePressed, this);
     this.prevPageButton.anchor.setTo(0, 0.5);
     this.prevPageButton.scale.setTo(0.7, 0.7);
     this.prevPageButton.scale.x *= -1;
