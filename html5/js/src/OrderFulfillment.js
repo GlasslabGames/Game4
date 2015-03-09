@@ -321,7 +321,7 @@ GlassLab.OrderFulfillment.prototype.restartLoading = function(numAttempts)
 GlassLab.OrderFulfillment.prototype.onFoodSet = function(inventorySlot, dragTarget) {
     for (var i = 0; i < this.answerInputs.length; i++) {
         if (this.answerInputs[i].dragTarget == dragTarget) {
-            this.foodTypes[i] = inventorySlot.foodType;
+            this.foodTypes[i - 1] = inventorySlot.foodType; // subtract 1 since the first answer input is the creature
         }
     }
     this._refreshAnswerInputs();
@@ -331,18 +331,26 @@ GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calcula
     // Telemetry - for now we only allow them to set the food, not to set the number of creatures. FIXME later.
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.data.type);
     var response = this._getResponse();
+
+    // figure out the correct answer
+    var targetNumCreatures = this.data.numCreatures || 0;
+    if (!targetNumCreatures) {
+        if (this.data.numFoodA) targetNumCreatures = this.data.numFoodA / creatureInfo.desiredFood[0].amount;
+        else if (this.data.numFoodB) targetNumCreatures = this.data.numFoodB / creatureInfo.desiredFood[1].amount;
+    }
+
     var data = {
         creature_type: this.data.type,
-        creature_count: this.data.numCreatures,
-        target_creature_count: this.data.numCreatures,
+        creature_count: response[0] || 0,
+        target_creature_count: targetNumCreatures,
         foodA_type: this.foodTypes[0] || "",
         target_foodA_type: creatureInfo.desiredFood[0].type || "",
         foodB_type: this.foodTypes[1] || "",
         target_foodB_type: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].type : ""),
-        foodA_count: response[0] || 0,
-        target_foodA_count: creatureInfo.desiredFood[0].amount * this.data.numCreatures,
-        foodB_count: response[1] || 0,
-        target_foodB_count: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) * this.data.numCreatures
+        foodA_count: response[1] || 0,
+        target_foodA_count: creatureInfo.desiredFood[0].amount * targetNumCreatures,
+        foodB_count: response[2] || 0,
+        target_foodB_count: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) * targetNumCreatures
     };
     if (calculateSuccess) {
         // check that the food type & counts match the target, or are swapped (A matches B, etc)
