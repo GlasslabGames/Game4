@@ -293,6 +293,7 @@ GlassLab.State.Init.prototype.create = function()
             GLOBAL.Journal.Hide();
         }
     }, this );
+    button.image.position.setTo(0, 10);
     table.addManagedChild(button);
 
     button = new GlassLab.HUDButton(game, 0,0, "mailIcon", "hudBg", false, function(){
@@ -305,9 +306,10 @@ GlassLab.State.Init.prototype.create = function()
             GLOBAL.mailManager.HideMail();
         }
     }, this );
+    button.image.position.setTo(0, 5);
     GLOBAL.ordersButton = button;
     GlassLab.SignalManager.levelLoaded.add(function(level){
-        this.visible = true; //FIXME (level.data.orders && level.data.orders.length > 0);
+        this.visible = (level.data.orders && level.data.orders.length > 0);
     }, button);
     GlassLab.SignalManager.orderAdded.add(function(order){
         this.visible = true;
@@ -326,6 +328,7 @@ GlassLab.State.Init.prototype.create = function()
             GLOBAL.inventoryMenu.Hide();
         }
     }, this);
+    button.image.position.setTo(0, 15);
     GLOBAL.UIManager.bottomLeftAnchor.addChild(button);
     button.position.setTo( (button.getWidth() / 2) + 20, (button.getHeight() / -2) - 20);
     GLOBAL.itemsButton = button;
