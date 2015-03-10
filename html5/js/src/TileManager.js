@@ -52,6 +52,7 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
 {
     var tilemap = new Phaser.Tilemap(this.game, "testTileMap");
     var mapData = [[]];
+    /*
     for (var i=0; i < width; i++)
     {
         for (var j=0; j < height; j++)
@@ -65,7 +66,9 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
             //var tile = new Phaser.Tile(null, mapData[i][j], i, j, 1, 1);
             //tilemap.putTile(mapData[i][j], i, j, 0);
         }
-    }
+    }*/
+
+    var data = this.game.cache.getTilemapData("testTileMap");
 /* This made a fence
     this.mapData[10][6] = 6; // Right corner
     this.mapData[10][7] = 6;
@@ -83,8 +86,42 @@ GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
     this.mapData[9][6] = 6;
    */
 
+    var jsonData;
     console.log(tilemap);
+    console.log(data);
+    console.log("Processed: ", jsonData = JSON.parse(data.data));
+
+    for (var i=0; i < jsonData.width; i++)
+    {
+        for (var j = 0; j < jsonData.height; j++)
+        {
+            if (!mapData[i]) mapData[i] = [];
+            mapData[i][j] = jsonData.layers[0].data[i + j*jsonData.width]-1;
+        }
+    }
+
+    this.tileData = [];
+    var tllll = jsonData.tilesets[0].tiles;
+    for (var i in tllll)
+    {
+        var tileData = new GlassLab.TileData();
+        tileData.image = jsonData.tilesets[0].tiles[i].image;
+        tileData.imageKey = tileData.image.substring(tileData.image.lastIndexOf("/")+1);
+        tileData.id = i;
+        tileData.properties = jsonData.tilesets[0].tileproperties[i] || {};
+        this.tileData[i] = tileData;
+    }
+    console.log(this.tileData);
+
+    this.game.plugins..setAStarMap(jsonData);
     return mapData;
+};
+
+GlassLab.TileData = function() {
+    this.id = -1;
+    this.properties = {};
+    this.imageKey = "";
+    this.image = "";
 };
 
 GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(data, parentGroup)
@@ -96,7 +133,9 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(data, paren
         for (var j=this.mapData[i].length-1; j>=0; j--)
         {
             var tileType = this.GetTileData(i, j);
+            if (tileType == -1) continue;
             var shouldFlip = false;
+            /*
             if (isFence(tileType)) // we're not using this at all :/
             {
                 if (isFence(this.mapData[i+1][j])) // right-down
@@ -163,7 +202,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(data, paren
                     }
                 }
             }
-
+            */
             var image = new GlassLab.Tile(this.game, i, j, tileType);
             if (shouldFlip) image.scale.x = -image.scale.x;
             parentGroup.add(image);
@@ -282,10 +321,13 @@ GlassLab.TileManager.prototype.clearTiles = function()
   for (var col = 0; col < this.GetMapWidth(); col++) {
     for (var row = 0; row < this.GetMapHeight(); row++) {
       var tile = this.GetTile(col, row);
-      tile.setInPen(false);
-      tile.unswapType();
-      tile.occupant = null;
-        tile.food = null;
+        if (tile)
+        {
+            tile.setInPen(false);
+            tile.unswapType();
+            tile.occupant = null;
+            tile.food = null;
+        }
     }
   }
 
@@ -314,7 +356,7 @@ GlassLab.TileManager.prototype.getTargets = function(creature)
   for (var col = 0; col < this.GetMapWidth(); col++) {
     for (var row = 0; row < this.GetMapHeight(); row++) {
       var tile = this.GetTile(col, row);
-      if (tile.isTarget(creature)) tiles.push(tile);
+      if (tile && tile.isTarget(creature)) tiles.push(tile);
     }
   }
   return tiles;
@@ -325,7 +367,8 @@ GlassLab.TileManager.prototype.getTargets = function(creature)
  * Tile
  */
 GlassLab.Tile = function(game, col, row, type) {
-  Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-10)*GLOBAL.tileSize, (row-10)*GLOBAL.tileSize, 0, type);
+    var imageName = GLOBAL.tileManager.tileData[type].imageKey;
+  Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-10)*GLOBAL.tileSize, (row-10)*GLOBAL.tileSize, 0, imageName);
   this.type = type;
   //this.tint = Phaser.Color.getColor(Math.random() * 255, Math.random() * 255, Math.random() * 255); // for testing with clearly distinguished tiles (change type to placeholderTile)
   this.anchor.setTo(0.5, 0.5);
@@ -405,6 +448,7 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
 };
 
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
+    return !GLOBAL.tileManager.tileData[this.type].properties.hasOwnProperty("collidable");
   if (this.type == GlassLab.Tile.TYPES.water || this.occupant) return false;
   else if (creatureType && this.targetCreatureType == creatureType) return true; // allow walking in pen if the creature type matches
   else return !this.inPen;

@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="Tiels" tilewidth="240" tileheight="248">
+<tileset name="Tiles" tilewidth="240" tileheight="248">
  <tile id="0">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/autumn_fenceBottomCorner.png"/>
  </tile>
  <tile id="1">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/autumn_fenceSideCorner.png"/>
  </tile>
  <tile id="2">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/autumn_fenceStraight.png"/>
  </tile>
  <tile id="3">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/autumn_fenceTopCorner.png"/>
  </tile>
  <tile id="4">
@@ -25,6 +37,9 @@
   <image width="240" height="248" source="../images/tiles/autumn_ground4.png"/>
  </tile>
  <tile id="8">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/autumn_water.png"/>
  </tile>
  <tile id="9">
@@ -46,18 +61,33 @@
   <image width="240" height="248" source="../images/tiles/grassy_4.png"/>
  </tile>
  <tile id="15">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/grassy_fence_bottomCorner.png"/>
  </tile>
  <tile id="16">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/grassy_fence_length.png"/>
  </tile>
  <tile id="17">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/grassy_fence_sideCorner.png"/>
  </tile>
  <tile id="18">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/grassy_fence_topCorner.png"/>
  </tile>
  <tile id="19">
+  <properties>
+   <property name="collidable" value=""/>
+  </properties>
   <image width="240" height="248" source="../images/tiles/grassy_water.png"/>
  </tile>
  <tile id="20">
