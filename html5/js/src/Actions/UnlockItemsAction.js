@@ -14,6 +14,10 @@ GlassLab.UnlockItemsAction.prototype.constructor = GlassLab.UnlockItemsAction;
 
 GlassLab.UnlockItemsAction.prototype.Do = function()
 {
+    if (this.lockOthers) {
+        GLOBAL.inventoryManager.lockAll();
+    }
+
     for (var i=0; i < this.items.length; i++)
     {
         GLOBAL.inventoryManager.unlock(this.items[i]);

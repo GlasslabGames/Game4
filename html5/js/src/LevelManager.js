@@ -102,10 +102,10 @@ GlassLab.LevelManager = function(game)
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
-            {type: "rammus", foodAWidth: 1, height:1}//, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+            {type: "baby_rammus", foodAWidth: 1, height:1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            //rammus: 16
+            baby_rammus: 8
         },
         objective: "Feed the rams!"
     };
@@ -146,6 +146,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
 {
     this._destroyCurrentLevel();
+    GLOBAL.inventoryManager.unlockAll(); // FIXME
 
     if (levelData.pens) {
         for (var i = 0; i < levelData.pens.length; i++) {
