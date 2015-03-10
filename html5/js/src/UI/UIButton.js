@@ -17,7 +17,7 @@ GlassLab.UIButton = function(game, x, y, spriteName, callback, callbackContext)
 
     this.callback = callback;
     this.callbackContext = callbackContext;
-    this.inputHandler = this.events.onInputDown.add(this._onDown, this);
+    this.inputHandler = this.events.onInputUp.add(this._onUp, this);
 };
 
 GlassLab.UIButton.prototype = Object.create(GlassLab.UIElement.prototype);
@@ -28,7 +28,7 @@ GlassLab.UIButton.prototype.setEnabled = function(enabled) {
     this.inputHandler.active = enabled;
 };
 
-GlassLab.UIButton.prototype._onDown = function() {
+GlassLab.UIButton.prototype._onUp = function() {
     GLOBAL.audioManager.playSound("click");
     if (this.callback) this.callback.apply(this.callbackContext, arguments);
 };

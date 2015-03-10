@@ -102,14 +102,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
 
     // UI
-    game.load.image('zoomBG', 'assets/images/prima_HUD_zoom.png');
-    game.load.image('zoomInIcon', 'assets/images/prima_HUD_zoomIn.png');
-    game.load.image('zoomOutIcon', 'assets/images/prima_HUD_zoomOut.png');
-    game.load.image('fullscreenIcon', 'assets/images/prima_HUD_enterFullScreen.png');
-    game.load.image('fullscreenOffIcon', 'assets/images/prima_HUD_exitFullScreen.png');
     game.load.image('itemsIcon', 'assets/images/prima_HUD_items.png');
     game.load.image('journalIcon', 'assets/images/prima_HUD_journal.png');
-    game.load.image('pauseIcon', 'assets/images/prima_HUD_pause.png');
     game.load.image('closeIcon', 'assets/images/Close-button.png');
     game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
     game.load.image('journalBg', 'assets/images/journal_bg2.png');
@@ -130,6 +124,16 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bigO', 'assets/images/matchingGame_o.png');
     game.load.image('bigX', 'assets/images/matchingGame_x.png');
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
+
+    // New UI
+    game.load.image('hudSettingsBgRounded', 'assets/images/hud/hud_button_settings_rounded.png');
+    game.load.image('hudSettingsBg', 'assets/images/hud/hud_button_settings_square.png');
+    game.load.image('zoomInIcon', 'assets/images/hud/hud_icon_zoomin.png');
+    game.load.image('zoomOutIcon', 'assets/images/hud/hud_icon_zoomout.png');
+    game.load.image('fullscreenIcon', 'assets/images/hud/hud_icon_enter_fullscreen.png');
+    game.load.image('fullscreenOffIcon', 'assets/images/hud/hud_icon_exit_fullscreen.png');
+    game.load.image('pauseIcon', 'assets/images/hud/hud_icon_pause.png');
+
 
     game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
@@ -217,53 +221,56 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
 
     // Add UI
-    // TODO: Gross, so much crap here. How to clean? We could move into UIManager at least..
     var uiGroup = game.add.group();
     GLOBAL.UIGroup = uiGroup;
 
     GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
 
-    var table = new GlassLab.UITable(game, 1, 20);
-    table.x = -70;
-    table.y = 20;
+    var table = new GlassLab.UITable(game, 1, 3);
     GLOBAL.UIManager.topRightAnchor.addChild(table);
 
     // pause icon
-    var uiElement = new GlassLab.UIButton(game, 0, 0, "pauseIcon", function() {
+    var button = new GlassLab.HUDButton(game, 0, 0, "pauseIcon", "hudSettingsBgRounded", true, function() {
         GLOBAL.pauseMenu.toggle();
     }, this);
-    uiElement.scale.setTo(.5, .5);
-    table.addManagedChild(uiElement);
+    table.addManagedChild(button);
 
-    var zoomBG = new GlassLab.UIElement(game, 0, 0, "zoomBG");
-    zoomBG.scale.setTo(.5, .5);
-    table.addManagedChild(zoomBG);
-    uiElement = new GlassLab.UIButton(game, 15, 40, "zoomInIcon", function() {
+    var zoomGroup = new GlassLab.UIElement(game);
+    table.addManagedChild(zoomGroup);
+
+    // for some reason the position in the table is a little off unless we set the y to 2 here
+    button = new GlassLab.HUDButton(game, 0, 1, "zoomInIcon", "hudSettingsBg", true, function() {
         GLOBAL.WorldLayer.scale.x *= 2;
         GLOBAL.WorldLayer.scale.y *= 2;
     }, this);
-    zoomBG.addChild(uiElement);
-    uiElement = new GlassLab.UIButton(game, 15, 110, "zoomOutIcon", function() {
+    zoomGroup.addChild(button);
+    zoomGroup.actualHeight = button.getHeight();
+
+    button = new GlassLab.HUDButton(game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, function() {
         GLOBAL.WorldLayer.scale.x /= 2;
         GLOBAL.WorldLayer.scale.y /= 2;
     }, this);
-    zoomBG.addChild(uiElement);
+    zoomGroup.addChild(button);
+    zoomGroup.actualHeight += button.getHeight();
 
-    var fullscreenUIElement = new GlassLab.UIButton(game, 0, 0, "fullscreenIcon", function() {
+    var fullscreenButton = new GlassLab.HUDButton(game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
         if (game.scale.isFullScreen)
         {
             game.scale.stopFullScreen();
-            fullscreenUIElement.loadTexture("fullscreenIcon");
+            fullscreenButton.image.loadTexture("fullscreenIcon");
         }
         else
         {
             game.scale.startFullScreen(false);
-            fullscreenUIElement.loadTexture("fullscreenOffIcon");
+            fullscreenButton.image.loadTexture("fullscreenOffIcon");
         }
     }, this);
-    fullscreenUIElement.scale.setTo(.5, .5);
-    table.addManagedChild(fullscreenUIElement);
+    fullscreenButton.bg.scale.y *= -1;
+    table.addManagedChild(fullscreenButton);
+
     table._refresh();
+    table.position.setTo( (table.getWidth() / -2) - 20, (button.getHeight() / 2) + 20 );
+
 
     table = new GlassLab.UITable(game, 1, 40);
     table.x = 20;
