@@ -16,10 +16,11 @@ GlassLab.SignalManager = {
     // UI Events
     journalOpened: new Phaser.Signal(),
     journalClosed: new Phaser.Signal(),
-    uiFocusChanged: new Phaser.Signal(),
     inventoryOpened: new Phaser.Signal(),
     inventoryClosed: new Phaser.Signal(),
     mailOpened: new Phaser.Signal(),
+    mailClosed: new Phaser.Signal(),
+    uiFocusChanged: new Phaser.Signal(),
 
     // Tutorial
     tutorialAdvanced: new Phaser.Signal(),

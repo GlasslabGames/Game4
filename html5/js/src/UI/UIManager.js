@@ -48,6 +48,8 @@ GlassLab.UIManager = function(game)
     this.tutorialArrowTween = game.add.tween(this.tutorialArrow.scale).to( { x: 0.55 }, 300, Phaser.Easing.Linear.InOut, true, 0, 150, true);
     this.tutorialArrowTween.pause();
     this.tutorialArrow.visible = false;
+
+    this.createHud();
 };
 
 GlassLab.UIManager.prototype._onGlobalUp = function(pointer, DOMevent)
@@ -179,4 +181,111 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
     }
 
     return label.text; // returns the text with newlines inserted
+};
+
+GlassLab.UIManager.prototype.createHud = function() {
+    var table = new GlassLab.UITable(this.game, 1, 3);
+    this.topRightAnchor.addChild(table);
+
+    // pause icon
+    var button = new GlassLab.HUDButton(this.game, 0, 0, "pauseIcon", "hudSettingsBgRounded", true, function() {
+        GLOBAL.pauseMenu.toggle();
+    }, this);
+    table.addManagedChild(button);
+
+    var zoomGroup = new GlassLab.UIElement(this.game);
+    table.addManagedChild(zoomGroup);
+
+    // for some reason the position in the table is a little off unless we set the y to 2 here
+    button = new GlassLab.HUDButton(this.game, 0, 1, "zoomInIcon", "hudSettingsBg", true, function() {
+        GLOBAL.WorldLayer.scale.x *= 2;
+        GLOBAL.WorldLayer.scale.y *= 2;
+    }, this);
+    zoomGroup.addChild(button);
+    zoomGroup.actualHeight = button.getHeight();
+
+    button = new GlassLab.HUDButton(this.game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, function() {
+        GLOBAL.WorldLayer.scale.x /= 2;
+        GLOBAL.WorldLayer.scale.y /= 2;
+    }, this);
+    zoomGroup.addChild(button);
+    zoomGroup.actualHeight += button.getHeight();
+
+    var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
+        if (game.scale.isFullScreen)
+        {
+            game.scale.stopFullScreen();
+            fullscreenButton.image.loadTexture("fullscreenIcon");
+        }
+        else
+        {
+            game.scale.startFullScreen(false);
+            fullscreenButton.image.loadTexture("fullscreenOffIcon");
+        }
+    }, this);
+    fullscreenButton.bg.scale.y *= -1;
+    table.addManagedChild(fullscreenButton);
+
+    table._refresh();
+    table.position.setTo( (table.getWidth() / -2) - 20, (button.getHeight() / 2) + 20 );
+
+
+    table = new GlassLab.UITable(this.game, 1, 20);
+    this.topLeftAnchor.addChild(table);
+
+    this.journalButton = new GlassLab.HUDAnimButton(this.game, 0,0, "notesIcon", "hudBg", false, this._onJournalButton, this );
+    this.journalButton.image.position.setTo(0, 10);
+    table.addManagedChild(this.journalButton);
+
+    GlassLab.SignalManager.journalOpened.add(function() { this.toggleOpen(true); }, this.journalButton);
+    GlassLab.SignalManager.journalClosed.add(function() { this.toggleOpen(false); }, this.journalButton);
+
+    this.mailButton = new GlassLab.HUDAnimButton(this.game, 0,0, "mailIcon", "hudBg", false, this._onMailButton, this );
+    this.mailButton.image.position.setTo(0, 5);
+    GLOBAL.ordersButton = this.mailButton;
+    GlassLab.SignalManager.levelLoaded.add(function(level){
+        this.visible = (level.data.orders && level.data.orders.length > 0);
+    }, this.mailButton);
+    GlassLab.SignalManager.orderAdded.add(function(order){
+        this.visible = true;
+    }, this.mailButton);
+    table.addManagedChild(this.mailButton, true);
+
+    GlassLab.SignalManager.mailOpened.add(function() { this.toggleOpen(true); }, this.mailButton);
+    GlassLab.SignalManager.mailClosed.add(function() { this.toggleOpen(false); }, this.mailButton);
+
+    table.position.setTo( (table.getWidth() / 2) + 20, (this.mailButton.getHeight() / 2) + 20 );
+
+    this.itemsButton = new GlassLab.HUDAnimButton(this.game, 0, 0, "foodIcon", "hudBg", false, this._onItemsButton, this);
+    this.itemsButton.image.position.setTo(0, 15);
+    this.bottomLeftAnchor.addChild(this.itemsButton);
+    this.itemsButton.position.setTo( (this.itemsButton.getWidth() / 2) + 20, (this.itemsButton.getHeight() / -2) - 20);
+    GLOBAL.itemsButton = this.itemsButton;
+
+    GlassLab.SignalManager.inventoryOpened.add(function() { this.toggleOpen(true); }, this.itemsButton);
+    GlassLab.SignalManager.inventoryClosed.add(function() { this.toggleOpen(false); }, this.itemsButton);
+};
+
+GlassLab.UIManager.prototype._onJournalButton = function() {
+    if (!GLOBAL.Journal.IsShowing()) {
+        GLOBAL.Journal.Show();
+    } else {
+        GLOBAL.Journal.Hide();
+    }
+};
+
+GlassLab.UIManager.prototype._onMailButton = function() {
+    if (!GLOBAL.mailManager.IsMailShowing()) {
+        GLOBAL.mailManager.ShowMail();
+    } else {
+        GLOBAL.mailManager.HideMail();
+    }
+};
+
+GlassLab.UIManager.prototype._onItemsButton = function() {
+    if (!GLOBAL.inventoryMenu.visible) {
+        GLOBAL.inventoryMenu.Show();
+    } else {
+        GLOBAL.inventoryMenu.Hide();
+    }
 };
