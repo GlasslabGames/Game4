@@ -133,7 +133,15 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('fullscreenIcon', 'assets/images/hud/hud_icon_enter_fullscreen.png');
     game.load.image('fullscreenOffIcon', 'assets/images/hud/hud_icon_exit_fullscreen.png');
     game.load.image('pauseIcon', 'assets/images/hud/hud_icon_pause.png');
+    game.load.image('hudBg', 'assets/images/hud/hud_button_panel.png');
 
+    game.load.image('notesIcon', 'assets/images/hud/hud_notes/notes_static.png');
+    game.load.image('notesOpenIcon', 'assets/images/hud/hud_notes/notes_static_open.png');
+    game.load.image('mailIcon', 'assets/images/hud/hud_mail/mailbox_static.png');
+    game.load.image('mailOpenIcon', 'assets/images/hud/hud_mail/mailbox_static_empty_open.png');
+    game.load.image('mailOpenFullIcon', 'assets/images/hud/hud_mail/mailbox_static_full_open.png');
+    game.load.image('foodIcon', 'assets/images/hud/hud_food/food_static.png');
+    game.load.image('foodOpenIcon', 'assets/images/hud/hud_food/food_static_open.png');
 
     game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
@@ -272,15 +280,12 @@ GlassLab.State.Init.prototype.create = function()
     table.position.setTo( (table.getWidth() / -2) - 20, (button.getHeight() / 2) + 20 );
 
 
-    table = new GlassLab.UITable(game, 1, 40);
-    table.x = 20;
-    table.y = 20;
+    table = new GlassLab.UITable(game, 1, 20);
     GLOBAL.UIManager.topLeftAnchor.addChild(table);
 
-    uiElement = new GlassLab.UIButton(game, 0,0, "journalIcon", function() {
+    var button = new GlassLab.HUDButton(game, 0,0, "notesIcon", "hudBg", false, function() {
         if (!GLOBAL.Journal.IsShowing())
         {
-            journalAlert.visible = false;
             GLOBAL.Journal.Show();
         }
         else
@@ -288,41 +293,30 @@ GlassLab.State.Init.prototype.create = function()
             GLOBAL.Journal.Hide();
         }
     }, this );
-    uiElement.scale.setTo(.6, .6);
-    var journalAlert = game.make.sprite(0,0,"alertIcon");
-    journalAlert.anchor.setTo(.5,.5);
-    journalAlert.visible = false;
-    GlassLab.SignalManager.levelWon.add(function(level){ this.visible = true; }, journalAlert);
-    uiElement.addChild(journalAlert);
-    table.addManagedChild(uiElement);
+    table.addManagedChild(button);
 
-    uiElement = new GlassLab.UIRectButton(game, 0,0, function(){
+    button = new GlassLab.HUDButton(game, 0,0, "mailIcon", "hudBg", false, function(){
         if (!GLOBAL.mailManager.IsMailShowing())
         {
-            ordersAlert.visible = false;
             GLOBAL.mailManager.ShowMail();
         }
         else
         {
             GLOBAL.mailManager.HideMail();
         }
-    }, this, 60, 60, 0xffffff, "Mail", 16);
-    uiElement.inputEnabled = true;
-    GLOBAL.ordersButton = uiElement;
-    var ordersAlert = game.make.sprite(0,0,"alertIcon");
-    ordersAlert.anchor.setTo(.5,.5);
-    ordersAlert.scale.setTo(.6, .6);
-    uiElement.addChild(ordersAlert);
+    }, this );
+    GLOBAL.ordersButton = button;
     GlassLab.SignalManager.levelLoaded.add(function(level){
-        this.visible = (level.data.orders && level.data.orders.length > 0);
-    }, uiElement);
+        this.visible = true; //FIXME (level.data.orders && level.data.orders.length > 0);
+    }, button);
     GlassLab.SignalManager.orderAdded.add(function(order){
         this.visible = true;
-        ordersAlert.visible = true;
-    }, uiElement);
-    table.addManagedChild(uiElement, true);
+    }, button);
+    table.addManagedChild(button, true);
 
-    uiElement = new GlassLab.UIButton(game, 20, -100, "itemsIcon", function() {
+    table.position.setTo( (table.getWidth() / 2) + 20, (button.getHeight() / 2) + 20 );
+
+    button = new GlassLab.HUDButton(game, 0, 0, "foodIcon", "hudBg", false, function() {
         if (!GLOBAL.inventoryMenu.visible)
         {
             GLOBAL.inventoryMenu.Show();
@@ -332,9 +326,9 @@ GlassLab.State.Init.prototype.create = function()
             GLOBAL.inventoryMenu.Hide();
         }
     }, this);
-    uiElement.scale.setTo(.6, .6);
-    GLOBAL.UIManager.bottomLeftAnchor.addChild(uiElement);
-    GLOBAL.itemsButton = uiElement;
+    GLOBAL.UIManager.bottomLeftAnchor.addChild(button);
+    button.position.setTo( (button.getWidth() / 2) + 20, (button.getHeight() / -2) - 20);
+    GLOBAL.itemsButton = button;
 
     // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
     GLOBAL.lastMousePosition = new Phaser.Point();

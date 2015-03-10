@@ -40,8 +40,6 @@ GlassLab.HUDButton.prototype.constructor = GlassLab.HUDButton;
 
 
 GlassLab.HUDButton.prototype._onDown = function() {
-    console.log("down");
-
     this.pressed = true;
     this.bg.tint = this.bgColor;
     this.bg.alpha = 1;
@@ -49,8 +47,6 @@ GlassLab.HUDButton.prototype._onDown = function() {
 };
 
 GlassLab.HUDButton.prototype._onUp = function() {
-    console.log("up");
-
     GlassLab.UIButton.prototype._onUp.apply(this, arguments);
 
     this.pressed = false;
@@ -60,7 +56,6 @@ GlassLab.HUDButton.prototype._onUp = function() {
 };
 
 GlassLab.HUDButton.prototype._onOver = function() {
-    console.log("over");
     if (!this.mousedOver) { // catch the case where we already over, but we got this event again after releasing the mouse
         this._tweenColors(this.bgColor, this.bgOverColor, this.imageColor, this.imageOverColor);
     }
@@ -68,7 +63,6 @@ GlassLab.HUDButton.prototype._onOver = function() {
 };
 
 GlassLab.HUDButton.prototype._onOut = function() {
-    console.log("out");
     this.mousedOver = false;
     if (!this.pressed) {
         this._tweenColors(this.bgOverColor, this.bgColor, this.imageOverColor, this.imageColor);
