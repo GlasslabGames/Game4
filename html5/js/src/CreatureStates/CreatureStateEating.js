@@ -55,9 +55,12 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
+    console.log("stop eating");
     if (!this.chomped) this._onChomp();
 
+    console.log(this.creature.foodEaten[this.food.type], this.amountEaten);
     this.creature.foodEaten[this.food.type] += this.amountEaten;
+    console.log(this.creature.foodEaten[this.food.type], this.amountEaten);
 
     // Choose which state to go to based on the situation...
     if (this.creature.getIsSick()) {

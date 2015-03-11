@@ -393,8 +393,8 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
 };
 
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
-  if (this.type == GlassLab.Tile.TYPES.water || this.occupant) return false;
-  else if (creatureType && this.targetCreatureType == creatureType) return true; // allow walking in pen if the creature type matches
+    if (creatureType && this.targetCreatureType == creatureType) return true; // allow walking in pen if the creature type matches
+    else if (this.type == GlassLab.Tile.TYPES.water || this.occupant) return false;
   else return !this.inPen;
 };
 

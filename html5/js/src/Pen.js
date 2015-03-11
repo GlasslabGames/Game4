@@ -414,7 +414,9 @@ GlassLab.Pen.prototype._makeGatePieces = function() {
 
     this.gateLever = this.game.make.sprite(0, 0, "gateSwitchFail");
     this.gateLever.inputEnabled = true;
+    this.gateLever.input.pixelPerfectClick = true;
     this.gateLever.events.onInputDown.add(this._onLeverPulled, this);
+    this.gateLever.input.priorityID = 10; // above other game objects, though below the UI
     this.gateFront.addChild(this.gateLever).anchor.setTo(anchorX, anchorY);
 
     this.gateLight = this.game.make.sprite(0, 0, "gateLightRed");

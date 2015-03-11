@@ -102,10 +102,10 @@ GlassLab.LevelManager = function(game)
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
-            {type: "rammus", foodBWidth: 1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+            {type: "baby_unifox", foodBWidth: 0, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            rammus: 2
+            baby_unifox: 10
         },
         objective: "Feed the rams!"
     };

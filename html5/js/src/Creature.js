@@ -283,6 +283,10 @@ GlassLab.Creature.prototype.addTargetFood = function(food, eatPartially) {
     this.targetFood.push({food: food, eatPartially: eatPartially});
 };
 
+GlassLab.Creature.prototype.resetTargetFood = function() {
+    this.targetFood = [];
+};
+
 GlassLab.Creature.prototype.Emote = function (happy) {
     var spriteName = (happy) ? "happyEmote" : "angryEmote";
     this.emote = this.game.make.sprite(0, 0, spriteName);
@@ -367,6 +371,8 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
 GlassLab.Creature.prototype.enterPen = function (pen) {
     console.log("enter pen");
     this.pen = pen;
+    var tile = this.creature.getTile();
+    this.creature.setIsoPos(tile.isoX, tile.isoY); // center on the tile
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
     pen.onCreatureEntered(this);
     pen.creatureRoot.addChild(this.sprite); // parent it in the pen so that the ordering works correctly
