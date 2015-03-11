@@ -19,11 +19,9 @@ GlassLab.CreatureStateIdle.constructor = GlassLab.CreatureStateIdle;
 GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
   //this.findDestinationHandler = this.game.time.events.add(Math.random()*1000, this._findNewDestination, this);
   this._setNewDestination(this.creature.getTile());
   this.creature.draggable = true;
-
     this.speed = this.creature.moveSpeed / 2;
 };
 
@@ -37,7 +35,6 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
     this.game.time.events.remove(this.findDestinationHandler);
     this.findDestinationHandler = null;
   }
-  if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
 };
 
 GlassLab.CreatureStateIdle.prototype._findNewDestination = function()

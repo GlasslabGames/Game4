@@ -33,7 +33,7 @@ GlassLab.LevelManager = function(game)
         quest: "alpha4"
     };
 
-    /*/ TESTING LEVELS:
+    // TESTING LEVELS:
     // 5
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
@@ -105,11 +105,13 @@ GlassLab.LevelManager = function(game)
             {type: "rammus", foodBWidth: 1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            rammus: 4
+            rammus: 2
         },
         objective: "Feed the rams!"
     };
-    */
+
+    // 9
+    this._addLevelData(new GlassLab.Level()).data = {};
 
 };
 
@@ -161,6 +163,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
                 GLOBAL.creatureLayer.add(creature.sprite);
                 creature.moveToRandomTile();
                 creature._onTargetsChanged();
+                creature.name = "creature"+j; // for debugging
             }
         }
     }

@@ -67,16 +67,16 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     if (this.autoFill) {
         this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatures, this.numCreatures,
             0, this.widths[0], true, this.creatureType);
-        for (var i = 0; i < this.creatures.length; i++) {
-            this.creatures[i].draggable = false;
+        for (var j = 0; j < this.creatures.length; j++) {
+            this.creatures[j].draggable = false;
         }
     } else {
         // Move all the creatures
         if (this.prevIsoPos) {
             var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
 
-            for (var i = 0; i < this.creatures.length; i++) {
-                var creature = this.creatures[i];
+            for (var k = 0; k < this.creatures.length; k++) {
+                var creature = this.creatures[k];
                 creature.setIsoPos( creature.sprite.isoX - posDif.x, creature.sprite.isoY - posDif.y);
             }
 
@@ -103,31 +103,34 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     // But it would be better to rewrite the Pen one to count the number of food / creatures currently in the pen.
     if (this.numFoods && this.numCreatures) {
         this.ratioLabel.text = this.numCreatures;
-        for (var i = 0; i < this.numFoods.length; i++) {
-            this.ratioLabel.text += " : " + this.numFoods[i];
+        for (var l = 0; l < this.numFoods.length; l++) {
+            this.ratioLabel.text += " : " + this.numFoods[l];
         }
     }
 
     this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 
     if (this.prevHeight != this.height || this.prevCreatureWidth != this.widths[0]) {
-        GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
         // Check for any creatures outside the pen and move them out
-        for (var i = 0; i < this.creatures.length; i++) {
-            var creature = this.creatures[i];
+        for (var m = 0; m < this.creatures.length; m++) {
+            var creature = this.creatures[m];
             var tile = creature.getTile();
+
             if (this._getSection(tile) != 0) { // if it's not in the creature section of the pen
                 creature.exitPen(this);
-                this.creatures.splice(i, 1);
-                i --;
+                this.creatures.splice(m, 1);
+                m --;
             }
+
         }
 
         this._onCreatureContentsChanged();
         this.prevHeight = this.height;
         this.prevCreatureWidth = this.widths[0];
     }
+
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
 // if we allow condensing odd numbers to multiple rows, this determines when to start condensing
@@ -399,6 +402,7 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
     {
         this.creatures.push(creature);
     }
+    console.log("creature entered. Num creatures:",this.creatures.length);
 
     this._onCreatureContentsChanged();
 };
@@ -406,7 +410,7 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
 GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
     var index = this.creatures.indexOf(creature);
     if (index > -1) this.creatures.splice(index, 1);
-    console.log("OnCreatureRemoved",index, this.creatures.length);
+    console.log("creature removed. Num creatures:",this.creatures.length);
 
     this._onCreatureContentsChanged();
 

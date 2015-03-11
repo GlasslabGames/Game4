@@ -77,9 +77,10 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * 4;
 
-    //game.physics.isoArcade.enable(this.sprite);
-    //this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     this.sprite.events.onDestroy.add(this._onDestroy, this);
+
+    this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
+
 
     // FINALLY, start the desired state
     if (startInPen) {
@@ -97,6 +98,7 @@ GlassLab.Creature.prototype._onDestroy = function () {
     if (GLOBAL.dragTarget == this) GLOBAL.dragTarget = null;
     this.sprite.events.destroy();
     if (this.updateHandler) this.updateHandler.detach();
+    if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
     if (this.state) this.state.Exit(); // wrap up the current state
 
     GLOBAL.creatureManager.RemoveCreature(this);
@@ -202,16 +204,17 @@ GlassLab.Creature.prototype._onDown = function (sprite, pointer) {
 
 GlassLab.Creature.prototype._startDrag = function () {
     if (GLOBAL.dragTarget != null) return;
+    this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     if (this.pen) this.exitPen(this.pen);
     if (this.tile) this.tile.onCreatureExit(this);
-    this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     GLOBAL.dragTarget = this;
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
 GlassLab.Creature.prototype._endDrag = function () {
     GLOBAL.dragTarget = null;
     this.getTile().onCreatureEnter(this);
-    this._onTargetsChanged(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
+    this._onTargetsChanged(true); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
 GlassLab.Creature.prototype.OnStickyDrop = function () { // called by (atm) prototype.js
@@ -307,8 +310,12 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
     this.hungerBar.sprite.visible = false;
 };
 
-GlassLab.Creature.prototype._onTargetsChanged = function () {
+GlassLab.Creature.prototype._onTargetsChanged = function (definitely) {
+    // don't look for new target if we're waiting in a pen or if we're currently dragging.. unless we've been told to *definitely* check
+    if (definitely !== true && (this.pen || this.state instanceof GlassLab.CreatureStateDragged)) return;
     var targets = GLOBAL.tileManager.getTargets(this);
+    //console.log(this.name,"on targets changed. Targets:",targets);
+
     var minDist = null, bestTarget; // target is a tile
     for (var i = 0, len = targets.length; i < len; i++) {
         var distSqr = Math.pow((this.sprite.isoX - targets[i].isoX), 2) + Math.pow((this.sprite.isoY - targets[i].isoY), 2);
@@ -321,8 +328,8 @@ GlassLab.Creature.prototype._onTargetsChanged = function () {
     var maxNoticeDist = GLOBAL.tileSize * 20;
     if (bestTarget == this.getTile()) {
         if (bestTarget.inPen) { // if we're actually in the pen now
-            this.enterPen(bestTarget.inPen);
             this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
+            this.enterPen(bestTarget.inPen);
         } else { // assume that we're on top of some food
             this.eatFreeFood(bestTarget.food);
         }
@@ -358,6 +365,7 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
 };
 
 GlassLab.Creature.prototype.enterPen = function (pen) {
+    console.log("enter pen");
     this.pen = pen;
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
     pen.onCreatureEntered(this);
@@ -366,11 +374,11 @@ GlassLab.Creature.prototype.enterPen = function (pen) {
 };
 
 GlassLab.Creature.prototype.exitPen = function (pen) {
-    console.log("exitPen",pen == this.pen);
     if (this.pen != pen) return;
-
+    console.log("exit pen");
     GLOBAL.creatureLayer.add(this.sprite); // parent it back to the creature layer
-    //this.setIsoPos( this.sprite.isoX + pen.sprite.isoX, this.sprite.isoY + pen.sprite.isoY); // FIXME
+    this.setIsoPos( this.sprite.isoX + pen.sprite.isoX, this.sprite.isoY + pen.sprite.isoY);
+
     this.pen = null;
     pen.onCreatureRemoved(this); // do this after setting this.pen to null for telemetry purposes
 };

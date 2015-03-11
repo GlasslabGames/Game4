@@ -288,6 +288,9 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
 
+    //GLOBAL.debugText = game.make.text(-300,0,"test");
+    //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);
+
     this.initComplete = true;
 };
 
