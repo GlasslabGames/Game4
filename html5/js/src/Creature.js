@@ -232,6 +232,8 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
             position.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
             position.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
         }
+
+        GLOBAL.tileManager.GetTileAtIsoWorldPosition(x, y).occupant = this;
     }
 
     this.onPathChanged.dispatch(this);
