@@ -130,47 +130,12 @@
       },
       {
         "__type": "GlassLab.WaitForCondition",
-        "operator": "or",
         "conditions": [
-          {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.journalOpened"
-          },
           {
             "__type": "GlassLab.SignalCondition",
             "signalName": "GlassLab.SignalManager.challengeComplete"
           }
-        ],
-        "_comment": "We're not sure if we're going to show the journal or not. If we do, journalOpened will happen before challengeComplete."
-      },
-      {
-        "__type": "GlassLab.ConditionalAction",
-        "serializedCondition": {
-          "__type": "GlassLab.GlobalVariableEqualsCondition",
-          "variableName": "GLOBAL.Journal.sprite.visible",
-          "target": true
-        },
-        "serializedTrueAction": {
-          "__type": "GlassLab.ActionGroup",
-          "serializedActions": [
-            {
-              "__type": "GlassLab.ShowAssistantDialogueAction",
-              "text": "You've mastered the *baby ram*! This is your *journal*. You can open it any time to check what creatures eat."
-            },
-            {
-              "__type": "GlassLab.WaitForCondition",
-              "conditions": [
-                {
-                  "__type": "GlassLab.SignalCondition",
-                  "signalName": "GlassLab.SignalManager.journalClosed"
-                }
-              ]
-            },
-            {
-              "__type": "GlassLab.HideAssistantDialogueAction"
-            }
-          ]
-        }
+        ]
       },
       {
         "__type": "GlassLab.ClearWorldAction"

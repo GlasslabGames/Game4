@@ -72,29 +72,50 @@
       },
       {
         "__type": "GlassLab.ShowAssistantDialogueAction",
-        "text": "Great! In Mixia you'll be *feeding* lots of creatures. Now show me *how much food* that *baby ram* needed.",
-        "showButton": true
+        "text": "Great! In Mixia you'll be *feeding* lots of creatures and *discovering* what food they like. Now open your notes."
+      },
+      {
+        "__type": "GlassLab.ShowArrowAction",
+        "direction": "left",
+        "anchor": "topLeftAnchor",
+        "xPosition": 110,
+        "yPosition": 60
       },
       {
         "__type": "GlassLab.WaitForCondition",
         "conditions": [
           {
             "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.tutorialAdvanced"
+            "signalName": "GlassLab.SignalManager.journalOpened"
           }
         ]
       },
       {
-        "__type": "GlassLab.ClearWorldAction"
+        "__type": "GlassLab.HideArrowAction"
+      },
+      {
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "You've mastered the *baby ram*! You can open your *notes* any time to check what creatures eat."
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.journalClosed"
+          }
+        ]
       },
       {
         "__type": "GlassLab.HideAssistantDialogueAction"
+      },
+      {
+        "__type": "GlassLab.ClearWorldAction"
       }
     ]
   },
   {
     "__type": "GlassLab.CreateBonusRoundAction",
-    "startImmediately": true,
     "data": [
       {
         "creatureType": "baby_rammus",
