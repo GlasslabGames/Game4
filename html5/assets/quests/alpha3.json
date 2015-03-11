@@ -5,7 +5,8 @@
   },
   {
     "__type": "GlassLab.UnlockItemsAction",
-    "items": ["broccoli", "strawberry", "carrot", "apple"]
+    "items": ["strawberry"],
+    "lockOthers": true
   },
   {
     "__type": "GlassLab.ResetTelemetryAction"

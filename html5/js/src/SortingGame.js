@@ -126,6 +126,12 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
 };
 
 GlassLab.SortingGame.prototype.start = function(data) {
+    if (!data) data = this.storedData;
+    if (!data) {
+        console.error("Tried to start Sorting Game without any data or stored data!");
+        return;
+    }
+
     this.visible = true;
 
     // Remove all the cards and make new ones. (Yes, we should reset cards instead, but that's more complicated.)

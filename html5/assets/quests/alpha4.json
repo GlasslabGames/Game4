@@ -1,118 +1,154 @@
 [
   {
-    "__type": "GlassLab.SetDayAction",
-    "numDots": 2
+    "__type":"GlassLab.SetDayAction",
+    "numDots":3
   },
   {
-    "__type": "GlassLab.UnlockItemsAction",
-    "items": ["broccoli", "strawberry", "carrot", "tincan", "apple"]
+    "__type":"GlassLab.UnlockItemsAction",
+    "items":[
+      "broccoli",
+      "strawberry",
+      "carrot",
+      "tincan",
+      "apple"
+    ]
   },
   {
-    "__type": "GlassLab.ResetTelemetryAction"
+    "__type":"GlassLab.ResetTelemetryAction"
   },
   {
-    "__type": "GlassLab.ClearOrdersAction"
+    "__type":"GlassLab.ClearOrdersAction"
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type":"GlassLab.SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ActionGroup",
-    "serializedActions": [
+    "__type":"GlassLab.ActionGroup",
+    "serializedActions":[
       {
-        "__type": "GlassLab.StartChallengeAction",
-        "id": "4.1",
-        "problemType": "MD",
-        "challengeType": "pen",
-        "objective": "Feed 5 adult rams in the pen."
+        "__type":"GlassLab.StartChallengeAction",
+        "id":"4.0",
+        "problemType":"MD",
+        "challengeType":"handfeeding",
+        "objective":"Hand-feed 1 adult ram!"
       },
       {
-        "__type": "GlassLab.CreatePenAction",
-        "penData": {
-          "type": "rammus",
-          "bottomDraggable": true,
-          "leftDraggable": true,
-          "topDraggable": true,
-          "foodAWidth": 1,
-          "foodBWidth": 1,
-          "targetNumCreatures": 5
+        "centered":true,
+        "__type":"GlassLab.CreateCreaturesAction",
+        "data":{
+          "rammus":1
         }
       },
       {
-        "__type": "GlassLab.CreateCreaturesAction",
-        "data": {"rammus": 5}
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
+        "__type":"GlassLab.WaitForCondition",
+        "conditions":[
           {
-            "__type": "GlassLab.FeedAnimalCondition",
-            "acceptedType": "rammus",
-            "numRequired": 5
+            "__type":"GlassLab.FeedAnimalCondition",
+            "acceptedType":"rammus",
+            "numRequired":1
           }
         ]
       },
       {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
-          {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.challengeComplete"
-          }
-        ]
-      },
-      {
-        "__type": "GlassLab.ClearWorldAction"
+        "__type":"GlassLab.ClearWorldAction"
       }
     ]
   },
   {
-    "__type": "GlassLab.AdvanceDayAction"
+    "__type":"GlassLab.AdvanceDayAction"
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type":"GlassLab.SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ActionGroup",
-    "serializedActions": [
+    "__type":"GlassLab.ActionGroup",
+    "serializedActions":[
       {
-        "__type": "GlassLab.StartChallengeAction",
-        "id": "4.2",
-        "problemType": "MD",
-        "challengeType": "order",
-        "objective": "Complete a shipment of 8 rams!"
+        "__type":"GlassLab.StartChallengeAction",
+        "id":"4.1",
+        "problemType":"MD",
+        "challengeType":"pen",
+        "objective":"Feed 5 adult rams in the pen."
       },
       {
-        "__type": "GlassLab.AddOrderAction",
-        "data": {
-          "client": "Archibold Huxley III",
-          "company": "Rupture Farms",
-          "numCreatures": 8,
-          "type": "rammus",
-          "description": "Dear Friend! I want 8 ADULT RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
-          "fulfilled": false,
-          "reward": 200
+        "__type":"GlassLab.CreatePenAction",
+        "penData":{
+          "type":"rammus",
+          "bottomDraggable":true,
+          "leftDraggable":true,
+          "topDraggable":true,
+          "foodAWidth":1,
+          "foodBWidth":1,
+          "targetNumCreatures":5
         }
       },
       {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
+        "__type":"GlassLab.CreateCreaturesAction",
+        "data":{
+          "rammus":5
+        }
+      },
+      {
+        "__type":"GlassLab.WaitForCondition",
+        "conditions":[
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.challengeComplete"
+            "__type":"GlassLab.SignalCondition",
+            "signalName":"GlassLab.SignalManager.challengeComplete"
+          }
+        ]
+      },
+      {
+        "__type":"GlassLab.ClearWorldAction"
+      }
+    ]
+  },
+  {
+    "__type":"GlassLab.AdvanceDayAction"
+  },
+  {
+    "__type":"GlassLab.SaveCheckpointAction"
+  },
+  {
+    "__type":"GlassLab.ActionGroup",
+    "serializedActions":[
+      {
+        "__type":"GlassLab.StartChallengeAction",
+        "id":"4.2",
+        "problemType":"MD",
+        "challengeType":"order",
+        "objective":"Complete a shipment of 8 rams!"
+      },
+      {
+        "__type":"GlassLab.AddOrderAction",
+        "data":{
+          "client":"Archibold Huxley III",
+          "company":"Rupture Farms",
+          "numCreatures":8,
+          "type":"rammus",
+          "description":"Dear Friend! I want 8 ADULT RAMS. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+          "fulfilled":false,
+          "reward":200
+        }
+      },
+      {
+        "__type":"GlassLab.WaitForCondition",
+        "conditions":[
+          {
+            "__type":"GlassLab.SignalCondition",
+            "signalName":"GlassLab.SignalManager.challengeComplete"
           }
         ]
       }
     ]
   },
   {
-    "__type": "GlassLab.EndQuestAction"
+    "__type":"GlassLab.EndQuestAction"
   },
   {
-    "__type": "GlassLab.ClearWorldAction"
+    "__type":"GlassLab.ClearWorldAction"
   },
   {
-    "__type": "GlassLab.DisplayModalAction",
-    "text": "Congrats! You Win! Thanks for playing!"
+    "__type":"GlassLab.DisplayModalAction",
+    "text":"Congrats! You Win! Thanks for playing!"
   }
 ]
