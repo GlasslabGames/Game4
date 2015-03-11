@@ -259,7 +259,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                 var foodCol = -1;
                 for (var col = 0; col < creatureRow.length; col++) {
                     var n = (col < luckyCreatures? bigN : littleN);
-                    for (var i = 0; i < n; i++) {
+                    for (var j = 0; j < n; j++) {
                         if (foodCol ++ < foodRow.length) {
                             creatureRow[col].addTargetFood(foodRow[foodCol]);
                             //console.log("Food",foodCol,"to creature",col);
@@ -460,7 +460,6 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     this.finished = true;
 
     var numCreatures = this.height * this.widths[0];
-    console.log("target",this.targetNumCreatures,"have",numCreatures);
     var win = (result == "satisfied" && (!this.targetNumCreatures || numCreatures >= this.targetNumCreatures));
 
     // Telemetry

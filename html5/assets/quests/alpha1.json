@@ -38,8 +38,12 @@
         "__type": "GlassLab.ShowArrowAction",
         "direction": "down",
         "anchor": "bottomLeftAnchor",
-        "xPosition": 50,
+        "xPosition": 60,
         "yPosition": -110
+      },
+      {
+        "__type": "GlassLab.AnimateButtonAction",
+        "button": "itemsButton"
       },
       {
         "__type": "GlassLab.WaitForCondition",
@@ -90,6 +94,7 @@
   },
   {
     "__type": "GlassLab.CreateBonusRoundAction",
+    "startImmediately": true,
     "data": [
       {
         "creatureType": "baby_rammus",

@@ -16,10 +16,11 @@ GlassLab.SignalManager = {
     // UI Events
     journalOpened: new Phaser.Signal(),
     journalClosed: new Phaser.Signal(),
-    uiFocusChanged: new Phaser.Signal(),
     inventoryOpened: new Phaser.Signal(),
     inventoryClosed: new Phaser.Signal(),
     mailOpened: new Phaser.Signal(),
+    mailClosed: new Phaser.Signal(),
+    uiFocusChanged: new Phaser.Signal(),
 
     // Tutorial
     tutorialAdvanced: new Phaser.Signal(),
@@ -44,8 +45,9 @@ GlassLab.SignalManager = {
     penFoodTypeSet: new Phaser.Signal(),
 
     // Order Events
-    orderAdded: new Phaser.Signal(), // (order) => added order
+    ordersChanged: new Phaser.Signal(), // when an order is added or removed
     orderStarted: new Phaser.Signal(), // (order) => order that was started
+    orderCanceled: new Phaser.Signal(), // (order) => order that was started
     orderCompleted: new Phaser.Signal(), // (order) => order that was completed
     orderFailed: new Phaser.Signal(), // (order) => order that was failed
 

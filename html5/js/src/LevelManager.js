@@ -72,8 +72,8 @@ GlassLab.LevelManager = function(game)
                 "client": "Archibold Huxley III",
                 "company": "Rupture Farms",
                 //"numCreatures": 12,
-                "numFoodB": 4,
-                "type": "unifox",
+                "numFoodA": 4,
+                "type": "baby_unifox",
                 "description": "Dear Friend! I have space for 48 STRAWBERRIES. Can you send me ENOUGH UNIFOXES to eat that much food?",
                 "fulfilled": false,
                 "reward": 200
@@ -102,10 +102,10 @@ GlassLab.LevelManager = function(game)
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
-            {type: "baby_rammus", foodAWidth: 1, height:1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+            {type: "rammus", foodBWidth: 1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            baby_rammus: 8
+            rammus: 4
         },
         objective: "Feed the rams!"
     };
@@ -146,7 +146,6 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
 {
     this._destroyCurrentLevel();
-    GLOBAL.inventoryManager.unlockAll(); // FIXME
 
     if (levelData.pens) {
         for (var i = 0; i < levelData.pens.length; i++) {
@@ -180,6 +179,8 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
         }
 
         quest.Start();
+    } else {
+        GLOBAL.inventoryManager.unlockAll(); // for testing
     }
 
     if (typeof levelData.objective != 'undefined')

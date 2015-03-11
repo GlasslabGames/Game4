@@ -136,12 +136,16 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('hudBg', 'assets/images/hud/hud_button_panel.png');
 
     game.load.image('notesIcon', 'assets/images/hud/hud_notes/notes_static.png');
-    game.load.image('notesOpenIcon', 'assets/images/hud/hud_notes/notes_static_open.png');
+    game.load.image('notesIcon_open', 'assets/images/hud/hud_notes/notes_static_open.png');
+    game.load.atlasJSONHash('notesIcon_anim', 'assets/images/hud/hud_notes/notes_full.png', 'assets/images/hud/hud_notes/notes_full.json');
     game.load.image('mailIcon', 'assets/images/hud/hud_mail/mailbox_static.png');
-    game.load.image('mailOpenIcon', 'assets/images/hud/hud_mail/mailbox_static_empty_open.png');
-    game.load.image('mailOpenFullIcon', 'assets/images/hud/hud_mail/mailbox_static_full_open.png');
+    game.load.image('mailIcon_open', 'assets/images/hud/hud_mail/mailbox_static_empty_open.png');
+    game.load.image('mailIcon_open_full', 'assets/images/hud/hud_mail/mailbox_static_full_open.png');
+    game.load.image('mailIcon_full', 'assets/images/hud/hud_mail/mailbox_static_full.png');
+    game.load.atlasJSONHash('mailIcon_anim', 'assets/images/hud/hud_mail/mailbox_full.png', 'assets/images/hud/hud_mail/mailbox_full.json');
     game.load.image('foodIcon', 'assets/images/hud/hud_food/food_static.png');
-    game.load.image('foodOpenIcon', 'assets/images/hud/hud_food/food_static_open.png');
+    game.load.image('foodIcon_open', 'assets/images/hud/hud_food/food_static_open.png');
+    game.load.atlasJSONHash('foodIcon_anim', 'assets/images/hud/hud_food/food_full.png', 'assets/images/hud/hud_food/food_full.json');
 
     game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
@@ -233,105 +237,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UIGroup = uiGroup;
 
     GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
-
-    var table = new GlassLab.UITable(game, 1, 3);
-    GLOBAL.UIManager.topRightAnchor.addChild(table);
-
-    // pause icon
-    var button = new GlassLab.HUDButton(game, 0, 0, "pauseIcon", "hudSettingsBgRounded", true, function() {
-        GLOBAL.pauseMenu.toggle();
-    }, this);
-    table.addManagedChild(button);
-
-    var zoomGroup = new GlassLab.UIElement(game);
-    table.addManagedChild(zoomGroup);
-
-    // for some reason the position in the table is a little off unless we set the y to 2 here
-    button = new GlassLab.HUDButton(game, 0, 1, "zoomInIcon", "hudSettingsBg", true, function() {
-        GLOBAL.WorldLayer.scale.x *= 2;
-        GLOBAL.WorldLayer.scale.y *= 2;
-    }, this);
-    zoomGroup.addChild(button);
-    zoomGroup.actualHeight = button.getHeight();
-
-    button = new GlassLab.HUDButton(game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, function() {
-        GLOBAL.WorldLayer.scale.x /= 2;
-        GLOBAL.WorldLayer.scale.y /= 2;
-    }, this);
-    zoomGroup.addChild(button);
-    zoomGroup.actualHeight += button.getHeight();
-
-    var fullscreenButton = new GlassLab.HUDButton(game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
-        if (game.scale.isFullScreen)
-        {
-            game.scale.stopFullScreen();
-            fullscreenButton.image.loadTexture("fullscreenIcon");
-        }
-        else
-        {
-            game.scale.startFullScreen(false);
-            fullscreenButton.image.loadTexture("fullscreenOffIcon");
-        }
-    }, this);
-    fullscreenButton.bg.scale.y *= -1;
-    table.addManagedChild(fullscreenButton);
-
-    table._refresh();
-    table.position.setTo( (table.getWidth() / -2) - 20, (button.getHeight() / 2) + 20 );
-
-
-    table = new GlassLab.UITable(game, 1, 20);
-    GLOBAL.UIManager.topLeftAnchor.addChild(table);
-
-    var button = new GlassLab.HUDButton(game, 0,0, "notesIcon", "hudBg", false, function() {
-        if (!GLOBAL.Journal.IsShowing())
-        {
-            GLOBAL.Journal.Show();
-        }
-        else
-        {
-            GLOBAL.Journal.Hide();
-        }
-    }, this );
-    button.image.position.setTo(0, 10);
-    table.addManagedChild(button);
-
-    button = new GlassLab.HUDButton(game, 0,0, "mailIcon", "hudBg", false, function(){
-        if (!GLOBAL.mailManager.IsMailShowing())
-        {
-            GLOBAL.mailManager.ShowMail();
-        }
-        else
-        {
-            GLOBAL.mailManager.HideMail();
-        }
-    }, this );
-    button.image.position.setTo(0, 5);
-    GLOBAL.ordersButton = button;
-    GlassLab.SignalManager.levelLoaded.add(function(level){
-        this.visible = (level.data.orders && level.data.orders.length > 0);
-    }, button);
-    GlassLab.SignalManager.orderAdded.add(function(order){
-        this.visible = true;
-    }, button);
-    table.addManagedChild(button, true);
-
-    table.position.setTo( (table.getWidth() / 2) + 20, (button.getHeight() / 2) + 20 );
-
-    button = new GlassLab.HUDButton(game, 0, 0, "foodIcon", "hudBg", false, function() {
-        if (!GLOBAL.inventoryMenu.visible)
-        {
-            GLOBAL.inventoryMenu.Show();
-        }
-        else
-        {
-            GLOBAL.inventoryMenu.Hide();
-        }
-    }, this);
-    button.image.position.setTo(0, 15);
-    GLOBAL.UIManager.bottomLeftAnchor.addChild(button);
-    button.position.setTo( (button.getWidth() / 2) + 20, (button.getHeight() / -2) - 20);
-    GLOBAL.itemsButton = button;
 
     // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
     GLOBAL.lastMousePosition = new Phaser.Point();
