@@ -10,6 +10,7 @@ GlassLab.CreateCreaturesAction = function(game, data)
 
     this.game = game || GLOBAL.game;
     this.data = data;
+    this.centered = false;
 };
 
 GlassLab.CreateCreaturesAction.prototype = Object.create(GlassLab.Action.prototype);
@@ -21,7 +22,7 @@ GlassLab.CreateCreaturesAction.prototype.Do = function()
         for (var j = 0; j < this.data[type]; j++) {
             var creature = GLOBAL.creatureManager.CreateCreature(type);
             if (this.centered) { // kinda hacky way to make sure the creatues we create are in the middle of the map
-                creature.moveToTile( 10, 10 );
+                creature.moveToTile( GLOBAL.tileManager.tilemap.width/2, GLOBAL.tileManager.tilemap.height/2 );
                 creature._onTargetsChanged();
             }
         }

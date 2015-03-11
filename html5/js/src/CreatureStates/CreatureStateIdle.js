@@ -9,8 +9,6 @@ GlassLab.CreatureStateIdle = function(game, owner)
   GlassLab.CreatureState.call(this, game, owner);
 
   this.targetPosition = new Phaser.Point();
-  this.targetIsoPoint = new Phaser.Plugin.Isometric.Point3();
-  this.findDestinationTimer = null;
 };
 
 GlassLab.CreatureStateIdle.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -20,8 +18,7 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
-  //this.findDestinationHandler = this.game.time.events.add(Math.random()*1000, this._findNewDestination, this);
-  this._setNewDestination(this.creature.getTile());
+  //this._setNewDestination(this.creature.getTile());
   this.creature.draggable = true;
 
     this.speed = this.creature.moveSpeed / 2;
@@ -46,23 +43,20 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
 
   // Build list of possible movements
   var possibleTiles = [];
-  var tile = GLOBAL.tileManager.GetTile(currentTile.col - 1, currentTile.row);
-  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
-
-  tile = GLOBAL.tileManager.GetTile(currentTile.col + 1, currentTile.row);
-  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
-
-  tile = GLOBAL.tileManager.GetTile(currentTile.col, currentTile.row - 1);
-  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
-
-  tile = GLOBAL.tileManager.GetTile(currentTile.col, currentTile.row + 1);
-  if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
+  for (var i=-3; i <= 3; i++)
+  {
+    for (var j=-3; j <= 3; j++)
+    {
+      if (j==0 && i == 0) continue;
+      var tile = GLOBAL.tileManager.GetTile(currentTile.col + i, currentTile.row + j);
+      if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
+    }
+  }
 
   if (possibleTiles.length > 0) {
     tile = possibleTiles[parseInt(Math.random() * possibleTiles.length)];
   }
   else tile = currentTile; // stay in place
-
   this._setNewDestination(tile);
 };
 
@@ -71,55 +65,20 @@ GlassLab.CreatureStateIdle.prototype._setNewDestination = function(tile) {
 
   this.findDestinationHandler = null;
 
-  if (tile)
-  {
-    this.targetPosition.set(tile.isoX, tile.isoY);
-    tile.onCreatureEnter(this.creature); // prevent creatures from entering the same tiles. Since we do this in both this and CSTraveling, maybe refactor more?
-
-    if (tile.isoX != this.creature.sprite.isoX || tile.isoY != this.creature.sprite.isoY) {
-      var flip = tile.isoY == this.creature.sprite.isoY;
-      this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x) * (flip ? -1 : 1);
-
-      if (tile.isoY < this.creature.sprite.isoY || tile.isoX < this.creature.sprite.isoX) this.creature.PlayAnim('walk_back', true, this.creature.baseAnimSpeed * this.speed);
-      else this.creature.PlayAnim('walk', true, this.creature.baseAnimSpeed * this.speed);
-    }
-  }
+  if (GLOBAL.debug) this.tint = 0x00ff00;
+  this.creature.PathToTile(tile);
 };
 
 GlassLab.CreatureStateIdle.prototype.Update = function()
 {
   if (this.findDestinationHandler) return; // still waiting to pick a new destination
 
-  var delta = Phaser.Point.subtract(this.targetPosition, this.creature.sprite.isoPosition);
-  if (delta.getMagnitudeSq() > this.speed) {
-    delta.setMagnitude(this.speed);
-  }
-  else {
-    // If the delta magnitude is less than our move speed, we're done after this frame.
-    this.creature.StopAnim();
+  if (!this.creature.targetPosition && this.creature.currentPath.length == 0)
+  {
     this.findDestinationHandler = this.game.time.events.add(Math.random() * 4000, this._findNewDestination, this);
-    // Physics
-    if (this.creature.sprite.body) {
-      this.creature.sprite.body.velocity.setTo(0, 0);
-      return;
-    }
   }
-
-  var debugPoint = this.game.iso.project(delta);
-
-  if (this.creature.sprite.body) {
-    // Physics
-    this.creature.sprite.body.velocity.x = delta.x * 100.0;
-    this.creature.sprite.body.velocity.y = delta.y * 100.0;
+  else
+  {
+    this.creature._move();
   }
-  else {
-    Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
-
-    //this.creature.sprite.position = delta;
-    this.creature.sprite.isoX = delta.x;
-    this.creature.sprite.isoY = delta.y;
-  }
-
-  debugPoint = this.game.iso.project(this.targetIsoPoint);
-  this.creature.debugAILine.setTo(this.creature.sprite.x, this.creature.sprite.y, debugPoint.x, debugPoint.y);
 };

@@ -18,14 +18,15 @@ GlassLab.TileManager = function(game)
 
 GlassLab.TileManager.prototype.TryGetTileData = function(x, y)
 {
-    if (x < 0 || x >= this.mapData.length || y < 0 || y >= this.mapData[x].length) return null;
+    if (x < 0 || x >= this.tileMap.width || y < 0 || y >= this.tileMap.height) return null;
 
     return this.GetTileData(x, y);
 };
 
 GlassLab.TileManager.prototype.GetTileData = function(x, y)
 {
-    return this.mapData[x][y];
+    var tileData = this.tilemap.getTile(x, y, "default");
+    return tileData ? this.tilemap.getTile(x, y, "default").index-1  : -1;
 };
 
 GlassLab.TileManager.prototype.GetTile = function(x, y)
@@ -48,115 +49,47 @@ GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
     return type && type != GlassLab.Tile.TYPES.water; // maybe move this to Tile? or give the tile types some properties?
 };
 
-GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height, min, max)
+GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
 {
-    for (var i=0; i < width; i++)
+    var tilemapData = this.game.cache.getTilemapData("testTileMap");
+    var tilemap = new Phaser.Tilemap(this.game);
+    tilemap.create("default", tilemapData.data.width, tilemapData.data.height, 1,1);
+
+    for (var j = 0; j < tilemapData.data.height; j++)
     {
-        for (var j=0; j < height; j++)
+        for (var i=0; i < tilemapData.data.width; i++)
         {
-            if (!this.mapData[i]) this.mapData[i] = [];
-            var centerDist = Math.sqrt( (j - height / 2.0)*(j - height / 2.0) + (i - width / 2.0) * (i - width / 2.0));
-            if (centerDist > 8.5) this.mapData[i][j] = GlassLab.Tile.TYPES.water; // water
-            else if (Math.random() < 0.75) this.mapData[i][j] = GlassLab.Tile.TYPES.grass;
-            else this.mapData[i][j] = GlassLab.Tile.TYPES["mushroom"+ Math.floor(Math.random() * 3)];
+            tilemap.putTile(tilemapData.data.layers[0].data[i + j*tilemapData.data.width], i, j);
         }
     }
-/* This made a fence
-    this.mapData[10][6] = 6; // Right corner
-    this.mapData[10][7] = 6;
-    this.mapData[10][8] = 6;
-    this.mapData[10][9] = 6; // Bottom corner
-    this.mapData[6][6] = 6; // Top corner
-    this.mapData[6][7] = 6;
-    this.mapData[6][8] = 6;
-    this.mapData[6][9] = 6; // Left corner
-    this.mapData[7][9] = 6;
-    this.mapData[8][9] = 6;
-    this.mapData[9][9] = 6;
-    this.mapData[7][6] = 6;
-    this.mapData[8][6] = 6;
-    this.mapData[9][6] = 6;
-   */
+    tilemap.tilesets = tilemapData.data.tilesets;
+
+    GLOBAL.astar.setAStarMap(tilemap, "default", "Tiles");
+
+    return tilemap;
 };
 
-GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(parentGroup)
+GlassLab.TileData = function() {
+    this.id = -1;
+    this.properties = {};
+    this.imageKey = "";
+    this.image = "";
+};
+
+GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, parentGroup)
 {
+    this.tilemap = tilemap;
+
+    this.SetCenter(this.tilemap.width/2, this.tilemap.height/2);
     function isFence(num) { return num >= 5 && num <= 8; }
-    for (var i=this.mapData.length-1; i>=0; i--)
+    for (var i=this.tilemap.width-1; i>=0; i--)
     {
-        for (var j=this.mapData[i].length-1; j>=0; j--)
+        for (var j=this.tilemap.height-1; j>=0; j--)
         {
             var tileType = this.GetTileData(i, j);
-            var shouldFlip = false;
-            if (isFence(tileType)) // we're not using this at all :/
-            {
-                if (isFence(this.mapData[i+1][j])) // right-down
-                {
-                    if (isFence(this.mapData[i-1][j])) // -
-                    {
-                        tileType = 6;
-                        shouldFlip = true;
-                    }
-                    else if (isFence(this.mapData[i][j+1])) // ^
-                    {
-                        tileType = 8;
-                    }
-                    else if (isFence(this.mapData[i][j-1])) // <
-                    {
-                        tileType = 7;
-                    }
-                }
-                else if (isFence(this.mapData[i-1][j])) // left-top
-                {
-                    if (isFence(this.mapData[i+1][j])) // -
-                    {
-                        tileType = 6;
-                        shouldFlip = true;
-                    }
-                    else if (isFence(this.mapData[i][j+1])) // >
-                    {
-                        tileType = 7;
-                        shouldFlip = true;
-                    }
-                    else if (isFence(this.mapData[i][j-1])) // v
-                    {
-                        tileType = 5;
-                    }
-                }
-                else if (isFence(this.mapData[i][j+1])) // left-down
-                {
-                    if (isFence(this.mapData[i][j-1])) // -
-                    {
-                        tileType = 6;
-                    }
-                    else if (isFence(this.mapData[i+1][j])) // ^
-                    {
-                        tileType = 8;
-                    }
-                    else if (isFence(this.mapData[i-1][j])) // v
-                    {
-                        tileType = 5;
-                    }
-                }
-                else if (isFence(this.mapData[i][j-1])) // right-top
-                {
-                    if (isFence(this.mapData[i][j+1])) // -
-                    {
-                        tileType = 6;
-                    }
-                    else if (isFence(this.mapData[i+1][j])) // <
-                    {
-                        tileType = 7;
-                    }
-                    else if (isFence(this.mapData[i-1][j])) // v
-                    {
-                        tileType = 5;
-                    }
-                }
-            }
+            if (tileType == -1) continue;
 
             var image = new GlassLab.Tile(this.game, i, j, tileType);
-            if (shouldFlip) image.scale.x = -image.scale.x;
             parentGroup.add(image);
 
             if (!this.map[i]) this.map[i] = [];
@@ -273,10 +206,13 @@ GlassLab.TileManager.prototype.clearTiles = function()
   for (var col = 0; col < this.GetMapWidth(); col++) {
     for (var row = 0; row < this.GetMapHeight(); row++) {
       var tile = this.GetTile(col, row);
-      tile.setInPen(false);
-      tile.unswapType();
-      tile.occupant = null;
-        tile.food = null;
+        if (tile)
+        {
+            tile.setInPen(false);
+            tile.unswapType();
+            tile.occupant = null;
+            tile.food = null;
+        }
     }
   }
 
@@ -290,7 +226,7 @@ GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
   var randRow = parseInt(Math.random() * this.GetMapHeight());
   var targetTile = this.GetTile(randCol, randRow);
   var n = 0;
-  while (!targetTile.getIsWalkable() && n++ < 3000) // safeguard against infinite loops
+  while ((!targetTile || !targetTile.getIsWalkable()) && n++ < 3000) // safeguard against infinite loops
   {
     randCol = parseInt(Math.random() * this.GetMapWidth());
     randRow = parseInt(Math.random() * this.GetMapHeight());
@@ -305,7 +241,7 @@ GlassLab.TileManager.prototype.getTargets = function(creature)
   for (var col = 0; col < this.GetMapWidth(); col++) {
     for (var row = 0; row < this.GetMapHeight(); row++) {
       var tile = this.GetTile(col, row);
-      if (tile.isTarget(creature)) tiles.push(tile);
+      if (tile && tile.isTarget(creature)) tiles.push(tile);
     }
   }
   return tiles;
@@ -316,7 +252,8 @@ GlassLab.TileManager.prototype.getTargets = function(creature)
  * Tile
  */
 GlassLab.Tile = function(game, col, row, type) {
-  Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-10)*GLOBAL.tileSize, (row-10)*GLOBAL.tileSize, 0, type);
+    var imageName = this._getImageFromType(type);
+  Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-GLOBAL.tileManager.tilemap.width/2)*GLOBAL.tileSize, (row-GLOBAL.tileManager.tilemap.height/2)*GLOBAL.tileSize, 0, imageName);
   this.type = type;
   //this.tint = Phaser.Color.getColor(Math.random() * 255, Math.random() * 255, Math.random() * 255); // for testing with clearly distinguished tiles (change type to placeholderTile)
   this.anchor.setTo(0.5, 0.5);
@@ -331,27 +268,40 @@ GlassLab.Tile = function(game, col, row, type) {
 GlassLab.Tile.prototype = Object.create(Phaser.Plugin.Isometric.IsoSprite.prototype);
 GlassLab.Tile.prototype.constructor = Phaser.Tile;
 
+GlassLab.Tile.prototype._getImageFromType = function(type)
+{
+    var imageName = GLOBAL.tileManager.tilemap.tilesets[0].tiles[type].image;
+    // remove full address and get just file name
+    var fileNameIndex = imageName.lastIndexOf("/");
+    if (fileNameIndex != -1)
+    {
+        imageName = imageName.substring(fileNameIndex+1);
+    }
+
+    return imageName;
+};
+
 GlassLab.Tile.TYPES = {
-  water : "grassTile0",
-  grass : "grassTile4",
-  mushroom0 : "grassTile3",
-  mushroom1 : "grassTile1",
-  mushroom2 : "grassTile2",
-  dirt : "dirtTile"
+  water : 8,
+  grass : 14,
+  mushroom0 : 13,
+  mushroom1 : 11,
+  mushroom2 : 12,
+  dirt : 9
 };
 
 GlassLab.Tile.prototype.swapType = function(newType) {
   if (this.type == newType) return;
   this.prevType = this.type;
   this.type = newType;
-  this.loadTexture( newType );
+  this.loadTexture( this._getImageFromType(this.type) );
 };
 
 GlassLab.Tile.prototype.unswapType = function() {
   if (!this.prevType) return;
   this.type = this.prevType;
   this.prevType = null;
-  this.loadTexture( this.type );
+    this.loadTexture( this._getImageFromType(this.type) );
 };
 
 GlassLab.Tile.prototype.isTarget = function(creature) {
@@ -371,12 +321,16 @@ GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
   if (this.occupant) return;
   this.occupant = creature;
     creature.tile = this;
+
+    if (GLOBAL.debug) this.tint = 0xff0000;
   //if (this.isTarget(creature.type)) creature.enterPen(this.inPen);
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {
   if (this.occupant == creature) this.occupant = null;
     if (creature.tile == this) creature.tile = null;
+
+    if (GLOBAL.debug) this.tint = 0xffffff;
 };
 
 GlassLab.Tile.prototype.onFoodAdded = function(food) {
@@ -392,9 +346,12 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
 };
 
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
-  if (this.type == GlassLab.Tile.TYPES.water || this.occupant) return false;
-  else if (creatureType && this.targetCreatureType == creatureType) return true; // allow walking in pen if the creature type matches
-  else return !this.inPen;
+    var tileProperties = GLOBAL.tileManager.tilemap.tilesets[0].tileproperties[this.type];
+    return ((tileProperties.hasOwnProperty("walkable") && tileProperties.walkable === "true") // Walkable
+        //|| (this.type != GlassLab.Tile.TYPES.water) // blocked by water (OBSOLETE ID)
+        && !this.occupant // Blocked by occupant
+        && !this.inPen)
+        || (creatureType && this.targetCreatureType == creatureType); // allow walking in pen if the creature type matches;
 };
 
 GlassLab.Tile.prototype.canDropFood = function() {

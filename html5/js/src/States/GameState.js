@@ -23,6 +23,8 @@ GlassLab.State.Game.prototype.create = function()
     // Move camera so center of iso world is in middle of screen
     game.camera.x = -game.camera.width/2;
     game.camera.y = -game.camera.height/2;
+    //game.camera.x = -game.camera.width/2;
+    //game.camera.y = -game.camera.height/2;
 
     // start with the sound effects off during development.
     GLOBAL.audioManager.toggleMusic(false);
@@ -68,3 +70,7 @@ GlassLab.State.Game.prototype.update = function()
 
     GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
 };
+
+GlassLab.State.Game.prototype.render = function(game)
+{
+}
