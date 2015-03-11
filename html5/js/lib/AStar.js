@@ -153,6 +153,7 @@ Phaser.Plugin.AStar.prototype.setAStarMap = function(map, layerName, tilesetName
 {
     var tile;
     var walkable;
+    var properties;
 
     //for each tile, add a default AStarNode with x, y and walkable properties according to the tilemap/tileset datas
     for(var y=0; y < this._tilemap.height; y++)
@@ -160,7 +161,8 @@ Phaser.Plugin.AStar.prototype.setAStarMap = function(map, layerName, tilesetName
         for(var x=0; x < this._tilemap.width; x++)
         {
             tile = this._tilemap.layers[this._layerIndex].data[y][x];
-            walkable = this._tilemap.tilesets[this._tilesetIndex].tileProperties[tile.index - 1][this._walkablePropName] !== "false" ? true : false;
+            properties = this._tilemap.tilesets[this._tilesetIndex].tileproperties[tile.index - 1];
+            walkable = properties && properties[this._walkablePropName] !== "false" ? true : false;
             tile.properties.astarNode = new Phaser.Plugin.AStar.AStarNode(x, y, walkable);
         }
     }
@@ -577,7 +579,7 @@ Phaser.Plugin.AStar.AStarPath = function(nodes, start, goal)
 * @param {string} color - Color to stroke the path line.
 * @return {void}
 */
-Phaser.Utils.Debug.prototype.AStar = function(astar, x, y, color, showVisited)
+Phaser.Utils.Debug.prototype.AStar = function(game, astar, x, y, color, showVisited)
 {
     if (this.context == null)
     {

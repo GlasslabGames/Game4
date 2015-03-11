@@ -133,7 +133,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
 
     // Tilemap
-    game.load.tilemap('testTileMap', 'assets/tilemaps/test.json');
+    game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 
     game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
@@ -152,8 +152,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.json('alpha3', 'assets/quests/alpha3.json');
     game.load.json('alpha4', 'assets/quests/alpha4.json');
 
-    game.plugins.add(new Phaser.Plugin.Isometric(game));
-    game.plugins.add(new Phaser.Plugin.AStar(game));
+    game.plugins.add(Phaser.Plugin.Isometric);
+    GLOBAL.astar = game.plugins.add(Phaser.Plugin.AStar);
+    GLOBAL.astar._useDiagonal = false;
 
     var loadingText = game.add.text(32, 32, "Loading...", { fill: '#ffffff' } );
 
@@ -200,7 +201,6 @@ GlassLab.State.Init.prototype.create = function()
 
     var mapData = GLOBAL.tileManager.GenerateRandomMapData(20, 20);
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
-    GLOBAL.tileManager.SetCenter(10,10);
     GLOBAL.grassGroup = game.make.group();
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
@@ -217,6 +217,8 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
+
+    GLOBAL.effectLayer = game.make.group();
 
     GLOBAL.paused = false;
 

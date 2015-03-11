@@ -18,14 +18,15 @@ GlassLab.TileManager = function(game)
 
 GlassLab.TileManager.prototype.TryGetTileData = function(x, y)
 {
-    if (x < 0 || x >= this.mapData.length || y < 0 || y >= this.mapData[x].length) return null;
+    if (x < 0 || x >= this.tileMap.width || y < 0 || y >= this.tileMap.height) return null;
 
     return this.GetTileData(x, y);
 };
 
 GlassLab.TileManager.prototype.GetTileData = function(x, y)
 {
-    return this.mapData[x][y];
+    var tileData = this.tilemap.getTile(x, y, "default");
+    return tileData ? this.tilemap.getTile(x, y, "default").index-1  : -1;
 };
 
 GlassLab.TileManager.prototype.GetTile = function(x, y)
@@ -50,71 +51,22 @@ GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
 
 GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
 {
-    var tilemap = new Phaser.Tilemap(this.game, "testTileMap");
-    var mapData = [[]];
-    /*
-    for (var i=0; i < width; i++)
+    var tilemapData = this.game.cache.getTilemapData("testTileMap");
+    var tilemap = new Phaser.Tilemap(this.game);
+    tilemap.create("default", tilemapData.data.width, tilemapData.data.height, 1,1);
+
+    for (var j = 0; j < tilemapData.data.height; j++)
     {
-        for (var j=0; j < height; j++)
+        for (var i=0; i < tilemapData.data.width; i++)
         {
-            if (!mapData[i]) mapData[i] = [];
-            var centerDist = Math.sqrt( (j - height / 2.0)*(j - height / 2.0) + (i - width / 2.0) * (i - width / 2.0));
-            if (centerDist > 8.5) mapData[i][j] = GlassLab.Tile.TYPES.water; // water
-            else if (Math.random() < 0.75) mapData[i][j] = GlassLab.Tile.TYPES.grass;
-            else mapData[i][j] = GlassLab.Tile.TYPES["mushroom"+ Math.floor(Math.random() * 3)];
-
-            //var tile = new Phaser.Tile(null, mapData[i][j], i, j, 1, 1);
-            //tilemap.putTile(mapData[i][j], i, j, 0);
-        }
-    }*/
-
-    var data = this.game.cache.getTilemapData("testTileMap");
-/* This made a fence
-    this.mapData[10][6] = 6; // Right corner
-    this.mapData[10][7] = 6;
-    this.mapData[10][8] = 6;
-    this.mapData[10][9] = 6; // Bottom corner
-    this.mapData[6][6] = 6; // Top corner
-    this.mapData[6][7] = 6;
-    this.mapData[6][8] = 6;
-    this.mapData[6][9] = 6; // Left corner
-    this.mapData[7][9] = 6;
-    this.mapData[8][9] = 6;
-    this.mapData[9][9] = 6;
-    this.mapData[7][6] = 6;
-    this.mapData[8][6] = 6;
-    this.mapData[9][6] = 6;
-   */
-
-    var jsonData;
-    console.log(tilemap);
-    console.log(data);
-    console.log("Processed: ", jsonData = JSON.parse(data.data));
-
-    for (var i=0; i < jsonData.width; i++)
-    {
-        for (var j = 0; j < jsonData.height; j++)
-        {
-            if (!mapData[i]) mapData[i] = [];
-            mapData[i][j] = jsonData.layers[0].data[i + j*jsonData.width]-1;
+            tilemap.putTile(tilemapData.data.layers[0].data[i + j*tilemapData.data.width], i, j);
         }
     }
+    tilemap.tilesets = tilemapData.data.tilesets;
 
-    this.tileData = [];
-    var tllll = jsonData.tilesets[0].tiles;
-    for (var i in tllll)
-    {
-        var tileData = new GlassLab.TileData();
-        tileData.image = jsonData.tilesets[0].tiles[i].image;
-        tileData.imageKey = tileData.image.substring(tileData.image.lastIndexOf("/")+1);
-        tileData.id = i;
-        tileData.properties = jsonData.tilesets[0].tileproperties[i] || {};
-        this.tileData[i] = tileData;
-    }
-    console.log(this.tileData);
+    GLOBAL.astar.setAStarMap(tilemap, "default", "Tiles");
 
-    this.game.plugins..setAStarMap(jsonData);
-    return mapData;
+    return tilemap;
 };
 
 GlassLab.TileData = function() {
@@ -124,87 +76,20 @@ GlassLab.TileData = function() {
     this.image = "";
 };
 
-GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(data, parentGroup)
+GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, parentGroup)
 {
-    this.mapData = data;
+    this.tilemap = tilemap;
+
+    this.SetCenter(this.tilemap.width/2, this.tilemap.height/2);
     function isFence(num) { return num >= 5 && num <= 8; }
-    for (var i=this.mapData.length-1; i>=0; i--)
+    for (var i=this.tilemap.width-1; i>=0; i--)
     {
-        for (var j=this.mapData[i].length-1; j>=0; j--)
+        for (var j=this.tilemap.height-1; j>=0; j--)
         {
             var tileType = this.GetTileData(i, j);
             if (tileType == -1) continue;
-            var shouldFlip = false;
-            /*
-            if (isFence(tileType)) // we're not using this at all :/
-            {
-                if (isFence(this.mapData[i+1][j])) // right-down
-                {
-                    if (isFence(this.mapData[i-1][j])) // -
-                    {
-                        tileType = 6;
-                        shouldFlip = true;
-                    }
-                    else if (isFence(this.mapData[i][j+1])) // ^
-                    {
-                        tileType = 8;
-                    }
-                    else if (isFence(this.mapData[i][j-1])) // <
-                    {
-                        tileType = 7;
-                    }
-                }
-                else if (isFence(this.mapData[i-1][j])) // left-top
-                {
-                    if (isFence(this.mapData[i+1][j])) // -
-                    {
-                        tileType = 6;
-                        shouldFlip = true;
-                    }
-                    else if (isFence(this.mapData[i][j+1])) // >
-                    {
-                        tileType = 7;
-                        shouldFlip = true;
-                    }
-                    else if (isFence(this.mapData[i][j-1])) // v
-                    {
-                        tileType = 5;
-                    }
-                }
-                else if (isFence(this.mapData[i][j+1])) // left-down
-                {
-                    if (isFence(this.mapData[i][j-1])) // -
-                    {
-                        tileType = 6;
-                    }
-                    else if (isFence(this.mapData[i+1][j])) // ^
-                    {
-                        tileType = 8;
-                    }
-                    else if (isFence(this.mapData[i-1][j])) // v
-                    {
-                        tileType = 5;
-                    }
-                }
-                else if (isFence(this.mapData[i][j-1])) // right-top
-                {
-                    if (isFence(this.mapData[i][j+1])) // -
-                    {
-                        tileType = 6;
-                    }
-                    else if (isFence(this.mapData[i+1][j])) // <
-                    {
-                        tileType = 7;
-                    }
-                    else if (isFence(this.mapData[i-1][j])) // v
-                    {
-                        tileType = 5;
-                    }
-                }
-            }
-            */
+
             var image = new GlassLab.Tile(this.game, i, j, tileType);
-            if (shouldFlip) image.scale.x = -image.scale.x;
             parentGroup.add(image);
 
             if (!this.map[i]) this.map[i] = [];
@@ -341,7 +226,7 @@ GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
   var randRow = parseInt(Math.random() * this.GetMapHeight());
   var targetTile = this.GetTile(randCol, randRow);
   var n = 0;
-  while (!targetTile.getIsWalkable() && n++ < 3000) // safeguard against infinite loops
+  while ((!targetTile || !targetTile.getIsWalkable()) && n++ < 3000) // safeguard against infinite loops
   {
     randCol = parseInt(Math.random() * this.GetMapWidth());
     randRow = parseInt(Math.random() * this.GetMapHeight());
@@ -367,8 +252,8 @@ GlassLab.TileManager.prototype.getTargets = function(creature)
  * Tile
  */
 GlassLab.Tile = function(game, col, row, type) {
-    var imageName = GLOBAL.tileManager.tileData[type].imageKey;
-  Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-10)*GLOBAL.tileSize, (row-10)*GLOBAL.tileSize, 0, imageName);
+    var imageName = this._getImageFromType(type);
+  Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-GLOBAL.tileManager.tilemap.width/2)*GLOBAL.tileSize, (row-GLOBAL.tileManager.tilemap.height/2)*GLOBAL.tileSize, 0, imageName);
   this.type = type;
   //this.tint = Phaser.Color.getColor(Math.random() * 255, Math.random() * 255, Math.random() * 255); // for testing with clearly distinguished tiles (change type to placeholderTile)
   this.anchor.setTo(0.5, 0.5);
@@ -383,27 +268,40 @@ GlassLab.Tile = function(game, col, row, type) {
 GlassLab.Tile.prototype = Object.create(Phaser.Plugin.Isometric.IsoSprite.prototype);
 GlassLab.Tile.prototype.constructor = Phaser.Tile;
 
+GlassLab.Tile.prototype._getImageFromType = function(type)
+{
+    var imageName = GLOBAL.tileManager.tilemap.tilesets[0].tiles[type].image;
+    // remove full address and get just file name
+    var fileNameIndex = imageName.lastIndexOf("/");
+    if (fileNameIndex != -1)
+    {
+        imageName = imageName.substring(fileNameIndex+1);
+    }
+
+    return imageName;
+};
+
 GlassLab.Tile.TYPES = {
-  water : "grassTile0",
-  grass : "grassTile4",
-  mushroom0 : "grassTile3",
-  mushroom1 : "grassTile1",
-  mushroom2 : "grassTile2",
-  dirt : "dirtTile"
+  water : 8,
+  grass : 14,
+  mushroom0 : 13,
+  mushroom1 : 11,
+  mushroom2 : 12,
+  dirt : 9
 };
 
 GlassLab.Tile.prototype.swapType = function(newType) {
   if (this.type == newType) return;
   this.prevType = this.type;
   this.type = newType;
-  this.loadTexture( newType );
+  this.loadTexture( this._getImageFromType(this.type) );
 };
 
 GlassLab.Tile.prototype.unswapType = function() {
   if (!this.prevType) return;
   this.type = this.prevType;
   this.prevType = null;
-  this.loadTexture( this.type );
+    this.loadTexture( this._getImageFromType(this.type) );
 };
 
 GlassLab.Tile.prototype.isTarget = function(creature) {
@@ -448,10 +346,12 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
 };
 
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
-    return !GLOBAL.tileManager.tileData[this.type].properties.hasOwnProperty("collidable");
-  if (this.type == GlassLab.Tile.TYPES.water || this.occupant) return false;
-  else if (creatureType && this.targetCreatureType == creatureType) return true; // allow walking in pen if the creature type matches
-  else return !this.inPen;
+    var tileProperties = GLOBAL.tileManager.tilemap.tilesets[0].tileproperties[this.type];
+    return ((tileProperties.hasOwnProperty("walkable") && tileProperties.walkable === "true") // Walkable
+        //|| (this.type != GlassLab.Tile.TYPES.water) // blocked by water (OBSOLETE ID)
+        && !this.occupant // Blocked by occupant
+        && !this.inPen)
+        || (creatureType && this.targetCreatureType == creatureType); // allow walking in pen if the creature type matches;
 };
 
 GlassLab.Tile.prototype.canDropFood = function() {

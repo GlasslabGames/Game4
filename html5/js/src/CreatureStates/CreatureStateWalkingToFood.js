@@ -16,28 +16,28 @@ GlassLab.CreatureStateWalkingToFood.constructor = GlassLab.CreatureStateWalkingT
 
 GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
-  GlassLab.CreatureState.prototype.Enter.call(this);
+    GlassLab.CreatureState.prototype.Enter.call(this);
     this.speed = this.creature.moveSpeed - 0.25 + (Math.random() * 0.5); // adjust by +- 0.25
-    this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
-  this.creature.draggable = false;
+    this.creature.draggable = false;
+    this.creature.PathToTile(this.foodInfo.food.getTile());
+
+    this.creature.onDestinationReached.add(this._onDestinationReached, this);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
 {
   GlassLab.CreatureState.prototype.Exit.call(this);
   this.creature.StopAnim();
+
+    this.creature.onDestinationReached.remove(this._onDestinationReached, this);
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 {
-  var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalIsoPos(), this.creature.getGlobalIsoPos());
-  if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're far from the carrot
-    delta.setMagnitude(this.speed);
-    Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
-    this.creature.sprite.isoX = delta.x;
-    this.creature.sprite.isoY = delta.y;
-  }
-  else {
+    this.creature._move();
+};
+
+GlassLab.CreatureStateWalkingToFood.prototype._onDestinationReached = function(creature)
+{
     this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.foodInfo));
-  }
 };
