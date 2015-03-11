@@ -55,7 +55,6 @@ GlassLab.OrdersMenu = function(game, x, y) {
 
     this.selectButton = new GlassLab.UIButton(this.game, this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
         this.Hide(true);
-
         GLOBAL.orderFulfillment.Show(this.data);
     }, this);
     this.selectButton.scale.setTo(.65,.65);
@@ -170,6 +169,9 @@ GlassLab.OrdersMenu.prototype.Show = function(orderNum)
     this.currentPage = orderNum;
 
     this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
+
+    GlassLab.SignalManager.mailOpened.dispatch(orderNum);
+
 };
 
 GlassLab.OrdersMenu.prototype.Hide = function(auto)
@@ -177,6 +179,8 @@ GlassLab.OrdersMenu.prototype.Hide = function(auto)
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_orders", {});
 
     this.sprite.visible = false;
+
+    GlassLab.SignalManager.mailClosed.dispatch();
 };
 
 GlassLab.OrdersMenu.prototype._onClosePressed = function()

@@ -45,8 +45,9 @@ GlassLab.SignalManager = {
     penFoodTypeSet: new Phaser.Signal(),
 
     // Order Events
-    orderAdded: new Phaser.Signal(), // (order) => added order
+    ordersChanged: new Phaser.Signal(), // when an order is added or removed
     orderStarted: new Phaser.Signal(), // (order) => order that was started
+    orderCanceled: new Phaser.Signal(), // (order) => order that was started
     orderCompleted: new Phaser.Signal(), // (order) => order that was completed
     orderFailed: new Phaser.Signal(), // (order) => order that was failed
 

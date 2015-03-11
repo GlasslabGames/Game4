@@ -144,7 +144,7 @@ GlassLab.UIManager.prototype._onContinuePressed = function()
 GlassLab.UIManager.prototype._onBonusPressed = function()
 {
     this.bonusModal.visible = false;
-    GLOBAL.levelManager.LoadNextBonusGame();
+    GLOBAL.sortingGame.start();
 };
 
 GlassLab.UIManager.prototype._createZoomButton = function()
@@ -234,25 +234,20 @@ GlassLab.UIManager.prototype.createHud = function() {
     this.topLeftAnchor.addChild(table);
 
     this.journalButton = new GlassLab.HUDAnimButton(this.game, 0,0, "notesIcon", "hudBg", false, this._onJournalButton, this );
-    this.journalButton.image.position.setTo(0, 10);
+    this.journalButton.image.position.setTo(0, 8);
     table.addManagedChild(this.journalButton);
 
     GlassLab.SignalManager.journalOpened.add(function() { this.toggleOpen(true); }, this.journalButton);
     GlassLab.SignalManager.journalClosed.add(function() { this.toggleOpen(false); }, this.journalButton);
 
     this.mailButton = new GlassLab.HUDAnimButton(this.game, 0,0, "mailIcon", "hudBg", false, this._onMailButton, this );
-    this.mailButton.image.position.setTo(0, 5);
+    this.mailButton.image.position.setTo(0, 10);
     GLOBAL.ordersButton = this.mailButton;
-    GlassLab.SignalManager.levelLoaded.add(function(level){
-        this.visible = (level.data.orders && level.data.orders.length > 0);
-    }, this.mailButton);
-    GlassLab.SignalManager.orderAdded.add(function(order){
-        this.visible = true;
-    }, this.mailButton);
     table.addManagedChild(this.mailButton, true);
 
     GlassLab.SignalManager.mailOpened.add(function() { this.toggleOpen(true); }, this.mailButton);
     GlassLab.SignalManager.mailClosed.add(function() { this.toggleOpen(false); }, this.mailButton);
+    GlassLab.SignalManager.ordersChanged.add(this._refreshMailButton, this);
 
     table.position.setTo( (table.getWidth() / 2) + 20, (this.mailButton.getHeight() / 2) + 20 );
 
@@ -272,6 +267,14 @@ GlassLab.UIManager.prototype._onJournalButton = function() {
     } else {
         GLOBAL.Journal.Hide();
     }
+    this.journalButton.toggleActive(false); // no need to stay active after it's been clicked
+};
+
+GlassLab.UIManager.prototype._refreshMailButton = function() {
+    var hasMail = GLOBAL.mailManager.availableOrders.length || GLOBAL.mailManager.rewards.length;
+    this.mailButton.toggleFull(hasMail);
+    var active = hasMail && !GLOBAL.mailManager.currentOrder;
+    this.mailButton.toggleActive(active);
 };
 
 GlassLab.UIManager.prototype._onMailButton = function() {
@@ -288,4 +291,5 @@ GlassLab.UIManager.prototype._onItemsButton = function() {
     } else {
         GLOBAL.inventoryMenu.Hide();
     }
+    this.itemsButton.toggleActive(false); // no need to stay active after it's been clicked
 };

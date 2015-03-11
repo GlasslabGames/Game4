@@ -17,7 +17,12 @@ GlassLab.CreateBonusRoundAction.prototype.constructor = GlassLab.CreateBonusRoun
 
 GlassLab.CreateBonusRoundAction.prototype.Do = function()
 {
-    GLOBAL.sortingGame.start(this.data);
+    if (this.startImmediately) {
+        GLOBAL.sortingGame.start(this.data);
+    } else {
+        GLOBAL.sortingGame.storedData = this.data;
+        GLOBAL.UIManager.bonusModal.visible = true; // this will start the sorting game once they press a button
+    }
 
     this.completeListenerBinding = GlassLab.SignalManager.bonusGameComplete.addOnce(this._complete, this);
 };

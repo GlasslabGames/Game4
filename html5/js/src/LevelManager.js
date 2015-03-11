@@ -73,7 +73,7 @@ GlassLab.LevelManager = function(game)
                 "company": "Rupture Farms",
                 //"numCreatures": 12,
                 "numFoodA": 4,
-                "type": "unifox",
+                "type": "baby_unifox",
                 "description": "Dear Friend! I have space for 48 STRAWBERRIES. Can you send me ENOUGH UNIFOXES to eat that much food?",
                 "fulfilled": false,
                 "reward": 200
@@ -146,7 +146,6 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
 {
     this._destroyCurrentLevel();
-    GLOBAL.inventoryManager.unlockAll(); // FIXME
 
     if (levelData.pens) {
         for (var i = 0; i < levelData.pens.length; i++) {
@@ -180,6 +179,8 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
         }
 
         quest.Start();
+    } else {
+        GLOBAL.inventoryManager.unlockAll(); // for testing
     }
 
     if (typeof levelData.objective != 'undefined')

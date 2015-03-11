@@ -137,11 +137,15 @@ GlassLab.State.Init.prototype.preload = function()
 
     game.load.image('notesIcon', 'assets/images/hud/hud_notes/notes_static.png');
     game.load.image('notesIcon_open', 'assets/images/hud/hud_notes/notes_static_open.png');
+    game.load.atlasJSONHash('notesIcon_anim', 'assets/images/hud/hud_notes/notes_full.png', 'assets/images/hud/hud_notes/notes_full.json');
     game.load.image('mailIcon', 'assets/images/hud/hud_mail/mailbox_static.png');
     game.load.image('mailIcon_open', 'assets/images/hud/hud_mail/mailbox_static_empty_open.png');
     game.load.image('mailIcon_open_full', 'assets/images/hud/hud_mail/mailbox_static_full_open.png');
+    game.load.image('mailIcon_full', 'assets/images/hud/hud_mail/mailbox_static_full.png');
+    game.load.atlasJSONHash('mailIcon_anim', 'assets/images/hud/hud_mail/mailbox_full.png', 'assets/images/hud/hud_mail/mailbox_full.json');
     game.load.image('foodIcon', 'assets/images/hud/hud_food/food_static.png');
     game.load.image('foodIcon_open', 'assets/images/hud/hud_food/food_static_open.png');
+    game.load.atlasJSONHash('foodIcon_anim', 'assets/images/hud/hud_food/food_full.png', 'assets/images/hud/hud_food/food_full.json');
 
     game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');

@@ -103,6 +103,8 @@ GlassLab.RewardPopup.prototype.Show = function(data)
         GLOBAL.audioManager.playSound("fail");
     }
 
+    GlassLab.SignalManager.mailOpened.dispatch(); // eh, not sure we should be using this event :?
+
 };
 
 GlassLab.RewardPopup.prototype.Hide = function()
@@ -111,6 +113,8 @@ GlassLab.RewardPopup.prototype.Hide = function()
     if (this.data && this.data.fulfilled) { // they closed it after successfully filling in order, so count it as a completed challenge
         GLOBAL.questManager.completeChallenge();
     }
+
+    GlassLab.SignalManager.mailClosed.dispatch(); // eh, not sure we should be using this event :?
 };
 
 GlassLab.RewardPopup.prototype.finish = function() {
