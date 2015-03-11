@@ -61,6 +61,6 @@ GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
   } else {
     this.creature.Emote(false);
     this.creature.resetFoodEaten();
-    this.creature._onTargetsChanged();
+    this.creature._onTargetsChanged(true);
   }
 };

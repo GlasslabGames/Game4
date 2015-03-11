@@ -315,8 +315,8 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
 };
 
 GlassLab.Creature.prototype._onTargetsChanged = function (definitely) {
-    // don't look for new target if we're waiting in a pen or if we're currently dragging.. unless we've been told to *definitely* check
-    if (definitely !== true && (this.pen || this.state instanceof GlassLab.CreatureStateDragged)) return;
+    // don't look for new target if we're not either idle or traveling.. unless we've been told to *definitely* check
+    if (definitely !== true && !(this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling)) return;
     var targets = GLOBAL.tileManager.getTargets(this);
     //console.log(this.name,"on targets changed. Targets:",targets);
 
@@ -371,8 +371,8 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
 GlassLab.Creature.prototype.enterPen = function (pen) {
     console.log("enter pen");
     this.pen = pen;
-    var tile = this.creature.getTile();
-    this.creature.setIsoPos(tile.isoX, tile.isoY); // center on the tile
+    var tile = this.getTile();
+    this.setIsoPos(tile.isoX, tile.isoY); // center on the tile
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
     pen.onCreatureEntered(this);
     pen.creatureRoot.addChild(this.sprite); // parent it in the pen so that the ordering works correctly
