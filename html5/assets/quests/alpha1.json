@@ -55,10 +55,23 @@
         ]
       },
       {
-        "__type": "GlassLab.HideAssistantDialogueAction"
+        "__type": "GlassLab.HideArrowAction"
       },
       {
-        "__type": "GlassLab.HideArrowAction"
+        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "text": "Drag food onto the grass to see what the ram likes to eat!"
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.SignalCondition",
+            "signalName": "GlassLab.SignalManager.foodDropped"
+          }
+        ]
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
       },
       {
         "__type": "GlassLab.WaitForCondition",
