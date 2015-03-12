@@ -82,6 +82,6 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creature.type, 1);
             GLOBAL.UIManager.journalButton.toggleActive(true); // we already set "journal.wantToShow", so just start bouncing now
         }
-        this.creature._onTargetsChanged(true);
+        this.creature.lookForTargets();
     }
 };

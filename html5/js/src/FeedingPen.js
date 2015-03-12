@@ -159,7 +159,7 @@ GlassLab.FeedingPen.prototype.RefreshCreatures = function() {
                 console.log(creature.name,"in the pen incorrectly (",tile.col,tile.row,") - pop out.");
                 creature.exitPen(this);
                 //creature.setIsoPos(this.isoX,this.isoY - GLOBAL.tileSize);
-                creature._onTargetsChanged(true);
+                creature.lookForTargets();
             }
         } else {
             if (section == 0 && occupiedTiles.indexOf(tile) == -1) {

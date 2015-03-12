@@ -162,7 +162,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
                 var creature = new GlassLab.Creature(this.game, type);
                 GLOBAL.creatureLayer.add(creature.sprite);
                 creature.moveToRandomTile();
-                creature._onTargetsChanged();
+                creature.lookForTargets();
                 creature.name = "creature"+j; // for debugging
             }
         }

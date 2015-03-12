@@ -214,7 +214,7 @@ GlassLab.Creature.prototype._startDrag = function () {
 GlassLab.Creature.prototype._endDrag = function () {
     GLOBAL.dragTarget = null;
     this.getTile().onCreatureEnter(this);
-    this._onTargetsChanged(true); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
+    this.lookForTargets(true); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
 GlassLab.Creature.prototype.OnStickyDrop = function () { // called by (atm) prototype.js
@@ -314,9 +314,13 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
     this.hungerBar.sprite.visible = false;
 };
 
-GlassLab.Creature.prototype._onTargetsChanged = function (definitely) {
-    // don't look for new target if we're not either idle or traveling.. unless we've been told to *definitely* check
-    if (definitely !== true && !(this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling)) return;
+GlassLab.Creature.prototype._onTargetsChanged = function() {
+    if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
+        this.lookForTargets();
+    }
+};
+
+GlassLab.Creature.prototype.lookForTargets = function () {
     var targets = GLOBAL.tileManager.getTargets(this);
     //console.log(this.name,"on targets changed. Targets:",targets);
 
