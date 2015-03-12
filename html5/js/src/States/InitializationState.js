@@ -76,28 +76,29 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('happyEmote', 'assets/images/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/angryEmote.png');
 
-    /*
-     game.load.image('autumnTile1', 'assets/images/autumn_ground1.png');
-     game.load.image('autumnTile2', 'assets/images/autumn_ground2.png');
-     game.load.image('autumnTile3', 'assets/images/autumn_ground3.png');
-     game.load.image('autumnTile4', 'assets/images/autumn_ground4.png');
-     game.load.image('autumnTile5', 'assets/images/autumn_water.png');
-     game.load.image('autumnTile6', 'assets/images/autumn_fenceBottomCorner.png');
-     game.load.image('autumnTile7', 'assets/images/autumn_fenceSideCorner.png');
-     game.load.image('autumnTile8', 'assets/images/autumn_fenceStraight.png');
-     game.load.image('autumnTile9', 'assets/images/autumn_fenceTopCorner.png');
-     */
-    game.load.image('grassTile0', 'assets/images/tiles/grassy_water.png');
-    game.load.image('grassTile1', 'assets/images/tiles/grassy_1.png');
-    game.load.image('grassTile2', 'assets/images/tiles/grassy_2.png');
-    game.load.image('grassTile3', 'assets/images/tiles/grassy_3.png');
-    game.load.image('grassTile4', 'assets/images/tiles/grassy_4.png');
-    /*game.load.image('grassTile5', 'assets/images/grassy_fence_bottomCorner.png');
-     game.load.image('grassTile6', 'assets/images/grassy_fence_length.png');
-     game.load.image('grassTile7', 'assets/images/grassy_fence_sideCorner.png');
-     game.load.image('grassTile8', 'assets/images/grassy_fence_topCorner.png');*/
-    game.load.image('dirtTile', 'assets/images/tiles/dirtTile1.png');
-    game.load.image('placeholderTile', 'assets/images/tiles/penTile_placeholder2.png');
+
+     game.load.image('autumn_ground1.png', 'assets/images/tiles/autumn_ground1.png');
+     game.load.image('autumn_ground2.png', 'assets/images/tiles/autumn_ground2.png');
+     game.load.image('autumn_ground3.png', 'assets/images/tiles/autumn_ground3.png');
+     game.load.image('autumn_ground4.png', 'assets/images/tiles/autumn_ground4.png');
+     game.load.image('autumn_water.png', 'assets/images/tiles/autumn_water.png');
+     game.load.image('autumn_fenceBottomCorner.png', 'assets/images/tiles/autumn_fenceBottomCorner.png');
+     game.load.image('autumn_fenceSideCorner.png', 'assets/images/tiles/autumn_fenceSideCorner.png');
+     game.load.image('autumn_fenceStraight.png', 'assets/images/tiles/autumn_fenceStraight.png');
+     game.load.image('autumn_fenceTopCorner.png', 'assets/images/tiles/autumn_fenceTopCorner.png');
+
+    game.load.image('grassy_water.png', 'assets/images/tiles/grassy_water.png');
+    game.load.image('grassy_1.png', 'assets/images/tiles/grassy_1.png');
+    game.load.image('grassy_2.png', 'assets/images/tiles/grassy_2.png');
+    game.load.image('grassy_3.png', 'assets/images/tiles/grassy_3.png');
+    game.load.image('grassy_4.png', 'assets/images/tiles/grassy_4.png');
+    game.load.image('grassy_fence_bottomCorner.png', 'assets/images/tiles/grassy_fence_bottomCorner.png');
+     game.load.image('grassy_fence_length.png', 'assets/images/tiles/grassy_fence_length.png');
+     game.load.image('grassy_fence_sideCorner.png', 'assets/images/tiles/grassy_fence_sideCorner.png');
+     game.load.image('grassy_fence_topCorner.png', 'assets/images/tiles/grassy_fence_topCorner.png');
+    game.load.image('dirtTile1.png', 'assets/images/tiles/dirtTile1.png');
+    game.load.image('penTile_placeholder.png', 'assets/images/tiles/penTile_placeholder.png');
+    game.load.image('penTile_placeholder2.png', 'assets/images/tiles/penTile_placeholder2.png');
 
     // Cloud shadow
     game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
@@ -154,6 +155,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('questObjectiveBg', 'assets/images/hud/hud_current_quest_background.png');
     game.load.image('questObjectiveArrow', 'assets/images/hud/hud_current_quest_arrow.png');
 
+    // Tilemap
+    game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
+
     game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
     game.load.audio('eatingSound', 'assets/audio/eating.mp3');
@@ -163,6 +167,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('successSound', 'assets/audio/success.mp3');
     game.load.audio('clickSound', 'assets/audio/button_click.mp3');
 
+    // Quests
     game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
     game.load.json('alpha_quest', 'assets/quests/alpha.json');
     game.load.json('alpha1', 'assets/quests/alpha1.json');
@@ -170,7 +175,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.json('alpha3', 'assets/quests/alpha3.json');
     game.load.json('alpha4', 'assets/quests/alpha4.json');
 
-    game.plugins.add(new Phaser.Plugin.Isometric(game));
+    game.plugins.add(Phaser.Plugin.Isometric);
+    GLOBAL.astar = game.plugins.add(Phaser.Plugin.AStar);
+    GLOBAL.astar._useDiagonal = false;
 
     var loadingText = game.add.text(32, 32, "Loading...", { fill: '#ffffff' } );
 
@@ -213,11 +220,12 @@ GlassLab.State.Init.prototype.create = function()
 
     // Create TileManager and map
     GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
-    GLOBAL.tileManager.GenerateRandomMapData(20, 20);
+    var tileData = game.cache.getTilemapData("testTileMap");
+
+    var mapData = GLOBAL.tileManager.GenerateRandomMapData(20, 20);
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
-    GLOBAL.tileManager.SetCenter(10,10);
     GLOBAL.grassGroup = game.make.group();
-    GLOBAL.tileManager.GenerateMapFromDataToGroup(GLOBAL.grassGroup);
+    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
     // Create pen
@@ -232,6 +240,8 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
+
+    GLOBAL.effectLayer = game.make.group();
 
     GLOBAL.paused = false;
 

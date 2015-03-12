@@ -128,7 +128,19 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
     {
         if (typeof this.currentLevel != "undefined" && this.currentLevel > -1) {
             GlassLabSDK.saveTelemEvent("finish_day", {day: this.currentLevel + 1});
+
+            GlassLabSDK.endSessionAndFlush(function(data){
+                console.log("Session ended: "+data);
+            }.bind(this), function(data) {
+                console.log("Session end failed: "+data);
+            }.bind(this));
         }
+
+        GlassLabSDK.startSession(function(data){
+            console.log("Session started: "+data);
+        }.bind(this), function(data) {
+            console.log("Session start failed: "+data);
+        }.bind(this));
 
         console.log("Starting level", levelNum, this.levels[levelNum].data);
         this.currentLevel = levelNum;

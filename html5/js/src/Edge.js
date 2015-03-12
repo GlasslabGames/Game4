@@ -79,6 +79,9 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, anchor) {
     if (anchor) sprite.anchor.set(anchor.x, anchor.y);
     sprite.isoX = x;
     sprite.isoY = y;
+
+
+
     sprite.parent.setChildIndex(sprite, sprite.parent.children.length - 1); // move it to the back of the children so far
 
     return sprite;

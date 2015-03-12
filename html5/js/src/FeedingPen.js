@@ -409,7 +409,6 @@ GlassLab.FeedingPen.prototype.Destroy = function()
             {
                 tile.setInPen(false);
                 tile.unswapType();
-                tile.occupant = null;
             }
         }
     }
