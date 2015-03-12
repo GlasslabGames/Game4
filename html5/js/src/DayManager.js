@@ -12,16 +12,18 @@ GlassLab.DayManager = function(game)
     this.totalSections = 3;
 
     this.dayMeter = new GlassLab.DayMeter(game);
-    this.dayMeter.x = 30;
+    this.dayMeter.x = 20;
     this.dayMeter.y = 30;
     GLOBAL.UIManager.topAnchor.addChild(this.dayMeter);
 
+    /*
     this.dayTextBg = game.make.graphics(-270,0);
     this.dayTextBg.beginFill(0xffffff).lineStyle(3, 0).drawRect(-35,-10,70, 20);
     this.dayMeter.addChild(this.dayTextBg);
     this.dayText = game.make.text(0,0,"Day", {font: "16px Helvetica"});
     this.dayText.anchor.setTo(.5, .5);
     this.dayTextBg.addChild(this.dayText);
+    */
 
     GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
@@ -33,13 +35,13 @@ GlassLab.DayManager = function(game)
 GlassLab.DayManager.prototype._onSaveRequested = function(blob)
 {
     blob.currentSection = this.currentSection;
-    blob.dotPositions = this.dayMeter.dotPositions;
+    blob.numDots = this.dayMeter.challengeDots.length;
 };
 
 GlassLab.DayManager.prototype._onGameLoaded = function(blob)
 {
     this.currentSection = blob.currentSection;
-    this.dayMeter.SetDots(blob.dotPositions);
+    this.dayMeter.SetDots(blob.numDots);
 
     this._refresh();
 };
@@ -65,9 +67,9 @@ GlassLab.DayManager.prototype._onLevelLoaded = function(level)
 
 GlassLab.DayManager.prototype._refresh = function()
 {
-    this.dayText.setText( "Day " + (GLOBAL.levelManager.currentLevel+1) );
+    //this.dayText.setText( "Day " + (GLOBAL.levelManager.currentLevel+1) );
 
-    if (this.currentSection < this.dayMeter.dots.length)
+    if (this.currentSection < this.dayMeter.challengeDots.length)
     {
         if (this.currentSection == 0)
         {
@@ -80,6 +82,6 @@ GlassLab.DayManager.prototype._refresh = function()
     }
     else
     {
-        console.error("Not enough dots to display day position");
+        console.log("Not enough dots (",this.dayMeter.challengeDots.length,") to display day position:",this.currentSection);
     }
 };
