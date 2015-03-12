@@ -43,10 +43,12 @@ GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creat
 {
     this.creature.StopAnim();
     // If the waypoint is the same as the original target point, stop
-    if (this.target.inPen) {
-        this.creature.enterPen(this.target.inPen);
-    } else if (this.target.food && this.creature.desiredAmountsOfFood[this.target.food.type]) {
-        this.creature.eatFreeFood(this.target.food);
+
+    var creatureCurrentTile = this.creature.getTile();
+    if (creatureCurrentTile.inPen) {
+        this.creature.enterPen(creatureCurrentTile.inPen);
+    } else if (creatureCurrentTile.food && this.creature.desiredAmountsOfFood[creatureCurrentTile.food.type]) {
+        this.creature.eatFreeFood(creatureCurrentTile.food);
     } else {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
     }

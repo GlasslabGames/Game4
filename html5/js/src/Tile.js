@@ -15,7 +15,6 @@ GlassLab.Tile = function(game, col, row, type) {
     this.row = row;
     this.inPen = null;
     this.food = null;
-    this.occupant = null; // current creature walking here
 };
 
 // Extends Isosprite
@@ -64,8 +63,7 @@ GlassLab.Tile.prototype.unswapType = function() {
 };
 
 GlassLab.Tile.prototype.isTarget = function(creature) {
-    if (this.occupant && this.occupant != creature ) return false; // nope, someone's here already
-    else if (this.targetCreatureType == creature.type && !this.inPen.feeding) return true; // yes, this is a target pen slot
+    if (this.targetCreatureType == creature.type && !this.inPen.feeding) return true; // yes, this is a target pen slot
     else if (this.food && creature.desiredAmountsOfFood && (this.food.type in creature.desiredAmountsOfFood)) return true; // yes, there's food we want here
     else return false; // boring
 };
@@ -108,16 +106,12 @@ GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
 
 
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
-    if (this.occupant) return;
-    this.occupant = creature;
     creature.tile = this;
 
     if (GLOBAL.debug) this.tint = 0xff0000;
-    //if (this.isTarget(creature.type)) creature.enterPen(this.inPen);
 };
 
 GlassLab.Tile.prototype.onCreatureExit = function(creature) {
-    if (this.occupant == creature) this.occupant = null;
     if (creature.tile == this) creature.tile = null;
 
     if (GLOBAL.debug) this.tint = 0xffffff;
@@ -137,11 +131,25 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
 
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
     var tileProperties = GLOBAL.tileManager.tilemap.tilesets[0].tileproperties[this.type];
-    return ((tileProperties.hasOwnProperty("walkable") && tileProperties.walkable === "true") // Walkable
-            //|| (this.type != GlassLab.Tile.TYPES.water) // blocked by water (OBSOLETE ID)
-        && !this.occupant // Blocked by occupant
-        && !this.inPen)
-        || (creatureType && this.targetCreatureType == creatureType); // allow walking in pen if the creature type matches;
+    return (tileProperties.hasOwnProperty("walkable") && tileProperties.walkable === "true") // Walkable
+        && (!this.inPen || this.getObjectsInTile().length == 0)
+        && (!this.targetCreatureType || this.targetCreatureType == creatureType); // allow walking in pen if the creature type matches;
+};
+
+GlassLab.Tile.prototype.getObjectsInTile = function() {
+    var objects = [];
+    var allCreatures = GLOBAL.creatureManager.creatures;
+
+    for (var i=allCreatures.length-1; i>=0; i--)
+    {
+        var creature = allCreatures[i];
+        if (creature.getTile() == this)
+        {
+            objects.push(creature);
+        }
+    }
+
+    return objects;
 };
 
 GlassLab.Tile.prototype.canDropFood = function() {

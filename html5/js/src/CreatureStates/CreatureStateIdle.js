@@ -16,10 +16,9 @@ GlassLab.CreatureStateIdle.constructor = GlassLab.CreatureStateIdle;
 
 GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
-  GlassLab.CreatureState.prototype.Enter.call(this);
-  this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
-  //this._setNewDestination(this.creature.getTile());
-  this.creature.draggable = true;
+    GlassLab.CreatureState.prototype.Enter.call(this);
+    this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
+    this.creature.draggable = true;
 
     this.speed = this.creature.moveSpeed / 2;
 };
