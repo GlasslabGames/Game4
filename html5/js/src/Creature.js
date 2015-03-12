@@ -219,7 +219,7 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 
     var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
     var goal = GLOBAL.tileManager.GetTileIndexAtWorldPosition(x, y);
-    var path = GLOBAL.astar.findPath(start, goal);
+    var path = GLOBAL.astar.findPath(start, goal, null, this.type);
 
     if (path.nodes.length > 0)
     {
