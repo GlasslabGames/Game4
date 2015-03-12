@@ -134,7 +134,7 @@ Phaser.Plugin.AStar.DISTANCE_EUCLIDIAN = 'distEuclidian';
 Phaser.Plugin.AStar.prototype.setAStarMap = function(map, layerName, tilesetName)
 {
     this._tilemap = map;
-    this._layerIndex = this._tilemap.getLayerIndex(layerName);;
+    this._layerIndex = this._tilemap.getLayerIndex(layerName);
     this._tilesetIndex = this._tilemap.getTilesetIndex(tilesetName);
 
     this.updateMap();
@@ -176,13 +176,19 @@ Phaser.Plugin.AStar.prototype.setAStarMap = function(map, layerName, tilesetName
  * @public
  * @param {Phaser.Point} startPoint - The start point x, y in tiles coordinates to search a path.
  * @param {Phaser.Point} goalPoint - The goal point x, y in tiles coordinates that you trying to reach.
+ * @param {string} layerName - Name of the layer to use in the search
  * @return {Phaser.Plugin.AStar.AStarPath} The Phaser.Plugin.AStar.AStarPath that results
  */
-Phaser.Plugin.AStar.prototype.findPath = function(startPoint, goalPoint)
+Phaser.Plugin.AStar.prototype.findPath = function(startPoint, goalPoint, layerName, creatureType)
 {
+    if (layerName)
+    {
+        this._layerIndex = this._tilemap.getLayerIndex(layerName);
+    }
+
     var path = new Phaser.Plugin.AStar.AStarPath();
 
-    var start = this._tilemap.layers[this._layerIndex].data[startPoint.y][startPoint.x].properties.astarNode; //:AStarNode;
+    var start = this._tilemap.layers[this._layerIndex].data[startPoint.y][startPoint.x].properties.astarNode;
     var goal = this._tilemap.layers[this._layerIndex].data[goalPoint.y][goalPoint.x].properties.astarNode
 
     path.start = start;
@@ -228,7 +234,7 @@ Phaser.Plugin.AStar.prototype.findPath = function(startPoint, goalPoint)
         this._closed.push(x);
        
         //Then get its neighbors       
-        var n = this.neighbors(x);
+        var n = this.neighbors(x, creatureType);
 
         for(var yIndex=0; yIndex < n.length; yIndex++) 
         {
@@ -336,7 +342,7 @@ Phaser.Plugin.AStar.prototype.visit = function(node)
  * @param {Phaser.Plugin.AStar.AStarNode} n - The astar node you want to register as visited
  * @return {void}
  */
-Phaser.Plugin.AStar.prototype.neighbors = function(node)
+Phaser.Plugin.AStar.prototype.neighbors = function(node, creatureType) // TODO creatureType is a HACK
 {
     var x = node.x;
     var y = node.y;
@@ -344,10 +350,10 @@ Phaser.Plugin.AStar.prototype.neighbors = function(node)
     var neighbors = [];
    
     var map = this._tilemap.layers[this._layerIndex].data;
+    var currentTile = map[y][x];
 
     //West
-    if (x > 0) {
-           
+    if (x > 0 && !currentTile.collideLeft) {
         n = map[y][x-1].properties.astarNode;
         if (n.walkable) {
             n.travelCost = Phaser.Plugin.AStar.COST_ORTHOGONAL;
@@ -355,7 +361,7 @@ Phaser.Plugin.AStar.prototype.neighbors = function(node)
         }
     }
     //East
-    if (x < this._tilemap.width-1) {
+    if (x < this._tilemap.width-1 && !currentTile.collideRight) {
         n = map[y][x+1].properties.astarNode;
         if (n.walkable) {
             n.travelCost = Phaser.Plugin.AStar.COST_ORTHOGONAL;
@@ -363,7 +369,7 @@ Phaser.Plugin.AStar.prototype.neighbors = function(node)
         }
     }
     //North
-    if (y > 0) {
+    if (y > 0 && !currentTile.collideUp) {
         n = map[y-1][x].properties.astarNode;
         if (n.walkable) {
             n.travelCost = Phaser.Plugin.AStar.COST_ORTHOGONAL;
@@ -371,7 +377,7 @@ Phaser.Plugin.AStar.prototype.neighbors = function(node)
         }
     }
     //South
-    if (y < this._tilemap.height-1) {
+    if (y < this._tilemap.height-1 && !currentTile.collideDown) {
         n = map[y+1][x].properties.astarNode;
         if (n.walkable) {
             n.travelCost = Phaser.Plugin.AStar.COST_ORTHOGONAL;
