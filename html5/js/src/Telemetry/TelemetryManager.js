@@ -92,20 +92,10 @@ GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
 
 GlassLab.TelemetryManager.prototype._onQuestStarted = function()
 {
-    GlassLabSDK.startSession(function(data){
-        console.log("Session started: "+data);
-    }.bind(this), function(data) {
-        console.log("Session start failed: "+data);
-    }.bind(this));
 };
 
 GlassLab.TelemetryManager.prototype._onQuestEnded = function()
 {
-    GlassLabSDK.endSessionAndFlush(function(data){
-        console.log("Session ended: "+data);
-    }.bind(this), function(data) {
-        console.log("Session end failed: "+data);
-    }.bind(this));
 };
 
 GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)
