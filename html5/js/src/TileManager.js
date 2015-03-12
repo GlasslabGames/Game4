@@ -210,7 +210,6 @@ GlassLab.TileManager.prototype.clearTiles = function()
         {
             tile.setInPen(false);
             tile.unswapType();
-            tile.occupant = null;
             tile.food = null;
         }
     }
@@ -219,6 +218,10 @@ GlassLab.TileManager.prototype.clearTiles = function()
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
         GLOBAL.foodLayer.getChildAt(i).destroy();
     }
+};
+
+GlassLab.TileManager.prototype.getObjectsInTile = function(col, row) {
+    return this.getTile(col, row).getObjectsInTile();
 };
 
 GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
@@ -241,7 +244,7 @@ GlassLab.TileManager.prototype.getTargets = function(creature)
   for (var col = 0; col < this.GetMapWidth(); col++) {
     for (var row = 0; row < this.GetMapHeight(); row++) {
       var tile = this.GetTile(col, row);
-      if (tile && tile.isTarget(creature)) tiles.push(tile);
+      if (tile && tile.isTarget(creature) && tile.getIsWalkable(creature.type)) tiles.push(tile);
     }
   }
   return tiles;

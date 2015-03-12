@@ -225,15 +225,13 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
     {
         this.currentPath.push(new Phaser.Point(x, y));
 
-        for (var i=0; i < path.nodes.length-1; i++)
+        for (var i=1; i < path.nodes.length-1; i++)
         {
             var position;
             this.currentPath.push(position = GLOBAL.tileManager.GetTileWorldPosition(path.nodes[i].x, path.nodes[i].y));
             position.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
             position.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
         }
-
-        GLOBAL.tileManager.GetTileAtIsoWorldPosition(x, y).occupant = this;
     }
 
     this.onPathChanged.dispatch(this);
@@ -293,9 +291,18 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
     if (this.currentPath.length > 0)
     {
         this.targetPosition = this.currentPath.pop();
+        var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.targetPosition.x, this.targetPosition.y);
+
+        if (!tile.getIsWalkable(this.type))
+        {
+            this._clearPath();
+            this.onDestinationReached.dispatch(this);
+
+            return false;
+        }
+
         if (GLOBAL.debug)
         {
-            var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.targetPosition.x, this.targetPosition.y);
             tile.tint = 0x0000ff;
         }
 
