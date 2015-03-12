@@ -1,7 +1,7 @@
 [
   {
     "__type": "GlassLab.SetDayAction",
-    "numDots": 0
+    "numDots": 1
   },
   {
     "__type": "GlassLab.UnlockItemsAction",
