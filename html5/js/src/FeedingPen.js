@@ -597,6 +597,8 @@ GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
 GlassLab.FeedingPen.prototype._onLeverPulled = function() {
     GLOBAL.audioManager.playSound("click"); // generic interaction sound
 
+    var leverAnim;
+
     this._refreshFeedButton();
     if (!this.canFeed || this.feeding) {
         if (this.gateLight.spriteName != "gateLightRed") this.gateLight.loadTexture("gateLightRed");
@@ -605,13 +607,13 @@ GlassLab.FeedingPen.prototype._onLeverPulled = function() {
 
         if (this.gateLever.spriteName != "gateSwitchFail") this.gateLever.loadTexture("gateSwitchFail");
         this.gateLever.animations.add('anim');
-        this.gateLever.animations.play('anim', 48);
+        leverAnim = this.gateLever.animations.play('anim', 48);
     } else {
         this.gateLight.animations.stop(true);
 
         if (this.gateLever.spriteName != "gateSwitchFlip") this.gateLever.loadTexture("gateSwitchFlip");
         this.gateLever.animations.add('anim');
-        this.gateLever.animations.play('anim', 48);
+        leverAnim = this.gateLever.animations.play('anim', 48);
 
         var centerPieces = this.centerEdge.pieces.children;
         for (var i = 0; i < centerPieces.length; i++) {
@@ -623,6 +625,11 @@ GlassLab.FeedingPen.prototype._onLeverPulled = function() {
                     }, this);
             }*/
         }
-        this.game.time.events.add(100, this.FeedCreatures, this); // if we do it immediately it interrupts the update loop
+        this.game.time.events.add(100, this.FeedCreatures, this); // using t
     }
+
+    this.gateHoverEffect.visible = false; // can't show this while the animation is playing
+    leverAnim.onComplete.addOnce(function() {
+        this.gateHoverEffect.visible = true; // show it again when the animation completes
+    }, this);
 };

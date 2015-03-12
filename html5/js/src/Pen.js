@@ -410,17 +410,36 @@ GlassLab.Pen.prototype._makeGatePieces = function() {
     this.centerEdge.sprite.addChildAt(this.gateBack, 0);
 
     this.gateFront.addChild(this.game.make.sprite(0, 0, "gateCapNear")).anchor.setTo(anchorX, anchorY);
+
+    this.gateHoverEffect = this.game.make.sprite(0,0, "gateHover");
+    this.gateFront.addChild(this.gateHoverEffect).anchor.setTo(anchorX, anchorY);
+    this.gateHoverEffect.alpha = 0;
+
     this.gateFront.addChild(this.game.make.sprite(0, 0, "gateSwitchBack")).anchor.setTo(anchorX, anchorY);
 
     this.gateLever = this.game.make.sprite(0, 0, "gateSwitchFail");
     this.gateLever.inputEnabled = true;
-    this.gateLever.input.pixelPerfectClick = true;
     this.gateLever.events.onInputDown.add(this._onLeverPulled, this);
+    this.gateLever.events.onInputOver.add(this._onOverLever, this);
+    this.gateLever.events.onInputOut.add(this._onOffLever, this);
     this.gateLever.input.priorityID = 10; // above other game objects, though below the UI
+    /*var graphics = this.game.make.graphics();
+    graphics.beginFill(0x0000ff, 0.5).drawCircle(45, 75, 140);
+    this.gateLever.addChild(graphics);*/
+    this.gateLever.hitArea = new Phaser.Circle(45, 75, 140);
     this.gateFront.addChild(this.gateLever).anchor.setTo(anchorX, anchorY);
 
     this.gateLight = this.game.make.sprite(0, 0, "gateLightRed");
     this.gateFront.addChild(this.gateLight).anchor.setTo(anchorX, anchorY);
+};
+
+GlassLab.Pen.prototype._onOverLever = function() {
+    this.game.add.tween(this.gateHoverEffect).to({alpha: 0.5}, 150, Phaser.Easing.Linear.InOut, true);
+};
+
+
+GlassLab.Pen.prototype._onOffLever = function() {
+    this.game.add.tween(this.gateHoverEffect).to({alpha: 0}, 150, Phaser.Easing.Linear.InOut, true);
 };
 
 // this is overwritten in Feeding Pen

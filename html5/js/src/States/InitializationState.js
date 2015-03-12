@@ -66,6 +66,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('gateCapNear', 'assets/images/pen/feeding_gate_endcap_near.png');
     game.load.image('gateCapFar', 'assets/images/pen/feeding_gate_endcap_far.png');
     game.load.image('gateSwitchBack', 'assets/images/pen/gate_switch_back.png');
+    game.load.image('gateHover', 'assets/images/pen/switch_hover.png');
     game.load.atlasJSONHash('gateSwitchFlip', 'assets/images/pen/switch_flip.png', 'assets/images/pen/switch_flip.json');
     game.load.atlasJSONHash('gateSwitchFail', 'assets/images/pen/switch_fail.png', 'assets/images/pen/switch_fail.json');
     game.load.atlasJSONHash('gateLightGreen', 'assets/images/pen/switch_light_green.png', 'assets/images/pen/switch_light_green.json');
