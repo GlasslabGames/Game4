@@ -66,6 +66,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('gateCapNear', 'assets/images/pen/feeding_gate_endcap_near.png');
     game.load.image('gateCapFar', 'assets/images/pen/feeding_gate_endcap_far.png');
     game.load.image('gateSwitchBack', 'assets/images/pen/gate_switch_back.png');
+    game.load.image('gateHover', 'assets/images/pen/switch_hover.png');
     game.load.atlasJSONHash('gateSwitchFlip', 'assets/images/pen/switch_flip.png', 'assets/images/pen/switch_flip.json');
     game.load.atlasJSONHash('gateSwitchFail', 'assets/images/pen/switch_fail.png', 'assets/images/pen/switch_fail.json');
     game.load.atlasJSONHash('gateLightGreen', 'assets/images/pen/switch_light_green.png', 'assets/images/pen/switch_light_green.json');
@@ -148,8 +149,15 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('foodIcon_open', 'assets/images/hud/hud_food/food_static_open.png');
     game.load.atlasJSONHash('foodIcon_anim', 'assets/images/hud/hud_food/food_full.png', 'assets/images/hud/hud_food/food_full.json');
 
+    game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
+    game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');
+    game.load.atlasJSONHash('questBarSun', 'assets/images/hud/hud_sun/hud_mission_sun.png', 'assets/images/hud/hud_sun/hud_mission_sun.json');
+    game.load.image('questObjectiveBg', 'assets/images/hud/hud_current_quest_background.png');
+    game.load.image('questObjectiveArrow', 'assets/images/hud/hud_current_quest_arrow.png');
+
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
+
     game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
     game.load.audio('eatingSound', 'assets/audio/eating.mp3');
@@ -296,6 +304,9 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
 
     GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
+
+    //GLOBAL.debugText = game.make.text(-300,0,"test");
+    //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);
 
     this.initComplete = true;
 };

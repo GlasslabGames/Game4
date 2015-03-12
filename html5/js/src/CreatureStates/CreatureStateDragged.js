@@ -27,7 +27,7 @@ GlassLab.CreatureStateDragged.prototype.Exit = function()
   var tile = this.creature.getTile();
   this.creature.setIsoPos(tile.isoX, tile.isoY);
 
-  this.creature.StopAnim();
+    this.creature.StopAnim();
   //var offset = (); // offset by the shadow position
   this.creature.shadow.y = 0;
 };

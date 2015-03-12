@@ -102,14 +102,16 @@ GlassLab.LevelManager = function(game)
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
-            {type: "rammus", foodBWidth: 1, bottomDraggable: true, leftDraggable: true, topDraggable: true}
+            {type: "baby_unifox", foodBWidth: 0, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            rammus: 4
+            baby_unifox: 10
         },
         objective: "Feed the rams!"
     };
 
+    // 9
+    this._addLevelData(new GlassLab.Level()).data = {};
 
 };
 
@@ -172,7 +174,8 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
                 var creature = new GlassLab.Creature(this.game, type);
                 GLOBAL.creatureLayer.add(creature.sprite);
                 creature.moveToRandomTile();
-                creature._onTargetsChanged();
+                creature.lookForTargets();
+                creature.name = "creature"+j; // for debugging
             }
         }
     }

@@ -111,7 +111,7 @@ GlassLab.Journal.prototype.Show = function(auto, creatureType)
     this.sprite.visible = true;
     GLOBAL.inventoryMenu.Hide(true);
 
-    if (!creatureType) creatureType = GLOBAL.creatureManager.creatureList[this.currentPage || 0];
+    if (!creatureType) creatureType = this.wantToShow || GLOBAL.creatureManager.creatureList[this.currentPage || 0];
     // default to the page we last had open, or 0 if we haven't opened the journal yet
     this.RefreshWithCreature(creatureType);
 

@@ -23,7 +23,7 @@ GlassLab.CreateCreaturesAction.prototype.Do = function()
             var creature = GLOBAL.creatureManager.CreateCreature(type);
             if (this.centered) { // kinda hacky way to make sure the creatues we create are in the middle of the map
                 creature.moveToTile( GLOBAL.tileManager.tilemap.width/2, GLOBAL.tileManager.tilemap.height/2 );
-                creature._onTargetsChanged();
+                creature.lookForTargets();
             }
         }
     }

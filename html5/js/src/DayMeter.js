@@ -11,55 +11,50 @@ GlassLab.DayMeter = function(game)
 {
     Phaser.Sprite.prototype.constructor.call(this, game);
 
-    this.barContainer = game.make.sprite();
+    this.totalWidth = 480;
+    this.barContainer = game.make.sprite(-this.totalWidth / 2, 0);
     this.addChild(this.barContainer);
 
-    this.bar = game.make.graphics(-200,0);
-    this.bar.lineStyle(3, 0).moveTo(0,0).lineTo(400,0);
-    this.barContainer.addChild(this.bar);
+    this.dotContainer = game.make.sprite();
+    this.barContainer.addChild(this.dotContainer);
+    this.challengeDots = [];
 
-    this.sun = game.make.graphics(0,0);
-    this.sun.beginFill(0xffffff).lineStyle(GlassLab.DayMeter.LINE_THICKNESS, 0).drawCircle(0,0, GlassLab.DayMeter.SUN_RADIUS);
-    this.barContainer.addChild(this.sun);
-    this.sunLabel = game.make.text(0,0,"Sun", {font: "16px Helvetica"});
-    this.sunLabel.anchor.setTo(.5, .5);
-    this.sun.addChild(this.sunLabel);
+    this.objectiveContainer = game.make.sprite(0, 30);
+    this.objectiveContainer.alpha = 0;
+    this.barContainer.addChild(this.objectiveContainer);
 
-    this.dots = [];
-    this.dotPositions = [];
-    this.SetDots([0, .5, 1]);
+    this.objectiveBg = game.make.sprite(-20,0, "questObjectiveBg");
+    this.objectiveBg.tint = 0x000000;
+    this.objectiveBg.alpha = 0.5;
+    this.objectiveContainer.addChild(this.objectiveBg);
 
-    this.objectiveElement = game.make.graphics(0,this.bar.y+40);
-    this.objectiveElement.beginFill(0).drawRect(-250, 0, 500, 30);
-    this.objectiveElement.inputEnabled = true;
-    this.objectiveElement.inputPriority = 1;
-    this.addChild(this.objectiveElement);
+    this.objectiveArrow = game.make.sprite(0,0, "questObjectiveArrow");
+    this.objectiveArrow.anchor.setTo(0.5, 1);
+    this.objectiveArrow.tint = 0x000000;
+    this.objectiveArrow.alpha = 0.5;
+    this.objectiveContainer.addChild(this.objectiveArrow);
 
-    this.objectiveDayPointer = game.make.graphics(0,-10);
-    this.objectiveDayPointer.beginFill(0).drawPolygon(
-        -10,10,
-        0,0,
-        10,10
-    );
-    this.objectiveElement.addChild(this.objectiveDayPointer);
-
-    this.objectiveLabel = game.make.text(0, 3, "{Objective}", {fill: "#ffffff", font: "20px Arial"});
-    this.objectiveLabel.anchor.setTo(.5, 0);
-    this.objectiveElement.addChild(this.objectiveLabel);
-    this.objectiveElement.alpha = 0; // Alpha is managed by DayMeter
-    GLOBAL.dayMeter = this.objectiveElement;
+    this.objectiveLabel = game.make.text(0, 15, "", {fill: "#ffffff", font: "bold 16px Arial"});
+    this.objectiveLabel.anchor.setTo(0, 0.5);
+    this.objectiveContainer.addChild(this.objectiveLabel);
 
     this.barContainer.inputEnabled = true;
+    this.barContainer.hitArea = new Phaser.Rectangle(-20,-25,520,50);
     this.barContainer.events.onInputOver.add(this._onInputOver, this);
     this.barContainer.events.onInputOut.add(this._onInputOut, this);
 
+    // Use this rectangle to adjust the hitArea
+    //this.barContainer.addChild(this.game.make.graphics().beginFill(0xffffff, 0.5).drawRect(-20, -25, 520, 50));
+
+    this.sun = game.make.sprite(0,0,"questBarSun");
+    this.sun.anchor.setTo(0.5, 0.5);
+    this.sun.animations.add("idle", game.math.numberArray(0, 23), 48, true);
+    this.sun.animations.add("spin", game.math.numberArray(24, 47), 48, true);
+    this.sun.animations.play("idle");
+    this.barContainer.addChild(this.sun);
+
     GlassLab.SignalManager.objectiveUpdated.add(this._onObjectiveUpdated,this);
 };
-
-GlassLab.DayMeter.SUN_RADIUS = 40;
-GlassLab.DayMeter.LINE_THICKNESS = 3;
-GlassLab.DayMeter.NODE_RADIUS = 20;
-
 // Extends Sprite
 GlassLab.DayMeter.prototype = Object.create(Phaser.Sprite.prototype);
 GlassLab.DayMeter.prototype.constructor = GlassLab.DayMeter;
@@ -70,8 +65,8 @@ GlassLab.DayMeter.prototype._onObjectiveUpdated = function(objectiveText)
 
     if (!this.objectiveLabelAlertTween)
     {
-        this.objectiveElement.alpha = 0;
-        this.objectiveLabelAlertTween = this.game.add.tween(this.objectiveElement).to( {alpha: 1}, 250, "Linear").to( {alpha:1}, 3000).loop(true);
+        this.objectiveContainer.alpha = 0;
+        this.objectiveLabelAlertTween = this.game.add.tween(this.objectiveContainer).to( {alpha: 1}, 250, "Linear").to( {alpha:1}, 3000).loop(true);
         this.objectiveLabelAlertTween.onRepeat.add(function(){
             this.objectiveLabelAlertTween.pause();
             this._onInputOut();
@@ -84,6 +79,9 @@ GlassLab.DayMeter.prototype._onObjectiveUpdated = function(objectiveText)
 
 GlassLab.DayMeter.prototype._onInputOver = function()
 {
+    if (this.mouseOutTimer) this.game.time.events.remove(this.mouseOutTimer);
+    this.sun.animations.play("spin");
+
     if (this.objectiveLabelAlertTween && !this.objectiveLabelAlertTween.isPaused)
     {
         return;
@@ -92,8 +90,8 @@ GlassLab.DayMeter.prototype._onInputOver = function()
     // Lazy-instantiate tween
     if (!this.objectiveLabelTweenIn)
     {
-        this.objectiveElement.alpha = 0;
-        this.objectiveLabelTweenIn = this.game.add.tween(this.objectiveElement).to( {alpha: 1}, 250, "Linear").loop(true);
+        this.objectiveContainer.alpha = 0;
+        this.objectiveLabelTweenIn = this.game.add.tween(this.objectiveContainer).to( {alpha: 1}, 250, "Linear").loop(true);
         this.objectiveLabelTweenIn.onRepeat.add(function(){
             this.pause();
         }, this.objectiveLabelTweenIn);
@@ -111,16 +109,19 @@ GlassLab.DayMeter.prototype._onInputOver = function()
 
 GlassLab.DayMeter.prototype._onInputOut = function()
 {
-    if (this.objectiveLabelAlertTween && !this.objectiveLabelAlertTween.isPaused)
-    {
-        return;
-    }
+    if (this.mouseOutTimer) this.game.time.events.remove(this.mouseOutTimer);
+    this.mouseOutTimer = this.game.time.events.add(3000, this._hideObjective, this);
+    this.sun.animations.play("idle");
+};
+
+GlassLab.DayMeter.prototype._hideObjective = function() {
+    if (this.objectiveLabelAlertTween && !this.objectiveLabelAlertTween.isPaused) return;
 
     // Lazy-instantiate tween
     if (!this.objectiveLabelTweenOut)
     {
-        this.objectiveElement.alpha = 1;
-        this.objectiveLabelTweenOut = this.game.add.tween(this.objectiveElement).to( {alpha: 0}, 250, "Linear").loop(true);
+        this.objectiveContainer.alpha = 1;
+        this.objectiveLabelTweenOut = this.game.add.tween(this.objectiveContainer).to( {alpha: 0}, 250, "Linear").loop(true);
         this.objectiveLabelTweenOut.onRepeat.add(function(){
             this.pause();
         }, this.objectiveLabelTweenOut);
@@ -136,64 +137,58 @@ GlassLab.DayMeter.prototype._onInputOut = function()
     this.objectiveLabelTweenOut.start();
 };
 
-GlassLab.DayMeter.prototype._createDot = function()
-{
-    var dot = this.game.make.graphics(0,0);
-    dot.beginFill(0xffffff).lineStyle(GlassLab.DayMeter.LINE_THICKNESS, 0).drawCircle(0,0, GlassLab.DayMeter.NODE_RADIUS);
-    return dot;
-};
-
 GlassLab.DayMeter.prototype.AnimateSunToPositionIndex = function(index, animate)
 {
-    var targetX = this.dots[index].x + this.bar.x;
-    if (targetX > 0) targetX -= GlassLab.DayMeter.LINE_THICKNESS;
+    var targetX = this.challengeDots[index].x;
 
     var sunTween = this.game.add.tween(this.sun).to( {x: targetX }, 1500, Phaser.Easing.Cubic.InOut, true);
+    sunTween.onComplete.add(function() {
+        this.sun.animations.play("idle");
+    }, this);
+    this.sun.animations.play("spin");
 
-    this.objectiveDayPointer.x = targetX;
+    this.objectiveArrow.x = targetX;
 };
 
 GlassLab.DayMeter.prototype.SetSunToPositionIndex = function(index, animate)
 {
-    this.sun.x = this.dots[index].x + this.bar.x;
-    if (this.sun.x > 0) this.sun.x -= GlassLab.DayMeter.LINE_THICKNESS;
-
-    this.objectiveDayPointer.x = this.sun.x;
+    this.sun.x = this.challengeDots[index].x;
+    this.objectiveArrow.x = this.sun.x;
 };
 
-GlassLab.DayMeter.prototype.SetDots = function(positions)
+GlassLab.DayMeter.prototype.SetDots = function(numBigDots)
 {
-    this.dotPositions = positions;
+    var totalDots = [0, 15, 16, 15, 16, 17, 16][numBigDots];
+    if (!totalDots) totalDots = 2 * numBigDots - 1; // default is one small dot between each big dot
+    var offset = (totalDots-1) / (numBigDots - 1);
 
-    var dotIndex = 0;
-    var numDotsBeforeSet = this.dots.length;
-    var numPositions = positions.length;
-    for (; dotIndex < numPositions; dotIndex++)
-    {
+    this.challengeDots = [];
+    var prevNumDots = this.dotContainer.children.length;
+    var i = 0;
+    for (; i < totalDots; i++) {
+        var challengeDot = (numBigDots == 1 && i == (totalDots - 1) / 2) || (numBigDots > 1 && i % offset == 0);
+        var spriteName = challengeDot? "questBarDotLarge" : "questBarDotSmall";
+
         var dot;
-        if (dotIndex < numDotsBeforeSet)
-        {
-            dot = this.dots[dotIndex];
+        if (i < prevNumDots) {
+            dot = this.dotContainer.getChildAt(i);
             dot.visible = true;
-        }
-        else
-        {
-            dot = this._createDot();
-            this.bar.addChild(dot);
-            this.dots.push(dot);
+            if (dot.key != spriteName) dot.loadTexture(spriteName);
+        } else {
+            dot = this.game.make.sprite(0,0,spriteName);
+            dot.anchor.setTo(0.5, 0.5);
+            this.dotContainer.addChild(dot);
         }
 
-        var position = positions[dotIndex];
-        dot.x = position * this.bar.width;
-        if (dot.x > 0) dot.x -= 3;
+        dot.position.setTo(i * (this.totalWidth / (totalDots-1)), 0);
+        dot.alpha = (challengeDot? 0.5 : 0.25);
+        if (challengeDot) this.challengeDots.push(dot);
     }
 
     // Hide any extra dots
-    for (; dotIndex < numDotsBeforeSet; dotIndex++)
-    {
-        var dot = this.dots[dotIndex];
-        dot.visible = false;
+    for (; i < prevNumDots; i++) {
+        this.dotContainer.getChildAt(i).visible = false;
     }
 
-    this.barContainer.visible = (this.dotPositions.length > 1);
+    return;
 };

@@ -126,11 +126,15 @@ GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
 
 GlassLab.QuestManager.prototype.completeChallenge = function() {
     if (GLOBAL.Journal.wantToShow) {
-        GLOBAL.Journal.Show(true, GLOBAL.Journal.wantToShow);
-        //GLOBAL.UIManager.journalButton.toggleActive(true); // alternatively. But this doesn't work with the tutorial
-        GlassLab.SignalManager.journalClosed.addOnce(function() {
+        if (false) { // show the journal immediately
+            GLOBAL.Journal.Show(true);
+            GlassLab.SignalManager.journalClosed.addOnce(function() {
+                GlassLab.SignalManager.challengeComplete.dispatch();
+            }, this);
+        } else {
+            GLOBAL.UIManager.journalButton.toggleActive(true);
             GlassLab.SignalManager.challengeComplete.dispatch();
-        }, this);
+        }
     } else {
         GlassLab.SignalManager.challengeComplete.dispatch();
     }

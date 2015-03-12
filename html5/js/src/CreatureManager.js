@@ -182,7 +182,7 @@ GlassLab.CreatureManager.prototype.CreateCreature = function(type)
     var creature = new GlassLab.Creature(this.game, type);
     GLOBAL.creatureLayer.add(creature.sprite);
     creature.moveToRandomTile();
-    creature._onTargetsChanged();
+    creature.lookForTargets();
 
     return creature;
 };

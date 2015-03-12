@@ -51,6 +51,7 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 
 GlassLab.FeedingPen.prototype.Resize = function() {
     GlassLab.Pen.prototype.Resize.call(this);
+    console.log("resizing with num creatures:",this.creatures.length);
 
     var startCol = this.widths[0];
     for (var i = 0, len = this.foodTypes.length; i < len; i++) {
@@ -67,21 +68,10 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     if (this.autoFill) {
         this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatures, this.numCreatures,
             0, this.widths[0], true, this.creatureType);
-        for (var i = 0; i < this.creatures.length; i++) {
-            this.creatures[i].draggable = false;
+        for (var j = 0; j < this.creatures.length; j++) {
+            this.creatures[j].draggable = false;
         }
     } else {
-        // Move all the creatures
-        if (this.prevIsoPos) {
-            var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
-
-            for (var i = 0; i < this.creatures.length; i++) {
-                var creature = this.creatures[i];
-                creature.setIsoPos( creature.sprite.isoX - posDif.x, creature.sprite.isoY - posDif.y);
-            }
-
-            this.prevIsoPos = null;
-        }
 
         // For each tile in the creature side, mark that it's open for creatures
         for (var col = 0; col < this.widths[0]; col++) {
@@ -90,40 +80,103 @@ GlassLab.FeedingPen.prototype.Resize = function() {
                 if (tile)
                 {
                     tile.setInPen(this, this.creatureType);
+                    /*if (tile.occupant && tile.occupant.pen != tile.inPen) { // there's a creature here that hasn't been set as in the pen, so do that
+                        tile.occupant.setIsoPos( tile.isoX, tile.isoY ); // make sure it's in the right place in the pen
+                        tile.occupant.enterPen(tile.inPen);
+
+                    }*/
                 }
             }
         }
+
+        // Move all the creatures
+        if (this.prevIsoPos) {
+            var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
+
+            for (var k = 0; k < this.creatures.length; k++) {
+                var creature = this.creatures[k];
+                creature.setIsoPos( creature.sprite.isoX - posDif.x, creature.sprite.isoY - posDif.y);
+            }
+
+            this.prevIsoPos = null;
+        }
+
+        // Refresh creatures to resolve any issues
+        this.RefreshCreatures();
     }
 
     // If we've set a specific number of food & creatures, use that instead of the default which was set in Pen
     // But it would be better to rewrite the Pen one to count the number of food / creatures currently in the pen.
     if (this.numFoods && this.numCreatures) {
         this.ratioLabel.text = this.numCreatures;
-        for (var i = 0; i < this.numFoods.length; i++) {
-            this.ratioLabel.text += " : " + this.numFoods[i];
+        for (var l = 0; l < this.numFoods.length; l++) {
+            this.ratioLabel.text += " : " + this.numFoods[l];
         }
     }
 
     this.foodByRow = []; // clear foodByRow so that we know to recalculate it next time we need it
 
     if (this.prevHeight != this.height || this.prevCreatureWidth != this.widths[0]) {
-        GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
         // Check for any creatures outside the pen and move them out
-        for (var i = 0; i < this.creatures.length; i++) {
-            var creature = this.creatures[i];
+        /*
+        for (var m = 0; m < this.creatures.length; m++) {
+            var creature = this.creatures[m];
             var tile = creature.getTile();
+
             if (this._getSection(tile) != 0) { // if it's not in the creature section of the pen
                 creature.exitPen(this);
-                this.creatures.splice(i, 1);
-                i --;
+                this.creatures.splice(m, 1);
+                m --;
             }
-        }
 
-        this._onCreatureContentsChanged();
+        }*/
+
         this.prevHeight = this.height;
         this.prevCreatureWidth = this.widths[0];
     }
+
+    console.log("done resizing with num creatures",this.creatures.length);
+    this._onCreatureContentsChanged();
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+};
+
+GlassLab.FeedingPen.prototype.RefreshCreatures = function() {
+    var occupiedTiles = [];
+    var myCreatures = []; // recompile the list of creatures
+    for (var i = 0; i < GLOBAL.creatureManager.creatures.length; i++) {
+        var creature = GLOBAL.creatureManager.creatures[i];
+        var tile = creature.getTile();
+        var section = this._getSection(tile);
+        var currentlyInPen = creature.pen == this;
+        if (currentlyInPen) {
+            if (section == 0 && occupiedTiles.indexOf(tile) == -1) {
+                // we're all good - we can claim this spot in the waiting area
+                myCreatures.push(creature);
+                tile.onCreatureEnter(creature);
+                occupiedTiles.push(tile);
+            } else { // it was in the pen but it's either not in the waiting area or overlapping with another creature in the waiting area
+                console.log(creature.name,"in the pen incorrectly (",tile.col,tile.row,") - pop out.");
+                creature.exitPen(this);
+                //creature.setIsoPos(this.isoX,this.isoY - GLOBAL.tileSize);
+                creature.lookForTargets();
+            }
+        } else {
+            if (section == 0 && occupiedTiles.indexOf(tile) == -1) {
+                // it's not in the pen, but it should be since this spot in the waiting area is fine
+                console.log(creature.name,"out of the pen incorrectly (",tile.col,tile.row,") - take in.");
+                creature.enterPen(this);
+                myCreatures.push(creature);
+                tile.onCreatureEnter(creature);
+                occupiedTiles.push(tile);
+            } else {
+                // it shouldn't be counted as in the pen, so whatever
+            }
+        }
+        this.creatures = myCreatures;
+    }
+    console.log("Finished refreshing creatures:",myCreatures.length,"occupied tiles:",occupiedTiles.length);
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
 // if we allow condensing odd numbers to multiple rows, this determines when to start condensing
@@ -211,6 +264,14 @@ GlassLab.FeedingPen.prototype._onUpdate = function() {
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
+    this.RefreshCreatures();
+    this._refreshFeedButton(true);
+    console.log("Feed Creatures. Can feed?",this.canFeed);
+    if (!this.autoFill && !this.canFeed) {
+        console.error("Tried to feed creatures but ran into discrepancy with number of creatures. Try again.");
+        return;
+    }
+
     this.unfedCreatures = this.unsatisfiedCreatures = this.creatures.length;
     this.feeding = true;
     this.button.visible = false;
@@ -228,6 +289,11 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     GLOBAL.inventoryMenu.Hide(true);
 
     var creaturesByRow = this._sortObjectsByGrid(this.creatures, false);
+
+    // Reset creature foods in case anything weird happened before
+    for (var i = 0; i < this.creatures.length; i++) {
+        if (this.creatures[i]) this.creatures[i].resetTargetFood();
+    }
 
     // For each section of food, calculate which foods should go to which creatures
     for (var i = 0; i < this.foodTypes.length; i++) {
@@ -257,6 +323,10 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                     var n = (col < luckyCreatures? bigN : littleN);
                     for (var j = 0; j < n; j++) {
                         if (foodCol ++ < foodRow.length) {
+                            if (!creatureRow[col] || !foodRow[foodCol]) {
+                                console.error("Can't access creature or food in row",row,"while assigning food. Creature",col,":",creatureRow[col],"food",foodCol,":",foodRow[foodCol]);
+                                return;
+                            }
                             creatureRow[col].addTargetFood(foodRow[foodCol]);
                             //console.log("Food",foodCol,"to creature",col);
                         }
@@ -394,6 +464,7 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
     {
         this.creatures.push(creature);
     }
+    //console.log("creature entered. Num creatures:",this.creatures.length);
 
     this._onCreatureContentsChanged();
 };
@@ -401,7 +472,7 @@ GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
 GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
     var index = this.creatures.indexOf(creature);
     if (index > -1) this.creatures.splice(index, 1);
-    console.log("OnCreatureRemoved",index, this.creatures.length);
+    //console.log("creature removed. Num creatures:",this.creatures.length);
 
     this._onCreatureContentsChanged();
 
@@ -414,10 +485,11 @@ GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
     GLOBAL.creatureManager.creaturePopulationUpdate();
 };
 
-GlassLab.FeedingPen.prototype._refreshFeedButton = function() {
+GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
     //if (!this.button) return;
 
-    var ok = this.allowFeedButton && (this.creatures.length >= this.widths[0] * this.height) &&
+    console.log("Checking can feed. Num creatures:",this.creatures.length,"size:",this.widths[0] * this.height);
+    var ok = (this.creatures.length >= this.widths[0] * this.height) &&
         this.foodTypes.length == this.widths.length-1;
     if (ok) { // check that each section has a type of food assigned
         for (var i = 0; i < this.foodTypes.length; i++) {
@@ -429,8 +501,8 @@ GlassLab.FeedingPen.prototype._refreshFeedButton = function() {
     }
     //this.button.visible = ok;
     this.canFeed = ok;
-    if (this.gateLight) {
-        if (ok) {
+    if (this.gateLight && !dontChangeLight) {
+        if (ok && this.allowFeedButton) {
             if (this.gateLight.spriteName != "gateLightGreen") this.gateLight.loadTexture("gateLightGreen");
             this.gateLight.animations.add('anim');
             this.gateLight.animations.play('anim', 48, true);
@@ -524,6 +596,8 @@ GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
 GlassLab.FeedingPen.prototype._onLeverPulled = function() {
     GLOBAL.audioManager.playSound("click"); // generic interaction sound
 
+    var leverAnim;
+
     this._refreshFeedButton();
     if (!this.canFeed || this.feeding) {
         if (this.gateLight.spriteName != "gateLightRed") this.gateLight.loadTexture("gateLightRed");
@@ -532,23 +606,29 @@ GlassLab.FeedingPen.prototype._onLeverPulled = function() {
 
         if (this.gateLever.spriteName != "gateSwitchFail") this.gateLever.loadTexture("gateSwitchFail");
         this.gateLever.animations.add('anim');
-        this.gateLever.animations.play('anim', 48);
+        leverAnim = this.gateLever.animations.play('anim', 48);
     } else {
         this.gateLight.animations.stop(true);
 
         if (this.gateLever.spriteName != "gateSwitchFlip") this.gateLever.loadTexture("gateSwitchFlip");
         this.gateLever.animations.add('anim');
-        this.gateLever.animations.play('anim', 48);
+        leverAnim = this.gateLever.animations.play('anim', 48);
 
         var centerPieces = this.centerEdge.pieces.children;
         for (var i = 0; i < centerPieces.length; i++) {
             centerPieces[i].animations.add('anim');
             var anim = centerPieces[i].animations.play('anim', 48);
-            if (i == 0) { // add an event to the first animation to trigger the feeding once the gate is donw
+            /*if (i == 0) { // add an event to the first animation to trigger the feeding once the gate is donw
                 anim.onComplete.addOnce(function() {
                     this.game.time.events.add(0, this.FeedCreatures, this); // if we do it immediately it interrupts the update loop
                     }, this);
-            }
+            }*/
         }
+        this.game.time.events.add(100, this.FeedCreatures, this); // using t
     }
+
+    this.gateHoverEffect.visible = false; // can't show this while the animation is playing
+    leverAnim.onComplete.addOnce(function() {
+        this.gateHoverEffect.visible = true; // show it again when the animation completes
+    }, this);
 };

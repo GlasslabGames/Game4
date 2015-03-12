@@ -15,7 +15,6 @@ GlassLab.CreatureStateTraveling.constructor = GlassLab.CreatureStateTraveling;
 
 GlassLab.CreatureStateTraveling.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
-    this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this.creature._onTargetsChanged, this.creature);
     this.creature.draggable = true;
 
     this.creature.PathToTile(this.target);
@@ -28,7 +27,6 @@ GlassLab.CreatureStateTraveling.prototype.Enter = function() {
 GlassLab.CreatureStateTraveling.prototype.Exit = function()
 {
     GlassLab.CreatureState.prototype.Exit.call(this);
-    if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
 
     if (this.footstepSound) this.footstepSound.stop();
 
