@@ -7,8 +7,8 @@
  */
 GlassLab.CreatureStateWalkingToFood = function(game, owner, foodInfo)
 {
-  GlassLab.CreatureState.call(this, game, owner);
-  this.foodInfo = foodInfo;
+    GlassLab.CreatureState.call(this, game, owner);
+    this.foodInfo = foodInfo;
 };
 
 GlassLab.CreatureStateWalkingToFood.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -26,8 +26,8 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 
 GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
 {
-  GlassLab.CreatureState.prototype.Exit.call(this);
-  this.creature.StopAnim();
+    GlassLab.CreatureState.prototype.Exit.call(this);
+    this.creature.StopAnim();
 
     this.creature.onDestinationReached.remove(this._onDestinationReached, this);
 };

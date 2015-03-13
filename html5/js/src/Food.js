@@ -143,7 +143,8 @@ GlassLab.Food.prototype.getGlobalIsoPos = function() {
 
 // These functions should definitely be in a common superclass
 GlassLab.Food.prototype.getTile = function() {
-  return GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var globalPosition = this.getGlobalIsoPos();
+    return GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPosition.x, globalPosition.y);
 };
 
 GlassLab.Food.prototype.print = function()
