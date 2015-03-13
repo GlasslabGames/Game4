@@ -221,22 +221,31 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 {
     this._clearPath();
 
-    var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var globalPosition = this.getGlobalIsoPos();
+    var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(globalPosition.x, globalPosition.y);
     var goal = GLOBAL.tileManager.GetTileIndexAtWorldPosition(x, y);
     var path = GLOBAL.astar.findPath(start, goal, null, this.type);
 
+    console.log("----");
+
     if (path.nodes.length > 0)
     {
-        this.currentPath.push(new Phaser.Point(x, y));
+        this.currentPath.push(this.getLocalIsoPos(x, y));
+        console.log(goal.x, goal.y);
 
-        for (var i=1; i < path.nodes.length-1; i++)
+        for (var i=1; i < path.nodes.length; i++)
         {
             var position;
             this.currentPath.push(position = GLOBAL.tileManager.GetTileWorldPosition(path.nodes[i].x, path.nodes[i].y));
+            console.log(path.nodes[i].x, ", ", path.nodes[i].y);
             position.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
             position.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+
+            this.currentPath[i] = this.getLocalIsoPos(this.currentPath[i].x, this.currentPath[i].y); // Converts point to local coordinates TODO CLEANUP
         }
     }
+
+    console.log("----", path.nodes.length);
 
     this.onPathChanged.dispatch(this);
 };
@@ -296,7 +305,14 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
     if (this.currentPath.length > 0)
     {
         this.targetPosition = this.currentPath.pop();
-        var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.targetPosition.x, this.targetPosition.y);
+        var sprite = this.sprite;
+        var pos = new Phaser.Point(this.targetPosition.x, this.targetPosition.y);
+        while (sprite.parent && sprite.parent.isoPosition) {
+            sprite = sprite.parent;
+            pos.x += sprite.isoX;
+            pos.y += sprite.isoY;
+        }
+        var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(pos.x, pos.y);
 
         if (!tile.getIsWalkable(this.type))
         {
@@ -580,6 +596,18 @@ GlassLab.Creature.prototype.getGlobalIsoPos = function () {
         sprite = sprite.parent;
         pos.x += sprite.isoX;
         pos.y += sprite.isoY;
+    }
+    return pos;
+};
+
+GlassLab.Creature.prototype.getLocalIsoPos = function(isoX, isoY)
+{
+    var sprite = this.sprite;
+    var pos = new Phaser.Point(isoX, isoY);
+    while (sprite.parent && sprite.parent.isoPosition) {
+        sprite = sprite.parent;
+        pos.x -= sprite.isoX;
+        pos.y -= sprite.isoY;
     }
     return pos;
 };
