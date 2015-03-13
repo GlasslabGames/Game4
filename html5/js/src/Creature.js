@@ -127,9 +127,6 @@ GlassLab.Creature.prototype.setType = function (type) {
 GlassLab.Creature.prototype.moveToTile = function (col, row) {
     var tile = GLOBAL.tileManager.GetTile(col, row);
 
-    this.getTile().onCreatureExit(this);
-    tile.onCreatureEnter(this);
-
     this.sprite.isoX = tile.isoX;
     this.sprite.isoY = tile.isoY;
 
@@ -141,9 +138,6 @@ GlassLab.Creature.prototype.moveToTile = function (col, row) {
 
 GlassLab.Creature.prototype.moveToRandomTile = function () {
     var tile = GLOBAL.tileManager.getRandomWalkableTile();
-
-    this.getTile().onCreatureExit(this);
-    tile.onCreatureEnter(this);
 
     this.sprite.isoX = tile.isoX;
     this.sprite.isoY = tile.isoY;
@@ -244,7 +238,6 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 GlassLab.Creature.prototype._startDrag = function () {
     if (GLOBAL.dragTarget != null) return;
     if (this.pen) this.exitPen(this.pen);
-    if (this.tile) this.tile.onCreatureExit(this);
     this.currentPath = [];
     this.targetPosition = null;
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
@@ -254,7 +247,6 @@ GlassLab.Creature.prototype._startDrag = function () {
 
 GlassLab.Creature.prototype._endDrag = function () {
     GLOBAL.dragTarget = null;
-    this.getTile().onCreatureEnter(this);
     this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
@@ -265,21 +257,6 @@ GlassLab.Creature.prototype.OnStickyDrop = function () { // called by (atm) prot
 
 GlassLab.Creature.prototype._onUpdate = function () {
     if (this.state) this.state.Update();
-
-    if (this.prevIsoPos.x != this.sprite.isoX || this.prevIsoPos.y != this.sprite.isoY) {
-        this.prevIsoPos.x = this.sprite.isoX;
-        this.prevIsoPos.y = this.sprite.isoY;
-        if (GLOBAL.dragTarget != this) {
-            var tile = this.getTile();
-            if (this.prevTile != tile) {
-                if (this.prevTile) this.prevTile.onCreatureExit(this);
-                if (tile) {
-                    tile.onCreatureEnter(this);
-                    this.prevTile = tile;
-                }
-            }
-        }
-    }
 
     if (GLOBAL.debug) {
         for (var i=0; i < this.currentPath.length; i++)
@@ -538,10 +515,6 @@ GlassLab.Creature.prototype.setIsoPos = function (x, y) {
     this.sprite.isoY = y;
 
     this._clearPath();
-
-    if (this.tile) this.tile.onCreatureExit(this);
-    var tile = this.getTile();
-    if (tile) tile.onCreatureEnter(this);
 };
 
 GlassLab.Creature.prototype._clearPath = function()

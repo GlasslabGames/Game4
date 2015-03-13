@@ -153,7 +153,6 @@ GlassLab.FeedingPen.prototype.RefreshCreatures = function() {
             if (section == 0 && occupiedTiles.indexOf(tile) == -1) {
                 // we're all good - we can claim this spot in the waiting area
                 myCreatures.push(creature);
-                tile.onCreatureEnter(creature);
                 occupiedTiles.push(tile);
             } else { // it was in the pen but it's either not in the waiting area or overlapping with another creature in the waiting area
                 console.log(creature.name,"in the pen incorrectly (",tile.col,tile.row,") - pop out.");
@@ -167,7 +166,6 @@ GlassLab.FeedingPen.prototype.RefreshCreatures = function() {
                 console.log(creature.name,"out of the pen incorrectly (",tile.col,tile.row,") - take in.");
                 creature.enterPen(this);
                 myCreatures.push(creature);
-                tile.onCreatureEnter(creature);
                 occupiedTiles.push(tile);
             } else {
                 // it shouldn't be counted as in the pen, so whatever
