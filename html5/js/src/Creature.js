@@ -249,14 +249,15 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
                 this.currentPath.push(new Phaser.Point(node.x, node.y));
             }
         }
-    }
 
-    if (GLOBAL.debug) {
-        for (var i=this.currentPath.length-1; i >= 0; i--)
-        {
-            var tile = GLOBAL.tileManager.GetTile(this.currentPath[i].x, this.currentPath[i].y);
-            tile.tint = 0xFF0000;
+        if (GLOBAL.debug) {
+            for (var i=this.currentPath.length-1; i >= 0; i--)
+            {
+                var tile = GLOBAL.tileManager.GetTile(this.currentPath[i].x, this.currentPath[i].y);
+                tile.tint = 0xFF0000;
+            }
         }
+
     }
 
     this.onPathChanged.dispatch(this);
