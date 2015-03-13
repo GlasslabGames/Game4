@@ -25,7 +25,7 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.sprite.scale.setTo(-0.25, 0.25);
 
-    this.targetPosition = null;
+    this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
 
     this.moveSpeed = 2.75;
@@ -213,7 +213,6 @@ GlassLab.Creature.prototype.PathToTileCoordinate = function(col, row)
 // A*
 GlassLab.Creature.prototype.PathToTile = function(goalTile)
 {
-    //this.PathToIsoPosition(goalTile.isoX + .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize, goalTile.isoY + .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize);
     this.PathToIsoPosition(goalTile.isoX, goalTile.isoY);
 };
 
@@ -228,25 +227,34 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 
     if (path.nodes.length > 0)
     {
-        this.currentPath.push(GlassLab.Util.GetLocalIsoPosition(this.sprite, null, x, y));
+        var pathDelta = GlassLab.Util.POINT2.setTo(0,0);
+        this.currentPath.push(goal);
 
         for (var i=1; i < path.nodes.length; i++)
         {
-            var position;
-            this.currentPath.push(position = GLOBAL.tileManager.GetTileWorldPosition(path.nodes[i].x, path.nodes[i].y));
-            position.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
-            position.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
-
-            GlassLab.Util.GetLocalIsoPosition(this.sprite, position, position.x, position.y); // Converts point to local coordinates TODO CLEANUP
+            // Compare heading with last node's heading
+            var node = path.nodes[i];
+            var lastNode = this.currentPath[this.currentPath.length-1];
+            var dX = node.x - lastNode.x;
+            var dY = node.y - lastNode.y;
+            if (dX == pathDelta.x && dY == pathDelta.y) // Same direction
+            {
+                // Modify last node to simplify path
+                lastNode.setTo(node.x, node.y);
+            }
+            else // Different direction
+            {
+                // Add new node
+                pathDelta.setTo(dX, dY);
+                this.currentPath.push(new Phaser.Point(node.x, node.y));
+            }
         }
     }
 
     if (GLOBAL.debug) {
         for (var i=this.currentPath.length-1; i >= 0; i--)
         {
-            var pos = GlassLab.Util.POINT2;
-            GlassLab.Util.GetGlobalIsoPosition(this.sprite, pos, this.currentPath[i].x, this.currentPath[i].y);
-            var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(pos.x, pos.y);
+            var tile = GLOBAL.tileManager.GetTile(this.currentPath[i].x, this.currentPath[i].y);
             tile.tint = 0xFF0000;
         }
     }
@@ -259,7 +267,7 @@ GlassLab.Creature.prototype._startDrag = function () {
     if (this.pen) this.exitPen(this.pen);
     if (this.tile) this.tile.onCreatureExit(this);
     this.currentPath = [];
-    this.targetPosition = null;
+    this.targetPosition.x = Number.NaN;
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     GLOBAL.dragTarget = this;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
@@ -299,10 +307,8 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
 {
     if (this.currentPath.length > 0)
     {
-        this.targetPosition = this.currentPath.pop();
-        var pos = GlassLab.Util.POINT2;
-        GlassLab.Util.GetGlobalIsoPosition(this.sprite, pos, this.targetPosition.x, this.targetPosition.y);
-        var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(pos.x, pos.y);
+        var tileIndex = this.currentPath.pop();
+        var tile = GLOBAL.tileManager.GetTile(tileIndex.x, tileIndex.y);
 
         if (!tile.getIsWalkable(this.type))
         {
@@ -316,6 +322,12 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
         {
             tile.tint = 0x0000ff;
         }
+
+        GLOBAL.tileManager.GetTileWorldPosition(tileIndex.x, tileIndex.y, this.targetPosition); // Set target position to target tile position
+        // Offset position slightly
+        this.targetPosition.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+        this.targetPosition.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+        GlassLab.Util.GetLocalIsoPosition(this.sprite, this.targetPosition, this.targetPosition.x, this.targetPosition.y);
 
         var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);
         var debugPoint = this.game.iso.project(new Phaser.Plugin.Isometric.Point3(delta.x, delta.y, 0));
@@ -340,7 +352,7 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
 };
 
 GlassLab.Creature.prototype._move = function() {
-    if (!this.targetPosition && !this._setNextTargetPosition())
+    if (isNaN(this.targetPosition.x) && !this._setNextTargetPosition())
     {
         return;
     }
@@ -357,7 +369,7 @@ GlassLab.Creature.prototype._move = function() {
         if (!this._setNextTargetPosition())
         {
             this.StopAnim();
-            this.targetPosition = null;
+            this.targetPosition.x = Number.NaN;
 
             this.onDestinationReached.dispatch(this);
         }
@@ -555,7 +567,7 @@ GlassLab.Creature.prototype.setIsoPos = function (x, y) {
 GlassLab.Creature.prototype._clearPath = function()
 {
     this.currentPath = [];
-    this.targetPosition = null;
+    this.targetPosition.x = Number.NaN;
     this.StopAnim();
 };
 
