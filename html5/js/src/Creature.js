@@ -451,23 +451,27 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     }
 
     var maxNoticeDist = GLOBAL.tileSize * 20;
+    var reachedTarget = false;
     if (bestTarget == this.getTile()) {
         if (bestTarget.inPen) { // if we're actually in the pen now
-            this.setIsoPos(bestTarget.isoX, bestTarget.isoY);
-            this.enterPen(bestTarget.inPen);
+            if (this.tryEnterPen(bestTarget.inPen)) reachedTarget = true;
         } else { // assume that we're on top of some food
             this.eatFreeFood(bestTarget.food);
+            reachedTarget = true;
         }
-    } else if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
-        if (bestTarget.inPen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
-            this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this));
-        } else if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
-            this.state.target = bestTarget;
+    }
+    if (!reachedTarget) {
+        if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
+            if (bestTarget.inPen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
+                this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this));
+            } else if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
+                this.state.target = bestTarget;
+            } else {
+                this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));
+            }
         } else {
-            this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));
+            this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
         }
-    } else {
-        this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
     }
 };
 
@@ -489,25 +493,37 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
     this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food}));
 };
 
-GlassLab.Creature.prototype.enterPen = function (pen) {
-    console.log("enter pen");
+GlassLab.Creature.prototype.tryEnterPen = function (pen) {
+    console.log(this.name,"trying to enter pen");
+    var tile = this.getTile();
+    if (pen.tryAddCreature(this, tile)) { // note that this will parent the creature under the pen
+        this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
+        return true;
+    } else {
+        return false;
+    }
+    /*
     this.pen = pen;
     var tile = this.getTile();
     this.setIsoPos(tile.isoX, tile.isoY); // center on the tile
     this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
-    pen.onCreatureEntered(this);
-    pen.creatureRoot.addChild(this.sprite); // parent it in the pen so that the ordering works correctly
-    this.setIsoPos( this.sprite.isoX - pen.sprite.isoX, this.sprite.isoY - pen.sprite.isoY);
+    pen.onCreatureEntered(this, tile);
+    pen.creatureRoot.addChild(this.sprite); // parent it in the pen so that the ordering works correctly*/
 };
 
 GlassLab.Creature.prototype.exitPen = function (pen) {
-    if (this.pen != pen) return;
+    if (this.pen != pen) {
+        return false;
+    }
+    console.log(this.name,"trying to leave pen.");
+    return pen.tryRemoveCreature(this);
+    /*
     console.log("exit pen");
     GLOBAL.creatureLayer.add(this.sprite); // parent it back to the creature layer
-    this.setIsoPos( this.sprite.isoX + pen.sprite.isoX, this.sprite.isoY + pen.sprite.isoY);
+    this.setIsoPos( this.sprite.isoX + pen.sprite.isoX, this.sprite.isoY + pen.sprite.isoY ); // adjust position if the pen was offset
 
     this.pen = null;
-    pen.onCreatureRemoved(this); // do this after setting this.pen to null for telemetry purposes
+    pen.onCreatureRemoved(this); // do this after setting this.pen to null for telemetry purposes*/
 };
 
 GlassLab.Creature.prototype.setIsoPos = function (x, y) {

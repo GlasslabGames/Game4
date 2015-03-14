@@ -43,8 +43,8 @@ GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creat
     // If the waypoint is the same as the original target point, stop
 
     var creatureCurrentTile = this.creature.getTile();
-    if (creatureCurrentTile.inPen) {
-        this.creature.enterPen(creatureCurrentTile.inPen);
+    if (creatureCurrentTile.inPen && this.creature.tryEnterPen(creatureCurrentTile.inPen)) {
+        // ok, we're in the pen
     } else if (creatureCurrentTile.food && this.creature.desiredAmountsOfFood[creatureCurrentTile.food.type]) {
         this.creature.eatFreeFood(creatureCurrentTile.food);
     } else {
