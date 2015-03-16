@@ -425,6 +425,16 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function() {
     return spots;
 };
 
+GlassLab.FeedingPen.prototype.canAddCreature = function(creature, tile) {
+    // Figure out which row & col of the pen this creature wants to enter
+    var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var col = tile.col - originTile.col;
+    var row = tile.row - originTile.row;
+    if (row < 0 || this.creatureSpots.length <= row || col < 0 || this.creatureSpots[row].length <= col) return false;
+    else if (this.creatureSpots[row][col]) return false;
+    else return true;
+};
+
 GlassLab.FeedingPen.prototype.tryAddCreature = function(creature, tile) {
     // Figure out which row & col of the pen this creature wants to enter
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
@@ -448,7 +458,6 @@ GlassLab.FeedingPen.prototype.tryAddCreature = function(creature, tile) {
 
 // tries to remove a creature that has a spot in the pen & unassign its spot
 GlassLab.FeedingPen.prototype.tryRemoveCreature = function(creature) {
-    console.log(creature);
     var found = false;
     for (var row = 0; row < this.creatureSpots.length; row++) {
         for (var col = 0; col < this.creatureSpots[row].length; col++) {
@@ -465,6 +474,7 @@ GlassLab.FeedingPen.prototype.tryRemoveCreature = function(creature) {
         console.error(creature.name,"wanted to leave the pen but it's not in the pen!");
         return false;
     }
+    console.log("Found creature to remove. Now spots:",this.creatureSpots);
     this._removeCreature(creature);
     this._onCreatureContentsChanged();
     return true;
@@ -481,7 +491,7 @@ GlassLab.FeedingPen.prototype._removeCreature = function(creature, offset) {
     GLOBAL.creatureLayer.addChild(creature.sprite);
     creature.setIsoPos(tile.isoX, tile.isoY); // set the position so it stays on the tile it was over while in the pen
     creature.pen = null;
-    creature.lookForTargets();
+    if (!(creature.state instanceof GlassLab.CreatureStateDragged)) creature.lookForTargets();
 };
 
 GlassLab.FeedingPen.prototype._removeCreaturesInRow = function(row, offset) {
