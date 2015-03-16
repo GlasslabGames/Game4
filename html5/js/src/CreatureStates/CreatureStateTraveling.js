@@ -39,7 +39,7 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
 
 GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creature)
 {
-    console.log("Destination reached! target:",this.target);
+    //console.log("Destination reached! target:",this.target);
     this.creature.StopAnim();
     if (this.target.pen && this.creature.tryEnterPen(this.target.pen)) {
         // ok, we're in the pen

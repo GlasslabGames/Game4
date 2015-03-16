@@ -52,7 +52,6 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 GlassLab.FeedingPen.prototype.Resize = function() {
     GlassLab.Pen.prototype.Resize.call(this);
 
-    //this.forEachCreature(function() {console.log(this.name, this.getTile().col, this.getTile().row)});
     this._updateCreatureSpotsAfterResize();
 
     // Fill in the food to each section
@@ -113,16 +112,19 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
             tileDif.y --;
         }
 
-        for (var row = 0; row < this.creatureSpots.length; row++) {
-            while (tileDif.x < 0) {
+
+        while (tileDif.x < 0) {
+            for (var row = 0; row < this.creatureSpots.length; row++) {
                 this.creatureSpots[row].unshift(null); // add null to the beginning of the column
-                tileDif.x++;
             }
-            while (tileDif.x > 0) {
+            tileDif.x++;
+        }
+        while (tileDif.x > 0) {
+            for (var row = 0; row < this.creatureSpots.length; row++) {
                 var creature = this.creatureSpots[row].shift(); // remove the first element
                 if (creature) this._removeCreature(creature, posDif);
-                tileDif.x --;
             }
+            tileDif.x --;
         }
     }
 
@@ -488,7 +490,7 @@ GlassLab.FeedingPen.prototype._removeCreature = function(creature, offset) {
         creature.sprite.isoY = creature.sprite.isoY - offset.y;
     }
     var tile = creature.getTile();
-    console.log("removing creature at",tile.col, tile.row);
+    //console.log("removing creature at",tile.col, tile.row);
     GLOBAL.creatureLayer.addChild(creature.sprite);
     creature.setIsoPos(tile.isoX, tile.isoY); // set the position so it stays on the tile it was over while in the pen
     creature.pen = null;
