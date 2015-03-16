@@ -46,6 +46,6 @@ GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creat
     } else if (this.target.food && this.target.food.type in this.creature.desiredAmountsOfFood) {
         this.creature.eatFreeFood(this.target.food);
     } else {
-        this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
+        this.creature.lookForTargets();
     }
 };

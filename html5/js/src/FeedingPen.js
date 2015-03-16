@@ -52,7 +52,7 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 GlassLab.FeedingPen.prototype.Resize = function() {
     GlassLab.Pen.prototype.Resize.call(this);
 
-    this.forEachCreature(function() {console.log(this.name, this.getTile().col, this.getTile().row)});
+    //this.forEachCreature(function() {console.log(this.name, this.getTile().col, this.getTile().row)});
     this._updateCreatureSpotsAfterResize();
 
     // Fill in the food to each section
@@ -414,13 +414,14 @@ GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, col
 // returns a list of all the spots a creature could enter, formatted like { target: pen, type: "pen", pos: world position}
 GlassLab.FeedingPen.prototype.getAvailableSpots = function() {
     var spots = [];
-    for (var row = 0; row < this.creatureSpots.length; row++) {
-        for (var col = 0; col < this.creatureSpots[row].length; col++) {
+    for (var col = this.widths[0] - 1; col >= 0; col--) { // start with the column closest to the fence
+        for (var row = 0; row < this.creatureSpots.length; row++) {
             if (!this.creatureSpots[row][col]) { // nothing's here yet
                 var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * col, this.sprite.isoY + GLOBAL.tileSize * row );
                 spots.push({ pen: this, pos: pos });
             }
         }
+        if (spots.length) break; // stop as soon as we found any spots in the row closest to the fence
     }
     return spots;
 };

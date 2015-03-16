@@ -217,7 +217,6 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 
     var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
     var goal = GLOBAL.tileManager.GetTileIndexAtWorldPosition(x, y);
-    console.log("Path to",x,y,goal);
     var path = GLOBAL.astar.findPath(start, goal, null, this.type);
 
     if (path.nodes.length > 0)
@@ -433,7 +432,6 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
 };
 
 GlassLab.Creature.prototype._onTargetsChanged = function() {
-    console.log(this.name,"targets changed. State:",this.state);
     if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
         this.lookForTargets();
     }
@@ -456,7 +454,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
         }
     }
 
-    console.log(this.name,"lookForTargets. Targets:",targets);
+    //console.log(this.name,"lookForTargets. Targets:",targets);
 
     var minDist = null, bestTarget;
     for (var i = 0, len = targets.length; i < len; i++) {
@@ -511,7 +509,7 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
 };
 
 GlassLab.Creature.prototype.tryEnterPen = function (pen) {
-    console.log(this.name,"trying to enter pen");
+    //console.log(this.name,"trying to enter pen");
     var tile = this.getTile();
     if (pen.canAddCreature(this, tile)) { // note that this will parent the creature under the pen
         this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
@@ -525,7 +523,7 @@ GlassLab.Creature.prototype.exitPen = function (pen) {
     if (this.pen != pen) {
         return false;
     }
-    console.log(this.name,"trying to leave pen.");
+    //console.log(this.name,"trying to leave pen.");
     return pen.tryRemoveCreature(this);
 };
 
