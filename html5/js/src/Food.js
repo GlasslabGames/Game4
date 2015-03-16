@@ -87,6 +87,15 @@ GlassLab.Food = function(game, type) {
     this.hungerBar.sprite.x = -130;
     this.hungerBar.sprite.y = -150;
     this.sprite.addChild(this.hungerBar.sprite);
+
+    GLOBAL.foodInWorld.push(this);
+
+    this.sprite.events.onDestroy.add(this._onDestroy, this);
+};
+
+GlassLab.Food.prototype._onDestroy = function() {
+    var index = GLOBAL.foodInWorld.indexOf(this);
+    if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
 };
 
 // static function
@@ -112,8 +121,6 @@ GlassLab.Food.prototype.BeEaten = function(amount) {
         if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
         var anim = this.sprite.animations.play('anim', 24);
         anim.onComplete.add(this._afterEaten, this);
-        var tile = this.getTile();
-        if (tile) tile.onFoodRemoved(this);
     }
     return amount; // return the actual amount that was eaten
 };
@@ -160,4 +167,13 @@ GlassLab.Food.prototype.setType = function(type)
     this.type = type;
     this.info = GlassLab.FoodTypes[type];
     this.sprite.loadTexture(this.info.spriteName+"_eaten");
+};
+
+GlassLab.Food.prototype.getTargets = function()
+{
+    var pos = this.getGlobalIsoPos();
+    return [
+        { food: this, pos: new Phaser.Point(pos.x + GLOBAL.tileSize / 3, pos.y - GLOBAL.tileSize / 2) },
+        { food: this, pos: new Phaser.Point(pos.x - GLOBAL.tileSize / 3, pos.y) }
+    ];
 };

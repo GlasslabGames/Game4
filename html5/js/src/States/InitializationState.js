@@ -208,6 +208,8 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
 
+    GLOBAL.foodInWorld = [];
+
     game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
     // Save Manager

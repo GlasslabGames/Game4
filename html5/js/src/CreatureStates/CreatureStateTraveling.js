@@ -2,12 +2,12 @@
  * Created by Rose Abernathy on 2/3/2015.
  */
 /**
- * CreatureStateTraveling - when it's heading for a certain target (for now, a target tile, although it could be reworked)
+ * CreatureStateTraveling - when it's heading for a certain target
  */
-GlassLab.CreatureStateTraveling = function(game, owner, targetTile)
+GlassLab.CreatureStateTraveling = function(game, owner, target)
 {
     GlassLab.CreatureState.call(this, game, owner);
-    this.target = targetTile;
+    this.target = target;
 };
 
 GlassLab.CreatureStateTraveling.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -17,7 +17,7 @@ GlassLab.CreatureStateTraveling.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.creature.draggable = true;
 
-    this.creature.PathToTile(this.target);
+    this.creature.PathToIsoPosition(this.target.pos.x, this.target.pos.y);
 
     this.footstepSound = GLOBAL.audioManager.playSound("footsteps", true, true);
 
@@ -39,14 +39,12 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
 
 GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creature)
 {
+    console.log("Destination reached! target:",this.target);
     this.creature.StopAnim();
-    // If the waypoint is the same as the original target point, stop
-
-    var creatureCurrentTile = this.creature.getTile();
-    if (creatureCurrentTile.inPen && this.creature.tryEnterPen(creatureCurrentTile.inPen)) {
+    if (this.target.pen && this.creature.tryEnterPen(this.target.pen)) {
         // ok, we're in the pen
-    } else if (creatureCurrentTile.food && this.creature.desiredAmountsOfFood[creatureCurrentTile.food.type]) {
-        this.creature.eatFreeFood(creatureCurrentTile.food);
+    } else if (this.target.food && this.target.food.type in this.creature.desiredAmountsOfFood) {
+        this.creature.eatFreeFood(this.target.food);
     } else {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this.creature));
     }

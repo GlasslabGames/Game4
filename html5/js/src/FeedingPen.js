@@ -97,36 +97,34 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 };
 
 GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
-    var posDif = new Phaser.Point(0,0);
+    var tileDif = new Phaser.Point(0,0);
     if (this.prevIsoPos) {
         var posDif = Phaser.Point.subtract(this.sprite.isoPosition, this.prevIsoPos);
-        posDif.setTo(Math.round(posDif.x / GLOBAL.tileSize), Math.round(posDif.y / GLOBAL.tileSize));
+        tileDif.setTo(Math.round(posDif.x / GLOBAL.tileSize), Math.round(posDif.y / GLOBAL.tileSize));
     }
 
-    if (!posDif.isZero()) { // we moved the origin, so add or remove rows or columns from the front
-        while (posDif.y < 0) {
+    if (!tileDif.isZero()) { // we moved the origin, so add or remove rows or columns from the front
+        while (tileDif.y < 0) {
             this.creatureSpots.unshift(new Array(this.widths[0])); // add an empty row to the beginning
-            posDif.y++;
+            tileDif.y++;
         }
-        while (posDif.y > 0) {
-            this._removeCreaturesInRow(this.creatureSpots.shift()); // remove the first row
-            posDif.y --;
+        while (tileDif.y > 0) {
+            this._removeCreaturesInRow(this.creatureSpots.shift(), posDif); // remove the first row
+            tileDif.y --;
         }
 
         for (var row = 0; row < this.creatureSpots.length; row++) {
-            while (posDif.x < 0) {
+            while (tileDif.x < 0) {
                 this.creatureSpots[row].unshift(null); // add null to the beginning of the column
-                posDif.x++;
+                tileDif.x++;
             }
-            while (posDif.x > 0) {
+            while (tileDif.x > 0) {
                 var creature = this.creatureSpots[row].shift(); // remove the first element
-                if (creature) this._removeCreature(creature);
-                posDif.x --;
+                if (creature) this._removeCreature(creature, posDif);
+                tileDif.x --;
             }
         }
     }
-    this.forEachCreature(function() {console.log(this.name, this.getTile().col, this.getTile().row)});
-
 
     // Then if our pen is the wrong size (because we moved a the bottom/right edge), add/remove rows or columns until the size is right
     // First, if we increased the size of the pen, add new emtpy rows or columns
@@ -145,45 +143,6 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
             if (creature) this._removeCreature(creature);
         }
     }
-    this.forEachCreature(function() {console.log(this.name, this.getTile().col, this.getTile().row)});
-
-};
-
-GlassLab.FeedingPen.prototype.RefreshCreatures = function() {
-    return; // not using this at the moment
-    var occupiedTiles = [];
-    var myCreatures = []; // recompile the list of creatures
-    for (var i = 0; i < GLOBAL.creatureManager.creatures.length; i++) {
-        var creature = GLOBAL.creatureManager.creatures[i];
-        var tile = creature.getTile();
-        var section = this._getSection(tile);
-        var currentlyInPen = creature.pen == this;
-        if (currentlyInPen) {
-            if (section == 0 && occupiedTiles.indexOf(tile) == -1) {
-                // we're all good - we can claim this spot in the waiting area
-                myCreatures.push(creature);
-                occupiedTiles.push(tile);
-            } else { // it was in the pen but it's either not in the waiting area or overlapping with another creature in the waiting area
-                console.log(creature.name,"in the pen incorrectly (",tile.col,tile.row,") - pop out.");
-                creature.exitPen(this);
-                //creature.setIsoPos(this.isoX,this.isoY - GLOBAL.tileSize);
-                creature.lookForTargets();
-            }
-        } else {
-            if (section == 0 && occupiedTiles.indexOf(tile) == -1) {
-                // it's not in the pen, but it should be since this spot in the waiting area is fine
-                console.log(creature.name,"out of the pen incorrectly (",tile.col,tile.row,") - take in.");
-                creature.enterPen(this);
-                myCreatures.push(creature);
-                occupiedTiles.push(tile);
-            } else {
-                // it shouldn't be counted as in the pen, so whatever
-            }
-        }
-        this.creatures = myCreatures;
-    }
-    console.log("Finished refreshing creatures:",myCreatures.length,"occupied tiles:",occupiedTiles.length);
-    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
 // if we allow condensing odd numbers to multiple rows, this determines when to start condensing
@@ -426,20 +385,6 @@ GlassLab.FeedingPen.prototype.Destroy = function()
     this.onResolved.dispose();
 };
 
-/* Not used, outdated
-GlassLab.FeedingPen.prototype.GetNextFoodInCreatureRow = function(creature) {
-    if (!this.foodByRow || !this.foodByRow.length) this.foodByRow = this._sortObjectsByGrid(this.foods);
-    var row = Math.round(creature.sprite.isoY / GLOBAL.tileSize);
-    return (this.foodByRow[row])? this.foodByRow[row].shift() : null;
-};
-
-
-GlassLab.FeedingPen.prototype.GetNextFoodInRow = function(row) {
-    if (!this.foodByRow || !this.foodByRow.length) this.foodByRow = this._sortObjectsByGrid(this.foods);
-    return (this.foodByRow[row])? this.foodByRow[row].shift() : null;
-};
-*/
-
 GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, colOffset) {
     var toList = [];
     colOffset = colOffset || 0;
@@ -466,11 +411,29 @@ GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, col
     return toList;
 };
 
+// returns a list of all the spots a creature could enter, formatted like { target: pen, type: "pen", pos: world position}
+GlassLab.FeedingPen.prototype.getAvailableSpots = function() {
+    var spots = [];
+    for (var row = 0; row < this.creatureSpots.length; row++) {
+        for (var col = 0; col < this.creatureSpots[row].length; col++) {
+            if (!this.creatureSpots[row][col]) { // nothing's here yet
+                var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * col, this.sprite.isoY + GLOBAL.tileSize * row );
+                spots.push({ pen: this, pos: pos });
+            }
+        }
+    }
+    return spots;
+};
+
 GlassLab.FeedingPen.prototype.tryAddCreature = function(creature, tile) {
     // Figure out which row & col of the pen this creature wants to enter
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
     var col = tile.col - originTile.col;
     var row = tile.row - originTile.row;
+    if (row < 0 || this.creatureSpots.length <= row || col < 0 || this.creatureSpots[row].length <= col) {
+        console.error(creature.name,"tried to enter pen space",col,row,"but that's not in the pen!");
+        return false;
+    }
     if (this.creatureSpots[row][col]) {
         console.error(creature.name,"tried to enter pen space",col,row,"but it's occupied by",this.creatureSpots[row][col].name);
         return false;
@@ -508,7 +471,11 @@ GlassLab.FeedingPen.prototype.tryRemoveCreature = function(creature) {
 };
 
 // removes a creature, assuming that its spot in the pen is already unassigned
-GlassLab.FeedingPen.prototype._removeCreature = function(creature) {
+GlassLab.FeedingPen.prototype._removeCreature = function(creature, offset) {
+    if (offset && !offset.isZero()) {
+        creature.sprite.isoX = creature.sprite.isoX - offset.x;
+        creature.sprite.isoY = creature.sprite.isoY - offset.y;
+    }
     var tile = creature.getTile();
     console.log("removing creature at",tile.col, tile.row);
     GLOBAL.creatureLayer.addChild(creature.sprite);
@@ -517,9 +484,9 @@ GlassLab.FeedingPen.prototype._removeCreature = function(creature) {
     creature.lookForTargets();
 };
 
-GlassLab.FeedingPen.prototype._removeCreaturesInRow = function(row) {
+GlassLab.FeedingPen.prototype._removeCreaturesInRow = function(row, offset) {
     for (var col = 0; col < row.length; col++) {
-        if (row[col]) this._removeCreature(row[col]); // remove the creatures in this row from the pen
+        if (row[col]) this._removeCreature(row[col], offset); // remove the creatures in this row from the pen
     }
 };
 
@@ -532,29 +499,6 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
       }
   }
 };
-
-/* deprecated
-GlassLab.FeedingPen.prototype.onCreatureEntered = function(creature) {
-    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
-    if (this.creatures.indexOf(creature) == -1)
-    {
-        this.creatures.push(creature);
-    }
-    //console.log("creature entered. Num creatures:",this.creatures.length);
-
-    this._onCreatureContentsChanged();
-};
-
-GlassLab.FeedingPen.prototype.onCreatureRemoved = function(creature) {
-    var index = this.creatures.indexOf(creature);
-    if (index > -1) this.creatures.splice(index, 1);
-    //console.log("creature removed. Num creatures:",this.creatures.length);
-
-    this._onCreatureContentsChanged();
-
-    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
-};
-*/
 
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {

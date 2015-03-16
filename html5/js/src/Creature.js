@@ -217,6 +217,7 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 
     var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
     var goal = GLOBAL.tileManager.GetTileIndexAtWorldPosition(x, y);
+    console.log("Path to",x,y,goal);
     var path = GLOBAL.astar.findPath(start, goal, null, this.type);
 
     if (path.nodes.length > 0)
@@ -438,12 +439,27 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
 };
 
 GlassLab.Creature.prototype.lookForTargets = function () {
-    var targets = GLOBAL.tileManager.getTargets(this);
-    //console.log(this.name,"on targets changed. Targets:",targets);
+    var targets = []; // a list of targets like { pos: world position, pen: pen} or { pos: world position, food: food }
+    // Look for pen spots we could enter
+    for (var i = 0; i < GLOBAL.penManager.pens.length; i++) {
+        if (GLOBAL.penManager.pens[i].creatureType == this.type) { // TODO: this shouldn't depend on a preset creature type but use current food
+            targets = targets.concat(GLOBAL.penManager.pens[i].getAvailableSpots());
+        }
+    }
 
-    var minDist = null, bestTarget; // target is a tile
+    // Look for food we could eat
+    for (var i = 0; i < GLOBAL.foodInWorld.length; i++) {
+        var food = GLOBAL.foodInWorld[i];
+        if (food && food.health && !food.eaten && food.type in this.desiredAmountsOfFood) {
+            targets = targets.concat(food.getTargets());
+        }
+    }
+
+    console.log(this.name,"lookForTargets. Targets:",targets);
+
+    var minDist = null, bestTarget;
     for (var i = 0, len = targets.length; i < len; i++) {
-        var distSqr = Math.pow((this.sprite.isoX - targets[i].isoX), 2) + Math.pow((this.sprite.isoY - targets[i].isoY), 2);
+        var distSqr = Math.pow((this.sprite.isoX - targets[i].pos.x), 2) + Math.pow((this.sprite.isoY - targets[i].pos.y), 2);
         if (minDist == null || distSqr < minDist) {
             minDist = distSqr;
             bestTarget = targets[i];
@@ -452,20 +468,20 @@ GlassLab.Creature.prototype.lookForTargets = function () {
 
     var maxNoticeDist = GLOBAL.tileSize * 20;
     var reachedTarget = false;
-    if (bestTarget == this.getTile()) {
-        if (bestTarget.inPen) { // if we're actually in the pen now
-            if (this.tryEnterPen(bestTarget.inPen)) reachedTarget = true;
-        } else { // assume that we're on top of some food
+    if (bestTarget && minDist < GLOBAL.tileSize * GLOBAL.tileSize) { // we're less than a tile away from our target
+        if (bestTarget.pen && this.tryEnterPen(bestTarget.pen)) { // if we're actually in the pen now
+            reachedTarget = true;
+        } else if (bestTarget.food ) { // we're on top of some food
             this.eatFreeFood(bestTarget.food);
             reachedTarget = true;
         }
     }
-    if (!reachedTarget) {
+    if (!reachedTarget) { // if we weren't already on a target
         if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
-            if (bestTarget.inPen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
+            if (bestTarget.pen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
                 this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this));
-            } else if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
-                this.state.target = bestTarget;
+            /*} else if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
+                this.state.target = bestTarget;*/
             } else {
                 this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));
             }
