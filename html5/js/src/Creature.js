@@ -462,9 +462,8 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     var targets = []; // a list of targets like { pos: world position, pen: pen} or { pos: world position, food: food }
     // Look for pen spots we could enter
     for (var i = 0; i < GLOBAL.penManager.pens.length; i++) {
-        if (GLOBAL.penManager.pens[i].creatureType == this.type) { // TODO: this shouldn't depend on a preset creature type but use current food
-            targets = targets.concat(GLOBAL.penManager.pens[i].getAvailableSpots());
-        }
+        targets = targets.concat(GLOBAL.penManager.pens[i].getAvailableSpots(this.type));
+        // if this creature type can't enter/doesn't want to enter the pen, no spots will be returned
     }
 
     // Look for food we could eat
@@ -475,7 +474,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
         }
     }
 
-    //console.log(this.name,"lookForTargets. Targets:",targets);
+    console.log(this.name,"lookForTargets. Targets:",targets);
 
     var minDist = null, bestTarget;
     for (var i = 0, len = targets.length; i < len; i++) {

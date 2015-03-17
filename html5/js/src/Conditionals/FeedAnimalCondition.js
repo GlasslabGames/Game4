@@ -34,7 +34,7 @@ GlassLab.FeedAnimalCondition.prototype._onCreatureFed = function(creature)
 
 GlassLab.FeedAnimalCondition.prototype._onFeedPenResolved = function(pen, win)
 {
-    if (this.acceptedType.indexOf(pen.creatureType) != -1)
+    if (this.acceptedType.indexOf(pen._getCurrentCreatureType()) != -1)
     {
         if (win)
         {

@@ -11,7 +11,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.creatureSpots = []; // 2d array of creatures, on per spot in the pen
     this.feeding = false;
 
-    this.creatureType = creatureType;
+    this.creatureType = creatureType; // note that this is the target creature type, not necessarily the current creature type
     this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
 
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
@@ -74,13 +74,14 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     } else {
         this._repositionCreatures(); // adjust the creatures if they got moved
 
-        // For each tile in the creature side, mark that it's open for creatures
+        // For each tile in the creature side, mark that it's open for creatures - deprecated
+        /*
         for (var col = 0; col < this.widths[0]; col++) {
             for (var row = 0; row < this.height; row++) {
                 var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
                 if (tile) tile.setInPen(this, this.creatureType);
             }
-        }
+        }*/
     }
 
     // If we've set a specific number of food & creatures, use that instead of the default which was set in Pen
@@ -414,7 +415,11 @@ GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, col
 };
 
 // returns a list of all the spots a creature could enter, formatted like { target: pen, type: "pen", pos: world position}
-GlassLab.FeedingPen.prototype.getAvailableSpots = function() {
+GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
+    // if we can't accept this creature type, don't return any spots
+    if (creatureType && !this._getCreatureTypeCanEnter(creatureType)) return [];
+
+    // else this creature does want to be here, so figure out its target spots
     var spots = [];
     for (var col = this.widths[0] - 1; col >= 0; col--) { // start with the column closest to the fence
         for (var row = 0; row < this.creatureSpots.length; row++) {
@@ -426,6 +431,34 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function() {
         if (spots.length) break; // stop as soon as we found any spots in the row closest to the fence
     }
     return spots;
+};
+
+GlassLab.FeedingPen.prototype._getCreatureTypeCanEnter = function(creatureType) {
+    // If the number of sections is wrong, it's impossible
+    var info = GLOBAL.creatureManager.GetCreatureData(creatureType);
+
+    if (info.desiredFood.length != this.widths.length - 1) return false;
+
+    // Else if we already have a creature of another type, it's impossible
+    var currentType = this._getCurrentCreatureType();
+    if (currentType && currentType != creatureType) return false;
+
+    // Else if we don't have all the food types the creature wants
+    for (var i = 0; i < info.desiredFood.length; i++) {
+        if (this.foodTypes.indexOf(info.desiredFood[i].type) == -1) return false;
+    }
+
+    return true;
+};
+
+GlassLab.FeedingPen.prototype._getCurrentCreatureType = function() {
+    // we assume that all creatures in the pen have the same type, so we just need to get one
+    for (var i = 0; i < this.creatureSpots.length; i++) {
+        for (var j = 0; j < this.creatureSpots[i].length; j++) {
+            if (this.creatureSpots[i][j]) return this.creatureSpots[i][j].type;
+        }
+    }
+    return null; // no creatures yet
 };
 
 GlassLab.FeedingPen.prototype.canAddCreature = function(creature, tile) {
@@ -564,6 +597,7 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     var win = (result == "satisfied" && (!this.targetNumCreatures || numCreatures >= this.targetNumCreatures));
 
     // Telemetry
+    // TODO: get target creature type
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
     GlassLabSDK.saveTelemEvent("submit_pen_answer", {
         pen_id: this.id,
@@ -581,7 +615,7 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
 
     if (win)
     {
-        GLOBAL.creatureManager.LogNumCreaturesFed(this.creatureType, this.creatures.length);
+        GLOBAL.creatureManager.LogNumCreaturesFed(this._getCurrentCreatureType(), this.creatures.length);
         // If this creature is new, Journal.wantToShow will be set to true and the journal will open later
     }
     else
