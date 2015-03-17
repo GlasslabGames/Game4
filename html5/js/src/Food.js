@@ -88,8 +88,6 @@ GlassLab.Food = function(game, type) {
     this.hungerBar.sprite.y = -150;
     this.sprite.addChild(this.hungerBar.sprite);
 
-    GLOBAL.foodInWorld.push(this);
-
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 };
 
@@ -108,6 +106,7 @@ GlassLab.Food.prototype.placeOnTile = function(tile) {
   this.sprite.isoX = tile.isoX;
   this.sprite.isoY = tile.isoY;
   tile.onFoodAdded(this);
+    GLOBAL.foodInWorld.push(this);
 };
 
 GlassLab.Food.prototype.BeEaten = function(amount) {
