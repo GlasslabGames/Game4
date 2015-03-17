@@ -160,7 +160,7 @@ GlassLab.Food.prototype.setType = function(type)
 
 GlassLab.Food.prototype.getTargets = function()
 {
-    var pos = this.getGlobalIsoPos();
+    var pos = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
     return [
         { food: this, pos: new Phaser.Point(pos.x + GLOBAL.tileSize / 3, pos.y - GLOBAL.tileSize / 2) },
         { food: this, pos: new Phaser.Point(pos.x - GLOBAL.tileSize / 3, pos.y) }

@@ -26,9 +26,6 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
     }
     this.creature.draggable = false;
 
-    if (this.food.getGlobalIsoPos().x < this.creature.getGlobalIsoPos().x) this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x);
-    else this.creature.sprite.scale.x = - Math.abs(this.creature.sprite.scale.x);
-
     var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
     this.chompFrame = info.fxFrames.eat;
     if (info.eatFxStyle) this.food.setAnimStyle(info.eatFxStyle);
@@ -38,7 +35,12 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
         this.amountToEat = this.creature.desiredAmountsOfFood[this.food.type] % 1;
     }
 
-    if (!this.food.pen) { // eating in the wild, so consume this food
+    if (!this.food.pen) { // eating in the wild
+        // switch direction
+        if (GlassLab.Util.GetGlobalIsoPosition(this.food.sprite) < GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite)) this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x);
+        else this.creature.sprite.scale.x = - Math.abs(this.creature.sprite.scale.x);
+
+        // mark this food as consumed
         this.food.eaten = true;
         GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone
     }
