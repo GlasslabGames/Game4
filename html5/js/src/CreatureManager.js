@@ -130,6 +130,7 @@ GlassLab.CreatureManager.prototype.UnflagDiscoveredFoodCounts = function () {
 
 GlassLab.CreatureManager.prototype.AddCreature = function(creature)
 {
+    creature.name = creature.type + this.creatures.length; // for debugging purposes
     this.creatures.push(creature);
 };
 

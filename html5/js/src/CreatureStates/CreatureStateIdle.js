@@ -26,7 +26,6 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
 {
   GlassLab.CreatureState.prototype.Exit.call(this);
   this.creature.StopAnim();
-  if (this.targetTile && this.targetTile != this.creature.prevTile) this.targetTile.onCreatureExit(this.creature); // make sure that tile stops thinking we're entering it
   if (this.findDestinationHandler)
   {
     this.game.time.events.remove(this.findDestinationHandler);
