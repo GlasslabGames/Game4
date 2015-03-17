@@ -25,7 +25,7 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.sprite.scale.setTo(-0.25, 0.25);
 
-    this.targetPosition = null;
+    this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
 
     this.moveSpeed = 2.75;
@@ -207,7 +207,6 @@ GlassLab.Creature.prototype.PathToTileCoordinate = function(col, row)
 // A*
 GlassLab.Creature.prototype.PathToTile = function(goalTile)
 {
-    //this.PathToIsoPosition(goalTile.isoX + .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize, goalTile.isoY + .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize);
     this.PathToIsoPosition(goalTile.isoX, goalTile.isoY);
 };
 
@@ -215,20 +214,42 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 {
     this._clearPath();
 
-    var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var globalPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(globalPosition.x, globalPosition.y);
     var goal = GLOBAL.tileManager.GetTileIndexAtWorldPosition(x, y);
     var path = GLOBAL.astar.findPath(start, goal, null, this.type);
 
     if (path.nodes.length > 0)
     {
-        this.currentPath.push(new Phaser.Point(x, y));
+        var pathDelta = GlassLab.Util.POINT2.setTo(0,0);
+        this.currentPath.push(goal);
 
-        for (var i=1; i < path.nodes.length-1; i++)
+        for (var i=1; i < path.nodes.length; i++)
         {
-            var position;
-            this.currentPath.push(position = GLOBAL.tileManager.GetTileWorldPosition(path.nodes[i].x, path.nodes[i].y));
-            position.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
-            position.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+            // Compare heading with last node's heading
+            var node = path.nodes[i];
+            var lastNode = this.currentPath[this.currentPath.length-1];
+            var dX = node.x - lastNode.x;
+            var dY = node.y - lastNode.y;
+            if (dX == pathDelta.x && dY == pathDelta.y) // Same direction
+            {
+                // Modify last node to simplify path
+                lastNode.setTo(node.x, node.y);
+            }
+            else // Different direction
+            {
+                // Add new node
+                pathDelta.setTo(dX, dY);
+                this.currentPath.push(new Phaser.Point(node.x, node.y));
+            }
+        }
+    }
+
+    if (GLOBAL.debug) {
+        for (var i=this.currentPath.length-1; i >= 0; i--)
+        {
+            var tile = GLOBAL.tileManager.GetTile(this.currentPath[i].x, this.currentPath[i].y);
+            tile.tint = 0xFF0000;
         }
     }
 
@@ -240,7 +261,7 @@ GlassLab.Creature.prototype._startDrag = function () {
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     if (this.pen) this.exitPen(this.pen);
     this.currentPath = [];
-    this.targetPosition = null;
+    this.targetPosition.x = Number.NaN;
     GLOBAL.dragTarget = this;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
@@ -258,22 +279,14 @@ GlassLab.Creature.prototype.OnStickyDrop = function () { // called by (atm) prot
 GlassLab.Creature.prototype._onUpdate = function () {
     if (this.state) this.state.Update();
 
-    if (GLOBAL.debug) {
-        for (var i=0; i < this.currentPath.length; i++)
-        {
-            var point = this.currentPath[i];
-            var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(point.x, point.y);
-            tile.tint = 0xFF0000;
-        }
-    }
 };
 
 GlassLab.Creature.prototype._setNextTargetPosition = function()
 {
     if (this.currentPath.length > 0)
     {
-        this.targetPosition = this.currentPath.pop();
-        var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.targetPosition.x, this.targetPosition.y);
+        var tileIndex = this.currentPath.pop();
+        var tile = GLOBAL.tileManager.GetTile(tileIndex.x, tileIndex.y);
 
         if (!tile.getIsWalkable(this.type))
         {
@@ -287,6 +300,12 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
         {
             tile.tint = 0x0000ff;
         }
+
+        GLOBAL.tileManager.GetTileWorldPosition(tileIndex.x, tileIndex.y, this.targetPosition); // Set target position to target tile position
+        // Offset position slightly
+        this.targetPosition.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+        this.targetPosition.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+        GlassLab.Util.GetLocalIsoPosition(this.sprite, this.targetPosition, this.targetPosition.x, this.targetPosition.y);
 
         var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);
         var debugPoint = this.game.iso.project(new Phaser.Plugin.Isometric.Point3(delta.x, delta.y, 0));
@@ -311,7 +330,7 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
 };
 
 GlassLab.Creature.prototype._move = function() {
-    if (!this.targetPosition && !this._setNextTargetPosition())
+    if (isNaN(this.targetPosition.x) && !this._setNextTargetPosition())
     {
         return;
     }
@@ -328,7 +347,7 @@ GlassLab.Creature.prototype._move = function() {
         if (!this._setNextTargetPosition())
         {
             this.StopAnim();
-            this.targetPosition = null;
+            this.targetPosition.x = Number.NaN;
 
             this.onDestinationReached.dispatch(this);
         }
@@ -353,7 +372,9 @@ GlassLab.Creature.prototype._move = function() {
 
         if (GLOBAL.debug)
         {
-            var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+            var globalPos = GlassLab.Util.POINT2;
+            GlassLab.Util.GetGlobalIsoPosition(this.sprite, globalPos);
+            var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPos.x, globalPos.y);
             tile.tint = 0xffffff;
         }
     }
@@ -537,7 +558,7 @@ GlassLab.Creature.prototype.setIsoPos = function (x, y) {
 GlassLab.Creature.prototype._clearPath = function()
 {
     this.currentPath = [];
-    this.targetPosition = null;
+    this.targetPosition.x = Number.NaN;
     this.StopAnim();
 };
 
@@ -559,17 +580,6 @@ GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
 };
 
 GlassLab.Creature.prototype.getTile = function () {
-    var isoPosition = this.getGlobalIsoPos();
+    var isoPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite, GlassLab.Util.POINT2);
     return GLOBAL.tileManager.GetTileAtIsoWorldPosition(isoPosition.x, isoPosition.y);
-};
-
-GlassLab.Creature.prototype.getGlobalIsoPos = function () {
-    var sprite = this.sprite;
-    var pos = new Phaser.Point(sprite.isoX, sprite.isoY);
-    while (sprite.parent && sprite.parent.isoPosition) {
-        sprite = sprite.parent;
-        pos.x += sprite.isoX;
-        pos.y += sprite.isoY;
-    }
-    return pos;
 };

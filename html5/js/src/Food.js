@@ -136,20 +136,10 @@ GlassLab.Food.prototype._afterEaten = function() {
   tween.onComplete.add( function() {this.sprite.destroy();}, this);
 };
 
-GlassLab.Food.prototype.getGlobalIsoPos = function() {
-  var sprite = this.sprite;
-  var pos = new Phaser.Point(sprite.isoX, sprite.isoY);
-  while (sprite.parent && sprite.parent.isoPosition) {
-    sprite = sprite.parent;
-    pos.x += sprite.isoX;
-    pos.y += sprite.isoY;
-  }
-  return pos;
-};
-
 // These functions should definitely be in a common superclass
 GlassLab.Food.prototype.getTile = function() {
-  return GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var globalPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite, GlassLab.Util.POINT2);
+    return GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPosition.x, globalPosition.y);
 };
 
 GlassLab.Food.prototype.print = function()
