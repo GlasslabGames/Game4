@@ -54,6 +54,21 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 
     this._updateCreatureSpotsAfterResize();
 
+    this.refreshContents();
+
+    // If we've set a specific number of food & creatures, use that instead of the default which was set in Pen
+    // But it would be better to rewrite the Pen one to count the number of food / creatures currently in the pen.
+    if (this.numFoods && this.numCreatures) {
+        this.ratioLabel.text = this.numCreatures;
+        for (var l = 0; l < this.numFoods.length; l++) {
+            this.ratioLabel.text += " : " + this.numFoods[l];
+        }
+    }
+
+    this._onCreatureContentsChanged();
+};
+
+GlassLab.FeedingPen.prototype.refreshContents = function() {
     // Fill in the food to each section
     var startCol = this.widths[0];
     for (var i = 0, len = this.foodTypes.length; i < len; i++) {
@@ -73,27 +88,7 @@ GlassLab.FeedingPen.prototype.Resize = function() {
         this.forEachCreature(function() { this.draggable = false; });
     } else {
         this._repositionCreatures(); // adjust the creatures if they got moved
-
-        // For each tile in the creature side, mark that it's open for creatures - deprecated
-        /*
-        for (var col = 0; col < this.widths[0]; col++) {
-            for (var row = 0; row < this.height; row++) {
-                var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
-                if (tile) tile.setInPen(this, this.creatureType);
-            }
-        }*/
     }
-
-    // If we've set a specific number of food & creatures, use that instead of the default which was set in Pen
-    // But it would be better to rewrite the Pen one to count the number of food / creatures currently in the pen.
-    if (this.numFoods && this.numCreatures) {
-        this.ratioLabel.text = this.numCreatures;
-        for (var l = 0; l < this.numFoods.length; l++) {
-            this.ratioLabel.text += " : " + this.numFoods[l];
-        }
-    }
-
-    this._onCreatureContentsChanged();
 };
 
 GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
@@ -638,7 +633,8 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
 
     while (this.foodTypes.length < section-1) this.foodTypes.push(null);
     this.foodTypes[section - 1] = foodType;
-    this.Resize();
+
+    this.refreshContents();
     this._refreshFeedButton();
 
     GlassLabSDK.saveTelemEvent("set_pen_food", {
@@ -648,6 +644,7 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
         food_section: (section == 1? "A" : "B")
     });
 
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
     GlassLab.SignalManager.penFoodTypeSet.dispatch(this, foodType, this.foodTypes);
 
     return true;
