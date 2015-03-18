@@ -411,6 +411,9 @@ GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, col
 
 // returns a list of all the spots a creature could enter, formatted like { target: pen, type: "pen", pos: world position}
 GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
+    // if we already pulled the lever, don't allow any more creatures to enter
+    if (this.feeding) return [];
+
     // if we can't accept this creature type, don't return any spots
     if (creatureType && !this._getCreatureTypeCanEnter(creatureType)) return [];
 
@@ -420,10 +423,19 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
         for (var row = 0; row < this.creatureSpots.length; row++) {
             if (!this.creatureSpots[row][col]) { // nothing's here yet
                 var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * col, this.sprite.isoY + GLOBAL.tileSize * row );
-                spots.push({ pen: this, pos: pos });
+                spots.push({ pen: this, pos: pos, priority: 1 });
             }
         }
         if (spots.length) break; // stop as soon as we found any spots in the row closest to the fence
+    }
+
+    if (!spots.length) { // there were no open spots, so add occupied spots as a target to go be sad by. All spots will work
+        for (var col = this.widths[0] - 1; col >= 0; col--) {
+            for (var row = 0; row < this.creatureSpots.length; row++) {
+                var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * col, this.sprite.isoY + GLOBAL.tileSize * row );
+                spots.push({ pen: this, pos: pos, priority: 0.25 });
+            }
+        }
     }
     return spots;
 };

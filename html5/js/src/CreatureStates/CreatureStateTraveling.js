@@ -41,11 +41,7 @@ GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creat
 {
     //console.log("Destination reached! target:",this.target);
     this.creature.StopAnim();
-    if (this.target.pen && this.creature.tryEnterPen(this.target.pen)) {
-        // ok, we're in the pen
-    } else if (this.target.food && this.target.food.type in this.creature.desiredAmountsOfFood) {
-        this.creature.eatFreeFood(this.target.food);
-    } else {
+    if (!this.creature.tryReachTarget(this.target)) { // we weren't able to enter our target for some reason, so look for a new one
         this.creature.lookForTargets();
     }
 };
