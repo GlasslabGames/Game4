@@ -648,7 +648,7 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
         food_section: (section == 1? "A" : "B")
     });
 
-    GlassLab.SignalManager.penFoodTypeSet.dispatch(this, foodType);
+    GlassLab.SignalManager.penFoodTypeSet.dispatch(this, foodType, this.foodTypes);
 
     return true;
 };

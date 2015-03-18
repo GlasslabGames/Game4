@@ -474,7 +474,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
         }
     }
 
-    console.log(this.name,"lookForTargets. Targets:",targets);
+    //console.log(this.name,"lookForTargets. Targets:",targets);
 
     var minDist = null, bestTarget;
     for (var i = 0, len = targets.length; i < len; i++) {
