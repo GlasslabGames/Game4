@@ -16,6 +16,7 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.creature.draggable = true;
+    this.creature._clearPath();
 
     this.speed = this.creature.moveSpeed / 2;
 };
@@ -68,9 +69,9 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
 {
   if (this.findDestinationHandler) return; // still waiting to pick a new destination
 
-  if (isNaN(this.creature.targetPosition.x) || this.creature.currentPath.length == 0)
+  if (isNaN(this.creature.targetPosition.x) && this.creature.currentPath.length == 0)
   {
-    this.findDestinationHandler = this.game.time.events.add(Math.random() * 4000, this._findNewDestination, this);
+      this.findDestinationHandler = this.game.time.events.add(Math.random() * 4000, this._findNewDestination, this);
   }
   else
   {
