@@ -133,6 +133,7 @@ GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
 
         GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
         GlassLab.SignalManager.foodDropped.dispatch(food);
+        GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
         this._jumpToStart();
     }
