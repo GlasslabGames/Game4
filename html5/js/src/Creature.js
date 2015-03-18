@@ -177,6 +177,18 @@ GlassLab.Creature.prototype.StopAnim = function () {
     this.PlayAnim(); // no anim -> stand still
 };
 
+GlassLab.Creature.prototype.standFacingPosition = function(targetIsoPos) {
+    var pos = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var dir;
+    if (Math.abs(pos.x - targetIsoPos.x) > Math.abs(pos.y - targetIsoPos.y)) {
+        dir = (pos.x < targetIsoPos.x)? "right" : "left";
+    } else {
+        dir = (pos.y < targetIsoPos.y)? "down" : "up";
+    }
+    console.log("Stand facing",targetIsoPos.x,targetIsoPos.y,"from",pos.x,pos.y,dir);
+    this.standFacing(dir);
+};
+
 GlassLab.Creature.prototype.standFacing = function (dir) {
     if (dir == "left" || dir == "up") this.PlayAnim("idle_back");
     else this.PlayAnim("idle");
@@ -425,8 +437,9 @@ GlassLab.Creature.prototype.resetTargetFood = function() {
     this.targetFood = [];
 };
 
-GlassLab.Creature.prototype.Emote = function (happy) {
+GlassLab.Creature.prototype.Emote = function (happy, callback) {
     var spriteName = (happy) ? "happyEmote" : "angryEmote";
+    if (this.emote) this._afterEmote();
     this.emote = this.game.make.sprite(0, 0, spriteName);
     this.emote.y = -2 * this.spriteHeight * this.sprite.scale.y;
     var size = this.emote.height * 3; // assumes the height and width are the same
@@ -438,9 +451,16 @@ GlassLab.Creature.prototype.Emote = function (happy) {
     }, 100, Phaser.Easing.Linear.Out, true);
     this.emote.anchor.set(0.5, 1);
     this.sprite.addChild(this.emote);
-    this.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+    this.afterEmoteCallback = callback;
+    this.game.time.events.add(Phaser.Timer.SECOND * 1, this._afterEmote, this);
+};
+
+GlassLab.Creature.prototype._afterEmote = function() {
+    if (this.afterEmoteCallback) this.afterEmoteCallback.call(this);
+    if (this.emote) {
         this.emote.destroy();
-    }, this);
+        this.emote = null;
+    }
 };
 
 GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEatingAmount, foodType, hideAfter) {
@@ -476,38 +496,51 @@ GlassLab.Creature.prototype.lookForTargets = function () {
 
     //console.log(this.name,"lookForTargets. Targets:",targets);
 
-    var minDist = null, bestTarget;
+    var minDist = null, bestTarget, bestRealDist; // minDist is the best weighted dist so far, but
     for (var i = 0, len = targets.length; i < len; i++) {
         var distSqr = Math.pow((this.sprite.isoX - targets[i].pos.x), 2) + Math.pow((this.sprite.isoY - targets[i].pos.y), 2);
-        if (minDist == null || distSqr < minDist) {
-            minDist = distSqr;
+        // now divide the distance by the priority so that targets with higher priority count as closer
+        var weightedDistSqr = distSqr;
+        if (!isNaN(targets[i].priority)) weightedDistSqr /= (targets[i].priority * targets[i].priority);
+        if (minDist == null || weightedDistSqr < minDist) {
+            minDist = weightedDistSqr;
             bestTarget = targets[i];
+            bestRealDist = distSqr;
         }
     }
 
     var maxNoticeDist = GLOBAL.tileSize * 190; // so large as to be irrelevant for now
-    var reachedTarget = false;
-    if (bestTarget && minDist < GLOBAL.tileSize * GLOBAL.tileSize) { // we're less than a tile away from our target
-        if (bestTarget.pen && this.tryEnterPen(bestTarget.pen)) { // if we're actually in the pen now
-            reachedTarget = true;
-        } else if (bestTarget.food ) { // we're on top of some food
-            this.eatFreeFood(bestTarget.food);
-            reachedTarget = true;
-        }
+    bestRealDist = Math.sqrt(bestRealDist);
+    var targetIsNoticeable = bestRealDist <= maxNoticeDist;
+    var targetIsSameTile = bestRealDist <= GLOBAL.tileSize / 2;
+
+    if (bestTarget && targetIsNoticeable) {
+        if (bestTarget.pen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
+            this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this)); // this will look for a target again when it's done
+        } else if (!targetIsSameTile || !this.tryReachTarget(bestTarget)) { // if we're too far, or we fail to enter the target right now
+            this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget)); // travel to the target
+        } // else we must be close enough and have reached the target
+    } else {
+        this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
     }
-    if (!reachedTarget) { // if we weren't already on a target
-        if (bestTarget && minDist <= maxNoticeDist * maxNoticeDist) {
-            if (bestTarget.pen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
-                this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this));
-            /*} else if (this.state instanceof GlassLab.CreatureStateTraveling) { // rather than restarting the traveling state, just set the new target
-                this.state.target = bestTarget;*/
-            } else {
-                this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget));
-            }
-        } else {
-            this.StateTransitionTo(new GlassLab.CreatureStateIdle(this.game, this));
+
+};
+
+GlassLab.Creature.prototype.tryReachTarget = function(target) {
+    if (target.pen) {
+        if (!this.tryEnterPen(target.pen)) { // try to enter the pen, but if we can't (someone else is there):
+            this.Emote(false); // emote sad that we can't enter the pen
+            // Next frame, make sure they're facing the spot they want to go (we have to wait since finding the destination might still be wrapping up)
+            this.game.time.events.add(0, function() {
+                this.standFacingPosition(new Phaser.Point(target.pos.x + GLOBAL.tileSize, target.pos.y)); // add a tile here since we offset the position when we set the target in FeedingPen
+            }, this);
         }
+        return true; // either way, we reached the target
+    } else if (target.food ) { // we're on top of some food
+        this.eatFreeFood(target.food);
+        return true;
     }
+    return false;
 };
 
 // call this to eat some food outside of a pen
