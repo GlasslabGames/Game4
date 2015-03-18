@@ -42,7 +42,7 @@ GlassLab.SignalManager = {
     penResized: new Phaser.Signal(), // (FeedingPen, string, string) => source, prevDimensions, newDimensions // only when the player resizes it
     feedingPenResolved: new Phaser.Signal(), // (FeedingPen, bool) => source, win/loss
     penFeedingStarted: new Phaser.Signal(),
-    penFoodTypeSet: new Phaser.Signal(),
+    penFoodTypeSet: new Phaser.Signal(), // pen, food type added, list of food types
 
     // Order Events
     ordersChanged: new Phaser.Signal(), // when an order is added or removed
