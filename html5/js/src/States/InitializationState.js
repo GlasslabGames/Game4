@@ -155,6 +155,10 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('questObjectiveBg', 'assets/images/hud/hud_current_quest_background.png');
     game.load.image('questObjectiveArrow', 'assets/images/hud/hud_current_quest_arrow.png');
 
+    game.load.image('inventoryMoneyBg', 'assets/images/inventory/hud_food_money_bg.png');
+    game.load.image('inventoryCoinIcon', 'assets/images/inventory/hud_food_money_coin.png');
+    game.load.image('inventoryCoin', 'assets/images/inventory/hud_food_item_coin.png');
+
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 
