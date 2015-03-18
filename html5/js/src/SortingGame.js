@@ -164,6 +164,7 @@ GlassLab.SortingGame.prototype.start = function(data) {
     this.bonusAmountLabel.text = "$0";
     this.cardsAnswered = 0;
     this.cardsCorrect = 0;
+    this.bonusAmountLabel.style.fill = "#000000";
 
     GLOBAL.audioManager.switchMusic("bonus");
 
