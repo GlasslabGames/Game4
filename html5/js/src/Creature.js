@@ -177,6 +177,18 @@ GlassLab.Creature.prototype.StopAnim = function () {
     this.PlayAnim(); // no anim -> stand still
 };
 
+GlassLab.Creature.prototype.standFacingPosition = function(targetIsoPos) {
+    var pos = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var dir;
+    if (Math.abs(pos.x - targetIsoPos.x) > Math.abs(pos.y - targetIsoPos.y)) {
+        dir = (pos.x < targetIsoPos.x)? "right" : "left";
+    } else {
+        dir = (pos.y < targetIsoPos.y)? "down" : "up";
+    }
+    console.log("Stand facing",targetIsoPos.x,targetIsoPos.y,"from",pos.x,pos.y,dir);
+    this.standFacing(dir);
+};
+
 GlassLab.Creature.prototype.standFacing = function (dir) {
     if (dir == "left" || dir == "up") this.PlayAnim("idle_back");
     else this.PlayAnim("idle");
@@ -518,6 +530,10 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
     if (target.pen) {
         if (!this.tryEnterPen(target.pen)) { // try to enter the pen, but if we can't (someone else is there):
             this.Emote(false); // emote sad that we can't enter the pen
+            // Next frame, make sure they're facing the spot they want to go (we have to wait since finding the destination might still be wrapping up)
+            this.game.time.events.add(0, function() {
+                this.standFacingPosition(new Phaser.Point(target.pos.x + GLOBAL.tileSize, target.pos.y)); // add a tile here since we offset the position when we set the target in FeedingPen
+            }, this);
         }
         return true; // either way, we reached the target
     } else if (target.food ) { // we're on top of some food

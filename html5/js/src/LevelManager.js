@@ -105,7 +105,7 @@ GlassLab.LevelManager = function(game)
             {type: "baby_unifox", foodBWidth: 0, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            baby_unifox: 2
+            baby_unifox: 8
         },
         objective: "Feed the rams!"
     };
