@@ -54,19 +54,6 @@
         ]
       },
       {
-        "__type": "GlassLab.HideAssistantDialogueAction"
-      },
-      {
-        "__type": "GlassLab.WaitForCondition",
-        "conditions": [
-          {
-            "__type": "GlassLab.GlobalVariableGreaterThanCondition",
-            "variableName": "GLOBAL.creatureManager.numCreaturesInPen",
-            "number": 2
-          }
-        ]
-      },
-      {
         "__type": "GlassLab.ConditionalAction",
         "serializedCondition": {
           "__type": "GlassLab.GlobalVariableGreaterThanCondition",
@@ -95,6 +82,19 @@
             }
           ]
         }
+      },
+      {
+        "__type": "GlassLab.HideAssistantDialogueAction"
+      },
+      {
+        "__type": "GlassLab.WaitForCondition",
+        "conditions": [
+          {
+            "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+            "variableName": "GLOBAL.creatureManager.numCreaturesInPen",
+            "number": 2
+          }
+        ]
       },
       {
         "__type": "GlassLab.ConditionalAction",
