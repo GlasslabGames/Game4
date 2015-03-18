@@ -18,6 +18,12 @@ GlassLab.CreatureStateWaitingForFood.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.creature.standFacing("right");
   this.creature.draggable = !this.afterEating; // you can drag them out of the pen before you start feeding them, but not after they're done
+    this.foodTypesChangedHandler = GlassLab.SignalManager.penFoodTypeSet.add(this._onFoodTypeChanged, this);
+};
+
+GlassLab.CreatureStateWaitingForFood.prototype.Exit = function() {
+    GlassLab.CreatureState.prototype.Exit.call(this);
+    this.foodTypesChangedHandler.detach();
 };
 
 GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
@@ -34,4 +40,11 @@ GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
   } else {
     this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, foodInfo));
   }
+};
+
+GlassLab.CreatureStateWaitingForFood.prototype._onFoodTypeChanged = function(pen) {
+    if (this.creature.pen != pen) return;
+    if (!pen._getCreatureTypeCanEnter(this.creature.type)) {
+        this.creature.Emote(false);
+    }
 };
