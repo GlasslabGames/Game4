@@ -61,5 +61,5 @@ GlassLab.SignalManager = {
 
     // Inventory Events
     moneyChanged: new Phaser.Signal(), // (float) => amount money changed - negative if deducted
-    foodDropped: new Phaser.Signal()
+    foodDropped: new Phaser.Signal() // food
 };

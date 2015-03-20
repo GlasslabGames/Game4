@@ -159,6 +159,13 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('inventoryCoinIcon', 'assets/images/inventory/hud_food_money_coin.png');
     game.load.image('inventoryCoin', 'assets/images/inventory/hud_food_item_coin.png');
 
+    // creature thought bubble
+    game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
+    game.load.image('questionMark', 'assets/images/thought_bubble/thought_bubble_question_mark.png');
+    game.load.image('redX', 'assets/images/thought_bubble/thought_bubble_red_x.png');
+    game.load.image('thoughtBubbleStem', 'assets/images/thought_bubble/thought_bubble_stem.png');
+    game.load.atlasJSONHash('thoughtBubble', 'assets/images/thought_bubble/thought_bubble.png', 'assets/images/thought_bubble/thought_bubble.json');
+
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 

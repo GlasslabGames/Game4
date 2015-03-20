@@ -79,6 +79,8 @@ GlassLab.Food = function(game, type) {
     this.sprite.anchor.setTo(0.4, 1); // this anchor is specific to the carrot, so generify later
 
     this.health = 1; // food can be partially eaten. health 0 means it's totally eaten.
+    this.eaten = false; // set to true as soon as the creature starts eating it
+    this.dislikedBy = {}; // creature types are added once they dislike this food
 
     this.hungerBar = new GlassLab.FillBar(this.game, 160, 40);
     this.hungerBar.sprite.angle = 90;

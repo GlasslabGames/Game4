@@ -51,6 +51,11 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.sprite.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
 
+    this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
+    this.thoughtBubble.position.setTo(-200, -450);
+    this.thoughtBubble.scale.setTo(0.8/this.sprite.scale.x, 0.8/this.sprite.scale.y);
+    this.sprite.addChild(this.thoughtBubble);
+
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen. Each food is like {food: f, eatPartially: true}
@@ -81,7 +86,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 
     this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
-
+    this.foodDroppedHandler = GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
 
     // FINALLY, start the desired state
     if (startInPen) {
@@ -103,6 +108,7 @@ GlassLab.Creature.prototype._onDestroy = function () {
     this.sprite.events.destroy();
     if (this.updateHandler) this.updateHandler.detach();
     if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
+    if (this.foodDroppedHandler) this.foodDroppedHandler.detach();
     if (this.state) this.state.Exit(); // wrap up the current state
 
     GLOBAL.creatureManager.RemoveCreature(this);
@@ -456,7 +462,10 @@ GlassLab.Creature.prototype.Emote = function (happy, callback) {
 };
 
 GlassLab.Creature.prototype._afterEmote = function() {
-    if (this.afterEmoteCallback) this.afterEmoteCallback.call(this);
+    if (this.afterEmoteCallback) {
+        this.afterEmoteCallback.call(this);
+        this.afterEmoteCallback = null;
+    }
     if (this.emote) {
         this.emote.destroy();
         this.emote = null;
@@ -470,6 +479,17 @@ GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEatingAmount, foo
 
 GlassLab.Creature.prototype.HideHungerBar = function () {
     this.hungerBar.sprite.visible = false;
+};
+
+GlassLab.Creature.prototype._onFoodDropped = function(food) {
+    if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
+        var dist = GlassLab.Util.GetGlobalIsoPosition(this.sprite).distance(food.sprite.isoPosition);
+        if (dist < 3 * GLOBAL.tileSize) {
+            this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing
+            this.thoughtBubble.show("exclamationPoint", null, 800, this.lookForTargets, this);
+            this.standFacingPosition(food.sprite.isoPosition);
+        }
+    }
 };
 
 GlassLab.Creature.prototype._onTargetsChanged = function() {
@@ -489,7 +509,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     // Look for food we could eat
     for (var i = 0; i < GLOBAL.foodInWorld.length; i++) {
         var food = GLOBAL.foodInWorld[i];
-        if (food && food.health && !food.eaten && food.type in this.desiredAmountsOfFood) {
+        if (food && food.health && !food.eaten && !food.dislikedBy[this.type]) {
             targets = targets.concat(food.getTargets());
         }
     }
@@ -536,8 +556,12 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
             }, this);
         }
         return true; // either way, we reached the target
-    } else if (target.food ) { // we're on top of some food
-        this.eatFreeFood(target.food);
+    } else if (target.food) { // we're on top of some food
+        if (target.food.type in this.desiredAmountsOfFood) {
+            this.eatFreeFood(target.food);
+        } else {
+            this.dislikeFood(target.food);
+        }
         return true;
     }
     return false;
@@ -559,6 +583,18 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
         result: result
     });
     this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food}));
+
+    food.eaten = true;
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone
+};
+
+GlassLab.Creature.prototype.dislikeFood = function (food) {
+    this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing while emoting
+    this.thoughtBubble.show("redX", GlassLab.FoodTypes[food.type].spriteName, 1000, this.lookForTargets, this);
+    this.standFacingPosition(food.sprite.isoPosition);
+
+    food.dislikedBy[this.type] = true;
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food was just disliked
 };
 
 GlassLab.Creature.prototype.tryEnterPen = function (pen) {

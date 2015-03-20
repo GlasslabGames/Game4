@@ -42,9 +42,9 @@ GlassLab.CreatureStateWaitingForFood.prototype.StartWalkingToFood = function() {
   }
 };
 
-GlassLab.CreatureStateWaitingForFood.prototype._onFoodTypeChanged = function(pen) {
+GlassLab.CreatureStateWaitingForFood.prototype._onFoodTypeChanged = function(pen, food) {
     if (this.creature.pen != pen) return;
-    if (!pen._getCreatureTypeCanEnter(this.creature.type)) {
-        this.creature.Emote(false);
+    if (!(food in this.creature.desiredAmountsOfFood)) {
+        this.creature.thoughtBubble.show("redX", GlassLab.FoodTypes[food].spriteName, 1000);
     }
 };
