@@ -1,34 +1,34 @@
 [
   {
-    "__type": "GlassLab.SetDayAction",
+    "__type": "SetDayAction",
     "numDots": 3
   },
   {
-    "__type": "GlassLab.UnlockItemsAction",
+    "__type": "UnlockItemsAction",
     "items": ["strawberry"],
     "lockOthers": true
   },
   {
-    "__type": "GlassLab.ResetTelemetryAction"
+    "__type": "ResetTelemetryAction"
   },
   {
-    "__type": "GlassLab.ClearOrdersAction"
+    "__type": "ClearOrdersAction"
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ActionGroup",
+    "__type": "ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.StartChallengeAction",
+        "__type": "StartChallengeAction",
         "id": "3.1",
         "problemType": "MD",
         "challengeType": "pen",
         "objective": "Feed 2 baby unifoxes in the pen."
       },
       {
-        "__type": "GlassLab.CreatePenAction",
+        "__type": "CreatePenAction",
         "penData": {
           "type": "baby_unifox",
           "height": 1,
@@ -38,48 +38,48 @@
         "penStartCol": -4
       },
       {
-        "__type": "GlassLab.CreateCreaturesAction",
+        "__type": "CreateCreaturesAction",
         "data": {"baby_unifox": 2}
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.challengeComplete"
+            "__type": "SignalCondition",
+            "signalName": "challengeComplete"
           }
         ]
       },
       {
-        "__type": "GlassLab.ClearWorldAction"
+        "__type": "ClearWorldAction"
       }
     ]
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ConditionalAction",
+    "__type": "ConditionalAction",
     "serializedCondition": {
-      "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+      "__type": "GlobalVariableGreaterThanCondition",
       "variableName": "GLOBAL.telemetryManager.attemptsOnLastProblem",
       "number": 3
     },
     "serializedTrueAction": {
-      "__type": "GlassLab.ActionGroup",
+      "__type": "ActionGroup",
       "serializedActions": [
         {
-          "__type": "GlassLab.ClearWorldAction"
+          "__type": "ClearWorldAction"
         },
         {
-          "__type": "GlassLab.StartChallengeAction",
+          "__type": "StartChallengeAction",
           "id": "3.2",
           "problemType": "MD",
           "challengeType": "pen",
           "objective": "Feed 3 baby unifoxes in the pen."
         },
         {
-          "__type": "GlassLab.CreatePenAction",
+          "__type": "CreatePenAction",
           "penData": {
             "type": "baby_unifox",
             "height": 1,
@@ -89,42 +89,42 @@
           "penStartCol": -7
         },
         {
-          "__type": "GlassLab.CreateCreaturesAction",
+          "__type": "CreateCreaturesAction",
           "data": {"baby_unifox": 3}
         },
         {
-          "__type": "GlassLab.WaitForCondition",
+          "__type": "WaitForCondition",
           "conditions": [
             {
-              "__type": "GlassLab.SignalCondition",
-              "signalName": "GlassLab.SignalManager.challengeComplete"
+              "__type": "SignalCondition",
+              "signalName": "challengeComplete"
             }
           ]
         },
         {
-          "__type": "GlassLab.ClearWorldAction"
+          "__type": "ClearWorldAction"
         }
       ]
     }
   },
   {
-    "__type": "GlassLab.AdvanceDayAction"
+    "__type": "AdvanceDayAction"
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ActionGroup",
+    "__type": "ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.StartChallengeAction",
+        "__type": "StartChallengeAction",
         "id": "3.3",
         "problemType": "ND",
         "challengeType": "pen",
         "objective": "Feed 10 baby unifoxes in the pen."
       },
       {
-        "__type": "GlassLab.CreatePenAction",
+        "__type": "CreatePenAction",
         "penData": {
           "type": "baby_unifox",
           "bottomDraggable": true,
@@ -134,41 +134,41 @@
         }
       },
       {
-        "__type": "GlassLab.CreateCreaturesAction",
+        "__type": "CreateCreaturesAction",
         "data": {"baby_unifox": 10}
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.challengeComplete"
+            "__type": "SignalCondition",
+            "signalName": "challengeComplete"
           }
         ]
       },
       {
-        "__type": "GlassLab.ClearWorldAction"
+        "__type": "ClearWorldAction"
       }
     ]
   },
   {
-    "__type": "GlassLab.AdvanceDayAction"
+    "__type": "AdvanceDayAction"
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ActionGroup",
+    "__type": "ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.StartChallengeAction",
+        "__type": "StartChallengeAction",
         "id": "3.4",
         "problemType": "MS",
         "challengeType": "order",
         "objective": "Complete a shipment of Unifoxes!"
       },
       {
-        "__type": "GlassLab.AddOrderAction",
+        "__type": "AddOrderAction",
         "data": {
           "client": "Archibold Huxley III",
           "company": "Rupture Farms",
@@ -180,18 +180,18 @@
         }
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.challengeComplete"
+            "__type": "SignalCondition",
+            "signalName": "challengeComplete"
           }
         ]
       }
     ]
   },
   {
-    "__type": "GlassLab.DoBonusRoundAction",
+    "__type": "DoBonusRoundAction",
     "data": [
       {
         "creatureType": "baby_unifox",
@@ -217,13 +217,13 @@
     ]
   },
   {
-    "__type": "GlassLab.ClearWorldAction"
+    "__type": "ClearWorldAction"
   },
   {
-    "__type": "GlassLab.EndQuestAction"
+    "__type": "EndQuestAction"
   },
   {
-    "__type": "GlassLab.LoadLevelAction",
+    "__type": "LoadLevelAction",
     "level": 3
   }
 ]

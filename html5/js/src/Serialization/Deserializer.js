@@ -15,7 +15,8 @@ GlassLab.Deserializer._typeNameCache = {};
  */
 GlassLab.Deserializer.deserializeObj = function(blob)
 {
-    var objClass = GlassLab.Deserializer.getClassFromTypeName(blob.__type);
+    var objClass = GlassLab.Deserializer.getClassFromTypeName("GlassLab."+blob.__type); // prepend GlassLab since we almost definitely want it
+    if (!objClass) objClass = GlassLab.Deserializer.getClassFromTypeName(blob.__type); // else try without GlassLab
     var obj = new objClass();
     for (var property in blob)
     {
@@ -54,7 +55,7 @@ GlassLab.Deserializer.getPropertyFromName = function(propertyName)
     {
         if (nameComponents[i] === "") continue; // empty strings get added e.g. in prop[0].prop
         property = property[nameComponents[i]];
-        if (!property) break;
+        if (typeof property == 'undefined') return null; // failure
     }
 
     return property;
