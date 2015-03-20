@@ -51,6 +51,11 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.sprite.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
 
+    this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
+    this.thoughtBubble.position.setTo(-200, -450);
+    this.thoughtBubble.scale.setTo(0.8/this.sprite.scale.x, 0.8/this.sprite.scale.y);
+    this.sprite.addChild(this.thoughtBubble);
+
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen. Each food is like {food: f, eatPartially: true}
@@ -81,7 +86,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 
     this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
-
+    this.foodDroppedHandler = GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
 
     // FINALLY, start the desired state
     if (startInPen) {
@@ -103,6 +108,7 @@ GlassLab.Creature.prototype._onDestroy = function () {
     this.sprite.events.destroy();
     if (this.updateHandler) this.updateHandler.detach();
     if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
+    if (this.foodDroppedHandler) this.foodDroppedHandler.detach();
     if (this.state) this.state.Exit(); // wrap up the current state
 
     GLOBAL.creatureManager.RemoveCreature(this);
@@ -456,7 +462,10 @@ GlassLab.Creature.prototype.Emote = function (happy, callback) {
 };
 
 GlassLab.Creature.prototype._afterEmote = function() {
-    if (this.afterEmoteCallback) this.afterEmoteCallback.call(this);
+    if (this.afterEmoteCallback) {
+        this.afterEmoteCallback.call(this);
+        this.afterEmoteCallback = null;
+    }
     if (this.emote) {
         this.emote.destroy();
         this.emote = null;
@@ -470,6 +479,17 @@ GlassLab.Creature.prototype.ShowHungerBar = function (currentlyEatingAmount, foo
 
 GlassLab.Creature.prototype.HideHungerBar = function () {
     this.hungerBar.sprite.visible = false;
+};
+
+GlassLab.Creature.prototype._onFoodDropped = function(food) {
+    if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
+        var dist = GlassLab.Util.GetGlobalIsoPosition(this.sprite).distance(food.sprite.isoPosition);
+        if (dist < 3 * GLOBAL.tileSize) {
+            this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing
+            this.thoughtBubble.show("exclamationPoint", null, 800, this.lookForTargets, this);
+            this.standFacingPosition(food.sprite.isoPosition);
+        }
+    }
 };
 
 GlassLab.Creature.prototype._onTargetsChanged = function() {

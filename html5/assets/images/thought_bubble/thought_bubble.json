@@ -1,0 +1,396 @@
+{"frames": {
+
+"thought_bubble_000.png":
+{
+	"frame": {"x":176,"y":2,"w":173,"h":138},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":13,"w":173,"h":138},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_001.png":
+{
+	"frame": {"x":2,"y":286,"w":172,"h":139},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":12,"w":172,"h":139},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_002.png":
+{
+	"frame": {"x":176,"y":142,"w":172,"h":139},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":12,"w":172,"h":139},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_003.png":
+{
+	"frame": {"x":2,"y":427,"w":172,"h":139},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":12,"w":172,"h":139},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_004.png":
+{
+	"frame": {"x":2,"y":2,"w":172,"h":140},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":11,"w":172,"h":140},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_005.png":
+{
+	"frame": {"x":2,"y":144,"w":172,"h":140},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":11,"w":172,"h":140},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_006.png":
+{
+	"frame": {"x":176,"y":283,"w":172,"h":139},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":11,"w":172,"h":139},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_007.png":
+{
+	"frame": {"x":2,"y":568,"w":172,"h":139},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":11,"w":172,"h":139},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_008.png":
+{
+	"frame": {"x":176,"y":424,"w":172,"h":139},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":11,"w":172,"h":139},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_009.png":
+{
+	"frame": {"x":351,"y":2,"w":172,"h":138},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":11,"w":172,"h":138},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_010.png":
+{
+	"frame": {"x":350,"y":142,"w":172,"h":138},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":11,"w":172,"h":138},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_011.png":
+{
+	"frame": {"x":2,"y":709,"w":172,"h":137},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":12,"w":172,"h":137},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_012.png":
+{
+	"frame": {"x":875,"y":2,"w":173,"h":135},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":13,"w":173,"h":135},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_013.png":
+{
+	"frame": {"x":350,"y":421,"w":173,"h":134},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":14,"w":173,"h":134},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_014.png":
+{
+	"frame": {"x":177,"y":839,"w":173,"h":133},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":14,"w":173,"h":133},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_015.png":
+{
+	"frame": {"x":2,"y":848,"w":173,"h":132},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":15,"w":173,"h":132},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_016.png":
+{
+	"frame": {"x":875,"y":139,"w":174,"h":131},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":16,"w":174,"h":131},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_017.png":
+{
+	"frame": {"x":525,"y":141,"w":174,"h":129},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":17,"w":174,"h":129},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_018.png":
+{
+	"frame": {"x":700,"y":272,"w":174,"h":128},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":18,"w":174,"h":128},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_019.png":
+{
+	"frame": {"x":877,"y":402,"w":173,"h":127},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":19,"w":173,"h":127},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_020.png":
+{
+	"frame": {"x":876,"y":531,"w":174,"h":125},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":20,"w":174,"h":125},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_021.png":
+{
+	"frame": {"x":1051,"y":658,"w":174,"h":124},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":21,"w":174,"h":124},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_022.png":
+{
+	"frame": {"x":1052,"y":784,"w":174,"h":124},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":22,"w":174,"h":124},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_023.png":
+{
+	"frame": {"x":702,"y":791,"w":173,"h":125},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":21,"w":173,"h":125},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_024.png":
+{
+	"frame": {"x":877,"y":786,"w":173,"h":125},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":21,"w":173,"h":125},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_025.png":
+{
+	"frame": {"x":876,"y":658,"w":173,"h":126},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":21,"w":173,"h":126},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_026.png":
+{
+	"frame": {"x":1052,"y":530,"w":174,"h":126},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":21,"w":174,"h":126},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_027.png":
+{
+	"frame": {"x":1052,"y":272,"w":174,"h":127},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":20,"w":174,"h":127},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_028.png":
+{
+	"frame": {"x":1052,"y":401,"w":174,"h":127},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":20,"w":174,"h":127},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_029.png":
+{
+	"frame": {"x":701,"y":402,"w":174,"h":127},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":20,"w":174,"h":127},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_030.png":
+{
+	"frame": {"x":876,"y":272,"w":174,"h":128},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":19,"w":174,"h":128},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_031.png":
+{
+	"frame": {"x":701,"y":531,"w":173,"h":128},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":19,"w":173,"h":128},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_032.png":
+{
+	"frame": {"x":701,"y":661,"w":173,"h":128},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":19,"w":173,"h":128},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_033.png":
+{
+	"frame": {"x":526,"y":668,"w":173,"h":129},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":18,"w":173,"h":129},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_034.png":
+{
+	"frame": {"x":527,"y":799,"w":173,"h":129},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":18,"w":173,"h":129},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_035.png":
+{
+	"frame": {"x":525,"y":537,"w":174,"h":129},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":18,"w":174,"h":129},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_036.png":
+{
+	"frame": {"x":525,"y":405,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":17,"w":174,"h":130},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_037.png":
+{
+	"frame": {"x":1051,"y":139,"w":174,"h":131},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":17,"w":174,"h":131},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_038.png":
+{
+	"frame": {"x":524,"y":272,"w":174,"h":131},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":17,"w":174,"h":131},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_039.png":
+{
+	"frame": {"x":351,"y":693,"w":173,"h":133},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":16,"w":173,"h":133},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_040.png":
+{
+	"frame": {"x":352,"y":828,"w":173,"h":133},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":16,"w":173,"h":133},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_041.png":
+{
+	"frame": {"x":350,"y":557,"w":173,"h":134},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":16,"w":173,"h":134},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_042.png":
+{
+	"frame": {"x":176,"y":703,"w":173,"h":134},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":16,"w":173,"h":134},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_043.png":
+{
+	"frame": {"x":1050,"y":2,"w":173,"h":135},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":15,"w":173,"h":135},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_044.png":
+{
+	"frame": {"x":176,"y":565,"w":172,"h":136},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":15,"w":172,"h":136},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_045.png":
+{
+	"frame": {"x":350,"y":282,"w":172,"h":137},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":14,"w":172,"h":137},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_046.png":
+{
+	"frame": {"x":525,"y":2,"w":173,"h":137},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":14,"w":173,"h":137},
+	"sourceSize": {"w":180,"h":160}
+},
+"thought_bubble_047.png":
+{
+	"frame": {"x":700,"y":2,"w":173,"h":137},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":14,"w":173,"h":137},
+	"sourceSize": {"w":180,"h":160}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "thought_bubble.png",
+	"format": "RGBA8888",
+	"size": {"w":1228,"h":982},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7a474058cb93bfd54b39bd01932342ed:95ef96ea9d3688b6642348392361398a:8611450a9d78b71f4463e0baa92b81c6$"
+}
+}
