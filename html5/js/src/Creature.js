@@ -509,7 +509,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     // Look for food we could eat
     for (var i = 0; i < GLOBAL.foodInWorld.length; i++) {
         var food = GLOBAL.foodInWorld[i];
-        if (food && food.health && !food.eaten && food.type in this.desiredAmountsOfFood) {
+        if (food && food.health && !food.eaten && !food.dislikedBy[this.type]) {
             targets = targets.concat(food.getTargets());
         }
     }
@@ -556,8 +556,12 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
             }, this);
         }
         return true; // either way, we reached the target
-    } else if (target.food ) { // we're on top of some food
-        this.eatFreeFood(target.food);
+    } else if (target.food) { // we're on top of some food
+        if (target.food.type in this.desiredAmountsOfFood) {
+            this.eatFreeFood(target.food);
+        } else {
+            this.dislikeFood(target.food);
+        }
         return true;
     }
     return false;
@@ -579,6 +583,18 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
         result: result
     });
     this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food}));
+
+    food.eaten = true;
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone
+};
+
+GlassLab.Creature.prototype.dislikeFood = function (food) {
+    this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing while emoting
+    this.thoughtBubble.show("redX", GlassLab.FoodTypes[food.type].spriteName, 1000, this.lookForTargets, this);
+    this.standFacingPosition(food.sprite.isoPosition);
+
+    food.dislikedBy[this.type] = true;
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food was just disliked
 };
 
 GlassLab.Creature.prototype.tryEnterPen = function (pen) {
