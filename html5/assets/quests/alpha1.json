@@ -31,8 +31,21 @@
         "centered": true
       },
       {
-        "__type": "ShowAssistantDialogueAction",
-        "text": "There you are! These creatures need your help! Open your *inventory* to feed this *baby ram.*"
+        "__type": "RandomSelectionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Hi there! These creatures need your help! Open your *inventory* to feed this *baby ram.*"
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "There you are! These creatures need your help! Open your *inventory* to feed this *baby ram.*"
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Aha, there you are! These creatures need your help! Open your *inventory* to feed this *baby ram.*"
+          }
+        ]
       },
       {
         "__type": "ShowArrowAction",
