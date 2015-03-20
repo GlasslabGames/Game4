@@ -178,14 +178,25 @@ GlassLab.CreatureManager.prototype._onSaveRequested = function(blob) {
     }
 };
 
-GlassLab.CreatureManager.prototype.CreateCreature = function(type)
+GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 {
     var creature = new GlassLab.Creature(this.game, type);
     GLOBAL.creatureLayer.add(creature.sprite);
-    creature.moveToRandomTile();
+    if (centered) {
+        creature.moveToTile( GLOBAL.tileManager.tilemap.width/2, GLOBAL.tileManager.tilemap.height/2 );
+    } else {
+        creature.moveToRandomTile();
+    }
     creature.lookForTargets();
 
     return creature;
+};
+
+GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, centered) {
+    console.log(type, number, centered);
+    for (var i = 0; i < number; i ++) {
+        this.CreateCreature(type, centered); 
+    }
 };
 
 GlassLab.CreatureManager.prototype._onGameLoaded = function(blob)
