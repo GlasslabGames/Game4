@@ -355,7 +355,7 @@
     }
   },
   {
-    "__type": "GlassLab.CreateBonusRoundAction",
+    "__type": "GlassLab.DoBonusRoundAction",
     "data": [
       {
         "creatureType": "baby_rammus",
