@@ -79,10 +79,17 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
         return;
     }
 
+    this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
     console.log("Starting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
-    var challenge = this._getNextChallenge(this.currentChallengeCategory);
-    challenge.onComplete.addOnce(this._onChallengeComplete, this);
-    challenge.Do();
+    this.challenge = this._getNextChallenge(this.currentChallengeCategory);
+    this.challenge.onComplete.addOnce(this._onChallengeComplete, this);
+    this.challenge.Do();
+};
+
+GlassLab.Quest.prototype.restartChallenge = function() {
+    console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
+    this.perfect = false; // they messed up, so no longer perfect
+    this.challenge.Redo(); // re-do the current challenge
 };
 
 GlassLab.Quest.prototype._onChallengeComplete = function() {
@@ -92,23 +99,30 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
         this.funCountdown --; // we just finished a non-fun challenge, so decrease the time before the next one
     }
 
-    var perfect = true; // TODO: get whether the challenge was done perfectly
+    console.log("Challenge complete. Perfect:",this.perfect);
 
     if (this.currentChallengeCategory == "review") { // adjust their position in the review list depending on their performance
-        this.index[this.currentChallengeCategory] += (perfect? -2 : 1); // up 2 if they were perfect, down 1 otherwise
-        if (this.index[this.currentChallengeCategory] < 0) {
+        this.index.review += (this.perfect? -2 : 1); // up 2 if they were perfect, down 1 otherwise
+        if (this.index.review < 0) {
             this.inReview = false; // they made it out of the review list
+        } else if (this.index.review >= this.serializedChallenges.review.length) {
+            this.index.review = this.serializedChallenges.review.length - 2; // go to the 2nd to last problem so they don't repeat the last one again
         }
     } else {
         this.index[this.currentChallengeCategory] ++; // for progression and fun, just move forward one
 
-        if (this.currentChallengeCategory == "progression" && !perfect) { // bump them into the review challenges
+        if (this.currentChallengeCategory == "progression" && !this.perfect) { // bump them into the review challenges
             this.inReview = true;
             this.index.review = 0; // start at the beginning/top of the review challengess
         }
     }
 
     this._startNextChallenge();
+};
+
+GlassLab.Quest.prototype.failChallenge = function() {
+
+
 };
 
 GlassLab.Quest.prototype._resetFunCountdown = function() {

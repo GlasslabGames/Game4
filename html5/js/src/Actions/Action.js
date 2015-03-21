@@ -22,6 +22,14 @@ GlassLab.Action.prototype.Do = function()
 };
 
 /**
+ * @protected
+ */
+GlassLab.Action.prototype.Redo = function()
+{
+    this.Do();
+};
+
+/**
  *
  * @protected
  */

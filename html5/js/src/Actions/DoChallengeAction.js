@@ -21,6 +21,8 @@ GlassLab.DoChallengeAction.prototype.constructor = GlassLab.DoChallengeAction;
 
 GlassLab.DoChallengeAction.prototype.Do = function()
 {
+    GLOBAL.levelManager._destroyCurrentLevel(); // wipe the world in preparation
+
     GlassLabSDK.setOptions({gameLevel: this.challengeId});
 
     GLOBAL.saveManager.Save("default_checkpoint"); // from SaveCheckpointAction

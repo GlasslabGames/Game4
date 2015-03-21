@@ -40,6 +40,13 @@ GlassLab.ActionGroup.prototype.Do = function()
     }
 };
 
+GlassLab.ActionGroup.prototype.Redo = function() {
+    this.currentAction = null;
+    this.currentActionIndex = 0;
+    this._deserializedActions = [];
+    this.Do();
+};
+
 GlassLab.ActionGroup.prototype._onDestroy = function()
 {
     for (var i=this._deserializedActions.length-1; i >= 0; i--)

@@ -70,6 +70,11 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
     this.activeQuests.splice(questIndex, 1);
 };
 
+GlassLab.QuestManager.prototype.failChallenge = function() {
+    if (this.challengeIsBossLevel) GLOBAL.levelManager.RestartLevel(); // restart the whole day
+    else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
+};
+
 GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)
 {
     this._currentObjective = objectiveText;
