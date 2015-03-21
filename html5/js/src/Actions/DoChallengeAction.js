@@ -27,16 +27,25 @@ GlassLab.DoChallengeAction.prototype.Do = function()
 
     GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.problemType, this.challengeType, this.boss);
 
-    GLOBAL.questManager.UpdateObjective(this.objective);
+    var objective = this.objective;
 
     if (this.challengeType == "handfeeding") {
-        GLOBAL.creatureManager.CreateCreatures(this.challengeData.type, this.challengeData.numCreatures, this.challengeData.centered);
+        GLOBAL.creatureManager.CreateCreatures(this.challengeData.creatureType, this.challengeData.numCreatures, this.challengeData.centered);
+        if (!objective) {
+            objective = "Feed " + this.challengeData.numCreatures + " " + GLOBAL.creatureManager.GetCreatureName(this.challengeData.creatureType, this.challengeData.numCreatures > 1);
+        }
     } else if (this.challengeType == "pen") {
-        GLOBAL.creatureManager.CreateCreatures(this.challengeData.type, this.challengeData.numCreatures);
+        GLOBAL.creatureManager.CreateCreatures(this.challengeData.creatureType, this.challengeData.numCreatures);
         GLOBAL.penManager.CreatePen(this.challengeData, this.challengeData.startCol, this.challengeData.startRow);
+        if (!objective) {
+            objective = "Feed " + this.challengeData.numCreatures + " " + GLOBAL.creatureManager.GetCreatureName(this.challengeData.creatureType, this.challengeData.numCreatures > 1) + " in the pen";
+        }
     } else if (this.challengeType == "order") {
         GLOBAL.mailManager.AddOrders(this.challengeData);
+        if (!objective) objective = "Fulfill an urgent order";
     }
+
+    GLOBAL.questManager.UpdateObjective(objective);
 
     this.completeListenerBinding = GlassLab.SignalManager.challengeComplete.addOnce(this._onChallengeComplete, this);
 };

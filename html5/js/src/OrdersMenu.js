@@ -137,7 +137,7 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.descriptionLabel.setText(getProcessedString(this.data.description));
 
     this.clientNameLabel.setText(this.data.client);
-    this.companyNameLabel.setText(this.data.company);
+    this.companyNameLabel.setText(this.data.company || "");
     this.rewardAmountLabel.setText("$"+this.data.reward);
 
     this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.mailManager.availableOrders.length)
