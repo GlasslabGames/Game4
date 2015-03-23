@@ -40,6 +40,22 @@ GlassLab.Quest.prototype.Start = function()
         this._resetFunCountdown();
         this.inReview = false;
 
+        // Allow skipping ahead via url parameters
+        var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
+        if ((index && !isNaN(index)) || index === 0) {
+            this.index.progression = index;
+        } else {
+            for (var key in this.index) {
+                var index = getParameterByName(key + "Challenge"); // funChallenge, reviewChallenge, progressionChallenge
+                if ((index && !isNaN(index)) || index === 0) {
+                    this.index[key] = index;
+                    if (key == "fun") this.funCountdown = 0; // time for a fun challenge
+                    else if (key == "review") this.inReview = true;
+                    break;
+                }
+            }
+        }
+
         GLOBAL.dayManager.dayMeter.SetDots(this.numDots);
         for (var i=0; i < this.unlockedFood.length; i++) {
             GLOBAL.inventoryManager.unlock(this.unlockedFood[i]);
