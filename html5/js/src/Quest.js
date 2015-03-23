@@ -79,9 +79,13 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
         return;
     }
 
+    GLOBAL.mailManager.ClearOrders(); // for now, erase all pending orders
     this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
+
     console.log("Starting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
+
     this.challenge = this._getNextChallenge(this.currentChallengeCategory);
+    this.challenge.onComplete.remove(this._onChallengeComplete, this); // in case we had previously added this listener, remove it to make sure we have just one copy
     this.challenge.onComplete.addOnce(this._onChallengeComplete, this);
     this.challenge.Do();
 };
@@ -89,7 +93,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
 GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
     this.perfect = false; // they messed up, so no longer perfect
-    this.challenge.Redo(); // re-do the current challenge
+    this.challenge.Do(); // re-do the current challenge
 };
 
 GlassLab.Quest.prototype._onChallengeComplete = function() {
@@ -98,8 +102,6 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
     } else {
         this.funCountdown --; // we just finished a non-fun challenge, so decrease the time before the next one
     }
-
-    console.log("Challenge complete. Perfect:",this.perfect);
 
     if (this.currentChallengeCategory == "review") { // adjust their position in the review list depending on their performance
         this.index.review += (this.perfect? -2 : 1); // up 2 if they were perfect, down 1 otherwise
@@ -117,12 +119,9 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
         }
     }
 
+    this.challenge.Destroy(); // we're done with this challenge, so get rid of it
+
     this._startNextChallenge();
-};
-
-GlassLab.Quest.prototype.failChallenge = function() {
-
-
 };
 
 GlassLab.Quest.prototype._resetFunCountdown = function() {
@@ -137,45 +136,17 @@ Object.defineProperty(GlassLab.Quest.prototype, 'isStarted', {
 
 GlassLab.Quest.prototype.Reset = function()
 {
-    this._isStarted = false;
-    for (var i=0, j=this.actions.length; i < j; i++)
-    {
-        var action = this.actions[i];
-        action.completed = false;
-    }
-    this._currentActionIndex = -1;
+    this.Cancel();
 };
 
-GlassLab.Quest.prototype._procNextStep = function()
+GlassLab.Quest.prototype.Cancel = function()
 {
-    if (this.actions.length == 0)
+    if (this.challenge != null)
     {
-        console.error("No actions in Quest");
-        return;
+        this.challenge.Destroy();
+        this.challenge = null;
     }
-
-    this._currentActionIndex++;
-
-    if (this._currentActionIndex == this.actions.length)
-    {
-        this._complete();
-        return;
-    }
-
-    this.currentAction = this.actions[this._currentActionIndex];
-    this.currentAction.onComplete.addOnce(this._procNextStep, this);
-    this.currentAction.Do();
-};
-
-GlassLab.Quest.prototype.ForceComplete = function()
-{
-    if (this.currentAction != null)
-    {
-        // Cancel action?
-        //console.error("Forcing a quest to complete hasn't been fully implemented yet. You may see bugs...");
-    }
-
-    this._complete();
+    this._isStarted = this._isComplete = false;
 };
 
 GlassLab.Quest.prototype._complete = function()
@@ -186,6 +157,14 @@ GlassLab.Quest.prototype._complete = function()
         this._isStarted = false;
 
         GlassLab.SignalManager.questEnded.dispatch(this);
+
+        // Delete all the challenges we've deserialized
+        for (var key in this.challenges) {
+            for (var index in this.challenges[key]) {
+                if (this.challenges[key][index]) this.challenges[key][index].Destroy();
+            }
+        }
+        this.challenges = {progression: [], review: [], fun: []};
     }
 };
 

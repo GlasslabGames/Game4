@@ -71,8 +71,10 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
 };
 
 GlassLab.QuestManager.prototype.failChallenge = function() {
-    if (this.challengeIsBossLevel) GLOBAL.levelManager.RestartLevel(); // restart the whole day
-    else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
+    if (this.challengeIsBossLevel) {
+        this.GetCurrentQuest().Cancel(); // cancel the current challenge
+        GLOBAL.levelManager.RestartLevel(); // restart the whole day
+    } else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
 };
 
 GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)

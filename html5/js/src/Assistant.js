@@ -86,7 +86,7 @@ GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
     this.showButtons(false);
     var orderSegment;
     if (order.numCreatures) {
-        orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.type, (order.numCreatures > 1)) + "*";
+        orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.creatureType, (order.numCreatures > 1)) + "*";
     } else {
         orderSegment = "*enough creatures to eat this food*";
     }

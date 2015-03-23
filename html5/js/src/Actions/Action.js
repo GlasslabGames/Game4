@@ -22,20 +22,13 @@ GlassLab.Action.prototype.Do = function()
 };
 
 /**
- * @protected
- */
-GlassLab.Action.prototype.Redo = function()
-{
-    this.Do();
-};
-
-/**
  *
  * @protected
  */
 GlassLab.Action.prototype._complete = function()
 {
     this.completed = true;
+    console.log("Completed",this);
     this.onComplete.dispatch(this);
 };
 
