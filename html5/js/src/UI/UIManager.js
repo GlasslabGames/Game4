@@ -8,6 +8,7 @@ GlassLab.UIManager = function(game)
 {
     this.game = game;
     this.dragTargets = [];
+    this.zoomTo(0.5);
 
     this._createAnchors();
 
@@ -176,6 +177,22 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
     return label.text; // returns the text with newlines inserted
 };
 
+GlassLab.UIManager.maxZoom = 1;
+GlassLab.UIManager.minZoom = 0.125;
+
+GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
+    this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+    GLOBAL.WorldLayer.scale.x = GLOBAL.WorldLayer.scale.y = this.zoomLevel;
+};
+
+GlassLab.UIManager.prototype.zoomIn = function() {
+    this.zoomTo(this.zoomLevel * 2);
+};
+
+GlassLab.UIManager.prototype.zoomOut = function() {
+    this.zoomTo(this.zoomLevel / 2);
+};
+
 GlassLab.UIManager.prototype.createHud = function() {
     var table = new GlassLab.UITable(this.game, 1, 3);
     this.topRightAnchor.addChild(table);
@@ -189,18 +206,12 @@ GlassLab.UIManager.prototype.createHud = function() {
     var zoomGroup = new GlassLab.UIElement(this.game);
     table.addManagedChild(zoomGroup);
 
-    // for some reason the position in the table is a little off unless we set the y to 2 here
-    button = new GlassLab.HUDButton(this.game, 0, 1, "zoomInIcon", "hudSettingsBg", true, function() {
-        GLOBAL.WorldLayer.scale.x *= 2;
-        GLOBAL.WorldLayer.scale.y *= 2;
-    }, this);
+    // for some reason the position in the table is a little off unless we set the y to 1 here
+    button = new GlassLab.HUDButton(this.game, 0, 1, "zoomInIcon", "hudSettingsBg", true, this.zoomIn, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight = button.getHeight();
 
-    button = new GlassLab.HUDButton(this.game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, function() {
-        GLOBAL.WorldLayer.scale.x /= 2;
-        GLOBAL.WorldLayer.scale.y /= 2;
-    }, this);
+    button = new GlassLab.HUDButton(this.game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, this.zoomOut, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight += button.getHeight();
 
