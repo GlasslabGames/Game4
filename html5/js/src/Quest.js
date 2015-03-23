@@ -103,6 +103,8 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     this.challenge.onComplete.remove(this._onChallengeComplete, this); // in case we had previously added this listener, remove it to make sure we have just one copy
     this.challenge.onComplete.addOnce(this._onChallengeComplete, this);
     this.challenge.Do();
+
+    this._addBackgroundOrders(); // note that we should have already added the challenge order when we called this.challenge.do()
 };
 
 GlassLab.Quest.prototype.restartChallenge = function() {
@@ -141,6 +143,18 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
 
 GlassLab.Quest.prototype._resetFunCountdown = function() {
     this.funCountdown = Math.floor(Math.random() * 2) + 2; // how long until the next fun challenge, 2-3
+};
+
+GlassLab.Quest.prototype._addBackgroundOrders = function() {
+    if (GLOBAL.mailManager.availableOrders.length >= 3) return;
+
+    for (var i = 0; i < this.backgroundOrders.length; i++) {
+        var order = this.backgroundOrders[i].orderData; // TODO: store additional info for telemetry purposes
+        if (!order.fulfilled) { // only add orders that the player hasn't done yet
+            GLOBAL.mailManager.AddOrders(order);
+            if (GLOBAL.mailManager.availableOrders.length >= 3) break;
+        }
+    }
 };
 
 Object.defineProperty(GlassLab.Quest.prototype, 'isStarted', {

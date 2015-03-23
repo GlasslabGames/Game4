@@ -70,7 +70,7 @@ GlassLab.MailManager.prototype.IsMailShowing = function()
  * @param args Takes in any number of order blob arguments
  * @public
  */
-GlassLab.MailManager.prototype.AddOrders = function()
+GlassLab.MailManager.prototype.AddOrders = function(prepend)
 {
     for (var i=0; i < arguments.length; i++)
     {

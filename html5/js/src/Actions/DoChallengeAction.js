@@ -43,6 +43,7 @@ GlassLab.DoChallengeAction.prototype.Do = function()
             objective = "Feed " + this.challengeData.numCreatures + " " + GLOBAL.creatureManager.GetCreatureName(this.challengeData.creatureType, this.challengeData.numCreatures > 1) + " in the pen";
         }
     } else if (this.challengeType == "order") {
+        this.challengeData.key = true; // this is a key order for this challenge
         GLOBAL.mailManager.AddOrders(this.challengeData);
         if (!objective) objective = "Fulfill an urgent order";
     }
