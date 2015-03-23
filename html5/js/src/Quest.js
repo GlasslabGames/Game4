@@ -56,7 +56,7 @@ GlassLab.Quest.prototype.Start = function()
             }
         }
 
-        GLOBAL.dayManager.dayMeter.SetDots(this.numDots);
+        GLOBAL.dayManager.dayMeter.SetDots(this.serializedChallenges.progression.length);
         for (var i=0; i < this.unlockedFood.length; i++) {
             GLOBAL.inventoryManager.unlock(this.unlockedFood[i]);
         }
@@ -82,14 +82,13 @@ GlassLab.Quest.prototype._getNextChallenge = function(category) {
 };
 
 GlassLab.Quest.prototype._startNextChallenge = function() {
-    console.log("Start next challenge", this._hasNextChallenge("progression"));
-
     if (this.funCountdown <= 0 && this._hasNextChallenge("fun")) { // Time for a fun challenge!
         this.currentChallengeCategory = "fun";
     } else if (this.inReview && this._hasNextChallenge("review")) {
         this.currentChallengeCategory = "review";
     } else if (this._hasNextChallenge("progression")) { // even if we were supposed to be in review, fall back to the progression if we're missing review problems
         this.currentChallengeCategory = "progression";
+        GLOBAL.dayManager.AdvanceTo(this.index.progression);
     } else { // We don't have another challenge! The quest is over!
         this._complete();
         return;

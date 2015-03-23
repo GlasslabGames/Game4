@@ -21,8 +21,6 @@ GlassLab.DoChallengeAction.prototype.constructor = GlassLab.DoChallengeAction;
 
 GlassLab.DoChallengeAction.prototype.Do = function()
 {
-    console.log("Doing",this);
-
     GLOBAL.levelManager._destroyCurrentLevel(); // wipe the world in preparation
 
     GlassLabSDK.setOptions({gameLevel: this.challengeId});

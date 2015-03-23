@@ -265,8 +265,6 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         var foodRows = this.foodLists[i];
         var desiredAmount = desiredFood[this.foodTypes[i]];
 
-        console.log(this.foodLists[i]);
-
         if (true) { // easy way of assigning food - divide it into sections. This won't work for fractional food!
             for (var row = 0; row < foodRows.length; row++) {
                 var foodRow = foodRows[row];
@@ -433,7 +431,7 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
         for (var col = this.widths[0] - 1; col >= 0; col--) {
             for (var row = 0; row < this.creatureSpots.length; row++) {
                 var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * (col-1), this.sprite.isoY + GLOBAL.tileSize * row );
-                spots.push({ pen: this, pos: pos, priority: 0.25 });
+                spots.push({ pen: this, pos: pos, priority: 0.1 });
             }
         }
     }

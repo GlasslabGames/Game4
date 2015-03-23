@@ -18,7 +18,6 @@ GlassLab.RandomSelectionGroup.prototype.constructor = GlassLab.RandomSelectionGr
 GlassLab.RandomSelectionGroup.prototype.Do = function()
 {
     var index = Math.floor(Math.random() * this.possibilities.length);
-    console.log("Random choice:",index,this.possibilities.length);
     this.action = GlassLab.Deserializer.deserializeObj(this.possibilities[index]);
 
     this.action.onComplete.addOnce(this._onActionComplete, this);

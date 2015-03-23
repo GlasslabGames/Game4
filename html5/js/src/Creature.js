@@ -191,7 +191,6 @@ GlassLab.Creature.prototype.standFacingPosition = function(targetIsoPos) {
     } else {
         dir = (pos.y < targetIsoPos.y)? "down" : "up";
     }
-    console.log("Stand facing",targetIsoPos.x,targetIsoPos.y,"from",pos.x,pos.y,dir);
     this.standFacing(dir);
 };
 

@@ -20,8 +20,6 @@ GlassLab.ActionGroup.prototype = Object.create(GlassLab.Action.prototype);
 GlassLab.ActionGroup.prototype.constructor = GlassLab.ActionGroup;
 
 GlassLab.ActionGroup.prototype.Do = function() {
-    console.log("Doing",this);
-
     this.currentAction = null;
     this.currentActionIndex = 0;
 
@@ -32,7 +30,6 @@ GlassLab.ActionGroup.prototype._step = function() {
 
     if (this.waitForComplete && this.currentActionIndex == this.serializedActions.length)
     {
-        console.log("ActionGroup index:",this.currentActionIndex,this.serializedActions.length);
         this._complete();
         return;
     }
@@ -49,7 +46,6 @@ GlassLab.ActionGroup.prototype._step = function() {
 
     if (!this.waitForComplete)
     {
-        console.log("ActionGroup dont wait for complete.");
         this._complete();
     }
 };
@@ -73,6 +69,5 @@ GlassLab.ActionGroup.prototype._onDestroy = function()
 
 GlassLab.ActionGroup.prototype._onActionComplete = function()
 {
-    console.log("ActionGroup action complete!",this.serializedActions[this.currentActionIndex]);
     this._step();
 };

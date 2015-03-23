@@ -28,7 +28,6 @@ GlassLab.Action.prototype.Do = function()
 GlassLab.Action.prototype._complete = function()
 {
     this.completed = true;
-    console.log("Completed",this);
     this.onComplete.dispatch(this);
 };
 
