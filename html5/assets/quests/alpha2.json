@@ -1,33 +1,33 @@
 [
   {
-    "__type": "GlassLab.SetDayAction",
+    "__type": "SetDayAction",
     "numDots": 2
   },
   {
-    "__type": "GlassLab.UnlockItemsAction",
+    "__type": "UnlockItemsAction",
     "items": ["broccoli", "apple"]
   },
   {
-    "__type": "GlassLab.ResetTelemetryAction"
+    "__type": "ResetTelemetryAction"
   },
   {
-    "__type": "GlassLab.ClearOrdersAction"
+    "__type": "ClearOrdersAction"
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ActionGroup",
+    "__type": "ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.StartChallengeAction",
+        "__type": "StartChallengeAction",
         "id": "2.1",
         "problemType": "MD",
         "challengeType": "pen",
         "objective": "Feed 3 baby rams."
       },
       {
-        "__type": "GlassLab.CreatePenAction",
+        "__type": "CreatePenAction",
         "penData": {
           "type": "baby_rammus",
           "bottomDraggable": true,
@@ -37,46 +37,46 @@
         }
       },
       {
-        "__type": "GlassLab.CreateCreaturesAction",
+        "__type": "CreateCreaturesAction",
         "data": {"baby_rammus": 3}
       },
       {
-        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "__type": "ShowAssistantDialogueAction",
         "text": "To *feed many rams* at once, *drag the sides* of this pen to make it bigger."
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.penResized"
+            "__type": "SignalCondition",
+            "signalName": "penResized"
           }
         ]
       },
       {
-        "__type": "GlassLab.ConditionalAction",
+        "__type": "ConditionalAction",
         "serializedCondition": {
-          "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+          "__type": "GlobalVariableGreaterThanCondition",
           "variableName": "GLOBAL.penManager.pens[0].foodTypes.length",
           "number": 0
         },
         "serializedFalseAction": {
-          "__type": "GlassLab.ActionGroup",
+          "__type": "ActionGroup",
           "serializedActions": [
             {
-              "__type": "GlassLab.ShowAssistantDialogueAction",
+              "__type": "ShowAssistantDialogueAction",
               "text": "Great! Now open your *inventory* and drag *broccoli* into the pen!"
             },
             {
-              "__type": "GlassLab.AnimateButtonAction",
+              "__type": "AnimateButtonAction",
               "button": "itemsButton"
             },
             {
-              "__type": "GlassLab.WaitForCondition",
+              "__type": "WaitForCondition",
               "conditions": [
                 {
-                  "__type": "GlassLab.SignalCondition",
-                  "signalName": "GlassLab.SignalManager.penFoodTypeSet"
+                  "__type": "SignalCondition",
+                  "signalName": "penFoodTypeSet"
                 }
               ]
             }
@@ -84,38 +84,38 @@
         }
       },
       {
-        "__type": "GlassLab.HideAssistantDialogueAction"
+        "__type": "HideAssistantDialogueAction"
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+            "__type": "GlobalVariableGreaterThanCondition",
             "variableName": "GLOBAL.creatureManager.numCreaturesInPen",
             "number": 2
           }
         ]
       },
       {
-        "__type": "GlassLab.ConditionalAction",
+        "__type": "ConditionalAction",
         "serializedCondition": {
-          "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+          "__type": "GlobalVariableGreaterThanCondition",
           "variableName": "GLOBAL.penManager.pens[0].feeding",
           "number": 0
         },
         "serializedFalseAction": {
-          "__type": "GlassLab.ActionGroup",
+          "__type": "ActionGroup",
           "serializedActions": [
             {
-              "__type": "GlassLab.ShowAssistantDialogueAction",
+              "__type": "ShowAssistantDialogueAction",
               "text": "Very nice. Now *pull the lever* to feed them."
             },
             {
-              "__type": "GlassLab.WaitForCondition",
+              "__type": "WaitForCondition",
               "conditions": [
                 {
-                  "__type": "GlassLab.SignalCondition",
-                  "signalName": "GlassLab.SignalManager.penFeedingStarted"
+                  "__type": "SignalCondition",
+                  "signalName": "penFeedingStarted"
                 }
               ]
             }
@@ -123,47 +123,47 @@
         }
       },
       {
-        "__type": "GlassLab.HideAssistantDialogueAction"
+        "__type": "HideAssistantDialogueAction"
       },
       {
-        "__type": "GlassLab.HideArrowAction"
+        "__type": "HideArrowAction"
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.challengeComplete"
+            "__type": "SignalCondition",
+            "signalName": "challengeComplete"
           }
         ]
       },
       {
-        "__type": "GlassLab.ClearWorldAction"
+        "__type": "ClearWorldAction"
       }
     ]
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ConditionalAction",
+    "__type": "ConditionalAction",
     "serializedCondition": {
-      "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+      "__type": "GlobalVariableGreaterThanCondition",
       "variableName": "GLOBAL.telemetryManager.attemptsOnLastProblem",
       "number": 3
     },
     "serializedTrueAction": {
-      "__type": "GlassLab.ActionGroup",
+      "__type": "ActionGroup",
       "serializedActions": [
         {
-          "__type": "GlassLab.StartChallengeAction",
+          "__type": "StartChallengeAction",
           "id": "2.2",
           "problemType": "MD",
           "challengeType": "pen",
           "objective": "Feed 4 baby rams in the pen."
         },
         {
-          "__type": "GlassLab.CreatePenAction",
+          "__type": "CreatePenAction",
           "penData": {
             "type": "baby_rammus",
             "bottomDraggable": true,
@@ -173,35 +173,35 @@
           }
         },
         {
-          "__type": "GlassLab.CreateCreaturesAction",
+          "__type": "CreateCreaturesAction",
           "data": {"baby_rammus": 4}
         },
         {
-          "__type": "GlassLab.WaitForCondition",
+          "__type": "WaitForCondition",
           "conditions": [
             {
-              "__type": "GlassLab.SignalCondition",
-              "signalName": "GlassLab.SignalManager.challengeComplete"
+              "__type": "SignalCondition",
+              "signalName": "challengeComplete"
             }
           ]
         },
         {
-          "__type": "GlassLab.ClearWorldAction"
+          "__type": "ClearWorldAction"
         }
       ]
     }
   },
   {
-    "__type": "GlassLab.AdvanceDayAction"
+    "__type": "AdvanceDayAction"
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ActionGroup",
+    "__type": "ActionGroup",
     "serializedActions": [
       {
-        "__type": "GlassLab.StartChallengeAction",
+        "__type": "StartChallengeAction",
         "id": "2.3",
         "problemType": "MS",
         "challengeType": "order",
@@ -209,7 +209,7 @@
         "bossLevel": true
       },
       {
-        "__type": "GlassLab.AddOrderAction",
+        "__type": "AddOrderAction",
         "data": {
           "client": "Archibold Huxley III",
           "company": "Rupture Farms",
@@ -221,112 +221,112 @@
         }
       },
       {
-        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "__type": "ShowAssistantDialogueAction",
         "text": "You've got *mail*! Click on the button to open it."
       },
       {
-        "__type": "GlassLab.ShowArrowAction",
+        "__type": "ShowArrowAction",
         "direction": "up",
         "anchor": "topLeftAnchor",
         "xPosition": 60,
         "yPosition": 200
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.mailOpened"
+            "__type": "SignalCondition",
+            "signalName": "mailOpened"
           }
         ]
       },
       {
-        "__type": "GlassLab.HideArrowAction"
+        "__type": "HideArrowAction"
       },
       {
-        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "__type": "ShowAssistantDialogueAction",
         "text": "This is an *order*! Your neighbor wants to feed some *baby rams*. Click the button to fill the order."
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.orderStarted"
+            "__type": "SignalCondition",
+            "signalName": "orderStarted"
           }
         ]
       },
       {
-        "__type": "GlassLab.HideAssistantDialogueAction"
+        "__type": "HideAssistantDialogueAction"
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.orderCompleted"
+            "__type": "SignalCondition",
+            "signalName": "orderCompleted"
           }
         ]
       },
       {
-        "__type": "GlassLab.ShowAssistantDialogueAction",
+        "__type": "ShowAssistantDialogueAction",
         "text": "Great job! Now open your *mail* to see the client's response."
       },
       {
-        "__type": "GlassLab.ShowArrowAction",
+        "__type": "ShowArrowAction",
         "direction": "up",
         "anchor": "topLeftAnchor",
         "xPosition": 60,
         "yPosition": 200
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.mailOpened"
+            "__type": "SignalCondition",
+            "signalName": "mailOpened"
           }
         ]
       },
       {
-        "__type": "GlassLab.HideArrowAction"
+        "__type": "HideArrowAction"
       },
       {
-        "__type": "GlassLab.HideAssistantDialogueAction"
+        "__type": "HideAssistantDialogueAction"
       },
       {
-        "__type": "GlassLab.WaitForCondition",
+        "__type": "WaitForCondition",
         "conditions": [
           {
-            "__type": "GlassLab.SignalCondition",
-            "signalName": "GlassLab.SignalManager.challengeComplete"
+            "__type": "SignalCondition",
+            "signalName": "challengeComplete"
           }
         ]
       }
     ]
   },
   {
-    "__type": "GlassLab.SaveCheckpointAction"
+    "__type": "SaveCheckpointAction"
   },
   {
-    "__type": "GlassLab.ConditionalAction",
+    "__type": "ConditionalAction",
     "serializedCondition": {
-      "__type": "GlassLab.GlobalVariableGreaterThanCondition",
+      "__type": "GlobalVariableGreaterThanCondition",
       "variableName": "GLOBAL.telemetryManager.attemptsOnLastProblem",
       "number": 3
     },
     "serializedTrueAction": {
-      "__type": "GlassLab.ActionGroup",
+      "__type": "ActionGroup",
       "serializedActions": [
         {
-          "__type": "GlassLab.StartChallengeAction",
+          "__type": "StartChallengeAction",
           "id": "2.2",
           "problemType": "MD",
           "challengeType": "pen",
           "objective": "Feed 4 baby rams in the pen."
         },
         {
-          "__type": "GlassLab.CreatePenAction",
+          "__type": "CreatePenAction",
           "penData": {
             "type": "baby_rammus",
             "bottomDraggable": true,
@@ -336,26 +336,26 @@
           }
         },
         {
-          "__type": "GlassLab.CreateCreaturesAction",
+          "__type": "CreateCreaturesAction",
           "data": {"baby_rammus": 4}
         },
         {
-          "__type": "GlassLab.WaitForCondition",
+          "__type": "WaitForCondition",
           "conditions": [
             {
-              "__type": "GlassLab.SignalCondition",
-              "signalName": "GlassLab.SignalManager.challengeComplete"
+              "__type": "SignalCondition",
+              "signalName": "challengeComplete"
             }
           ]
         },
         {
-          "__type": "GlassLab.ClearWorldAction"
+          "__type": "ClearWorldAction"
         }
       ]
     }
   },
   {
-    "__type": "GlassLab.CreateBonusRoundAction",
+    "__type": "DoBonusRoundAction",
     "data": [
       {
         "creatureType": "baby_rammus",
@@ -381,13 +381,13 @@
     ]
   },
   {
-    "__type": "GlassLab.ClearWorldAction"
+    "__type": "ClearWorldAction"
   },
   {
-    "__type": "GlassLab.EndQuestAction"
+    "__type": "EndQuestAction"
   },
   {
-    "__type": "GlassLab.LoadLevelAction",
+    "__type": "LoadLevelAction",
     "level": 2
   }
 ]

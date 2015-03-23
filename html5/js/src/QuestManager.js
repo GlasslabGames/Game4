@@ -16,12 +16,7 @@ GlassLab.QuestManager = function(game)
     this.activeQuests = [];
 
     this.quests = [
-        new GlassLab.Quest("Vertical Slice", this.game.cache.getJSON("vs_quest")),
-        new GlassLab.Quest("alpha1", this.game.cache.getJSON("alpha1")),
-        new GlassLab.Quest("alpha2", this.game.cache.getJSON("alpha2")),
-        new GlassLab.Quest("alpha3", this.game.cache.getJSON("alpha3")),
-        new GlassLab.Quest("alpha4", this.game.cache.getJSON("alpha4")),
-        new GlassLab.Quest("Alpha", this.game.cache.getJSON("alpha_quest"))
+        new GlassLab.Quest("day3", this.game.cache.getJSON("day3"))
     ];
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
@@ -73,6 +68,13 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
     }
 
     this.activeQuests.splice(questIndex, 1);
+};
+
+GlassLab.QuestManager.prototype.failChallenge = function() {
+    if (this.challengeIsBossLevel) {
+        this.GetCurrentQuest().Cancel(); // cancel the current challenge
+        GLOBAL.levelManager.RestartLevel(); // restart the whole day
+    } else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
 };
 
 GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)

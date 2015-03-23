@@ -102,5 +102,5 @@ GlassLab.SaveManager.prototype._doSave = function()
     this.saveRequested = false;
 
     document.cookie = JSON.stringify(this.dataBlob);
-    console.log("Saved. " + document.cookie);
+    console.log("Saved.");// + document.cookie);
 };

@@ -1,0 +1,278 @@
+{
+  "numDots": 3,
+  "unlockedItems": ["strawberry", "broccoli", "apple"],
+  "progression": [
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.05b.nd",
+     "challengeType": "pen",
+     "problemType": "ND",
+     "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 1,
+        "bottomDraggable":true,
+        "topDraggable":true,
+        "leftDraggable":true
+      }
+    },
+    {
+      "__type": "GlassLab.RandomSelectionGroup",
+      "possibilities": [
+        {
+          "__type": "GlassLab.DoChallengeAction",
+          "challengeId": "1.09.ns",
+          "challengeType": "order",
+          "problemType": "NS",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "baby_unifox",
+            "numFoodA": 52,
+            "description": "Dear Friend! I have 52 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
+            "reward": 200
+          }
+        },
+        {
+          "__type": "GlassLab.DoChallengeAction",
+          "challengeId": "1.08.nd",
+          "challengeType": "order",
+          "problemType": "ND",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "baby_unifox",
+            "numCreatures": 11,
+            "description": "Dear Friend! I have 11 BABY UNIFOXES. Please send me enough food for all of them!",
+            "reward": 200
+          }
+        },
+        {
+          "__type": "GlassLab.DoChallengeAction",
+          "challengeId": "1.07.ms",
+          "challengeType": "order",
+          "problemType": "MS",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "baby_unifox",
+            "numFoodA": 36,
+            "description": "Dear Friend! I have 36 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
+            "reward": 200
+          }
+        }
+      ]
+    },
+    {
+      "__type": "GlassLab.DoChallengeAction",
+      "challengeId": "1.06.ms",
+      "challengeType": "order",
+      "problemType": "MS",
+      "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "baby_rammus",
+          "numFoodA": 24,
+          "description": "Dear Friend! I have 24 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
+          "reward": 200
+        },
+      "boss": true
+    },
+    {
+    "__type": "GlassLab.DoBonusRoundAction",
+    "data": [
+        {
+          "creatureType": "baby_unifox",
+          "numCreatures": 6,
+          "numFood": 12,
+          "displayMode": "numbersOnly",
+          "problemType": "CS"
+        },
+        {
+          "creatureType": "baby_unifox",
+          "numCreatures": 6,
+          "numFood": 24,
+          "displayMode": "numbersOnly",
+          "problemType": "CE"
+        },
+        {
+          "creatureType": "baby_unifox",
+          "numCreatures": 6,
+          "numFood": 20,
+          "displayMode": "numbersOnly",
+          "problemType": "CD"
+        }
+      ]
+    }
+  ],
+  "reviewChallenges": [
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.05c.nd",
+     "challengeType": "pen",
+     "problemType": "ND",
+     "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 13,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true
+      }
+    },
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.05a.nd",
+     "challengeType": "pen",
+     "problemType": "ND",
+     "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 7,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true
+      }
+    },
+    {
+      "__type": "GlassLab.DoChallengeAction",
+      "challengeId": "1.04a.md",
+      "challengeType": "order",
+      "problemType": "MD",
+      "challengeData": {
+        "client": "Archibold Huxley III",
+        "creatureType": "baby_unifox",
+        "numCreatures": 9,
+        "description": "Dear Friend! I have 9 BABY UNIFOXES. Please send me enough food for all of them!",
+        "reward": 200
+      }
+    },
+    {
+      "__type": "GlassLab.DoChallengeAction",
+      "challengeId": "1.03a.md",
+      "challengeType": "order",
+      "problemType": "MD",
+      "challengeData": {
+        "client": "Archibold Huxley III",
+        "creatureType": "baby_rammus",
+        "numCreatures": 7,
+        "description": "Dear Friend! I have 7 BABY RAMS. Please send me enough food for all of them!",
+        "reward": 200
+      }
+    },
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.02c.md",
+     "challengeType": "pen",
+     "problemType": "MD",
+     "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 15,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true,
+        "maxHeight": 15
+      }
+    },
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.02b.md",
+     "challengeType": "pen",
+     "problemType": "MD",
+     "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 12,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true,
+        "maxHeight": 12
+      }
+    },
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.02a.md",
+     "challengeType": "pen",
+     "problemType": "MD",
+     "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 6,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true,
+        "maxHeight": 6
+      }
+    },
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.01c.md",
+     "challengeType": "pen",
+     "problemType": "MD",
+     "challengeData": {
+        "creatureType": "baby_rammus",
+        "numCreatures": 9,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true,
+        "maxHeight": 9
+      }
+    },
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.01b.md",
+     "challengeType": "pen",
+     "problemType": "MD",
+     "challengeData": {
+        "creatureType": "baby_rammus",
+        "numCreatures": 5,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true,
+        "maxHeight": 5
+      }
+    },
+    {
+     "__type": "GlassLab.DoChallengeAction",
+     "challengeId": "1.01a.md",
+     "challengeType": "pen",
+     "problemType": "MD",
+     "challengeData": {
+        "creatureType": "baby_rammus",
+        "numCreatures": 3,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "maxHeight": 3
+      }
+    }
+  ],
+  "funChallenges": [
+
+  ],
+  "backgroundOrders": [
+    {
+      "orderId": "bg1",
+      "problemType": "ND",
+      "orderData": {
+        "client": "Archibold Huxley III",
+        "creatureType": "baby_unifox",
+        "numFoodA": 48,
+        "description": "Dear Friend! I have 48 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
+        "reward": 200
+      }
+    },
+    {
+      "orderId": "1.04b.md",
+      "problemType": "MD",
+      "orderData": {
+        "client": "Archibold Huxley III",
+        "creatureType": "baby_unifox",
+        "numCreatures": 18,
+        "description": "Dear Friend! I have 18 BABY UNIFOXES. Please send me enough food for all of them!",
+        "reward": 200
+      }
+    },
+    {
+      "orderId": "1.03b.md",
+      "problemType": "MD",
+      "orderData": {
+        "client": "Archibold Huxley III",
+        "creatureType": "baby_rammus",
+        "numCreatures": 10,
+        "description": "Dear Friend! I have 10 BABY RAMS. Please send me enough food for all of them!",
+        "reward": 200
+      }
+    }
+  ]
+}

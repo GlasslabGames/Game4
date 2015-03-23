@@ -137,7 +137,7 @@ GlassLab.DayMeter.prototype._hideObjective = function() {
     this.objectiveLabelTweenOut.start();
 };
 
-GlassLab.DayMeter.prototype.AnimateSunToPositionIndex = function(index, animate)
+GlassLab.DayMeter.prototype.AnimateSunToPositionIndex = function(index)
 {
     var targetX = this.challengeDots[index].x;
 
@@ -150,7 +150,7 @@ GlassLab.DayMeter.prototype.AnimateSunToPositionIndex = function(index, animate)
     this.objectiveArrow.x = targetX;
 };
 
-GlassLab.DayMeter.prototype.SetSunToPositionIndex = function(index, animate)
+GlassLab.DayMeter.prototype.SetSunToPositionIndex = function(index)
 {
     this.sun.x = this.challengeDots[index].x;
     this.objectiveArrow.x = this.sun.x;
