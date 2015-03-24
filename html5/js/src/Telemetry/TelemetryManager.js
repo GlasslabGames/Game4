@@ -55,7 +55,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     GlassLabSDK.setOptions( { localLogging: !hasServer, dispatchQueueUpdateInterval: 500 } );
 
     // Turn on console logging
-    GlassLabSDK.displayLogs();
+    GlassLabSDK.hideLogs(); //displayLogs();
 
     if (GlassLabSDK.getOptions().localLogging)
     {

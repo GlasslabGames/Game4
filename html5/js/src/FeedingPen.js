@@ -626,12 +626,13 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     }
     else
     {
-        GlassLab.SignalManager.levelLost.dispatch();
+        //GlassLab.SignalManager.levelLost.dispatch();
     }
 
-    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
+    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win, numCreatures); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
 
-    this.onResolved.dispatch(win); // Currently nothing is listening to this signal. It's a red herring.
+    console.log("Pen resolved!");
+    this.onResolved.dispatch(result, numCreatures);
 };
 
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {

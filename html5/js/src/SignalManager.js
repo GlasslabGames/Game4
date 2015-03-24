@@ -47,6 +47,7 @@ GlassLab.SignalManager = {
     // Order Events
     ordersChanged: new Phaser.Signal(), // when an order is added or removed
     orderStarted: new Phaser.Signal(), // (order) => order that was started
+    orderResolved: new Phaser.Signal(), // (order, success) => order that was resolved
     orderCanceled: new Phaser.Signal(), // (order) => order that was started
     orderCompleted: new Phaser.Signal(), // (order) => order that was completed
     orderFailed: new Phaser.Signal(), // (order) => order that was failed
@@ -57,7 +58,7 @@ GlassLab.SignalManager = {
     questEnded: new Phaser.Signal(), // (Quest) => quest that ended
     dayReset: new Phaser.Signal(),
     challengeStarted: new Phaser.Signal(),
-    challengeSubmitted: new Phaser.Signal(),
+    challengeFinished: new Phaser.Signal(), // win/lose
 
     // Inventory Events
     moneyChanged: new Phaser.Signal(), // (float) => amount money changed - negative if deducted

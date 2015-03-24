@@ -26,7 +26,6 @@ GlassLab.MailManager = function(game)
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 
     GlassLab.SignalManager.orderStarted.add(this._onOrderStarted, this);
-    GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
 };
 
 GlassLab.MailManager.prototype.ShowMail = function(auto)
@@ -101,22 +100,18 @@ GlassLab.MailManager.prototype._onOrderCanceled = function(order) {
     GlassLab.SignalManager.ordersChanged.dispatch(order);
 };
 
-GlassLab.MailManager.prototype._onOrderCompleted = function(order)
+GlassLab.MailManager.prototype.completeOrder = function(order, success)
 {
     var orderIndex = this.availableOrders.indexOf(order);
-    if (orderIndex == -1)
-    {
-        console.warn("Order was completed that wasn't managed by MailManager.");
-    }
-    else
-    {
-        this.availableOrders.splice(orderIndex, 1);
-    }
+    if (orderIndex == -1) console.warn("Order was completed that wasn't managed by MailManager.");
+    else this.availableOrders.splice(orderIndex, 1);
 
-    this.rewards.push(order);
+    this.game.time.events.add(1000, function() {
+        this.rewards.push(order); // the reward popup will send OrderResolved when it's closed
+        GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
+    }, this);
 
     this.currentOrder = null;
-    GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
 };
 
 GlassLab.MailManager.prototype._onGameLoaded = function(blob)

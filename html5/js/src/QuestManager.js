@@ -127,17 +127,16 @@ GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
 };
 
 GlassLab.QuestManager.prototype.completeChallenge = function() {
-    if (GLOBAL.Journal.wantToShow) {
-        if (false) { // show the journal immediately
-            GLOBAL.Journal.Show(true);
-            GlassLab.SignalManager.journalClosed.addOnce(function() {
-                GlassLab.SignalManager.challengeComplete.dispatch();
-            }, this);
-        } else {
-            GLOBAL.UIManager.journalButton.toggleActive(true);
-            GlassLab.SignalManager.challengeComplete.dispatch();
-        }
+    GlassLab.SignalManager.challengeComplete.dispatch(); // if there's an action waiting for the challenge to be completed, do that
+};
+
+GlassLab.QuestManager.prototype.finishChallenge = function(win) {
+    GlassLab.SignalManager.challengeFinished.dispatch(win);
+    if (win) {
+        GLOBAL.audioManager.playSound("success");
+        GLOBAL.UIManager.winModal.visible = true;
     } else {
-        GlassLab.SignalManager.challengeComplete.dispatch();
+        GLOBAL.audioManager.playSound("fail");
+        GLOBAL.UIManager.loseModal.visible = true;
     }
 };

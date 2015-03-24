@@ -170,15 +170,7 @@ GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct)
     if (pen == this.pen)
     {
         this.data.fulfilled = correct;
-
-        if (correct)
-        {
-            GlassLab.SignalManager.orderCompleted.dispatch(this.data);
-        }
-        else
-        {
-            GlassLab.SignalManager.orderFailed.dispatch(this.data);
-        }
+        GLOBAL.mailManager.completeOrder(this.data, correct);
     }
 };
 
@@ -204,6 +196,8 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
 
     this._sendTelemetry("start_order");
     GlassLab.SignalManager.orderStarted.dispatch(this.data);
+
+    // hide other stuff in the world
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)

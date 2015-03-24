@@ -3,25 +3,32 @@
   "unlockedItems": ["strawberry", "broccoli", "apple"],
   "progression": [
     {
-     "__type": "GlassLab.DoChallengeAction",
+      "__type": "DoFeedingChallengeAction",
+      "challengeId": "1.05b.nd",
+      "problemType": "ND",
+      "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 2
+      }
+    },
+    {
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.05b.nd",
-     "challengeType": "pen",
      "problemType": "ND",
      "challengeData": {
         "creatureType": "baby_unifox",
-        "numCreatures": 1,
+        "numCreatures": 10,
         "bottomDraggable":true,
         "topDraggable":true,
         "leftDraggable":true
       }
     },
     {
-      "__type": "GlassLab.RandomSelectionGroup",
+      "__type": "RandomSelectionGroup",
       "possibilities": [
         {
-          "__type": "GlassLab.DoChallengeAction",
+          "__type": "DoOrderChallengeAction",
           "challengeId": "1.09.ns",
-          "challengeType": "order",
           "problemType": "NS",
           "challengeData": {
             "client": "Archibold Huxley III",
@@ -32,9 +39,8 @@
           }
         },
         {
-          "__type": "GlassLab.DoChallengeAction",
+          "__type": "DoOrderChallengeAction",
           "challengeId": "1.08.nd",
-          "challengeType": "order",
           "problemType": "ND",
           "challengeData": {
             "client": "Archibold Huxley III",
@@ -45,9 +51,8 @@
           }
         },
         {
-          "__type": "GlassLab.DoChallengeAction",
+          "__type": "DoOrderChallengeAction",
           "challengeId": "1.07.ms",
-          "challengeType": "order",
           "problemType": "MS",
           "challengeData": {
             "client": "Archibold Huxley III",
@@ -60,9 +65,8 @@
       ]
     },
     {
-      "__type": "GlassLab.DoChallengeAction",
+      "__type": "DoOrderChallengeAction",
       "challengeId": "1.06.ms",
-      "challengeType": "order",
       "problemType": "MS",
       "challengeData": {
           "client": "Archibold Huxley III",
@@ -74,7 +78,7 @@
       "boss": true
     },
     {
-    "__type": "GlassLab.DoBonusRoundAction",
+    "__type": "DoBonusRoundAction",
     "data": [
         {
           "creatureType": "baby_unifox",
@@ -102,9 +106,8 @@
   ],
   "reviewChallenges": [
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.05c.nd",
-     "challengeType": "pen",
      "problemType": "ND",
      "challengeData": {
         "creatureType": "baby_unifox",
@@ -115,9 +118,8 @@
       }
     },
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.05a.nd",
-     "challengeType": "pen",
      "problemType": "ND",
      "challengeData": {
         "creatureType": "baby_unifox",
@@ -128,9 +130,8 @@
       }
     },
     {
-      "__type": "GlassLab.DoChallengeAction",
+      "__type": "DoOrderChallengeAction",
       "challengeId": "1.04a.md",
-      "challengeType": "order",
       "problemType": "MD",
       "challengeData": {
         "client": "Archibold Huxley III",
@@ -141,9 +142,8 @@
       }
     },
     {
-      "__type": "GlassLab.DoChallengeAction",
+      "__type": "DoOrderChallengeAction",
       "challengeId": "1.03a.md",
-      "challengeType": "order",
       "problemType": "MD",
       "challengeData": {
         "client": "Archibold Huxley III",
@@ -154,9 +154,8 @@
       }
     },
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.02c.md",
-     "challengeType": "pen",
      "problemType": "MD",
      "challengeData": {
         "creatureType": "baby_unifox",
@@ -168,9 +167,8 @@
       }
     },
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.02b.md",
-     "challengeType": "pen",
      "problemType": "MD",
      "challengeData": {
         "creatureType": "baby_unifox",
@@ -182,9 +180,8 @@
       }
     },
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.02a.md",
-     "challengeType": "pen",
      "problemType": "MD",
      "challengeData": {
         "creatureType": "baby_unifox",
@@ -196,9 +193,8 @@
       }
     },
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.01c.md",
-     "challengeType": "pen",
      "problemType": "MD",
      "challengeData": {
         "creatureType": "baby_rammus",
@@ -210,9 +206,8 @@
       }
     },
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.01b.md",
-     "challengeType": "pen",
      "problemType": "MD",
      "challengeData": {
         "creatureType": "baby_rammus",
@@ -224,9 +219,8 @@
       }
     },
     {
-     "__type": "GlassLab.DoChallengeAction",
+     "__type": "DoPenChallengeAction",
      "challengeId": "1.01a.md",
-     "challengeType": "pen",
      "problemType": "MD",
      "challengeData": {
         "creatureType": "baby_rammus",

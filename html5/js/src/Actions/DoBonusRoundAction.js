@@ -24,6 +24,8 @@ GlassLab.DoBonusRoundAction.prototype.Do = function()
         GLOBAL.UIManager.bonusModal.visible = true; // this will start the sorting game once they press a button
     }
 
+    GLOBAL.questManager.UpdateObjective("Complete a bonus round!");
+
     this.completeListenerBinding = GlassLab.SignalManager.bonusGameComplete.addOnce(this._complete, this);
 };
 

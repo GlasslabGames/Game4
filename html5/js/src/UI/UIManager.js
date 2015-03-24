@@ -124,8 +124,7 @@ GlassLab.UIManager.prototype.hideArrow = function() {
 
 GlassLab.UIManager.prototype._onRetryPressed = function()
 {
-  this.winModal.visible = this.loseModal.visible = false;
-
+    this.winModal.visible = this.loseModal.visible = false;
     GLOBAL.questManager.failChallenge();
 };
 
@@ -139,11 +138,6 @@ GlassLab.UIManager.prototype._onBonusPressed = function()
 {
     this.bonusModal.visible = false;
     GLOBAL.sortingGame.start();
-};
-
-GlassLab.UIManager.prototype._createZoomButton = function()
-{
-
 };
 
 // General function to check if something was dropped onto a drag target that wants it
@@ -277,8 +271,16 @@ GlassLab.UIManager.prototype._onJournalButton = function() {
 GlassLab.UIManager.prototype._refreshMailButton = function() {
     var hasMail = GLOBAL.mailManager.availableOrders.length || GLOBAL.mailManager.rewards.length;
     this.mailButton.toggleFull(hasMail);
-    var active = hasMail && !GLOBAL.mailManager.currentOrder;
-    this.mailButton.toggleActive(active);
+    var active = GLOBAL.mailManager.rewards.length; // if we have a reward, then active should be true
+    if (!active && hasMail) { // else if we have a key order, then active should be true
+        for (var i = 0; i < GLOBAL.mailManager.availableOrders.length; i++) {
+            if (GLOBAL.mailManager.availableOrders[i].key) {
+                active = true;
+                break;
+            }
+        }
+    }
+    this.mailButton.toggleActive(active && !GLOBAL.mailManager.currentOrder);
 };
 
 GlassLab.UIManager.prototype._onMailButton = function() {

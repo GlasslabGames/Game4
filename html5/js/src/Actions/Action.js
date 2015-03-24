@@ -9,6 +9,7 @@ GlassLab.Action = function()
     this.completed = false;
 
     this.onComplete = new Phaser.Signal();
+    console.log("OnComplete added to",this);
 };
 
 /**
