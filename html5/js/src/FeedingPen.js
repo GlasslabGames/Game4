@@ -190,7 +190,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     }
     this.centerEdge.sprite.visible = false;
 
-    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize; // TODO: HACK FOR CENTER PLACEMENT
+    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
+    this.sprite.isoX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
 
     this.Resize();
 };
