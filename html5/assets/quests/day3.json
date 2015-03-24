@@ -3,15 +3,6 @@
   "unlockedItems": ["strawberry", "broccoli", "apple"],
   "progression": [
     {
-      "__type": "DoFeedingChallengeAction",
-      "challengeId": "1.05b.nd",
-      "problemType": "ND",
-      "challengeData": {
-        "creatureType": "baby_unifox",
-        "numCreatures": 2
-      }
-    },
-    {
      "__type": "DoPenChallengeAction",
      "challengeId": "1.05b.nd",
      "problemType": "ND",

@@ -171,6 +171,8 @@ GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct)
     {
         this.data.fulfilled = correct;
         GLOBAL.mailManager.completeOrder(this.data, correct);
+        this.game.time.events.add(0, function() { this.Hide(true); }, this); // hide the pen next frame
+        // TODO: Instead of just hiding the pen, we should be switching contexts
     }
 };
 

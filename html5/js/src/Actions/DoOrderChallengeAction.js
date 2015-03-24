@@ -33,6 +33,8 @@ GlassLab.DoOrderChallengeAction.prototype._onDestroy = function() {
 };
 
 GlassLab.DoOrderChallengeAction.prototype._onOrderResolved = function(order, success) {
+    if (!order.key) return; // it wasn't the order we were waiting for
+
     if (success) this.completeChallenge();
     else this.failChallenge();
 };
