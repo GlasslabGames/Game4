@@ -110,11 +110,13 @@ GlassLab.RewardPopup.prototype.Show = function(data)
 GlassLab.RewardPopup.prototype.Hide = function()
 {
     this.visible = false;
-    if (this.data && this.data.fulfilled) { // they closed it after successfully filling in order, so count it as a completed challenge
-        GLOBAL.questManager.completeChallenge();
+
+    if (this.data) {
+        // Since the reward popup shows the results of an order, closing it is the final step in resolving an order
+        GlassLab.SignalManager.orderResolved.dispatch(this.data, this.data.fulfilled);
     }
 
-    GlassLab.SignalManager.mailClosed.dispatch(); // eh, not sure we should be using this event :?
+    GlassLab.SignalManager.mailClosed.dispatch();
 };
 
 GlassLab.RewardPopup.prototype.finish = function() {

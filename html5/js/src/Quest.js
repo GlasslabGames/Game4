@@ -43,12 +43,12 @@ GlassLab.Quest.prototype.Start = function()
         // Allow skipping ahead via url parameters
         var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
         if ((index && !isNaN(index)) || index === 0) {
-            this.index.progression = index;
+            this.index.progression = index-1; // +1 so that "1" means the first challenge
         } else {
             for (var key in this.index) {
                 var index = getParameterByName(key + "Challenge"); // funChallenge, reviewChallenge, progressionChallenge
                 if ((index && !isNaN(index)) || index === 0) {
-                    this.index[key] = index;
+                    this.index[key] = index-1; // +1 so that "1" means the first challenge
                     if (key == "fun") this.funCountdown = 0; // time for a fun challenge
                     else if (key == "review") this.inReview = true;
                     break;
@@ -86,10 +86,11 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
         this.currentChallengeCategory = "fun";
     } else if (this.inReview && this._hasNextChallenge("review")) {
         this.currentChallengeCategory = "review";
-    } else if (this._hasNextChallenge("progression")) { // even if we were supposed to be in review, fall back to the progression if we're missing review problems
+    } else if (this._hasNextChallenge("progression")) { // even if we were supposed to be in review, fall back to the progression if we don't have enough review problems
         this.currentChallengeCategory = "progression";
         GLOBAL.dayManager.AdvanceTo(this.index.progression);
     } else { // We don't have another challenge! The quest is over!
+        console.log("End the quest!");
         this._complete();
         return;
     }
@@ -103,6 +104,8 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     this.challenge.onComplete.remove(this._onChallengeComplete, this); // in case we had previously added this listener, remove it to make sure we have just one copy
     this.challenge.onComplete.addOnce(this._onChallengeComplete, this);
     this.challenge.Do();
+
+    this._addBackgroundOrders(); // note that we should have already added the challenge order when we called this.challenge.do()
 };
 
 GlassLab.Quest.prototype.restartChallenge = function() {
@@ -141,6 +144,18 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
 
 GlassLab.Quest.prototype._resetFunCountdown = function() {
     this.funCountdown = Math.floor(Math.random() * 2) + 2; // how long until the next fun challenge, 2-3
+};
+
+GlassLab.Quest.prototype._addBackgroundOrders = function() {
+    if (GLOBAL.mailManager.availableOrders.length >= 3) return;
+
+    for (var i = 0; i < this.backgroundOrders.length; i++) {
+        var order = this.backgroundOrders[i].orderData; // TODO: store additional info for telemetry purposes
+        if (!order.fulfilled) { // only add orders that the player hasn't done yet
+            GLOBAL.mailManager.AddOrders(order);
+            if (GLOBAL.mailManager.availableOrders.length >= 3) break;
+        }
+    }
 };
 
 Object.defineProperty(GlassLab.Quest.prototype, 'isStarted', {

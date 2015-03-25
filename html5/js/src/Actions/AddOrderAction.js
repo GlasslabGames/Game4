@@ -17,6 +17,7 @@ GlassLab.AddOrderAction.prototype.constructor = GlassLab.AddOrderAction;
 
 GlassLab.AddOrderAction.prototype.Do = function()
 {
+    this.data.key = true;
     GLOBAL.mailManager.AddOrders(this.data);
     this._complete();
 };

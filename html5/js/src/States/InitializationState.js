@@ -179,6 +179,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('clickSound', 'assets/audio/button_click.mp3');
 
     // Quests
+    game.load.json('day1', 'assets/quests/day1.json');
+    game.load.json('day2', 'assets/quests/day2.json');
     game.load.json('day3', 'assets/quests/day3.json');
 
     game.plugins.add(Phaser.Plugin.Isometric);
@@ -210,7 +212,6 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.UILayer = game.add.group();
     GLOBAL.WorldLayer = game.add.group();
-    GLOBAL.WorldLayer.scale.setTo(0.5, 0.5);
 
     GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
 

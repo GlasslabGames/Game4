@@ -16,6 +16,8 @@ GlassLab.QuestManager = function(game)
     this.activeQuests = [];
 
     this.quests = [
+        new GlassLab.Quest("day1", this.game.cache.getJSON("day1")),
+        new GlassLab.Quest("day2", this.game.cache.getJSON("day2")),
         new GlassLab.Quest("day3", this.game.cache.getJSON("day3"))
     ];
 
@@ -68,6 +70,9 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
     }
 
     this.activeQuests.splice(questIndex, 1);
+    if (!this.activeQuests.length) { // no more quests, so go to the next level
+        GLOBAL.levelManager.LoadNextLevel();
+    }
 };
 
 GlassLab.QuestManager.prototype.failChallenge = function() {
@@ -127,17 +132,5 @@ GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
 };
 
 GlassLab.QuestManager.prototype.completeChallenge = function() {
-    if (GLOBAL.Journal.wantToShow) {
-        if (false) { // show the journal immediately
-            GLOBAL.Journal.Show(true);
-            GlassLab.SignalManager.journalClosed.addOnce(function() {
-                GlassLab.SignalManager.challengeComplete.dispatch();
-            }, this);
-        } else {
-            GLOBAL.UIManager.journalButton.toggleActive(true);
-            GlassLab.SignalManager.challengeComplete.dispatch();
-        }
-    } else {
-        GlassLab.SignalManager.challengeComplete.dispatch();
-    }
+    GlassLab.SignalManager.challengeComplete.dispatch(); // if there's an action waiting for the challenge to be completed, do that
 };

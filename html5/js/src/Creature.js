@@ -397,15 +397,29 @@ GlassLab.Creature.prototype._move = function() {
     }
 };
 
-GlassLab.Creature.prototype.FinishEating = function (result) {
-    this.hungerBar.show(false);
-    this.Emote(result == "satisfied");
-
-    if (result == "satisfied") {
-        this.pen.SetCreatureFinishedEating(true);
+GlassLab.Creature.prototype.tryWalkToNextFood = function (food) {
+    var foodInfo = this.targetFood.shift();
+    if (!foodInfo) {
+        if (this.getIsSatisfied()) this.FinishEating("satisfied");
+        else this.FinishEating("hungry");
+    } else if (!this.desiredAmountsOfFood[foodInfo.food.type]) { // we don't want this food
+        this.FinishEating("dislike", foodInfo.food.type);
     } else {
-        this.pen.FinishFeeding(result);
+        this.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this, foodInfo));
     }
+};
+
+GlassLab.Creature.prototype.FinishEating = function (result, food) {
+    this.hungerBar.show(false);
+    if (result == "dislike") {
+        this.thoughtBubble.show("redX", food, 2000);
+    } else if (result == "satisfied") {
+        this.Emote(true);
+    } else if (result == "hungry") {
+        this.thoughtBubble.show(null, this.getDesiredFood());
+    }
+    // else they would have started vomiting already
+    this.pen.SetCreatureFinishedEating(result);
 };
 
 GlassLab.Creature.prototype.resetFoodEaten = function () {
@@ -418,6 +432,13 @@ GlassLab.Creature.prototype.getIsSatisfied = function () {
         if (this.foodEaten[key] + 0.01 < this.desiredAmountsOfFood[key]) return false; // add a little padding
     }
     return true;
+};
+
+GlassLab.Creature.prototype.getDesiredFood = function () {
+    for (var key in this.foodEaten) {
+        if (this.foodEaten[key] + 0.01 < this.desiredAmountsOfFood[key]) return key;
+    }
+    return null;
 };
 
 GlassLab.Creature.prototype.getIsSick = function () {

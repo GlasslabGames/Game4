@@ -33,17 +33,28 @@ GlassLab.ThoughtBubble = function(game) {
     this.bubbleContents.addChild(this.symbolSprite);
 
     this.hide();
+
+    this.events.onDestroy.addOnce(this._onDestroy, this);
 };
 
 GlassLab.ThoughtBubble.prototype = Object.create(Phaser.Sprite.prototype);
 GlassLab.ThoughtBubble.prototype.constructor = GlassLab.ThoughtBubble;
 
+GlassLab.ThoughtBubble.prototype._onDestroy = function() {
+    if (this.timer) this.game.time.events.remove(this.timer);
+};
+
 GlassLab.ThoughtBubble.prototype.show = function(symbol, food, time, callback, callbackContext) {
     this.visible = true;
+
+    if (typeof time == 'undefined') time = 1000; // default time
 
     this.symbolSprite.visible = symbol;
     this.foodSprite.visible = food;
     this.foodSprite.alpha = symbol? 0.75 : 1; // if the food is under a symbol, it gets lighter
+
+    // food might be either a spritename or a food type, so check for food type. (This might be redundant if the food type == the spriteName, but it won't hurt)
+    if (food in GlassLab.FoodTypes) food = GlassLab.FoodTypes[food].spriteName;
 
     if (symbol && symbol != this.symbolSprite.key) this.symbolSprite.loadTexture(symbol);
     if (food && food != this.symbolSprite.key) this.foodSprite.loadTexture(food);
@@ -63,6 +74,8 @@ GlassLab.ThoughtBubble.prototype.show = function(symbol, food, time, callback, c
 };
 
 GlassLab.ThoughtBubble.prototype.hide = function() {
+    if (!this.game) return; // already removed from the game
+
     if (this.timer) {
         this.game.time.events.remove(this.timer);
         this.timer = null;

@@ -16,6 +16,8 @@ GlassLab.LevelManager = function(game)
 
     this.levels = [];
 
+    this._addLevelData({ quest: "day1" });
+    this._addLevelData({ quest: "day2" });
     this._addLevelData({ quest: "day3" });
 
     // TESTING LEVELS:
@@ -193,10 +195,9 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
 
     GLOBAL.saveManager.SaveData("currentLevel", this.currentLevel);
 
-    // TODO: HACK
     var level = new GlassLab.Level();
     level.data = levelData;
-    GlassLab.SignalManager.levelLoaded.dispatch(level);
+    GlassLab.SignalManager.levelStarted.dispatch(level);
 };
 
 GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
@@ -225,27 +226,6 @@ GlassLab.LevelManager.prototype.RestartLevel = function()
 GlassLab.LevelManager.prototype.GetCurrentLevel = function()
 {
     return this.levels[this.currentLevel];
-};
-
-GlassLab.LevelManager.prototype.CompleteCurrentLevel = function()
-{
-    var level = this.GetCurrentLevel();
-    var type = typeof level.data.quest;
-    if ((typeof level.data.quest) != 'undefined')
-    {
-        return false;
-    }
-
-    this.GetCurrentLevel().isCompleted = true;
-
-    GlassLab.SignalManager.levelWon.dispatch();
-};
-
-GlassLab.LevelManager.prototype.LoadNextBonusGame = function() {
-    if (this.bonusIndex < this.bonusData.length - 1) this.bonusIndex++; // else stay on the last one
-    var data = this.bonusData[this.bonusIndex];
-    console.log(data);
-    GLOBAL.sortingGame.start(data);
 };
 
 

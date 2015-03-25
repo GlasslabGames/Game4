@@ -11,7 +11,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.creatureSpots = []; // 2d array of creatures, on per spot in the pen
     this.feeding = false;
 
-    this.creatureType = creatureType; // note that this is the target creature type, not necessarily the current creature type
+    this.creatureType = creatureType; // note that this is the target creature type (used for telemetry etc), not necessarily the current creature type
     this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
 
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
@@ -148,7 +148,7 @@ GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5;
 
 // Resizes the pen to contain the specified number of creatures and food
 // If condenseToMultipleRows is true, it will add creatures in multiple rows where appropriate.
-/* FIXME: If we want to condenseToMultipleRows (currently we do not), fix how the carrots are added
+/* FIXME: If we want to condenseToMultipleRows (currently we do not), fix how the food is added
  so that cases like 7:14 and 4:5 both work. Currently we add food by column first, so that 4:5 (which might happen,
  but won't be correct) looks better. If we allow 7 creatures to be split into 2 cols, we have to make sure that
  7:14 still works since it's actually a (possible) correct solution.
@@ -168,7 +168,7 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
 
     if (!condenseToMultipleRows) {
-        this.widths[0] = 1;
+        this.widths[0] = 1; // there's always one row of creatures
         this.height = numCreatures;
     } else if (numCreatures == 9 && GlassLab.FeedingPen.MAX_PEN_HEIGHT < 9) {
         // I'm adding this one special case because 3x3 is a lot better than two columns of 4 and 5.
@@ -190,7 +190,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     }
     this.centerEdge.sprite.visible = false;
 
-    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize; // TODO: HACK FOR CENTER PLACEMENT
+    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
+    this.sprite.isoX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
 
     this.Resize();
 };
@@ -230,16 +231,15 @@ GlassLab.FeedingPen.prototype._onUpdate = function() {
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
-    //this.RefreshCreatures();
     this._refreshFeedButton(true);
     if (!this.autoFill && !this.canFeed) {
         console.error("Tried to feed creatures but ran into discrepancy with number of creatures. Try again.");
         return;
     }
 
-    this.unfedCreatures = this.unsatisfiedCreatures = this.getNumCreatures();
+    this.unfedCreatures = this.getNumCreatures();
+    this.result = "satisfied"; // this is the default result unless something worse happens
     this.feeding = true;
-    this.button.visible = false;
     this.SetDraggableOnly(); // make all edges undraggable
     for (var i = 0; i < this.rightEdges.length - 1; i++) {
         this.rightEdges[i].sprite.visible = false; // hide the middle fences
@@ -584,12 +584,11 @@ GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
     }
 };
 
-GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(satisfied) {
+GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(result) {
     this.unfedCreatures --;
-    if (satisfied) this.unsatisfiedCreatures --;
+    if (result != "satisfied") this.result = result; // even if one creature is satisfied, don't let it overwrite the result of other creatures
     if (this.unfedCreatures <= 0) {
-        var success = this.unsatisfiedCreatures <= 0;
-        this.FinishFeeding("satisfied");
+        this.FinishFeeding(result);
     }
 };
 
@@ -598,6 +597,7 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     if (this.finished) return;
     this.finished = true;
 
+    // this is used for telemetry, but the actual check is in DoPenChallengeAction
     var numCreatures = this.height * this.widths[0];
     var win = (result == "satisfied" && (!this.targetNumCreatures || numCreatures >= this.targetNumCreatures));
 
@@ -618,19 +618,11 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     });
 
 
-    if (win)
-    {
-        GLOBAL.creatureManager.LogNumCreaturesFed(this._getCurrentCreatureType(), this.creatures.length);
-        // If this creature is new, Journal.wantToShow will be set to true and the journal will open later
-    }
-    else
-    {
-        GlassLab.SignalManager.levelLost.dispatch();
-    }
+    if (result == "satisfied") GLOBAL.creatureManager.LogNumCreaturesFed(this._getCurrentCreatureType(), this.creatures.length);
 
-    GlassLab.SignalManager.feedingPenResolved.dispatch(this, win); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
+    GlassLab.SignalManager.feedingPenResolved.dispatch(this, (result == "satisfied"), numCreatures); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
 
-    this.onResolved.dispatch(win); // Currently nothing is listening to this signal. It's a red herring.
+    this.onResolved.dispatch(result, this._getCurrentCreatureType(), numCreatures); // used in DoPenChallengeAction
 };
 
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {

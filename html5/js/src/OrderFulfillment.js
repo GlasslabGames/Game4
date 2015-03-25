@@ -118,10 +118,12 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
 };
 
 GlassLab.OrderFulfillment.prototype._focusCamera = function() {
-    // Center the pen at the top of the screen, and zoom out if required
-    this.game.camera.x = -this.game.camera.width * 0.7;
-    this.game.camera.y = -this.game.camera.height * 0.2;
-    // TODO: zoom appropriately
+
+    // The pen is already set to be centered, so we can center the camera (with some offset for the UI)
+    this.game.camera.x = -this.game.camera.width * 0.5 - 75;
+    this.game.camera.y = -this.game.camera.height * 0.5 + 100;
+    var maxDimension = Math.max(this.pen.getFullWidth(), this.pen.height);
+    GLOBAL.UIManager.zoomTo(2.5 / maxDimension);
 };
 
 GlassLab.OrderFulfillment.prototype._getResponse = function(flashErrorGraphics) {
@@ -168,15 +170,9 @@ GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct)
     if (pen == this.pen)
     {
         this.data.fulfilled = correct;
-
-        if (correct)
-        {
-            GlassLab.SignalManager.orderCompleted.dispatch(this.data);
-        }
-        else
-        {
-            GlassLab.SignalManager.orderFailed.dispatch(this.data);
-        }
+        GLOBAL.mailManager.completeOrder(this.data, correct);
+        this.game.time.events.add(1000, function() { this.Hide(true); }, this); // hide the pen after a short delay
+        // TODO: Instead of just hiding the pen, we should be switching contexts
     }
 };
 
@@ -202,6 +198,8 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
 
     this._sendTelemetry("start_order");
     GlassLab.SignalManager.orderStarted.dispatch(this.data);
+
+    // hide other stuff in the world
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)

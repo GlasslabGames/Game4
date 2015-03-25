@@ -57,9 +57,12 @@ GlassLab.ActionGroup.prototype.Redo = function() {
 
 GlassLab.ActionGroup.prototype._onDestroy = function()
 {
-    for (var i=this._deserializedActions.length-1; i >= 0; i--)
-    {
-        this._deserializedActions[i].Destroy();
+    if (this._deserializedActions) {
+        for (var i=this._deserializedActions.length-1; i >= 0; i--)
+        {
+            this._deserializedActions[i].Destroy();
+
+        }
     }
 
     this._deserializedActions = null;
