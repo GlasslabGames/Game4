@@ -46,6 +46,8 @@ GlassLab.SignalManager = {
 
     // Order Events
     ordersChanged: new Phaser.Signal(), // when an order is added or removed
+    rewardAdded: new Phaser.Signal(), // when the reward message is added (currently used in Day2 tutorial)
+
     orderStarted: new Phaser.Signal(), // (order) => order that was started
     orderResolved: new Phaser.Signal(), // (order, success) => order that was resolved
     orderCanceled: new Phaser.Signal(), // (order) => order that was started

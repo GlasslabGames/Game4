@@ -43,12 +43,12 @@ GlassLab.Quest.prototype.Start = function()
         // Allow skipping ahead via url parameters
         var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
         if ((index && !isNaN(index)) || index === 0) {
-            this.index.progression = index;
+            this.index.progression = index-1; // +1 so that "1" means the first challenge
         } else {
             for (var key in this.index) {
                 var index = getParameterByName(key + "Challenge"); // funChallenge, reviewChallenge, progressionChallenge
                 if ((index && !isNaN(index)) || index === 0) {
-                    this.index[key] = index;
+                    this.index[key] = index-1; // +1 so that "1" means the first challenge
                     if (key == "fun") this.funCountdown = 0; // time for a fun challenge
                     else if (key == "review") this.inReview = true;
                     break;

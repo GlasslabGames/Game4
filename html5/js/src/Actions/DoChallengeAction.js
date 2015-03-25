@@ -12,6 +12,7 @@ GlassLab.DoChallengeAction = function(game)
     this.problemType = "";
     this.challengeType = "";
     this.objective = "";
+    this.serializedTutorial = null;
     this.boss = false;
     this.challengeData = {};
 };
@@ -30,11 +31,17 @@ GlassLab.DoChallengeAction.prototype.Do = function()
     GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.problemType, this.challengeType, this.boss);
 
     GLOBAL.questManager.UpdateObjective(this.objective);
+
+    this.tutorial = null;
+    if (this.serializedTutorial) {
+        this.tutorial = GlassLab.Deserializer.deserializeObj(this.serializedTutorial);
+        this.tutorial.Do();
+    }
 };
 
 GlassLab.DoChallengeAction.prototype.completeChallenge = function()
 {
-    console.log("complete challenge",this);
+    if (this.tutorial) this._cancelTutorial();
     GLOBAL.levelManager._destroyCurrentLevel();
     this._complete();
 };
@@ -42,5 +49,16 @@ GlassLab.DoChallengeAction.prototype.completeChallenge = function()
 
 GlassLab.DoChallengeAction.prototype.failChallenge = function()
 {
+    if (this.tutorial) this._cancelTutorial();
     GLOBAL.questManager.failChallenge();
+};
+
+GlassLab.DoChallengeAction.prototype._onDestroy = function() {
+    if (this.tutorial) this._cancelTutorial();
+};
+
+GlassLab.DoChallengeAction.prototype._cancelTutorial = function() {
+    GLOBAL.UIManager.hideArrow();
+    GLOBAL.assistant.hide();
+    this.tutorial.Destroy();
 };

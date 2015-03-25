@@ -51,11 +51,13 @@ GlassLab.Assistant.prototype.show = function(text, showButton) {
     this.showButtons(false);
     this.advanceTutorialButton.visible = showButton;
     this._setText(text);
+    this.inTutorial = true;
 };
 
 GlassLab.Assistant.prototype.hide = function() {
     if (!this.order) this.sprite.visible = false; // hide ourselves UNLESS we already started an order
     this.advanceTutorialButton.visible = false;
+    this.inTutorial = false;
 };
 
 // For use when completing an order
@@ -67,7 +69,9 @@ GlassLab.Assistant.prototype.startOrder = function(order) {
 };
 
 GlassLab.Assistant.prototype.endOrder = function(order) {
-    this.sprite.visible = false;
+    if (!this.inTutorial) { // this prevents an issue where the tutorial dialogue was closed when the order ended
+        this.sprite.visible = false;
+    }
     this.order = null;
 };
 

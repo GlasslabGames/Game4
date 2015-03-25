@@ -110,6 +110,7 @@ GlassLab.MailManager.prototype.completeOrder = function(order, success)
 
     this.rewards.push(order); // the reward popup will send OrderResolved when it's closed
     GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
+    GlassLab.SignalManager.rewardAdded.dispatch(order); // dispatch this so that the alert shows up on the mail
 };
 
 GlassLab.MailManager.prototype._onGameLoaded = function(blob)
