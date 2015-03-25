@@ -33,22 +33,28 @@ GlassLab.DoPenChallengeAction.prototype._onDestroy = function() {
     if (this.modal) this.modal.destroy();
 };
 
-GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatureCount) {
+GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatureType, creatureCount) {
     this.result = result;
-    this.success = result == "satisfied" && creatureCount >= this.challengeData.numCreatures;
-    GLOBAL.game.time.events.add(1000, this._showResult, this);
+    if (creatureType != this.challengeData.creatureType) this.result = "wrongCreatureType";
+    else if (creatureCount < this.challengeData.numCreatures) this.result = "wrongCreatureNumber";
+
+    GLOBAL.game.time.events.add(2000, this._showResult, this);
 };
 
 GlassLab.DoPenChallengeAction.prototype._showResult = function() {
-    if (this.success) {
+    if (this.result == "satisfied") {
         var nextButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.completeChallenge, this, 150, 60, 0xffffff, "Continue");
         this.modal = new GlassLab.UIModal(GLOBAL.game, "Good job! You did it!", nextButton);
     } else {
         var retryButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.failChallenge, this, 150, 60, 0xffffff, "Retry");
         var text = "Oops, ";
-        if (this.result == "hungry") text += "your creatures are still hungry.";
+        if (this.result == "wrongCreatureType") text += "that wasn't the right kind of creature.";
+        else if (this.result == "wrongCreatureNumber") text += "some creatures were left out of the pen.";
+        else if (this.result == "dislike") text += "that wasn't the right kind of food.";
+        else if (this.result == "hungry") text += "your creatures are still hungry.";
         else if (this.result == "sick") text += "your creatures ate too much!";
-        else if (this.result == "satisfied") text += "some creatures were left out of the pen!";
+        else text += "that wasn't right."; // fallback
+
         this.modal = new GlassLab.UIModal(GLOBAL.game, "", retryButton);
         this.modal.setText(text + " Try again?", true); // wrap text
     }

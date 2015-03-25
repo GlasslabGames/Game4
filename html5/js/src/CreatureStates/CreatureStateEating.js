@@ -68,18 +68,8 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
     // Choose which state to go to based on the situation...
     if (this.creature.getIsSick()) {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
-    } else if (this.food.pen) { // continue to the next part of the pen
-        var foodInfo = this.creature.targetFood.shift(); //this.creature.pen.GetNextFoodInCreatureRow(this.creature);
-        if (foodInfo && foodInfo.food && this.creature.desiredAmountsOfFood[foodInfo.food.type]) {
-            this.creature.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this.creature, foodInfo));
-        } else { // there's no more food
-            // end the level hungry or satisfied
-            this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature, true));
-            if (this.creature.getIsSatisfied()) this.creature.FinishEating("satisfied");
-            else {
-                this.creature.FinishEating("hungry");
-            }
-        }
+    } else if (this.creature.pen) { // continue to the next part of the pen
+        this.creature.tryWalkToNextFood();
     } else { // eating outside of pen, so just continue to the next target or go to idle
         if (this.creature.getIsSatisfied())
         {
