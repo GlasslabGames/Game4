@@ -25,7 +25,7 @@ GlassLab.DayManager = function(game)
     this.dayTextBg.addChild(this.dayText);
     */
 
-    GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
+    GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 

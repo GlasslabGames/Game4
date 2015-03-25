@@ -21,16 +21,16 @@ GlassLab.TelemetryManager = function()
 
     //GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
 
-    // FIXME: These may not be that useful. A level is currently connected to a day but we care more about challenges
-    GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
-    GlassLab.SignalManager.levelLost.add(this._onLevelLost, this);
+    // FIXME: These events are all messed up. We need to revise the telemetry system.
+    GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
+    //GlassLab.SignalManager.levelLost.add(this._onLevelLost, this);
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
     GlassLab.SignalManager.questEnded.add(this._onQuestEnded, this);
 
     GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
     GlassLab.SignalManager.penResized.add(this._onFeedingPenResized, this);
-    GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
+    //GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
 };

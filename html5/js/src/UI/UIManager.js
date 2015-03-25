@@ -24,21 +24,11 @@ GlassLab.UIManager = function(game)
     this.centerAnchor.addChild(this.loseModal);
     this.loseModal.visible = false;
 
-    GlassLab.SignalManager.levelLost.add(function() {
-        GLOBAL.audioManager.playSound("fail");
-      this.visible = true;
-    }, this.loseModal);
-
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
     this.bonusModal = new GlassLab.UIModal(this.game, "Great job! Now it's time for\nBONUS GAME!", nextButton);
     this.centerAnchor.addChild(this.bonusModal);
     this.bonusModal.visible = false;
-
-    // The win modal used to pop up, but we're replacing it with the bonus modal instead
-    GlassLab.SignalManager.levelWon.add(function(){
-        this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
-    }, this.bonusModal);
 
     //game.input.onDown.add(this._globalDown, this); // Global input down handler
     game.input.onUp.add(this._onGlobalUp, this); // Global input down handler

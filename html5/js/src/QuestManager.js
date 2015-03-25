@@ -134,14 +134,3 @@ GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
 GlassLab.QuestManager.prototype.completeChallenge = function() {
     GlassLab.SignalManager.challengeComplete.dispatch(); // if there's an action waiting for the challenge to be completed, do that
 };
-
-GlassLab.QuestManager.prototype.finishChallenge = function(win) {
-    GlassLab.SignalManager.challengeFinished.dispatch(win);
-    if (win) {
-        GLOBAL.audioManager.playSound("success");
-        GLOBAL.UIManager.winModal.visible = true;
-    } else {
-        GLOBAL.audioManager.playSound("fail");
-        GLOBAL.UIManager.loseModal.visible = true;
-    }
-};

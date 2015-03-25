@@ -23,16 +23,16 @@ GlassLab.SignalManager = {
     uiFocusChanged: new Phaser.Signal(),
 
     // Tutorial
-    tutorialAdvanced: new Phaser.Signal(),
+    tutorialAdvanced: new Phaser.Signal(), // used to advance to the next action in the tutorial
 
-    // Level Events
-    levelLoaded: new Phaser.Signal(),
-    levelWon: new Phaser.Signal(),
-    levelLost: new Phaser.Signal(),
+    // Level/challenge/quest Events
+    levelStarted: new Phaser.Signal(),
     bonusGameComplete: new Phaser.Signal(),
-
     challengeStarted: new Phaser.Signal(),
     challengeComplete: new Phaser.Signal(),
+    objectiveUpdated: new Phaser.Signal(), // (string) => new objective
+    questStarted: new Phaser.Signal(), // (Quest) => quest that was started
+    questEnded: new Phaser.Signal(), // (Quest) => quest that ended
 
     // Creature Events
     creatureTargetsChanged: new Phaser.Signal(),
@@ -47,20 +47,8 @@ GlassLab.SignalManager = {
     // Order Events
     ordersChanged: new Phaser.Signal(), // when an order is added or removed
     rewardAdded: new Phaser.Signal(), // when the reward message is added (currently used in Day2 tutorial)
-
     orderStarted: new Phaser.Signal(), // (order) => order that was started
-    orderResolved: new Phaser.Signal(), // (order, success) => order that was resolved
-    orderCanceled: new Phaser.Signal(), // (order) => order that was started
-    orderCompleted: new Phaser.Signal(), // (order) => order that was completed
-    orderFailed: new Phaser.Signal(), // (order) => order that was failed
-
-    // Quest Events
-    objectiveUpdated: new Phaser.Signal(), // (string) => new objective
-    questStarted: new Phaser.Signal(), // (Quest) => quest that was started
-    questEnded: new Phaser.Signal(), // (Quest) => quest that ended
-    dayReset: new Phaser.Signal(),
-    challengeStarted: new Phaser.Signal(),
-    challengeFinished: new Phaser.Signal(), // win/lose
+    orderResolved: new Phaser.Signal(), // (order, success) => after the order finishes and the player closes the reward popup
 
     // Inventory Events
     moneyChanged: new Phaser.Signal(), // (float) => amount money changed - negative if deducted
