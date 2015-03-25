@@ -67,12 +67,16 @@ GlassLab.Creature = function (game, type, startInPen) {
         animSprite.anchor.setTo(0.5, 0.8);
         animSprite.animations.add('anim'); // this animation uses the whole spritesheet
         this.sprite.addChild(animSprite);
-        animSprite.visible = false;
+
+        if (animNames[i] != "idle")
+        {
+            animSprite.alpha = 0.01;
+        }
+
         animSprite.tint = info.spriteTint || 0xffffff; // temporary way to distinguish creatures
         this.animSprites[animNames[i]] = animSprite;
     }
 
-    this.animSprites.idle.visible = true;
     this.spriteHeight = this.animSprites.idle.height; // for future reference
 
     this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * 4;
@@ -168,10 +172,10 @@ GlassLab.Creature.prototype.PlayAnim = function (anim, loop, framerate) { // ani
     for (var animName in this.animSprites) {
         var animation = this.animSprites[animName];
         if (animName == anim) {
-            animation.visible = true;
+            animation.alpha = 1;
             playedAnim = animation.animations.play('anim', framerate, loop);
         } else {
-            animation.visible = false;
+            animation.alpha = 0;
             animation.animations.stop();
         }
     }
