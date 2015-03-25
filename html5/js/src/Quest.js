@@ -86,10 +86,11 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
         this.currentChallengeCategory = "fun";
     } else if (this.inReview && this._hasNextChallenge("review")) {
         this.currentChallengeCategory = "review";
-    } else if (this._hasNextChallenge("progression")) { // even if we were supposed to be in review, fall back to the progression if we're missing review problems
+    } else if (this._hasNextChallenge("progression")) { // even if we were supposed to be in review, fall back to the progression if we don't have enough review problems
         this.currentChallengeCategory = "progression";
         GLOBAL.dayManager.AdvanceTo(this.index.progression);
     } else { // We don't have another challenge! The quest is over!
+        console.log("End the quest!");
         this._complete();
         return;
     }

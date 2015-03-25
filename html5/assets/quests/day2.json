@@ -1,0 +1,281 @@
+{
+  "unlockedItems": ["broccoli", "apple"],
+  "progression": [
+    {
+      "__type": "ActionGroup",
+      "serializedActions": [
+        {
+          "__type": "StartChallengeAction",
+          "id": "t2.01",
+          "problemType": "MD",
+          "challengeType": "pen",
+          "objective": "Feed 3 baby rams."
+        },
+        {
+          "__type": "CreatePenAction",
+          "penData": {
+            "type": "baby_rammus",
+            "bottomDraggable": true,
+            "topDraggable": true,
+            "targetNumCreatures": 3,
+            "maxHeight": 3
+          }
+        },
+        {
+          "__type": "CreateCreaturesAction",
+          "data": {"baby_rammus": 3}
+        },
+        {
+          "__type": "ShowAssistantDialogueAction",
+          "text": "To *feed many rams* at once, *drag the sides* of this pen to make it bigger."
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "penResized"
+            }
+          ]
+        },
+        {
+          "__type": "ConditionalAction",
+          "serializedCondition": {
+            "__type": "GlobalVariableGreaterThanCondition",
+            "variableName": "GLOBAL.penManager.pens[0].foodTypes.length",
+            "number": 0
+          },
+          "serializedFalseAction": {
+            "__type": "ActionGroup",
+            "serializedActions": [
+              {
+                "__type": "ShowAssistantDialogueAction",
+                "text": "Great! Now open your *inventory* and drag *broccoli* into the pen!"
+              },
+              {
+                "__type": "AnimateButtonAction",
+                "button": "itemsButton"
+              },
+              {
+                "__type": "WaitForCondition",
+                "conditions": [
+                  {
+                    "__type": "SignalCondition",
+                    "signalName": "penFoodTypeSet"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "__type": "HideAssistantDialogueAction"
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "GlobalVariableGreaterThanCondition",
+              "variableName": "GLOBAL.creatureManager.numCreaturesInPen",
+              "number": 2
+            }
+          ]
+        },
+        {
+          "__type": "ConditionalAction",
+          "serializedCondition": {
+            "__type": "GlobalVariableGreaterThanCondition",
+            "variableName": "GLOBAL.penManager.pens[0].feeding",
+            "number": 0
+          },
+          "serializedFalseAction": {
+            "__type": "ActionGroup",
+            "serializedActions": [
+              {
+                "__type": "ShowAssistantDialogueAction",
+                "text": "Very nice. Now *pull the lever* to feed them."
+              },
+              {
+                "__type": "WaitForCondition",
+                "conditions": [
+                  {
+                    "__type": "SignalCondition",
+                    "signalName": "penFeedingStarted"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "__type": "HideAssistantDialogueAction"
+        },
+        {
+          "__type": "HideArrowAction"
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "challengeComplete"
+            }
+          ]
+        },
+        {
+          "__type": "ClearWorldAction"
+        }
+      ]
+    },
+    {
+      "__type": "ActionGroup",
+      "serializedActions": [
+        {
+          "__type": "StartChallengeAction",
+          "id": "t2.03",
+          "problemType": "MS",
+          "challengeType": "order",
+          "objective": "Complete a shipment of baby rams!",
+          "bossLevel": true
+        },
+        {
+          "__type": "AddOrderAction",
+          "data": {
+            "client": "Archibold Huxley III",
+            "company": "Rupture Farms",
+            "numFoodA": 21,
+            "type": "baby_rammus",
+            "description": "Dear Friend! I have 21 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
+            "fulfilled": false,
+            "reward": 200
+          }
+        },
+        {
+          "__type": "ShowAssistantDialogueAction",
+          "text": "You've got *mail*! Click on the button to open it."
+        },
+        {
+          "__type": "ShowArrowAction",
+          "direction": "up",
+          "anchor": "topLeftAnchor",
+          "xPosition": 60,
+          "yPosition": 200
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "mailOpened"
+            }
+          ]
+        },
+        {
+          "__type": "HideArrowAction"
+        },
+        {
+          "__type": "ShowAssistantDialogueAction",
+          "text": "This is an *order*! Your neighbor wants to feed some *baby rams*. Click the button to fill the order."
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "orderStarted"
+            }
+          ]
+        },
+        {
+          "__type": "HideAssistantDialogueAction"
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "orderCompleted"
+            }
+          ]
+        },
+        {
+          "__type": "ShowAssistantDialogueAction",
+          "text": "Great job! Now open your *mail* to see the client's response."
+        },
+        {
+          "__type": "ShowArrowAction",
+          "direction": "up",
+          "anchor": "topLeftAnchor",
+          "xPosition": 60,
+          "yPosition": 200
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "mailOpened"
+            }
+          ]
+        },
+        {
+          "__type": "HideArrowAction"
+        },
+        {
+          "__type": "HideAssistantDialogueAction"
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "challengeComplete"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "__type": "DoBonusRoundAction",
+      "data": [
+        {
+          "creatureType": "baby_rammus",
+          "numCreatures": 2,
+          "numFood": 4,
+          "displayMode": "spritesOnly",
+          "challengeType": "CS"
+        },
+        {
+          "creatureType": "baby_rammus",
+          "numCreatures": 2,
+          "numFood": 6,
+          "displayMode": "spritesOnly",
+          "challengeType": "CE"
+        },
+        {
+          "creatureType": "baby_rammus",
+          "numCreatures": 2,
+          "numFood": 9,
+          "displayMode": "spritesOnly",
+          "challengeType": "CD"
+        }
+      ]
+    }
+  ],
+  "reviewChallenges": [
+    {
+      "__type": "DoPenChallengeAction",
+      "challengeId": "t2.01",
+      "problemType": "MD",
+      "challengeData": {
+        "creatureType": "baby_rammus",
+        "numCreatures": 4,
+        "bottomDraggable":true,
+        "topDraggable":true,
+        "leftDraggable":true
+      }
+    }
+  ],
+  "funChallenges": [],
+  "backgroundOrders": []
+}

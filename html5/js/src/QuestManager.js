@@ -16,6 +16,8 @@ GlassLab.QuestManager = function(game)
     this.activeQuests = [];
 
     this.quests = [
+        new GlassLab.Quest("day1", this.game.cache.getJSON("day1")),
+        new GlassLab.Quest("day2", this.game.cache.getJSON("day2")),
         new GlassLab.Quest("day3", this.game.cache.getJSON("day3"))
     ];
 
@@ -68,6 +70,9 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
     }
 
     this.activeQuests.splice(questIndex, 1);
+    if (!this.activeQuests.length) { // no more quests, so go to the next level
+        GLOBAL.levelManager.LoadNextLevel();
+    }
 };
 
 GlassLab.QuestManager.prototype.failChallenge = function() {

@@ -179,6 +179,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('clickSound', 'assets/audio/button_click.mp3');
 
     // Quests
+    game.load.json('day1', 'assets/quests/day1.json');
+    game.load.json('day2', 'assets/quests/day2.json');
     game.load.json('day3', 'assets/quests/day3.json');
 
     game.plugins.add(Phaser.Plugin.Isometric);
