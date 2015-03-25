@@ -105,8 +105,9 @@ GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function (type, num) {
     var creatureData = this.creatureDatabase[type];
     if (!creatureData.unlocked) {
         creatureData.unlocked = "new"; // note the fact that it's newly unlocked
-        // Delay showing the journal GLOBAL.Journal.Show(true, type); // only show the journal if we just unlocked something
+        // Delay showing the journal
         GLOBAL.Journal.wantToShow = type; // remember the creature we want to show in the journal
+        GLOBAL.UIManager.journalButton.toggleActive(true);
     }
     if (creatureData.discoveredFoodCounts[num]) {
         return;
@@ -130,6 +131,7 @@ GlassLab.CreatureManager.prototype.UnflagDiscoveredFoodCounts = function () {
 
 GlassLab.CreatureManager.prototype.AddCreature = function(creature)
 {
+    creature.name = creature.type + this.creatures.length; // for debugging purposes
     this.creatures.push(creature);
 };
 
@@ -177,14 +179,25 @@ GlassLab.CreatureManager.prototype._onSaveRequested = function(blob) {
     }
 };
 
-GlassLab.CreatureManager.prototype.CreateCreature = function(type)
+GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 {
     var creature = new GlassLab.Creature(this.game, type);
     GLOBAL.creatureLayer.add(creature.sprite);
-    creature.moveToRandomTile();
+    if (centered) {
+        creature.moveToTile( GLOBAL.tileManager.tilemap.width/2, GLOBAL.tileManager.tilemap.height/2 );
+    } else {
+        creature.moveToRandomTile();
+    }
     creature.lookForTargets();
 
     return creature;
+};
+
+GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, centered) {
+    console.log("Create creatures:", type, number, centered);
+    for (var i = 0; i < number; i ++) {
+        this.CreateCreature(type, centered);
+    }
 };
 
 GlassLab.CreatureManager.prototype._onGameLoaded = function(blob)

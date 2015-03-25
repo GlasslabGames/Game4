@@ -16,12 +16,9 @@ GlassLab.QuestManager = function(game)
     this.activeQuests = [];
 
     this.quests = [
-        new GlassLab.Quest("Vertical Slice", this.game.cache.getJSON("vs_quest")),
-        new GlassLab.Quest("alpha1", this.game.cache.getJSON("alpha1")),
-        new GlassLab.Quest("alpha2", this.game.cache.getJSON("alpha2")),
-        new GlassLab.Quest("alpha3", this.game.cache.getJSON("alpha3")),
-        new GlassLab.Quest("alpha4", this.game.cache.getJSON("alpha4")),
-        new GlassLab.Quest("Alpha", this.game.cache.getJSON("alpha_quest"))
+        new GlassLab.Quest("day1", this.game.cache.getJSON("day1")),
+        new GlassLab.Quest("day2", this.game.cache.getJSON("day2")),
+        new GlassLab.Quest("day3", this.game.cache.getJSON("day3"))
     ];
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
@@ -73,6 +70,16 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
     }
 
     this.activeQuests.splice(questIndex, 1);
+    if (!this.activeQuests.length) { // no more quests, so go to the next level
+        GLOBAL.levelManager.LoadNextLevel();
+    }
+};
+
+GlassLab.QuestManager.prototype.failChallenge = function() {
+    if (this.challengeIsBossLevel) {
+        this.GetCurrentQuest().Cancel(); // cancel the current challenge
+        GLOBAL.levelManager.RestartLevel(); // restart the whole day
+    } else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
 };
 
 GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)
@@ -125,17 +132,5 @@ GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
 };
 
 GlassLab.QuestManager.prototype.completeChallenge = function() {
-    if (GLOBAL.Journal.wantToShow) {
-        if (false) { // show the journal immediately
-            GLOBAL.Journal.Show(true);
-            GlassLab.SignalManager.journalClosed.addOnce(function() {
-                GlassLab.SignalManager.challengeComplete.dispatch();
-            }, this);
-        } else {
-            GLOBAL.UIManager.journalButton.toggleActive(true);
-            GlassLab.SignalManager.challengeComplete.dispatch();
-        }
-    } else {
-        GlassLab.SignalManager.challengeComplete.dispatch();
-    }
+    GlassLab.SignalManager.challengeComplete.dispatch(); // if there's an action waiting for the challenge to be completed, do that
 };

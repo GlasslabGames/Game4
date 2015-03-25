@@ -8,6 +8,7 @@ GlassLab.UIManager = function(game)
 {
     this.game = game;
     this.dragTargets = [];
+    this.zoomTo(0.5);
 
     this._createAnchors();
 
@@ -23,21 +24,11 @@ GlassLab.UIManager = function(game)
     this.centerAnchor.addChild(this.loseModal);
     this.loseModal.visible = false;
 
-    GlassLab.SignalManager.levelLost.add(function() {
-        GLOBAL.audioManager.playSound("fail");
-      this.visible = true;
-    }, this.loseModal);
-
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
     this.bonusModal = new GlassLab.UIModal(this.game, "Great job! Now it's time for\nBONUS GAME!", nextButton);
     this.centerAnchor.addChild(this.bonusModal);
     this.bonusModal.visible = false;
-
-    // The win modal used to pop up, but we're replacing it with the bonus modal instead
-    GlassLab.SignalManager.levelWon.add(function(){
-        this.visible = GLOBAL.levelManager.GetCurrentLevel().isCompleted;
-    }, this.bonusModal);
 
     //game.input.onDown.add(this._globalDown, this); // Global input down handler
     game.input.onUp.add(this._onGlobalUp, this); // Global input down handler
@@ -123,16 +114,8 @@ GlassLab.UIManager.prototype.hideArrow = function() {
 
 GlassLab.UIManager.prototype._onRetryPressed = function()
 {
-  this.winModal.visible = this.loseModal.visible = false;
-
-  if (!GLOBAL.questManager.challengeIsBossLevel && GLOBAL.saveManager.HasData("default_checkpoint"))
-  {
-      GLOBAL.saveManager.Load("default_checkpoint");
-  }
-    else
-  {
-      GLOBAL.levelManager.RestartLevel();
-  }
+    this.winModal.visible = this.loseModal.visible = false;
+    GLOBAL.questManager.failChallenge();
 };
 
 GlassLab.UIManager.prototype._onContinuePressed = function()
@@ -145,11 +128,6 @@ GlassLab.UIManager.prototype._onBonusPressed = function()
 {
     this.bonusModal.visible = false;
     GLOBAL.sortingGame.start();
-};
-
-GlassLab.UIManager.prototype._createZoomButton = function()
-{
-
 };
 
 // General function to check if something was dropped onto a drag target that wants it
@@ -183,6 +161,22 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
     return label.text; // returns the text with newlines inserted
 };
 
+GlassLab.UIManager.maxZoom = 1;
+GlassLab.UIManager.minZoom = 0.125;
+
+GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
+    this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+    GLOBAL.WorldLayer.scale.x = GLOBAL.WorldLayer.scale.y = this.zoomLevel;
+};
+
+GlassLab.UIManager.prototype.zoomIn = function() {
+    this.zoomTo(this.zoomLevel * 2);
+};
+
+GlassLab.UIManager.prototype.zoomOut = function() {
+    this.zoomTo(this.zoomLevel / 2);
+};
+
 GlassLab.UIManager.prototype.createHud = function() {
     var table = new GlassLab.UITable(this.game, 1, 3);
     this.topRightAnchor.addChild(table);
@@ -196,18 +190,12 @@ GlassLab.UIManager.prototype.createHud = function() {
     var zoomGroup = new GlassLab.UIElement(this.game);
     table.addManagedChild(zoomGroup);
 
-    // for some reason the position in the table is a little off unless we set the y to 2 here
-    button = new GlassLab.HUDButton(this.game, 0, 1, "zoomInIcon", "hudSettingsBg", true, function() {
-        GLOBAL.WorldLayer.scale.x *= 2;
-        GLOBAL.WorldLayer.scale.y *= 2;
-    }, this);
+    // for some reason the position in the table is a little off unless we set the y to 1 here
+    button = new GlassLab.HUDButton(this.game, 0, 1, "zoomInIcon", "hudSettingsBg", true, this.zoomIn, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight = button.getHeight();
 
-    button = new GlassLab.HUDButton(this.game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, function() {
-        GLOBAL.WorldLayer.scale.x /= 2;
-        GLOBAL.WorldLayer.scale.y /= 2;
-    }, this);
+    button = new GlassLab.HUDButton(this.game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, this.zoomOut, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight += button.getHeight();
 
@@ -273,8 +261,16 @@ GlassLab.UIManager.prototype._onJournalButton = function() {
 GlassLab.UIManager.prototype._refreshMailButton = function() {
     var hasMail = GLOBAL.mailManager.availableOrders.length || GLOBAL.mailManager.rewards.length;
     this.mailButton.toggleFull(hasMail);
-    var active = hasMail && !GLOBAL.mailManager.currentOrder;
-    this.mailButton.toggleActive(active);
+    var active = GLOBAL.mailManager.rewards.length; // if we have a reward, then active should be true
+    if (!active && hasMail) { // else if we have a key order, then active should be true
+        for (var i = 0; i < GLOBAL.mailManager.availableOrders.length; i++) {
+            if (GLOBAL.mailManager.availableOrders[i].key) {
+                active = true;
+                break;
+            }
+        }
+    }
+    this.mailButton.toggleActive(active && !GLOBAL.mailManager.currentOrder);
 };
 
 GlassLab.UIManager.prototype._onMailButton = function() {

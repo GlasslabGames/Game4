@@ -46,7 +46,7 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     var pen = new GlassLab.FeedingPen(
         this.game,
         GLOBAL.penLayer,
-        penData.type,
+        penData.type || penData.creatureType,
         (penData.height || 1),
         widths,
         penData.autoFill

@@ -7,8 +7,6 @@
 GlassLab.CreatureStateIdle = function(game, owner)
 {
   GlassLab.CreatureState.call(this, game, owner);
-
-  this.targetPosition = new Phaser.Point();
 };
 
 GlassLab.CreatureStateIdle.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -18,6 +16,7 @@ GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.creature.draggable = true;
+    this.creature._clearPath();
 
     this.speed = this.creature.moveSpeed / 2;
 };
@@ -26,7 +25,6 @@ GlassLab.CreatureStateIdle.prototype.Exit = function()
 {
   GlassLab.CreatureState.prototype.Exit.call(this);
   this.creature.StopAnim();
-  if (this.targetTile && this.targetTile != this.creature.prevTile) this.targetTile.onCreatureExit(this.creature); // make sure that tile stops thinking we're entering it
   if (this.findDestinationHandler)
   {
     this.game.time.events.remove(this.findDestinationHandler);
@@ -54,6 +52,7 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
     tile = possibleTiles[parseInt(Math.random() * possibleTiles.length)];
   }
   else tile = currentTile; // stay in place
+
   this._setNewDestination(tile);
 };
 
@@ -70,9 +69,9 @@ GlassLab.CreatureStateIdle.prototype.Update = function()
 {
   if (this.findDestinationHandler) return; // still waiting to pick a new destination
 
-  if (!this.creature.targetPosition && this.creature.currentPath.length == 0)
+  if (isNaN(this.creature.targetPosition.x) && this.creature.currentPath.length == 0)
   {
-    this.findDestinationHandler = this.game.time.events.add(Math.random() * 4000, this._findNewDestination, this);
+      this.findDestinationHandler = this.game.time.events.add(Math.random() * 4000, this._findNewDestination, this);
   }
   else
   {

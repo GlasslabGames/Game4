@@ -19,18 +19,28 @@ GlassLab.ActionGroup = function(serializedActions)
 GlassLab.ActionGroup.prototype = Object.create(GlassLab.Action.prototype);
 GlassLab.ActionGroup.prototype.constructor = GlassLab.ActionGroup;
 
-GlassLab.ActionGroup.prototype.Do = function()
-{
+GlassLab.ActionGroup.prototype.Do = function() {
+    this.currentAction = null;
+    this.currentActionIndex = 0;
+
+    this._step();
+};
+
+GlassLab.ActionGroup.prototype._step = function() {
+
     if (this.waitForComplete && this.currentActionIndex == this.serializedActions.length)
     {
         this._complete();
         return;
     }
 
-    this.currentAction = GlassLab.Deserializer.deserializeObj(this.serializedActions[this.currentActionIndex]);
-    this._deserializedActions[this.currentActionIndex] = this.currentAction;
+    if (!this._deserializedActions[this.currentActionIndex]) {
+        this._deserializedActions[this.currentActionIndex] = GlassLab.Deserializer.deserializeObj(this.serializedActions[this.currentActionIndex]);
+    }
+    this.currentAction = this._deserializedActions[this.currentActionIndex];
     this.currentActionIndex++;
 
+    this.currentAction.onComplete.remove(this._onActionComplete, this); // in case we had added a listener already
     this.currentAction.onComplete.addOnce(this._onActionComplete, this);
     this.currentAction.Do();
 
@@ -40,11 +50,19 @@ GlassLab.ActionGroup.prototype.Do = function()
     }
 };
 
+GlassLab.ActionGroup.prototype.Redo = function() {
+
+    this.Do();
+};
+
 GlassLab.ActionGroup.prototype._onDestroy = function()
 {
-    for (var i=this._deserializedActions.length-1; i >= 0; i--)
-    {
-        this._deserializedActions[i].Destroy();
+    if (this._deserializedActions) {
+        for (var i=this._deserializedActions.length-1; i >= 0; i--)
+        {
+            this._deserializedActions[i].Destroy();
+
+        }
     }
 
     this._deserializedActions = null;
@@ -54,5 +72,5 @@ GlassLab.ActionGroup.prototype._onDestroy = function()
 
 GlassLab.ActionGroup.prototype._onActionComplete = function()
 {
-    this.Do();
+    this._step();
 };

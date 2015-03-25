@@ -1,10 +1,10 @@
 [
   {
-    "__type":"GlassLab.SetDayAction",
+    "__type":"SetDayAction",
     "numDots":3
   },
   {
-    "__type":"GlassLab.UnlockItemsAction",
+    "__type":"UnlockItemsAction",
     "items":[
       "broccoli",
       "strawberry",
@@ -14,19 +14,19 @@
     ]
   },
   {
-    "__type":"GlassLab.ResetTelemetryAction"
+    "__type":"ResetTelemetryAction"
   },
   {
-    "__type":"GlassLab.ClearOrdersAction"
+    "__type":"ClearOrdersAction"
   },
   {
-    "__type":"GlassLab.SaveCheckpointAction"
+    "__type":"SaveCheckpointAction"
   },
   {
-    "__type":"GlassLab.ActionGroup",
+    "__type":"ActionGroup",
     "serializedActions":[
       {
-        "__type":"GlassLab.StartChallengeAction",
+        "__type":"StartChallengeAction",
         "id":"4.0",
         "problemType":"MD",
         "challengeType":"handfeeding",
@@ -34,44 +34,44 @@
       },
       {
         "centered":true,
-        "__type":"GlassLab.CreateCreaturesAction",
+        "__type":"CreateCreaturesAction",
         "data":{
           "rammus":1
         }
       },
       {
-        "__type":"GlassLab.WaitForCondition",
+        "__type":"WaitForCondition",
         "conditions":[
           {
-            "__type":"GlassLab.FeedAnimalCondition",
+            "__type":"FeedAnimalCondition",
             "acceptedType":"rammus",
             "numRequired":1
           }
         ]
       },
       {
-        "__type":"GlassLab.ClearWorldAction"
+        "__type":"ClearWorldAction"
       }
     ]
   },
   {
-    "__type":"GlassLab.AdvanceDayAction"
+    "__type":"AdvanceDayAction"
   },
   {
-    "__type":"GlassLab.SaveCheckpointAction"
+    "__type":"SaveCheckpointAction"
   },
   {
-    "__type":"GlassLab.ActionGroup",
+    "__type":"ActionGroup",
     "serializedActions":[
       {
-        "__type":"GlassLab.StartChallengeAction",
+        "__type":"StartChallengeAction",
         "id":"4.1",
         "problemType":"MD",
         "challengeType":"pen",
         "objective":"Feed 5 adult rams in the pen."
       },
       {
-        "__type":"GlassLab.CreatePenAction",
+        "__type":"CreatePenAction",
         "penData":{
           "type":"rammus",
           "bottomDraggable":true,
@@ -83,43 +83,43 @@
         }
       },
       {
-        "__type":"GlassLab.CreateCreaturesAction",
+        "__type":"CreateCreaturesAction",
         "data":{
           "rammus":5
         }
       },
       {
-        "__type":"GlassLab.WaitForCondition",
+        "__type":"WaitForCondition",
         "conditions":[
           {
-            "__type":"GlassLab.SignalCondition",
-            "signalName":"GlassLab.SignalManager.challengeComplete"
+            "__type":"SignalCondition",
+            "signalName":"challengeComplete"
           }
         ]
       },
       {
-        "__type":"GlassLab.ClearWorldAction"
+        "__type":"ClearWorldAction"
       }
     ]
   },
   {
-    "__type":"GlassLab.AdvanceDayAction"
+    "__type":"AdvanceDayAction"
   },
   {
-    "__type":"GlassLab.SaveCheckpointAction"
+    "__type":"SaveCheckpointAction"
   },
   {
-    "__type":"GlassLab.ActionGroup",
+    "__type":"ActionGroup",
     "serializedActions":[
       {
-        "__type":"GlassLab.StartChallengeAction",
+        "__type":"StartChallengeAction",
         "id":"4.2",
         "problemType":"MD",
         "challengeType":"order",
         "objective":"Complete a shipment of 8 rams!"
       },
       {
-        "__type":"GlassLab.AddOrderAction",
+        "__type":"AddOrderAction",
         "data":{
           "client":"Archibold Huxley III",
           "company":"Rupture Farms",
@@ -131,24 +131,24 @@
         }
       },
       {
-        "__type":"GlassLab.WaitForCondition",
+        "__type":"WaitForCondition",
         "conditions":[
           {
-            "__type":"GlassLab.SignalCondition",
-            "signalName":"GlassLab.SignalManager.challengeComplete"
+            "__type":"SignalCondition",
+            "signalName":"challengeComplete"
           }
         ]
       }
     ]
   },
   {
-    "__type":"GlassLab.EndQuestAction"
+    "__type":"EndQuestAction"
   },
   {
-    "__type":"GlassLab.ClearWorldAction"
+    "__type":"ClearWorldAction"
   },
   {
-    "__type":"GlassLab.DisplayModalAction",
+    "__type":"DisplayModalAction",
     "text":"Congrats! You Win! Thanks for playing!"
   }
 ]

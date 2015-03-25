@@ -40,10 +40,8 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.clientNameLabel = game.make.text(this.clientLabel.x+5,this.clientLabel.y + this.clientLabel.height, "{clientName}", {font: '10pt Arial'});
     this.sprite.addChild(this.clientNameLabel);
 
-    this.companyLabel = game.make.text(120,78, "Company:", {font: 'bold 10pt Arial'});
-    //this.sprite.addChild(this.companyLabel);
-    this.companyNameLabel = game.make.text(this.companyLabel.x+5,this.companyLabel.y + this.companyLabel.height, "{companyName}", {font: '10pt Arial'});
-    //this.sprite.addChild(this.companyNameLabel);
+    this.urgentLabel = game.make.text(120,78, "Urgent!", {font: 'bold 10pt Arial'});
+    this.sprite.addChild(this.urgentLabel);
 
     this.rewardLabel = game.make.text(120,115, "Payment:", {font: 'bold 10pt Arial'});
     this.sprite.addChild(this.rewardLabel);
@@ -137,7 +135,7 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.descriptionLabel.setText(getProcessedString(this.data.description));
 
     this.clientNameLabel.setText(this.data.client);
-    this.companyNameLabel.setText(this.data.company);
+    this.urgentLabel.setText(this.data.key? "Urgent!" : "");
     this.rewardAmountLabel.setText("$"+this.data.reward);
 
     this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.mailManager.availableOrders.length)

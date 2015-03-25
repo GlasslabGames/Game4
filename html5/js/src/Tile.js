@@ -104,7 +104,7 @@ GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
     }
 };
 
-
+/*
 GlassLab.Tile.prototype.onCreatureEnter = function(creature) {
     creature.tile = this;
 
@@ -116,6 +116,7 @@ GlassLab.Tile.prototype.onCreatureExit = function(creature) {
 
     if (GLOBAL.debug) this.tint = 0xffffff;
 };
+*/
 
 GlassLab.Tile.prototype.onFoodAdded = function(food) {
     this.food = food;

@@ -132,7 +132,8 @@ GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
         food.placeOnTile(tile);
 
         GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
-        GlassLab.SignalManager.foodDropped.dispatch(food);
+        GlassLab.SignalManager.foodDropped.dispatch(food); // we should have this before targetsChanged
+        GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
         this._jumpToStart();
     }

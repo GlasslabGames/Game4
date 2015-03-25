@@ -41,7 +41,7 @@ GlassLab.SignalCondition.prototype.init = function()
     // Init from deserialization
     if (!this.signal && this.signalName)
     {
-        this.signal = GlassLab.Deserializer.getClassFromTypeName(this.signalName);
+        this.signal = GlassLab.Deserializer.getClassFromTypeName("GlassLab.SignalManager." + this.signalName);
     }
 
     this.signalBinding = this.signal.addOnce(this._onSignalReceived, this);

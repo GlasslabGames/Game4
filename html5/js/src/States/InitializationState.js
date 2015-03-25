@@ -155,6 +155,17 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('questObjectiveBg', 'assets/images/hud/hud_current_quest_background.png');
     game.load.image('questObjectiveArrow', 'assets/images/hud/hud_current_quest_arrow.png');
 
+    game.load.image('inventoryMoneyBg', 'assets/images/inventory/hud_food_money_bg.png');
+    game.load.image('inventoryCoinIcon', 'assets/images/inventory/hud_food_money_coin.png');
+    game.load.image('inventoryCoin', 'assets/images/inventory/hud_food_item_coin.png');
+
+    // creature thought bubble
+    game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
+    game.load.image('questionMark', 'assets/images/thought_bubble/thought_bubble_question_mark.png');
+    game.load.image('redX', 'assets/images/thought_bubble/thought_bubble_red_x.png');
+    game.load.image('thoughtBubbleStem', 'assets/images/thought_bubble/thought_bubble_stem.png');
+    game.load.atlasJSONHash('thoughtBubble', 'assets/images/thought_bubble/thought_bubble.png', 'assets/images/thought_bubble/thought_bubble.json');
+
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 
@@ -168,12 +179,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('clickSound', 'assets/audio/button_click.mp3');
 
     // Quests
-    game.load.json('vs_quest', 'assets/quests/vertical_slice.json');
-    game.load.json('alpha_quest', 'assets/quests/alpha.json');
-    game.load.json('alpha1', 'assets/quests/alpha1.json');
-    game.load.json('alpha2', 'assets/quests/alpha2.json');
-    game.load.json('alpha3', 'assets/quests/alpha3.json');
-    game.load.json('alpha4', 'assets/quests/alpha4.json');
+    game.load.json('day1', 'assets/quests/day1.json');
+    game.load.json('day2', 'assets/quests/day2.json');
+    game.load.json('day3', 'assets/quests/day3.json');
 
     game.plugins.add(Phaser.Plugin.Isometric);
     GLOBAL.astar = game.plugins.add(Phaser.Plugin.AStar);
@@ -204,9 +212,10 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.UILayer = game.add.group();
     GLOBAL.WorldLayer = game.add.group();
-    GLOBAL.WorldLayer.scale.setTo(0.5, 0.5);
 
     GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
+
+    GLOBAL.foodInWorld = [];
 
     game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 

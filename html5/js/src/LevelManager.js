@@ -16,25 +16,12 @@ GlassLab.LevelManager = function(game)
 
     this.levels = [];
 
-    var level0 = this._addLevelData(new GlassLab.Level());
-    level0.data = {
-        quest: "alpha1"
-    };
-    var level01 = this._addLevelData(new GlassLab.Level());
-    level01.data = {
-        quest: "alpha2"
-    };
-    var level02 = this._addLevelData(new GlassLab.Level());
-    level02.data = {
-        quest: "alpha3"
-    };
-    var level03 = this._addLevelData(new GlassLab.Level());
-    level03.data = {
-        quest: "alpha4"
-    };
+    this._addLevelData({ quest: "day1" });
+    this._addLevelData({ quest: "day2" });
+    this._addLevelData({ quest: "day3" });
 
     // TESTING LEVELS:
-    // 5
+    // 2
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
         {type: "baby_unifox", height: 1, foodAWidth: 1,
@@ -50,7 +37,7 @@ GlassLab.LevelManager = function(game)
         objective: "Feed the ram!"
     };
 
-    // 6
+    // 3
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Feed the foxes with multiple kinds of food!",
         pens: [
@@ -65,6 +52,7 @@ GlassLab.LevelManager = function(game)
         }
     };
 
+    // 4
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Fill an order!",
         orders: [
@@ -99,25 +87,25 @@ GlassLab.LevelManager = function(game)
         ]
     };
 
-    // 8
+    // 5
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
             {type: "baby_unifox", foodBWidth: 0, bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         looseCreatures: {
-            baby_unifox: 10
+            baby_rammus: 8
         },
         objective: "Feed the rams!"
     };
 
-    // 9
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {};
 
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
 {
-    levelData.id = this.levels.length;
+    if (typeof levelData == 'object') levelData.id = this.levels.length;
     this.levels.push(levelData);
     return levelData;
 };
@@ -142,12 +130,14 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             console.log("Session start failed: "+data);
         }.bind(this));
 
-        console.log("Starting level", levelNum, this.levels[levelNum].data);
+        console.log("Starting level", levelNum, this.levels[levelNum], this.levels[levelNum].data);
         this.currentLevel = levelNum;
 
         GlassLabSDK.saveTelemEvent("start_day", {day: this.currentLevel + 1});
 
-        this.LoadLevelFromData(this.levels[levelNum].data);
+        var level = this.levels[levelNum];
+        if (level.data) level = level.data; // this lets us pass either a Level obj or just the data itself
+        this.LoadLevelFromData(level);
     }
     else
     {
@@ -205,10 +195,9 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
 
     GLOBAL.saveManager.SaveData("currentLevel", this.currentLevel);
 
-    // TODO: HACK
     var level = new GlassLab.Level();
     level.data = levelData;
-    GlassLab.SignalManager.levelLoaded.dispatch(level);
+    GlassLab.SignalManager.levelStarted.dispatch(level);
 };
 
 GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
@@ -237,27 +226,6 @@ GlassLab.LevelManager.prototype.RestartLevel = function()
 GlassLab.LevelManager.prototype.GetCurrentLevel = function()
 {
     return this.levels[this.currentLevel];
-};
-
-GlassLab.LevelManager.prototype.CompleteCurrentLevel = function()
-{
-    var level = this.GetCurrentLevel();
-    var type = typeof level.data.quest;
-    if ((typeof level.data.quest) != 'undefined')
-    {
-        return false;
-    }
-
-    this.GetCurrentLevel().isCompleted = true;
-
-    GlassLab.SignalManager.levelWon.dispatch();
-};
-
-GlassLab.LevelManager.prototype.LoadNextBonusGame = function() {
-    if (this.bonusIndex < this.bonusData.length - 1) this.bonusIndex++; // else stay on the last one
-    var data = this.bonusData[this.bonusIndex];
-    console.log(data);
-    GLOBAL.sortingGame.start(data);
 };
 
 

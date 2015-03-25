@@ -25,7 +25,7 @@ GlassLab.DayManager = function(game)
     this.dayTextBg.addChild(this.dayText);
     */
 
-    GlassLab.SignalManager.levelLoaded.add(this._onLevelLoaded, this);
+    GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 
@@ -49,6 +49,14 @@ GlassLab.DayManager.prototype._onGameLoaded = function(blob)
 GlassLab.DayManager.prototype.Advance = function()
 {
     this.currentSection++;
+    this._refresh();
+
+    GLOBAL.saveManager.Save("current_section");
+};
+
+GlassLab.DayManager.prototype.AdvanceTo = function(i)
+{
+    this.currentSection = i;
     this._refresh();
 
     GLOBAL.saveManager.Save("current_section");
