@@ -100,7 +100,7 @@ GlassLab.MailManager.prototype._onOrderCanceled = function(order) {
     GlassLab.SignalManager.ordersChanged.dispatch(order);
 };
 
-GlassLab.MailManager.prototype.completeOrder = function(order, success)
+GlassLab.MailManager.prototype.completeOrder = function(order)
 {
     var orderIndex = this.availableOrders.indexOf(order);
     if (orderIndex == -1) console.warn("Order was completed that wasn't managed by MailManager.");

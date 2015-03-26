@@ -149,6 +149,11 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('foodIcon_open', 'assets/images/hud/hud_food/food_static_open.png');
     game.load.atlasJSONHash('foodIcon_anim', 'assets/images/hud/hud_food/food_full.png', 'assets/images/hud/hud_food/food_full.json');
 
+    game.load.image('orderBg', 'assets/images/order/shipping_ui_packing_slip_bg.png');
+    game.load.image('orderBg2', 'assets/images/order/shipping_ui_packing_slip_tall_bg.png');
+    game.load.image('orderDragTarget', 'assets/images/order/shipping_ui_drag_food_here.png');
+    game.load.image('orderEntryField', 'assets/images/order/shipping_ui_number_field.png');
+
     game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
     game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');
     game.load.atlasJSONHash('questBarSun', 'assets/images/hud/hud_sun/hud_mission_sun.png', 'assets/images/hud/hud_sun/hud_mission_sun.json');
@@ -279,9 +284,8 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.mailManager = new GlassLab.MailManager(game);
 
     var orderFulfillment = new GlassLab.OrderFulfillment(game);
-    orderFulfillment.sprite.scale.setTo(.6, .6);
-    orderFulfillment.sprite.x = 20;
-    orderFulfillment.sprite.y = -380; // or 250 if the inventory is closed?
+    orderFulfillment.sprite.x = 250;
+    orderFulfillment.sprite.y = -110; // or 250 if the inventory is closed?
     GLOBAL.UIManager.bottomLeftAnchor.addChild(orderFulfillment.sprite);
     GLOBAL.orderFulfillment = orderFulfillment;
 
