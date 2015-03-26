@@ -54,7 +54,7 @@ GlassLab.OrderFulfillment = function(game)
 
     for (var i = 0; i < 3; i++) { // 3 inputs = the creature, foodA, and foodB
         var rowY = 65 * i;
-        var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC);
+        var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC, "orderEntryField");
         answerInput.x = 50;
         answerInput.y = rowY;
         answerInput.SetInputLimit(2);
@@ -80,7 +80,7 @@ GlassLab.OrderFulfillment = function(game)
         this.answerInputRoot.addChild(sprite);
 
         if (i > 0) { // the first input is for creatures, so we don't have to drag anything onto it
-            var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "drag food type here");
+            var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "orderDragTarget");
             dragTarget.x = -20;
             dragTarget.y = rowY - 5;
             dragTarget.objectValidator = function(obj) { return obj.foodType; };

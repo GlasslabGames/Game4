@@ -2,8 +2,8 @@
  * Created by Rose Abernathy on 2/13/2015.
  */
 
-GlassLab.UIDragTarget = function(game, width, height, hint, solidLines) {
-    GlassLab.UIElement.prototype.constructor.call(this, game);
+GlassLab.UIDragTarget = function(game, width, height, spriteName, hint, solidLines) {
+    GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0, spriteName);
     this.game = game;
 
     this.actualWidth = width;
@@ -14,8 +14,10 @@ GlassLab.UIDragTarget = function(game, width, height, hint, solidLines) {
     this.highlighted = false;
     this.dashedLines = !solidLines;
 
-    this.graphics = game.make.graphics();
-    this.addChild(this.graphics);
+    if (!spriteName) {
+        this.graphics = game.make.graphics();
+        this.addChild(this.graphics);
+    }
 
     if (hint) {
         var dragHint = game.make.text(width / 2, height / 2, hint, {fill: "#444444", font: "16px Arial"});
@@ -117,6 +119,8 @@ GlassLab.UIDragTarget.prototype._removeObject = function(obj) {
 };
 
 GlassLab.UIDragTarget.prototype._redraw = function() {
+    if (!this.graphics) return;
+
     this.graphics.clear();
     if (this.dashedLines) {
         this.graphics.beginFill(this.highlighted? 0x444444 : 0xffffff).drawRect(0,0,this.actualWidth,this.actualHeight);
