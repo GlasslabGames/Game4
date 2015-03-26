@@ -6,6 +6,8 @@
 var GlassLab = GlassLab || {};
 
 GlassLab.SignalManager = {
+    gameInitialized: new Phaser.Signal(), // when we're ready to start the game (after the save blob has loaded)
+
     // Update
     update: new Phaser.Signal(), // (float) => time since last update - update loop
 

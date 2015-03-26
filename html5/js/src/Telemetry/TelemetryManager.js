@@ -35,9 +35,11 @@ GlassLab.TelemetryManager = function()
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
 
-    // Save / load the dictionary of challengeAttempts so we can access the total number of attempts across multiple play sessions
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
+    // TODO: save/load this as needed
+    /*
+    GLOBAL.saveManager.SaveData("challengeAttempts", this.challengeAttempts);
+    if (GLOBAL.saveManager.HasData("challengeAttempts")) this.challengeAttempts = GLOBAL.saveManager.LoadData("challengeAttempts");
+    */
 };
 
 GlassLab.TelemetryManager.prototype._initializeSDK = function()
@@ -209,14 +211,4 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function()
     GlassLabSDK.saveTelemEvent("mean_challenge_latency", {
         value: this.challengeLatencySum / this.challengesCompleted
     });
-};
-
-GlassLab.TelemetryManager.prototype._onSaveRequested = function(blob)
-{
-    blob.challengeAttempts = this.challengeAttempts;
-};
-
-GlassLab.TelemetryManager.prototype._onGameLoaded = function(blob)
-{
-    if (blob) this.challengeAttempts = blob.challengeAttempts;
 };

@@ -86,9 +86,7 @@ GlassLab.CreatureManager = function (game) {
 
     this.creatures = [];
 
-    // Save / load which creatures have been discovered
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
+    GlassLab.SignalManager.gameInitialized.addOnce(this._loadDiscoveredCreatures, this);
 };
 
 /*
@@ -101,7 +99,7 @@ GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function (type, num) {
     var creatureData = this.creatureDatabase[type];
     if (!creatureData.unlocked) {
         creatureData.unlocked = "new"; // note the fact that it's newly unlocked
-        GLOBAL.saveManager.Save(); // save when we unlock creatures
+        this._saveDiscoveredCreatures();
 
         // Delay showing the journal
         GLOBAL.Journal.wantToShow = type; // remember the creature we want to show in the journal
@@ -166,21 +164,22 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
     }
 };
 
-GlassLab.CreatureManager.prototype._onSaveRequested = function(blob)
+GlassLab.CreatureManager.prototype._saveDiscoveredCreatures = function()
 {
     var unlockedCreatures = [];
     for (var type in this.creatureDatabase) {
-        if (type.unlocked) unlockedCreatures.push(type);
+        if (this.creatureDatabase[type].unlocked) unlockedCreatures.push(type);
     }
-    blob.unlockedCreatures = unlockedCreatures;
+    GLOBAL.saveManager.SaveData("discoveredCreatures", unlockedCreatures);
 };
 
-GlassLab.CreatureManager.prototype._onGameLoaded = function(blob)
+GlassLab.CreatureManager.prototype._loadDiscoveredCreatures = function()
 {
-    if (blob && blob.unlockedCreatures) {
-        for (var i = 0; i < blob.unlockedCreatures.length; i++) {
-            if (blob.unlockedCreatures[i] in this.creatureDatabase) {
-                blob.unlockedCreatures[i].unlocked = true;
+    if (GLOBAL.saveManager.HasData("discoveredCreatures")) {
+        var creatures = GLOBAL.saveManager.LoadData("discoveredCreatures");
+        for (var i = 0; i < creatures.length; i++) {
+            if (creatures[i] in this.creatureDatabase) {
+                this.creatureDatabase[creatures[i]].unlocked = true;
             }
         }
     }

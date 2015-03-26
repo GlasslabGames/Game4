@@ -26,10 +26,6 @@ GlassLab.Quest = function(name, data)
     this.unlockedFood = data.unlockedItems;
 
     GLOBAL.questManager.questsByName[this.name] = this;
-
-    // Save / load the current challenge and which orders are finished
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 GlassLab.Quest.prototype.Start = function()
@@ -39,11 +35,12 @@ GlassLab.Quest.prototype.Start = function()
     {
         this._isStarted = true;
 
-        var savedData = this.savedQuestData || {};
+        var savedData = this._loadQuestState();
 
         this.index = savedData.index || {progression: 0, review: 0, fun: 0};
         this._resetFunCountdown();
         this.inReview = savedData.inReview || false;
+        if ("perfect" in savedData) this.rememberPreviousFailure = !savedData.perfect;
 
         // Allow skipping ahead via url parameters
         var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
@@ -101,9 +98,9 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     }
 
     GLOBAL.mailManager.ClearOrders(); // for now, erase all pending orders
-    if (this.savedQuestData && "perfect" in this.savedQuestData) {
-        this.perfect = this.savedQuestData; // if we had failed last time we were playing, keep that info
-        delete this.savedQuestData.perfect; // but don't keep it around for the next challenge
+    if (this.rememberPreviousFailure) { // last time we played, we had to retry a level, so perfect shouldn't be true now
+        this.perfect = false;
+        this.rememberPreviousFailure = false; // only count the previous failure once
     } else this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
 
     console.log("Starting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
@@ -114,12 +111,16 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     this.challenge.Do();
 
     this._addBackgroundOrders(); // note that we should have already added the challenge order when we called this.challenge.do()
+
+    this._saveQuestState();
 };
 
 GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
     this.perfect = false; // they messed up, so no longer perfect
     this.challenge.Do(); // re-do the current challenge
+
+    this._saveQuestState();
 };
 
 GlassLab.Quest.prototype._onChallengeComplete = function() {
@@ -207,16 +208,17 @@ GlassLab.Quest.prototype._complete = function()
     }
 };
 
-GlassLab.Quest.prototype._onSaveRequested = function(blob)
+GlassLab.Quest.prototype._saveQuestState = function()
 {
     var questData = {};
     questData.inReview = this.inReview;
     questData.index = this.index;
     questData.perfect = this.perfect;
-    blob.questData = questData;
+    GLOBAL.saveManager.SaveData("questState", questData);
 };
 
-GlassLab.Quest.prototype._onGameLoaded = function(blob)
+GlassLab.Quest.prototype._loadQuestState = function()
 {
-    if (blob) this.savedQuestData = blob.questData;
+    if (GLOBAL.saveManager.HasData("questState")) return GLOBAL.saveManager.LoadData("questState");
+    else return {};
 };

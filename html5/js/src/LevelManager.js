@@ -7,17 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.LevelManager = function(game)
 {
     this.game = game;
-    this.currentLevel = -1; //GLOBAL.saveManager.LoadData("currentLevel") || -1;
-    var queryLevel = getParameterByName("level");
-    if (queryLevel != "")
-    {
-        this.currentLevel = parseInt(queryLevel)-2;
-        this.levelFromQuery = true;
-    }
-
-    // Save / load the current level
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
+    this.currentLevel = -1;
 
     this.levels = [];
 
@@ -141,6 +131,8 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
         var level = this.levels[levelNum];
         if (level.data) level = level.data; // this lets us pass either a Level obj or just the data itself
         this.LoadLevelFromData(level);
+
+        GLOBAL.saveManager.SaveData("currentLevel", this.currentLevel);
     }
     else
     {
@@ -196,8 +188,6 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
         GLOBAL.questManager.UpdateObjective(levelData.objective);
     }
 
-    GLOBAL.saveManager.Save(); // save when we start a new level
-
     var level = new GlassLab.Level();
     level.data = levelData;
     GlassLab.SignalManager.levelStarted.dispatch(level);
@@ -231,18 +221,17 @@ GlassLab.LevelManager.prototype.GetCurrentLevel = function()
     return this.levels[this.currentLevel];
 };
 
-GlassLab.LevelManager.prototype._onSaveRequested = function(blob)
+GlassLab.LevelManager.prototype.LoadFirstLevel = function()
 {
-    blob.currentLevel = this.currentLevel;
-};
-
-GlassLab.LevelManager.prototype._onGameLoaded = function(blob)
-{
-    console.log("Level manager game loaded",blob);
-    if (blob && !this.levelFromQuery) { // if we chose the level via url param, don't overwrite it
-        this.currentLevel = blob.currentLevel;
-        this.currentLevel --; // since LoadNextLevel is called by GameState
+    var queryLevel = getParameterByName("level");
+    if (queryLevel != "") {
+        this.currentLevel = parseInt(queryLevel)-1;
+    } else if (GLOBAL.saveManager.HasData("currentLevel")) {
+        this.currentLevel = GLOBAL.saveManager.LoadData("currentLevel");
+    } else {
+        this.currentLevel = 0;
     }
+    this.LoadLevel(this.currentLevel);
 };
 
 
