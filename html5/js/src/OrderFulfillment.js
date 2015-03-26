@@ -185,15 +185,16 @@ GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct, numC
 {
     if (pen == this.pen)
     {
-        this.data.outcome = correct? "success" : "failure";
+        var outcome = correct? "success" : "failure";
         if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
             var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
             var totalPerCreature = desiredFood[0].amount + desiredFood[1].amount;
             var targetNumCreatures = this.data.totalNumFood / totalPerCreature;
-            if (targetNumCreatures != numCreatures) this.data.outcome = "wrongNumCreatures";
+            if (targetNumCreatures != numCreatures) outcome = "wrongNumCreatures";
         }
+        this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
 
-        GLOBAL.mailManager.completeOrder(this.data);
+        GLOBAL.mailManager.completeOrder(this.data, outcome);
         this.game.time.events.add(1000, function() { this.Hide(true); }, this); // hide the pen after a short delay
         // TODO: Instead of just hiding the pen, we should be switching contexts
     }

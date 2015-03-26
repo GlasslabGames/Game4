@@ -44,7 +44,6 @@ GlassLab.Quest.prototype.Start = function()
         this.index = savedData.index || {progression: 0, review: 0, fun: 0};
         this._resetFunCountdown();
         this.inReview = savedData.inReview || false;
-        this.completedOrders = savedData.completedOrders || [];
 
         // Allow skipping ahead via url parameters
         var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
@@ -159,8 +158,9 @@ GlassLab.Quest.prototype._addBackgroundOrders = function() {
     if (GLOBAL.mailManager.availableOrders.length >= 3) return;
 
     for (var i = 0; i < this.backgroundOrders.length; i++) {
-        var order = this.backgroundOrders[i].orderData; // TODO: store additional info for telemetry purposes
-        if (order.outcome != "success") { // only add orders that the player hasn't successfully completed yet
+        var order = this.backgroundOrders[i].orderData;
+        order.id = this.backgroundOrders[i].orderId; // this wasn't originally part of the order data, but it will be useful to have later
+        if (!GLOBAL.mailManager.isOrderComplete(order.id)) { // only add orders that the player hasn't successfully completed yet
             GLOBAL.mailManager.AddOrders(order);
             if (GLOBAL.mailManager.availableOrders.length >= 3) break;
         }
@@ -212,7 +212,6 @@ GlassLab.Quest.prototype._onSaveRequested = function(blob)
     var questData = {};
     questData.inReview = this.inReview;
     questData.index = this.index;
-    questData.completedOrders = this.completedOrders;
     questData.perfect = this.perfect;
     blob.questData = questData;
 };
