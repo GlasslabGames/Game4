@@ -14,23 +14,51 @@ GlassLab.OrderFulfillment = function(game)
     this.game = game;
     this.sprite = game.make.sprite();
 
-    this.bg = game.make.graphics();
-    this.bg.beginFill(0xFFFFFF).lineStyle(4, 0x000000, 1).drawRect(0,0,250,400);
+    this.bg = game.make.sprite(0,0,"orderBg");
+    this.bg.anchor.setTo(1,1);
     this.sprite.addChild(this.bg);
 
-    this.packingLabel = game.make.text(30,20, "Packing List:", {font: "bold 24px Helvetica"});
-    this.sprite.addChild(this.packingLabel);
+    var foodScale = 0.25;
+
+    // The total food label is special and above the other answer inputs
+    this.totalFoodRoot = game.make.sprite(-180, -315);
+    var totalFoodSprite1 = game.make.sprite(0, 0, "apple");
+    totalFoodSprite1.anchor.setTo(.5, .5);
+    totalFoodSprite1.scale.setTo(foodScale, foodScale);
+    this.totalFoodRoot.addChild(totalFoodSprite1);
+
+    var totalFoodSprite2 = game.make.sprite(60, 0, "apple");
+    totalFoodSprite2.anchor.setTo(.5, .5);
+    totalFoodSprite2.scale.setTo(foodScale, foodScale);
+    this.totalFoodRoot.addChild(totalFoodSprite2);
+    this.totalFoodSprites = [totalFoodSprite1, totalFoodSprite2];
+
+    var plusLabel = game.make.text(30, 0, "+",  {font: "bold 20px Helvetica"});
+    plusLabel.anchor.setTo(.5, .5);
+    this.totalFoodRoot.addChild(plusLabel);
+
+    var equalsLabel = game.make.text(90, 0, "=", {font: "bold 20px Helvetica"});
+    equalsLabel.anchor.setTo(.5, .5);
+    this.totalFoodRoot.addChild(equalsLabel);
+
+    this.totalFoodLabel = game.make.text(120, 0, "100", {font: "bold 20px Helvetica"});
+    this.totalFoodLabel.anchor.setTo(.5, .5);
+    this.totalFoodRoot.addChild(this.totalFoodLabel);
+
+    this.sprite.addChild(this.totalFoodRoot);
 
     this.foodTypes = [];
     this.answerInputs = []; // array of answer inputs (for each kind of food)
+    this.answerInputRoot = game.make.sprite(-180, -275);
+    this.sprite.addChild(this.answerInputRoot);
 
-    for (var i = 0; i < 3; i++) { // for now, assume that we don't have creatures that eat more than 2 kinds of food
-        var rowY = 70 + 80 * i;
+    for (var i = 0; i < 3; i++) { // 3 inputs = the creature, foodA, and foodB
+        var rowY = 65 * i;
         var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC);
         answerInput.x = 50;
         answerInput.y = rowY;
         answerInput.SetInputLimit(2);
-        this.sprite.addChild(answerInput);
+        this.answerInputRoot.addChild(answerInput);
 
         var inputErrorGraphic = this.game.make.graphics();
         answerInput.events.onTextChange.add(this._onTextChange, this);
@@ -41,25 +69,24 @@ GlassLab.OrderFulfillment = function(game)
 
         var label = game.make.text(75, rowY, "100", {font: "bold 40px Helvetica"});
         label.anchor.set(0.5, 0);
-        this.sprite.addChild(label);
+        this.answerInputRoot.addChild(label);
 
-        var sprite = game.make.sprite(180, rowY + 20, "carrot");
+        var sprite = game.make.sprite(0, rowY + 20, "apple");
         sprite.anchor.setTo(.5, .5);
-        sprite.scale.setTo(.35, .35);
+        sprite.scale.setTo(foodScale, foodScale);
         if (i == 0) { // creature
-            sprite.x -= 10;
-            sprite.scale.setTo(0.4, 0.4);
+            sprite.scale.setTo(-0.25, 0.25);
         }
-        this.sprite.addChild(sprite);
+        this.answerInputRoot.addChild(sprite);
 
         if (i > 0) { // the first input is for creatures, so we don't have to drag anything onto it
-            var dragTarget = new GlassLab.UIDragTarget(game, 200, 60, "drag food type here");
-            dragTarget.x = 25;
+            var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "drag food type here");
+            dragTarget.x = -20;
             dragTarget.y = rowY - 5;
             dragTarget.objectValidator = function(obj) { return obj.foodType; };
             dragTarget.addObjectAsChild = false;
             dragTarget.events.onObjectDropped.add(this.onFoodSet, this);
-            this.sprite.addChild(dragTarget).name = "foodSlot"+i;
+            this.answerInputRoot.addChild(dragTarget).name = "foodSlot"+i;
         }
 
         this.answerInputs.push({ input: answerInput, errorGraphic: inputErrorGraphic,
@@ -67,21 +94,15 @@ GlassLab.OrderFulfillment = function(game)
     }
 
     this.crateLoaded = false;
-    this.submitButton = new GlassLab.UIRectButton(game, 30, 300, this._onSubmit, this, 180, 80, 0xffffff, "Load Crate"); // was 0xffaaff
+    this.submitButton = new GlassLab.UIRectButton(game, -200, -80, this._onSubmit, this, 180, 60, 0xffffff, "Load Crate");
     this.sprite.addChild(this.submitButton);
     this.submitButton.setEnabled(false);
 
-    /*
-    this.orderRequirementLabel = game.make.text(0,0,"",{font: "20px Helvetica", strokeThickness: 1});
-    this.orderRequirementLabel.x = 30;
-    this.orderRequirementLabel.y = 70;
-    this.sprite.addChild(this.orderRequirementLabel);
-    */
-
-    this.cancelButton = game.make.button(0, -100, "cancelButton", function(){
+    this.cancelButton = game.make.button(-140, -440, "cancelButton", function(){
         this.Hide(true);
         GlassLabSDK.saveTelemEvent("cancel_order", {});
     }, this);
+    this.cancelButton.scale.setTo(0.5, 0.5);
     this.sprite.addChild(this.cancelButton);
 
     this.sprite.visible = false;
@@ -126,24 +147,19 @@ GlassLab.OrderFulfillment.prototype._focusCamera = function() {
     GLOBAL.UIManager.zoomTo(2.5 / maxDimension);
 };
 
-GlassLab.OrderFulfillment.prototype._getResponse = function(flashErrorGraphics) {
+GlassLab.OrderFulfillment.prototype._getResponse = function() {
     var response = [];
     var valid = true;
     for (var i = 0; i < this.answerInputs.length; i++) {
-        if (this.answerInputs[i].label.visible) {
-            response.push ( this.answerInputs[i].label.text ); // preset amount
-            continue;
-        } else if (!this.answerInputs[i].input.visible) continue; // not set
-
-        var amount = parseInt( this.answerInputs[i].input.GetText());
-        if (!amount || amount <= 0) {
-            valid = false;
-            if (flashErrorGraphics) {
-                this.answerInputs[i].errorGraphic.alpha = 1;
-                this.game.add.tween(this.answerInputs[i].errorGraphic).to( {alpha: 0}, 500, "Linear", true);
+        if (this.answerInputs[i].input.visible) { // look at what they entered in the text field
+            var amount = parseInt( this.answerInputs[i].input.GetText());
+            if (!amount || amount <= 0) {
+                valid = false;
             }
+            response.push(amount);
+        } else if (this.answerInputs[i].label.visible || this.data.totalNumFood) { // use whatever amount was preset
+            response.push( this.answerInputs[i].label.text );
         }
-        response.push( amount );
     }
     if (!valid) return false;
     else return response;
@@ -165,12 +181,19 @@ GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
     this._focusCamera();
 };
 
-GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct)
+GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct, numCreatures)
 {
     if (pen == this.pen)
     {
-        this.data.fulfilled = correct;
-        GLOBAL.mailManager.completeOrder(this.data, correct);
+        this.data.outcome = correct? "success" : "failure";
+        if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
+            var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
+            var totalPerCreature = desiredFood[0].amount + desiredFood[1].amount;
+            var targetNumCreatures = this.data.totalNumFood / totalPerCreature;
+            if (targetNumCreatures != numCreatures) this.data.outcome = "wrongNumCreatures";
+        }
+
+        GLOBAL.mailManager.completeOrder(this.data);
         this.game.time.events.add(1000, function() { this.Hide(true); }, this); // hide the pen after a short delay
         // TODO: Instead of just hiding the pen, we should be switching contexts
     }
@@ -229,8 +252,32 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
     }
 
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-    this.foodTypes[0] = (this.data.numFoodA)? desiredFood[0].type : null;
-    this.foodTypes[1] = (this.data.numFoodB)? desiredFood[1].type : null;
+    this.foodTypes[0] = (this.data.numFoodA || this.data.noFoodEntries)? desiredFood[0].type : null;
+    this.foodTypes[1] = (this.data.numFoodB || this.data.noFoodEntries)? desiredFood[1].type : null;
+
+    var offsetY = false;
+    if (this.data.totalNumFood) {
+        if (this.data.noFoodEntries) {  // we can use the shorter bg and move things down
+            if (this.bg.key != "orderBg") this.bg.loadTexture("orderBg");
+            offsetY = true;
+            // also calculate the correct food division so that we can show it in the pen later
+            var total = desiredFood[0].amount + desiredFood[1].amount;
+            this.data.numFoodA = (desiredFood[0].amount / total) * this.data.totalNumFood;
+            this.data.numFoodB = (desiredFood[1].amount / total) * this.data.totalNumFood;
+            console.log(this.data);
+        } else {
+            if (this.bg.key != "orderBg2") this.bg.loadTexture("orderBg2");
+        }
+        this.totalFoodRoot.visible = true;
+        this.totalFoodSprites[0].loadTexture(GlassLab.FoodTypes[desiredFood[0].type].spriteName);
+        this.totalFoodSprites[1].loadTexture(GlassLab.FoodTypes[desiredFood[1].type].spriteName);
+        this.totalFoodLabel.text = this.data.totalNumFood;
+    } else {
+        if (this.bg.key != "orderBg") this.bg.loadTexture("orderBg");
+        this.totalFoodRoot.visible = false;
+    }
+    this.totalFoodRoot.y = (offsetY)? -250 : -315;
+    this.answerInputRoot.y = (offsetY)? -210 : -275;
 
     this._refreshAnswerInputs();
     this._refreshPen();
@@ -255,21 +302,24 @@ GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
         var input = this.answerInputs[i];
         var foodType = this.foodTypes[i - 1];
 
+        // check if the drag target should be visible
         input.dragTarget.visible = !foodType && visibleDragTargets < 1 && i <= maxFoods;
-        input.sprite.visible = foodType;
+        if (input.dragTarget.visible) visibleDragTargets ++; // never show more than one drag target
 
+        // then, if the food type is set, we can show the sprite and the entry field or the preset amount
         if (foodType) {
             var presetAmount = (i == 1)? this.data.numFoodA : this.data.numFoodB;
-            input.label.visible = presetAmount;
+            input.label.visible = presetAmount && !this.data.noFoodEntries;
             input.label.text = presetAmount || 0;
-            input.input.visible = !presetAmount;
+            input.input.visible = !presetAmount && !this.data.noFoodEntries; // if the amount isn't preset, show the entry field
 
             var spriteName = GlassLab.FoodTypes[foodType].spriteName;
+            input.sprite.visible = !this.data.noFoodEntries;
             if (input.sprite.spriteName != spriteName) input.sprite.loadTexture( spriteName );
         } else {
+            input.sprite.visible = false;
             input.label.visible = false;
             input.input.visible = false;
-            visibleDragTargets ++;
         }
     }
 };

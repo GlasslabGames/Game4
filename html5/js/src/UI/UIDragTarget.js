@@ -18,7 +18,7 @@ GlassLab.UIDragTarget = function(game, width, height, hint, solidLines) {
     this.addChild(this.graphics);
 
     if (hint) {
-        var dragHint = game.make.text(width / 2, height / 2, hint, {fill: "#444444", font: "20px Arial"});
+        var dragHint = game.make.text(width / 2, height / 2, hint, {fill: "#444444", font: "16px Arial"});
         dragHint.anchor.setTo(0.5, 0.5);
         this.addChild(dragHint);
     }
@@ -120,7 +120,7 @@ GlassLab.UIDragTarget.prototype._redraw = function() {
     this.graphics.clear();
     if (this.dashedLines) {
         this.graphics.beginFill(this.highlighted? 0x444444 : 0xffffff).drawRect(0,0,this.actualWidth,this.actualHeight);
-        this.graphics.lineStyle(3, (this.enabled? 0x000000 : 0xbbbbbb), 1);
+        this.graphics.lineStyle(2, (this.enabled? 0x000000 : 0xbbbbbb), 1);
         var dashLen = 10;
         for (var x = 0; x < this.actualWidth; x += dashLen * 2) {
             this.graphics.moveTo(x, 0).lineTo(x + dashLen, 0);
