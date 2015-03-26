@@ -23,6 +23,7 @@ GlassLab.QuestManager = function(game)
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
     GlassLab.SignalManager.questEnded.add(this._onQuestEnded, this);
+
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 

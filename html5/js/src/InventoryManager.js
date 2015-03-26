@@ -12,6 +12,7 @@ GlassLab.InventoryManager = function(game)
     this.unlockedItems = {};
 
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
+    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 GlassLab.InventoryManager.prototype.lockAll = function() {

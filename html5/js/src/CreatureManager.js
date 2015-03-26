@@ -90,9 +90,6 @@ GlassLab.CreatureManager = function (game) {
     };
 
     this.creatures = [];
-
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 /*
@@ -165,20 +162,6 @@ GlassLab.CreatureManager.prototype.DestroyAllCreatures = function() {
     this.creatures = [];
 };
 
-GlassLab.CreatureManager.prototype._onSaveRequested = function(blob) {
-    blob.creatures = [];
-
-    for (var i=0, j=this.creatures.length; i < j; i++)
-    {
-        var creature = this.creatures[i];
-        blob.creatures.push({
-            x: creature.sprite.x,
-            y: creature.sprite.y,
-            type: creature.type
-        });
-    }
-};
-
 GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 {
     var creature = new GlassLab.Creature(this.game, type);
@@ -198,32 +181,5 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
     for (var i = 0; i < number; i ++) {
         this.CreateCreature(type, centered);
     }
-};
-
-GlassLab.CreatureManager.prototype._onGameLoaded = function(blob)
-{
-    this.DestroyAllCreatures();
-
-    var creatures = blob.creatures;
-    if (creatures)
-    {
-        for (var i = 0, j = creatures.length; i < j; i++)
-        {
-            var creatureData = creatures[i];
-            var creature = this.CreateCreature(creatureData.type);
-            creature.sprite.x = creatureData.x;
-            creature.sprite.y = creatureData.y;
-        }
-    }
-};
-
-GlassLab.CreatureManager.prototype.creaturePopulationUpdate = function() {
-    var inPen = 0;
-    for (var i = 0, j = this.creatures.length; i < j; i++)
-    {
-        if (this.creatures[i].pen) inPen++;
-    }
-    this.numCreaturesInPen = inPen;
-    GlassLabSDK.saveTelemEvent("creature_population", {total: this.creatures.length, in_pen: inPen});
 };
 

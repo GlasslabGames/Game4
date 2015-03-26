@@ -555,7 +555,6 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
     this._refreshFeedButton();
-    GLOBAL.creatureManager.creaturePopulationUpdate();
 };
 
 GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {

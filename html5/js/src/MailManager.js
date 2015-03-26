@@ -22,9 +22,6 @@ GlassLab.MailManager = function(game)
     this.availableOrders = [];
     this.rewards = [];
 
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
-
     GlassLab.SignalManager.orderStarted.add(this._onOrderStarted, this);
 };
 
@@ -84,12 +81,6 @@ GlassLab.MailManager.prototype.ClearOrders = function()
     this.availableOrders = [];
 };
 
-GlassLab.MailManager.prototype._onSaveRequested = function(blob)
-{
-    blob.availableOrders = this.availableOrders;
-    blob.rewards = this.rewards;
-};
-
 GlassLab.MailManager.prototype._onOrderStarted = function(order) {
     this.currentOrder = order;
     GlassLab.SignalManager.ordersChanged.dispatch(order);
@@ -111,16 +102,4 @@ GlassLab.MailManager.prototype.completeOrder = function(order)
     this.rewards.push(order); // the reward popup will send OrderResolved when it's closed
     GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
     GlassLab.SignalManager.rewardAdded.dispatch(order); // dispatch this so that the alert shows up on the mail
-};
-
-GlassLab.MailManager.prototype._onGameLoaded = function(blob)
-{
-    this.availableOrders = blob.availableOrders || [];
-
-    this.rewards = blob.rewards || [];
-
-    if (this.availableOrders.length > 0 || this.rewards.length > 0)
-    {
-        GlassLab.SignalManager.ordersChanged.dispatch(arguments);
-    }
 };

@@ -12,9 +12,6 @@ GlassLab.PenManager = function(game) {
     this.game = game;
 
     this.pens = [];
-
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 GlassLab.PenManager.prototype.AddPen = function(pen)
@@ -98,44 +95,4 @@ GlassLab.PenManager.prototype.DestroyAllPens = function()
     }
 
     this.pens = [];
-};
-
-GlassLab.PenManager.prototype._onSaveRequested = function(blob)
-{
-    blob.pens = [];
-
-    for (var i=0, j=this.pens.length; i < j; i++)
-    {
-        var pen = this.pens[i];
-        var penBlob = {
-            type: pen.creatureType,
-            width: pen.width,
-            height: pen.height,
-            foodAWidth: pen.foodAWidth,
-            foodBWidth: pen.foodBWidth,
-            draggableEdges: []
-        };
-
-        for (var edgeIndex = 0; edgeIndex < pen.edges.length; edgeIndex++)
-        {
-            if (pen.edges[edgeIndex].draggable)
-            {
-                penBlob.draggableEdges.push(pen.edges[edgeIndex].side);
-            }
-        }
-
-        blob.pens.push(penBlob);
-    }
-};
-
-GlassLab.PenManager.prototype._onGameLoaded = function(blob)
-{
-    this.DestroyAllPens();
-
-    for (var i=0, j=blob.pens.length; i < j; i++)
-    {
-        var penData = blob.pens[i];
-
-        this.CreatePen(penData);
-    }
 };

@@ -26,22 +26,6 @@ GlassLab.DayManager = function(game)
     */
 
     GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
-
-    this._refresh();
-};
-
-GlassLab.DayManager.prototype._onSaveRequested = function(blob)
-{
-    blob.currentSection = this.currentSection;
-    blob.numDots = this.dayMeter.challengeDots.length;
-};
-
-GlassLab.DayManager.prototype._onGameLoaded = function(blob)
-{
-    this.currentSection = blob.currentSection;
-    this.dayMeter.SetDots(blob.numDots);
 
     this._refresh();
 };
