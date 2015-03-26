@@ -26,16 +26,18 @@ GlassLab.Quest = function(name, data)
     this.unlockedFood = data.unlockedItems;
 
     GLOBAL.questManager.questsByName[this.name] = this;
+
+    GlassLab.SignalManager.gameInitialized.addOnce(this._loadQuestState, this);
 };
 
 GlassLab.Quest.prototype.Start = function()
 {
-    console.log("Starting quest", this.name, this.savedQuestData);
+    console.log("Starting quest", this.name);
     if (!this._isStarted)
     {
         this._isStarted = true;
 
-        var savedData = this._loadQuestState();
+        var savedData = this.savedState || {};
 
         this.index = savedData.index || {progression: 0, review: 0, fun: 0};
         this._resetFunCountdown();
@@ -219,6 +221,8 @@ GlassLab.Quest.prototype._saveQuestState = function()
 
 GlassLab.Quest.prototype._loadQuestState = function()
 {
-    if (GLOBAL.saveManager.HasData("questState")) return GLOBAL.saveManager.LoadData("questState");
-    else return {};
+    if (GLOBAL.saveManager.HasData("questState")) {
+        this.savedState = GLOBAL.saveManager.LoadData("questState");
+    } else this.savedState = {};
+    return this.savedState;
 };
