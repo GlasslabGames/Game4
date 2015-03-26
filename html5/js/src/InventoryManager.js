@@ -11,6 +11,7 @@ GlassLab.InventoryManager = function(game)
 
     this.unlockedItems = {};
 
+    // save / load which items are locked or unlocked
     GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
     GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
@@ -44,6 +45,8 @@ GlassLab.InventoryManager.prototype._onSaveRequested = function(blob)
 
 GlassLab.InventoryManager.prototype._onGameLoaded = function(blob)
 {
+    if (!blob) return;
+
     this.money = blob.money;
 
     for (var type in blob.unlockedItems)

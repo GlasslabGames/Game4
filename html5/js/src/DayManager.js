@@ -34,16 +34,12 @@ GlassLab.DayManager.prototype.Advance = function()
 {
     this.currentSection++;
     this._refresh();
-
-    GLOBAL.saveManager.Save("current_section");
 };
 
 GlassLab.DayManager.prototype.AdvanceTo = function(i)
 {
     this.currentSection = i;
     this._refresh();
-
-    GLOBAL.saveManager.Save("current_section");
 };
 
 GlassLab.DayManager.prototype.AdvanceDay = function()

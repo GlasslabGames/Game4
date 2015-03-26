@@ -24,9 +24,6 @@ GlassLab.QuestManager = function(game)
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
     GlassLab.SignalManager.questEnded.add(this._onQuestEnded, this);
 
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
-
     // These things actually end the level
     GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
 
@@ -38,6 +35,8 @@ GlassLab.QuestManager.prototype._onChallengeStarted = function(id, problemType, 
 {
     this.challengeIsBossLevel = isBoss;
     this.challengeType = challengeType;
+
+    GLOBAL.saveManager.Save(); // save when we start a new challenge
 };
 
 GlassLab.QuestManager.prototype.GetCurrentQuest = function()
@@ -88,39 +87,6 @@ GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)
     this._currentObjective = objectiveText;
 
     GlassLab.SignalManager.objectiveUpdated.dispatch(this._currentObjective);
-};
-
-GlassLab.QuestManager.prototype._onSaveRequested = function(blob)
-{
-    blob.currentObjective = this._currentObjective;
-
-    blob.activeQuests = [];
-
-    for (var i=0; i < this.activeQuests.length; i++)
-    {
-        var quest = this.activeQuests[i];
-        blob.activeQuests.push({
-            name: quest.name,
-            currentActionIndex: quest._currentActionIndex,
-            complete: quest._isComplete
-        });
-    }
-};
-
-GlassLab.QuestManager.prototype._onGameLoaded = function(blob)
-{
-    this.UpdateObjective(blob.currentObjective);
-
-    for (var i=0; i < blob.activeQuests.length; i++)
-    {
-        var questData = blob.activeQuests[i];
-        var quest = this.questsByName[questData.name];
-        quest._isComplete = questData.complete;
-
-        quest._currentActionIndex = questData.currentActionIndex-1;
-        quest._isStarted = false;
-        quest.Start();
-    }
 };
 
 GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)

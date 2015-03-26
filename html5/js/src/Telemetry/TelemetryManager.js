@@ -18,6 +18,7 @@ GlassLab.TelemetryManager = function()
     this.challengeLatencySum = 0;
 
     this.penResizes = [];
+    this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
 
     //GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
 
@@ -33,6 +34,10 @@ GlassLab.TelemetryManager = function()
     //GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
+
+    // Save / load the dictionary of challengeAttempts so we can access the total number of attempts across multiple play sessions
+    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
+    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 GlassLab.TelemetryManager.prototype._initializeSDK = function()
@@ -206,3 +211,12 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function()
     });
 };
 
+GlassLab.TelemetryManager.prototype._onSaveRequested = function(blob)
+{
+    blob.challengeAttempts = this.challengeAttempts;
+};
+
+GlassLab.TelemetryManager.prototype._onGameLoaded = function(blob)
+{
+    if (blob) this.challengeAttempts = blob.challengeAttempts;
+};

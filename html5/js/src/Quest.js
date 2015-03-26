@@ -23,22 +23,28 @@ GlassLab.Quest = function(name, data)
     this.challenges = {progression: [], review: [], fun: []};
     this.backgroundOrders = data.backgroundOrders;
 
-    this.numDots = data.numDots;
     this.unlockedFood = data.unlockedItems;
 
     GLOBAL.questManager.questsByName[this.name] = this;
+
+    // Save / load the current challenge and which orders are finished
+    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
+    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 };
 
 GlassLab.Quest.prototype.Start = function()
 {
-    console.log("Starting quest", this.name);
+    console.log("Starting quest", this.name, this.savedQuestData);
     if (!this._isStarted)
     {
         this._isStarted = true;
 
-        this.index = {progression: 0, review: 0, fun: 0};
+        var savedData = this.savedQuestData || {};
+
+        this.index = savedData.index || {progression: 0, review: 0, fun: 0};
         this._resetFunCountdown();
-        this.inReview = false;
+        this.inReview = savedData.inReview || false;
+        this.completedOrders = savedData.completedOrders || [];
 
         // Allow skipping ahead via url parameters
         var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
@@ -96,7 +102,10 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     }
 
     GLOBAL.mailManager.ClearOrders(); // for now, erase all pending orders
-    this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
+    if (this.savedQuestData && "perfect" in this.savedQuestData) {
+        this.perfect = this.savedQuestData; // if we had failed last time we were playing, keep that info
+        delete this.savedQuestData.perfect; // but don't keep it around for the next challenge
+    } else this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
 
     console.log("Starting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
 
@@ -198,3 +207,17 @@ GlassLab.Quest.prototype._complete = function()
     }
 };
 
+GlassLab.Quest.prototype._onSaveRequested = function(blob)
+{
+    var questData = {};
+    questData.inReview = this.inReview;
+    questData.index = this.index;
+    questData.completedOrders = this.completedOrders;
+    questData.perfect = this.perfect;
+    blob.questData = questData;
+};
+
+GlassLab.Quest.prototype._onGameLoaded = function(blob)
+{
+    if (blob) this.savedQuestData = blob.questData;
+};

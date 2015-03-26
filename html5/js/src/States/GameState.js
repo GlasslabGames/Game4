@@ -15,7 +15,7 @@ GlassLab.State.Game.prototype.create = function()
 {
     var game = this.game;
 
-    // FINALLY, load the first level. We do it at the end so that we're sure everything relevant has already been created
+    GLOBAL.saveManager.Load(); // load info that we saved previously (if it exists)
     GLOBAL.levelManager.LoadNextLevel(); // Load first level
 
     game.time.events.start();

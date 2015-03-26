@@ -26,8 +26,6 @@ GlassLab.DoChallengeAction.prototype.Do = function()
 
     GlassLabSDK.setOptions({gameLevel: this.challengeId});
 
-    GLOBAL.saveManager.Save("default_checkpoint"); // from SaveCheckpointAction
-
     GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.problemType, this.challengeType, this.boss);
 
     GLOBAL.questManager.UpdateObjective(this.objective);

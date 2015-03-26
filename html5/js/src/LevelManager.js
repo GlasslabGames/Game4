@@ -12,7 +12,12 @@ GlassLab.LevelManager = function(game)
     if (queryLevel != "")
     {
         this.currentLevel = parseInt(queryLevel)-2;
+        this.levelFromQuery = true;
     }
+
+    // Save / load the current level
+    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
+    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
 
     this.levels = [];
 
@@ -133,8 +138,6 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
         console.log("Starting level", levelNum, this.levels[levelNum], this.levels[levelNum].data);
         this.currentLevel = levelNum;
 
-        GlassLabSDK.saveTelemEvent("start_day", {day: this.currentLevel + 1});
-
         var level = this.levels[levelNum];
         if (level.data) level = level.data; // this lets us pass either a Level obj or just the data itself
         this.LoadLevelFromData(level);
@@ -193,7 +196,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
         GLOBAL.questManager.UpdateObjective(levelData.objective);
     }
 
-    GLOBAL.saveManager.SaveData("currentLevel", this.currentLevel);
+    GLOBAL.saveManager.Save(); // save when we start a new level
 
     var level = new GlassLab.Level();
     level.data = levelData;
@@ -226,6 +229,20 @@ GlassLab.LevelManager.prototype.RestartLevel = function()
 GlassLab.LevelManager.prototype.GetCurrentLevel = function()
 {
     return this.levels[this.currentLevel];
+};
+
+GlassLab.LevelManager.prototype._onSaveRequested = function(blob)
+{
+    blob.currentLevel = this.currentLevel;
+};
+
+GlassLab.LevelManager.prototype._onGameLoaded = function(blob)
+{
+    console.log("Level manager game loaded",blob);
+    if (blob && !this.levelFromQuery) { // if we chose the level via url param, don't overwrite it
+        this.currentLevel = blob.currentLevel;
+        this.currentLevel --; // since LoadNextLevel is called by GameState
+    }
 };
 
 

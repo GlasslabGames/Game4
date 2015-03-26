@@ -23,6 +23,8 @@ GlassLab.SaveManager = function(game)
 
     this.saveRequested = false;
     this.lastSaveTime = -1;
+
+    GlassLab.SignalManager.update.add(this._onUpdate, this);
 };
 
 GlassLab.SaveManager.SAVE_DELAY = 5; // Minimum time in seconds to wait between saves.
@@ -54,8 +56,6 @@ GlassLab.SaveManager.prototype.SaveData = function(key, value)
 {
     this.dataBlob[key] = value;
     this.onDataChanged();
-
-    GlassLab.SignalManager.update.add(this._onUpdate, this);
 };
 
 GlassLab.SaveManager.prototype.LoadData = function(key)
@@ -102,5 +102,10 @@ GlassLab.SaveManager.prototype._doSave = function()
     this.saveRequested = false;
 
     document.cookie = JSON.stringify(this.dataBlob);
-    console.log("Saved.");// + document.cookie);
+    console.log("Saved", this.dataBlob);
+};
+
+GlassLab.SaveManager.prototype.EraseSave = function()
+{
+    document.cookie = null;
 };
