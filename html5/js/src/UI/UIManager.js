@@ -176,14 +176,14 @@ GlassLab.UIManager.prototype.createHud = function() {
     zoomGroup.actualHeight += button.getHeight();
 
     var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
-        if (game.scale.isFullScreen)
+        if (this.game.scale.isFullScreen)
         {
-            game.scale.stopFullScreen();
+            this.game.scale.stopFullScreen();
             fullscreenButton.image.loadTexture("fullscreenIcon");
         }
         else
         {
-            game.scale.startFullScreen(false);
+            this.game.scale.startFullScreen(false);
             fullscreenButton.image.loadTexture("fullscreenOffIcon");
         }
     }, this);

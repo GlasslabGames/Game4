@@ -1,0 +1,164 @@
+{"frames": {
+
+"babybird_cry_end_00060.png":
+{
+	"frame": {"x":2,"y":304,"w":404,"h":298},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":109,"w":404,"h":298},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00061.png":
+{
+	"frame": {"x":2,"y":2,"w":406,"h":300},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":107,"w":406,"h":300},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00062.png":
+{
+	"frame": {"x":410,"y":2,"w":386,"h":301},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":82,"y":106,"w":386,"h":301},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00063.png":
+{
+	"frame": {"x":2,"y":604,"w":386,"h":302},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":82,"y":105,"w":386,"h":302},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00064.png":
+{
+	"frame": {"x":798,"y":2,"w":389,"h":286},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":80,"y":121,"w":389,"h":286},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00065.png":
+{
+	"frame": {"x":408,"y":558,"w":242,"h":221},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":137,"y":143,"w":242,"h":221},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00066.png":
+{
+	"frame": {"x":1189,"y":2,"w":235,"h":258},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":148,"y":106,"w":235,"h":258},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00067.png":
+{
+	"frame": {"x":652,"y":558,"w":234,"h":242},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":152,"y":122,"w":234,"h":242},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00068.png":
+{
+	"frame": {"x":1129,"y":781,"w":238,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":150,"y":130,"w":238,"h":234},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00069.png":
+{
+	"frame": {"x":888,"y":787,"w":239,"h":227},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":148,"y":137,"w":239,"h":227},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00070.png":
+{
+	"frame": {"x":390,"y":781,"w":240,"h":219},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":146,"y":145,"w":240,"h":219},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00071.png":
+{
+	"frame": {"x":1358,"y":510,"w":237,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":149,"y":135,"w":237,"h":229},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00072.png":
+{
+	"frame": {"x":1123,"y":539,"w":233,"h":240},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":152,"y":124,"w":233,"h":240},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00073.png":
+{
+	"frame": {"x":640,"y":305,"w":228,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":155,"y":113,"w":228,"h":251},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00074.png":
+{
+	"frame": {"x":408,"y":305,"w":230,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":154,"y":113,"w":230,"h":251},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00075.png":
+{
+	"frame": {"x":870,"y":290,"w":230,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":154,"y":115,"w":230,"h":249},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00076.png":
+{
+	"frame": {"x":1102,"y":290,"w":232,"h":247},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":153,"y":117,"w":232,"h":247},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00077.png":
+{
+	"frame": {"x":1336,"y":262,"w":232,"h":246},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":153,"y":118,"w":232,"h":246},
+	"sourceSize": {"w":500,"h":500}
+},
+"babybird_cry_end_00078.png":
+{
+	"frame": {"x":888,"y":541,"w":233,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":152,"y":120,"w":233,"h":244},
+	"sourceSize": {"w":500,"h":500}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "babybird_cry_end.png",
+	"format": "RGBA8888",
+	"size": {"w":1597,"h":1019},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:1f68713e70bf17cde15e5a0993590034:9d11234d7bf780ef7c17346ed457b358:4bc74bca26b2f5a7e6bbb2d0c3181e6d$"
+}
+}

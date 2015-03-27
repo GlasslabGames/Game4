@@ -28,7 +28,7 @@ GlassLab.RewardPopup = function(game, x, y)
     photo.angle = 10;
     this.addChild(photo);
 
-    this.creature = this.game.make.sprite(0, 30, "unicorn_idle");
+    this.creature = this.game.make.sprite(0, 30, "unifox_idle");
     this.creature.scale.setTo(-0.25, 0.25);
     this.creature.anchor.setTo(0.5, 0.5);
     photo.addChild(this.creature);

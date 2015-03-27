@@ -1,0 +1,236 @@
+{"frames": {
+
+"bird_cry_start_00000.png":
+{
+	"frame": {"x":1538,"y":2,"w":230,"h":238},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":151,"y":125,"w":230,"h":238},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00001.png":
+{
+	"frame": {"x":947,"y":669,"w":230,"h":238},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":151,"y":125,"w":230,"h":238},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00002.png":
+{
+	"frame": {"x":479,"y":662,"w":231,"h":237},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":150,"y":126,"w":231,"h":237},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00003.png":
+{
+	"frame": {"x":712,"y":665,"w":233,"h":237},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":148,"y":126,"w":233,"h":237},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00004.png":
+{
+	"frame": {"x":242,"y":660,"w":235,"h":236},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":146,"y":127,"w":235,"h":236},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00005.png":
+{
+	"frame": {"x":2,"y":660,"w":238,"h":233},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":145,"y":130,"w":238,"h":233},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00006.png":
+{
+	"frame": {"x":1255,"y":443,"w":243,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":144,"y":134,"w":243,"h":229},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00007.png":
+{
+	"frame": {"x":1007,"y":441,"w":246,"h":226},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":137,"w":246,"h":226},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00008.png":
+{
+	"frame": {"x":756,"y":440,"w":249,"h":223},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":142,"y":140,"w":249,"h":223},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00009.png":
+{
+	"frame": {"x":2,"y":437,"w":250,"h":221},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":142,"y":142,"w":250,"h":221},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00010.png":
+{
+	"frame": {"x":2,"y":216,"w":251,"h":219},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":142,"y":144,"w":251,"h":219},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00011.png":
+{
+	"frame": {"x":1283,"y":2,"w":253,"h":217},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":141,"y":146,"w":253,"h":217},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00012.png":
+{
+	"frame": {"x":1027,"y":2,"w":254,"h":216},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":141,"y":147,"w":254,"h":216},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00013.png":
+{
+	"frame": {"x":515,"y":2,"w":255,"h":214},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":141,"y":149,"w":255,"h":214},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00014.png":
+{
+	"frame": {"x":2,"y":2,"w":255,"h":212},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":141,"y":151,"w":255,"h":212},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00015.png":
+{
+	"frame": {"x":772,"y":2,"w":253,"h":215},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":142,"y":148,"w":253,"h":215},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00016.png":
+{
+	"frame": {"x":255,"y":216,"w":252,"h":219},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":142,"y":144,"w":252,"h":219},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00017.png":
+{
+	"frame": {"x":254,"y":437,"w":249,"h":221},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":142,"w":249,"h":221},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00018.png":
+{
+	"frame": {"x":505,"y":439,"w":249,"h":221},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":142,"w":249,"h":221},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00019.png":
+{
+	"frame": {"x":1262,"y":221,"w":249,"h":220},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":143,"w":249,"h":220},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00020.png":
+{
+	"frame": {"x":1513,"y":242,"w":249,"h":220},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":143,"w":249,"h":220},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00021.png":
+{
+	"frame": {"x":509,"y":218,"w":249,"h":219},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":144,"w":249,"h":219},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00022.png":
+{
+	"frame": {"x":760,"y":219,"w":249,"h":219},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":144,"w":249,"h":219},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00023.png":
+{
+	"frame": {"x":1011,"y":220,"w":249,"h":219},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":144,"w":249,"h":219},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00024.png":
+{
+	"frame": {"x":259,"y":2,"w":254,"h":212},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":141,"y":151,"w":254,"h":212},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00025.png":
+{
+	"frame": {"x":1500,"y":464,"w":254,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":141,"y":134,"w":254,"h":229},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00026.png":
+{
+	"frame": {"x":1179,"y":674,"w":254,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":132,"y":112,"w":254,"h":251},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_start_00027.png":
+{
+	"frame": {"x":1435,"y":695,"w":312,"h":258},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":67,"y":105,"w":312,"h":258},
+	"sourceSize": {"w":500,"h":500}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bird_cry_start.png",
+	"format": "RGBA8888",
+	"size": {"w":1770,"h":955},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:ec366a893411b795a0d7896de954e882:13887b575db2ae4d8a121e5257b61403:441bac88634b4d1b5e3455652e1225ef$"
+}
+}

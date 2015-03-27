@@ -1,0 +1,92 @@
+{"frames": {
+
+"babyunifox_cry_loop_00040.png":
+{
+	"frame": {"x":828,"y":309,"w":404,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":77,"y":108,"w":404,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00041.png":
+{
+	"frame": {"x":416,"y":309,"w":410,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":108,"w":410,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00042.png":
+{
+	"frame": {"x":2,"y":309,"w":412,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":108,"w":412,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00043.png":
+{
+	"frame": {"x":2,"y":2,"w":414,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":108,"w":414,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00044.png":
+{
+	"frame": {"x":418,"y":2,"w":408,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":84,"y":108,"w":408,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00045.png":
+{
+	"frame": {"x":828,"y":2,"w":405,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":108,"w":405,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00046.png":
+{
+	"frame": {"x":1234,"y":309,"w":404,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":108,"w":404,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00047.png":
+{
+	"frame": {"x":1640,"y":309,"w":403,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":77,"y":108,"w":403,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00048.png":
+{
+	"frame": {"x":1641,"y":2,"w":402,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":79,"y":108,"w":402,"h":305},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyunifox_cry_loop_00049.png":
+{
+	"frame": {"x":1235,"y":2,"w":404,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":77,"y":108,"w":404,"h":305},
+	"sourceSize": {"w":500,"h":500}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "babyunifox_cry_loop.png",
+	"format": "RGBA8888",
+	"size": {"w":2045,"h":616},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:ee6c153f3e37565da5293684a1c9b07c:4467704d5c8a0db292737dfaa13438c7:51680c8eacfc749c0767e25bc19c5b33$"
+}
+}

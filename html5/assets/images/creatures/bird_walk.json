@@ -1,0 +1,204 @@
+{"frames": {
+
+"bird_walk_00000.png":
+{
+	"frame": {"x":488,"y":234,"w":230,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":244},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00001.png":
+{
+	"frame": {"x":245,"y":235,"w":230,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":244},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00002.png":
+{
+	"frame": {"x":2,"y":237,"w":230,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":244},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00003.png":
+{
+	"frame": {"x":1214,"y":2,"w":230,"h":243},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":45,"w":230,"h":243},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00004.png":
+{
+	"frame": {"x":973,"y":233,"w":230,"h":242},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":45,"w":230,"h":242},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00005.png":
+{
+	"frame": {"x":1187,"y":478,"w":230,"h":241},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":45,"w":230,"h":241},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00006.png":
+{
+	"frame": {"x":1443,"y":247,"w":231,"h":240},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":45,"w":231,"h":240},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00007.png":
+{
+	"frame": {"x":1676,"y":244,"w":230,"h":239},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":45,"w":230,"h":239},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00008.png":
+{
+	"frame": {"x":234,"y":481,"w":235,"h":238},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":65,"y":44,"w":235,"h":238},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00009.png":
+{
+	"frame": {"x":477,"y":480,"w":238,"h":236},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":62,"y":44,"w":238,"h":236},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00010.png":
+{
+	"frame": {"x":731,"y":2,"w":240,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":44,"w":240,"h":234},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00011.png":
+{
+	"frame": {"x":2,"y":2,"w":241,"h":233},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":59,"y":44,"w":241,"h":233},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00012.png":
+{
+	"frame": {"x":245,"y":2,"w":241,"h":231},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":59,"y":44,"w":241,"h":231},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00013.png":
+{
+	"frame": {"x":488,"y":2,"w":241,"h":230},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":59,"y":44,"w":241,"h":230},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00014.png":
+{
+	"frame": {"x":973,"y":2,"w":239,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":61,"y":44,"w":239,"h":229},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00015.png":
+{
+	"frame": {"x":1205,"y":247,"w":236,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":64,"y":44,"w":236,"h":229},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00016.png":
+{
+	"frame": {"x":952,"y":477,"w":233,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":67,"y":44,"w":233,"h":229},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00017.png":
+{
+	"frame": {"x":1419,"y":489,"w":230,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":229},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00018.png":
+{
+	"frame": {"x":1678,"y":2,"w":230,"h":231},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":231},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00019.png":
+{
+	"frame": {"x":1676,"y":485,"w":230,"h":232},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":45,"w":230,"h":232},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00020.png":
+{
+	"frame": {"x":2,"y":483,"w":230,"h":236},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":236},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00021.png":
+{
+	"frame": {"x":717,"y":482,"w":230,"h":238},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":238},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00022.png":
+{
+	"frame": {"x":1446,"y":2,"w":230,"h":240},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":240},
+	"sourceSize": {"w":338,"h":338}
+},
+"bird_walk_00023.png":
+{
+	"frame": {"x":720,"y":238,"w":230,"h":242},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":70,"y":44,"w":230,"h":242},
+	"sourceSize": {"w":338,"h":338}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bird_walk.png",
+	"format": "RGBA8888",
+	"size": {"w":1910,"h":722},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:2dbb217179cb5acf1cb8dc2b56cacd75:2a7869e7c99f539802dd7924cee2937f:20b6732039bbc661955f19cdf0acffe8$"
+}
+}

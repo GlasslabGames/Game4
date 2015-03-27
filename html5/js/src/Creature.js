@@ -23,7 +23,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
 
-    this.sprite.scale.setTo(-0.25, 0.25);
+    this.sprite.scale.setTo(-0.5, 0.5);
 
     this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
@@ -47,12 +47,12 @@ GlassLab.Creature = function (game, type, startInPen) {
         var foodInfo = GlassLab.FoodTypes[type];
         hungerBarSections[type] = {percent: this.desiredAmountsOfFood[type] / totalFoodDesired, color: foodInfo.color };
     };
-    this.hungerBar = new GlassLab.FillBar(this.game, 500, 100, hungerBarSections);
+    this.hungerBar = new GlassLab.FillBar(this.game, 250, 50, hungerBarSections);
     this.sprite.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
-    this.thoughtBubble.position.setTo(-200, -450);
+    this.thoughtBubble.position.setTo(-100, -225);
     this.thoughtBubble.scale.setTo(0.8/this.sprite.scale.x, 0.8/this.sprite.scale.y);
     this.sprite.addChild(this.thoughtBubble);
 
@@ -63,24 +63,32 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.shadow = this.game.make.sprite(0, 0, "shadow");
     this.sprite.addChild(this.shadow);
     this.shadow.anchor.setTo(0.5, 0.8);
+    this.shadow.scale.setTo(0.5, 0.5);
 
     this.animSprites = {};
     var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit"];
     for (var i = 0; i < animNames.length; i++) {
         var spriteName = info.spriteName + "_" + animNames[i];
         var animSprite = this.game.make.sprite(0, 0, spriteName);
+
+        GLOBAL.resourceManager.preloadResource(spriteName);
+
         animSprite.anchor.setTo(0.5, 0.8);
         animSprite.animations.add('anim'); // this animation uses the whole spritesheet
         this.sprite.addChild(animSprite);
-        animSprite.visible = false;
+
+        if (animNames[i] != "idle")
+        {
+            animSprite.visible = false;
+        }
+
         animSprite.tint = info.spriteTint || 0xffffff; // temporary way to distinguish creatures
         this.animSprites[animNames[i]] = animSprite;
     }
 
-    this.animSprites.idle.visible = true;
     this.spriteHeight = this.animSprites.idle.height; // for future reference
 
-    this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * 4;
+    this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * this.sprite.anchor.y - 270;
 
     //game.physics.isoArcade.enable(this.sprite);
     this.sprite.events.onDestroy.add(this._onDestroy, this);
@@ -260,14 +268,15 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
                 this.currentPath.push(new Phaser.Point(node.x, node.y));
             }
         }
-    }
 
-    if (GLOBAL.debug) {
-        for (var i=this.currentPath.length-1; i >= 0; i--)
-        {
-            var tile = GLOBAL.tileManager.GetTile(this.currentPath[i].x, this.currentPath[i].y);
-            tile.tint = 0xFF0000;
+        if (GLOBAL.debug) {
+            for (var i=this.currentPath.length-1; i >= 0; i--)
+            {
+                var tile = GLOBAL.tileManager.GetTile(this.currentPath[i].x, this.currentPath[i].y);
+                tile.tint = 0xFF0000;
+            }
         }
+
     }
 
     this.onPathChanged.dispatch(this);
@@ -467,6 +476,7 @@ GlassLab.Creature.prototype.Emote = function (happy, callback) {
     var spriteName = (happy) ? "happyEmote" : "angryEmote";
     if (this.emote) this._afterEmote();
     this.emote = this.game.make.sprite(0, 0, spriteName);
+    this.emote.scale.setTo(.5, .5);
     this.emote.y = -2 * this.spriteHeight * this.sprite.scale.y;
     var size = this.emote.height * 3; // assumes the height and width are the same
     this.emote.height = this.emote.width = 0;

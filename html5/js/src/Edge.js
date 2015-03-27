@@ -18,12 +18,8 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.sprite.addChild(this.pieces);
 
     if (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) {
-        //this.spriteName = "penRightEdge";
-        //this.sprite.isoX = 0.5 * GLOBAL.tileSize;
         this.horizontal = true;
     } else {
-        //this.spriteName = "penLeftEdge";
-        //this.sprite.isoY = 0.5 * GLOBAL.tileSize;
         this.horizontal = false;
     }
 
@@ -57,14 +53,14 @@ GlassLab.Edge.prototype.Reset = function() {
 GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "right", center: "center" }; // enum
 
 // add a new piece or recycle one
-GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName, anchor) {
-    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName, anchor);
+GlassLab.Edge.prototype.PlacePiece = function(col, row, atlasName, spriteName, anchor) {
+    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, atlasName, spriteName, anchor);
 };
 
-GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, anchor) {
+GlassLab.Edge.prototype.PlacePieceAt = function(x, y, atlasName, spriteName, anchor) {
     var sprite = this.unusedSprites.pop();
     if (!sprite) {
-        sprite = this.game.make.isoSprite(0, 0, 0, spriteName);
+        sprite = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
         this._setInputHandlers(sprite);
         switch (this.side) {
             case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
@@ -75,7 +71,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, anchor) {
         this.pieces.addChild(sprite);
     }
     sprite.visible = true;
-    if (sprite.spriteName != spriteName) sprite.loadTexture(spriteName);
+    if (sprite.spriteName != spriteName) sprite.loadTexture(atlasName, spriteName);
     if (anchor) sprite.anchor.set(anchor.x, anchor.y);
     sprite.isoX = x;
     sprite.isoY = y;
