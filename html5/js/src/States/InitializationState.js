@@ -44,11 +44,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('shadow', 'assets/images/iso_shadow.png');
     game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
-    game.load.image('penBg', 'assets/images/tiles/dirtTile1_top.png');
-    game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical2.png');
-    game.load.image('penLeftEdge', 'assets/images/edgeFence_vertical2.png');
-    game.load.image('penRightEdge', 'assets/images/edgeFence_horizontal2.png');
-
+    /*
     game.load.image('crateBackCorner', 'assets/images/crate/crate_back_corner.png');
     game.load.image('crateBackLeft', 'assets/images/crate/crate_back_left.png');
     game.load.image('crateBackRight', 'assets/images/crate/crate_back_right.png');
@@ -56,6 +52,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('crateFrontLeft', 'assets/images/crate/crate_front_left.png');
     game.load.image('crateFrontRight', 'assets/images/crate/crate_front_right.png');
     game.load.image('crateFloor', 'assets/images/crate/crate_floor.png');
+    */
+    game.load.atlasJSONHash('crate', 'assets/images/crate/crate.png', 'assets/images/crate/crate.json');
 
     game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
     game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');
@@ -77,7 +75,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('happyEmote', 'assets/images/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/angryEmote.png');
 
-
+/*
      game.load.image('autumn_ground1.png', 'assets/images/tiles/autumn_ground1.png');
      game.load.image('autumn_ground2.png', 'assets/images/tiles/autumn_ground2.png');
      game.load.image('autumn_ground3.png', 'assets/images/tiles/autumn_ground3.png');
@@ -100,13 +98,13 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('dirtTile1.png', 'assets/images/tiles/dirtTile1.png');
     game.load.image('penTile_placeholder.png', 'assets/images/tiles/penTile_placeholder.png');
     game.load.image('penTile_placeholder2.png', 'assets/images/tiles/penTile_placeholder2.png');
+    */
+    game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
 
     // Cloud shadow
     game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
 
     // UI
-    game.load.image('itemsIcon', 'assets/images/prima_HUD_items.png');
-    game.load.image('journalIcon', 'assets/images/prima_HUD_journal.png');
     game.load.image('closeIcon', 'assets/images/Close-button.png');
     game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
     game.load.image('journalBg', 'assets/images/journal_bg2.png');
@@ -235,7 +233,6 @@ GlassLab.State.Init.prototype.create = function()
 
     // Create TileManager and map
     GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
-    var tileData = game.cache.getTilemapData("testTileMap");
 
     var mapData = GLOBAL.tileManager.GenerateRandomMapData(20, 20);
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);

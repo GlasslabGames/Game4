@@ -180,7 +180,7 @@ GlassLab.Pen.prototype.Resize = function() {
     // if we look like a crate, we need to show a special corner sprite
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
         this.cornerSprite.visible = true;
-        if (this.cornerSprite.spriteName != "crateBackCorner") this.cornerSprite.loadTexture("crateBackCorner");
+        if (this.cornerSprite.spriteName != "crate" || this.cornerSprite.frameName != "crate_back_corner.png") this.cornerSprite.loadTexture("crate", "crate_back_corner.png"); // TODO: FIX IF CHECK
         this.cornerSprite.anchor.setTo(0.075, 0.04);
         this.cornerSprite.isoPosition.setTo(GLOBAL.tileSize * -2, GLOBAL.tileSize * -1);
     } else {
@@ -251,12 +251,13 @@ GlassLab.Pen.prototype._resetTiles = function() {
 
 // The following functions can be overwritten to show different pens (e.g. the crate for shipping)
 GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow) {
-    var spriteName, anchor;
+    var spriteName, anchor, atlasName;
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
+        atlasName = "crate";
         if (targetEdge.side == GlassLab.Edge.SIDES.left) {
-            spriteName = "crateBackLeft";
+            spriteName = "crate_back_left.png";
         } else {
-            spriteName = "crateFrontRight";
+            spriteName = "crate_front_right.png";
             col --;
         }
         startRow --;
@@ -265,27 +266,28 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     } else {
         if (targetEdge.side == GlassLab.Edge.SIDES.left ||
             (targetEdge.side == GlassLab.Edge.SIDES.right && targetEdge.sideIndex < this.widths.length - 2)) {
-            spriteName = "dottedLineRight";
+            atlasName = "dottedLineRight";
             anchor = new Phaser.Point(0.1, 0.15);
         } else if (targetEdge.side == GlassLab.Edge.SIDES.center) {
-            spriteName = "gateDown";
+            atlasName = "gateDown";
             anchor = new Phaser.Point(0.15, 0.28);
         } else {
-            spriteName = "penFenceLeft";
+            atlasName = "penFenceLeft";
             anchor = new Phaser.Point(0.1, 0.15);
         }
     }
 
     for (var row = startRow; row < endRow; row++) {
-        targetEdge.PlacePiece(col - 2, row, spriteName, anchor);
+        targetEdge.PlacePiece(col - 2, row, atlasName, spriteName, anchor);
     }
 };
 
-GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName) {
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, atlasName, spriteName) {
     var anchor;
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
+        atlasName = "crate";
         if (targetEdge.side == GlassLab.Edge.SIDES.bottom) {
-            spriteName = "crateFrontLeft";
+            spriteName = "crate_front_left.png";
             row --;
         }
         var windowFreq = 3; // the frequency of windows. Only used for the top side
@@ -299,9 +301,9 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
 
     for (var col = startCol; col < endCol; col++) {
         if (this.penStyle == GlassLab.Pen.STYLES.crate && targetEdge.side == GlassLab.Edge.SIDES.top) {
-            spriteName = ((col - startCol) % windowFreq == 0)? "crateBackRightWindow" : "crateBackRight";
+            spriteName = ((col - startCol) % windowFreq == 0)? "crate_back_right_window.png" : "crate_back_right.png";
         }
-        targetEdge.PlacePiece(col - 1, row - 1, spriteName, anchor);
+        targetEdge.PlacePiece(col - 1, row - 1, atlasName, spriteName, anchor);
     }
 };
 
@@ -312,7 +314,7 @@ GlassLab.Pen.prototype._drawBg = function() {
             if (tile) {
                 tile.setInPen(this);
                 if (this.penStyle == GlassLab.Pen.STYLES.crate) {
-                    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), "crateFloor");
+                    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), "crate", "crate_floor.png");
                 }
                 else if (col >= this.widths[0]) tile.swapType(GlassLab.Tile.TYPES.dirt);
             }
@@ -347,17 +349,17 @@ GlassLab.Pen.prototype._placeArrows = function() {
     this.bottomEdge.placeArrow( midCol, this.height );
 };
 
-GlassLab.Pen.prototype._placeTile = function(xPos, yPos, spriteName) {
+GlassLab.Pen.prototype._placeTile = function(xPos, yPos, atlasName, spriteName) {
 
     var tile = this.unusedTiles.pop();
     if (!tile) { // we ran out of existing tiles, so make a new one
-        tile = this.game.make.isoSprite(0, 0, 0, spriteName);
+        tile = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
         tile.anchor.setTo(0.075, 0.04);
         this.tileRoot.addChild(tile);
         this.tiles.push(tile);
     }
     tile.visible = true;
-    if (tile.spriteName != spriteName) tile.loadTexture(spriteName);
+    if (tile.spriteName != spriteName) tile.loadTexture(atlasName, spriteName);
     tile.isoX = xPos;
     tile.isoY = yPos;
     tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far

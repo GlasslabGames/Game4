@@ -52,7 +52,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.hungerBar.sprite.visible = false;
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
-    this.thoughtBubble.position.setTo(-200, -450);
+    this.thoughtBubble.position.setTo(-100, -225);
     this.thoughtBubble.scale.setTo(0.8/this.sprite.scale.x, 0.8/this.sprite.scale.y);
     this.sprite.addChild(this.thoughtBubble);
 
@@ -476,6 +476,7 @@ GlassLab.Creature.prototype.Emote = function (happy, callback) {
     var spriteName = (happy) ? "happyEmote" : "angryEmote";
     if (this.emote) this._afterEmote();
     this.emote = this.game.make.sprite(0, 0, spriteName);
+    this.emote.scale.setTo(.5, .5);
     this.emote.y = -2 * this.spriteHeight * this.sprite.scale.y;
     var size = this.emote.height * 3; // assumes the height and width are the same
     this.emote.height = this.emote.width = 0;
