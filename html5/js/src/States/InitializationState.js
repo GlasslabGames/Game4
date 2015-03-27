@@ -72,8 +72,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.atlasJSONHash('gateLightRed', 'assets/images/pen/switch_light_red.png', 'assets/images/pen/switch_light_red.json');
 
     game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
-    game.load.image('happyEmote', 'assets/images/happyEmote.png');
-    game.load.image('angryEmote', 'assets/images/angryEmote.png');
+    game.load.image('happyEmote', 'assets/images/emotes/happyEmote.png');
+    game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
 /*
      game.load.image('autumn_ground1.png', 'assets/images/tiles/autumn_ground1.png');
