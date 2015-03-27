@@ -23,7 +23,7 @@ GlassLab.CreatureManager = function (game) {
                 plural: "baby rams"
             },
             unlocked: false, // if the player has discovered this animal yet
-            spriteName: "babySheep",
+            spriteName: "babyram",
             fxFrames: {eat: 14, vomit: 21 },
             desiredFood: [{type: "broccoli", amount: 3}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
@@ -38,7 +38,7 @@ GlassLab.CreatureManager = function (game) {
                 plural: "rams"
             },
             unlocked: false, // if the player has discovered this animal yet
-            spriteName: "sheep",
+            spriteName: "ram",
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}],
             discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
@@ -53,7 +53,7 @@ GlassLab.CreatureManager = function (game) {
                 plural: "baby unifoxes"
             },
             unlocked: false,
-            spriteName: "babyUnicorn",
+            spriteName: "babyunifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 22, vomit: 36 },
             desiredFood: [{type: "strawberry", amount: 4}],
@@ -69,7 +69,7 @@ GlassLab.CreatureManager = function (game) {
                 plural: "unifoxes"
             },
             unlocked: false,
-            spriteName: "unicorn",
+            spriteName: "unifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40 },
             desiredFood: [{type: "strawberry", amount: 5}, {type: "carrot", amount: 4}],

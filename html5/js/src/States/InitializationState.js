@@ -18,15 +18,16 @@ GlassLab.State.Init.prototype.preload = function()
         game.paused = false;
     }
 
-    var creatureSpriteNames = ["sheep", "unicorn", "babySheep", "babyUnicorn"];
+    var creatureSpriteNames = ["ram", "unifox", "babyram", "babyunifox", "bird", "babybird"];
     for (var i = 0; i < creatureSpriteNames.length; i++) {
         var spriteName = creatureSpriteNames[i];
         game.load.image(spriteName+'_idle', 'assets/images/creatures/'+spriteName+'_idle.png');
-        game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_backfacing_idle.png');
+        game.load.image(spriteName+'_idle_back', 'assets/images/creatures/'+spriteName+'_idlebf.png');
         game.load.atlasJSONHash(spriteName+'_walk', 'assets/images/creatures/'+spriteName+'_walk.png', 'assets/images/creatures/'+spriteName+'_walk.json');
-        game.load.atlasJSONHash(spriteName+'_walk_back', 'assets/images/creatures/'+spriteName+'_backfacing_walk.png', 'assets/images/creatures/'+spriteName+'_backfacing_walk.json');
+        game.load.atlasJSONHash(spriteName+'_walk_back', 'assets/images/creatures/'+spriteName+'_walkbf.png', 'assets/images/creatures/'+spriteName+'_walkbf.json');
         game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');
         game.load.atlasJSONHash(spriteName+'_vomit', 'assets/images/creatures/'+spriteName+'_vomit.png', 'assets/images/creatures/'+spriteName+'_vomit.json');
+        game.load.atlasJSONHash(spriteName+'_poop', 'assets/images/creatures/'+spriteName+'_poop.png', 'assets/images/creatures/'+spriteName+'_poop.json');
         game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
     }

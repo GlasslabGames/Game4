@@ -1,0 +1,204 @@
+{"frames": {
+
+"babybird_walkbf_00025.png":
+{
+	"frame": {"x":2,"y":490,"w":210,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":28,"w":210,"h":251},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00026.png":
+{
+	"frame": {"x":437,"y":493,"w":211,"h":253},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":211,"h":253},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00027.png":
+{
+	"frame": {"x":650,"y":495,"w":211,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":211,"h":255},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00028.png":
+{
+	"frame": {"x":1085,"y":499,"w":211,"h":257},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":27,"w":211,"h":257},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00029.png":
+{
+	"frame": {"x":223,"y":746,"w":211,"h":259},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":27,"w":211,"h":259},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00030.png":
+{
+	"frame": {"x":436,"y":748,"w":212,"h":261},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":27,"w":212,"h":261},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00031.png":
+{
+	"frame": {"x":650,"y":755,"w":213,"h":262},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":27,"w":213,"h":262},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00032.png":
+{
+	"frame": {"x":1085,"y":758,"w":216,"h":263},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":27,"w":216,"h":263},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00033.png":
+{
+	"frame": {"x":865,"y":755,"w":218,"h":262},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":26,"w":218,"h":262},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00034.png":
+{
+	"frame": {"x":2,"y":746,"w":219,"h":258},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":27,"w":219,"h":258},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00035.png":
+{
+	"frame": {"x":863,"y":497,"w":220,"h":256},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":27,"w":220,"h":256},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00036.png":
+{
+	"frame": {"x":214,"y":492,"w":221,"h":252},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":221,"h":252},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00037.png":
+{
+	"frame": {"x":874,"y":246,"w":220,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":28,"w":220,"h":249},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00038.png":
+{
+	"frame": {"x":438,"y":245,"w":221,"h":246},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":28,"w":221,"h":246},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00039.png":
+{
+	"frame": {"x":2,"y":244,"w":221,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":221,"h":244},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00040.png":
+{
+	"frame": {"x":661,"y":2,"w":221,"h":242},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":221,"h":242},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00041.png":
+{
+	"frame": {"x":439,"y":2,"w":220,"h":241},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":220,"h":241},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00042.png":
+{
+	"frame": {"x":2,"y":2,"w":218,"h":240},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":218,"h":240},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00043.png":
+{
+	"frame": {"x":222,"y":2,"w":215,"h":240},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":215,"h":240},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00044.png":
+{
+	"frame": {"x":884,"y":2,"w":212,"h":242},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":27,"w":212,"h":242},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00045.png":
+{
+	"frame": {"x":1098,"y":2,"w":211,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":27,"w":211,"h":244},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00046.png":
+{
+	"frame": {"x":225,"y":244,"w":211,"h":246},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":27,"w":211,"h":246},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00047.png":
+{
+	"frame": {"x":661,"y":246,"w":211,"h":247},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":28,"w":211,"h":247},
+	"sourceSize": {"w":338,"h":338}
+},
+"babybird_walkbf_00048.png":
+{
+	"frame": {"x":1096,"y":248,"w":210,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":28,"w":210,"h":249},
+	"sourceSize": {"w":338,"h":338}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "babybird_walkbf.png",
+	"format": "RGBA8888",
+	"size": {"w":1311,"h":1023},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:decc2daa8d74496d0407afddf2f85937:bd6ed2e301ddff995048613f992e32e3:68d4a5026ee053ea95b1bb658d938418$"
+}
+}

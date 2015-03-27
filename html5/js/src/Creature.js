@@ -23,7 +23,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
 
-    this.sprite.scale.setTo(-0.25, 0.25);
+    this.sprite.scale.setTo(-0.5, 0.5);
 
     this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
@@ -47,7 +47,7 @@ GlassLab.Creature = function (game, type, startInPen) {
         var foodInfo = GlassLab.FoodTypes[type];
         hungerBarSections[type] = {percent: this.desiredAmountsOfFood[type] / totalFoodDesired, color: foodInfo.color };
     };
-    this.hungerBar = new GlassLab.FillBar(this.game, 500, 100, hungerBarSections);
+    this.hungerBar = new GlassLab.FillBar(this.game, 250, 50, hungerBarSections);
     this.sprite.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
 
@@ -63,6 +63,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.shadow = this.game.make.sprite(0, 0, "shadow");
     this.sprite.addChild(this.shadow);
     this.shadow.anchor.setTo(0.5, 0.8);
+    this.shadow.scale.setTo(0.5, 0.5);
 
     this.animSprites = {};
     var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit"];
@@ -87,7 +88,7 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.spriteHeight = this.animSprites.idle.height; // for future reference
 
-    this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * 4;
+    this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * this.sprite.anchor.y - 270;
 
     //game.physics.isoArcade.enable(this.sprite);
     this.sprite.events.onDestroy.add(this._onDestroy, this);
