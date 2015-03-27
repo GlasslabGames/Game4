@@ -12,12 +12,27 @@ GlassLab.SaveManager = function(game)
     // Try load from cookie
     if (getParameterByName("reset") != "true")
     {
-        try {
-            this.dataBlob = JSON.parse(document.cookie);
-        }
-        catch (e)
+        // Get save from cookie if local
+        if (GlassLabSDK.getOptions().localLogging)
         {
-            console.error("Error parsing cookie: "+e+"\n",document.cookie);
+            try {
+                this.dataBlob = JSON.parse(document.cookie);
+            }
+            catch (e)
+            {
+                console.error("Error parsing cookie: "+e+"\n",document.cookie);
+            }
+        }
+        else // Get save from server if not local
+        {
+            try {
+                this.dataBlob = JSON.parse(GLOBAL.telemetryManager.userSaveString);
+                console.log("GAME LOAD: ", this.dataBlob);
+            }
+            catch (e)
+            {
+                console.error("Error parsing save data: "+e+"\n",GLOBAL.telemetryManager.userSaveString);
+            }
         }
     }
 
@@ -101,8 +116,20 @@ GlassLab.SaveManager.prototype._doSave = function()
     this.lastSaveTime = GLOBAL.game.time.totalElapsedSeconds();
     this.saveRequested = false;
 
-    document.cookie = JSON.stringify(this.dataBlob);
-    console.log("Saved", this.dataBlob);
+    // Save to local
+    if (GlassLabSDK.getOptions().localLogging)
+    {
+        document.cookie = JSON.stringify(this.dataBlob);
+    }
+    else // Save to server
+    {
+        GlassLabSDK.postSaveGame(this.dataBlob, function(data) {
+            console.log("Saved", data);
+        }, function(data) {
+            console.error("ERROR SAVING GAME: ", data);
+        });
+    }
+
 };
 
 GlassLab.SaveManager.prototype.EraseSave = function()
