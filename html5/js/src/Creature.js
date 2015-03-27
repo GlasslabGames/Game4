@@ -477,11 +477,11 @@ GlassLab.Creature.prototype.Emote = function (happy, callback) {
     if (this.emote) this._afterEmote();
     this.emote = this.game.make.sprite(0, 0, spriteName);
     this.emote.scale.setTo(.5, .5);
-    this.emote.y = -2 * this.spriteHeight * this.sprite.scale.y;
+    this.emote.y = -this.spriteHeight * this.sprite.scale.y;
     var size = this.emote.height * 3; // assumes the height and width are the same
     this.emote.height = this.emote.width = 0;
     this.game.add.tween(this.emote).to({
-        y: -3 * this.spriteHeight * this.sprite.scale.y,
+        y: -2 * this.spriteHeight * this.sprite.scale.y,
         height: size,
         width: size
     }, 100, Phaser.Easing.Linear.Out, true);
