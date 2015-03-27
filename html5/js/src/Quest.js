@@ -151,7 +151,7 @@ GlassLab.Quest.prototype._addBackgroundOrders = function() {
 
     for (var i = 0; i < this.backgroundOrders.length; i++) {
         var order = this.backgroundOrders[i].orderData; // TODO: store additional info for telemetry purposes
-        if (!order.fulfilled) { // only add orders that the player hasn't done yet
+        if (order.outcome != "success") { // only add orders that the player hasn't successfully completed yet
             GLOBAL.mailManager.AddOrders(order);
             if (GLOBAL.mailManager.availableOrders.length >= 3) break;
         }

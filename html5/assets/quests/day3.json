@@ -7,7 +7,7 @@
      "problemType": "ND",
      "challengeData": {
         "creatureType": "baby_unifox",
-        "numCreatures": 2,
+        "numCreatures": 10,
         "bottomDraggable":true,
         "topDraggable":true,
         "leftDraggable":true

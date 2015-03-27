@@ -186,7 +186,7 @@ GlassLab.SortingGame.prototype.finish = function() {
  */
 
 GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFood, displayMode, challengeType) {
-    GlassLab.UIDragTarget.prototype.constructor.call(this, sortingGame.game, 230, 350, "", true);
+    GlassLab.UIDragTarget.prototype.constructor.call(this, sortingGame.game, 230, 350, null, "", true);
 
     this.sortingGame = sortingGame;
     this.creatureType = creatureType;
