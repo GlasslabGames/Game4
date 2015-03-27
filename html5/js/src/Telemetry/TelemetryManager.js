@@ -19,6 +19,8 @@ GlassLab.TelemetryManager = function()
 
     this.penResizes = [];
     this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
+    this.SOWOs = {};
+    this.problemTypesCompletedPerfectly = {}; // problem types are added to this list when a player completes a problem of that type in 1 attempt
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
     GlassLab.SignalManager.challengeComplete.add(this._onChallengeComplete, this);
@@ -122,8 +124,6 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function(success)
     attempts ++;
     this.challengeAttempts[this.currentChallengeId] = attempts;
 
-    this._saveData();
-
     GlassLabSDK.saveTelemEvent("submit_answer", {
         challenge_type: this.currentChallengeType,
         success: success,
@@ -133,11 +133,15 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function(success)
 
     if (success) this._onChallengeSuccess();
     else this._onChallengeFailure();
+
+    this._saveData();
 };
 
 GlassLab.TelemetryManager.prototype._onChallengeFailure = function()
 {
     GlassLabSDK.saveTelemEvent("fail_challenge", {});
+
+    this._checkFailureSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType);
 };
 
 GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
@@ -178,7 +182,56 @@ GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
         value: this.challengeLatencySum / this.challengesCompleted
     });
 
-    this._saveData();
+    this._checkSuccessSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType);
+};
+
+GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, attempts, challengeType) {
+    var perfectProgressions = {};
+    for (var id in this.challengeAttempts) {
+        var section = id.split(".")[0]; // make sure to update this if the challenge ID format changes
+        if (section in perfectProgressions) {
+            perfectProgressions[section] = perfectProgressions[section] && (this.challengeAttempts[id] == 1);
+        } else {
+            perfectProgressions[section] = (this.challengeAttempts[id] == 1);
+        }
+    }
+    if (perfectProgressions["0"]) this._sendSOWO("so1"); // all intro levels were successful on the 1st attempt
+
+    if (challengeType == "pen") this._sendSOWO("so2"); // first successful pen (it will only be sent if it hasn't been sent yet.)
+    else if (challengeType == "order") this._sendSOWO("so3"); // first successful order
+
+    var problemType = challengeId.split(".")[2]; // make sure to update this if the challenge ID format changes
+
+    if (attempts == 1) {
+        if (!this.problemTypesCompletedPerfectly[problemType]) {
+            this.problemTypesCompletedPerfectly[problemType] = true;
+            // the following SOs will be sent as soon as the player completes at least one problem of the specifies types perfectly
+            if (this.problemTypesCompletedPerfectly.md && this.problemTypesCompletedPerfectly.nd) this._sendSOWO("so4");
+            if (this.problemTypesCompletedPerfectly.ms && this.problemTypesCompletedPerfectly.ns) this._sendSOWO("so5");
+            if (this.problemTypesCompletedPerfectly.mt) this._sendSOWO("so6");
+        }
+    }
+
+    if (perfectProgressions["1"] && perfectProgressions["2"]) this._sendSOWO("so7"); // all challenges in parts 1 and 2 were completed in 1 attempt
+
+    if (problemType == "mt") this._sendSOWO("so8"); // the player has completed an advanced challenge (in any number of attempts)
+};
+
+GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, attempts, challengeType) {
+    var section = challengeId.split(".")[0]; // make sure to update this if the challenge ID format changes
+    if (section == "0") {
+        if (attempts >= 3) this._sendSOWO("wo1"); // more than 3 attempts to complete an intro challenge
+    } else if (attempts >= 4) {
+        if (challengeType == "order" && !this.SOWOs.so3) this._sendSOWO("wo2"); // more than 4 attempts for the first order challenge (they haven't beaten one before)
+        else if (challengeType == "pen" && !this.SOWOs.so2) this._sendSOWO("wo3"); // more than 4 attempts for the first pen challenge (they haven't beaten one before)
+    }
+};
+
+GlassLab.TelemetryManager.prototype._sendSOWO = function(name) {
+    if (!this.SOWOs[name]) { // only send a SOWO if we haven't sent it yet
+        this.SOWOs[name] = true;
+        GlassLabSDK.saveTelemEvent(name, {});
+    }
 };
 
 GlassLab.TelemetryManager.prototype._saveData = function() {
@@ -186,7 +239,9 @@ GlassLab.TelemetryManager.prototype._saveData = function() {
         challengesCompleted: this.challengesCompleted,
         challengesCompletedOnFirstAttempt: this.challengesCompletedOnFirstAttempt,
         challengeLatencySum: this.challengeLatencySum,
-        challengeAttempts: this.challengeAttempts
+        challengeAttempts: this.challengeAttempts,
+        SOWOs: this.SOWOs,
+        problemTypesCompletedPerfectly: this.problemTypesCompletedPerfectly
     });
 };
 
@@ -197,5 +252,7 @@ GlassLab.TelemetryManager.prototype._loadData = function() {
         this.challengesCompletedOnFirstAttempt = data.challengesCompletedOnFirstAttempt;
         this.challengeLatencySum = data.challengeLatencySum;
         this.challengeAttempts = data.challengeAttempts;
+        this.SOWOs = data.SOWOs;
+        this.problemTypesCompletedPerfectly = data.problemTypesCompletedPerfectly;
     }
 };

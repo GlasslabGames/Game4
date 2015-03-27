@@ -3,7 +3,7 @@
   "progression": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "1.02.md",
+      "challengeId": "0.02.md",
       "problemType": "MD",
       "challengeData": {
         "creatureType": "baby_rammus",
@@ -108,7 +108,7 @@
     },
     {
       "__type": "DoOrderChallengeAction",
-      "id": "1.04.ms",
+      "id": "0.04.ms",
       "problemType": "MS",
       "boss": true,
       "challengeData": {
@@ -250,7 +250,7 @@
   "reviewChallenges": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "1.03.md",
+      "challengeId": "0.03.md",
       "problemType": "MD",
       "challengeData": {
         "creatureType": "baby_rammus",
