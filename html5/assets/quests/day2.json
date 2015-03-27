@@ -3,7 +3,7 @@
   "progression": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "1.02.md",
+      "challengeId": "0.02.md",
       "problemType": "MD",
       "challengeData": {
         "creatureType": "baby_rammus",
@@ -108,7 +108,7 @@
     },
     {
       "__type": "DoOrderChallengeAction",
-      "id": "1.04.ms",
+      "challengeId": "0.04.ms",
       "problemType": "MS",
       "boss": true,
       "challengeData": {
@@ -123,26 +123,6 @@
       "serializedTutorial": {
         "__type": "ActionGroup",
         "serializedActions": [
-          {
-            "__type": "StartChallengeAction",
-            "id": "t2.03",
-            "problemType": "MS",
-            "challengeType": "order",
-            "objective": "Complete a shipment of baby rams!",
-            "bossLevel": true
-          },
-          {
-            "__type": "AddOrderAction",
-            "data": {
-              "client": "Archibold Huxley III",
-              "company": "Rupture Farms",
-              "numFoodA": 21,
-              "type": "baby_rammus",
-              "description": "Dear Friend! I have 21 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
-              "fulfilled": false,
-              "reward": 200
-            }
-          },
           {
             "__type": "ShowAssistantDialogueAction",
             "text": "You've got *mail*! Click on the button to open it."
@@ -250,7 +230,7 @@
   "reviewChallenges": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "1.03.md",
+      "challengeId": "0.03.md",
       "problemType": "MD",
       "challengeData": {
         "creatureType": "baby_rammus",

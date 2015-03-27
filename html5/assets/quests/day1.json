@@ -6,7 +6,7 @@
       "serializedActions": [
         {
           "__type": "StartChallengeAction",
-          "id": "1.01.md",
+          "id": "0.01.md",
           "problemType": "MD",
           "challengeType": "handfeeding",
           "objective": "Hand-feed 1 baby ram!"
