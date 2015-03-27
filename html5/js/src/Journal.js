@@ -13,31 +13,6 @@ GlassLab.Journal = function(game) {
     this.bg.anchor.set(0.5, 0.5);
     this.sprite.addChild(this.bg);
 
-    /*
-    // Food Log - this is no longer in the journal, but we'll want to reference it if we add the food log elsewhere
-    this.foodLogEntries = [];
-    this.foodLogGrid = new GlassLab.UIGrid(this.game, 2, 210, 60, true);
-    this.foodLogGrid.x = 555;
-    this.foodLogGrid.y = 180;
-    this.sprite.addChild(this.foodLogGrid);
-
-    // Feeding Log picture
-    this.foodLogCreatureArt = game.make.sprite(0, 160);
-    this.foodLogCreatureArt.tint = 0x000000;
-    this.foodLogCreatureArt.scale.setTo(0.4, 0.4);
-    this.foodLogCreatureArt.anchor.setTo(.5, 1);
-    this.sprite.addChild(this.foodLogCreatureArt);
-
-    this.foodLogFoodAArt = game.make.sprite(0, 160);
-    this.foodLogFoodAArt.scale.setTo(0.4, 0.4);
-    this.foodLogFoodAArt.anchor.setTo(.5, 1);
-    this.sprite.addChild(this.foodLogFoodAArt);
-
-    this.foodLogFoodBArt = game.make.sprite(0, 160);
-    this.foodLogFoodBArt.scale.setTo(0.4, 0.4);
-    this.foodLogFoodBArt.anchor.setTo(.5, 1);
-    this.sprite.addChild(this.foodLogFoodBArt);
-    */
     this.alerts = game.make.sprite();
     this.sprite.addChild(this.alerts);
 
@@ -140,53 +115,6 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     this.creatureSilhouette.visible = (!creatureData.unlocked || creatureData.unlocked == "new");
 
 
-    /* Food log - removed from journal
-    var numFoodTypes = creatureData.desiredFood.length;
-    this.foodLogGrid.colWidth = 420 / (numFoodTypes + 1);
-    this.foodLogGrid.numCols = numFoodTypes + 1;
-
-    this.foodLogCreatureArt.loadTexture(creatureData.spriteName+"_art");
-    this.foodLogCreatureArt.x = this.foodLogGrid.x + this.foodLogGrid.colWidth * 0.5;
-    this.foodLogFoodAArt.loadTexture(GlassLab.FoodTypes[creatureData.desiredFood[0].type].spriteName);
-    this.foodLogFoodAArt.x = this.foodLogGrid.x + this.foodLogGrid.colWidth * 1.5;
-    if (numFoodTypes > 1) {
-        this.foodLogFoodBArt.visible = true;
-        this.foodLogFoodBArt.loadTexture(GlassLab.FoodTypes[creatureData.desiredFood[1].type].spriteName);
-        this.foodLogFoodBArt.x = this.foodLogGrid.x + this.foodLogGrid.colWidth * 2.5;
-    } else {
-        this.foodLogFoodBArt.visible = false;
-    }
-
-
-    var unusedEntries = this.foodLogEntries.slice();
-    this.foodLogGrid.removeManagedChildren();
-    for (var i = 0; i < 8; i++) { // to do: should be looping over discovered food counts, maybe? like if we go above 8??
-        var numCreatures = i + 1; // since row 0 should be for 1 creature
-        for (var j = 0; j < numFoodTypes + 1; j++) {
-            var text = unusedEntries.pop();
-            if (!text) {
-                text = this.game.make.text();
-                text.anchor.setTo(0.5, 0.5);
-                this.foodLogEntries.push(text);
-            }
-            text.visible = true;
-            this.foodLogGrid.insertManagedChild(text, j, i);
-            if (creatureData.discoveredFoodCounts[numCreatures]) {
-                if (j == 0) text.text = numCreatures;
-                else text.text = Math.round(numCreatures * creatureData.desiredFood[j - 1].amount * 10) / 10;
-            } else text.text = "???";
-        }
-
-        if (creatureData.discoveredFoodCounts[numCreatures] == "new") {
-            var alertY = this.foodLogGrid.y + this.foodLogGrid.rowHeight * (i + 0.5);
-            this._addAlert(800, alertY); // FIXME: the alert isn't showing up...
-        }
-    }
-    this.foodLogGrid.refresh();
-    for (var k = 0; k < unusedEntries.length; k++) {
-        unusedEntries[k].visible = false;
-    }
-    */
 
     // Fill in the Daily Diet if we know it
     this.dailyDiet.visible = creatureData.unlocked;
