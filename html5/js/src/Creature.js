@@ -555,7 +555,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     var targetIsSameTile = bestRealDist <= GLOBAL.tileSize / 2;
 
     if (bestTarget && targetIsNoticeable) {
-        if (bestTarget.pen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
+        if (bestTarget.pen && !bestTarget.full && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
             this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this)); // this will look for a target again when it's done
         } else if (!targetIsSameTile || !this.tryReachTarget(bestTarget)) { // if we're too far, or we fail to enter the target right now
             this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget)); // travel to the target
