@@ -28,7 +28,5 @@ GlassLab.CreateCreaturesAction.prototype.Do = function()
         }
     }
 
-    GLOBAL.creatureManager.creaturePopulationUpdate();
-
     this._complete();
 };

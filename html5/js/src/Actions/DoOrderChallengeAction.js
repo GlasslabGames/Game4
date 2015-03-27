@@ -8,7 +8,7 @@ GlassLab.DoOrderChallengeAction = function(game)
 {
     GlassLab.DoChallengeAction.prototype.constructor.call(this);
 
-    this.problemType = "order";
+    this.challengeType = "order";
 };
 
 GlassLab.DoOrderChallengeAction.prototype = Object.create(GlassLab.DoChallengeAction.prototype);

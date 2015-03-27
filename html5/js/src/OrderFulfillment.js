@@ -185,15 +185,16 @@ GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct, numC
 {
     if (pen == this.pen)
     {
-        this.data.outcome = correct? "success" : "failure";
+        var outcome = correct? "success" : "failure";
         if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
             var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
             var totalPerCreature = desiredFood[0].amount + desiredFood[1].amount;
             var targetNumCreatures = this.data.totalNumFood / totalPerCreature;
-            if (targetNumCreatures != numCreatures) this.data.outcome = "wrongNumCreatures";
+            if (targetNumCreatures != numCreatures) outcome = "wrongNumCreatures";
         }
+        this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
 
-        GLOBAL.mailManager.completeOrder(this.data);
+        GLOBAL.mailManager.completeOrder(this.data, outcome);
         this.game.time.events.add(1000, function() { this.Hide(true); }, this); // hide the pen after a short delay
         // TODO: Instead of just hiding the pen, we should be switching contexts
     }
@@ -338,7 +339,7 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
             GLOBAL.assistant.onPenLoaded();
             this.crateLoaded = true;
 
-            this._sendTelemetry("pack_order", true); // FIXME
+            this._sendTelemetry("pack_order", true);
         }
     } else { // actually ship the crate
         var response = this._getResponse(true);
@@ -377,7 +378,7 @@ GlassLab.OrderFulfillment.prototype.onFoodSet = function(inventorySlot, dragTarg
 };
 
 GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calculateSuccess) {
-    // Telemetry - for now we only allow them to set the food, not to set the number of creatures. FIXME later.
+    // Telemetry
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType);
     var response = this._getResponse();
 
@@ -386,9 +387,14 @@ GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calcula
     if (!targetNumCreatures) {
         if (this.data.numFoodA) targetNumCreatures = this.data.numFoodA / creatureInfo.desiredFood[0].amount;
         else if (this.data.numFoodB) targetNumCreatures = this.data.numFoodB / creatureInfo.desiredFood[1].amount;
+        else if (this.data.totalNumFood) {
+            targetNumCreatures = this.data.totalNumFood / (creatureInfo.desiredFood[0].amount + creatureInfo.desiredFood[1].amount);
+        }
     }
 
     var data = {
+        order_id: this.data.id || "",
+        key: this.data.key || false,
         creature_type: this.data.creatureType,
         creature_count: response[0] || 0,
         target_creature_count: targetNumCreatures,
@@ -399,7 +405,8 @@ GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calcula
         foodA_count: response[1] || 0,
         target_foodA_count: creatureInfo.desiredFood[0].amount * targetNumCreatures,
         foodB_count: response[2] || 0,
-        target_foodB_count: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) * targetNumCreatures
+        target_foodB_count: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) * targetNumCreatures,
+        total_food: this.data.totalNumFood || 0
     };
     if (calculateSuccess) {
         // check that the food type & counts match the target, or are swapped (A matches B, etc)

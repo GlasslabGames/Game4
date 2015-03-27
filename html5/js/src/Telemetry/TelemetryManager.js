@@ -18,21 +18,14 @@ GlassLab.TelemetryManager = function()
     this.challengeLatencySum = 0;
 
     this.penResizes = [];
-
-    //GlassLabSDK.setOptions({gameLevel: "measure_window_a3"});
-
-    // FIXME: These events are all messed up. We need to revise the telemetry system.
-    GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
-    //GlassLab.SignalManager.levelLost.add(this._onLevelLost, this);
-
-    GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
-    GlassLab.SignalManager.questEnded.add(this._onQuestEnded, this);
-
-    GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
-    GlassLab.SignalManager.penResized.add(this._onFeedingPenResized, this);
-    //GlassLab.SignalManager.orderCompleted.add(this._onOrderCompleted, this);
+    this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
+    GlassLab.SignalManager.challengeComplete.add(this._onChallengeComplete, this);
+
+    GlassLab.SignalManager.penResized.add(this._onFeedingPenResized, this); // needed to track pen resizes
+
+    GlassLab.SignalManager.gameInitialized.addOnce(this._loadData, this);
 };
 
 GlassLab.TelemetryManager.prototype._initializeSDK = function()
@@ -46,7 +39,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     GlassLabSDK.setOptions( {
         gameId: "PRIMA",
         gameVersion: "0.2.1",
-        gameLevel: "Ben 'Pinnacle of Rage' Dapkiewicz"
+        gameLevel: ""
     } );
 
     // Manually set local logging for the SDK
@@ -55,7 +48,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     GlassLabSDK.setOptions( { localLogging: !hasServer, dispatchQueueUpdateInterval: 500 } );
 
     // Turn on console logging
-    GlassLabSDK.hideLogs(); //displayLogs();
+    GlassLabSDK.displayLogs();
 
     if (GlassLabSDK.getOptions().localLogging)
     {
@@ -84,20 +77,6 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     }
 };
 
-GlassLab.TelemetryManager.prototype._onLevelLoaded = function(level)
-{
-    this.attemptsOnLastProblem = 0;
-    this.ordersCompleted = 0;
-};
-
-GlassLab.TelemetryManager.prototype._onQuestStarted = function()
-{
-};
-
-GlassLab.TelemetryManager.prototype._onQuestEnded = function()
-{
-};
-
 GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)
 {
     this.ordersCompleted++;
@@ -110,69 +89,63 @@ GlassLab.TelemetryManager.prototype._onLevelLost = function()
     console.log("Attempts: "+this.attemptsOnLastProblem);
 };
 
-GlassLab.TelemetryManager.prototype._onFeedingPenResolved = function(pen, success)
-{
-    console.log("Feeding pen resolved");
-    this._onChallengeAnswered(success);
-    // TODO: There are more complications like whether enough creatures were in the pen.
-    // This whole structure is weird. The telemetry manager shouldn't be making decisions about what's a success or failure.
-};
 
 GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDimensions, newDimensions)
 {
     if (!this.penResizes.length) this.originalPenDimensions = prevDimensions;
 
-    this.penResizes.push(newDimensions);
+    if (prevDimensions != newDimensions) this.penResizes.push(newDimensions);
 };
 
 
-GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, problemType, challengeType)
+GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, challengeType)
 {
-    if (this.currentChallengeId == id) return; // no need for a challenge started since this is actually a restart
+    console.log("_onChallengeStarted",id,this.currentChallengeId);
+
+    // These things should be set whether we're starting a new challenge or just restarting
+    this.challengeAttemptStartTime = GLOBAL.game.time.now;
+    this.penResizes = [];
+
+    if (this.currentChallengeId == id) return; // if we're just restarting, don't send the telemetry or reset anything else
 
     this.currentChallengeId = id;
-    this.currentProblemType = problemType;
     this.currentChallengeType = challengeType;
-    this.challengeAttempts = 0;
     this.challengeOriginalStartTime = GLOBAL.game.time.now;
-    this.challengeAttemptStartTime = GLOBAL.game.time.now;
-    this.feedingPenResizes = [];
 
-    GlassLabSDK.saveTelemEvent("start_challenge", {problem_type: problemType, challenge_type: challengeType});
+    GlassLabSDK.saveTelemEvent("start_challenge", {challenge_type: challengeType});
 };
 
-GlassLab.TelemetryManager.prototype._onChallengeAnswered = function(success)
+GlassLab.TelemetryManager.prototype._onChallengeComplete = function(success)
 {
-    this.challengeAttempts ++;
+    // we submitted the answer, so increment the number of attempts
+    var attempts = this.challengeAttempts[this.currentChallengeId] || 0;
+    attempts ++;
+    this.challengeAttempts[this.currentChallengeId] = attempts;
+
+    this._saveData();
 
     GlassLabSDK.saveTelemEvent("submit_answer", {
-        problem_type: this.currentProblemType,
         challenge_type: this.currentChallengeType,
         success: success,
-        attempt_count: this.challengeAttempts,
+        attempt_count: attempts,
         latency: (GLOBAL.game.time.now - this.challengeAttemptStartTime) / 1000
     });
 
-    // This should align correctly, but if not we'll need to hook up these functions to their own events
-    if (success) this._onChallengeComplete();
-    else this._onChallengeRestarted();
+    if (success) this._onChallengeSuccess();
+    else this._onChallengeFailure();
 };
 
-GlassLab.TelemetryManager.prototype._onChallengeRestarted = function()
+GlassLab.TelemetryManager.prototype._onChallengeFailure = function()
 {
-    this.challengeAttemptStartTime = GLOBAL.game.time.now;
-    this.feedingPenResizes = [];
-
-    GlassLabSDK.saveTelemEvent("restart_challenge", {});
+    GlassLabSDK.saveTelemEvent("fail_challenge", {});
 };
 
-GlassLab.TelemetryManager.prototype._onChallengeComplete = function()
+GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
 {
     var latency = (GLOBAL.game.time.now - this.challengeOriginalStartTime) / 1000;
     GlassLabSDK.saveTelemEvent("complete_challenge", {
-        problem_type: this.currentProblemType,
         challenge_type: this.currentChallengeType,
-        attempt_count: this.challengeAttempts,
+        attempt_count: this.challengeAttempts[this.currentChallengeId],
         total_latency: latency
     });
 
@@ -195,7 +168,7 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function()
     }
 
     this.challengesCompleted ++;
-    if (this.challengeAttempts == 1) this.challengesCompletedOnFirstAttempt ++;
+    if (this.challengeAttempts[this.currentChallengeId] == 1) this.challengesCompletedOnFirstAttempt ++;
     GlassLabSDK.saveTelemEvent("proportion_completed_on_first_attempt", {
         value: this.challengesCompletedOnFirstAttempt / this.challengesCompleted
     });
@@ -204,5 +177,25 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function()
     GlassLabSDK.saveTelemEvent("mean_challenge_latency", {
         value: this.challengeLatencySum / this.challengesCompleted
     });
+
+    this._saveData();
 };
 
+GlassLab.TelemetryManager.prototype._saveData = function() {
+    GLOBAL.saveManager.SaveData("telemetryData", {
+        challengesCompleted: this.challengesCompleted,
+        challengesCompletedOnFirstAttempt: this.challengesCompletedOnFirstAttempt,
+        challengeLatencySum: this.challengeLatencySum,
+        challengeAttempts: this.challengeAttempts
+    });
+};
+
+GlassLab.TelemetryManager.prototype._loadData = function() {
+    if (GLOBAL.saveManager.HasData("telemetryData")) {
+        var data = GLOBAL.saveManager.LoadData("telemetryData");
+        this.challengesCompleted = data.challengesCompleted;
+        this.challengesCompletedOnFirstAttempt = data.challengesCompletedOnFirstAttempt;
+        this.challengeLatencySum = data.challengeLatencySum;
+        this.challengeAttempts = data.challengeAttempts;
+    }
+};

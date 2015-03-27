@@ -11,7 +11,6 @@ GlassLab.CreatureManager = function (game) {
     this.game = game;
     GLOBAL.creatureManager = this;
     this.creatureList = ["baby_rammus", "rammus", "baby_unifox", "unifox"]; // list of creatures in the order they should appear in the journal
-    // TODO: update the creatureList when creatures are unlocked or change how pages in the journal work
     this.creatureDatabase = {
         baby_rammus: {
             journalInfo: {
@@ -25,8 +24,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "babySheep",
             fxFrames: {eat: 14, vomit: 21 },
-            desiredFood: [{type: "broccoli", amount: 3}],
-            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
+            desiredFood: [{type: "broccoli", amount: 3}]
         },
         rammus: {
             journalInfo: {
@@ -40,8 +38,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "sheep",
             fxFrames: {eat: 16, vomit: 60 },
-            desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}],
-            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
+            desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}]
         },
         baby_unifox: {
             journalInfo: {
@@ -56,8 +53,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "babyUnicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 22, vomit: 36 },
-            desiredFood: [{type: "strawberry", amount: 4}],
-            discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
+            desiredFood: [{type: "strawberry", amount: 4}]
         },
         unifox: {
             journalInfo: {
@@ -72,8 +68,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "unicorn",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40 },
-            desiredFood: [{type: "strawberry", amount: 5}, {type: "carrot", amount: 4}],
-            discoveredFoodCounts: {} // By number of creatures (food is auto-derived)
+            desiredFood: [{type: "strawberry", amount: 5}, {type: "carrot", amount: 4}]
         } /*,
         rammus2: { // For testing fractional food
             journalInfo: {
@@ -91,8 +86,7 @@ GlassLab.CreatureManager = function (game) {
 
     this.creatures = [];
 
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
-    GlassLab.SignalManager.gameLoaded.add(this._onGameLoaded, this);
+    GlassLab.SignalManager.gameInitialized.addOnce(this._loadDiscoveredCreatures, this);
 };
 
 /*
@@ -105,27 +99,11 @@ GlassLab.CreatureManager.prototype.LogNumCreaturesFed = function (type, num) {
     var creatureData = this.creatureDatabase[type];
     if (!creatureData.unlocked) {
         creatureData.unlocked = "new"; // note the fact that it's newly unlocked
+        this._saveDiscoveredCreatures();
+
         // Delay showing the journal
         GLOBAL.Journal.wantToShow = type; // remember the creature we want to show in the journal
         GLOBAL.UIManager.journalButton.toggleActive(true);
-    }
-    if (creatureData.discoveredFoodCounts[num]) {
-        return;
-    }
-    else {
-        creatureData.discoveredFoodCounts[num] = "new"; // set it to "new" for now so we know it was just added
-    }
-};
-
-// For all the discovered food counts that are set to "new", remove that new flag
-GlassLab.CreatureManager.prototype.UnflagDiscoveredFoodCounts = function () {
-    for (var creatureType in this.creatureDatabase) {
-        var discoveredFoodCounts = this.creatureDatabase[creatureType].discoveredFoodCounts;
-        for (var index in discoveredFoodCounts) {
-            if (discoveredFoodCounts[index] == "new") {
-                discoveredFoodCounts[index] = true; // erase the new, but make sure it's still marked as discovered
-            }
-        }
     }
 };
 
@@ -165,20 +143,6 @@ GlassLab.CreatureManager.prototype.DestroyAllCreatures = function() {
     this.creatures = [];
 };
 
-GlassLab.CreatureManager.prototype._onSaveRequested = function(blob) {
-    blob.creatures = [];
-
-    for (var i=0, j=this.creatures.length; i < j; i++)
-    {
-        var creature = this.creatures[i];
-        blob.creatures.push({
-            x: creature.sprite.x,
-            y: creature.sprite.y,
-            type: creature.type
-        });
-    }
-};
-
 GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 {
     var creature = new GlassLab.Creature(this.game, type);
@@ -200,30 +164,24 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
     }
 };
 
-GlassLab.CreatureManager.prototype._onGameLoaded = function(blob)
+GlassLab.CreatureManager.prototype._saveDiscoveredCreatures = function()
 {
-    this.DestroyAllCreatures();
-
-    var creatures = blob.creatures;
-    if (creatures)
-    {
-        for (var i = 0, j = creatures.length; i < j; i++)
-        {
-            var creatureData = creatures[i];
-            var creature = this.CreateCreature(creatureData.type);
-            creature.sprite.x = creatureData.x;
-            creature.sprite.y = creatureData.y;
-        }
+    var unlockedCreatures = [];
+    for (var type in this.creatureDatabase) {
+        if (this.creatureDatabase[type].unlocked) unlockedCreatures.push(type);
     }
+    GLOBAL.saveManager.SaveData("discoveredCreatures", unlockedCreatures);
 };
 
-GlassLab.CreatureManager.prototype.creaturePopulationUpdate = function() {
-    var inPen = 0;
-    for (var i = 0, j = this.creatures.length; i < j; i++)
-    {
-        if (this.creatures[i].pen) inPen++;
+GlassLab.CreatureManager.prototype._loadDiscoveredCreatures = function()
+{
+    if (GLOBAL.saveManager.HasData("discoveredCreatures")) {
+        var creatures = GLOBAL.saveManager.LoadData("discoveredCreatures");
+        for (var i = 0; i < creatures.length; i++) {
+            if (creatures[i] in this.creatureDatabase) {
+                this.creatureDatabase[creatures[i]].unlocked = true;
+            }
+        }
     }
-    this.numCreaturesInPen = inPen;
-    GlassLabSDK.saveTelemEvent("creature_population", {total: this.creatures.length, in_pen: inPen});
 };
 
