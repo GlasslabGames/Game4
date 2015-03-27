@@ -45,7 +45,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
 
     GlassLabSDK.setOptions( {
         gameId: "PRIMA",
-        gameVersion: "0.2.1",
+        gameVersion: "0.2.2",
         gameLevel: "Ben 'Pinnacle of Rage' Dapkiewicz"
     } );
 
