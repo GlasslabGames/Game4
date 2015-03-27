@@ -16,18 +16,17 @@ GlassLab.SaveManager = function(game)
         if (GlassLabSDK.getOptions().localLogging)
         {
             try {
-                this.dataBlob = JSON.parse(document.cookie);
+                this.dataBlob = JSON.parse(GlassLab.Util.GetCookieData("PRIMA_SAVE", document.cookie));
             }
             catch (e)
             {
-                console.error("Error parsing cookie: "+e+"\n",document.cookie);
+                console.error("Error parsing cookie: "+e+"\n",document.cookie,"\n",GlassLab.Util.GetCookieData("PRIMA_SAVE", document.cookie));
             }
         }
         else // Get save from server if not local
         {
             try {
                 this.dataBlob = JSON.parse(GLOBAL.telemetryManager.userSaveString);
-                console.log("GAME LOAD: ", this.dataBlob);
             }
             catch (e)
             {
@@ -119,7 +118,7 @@ GlassLab.SaveManager.prototype._doSave = function()
     // Save to local
     if (GlassLabSDK.getOptions().localLogging)
     {
-        document.cookie = JSON.stringify(this.dataBlob);
+        GlassLab.Util.SetCookieData("PRIMA_SAVE", JSON.stringify(this.dataBlob));
     }
     else // Save to server
     {
