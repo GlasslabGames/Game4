@@ -25,8 +25,6 @@ GlassLab.ResourceManager.prototype.preloadResource = function(resourceKey)
         var resource = this.game.add.sprite(0,0,resourceKey);
         resource.alpha = 0.001;
         resource.fixedToCamera = true;
-        //resource.animations.add('anim'); // this animation uses the whole spritesheet
-        //resource.animations.play('anim', 30, true);
         this.resourceCache[resourceKey] = resource;
 
         console.log("Preloading "+ resourceKey);
