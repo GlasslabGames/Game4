@@ -6,6 +6,8 @@
 var GlassLab = GlassLab || {};
 
 GlassLab.SignalManager = {
+    gameInitialized: new Phaser.Signal(), // when we're ready to start the game (after the save blob has loaded)
+
     // Update
     update: new Phaser.Signal(), // (float) => time since last update - update loop
 
@@ -29,7 +31,7 @@ GlassLab.SignalManager = {
     levelStarted: new Phaser.Signal(),
     bonusGameComplete: new Phaser.Signal(),
     challengeStarted: new Phaser.Signal(),
-    challengeComplete: new Phaser.Signal(),
+    challengeComplete: new Phaser.Signal(), // (success)
     objectiveUpdated: new Phaser.Signal(), // (string) => new objective
     questStarted: new Phaser.Signal(), // (Quest) => quest that was started
     questEnded: new Phaser.Signal(), // (Quest) => quest that ended
@@ -48,7 +50,8 @@ GlassLab.SignalManager = {
     ordersChanged: new Phaser.Signal(), // when an order is added or removed
     rewardAdded: new Phaser.Signal(), // when the reward message is added (currently used in Day2 tutorial)
     orderStarted: new Phaser.Signal(), // (order) => order that was started
-    orderResolved: new Phaser.Signal(), // (order, success) => after the order finishes and the player closes the reward popup
+    orderResolved: new Phaser.Signal(), // (order, result) => after the order finishes and the player closes the reward popup
+    orderShipped: new Phaser.Signal(), // (order, result) => after the order is sent off and the player has to open the reward popup to proceed
 
     // Inventory Events
     moneyChanged: new Phaser.Signal(), // (float) => amount money changed - negative if deducted

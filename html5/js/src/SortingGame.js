@@ -185,7 +185,7 @@ GlassLab.SortingGame.prototype.finish = function() {
  * SortingGameCard
  */
 
-GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFood, displayMode, challengeType) {
+GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFood, displayMode, problemType) {
     GlassLab.UIDragTarget.prototype.constructor.call(this, sortingGame.game, 230, 350, null, "", true);
 
     this.sortingGame = sortingGame;
@@ -194,7 +194,7 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
     this.numFood = [].concat(numFood); // make sure it's an array
     this.id = sortingGame.cards.length;
     this.displayMode = displayMode;
-    this.challengeType = challengeType;
+    this.problemType = problemType;
 
     // Calculate the correct answer to this card. For now, creatures with multiple kinds of food just look at the total food.
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
@@ -268,7 +268,7 @@ GlassLab.SortingGameCard.prototype._onObjectDropped = function(obj) {
         creature_count: this.numCreatures,
         foodA_count: this.numFood[0],
         foodB_count: this.numFood[1] || 0,
-        challenge_type: this.challengeType,
+        problem_type: this.problemType,
         format: this.displayMode
     });
 

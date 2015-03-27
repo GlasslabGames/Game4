@@ -37,8 +37,8 @@ GlassLab.State.Init.prototype.preload = function()
     for (var i = 0; i < foodSpriteNames.length; i++) {
         spriteName = foodSpriteNames[i];
         game.load.image(spriteName, 'assets/images/food/'+spriteName+'.png');
-        game.load.atlasJSONHash(spriteName+'_eaten', 'assets/images/food/'+spriteName+'_death_vfx.png', 'assets/images/food/'+spriteName+'_death_vfx.json');
-        game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_vfx.png', 'assets/images/food/'+spriteName+'_long_death_vfx.json');
+        game.load.atlasJSONHash(spriteName+'_eaten', 'assets/images/food/'+spriteName+'_death_VFX.png', 'assets/images/food/'+spriteName+'_death_VFX.json');
+        game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_VFX.png', 'assets/images/food/'+spriteName+'_long_death_VFX.json');
     }
 
     game.load.image('shadow', 'assets/images/iso_shadow.png');

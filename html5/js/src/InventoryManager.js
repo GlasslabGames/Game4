@@ -9,48 +9,52 @@ GlassLab.InventoryManager = function(game)
     this.game = game;
     this.money = 10;
 
-    this.unlockedItems = {};
+    GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
+};
 
-    GlassLab.SignalManager.saveRequested.add(this._onSaveRequested, this);
+GlassLab.InventoryManager.prototype._onInitGame = function() {
+    if (GLOBAL.saveManager.HasData("money")) this.money = GLOBAL.saveManager.LoadData("money");
+    this._loadUnlockedFood();
 };
 
 GlassLab.InventoryManager.prototype.lockAll = function() {
     for (var key in GlassLab.FoodTypes) GlassLab.FoodTypes[key].unlocked = false;
+    this._saveUnlockedFood();
 };
 
 GlassLab.InventoryManager.prototype.unlockAll = function() {
     for (var key in GlassLab.FoodTypes) GlassLab.FoodTypes[key].unlocked = true;
+    this._saveUnlockedFood();
 };
 
 GlassLab.InventoryManager.prototype.unlock = function(type) {
     if (GlassLab.FoodTypes[type]) GlassLab.FoodTypes[type].unlocked = true;
+    this._saveUnlockedFood();
 };
 
-GlassLab.InventoryManager.prototype._onSaveRequested = function(blob)
+GlassLab.InventoryManager.prototype._saveUnlockedFood = function()
 {
-    blob.money = this.money;
-
+    var unlockedItems = [];
     for (var type in GlassLab.FoodTypes)
     {
         if (GlassLab.FoodTypes[type].unlocked)
         {
-            this.unlockedItems[type] = true;
+            unlockedItems.push(type);
         }
     }
 
-    blob.unlockedItems = this.unlockedItems;
+    GLOBAL.saveManager.SaveData("unlockedItems", unlockedItems);
 };
 
-GlassLab.InventoryManager.prototype._onGameLoaded = function(blob)
+GlassLab.InventoryManager.prototype._loadUnlockedFood = function()
 {
-    this.money = blob.money;
-
-    for (var type in blob.unlockedItems)
-    {
-        GlassLab.FoodTypes[type].unlocked = blob.unlockedItems[type];
+    if (GLOBAL.saveManager.HasData("unlockedItems")) {
+        var unlockedItems = GLOBAL.saveManager.LoadData("unlockedItems");
+        for (var i = 0; i < unlockedItems.length; i++) {
+            var type = unlockedItems[i];
+            if (GlassLab.FoodTypes[type]) GlassLab.FoodTypes[type].unlocked = true;
+        }
     }
-
-    this.unlockedItems = blob.unlockedItems;
 };
 
 GlassLab.InventoryManager.prototype.TrySpendMoney = function(amt)
@@ -63,6 +67,7 @@ GlassLab.InventoryManager.prototype.TrySpendMoney = function(amt)
     {
         this.money -= amt;
         GlassLab.SignalManager.moneyChanged.dispatch(-amt);
+        GLOBAL.saveManager.SaveData("money", this.money);
         return true;
     }
 };
@@ -72,4 +77,5 @@ GlassLab.InventoryManager.prototype.AddMoney = function(amt)
     this.money += amt;
 
     GlassLab.SignalManager.moneyChanged.dispatch(amt);
+    GLOBAL.saveManager.SaveData("money", this.money);
 };

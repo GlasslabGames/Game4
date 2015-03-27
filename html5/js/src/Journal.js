@@ -252,7 +252,6 @@ GlassLab.Journal.prototype.Hide = function(auto)
 
 GlassLab.Journal.prototype._onLeavePage = function() {
     this._clearAlerts(); // only show the alerts for one time the journal is up
-    GLOBAL.creatureManager.UnflagDiscoveredFoodCounts();
 };
 
 GlassLab.Journal.prototype._addAlert = function(x, y) {
