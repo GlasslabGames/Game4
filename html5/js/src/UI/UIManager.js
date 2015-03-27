@@ -12,18 +12,6 @@ GlassLab.UIManager = function(game)
 
     this._createAnchors();
 
-    // Create the modal that shows when you win a level
-    var nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onContinuePressed, this, 150, 60, 0xffffff, "Continue");
-    this.winModal = new GlassLab.UIModal(this.game, "Good job! You did it!", nextButton);
-    this.centerAnchor.addChild(this.winModal);
-    this.winModal.visible = false;
-
-    // Create the modal that shows when you lose a level
-    var retryButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onRetryPressed, this, 150, 60, 0xffffff, "Retry");
-    this.loseModal = new GlassLab.UIModal(this.game, "That wasn't right. Try again?", retryButton);
-    this.centerAnchor.addChild(this.loseModal);
-    this.loseModal.visible = false;
-
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
     this.bonusModal = new GlassLab.UIModal(this.game, "Great job! Now it's time for\nBONUS GAME!", nextButton);
@@ -112,18 +100,6 @@ GlassLab.UIManager.prototype.hideArrow = function() {
     this.tutorialArrow.visible = false;
 };
 
-GlassLab.UIManager.prototype._onRetryPressed = function()
-{
-    this.winModal.visible = this.loseModal.visible = false;
-    GLOBAL.questManager.failChallenge();
-};
-
-GlassLab.UIManager.prototype._onContinuePressed = function()
-{
-    this.winModal.visible = this.loseModal.visible = false;
-    GLOBAL.questManager.completeChallenge();
-};
-
 GlassLab.UIManager.prototype._onBonusPressed = function()
 {
     this.bonusModal.visible = false;
@@ -200,14 +176,14 @@ GlassLab.UIManager.prototype.createHud = function() {
     zoomGroup.actualHeight += button.getHeight();
 
     var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
-        if (game.scale.isFullScreen)
+        if (this.game.scale.isFullScreen)
         {
-            game.scale.stopFullScreen();
+            this.game.scale.stopFullScreen();
             fullscreenButton.image.loadTexture("fullscreenIcon");
         }
         else
         {
-            game.scale.startFullScreen(false);
+            this.game.scale.startFullScreen(false);
             fullscreenButton.image.loadTexture("fullscreenOffIcon");
         }
     }, this);

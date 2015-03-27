@@ -9,7 +9,6 @@ GlassLab.StartChallengeAction = function(game)
     GlassLab.Action.prototype.constructor.call(this);
 
     this.id = -1;
-    this.problemType = "";
     this.challengeType = "";
     this.bossLevel = false;
 };
@@ -20,7 +19,7 @@ GlassLab.StartChallengeAction.prototype.constructor = GlassLab.StartChallengeAct
 GlassLab.StartChallengeAction.prototype.Do = function()
 {
     GlassLabSDK.setOptions({gameLevel: this.id});
-    GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.problemType, this.challengeType, this.bossLevel);
+    GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.challengeType, this.bossLevel);
 
     GLOBAL.questManager.UpdateObjective(this.objective);
     this._complete();

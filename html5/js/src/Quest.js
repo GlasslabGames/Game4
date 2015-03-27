@@ -23,22 +23,27 @@ GlassLab.Quest = function(name, data)
     this.challenges = {progression: [], review: [], fun: []};
     this.backgroundOrders = data.backgroundOrders;
 
-    this.numDots = data.numDots;
     this.unlockedFood = data.unlockedItems;
 
     GLOBAL.questManager.questsByName[this.name] = this;
+
+    GlassLab.SignalManager.gameInitialized.addOnce(this._loadQuestState, this);
 };
 
 GlassLab.Quest.prototype.Start = function()
 {
-    console.log("Starting quest", this.name);
+    console.log("Starting quest", this.name, this.savedState);
     if (!this._isStarted)
     {
         this._isStarted = true;
 
-        this.index = {progression: 0, review: 0, fun: 0};
+        var savedData = this.savedState || {};
+        this.savedState = null; // only look at the saved state once - if we start a new quest later we don't want this info hanging around
+
+        this.index = savedData.index || {progression: 0, review: 0, fun: 0};
         this._resetFunCountdown();
-        this.inReview = false;
+        this.inReview = savedData.inReview || false;
+        if ("perfect" in savedData) this.rememberPreviousFailure = !savedData.perfect;
 
         // Allow skipping ahead via url parameters
         var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
@@ -96,7 +101,10 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     }
 
     GLOBAL.mailManager.ClearOrders(); // for now, erase all pending orders
-    this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
+    if (this.rememberPreviousFailure) { // last time we played, we had to retry a level, so perfect shouldn't be true now
+        this.perfect = false;
+        this.rememberPreviousFailure = false; // only count the previous failure once
+    } else this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
 
     console.log("Starting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
 
@@ -106,12 +114,16 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     this.challenge.Do();
 
     this._addBackgroundOrders(); // note that we should have already added the challenge order when we called this.challenge.do()
+
+    this._saveQuestState();
 };
 
 GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
     this.perfect = false; // they messed up, so no longer perfect
     this.challenge.Do(); // re-do the current challenge
+
+    this._saveQuestState();
 };
 
 GlassLab.Quest.prototype._onChallengeComplete = function() {
@@ -150,8 +162,9 @@ GlassLab.Quest.prototype._addBackgroundOrders = function() {
     if (GLOBAL.mailManager.availableOrders.length >= 3) return;
 
     for (var i = 0; i < this.backgroundOrders.length; i++) {
-        var order = this.backgroundOrders[i].orderData; // TODO: store additional info for telemetry purposes
-        if (!order.fulfilled) { // only add orders that the player hasn't done yet
+        var order = this.backgroundOrders[i].orderData;
+        order.id = this.backgroundOrders[i].orderId; // this wasn't originally part of the order data, but it will be useful to have later
+        if (!GLOBAL.mailManager.isOrderComplete(order.id)) { // only add orders that the player hasn't successfully completed yet
             GLOBAL.mailManager.AddOrders(order);
             if (GLOBAL.mailManager.availableOrders.length >= 3) break;
         }
@@ -198,3 +211,21 @@ GlassLab.Quest.prototype._complete = function()
     }
 };
 
+GlassLab.Quest.prototype._saveQuestState = function()
+{
+    var questData = {};
+    questData.name = this.name;
+    questData.inReview = this.inReview;
+    questData.index = this.index;
+    questData.perfect = this.perfect;
+    GLOBAL.saveManager.SaveData("questState", questData);
+};
+
+GlassLab.Quest.prototype._loadQuestState = function()
+{
+    if (GLOBAL.saveManager.HasData("questState")) {
+        this.savedState = GLOBAL.saveManager.LoadData("questState");
+        if (this.savedState.name != this.name) this.savedState = {};
+    } else this.savedState = {};
+    return this.savedState;
+};

@@ -431,7 +431,7 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
         for (var col = this.widths[0] - 1; col >= 0; col--) {
             for (var row = 0; row < this.creatureSpots.length; row++) {
                 var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * (col-1), this.sprite.isoY + GLOBAL.tileSize * row );
-                spots.push({ pen: this, pos: pos, priority: 0.1 });
+                spots.push({ pen: this, pos: pos, priority: 0.1, full: true }); // full is used to check specifically if the creature should vomit/poop before entering
             }
         }
     }
@@ -555,7 +555,6 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
     this._refreshFeedButton();
-    GLOBAL.creatureManager.creaturePopulationUpdate();
 };
 
 GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
@@ -597,26 +596,30 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     if (this.finished) return;
     this.finished = true;
 
-    // this is used for telemetry, but the actual check is in DoPenChallengeAction
-    var numCreatures = this.height * this.widths[0];
-    var win = (result == "satisfied" && (!this.targetNumCreatures || numCreatures >= this.targetNumCreatures));
+    if (!GLOBAL.mailManager.currentOrder) { // don't send telemetry if we're submitting the pen for an order
 
-    // Telemetry
-    // TODO: get target creature type
-    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
-    GlassLabSDK.saveTelemEvent("submit_pen_answer", {
-        pen_id: this.id,
-        pen_dimensions: this.getDimensionEncoding(),
-        target_pen_dimensions: this.getTargetDimensionEncoding(),
-        foodA_type: this.foodTypes[0],
-        foodB_type: this.foodTypes[1] || "",
-        target_foodA_type: creatureInfo.desiredFood[0].type,
-        target_foodB_type: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].type : ""),
-        creature_type: this.creatureType,
-        result: result,
-        success: win
-    });
+        // this is used for telemetry, but the actual check is in DoPenChallengeAction
+        var numCreatures = this.height * this.widths[0];
+        var creatureType = this._getCurrentCreatureType();
+        var telemResult = result;
+        if (this.creatureType != creatureType) telemResult = "wrongCreatureType";
+        else if (this.targetNumCreatures && numCreatures < this.targetNumCreatures) telemResult = "wrongCreatureNumber";
 
+        var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
+        GlassLabSDK.saveTelemEvent("submit_pen_answer", {
+            pen_id: this.id,
+            pen_dimensions: this.getDimensionEncoding(),
+            target_pen_dimensions: this.getTargetDimensionEncoding(),
+            foodA_type: this.foodTypes[0],
+            foodB_type: this.foodTypes[1] || "",
+            target_foodA_type: creatureInfo.desiredFood[0].type,
+            target_foodB_type: (creatureInfo.desiredFood[1] ? creatureInfo.desiredFood[1].type : ""),
+            creature_type: creatureType,
+            target_creature_type: this.creatureType,
+            result: telemResult,
+            success: (telemResult == "satisfied")
+        });
+    }
 
     if (result == "satisfied") GLOBAL.creatureManager.LogNumCreaturesFed(this._getCurrentCreatureType(), this.creatures.length);
 

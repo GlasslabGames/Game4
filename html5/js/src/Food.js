@@ -56,7 +56,7 @@ GlassLab.FoodTypes = {
         spriteName: "tincan",
         color: 0x99a2ac,
         unlocked: false,
-        cost: -1,
+        cost: 1,
         hidden: false,
         displayNames: {
             singular: "tin can",

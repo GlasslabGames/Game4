@@ -1,0 +1,164 @@
+{"frames": {
+
+"bird_cry_end_00060.png":
+{
+	"frame": {"x":371,"y":289,"w":367,"h":279},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":62,"y":104,"w":367,"h":279},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00061.png":
+{
+	"frame": {"x":2,"y":289,"w":367,"h":282},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":62,"y":101,"w":367,"h":282},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00062.png":
+{
+	"frame": {"x":2,"y":2,"w":369,"h":285},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":61,"y":99,"w":369,"h":285},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00063.png":
+{
+	"frame": {"x":373,"y":2,"w":235,"h":267},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":139,"y":96,"w":235,"h":267},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00064.png":
+{
+	"frame": {"x":610,"y":2,"w":235,"h":250},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":139,"y":113,"w":235,"h":250},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00065.png":
+{
+	"frame": {"x":1669,"y":239,"w":236,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":138,"y":129,"w":236,"h":234},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00066.png":
+{
+	"frame": {"x":740,"y":254,"w":242,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":132,"y":119,"w":242,"h":244},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00067.png":
+{
+	"frame": {"x":1766,"y":2,"w":226,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":148,"y":129,"w":226,"h":234},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00068.png":
+{
+	"frame": {"x":1711,"y":475,"w":232,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":149,"y":134,"w":232,"h":229},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00069.png":
+{
+	"frame": {"x":1230,"y":486,"w":239,"h":225},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":147,"y":138,"w":239,"h":225},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00070.png":
+{
+	"frame": {"x":984,"y":488,"w":244,"h":221},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":145,"y":142,"w":244,"h":221},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00071.png":
+{
+	"frame": {"x":1471,"y":483,"w":238,"h":228},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":147,"y":135,"w":238,"h":228},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00072.png":
+{
+	"frame": {"x":1533,"y":2,"w":231,"h":235},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":150,"y":128,"w":231,"h":235},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00073.png":
+{
+	"frame": {"x":984,"y":245,"w":223,"h":241},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":153,"y":122,"w":223,"h":241},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00074.png":
+{
+	"frame": {"x":847,"y":2,"w":224,"h":241},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":153,"y":122,"w":224,"h":241},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00075.png":
+{
+	"frame": {"x":1209,"y":244,"w":226,"h":240},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":152,"y":123,"w":226,"h":240},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00076.png":
+{
+	"frame": {"x":1073,"y":2,"w":227,"h":240},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":152,"y":123,"w":227,"h":240},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00077.png":
+{
+	"frame": {"x":1302,"y":2,"w":229,"h":239},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":151,"y":124,"w":229,"h":239},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_end_00078.png":
+{
+	"frame": {"x":1437,"y":243,"w":230,"h":238},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":151,"y":125,"w":230,"h":238},
+	"sourceSize": {"w":500,"h":500}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bird_cry_end.png",
+	"format": "RGBA8888",
+	"size": {"w":1994,"h":713},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:54c6c9a6b7bc1b4aa9007764488f7d37:78731cc6baab51835f354d4e7a7d1fea:bb42b7608a503ab9365c1289affb06c1$"
+}
+}

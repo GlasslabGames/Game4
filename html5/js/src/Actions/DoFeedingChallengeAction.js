@@ -8,7 +8,7 @@ GlassLab.DoFeedingChallengeAction = function(game)
 {
     GlassLab.DoChallengeAction.prototype.constructor.call(this);
 
-    this.problemType = "handfeeding";
+    this.challengeType = "handfeeding";
 };
 
 GlassLab.DoFeedingChallengeAction.prototype = Object.create(GlassLab.DoChallengeAction.prototype);

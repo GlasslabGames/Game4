@@ -28,7 +28,7 @@ GlassLab.RewardPopup = function(game, x, y)
     photo.angle = 10;
     this.addChild(photo);
 
-    this.creature = this.game.make.sprite(0, 30, "unicorn_idle");
+    this.creature = this.game.make.sprite(0, 30, "unifox_idle");
     this.creature.scale.setTo(-0.25, 0.25);
     this.creature.anchor.setTo(0.5, 0.5);
     photo.addChild(this.creature);
@@ -67,17 +67,18 @@ GlassLab.RewardPopup.prototype.Show = function(data)
 {
     this.data = data;
     this.visible = true;
-    this.reward = (data.fulfilled? data.reward : 0);
+    this.reward = (data.outcome == "success")? data.reward : 0;
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
 
-    this.button.label.text = (data.fulfilled? "Collect Payment!" : "I'll do better next time!");
+    this.button.label.text = (data.outcome == "success")? "Collect Payment!" : "I'll do better next time!";
 
     var string = "From the desk of:\n" + data.client + "\n\n";
     var name = creatureInfo.displayNames.plural;
 
-    if (data.fulfilled) {
-        // TODO: include display name in creature info, and use it here
+    if (data.outcome == "success") {
         string += "All my "+ name + " arrived safe and sound! Your full payment is enclosed. It was a pleasure doing business with you."
+    } else if (data.outcome == "wrongNumCreatures") {
+        string += "You didn't send me the amount of food and creatures that I asked for! I won't be paying you for this unacceptable situation. Next time, please make sure the amount of food and creatures align to my request."
     } else {
         string += "The "+ name + " you sent weren't fed correctly, and now they're all angry! I won't be paying you for this unacceptable situation. Next time, please make sure the amount of food is appropriate for the number of creatures you send."
     }
@@ -91,13 +92,13 @@ GlassLab.RewardPopup.prototype.Show = function(data)
 
     this.closeButton.x = 0.5 * this.modal.getWidth() - 30;
 
-    this.headerLabel.text = (data.fulfilled? "Order Fulfilled!" : "Order Failed!");
+    this.headerLabel.text = (data.outcome == "success")? "Order Fulfilled!" : "Order Failed!";
 
     if (this.creature.spriteName != creatureInfo.spriteName + "_idle") this.creature.loadTexture(creatureInfo.spriteName + "_idle");
-    var emoteSpriteName = (data.fulfilled? "happyEmote" : "angryEmote");
+    var emoteSpriteName = (data.outcome == "success")? "happyEmote" : "angryEmote";
     if (this.emote.spriteName != emoteSpriteName) this.emote.loadTexture(emoteSpriteName);
 
-    if (data.fulfilled) {
+    if (data.outcome == "success") {
         GLOBAL.audioManager.playSound("success");
     } else {
         GLOBAL.audioManager.playSound("fail");
@@ -113,7 +114,7 @@ GlassLab.RewardPopup.prototype.Hide = function()
 
     if (this.data) {
         // Since the reward popup shows the results of an order, closing it is the final step in resolving an order
-        GlassLab.SignalManager.orderResolved.dispatch(this.data, this.data.fulfilled);
+        GlassLab.SignalManager.orderResolved.dispatch(this.data, (this.data.outcome == "success"));
     }
 
     GlassLab.SignalManager.mailClosed.dispatch();

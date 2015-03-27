@@ -1,0 +1,92 @@
+{"frames": {
+
+"unifox_cry_loop_00040.png":
+{
+	"frame": {"x":406,"y":298,"w":398,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":110,"w":398,"h":292},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00041.png":
+{
+	"frame": {"x":1598,"y":297,"w":400,"h":291},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":111,"w":400,"h":291},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00042.png":
+{
+	"frame": {"x":2,"y":298,"w":402,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":110,"w":402,"h":292},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00043.png":
+{
+	"frame": {"x":806,"y":297,"w":396,"h":293},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":94,"y":109,"w":396,"h":293},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00044.png":
+{
+	"frame": {"x":1187,"y":2,"w":393,"h":293},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":109,"w":393,"h":293},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00045.png":
+{
+	"frame": {"x":1204,"y":297,"w":392,"h":293},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":109,"w":392,"h":293},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00046.png":
+{
+	"frame": {"x":2,"y":2,"w":391,"h":294},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":87,"y":108,"w":391,"h":294},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00047.png":
+{
+	"frame": {"x":395,"y":2,"w":390,"h":294},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":89,"y":108,"w":390,"h":294},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00048.png":
+{
+	"frame": {"x":1582,"y":2,"w":392,"h":293},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":87,"y":109,"w":392,"h":293},
+	"sourceSize": {"w":500,"h":500}
+},
+"unifox_cry_loop_00049.png":
+{
+	"frame": {"x":787,"y":2,"w":398,"h":293},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":109,"w":398,"h":293},
+	"sourceSize": {"w":500,"h":500}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "unifox_cry_loop.png",
+	"format": "RGBA8888",
+	"size": {"w":2000,"h":592},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:d5a7836102be15fce403708e7521eff6:3db5d905e64cb700689093c00d70a4c9:9e8d16ba77c4127c06aed70361aa7eef$"
+}
+}
