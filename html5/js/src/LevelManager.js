@@ -16,34 +16,31 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day3" });
 
     // TESTING LEVELS:
-    // 2
+    // 4
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
-        {type: "baby_unifox", height: 1, foodAWidth: 1,
+        {type: "baby_bird", height: 1, foodAWidth: 1,
             bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],
       looseCreatures: {
-          baby_unifox: 3,
-          baby_rammus: 3,
-          unifox: 3,
-          rammus: 3
+          baby_bird: 4
 
       },
-        objective: "Feed the ram!"
+        objective: "This is a test!"
     };
 
     // 3
     this._addLevelData(new GlassLab.Level()).data = {
-        objective: "Feed the foxes with multiple kinds of food!",
+        objective: "This is a test!",
         pens: [
             {
-                type: "unifox", height: 1, foodAWidth: 1, foodBWidth: 1,
-                bottomDraggable: true, leftDraggable: true, topDraggable: true
+                type: "bird", height: 1, foodAWidth: 1, foodBWidth: 1,
+                bottomDraggable: true, leftDraggable: true, topDraggable: true,
+                startCol: -9
             }
         ],
         looseCreatures: {
-            unifox: 6,
-            rammus: 3
+            bird: 4
         }
     };
 

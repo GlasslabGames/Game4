@@ -8,7 +8,7 @@ GlassLab.UIManager = function(game)
 {
     this.game = game;
     this.dragTargets = [];
-    this.zoomTo(0.5);
+    this.zoomTo(0.25);
 
     this._createAnchors();
 
