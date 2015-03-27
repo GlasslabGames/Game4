@@ -1,0 +1,92 @@
+{"frames": {
+
+"bird_cry_loop_00040.png":
+{
+	"frame": {"x":772,"y":283,"w":380,"h":278},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":105,"w":380,"h":278},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00041.png":
+{
+	"frame": {"x":2,"y":284,"w":382,"h":277},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":106,"w":382,"h":277},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00042.png":
+{
+	"frame": {"x":386,"y":283,"w":384,"h":278},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":105,"w":384,"h":278},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00043.png":
+{
+	"frame": {"x":1154,"y":283,"w":378,"h":278},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":62,"y":105,"w":378,"h":278},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00044.png":
+{
+	"frame": {"x":1534,"y":283,"w":375,"h":278},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":105,"w":375,"h":278},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00045.png":
+{
+	"frame": {"x":758,"y":2,"w":374,"h":279},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":104,"w":374,"h":279},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00046.png":
+{
+	"frame": {"x":1510,"y":2,"w":373,"h":279},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":104,"w":373,"h":279},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00047.png":
+{
+	"frame": {"x":2,"y":2,"w":372,"h":280},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":57,"y":103,"w":372,"h":280},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00048.png":
+{
+	"frame": {"x":1134,"y":2,"w":374,"h":279},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":104,"w":374,"h":279},
+	"sourceSize": {"w":500,"h":500}
+},
+"bird_cry_loop_00049.png":
+{
+	"frame": {"x":376,"y":2,"w":380,"h":279},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":104,"w":380,"h":279},
+	"sourceSize": {"w":500,"h":500}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bird_cry_loop.png",
+	"format": "RGBA8888",
+	"size": {"w":1911,"h":563},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:f451283cdaea80b6a5cd94328e3bfe13:e1a31de5c25e1215ecbbf78532f33bca:39267171a18f5806ce82c4f11455f722$"
+}
+}

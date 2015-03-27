@@ -1,0 +1,92 @@
+{"frames": {
+
+"babyram_cry_loop_00040.png":
+{
+	"frame": {"x":1595,"y":248,"w":403,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":127,"w":403,"h":244},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00041.png":
+{
+	"frame": {"x":1595,"y":2,"w":407,"h":244},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":71,"y":127,"w":407,"h":244},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00042.png":
+{
+	"frame": {"x":1192,"y":2,"w":398,"h":246},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":82,"y":125,"w":398,"h":246},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00043.png":
+{
+	"frame": {"x":399,"y":2,"w":397,"h":250},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":121,"w":397,"h":250},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00044.png":
+{
+	"frame": {"x":2,"y":2,"w":395,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":74,"y":120,"w":395,"h":251},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00045.png":
+{
+	"frame": {"x":798,"y":2,"w":392,"h":250},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":121,"w":392,"h":250},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00046.png":
+{
+	"frame": {"x":403,"y":254,"w":390,"h":248},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":78,"y":123,"w":390,"h":248},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00047.png":
+{
+	"frame": {"x":795,"y":254,"w":393,"h":247},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":124,"w":393,"h":247},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00048.png":
+{
+	"frame": {"x":2,"y":255,"w":399,"h":247},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":124,"w":399,"h":247},
+	"sourceSize": {"w":500,"h":500}
+},
+"babyram_cry_loop_00049.png":
+{
+	"frame": {"x":1190,"y":254,"w":403,"h":246},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":73,"y":125,"w":403,"h":246},
+	"sourceSize": {"w":500,"h":500}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "babyram_cry_loop.png",
+	"format": "RGBA8888",
+	"size": {"w":2004,"h":504},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:a833b7833455e93d4b720289da36dc2a:8b8164b4498ec725019023dd443b3a3e:022ffd34ed97120abf12437876c97377$"
+}
+}
