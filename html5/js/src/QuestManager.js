@@ -24,14 +24,11 @@ GlassLab.QuestManager = function(game)
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
     GlassLab.SignalManager.questEnded.add(this._onQuestEnded, this);
 
-    // These things actually end the level
-    GlassLab.SignalManager.feedingPenResolved.add(this._onFeedingPenResolved, this);
-
     this.challengeIsBossLevel = false;
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
 };
 
-GlassLab.QuestManager.prototype._onChallengeStarted = function(id, problemType, challengeType, isBoss)
+GlassLab.QuestManager.prototype._onChallengeStarted = function(id, challengeType, isBoss)
 {
     this.challengeIsBossLevel = isBoss;
     this.challengeType = challengeType;
@@ -93,13 +90,4 @@ GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)
     this._currentObjective = objectiveText;
 
     GlassLab.SignalManager.objectiveUpdated.dispatch(this._currentObjective);
-};
-
-GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
-{
-    if (win && this.challengeType == "pen") {
-        GLOBAL.UIManager.winModal.visible = true;
-        GLOBAL.audioManager.playSound("success");
-        // this.completeChallenge will be called when they close the popup
-    }
 };

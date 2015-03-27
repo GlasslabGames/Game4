@@ -7,7 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.DoPenChallengeAction = function(game) {
     GlassLab.DoChallengeAction.prototype.constructor.call(this);
 
-    this.problemType = "pen";
+    this.challengeType = "pen";
 };
 
 GlassLab.DoPenChallengeAction.prototype = Object.create(GlassLab.DoChallengeAction.prototype);

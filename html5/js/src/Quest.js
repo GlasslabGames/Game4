@@ -32,12 +32,13 @@ GlassLab.Quest = function(name, data)
 
 GlassLab.Quest.prototype.Start = function()
 {
-    console.log("Starting quest", this.name);
+    console.log("Starting quest", this.name, this.savedState);
     if (!this._isStarted)
     {
         this._isStarted = true;
 
         var savedData = this.savedState || {};
+        this.savedState = null; // only look at the saved state once - if we start a new quest later we don't want this info hanging around
 
         this.index = savedData.index || {progression: 0, review: 0, fun: 0};
         this._resetFunCountdown();
@@ -213,6 +214,7 @@ GlassLab.Quest.prototype._complete = function()
 GlassLab.Quest.prototype._saveQuestState = function()
 {
     var questData = {};
+    questData.name = this.name;
     questData.inReview = this.inReview;
     questData.index = this.index;
     questData.perfect = this.perfect;
@@ -223,6 +225,7 @@ GlassLab.Quest.prototype._loadQuestState = function()
 {
     if (GLOBAL.saveManager.HasData("questState")) {
         this.savedState = GLOBAL.saveManager.LoadData("questState");
+        if (this.savedState.name != this.name) this.savedState = {};
     } else this.savedState = {};
     return this.savedState;
 };

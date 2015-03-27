@@ -26,7 +26,7 @@ GlassLab.DoChallengeAction.prototype.Do = function()
 
     GlassLabSDK.setOptions({gameLevel: this.challengeId});
 
-    GlassLab.SignalManager.challengeStarted.dispatch(this.challengeId, this.problemType, this.challengeType, this.boss);
+    GlassLab.SignalManager.challengeStarted.dispatch(this.challengeId, this.challengeType, this.boss);
 
     GLOBAL.questManager.UpdateObjective(this.objective);
 
