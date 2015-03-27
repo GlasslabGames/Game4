@@ -31,7 +31,7 @@ GlassLab.SignalManager = {
     levelStarted: new Phaser.Signal(),
     bonusGameComplete: new Phaser.Signal(),
     challengeStarted: new Phaser.Signal(),
-    challengeComplete: new Phaser.Signal(),
+    challengeComplete: new Phaser.Signal(), // (success)
     objectiveUpdated: new Phaser.Signal(), // (string) => new objective
     questStarted: new Phaser.Signal(), // (Quest) => quest that was started
     questEnded: new Phaser.Signal(), // (Quest) => quest that ended

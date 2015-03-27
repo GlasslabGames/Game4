@@ -112,6 +112,9 @@
         },
         {
           "__type": "ClearWorldAction"
+        },
+        {
+          "__type": "CompleteChallengeAction"
         }
       ]
     },

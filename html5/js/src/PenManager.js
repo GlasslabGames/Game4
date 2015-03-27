@@ -53,7 +53,7 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     if (row) pen.sprite.isoY = row * GLOBAL.tileSize;
     if (col || row) pen.Resize();
 
-    pen.targetNumCreatures = penData.targetNumCreatures;
+    pen.targetNumCreatures = penData.targetNumCreatures || penData.numCreatures;
     pen.maxHeight = penData.maxHeight;
 
     // set which edges are adjustable here (defaults to the right side only)
@@ -65,18 +65,14 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     // Record that the details of the pen for the challenge info. If this function stops being 1:1 to a pen challenge we'll have to change it
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(pen.creatureType);
     GlassLabSDK.saveTelemEvent("pen_initialized", {
-        creature_type: pen.creatureType || "",
-        foodA_type: pen.foodTypes[0] || "",
-        foodB_type: pen.foodTypes[1] || "",
-        target_foodA_type: creatureInfo.desiredFood[0].type,
-        target_foodB_type: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].type : ""),
+        target_creature_type: pen.creatureType || "",
         rows: pen.height,
         creature_columns: pen.widths[0],
         foodA_columns: pen.widths[1],
         foodB_columns: pen.widths[2] || 0,
         pen_dimensions: pen.getDimensionEncoding(),
         target_pen_dimensions: pen.getTargetDimensionEncoding(),
-        pen_id: pen.id, // fix if we have multiple pens
+        pen_id: pen.id,
         top_moveable: pen.topEdge.draggable,
         left_moveable: pen.leftEdge.draggable,
         right_moveable: pen.rightEdges[0].draggable, // even if there are multiple right edges, we can just check one

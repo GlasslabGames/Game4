@@ -76,10 +76,16 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
 };
 
 GlassLab.QuestManager.prototype.failChallenge = function() {
+    GlassLab.SignalManager.challengeComplete.dispatch(false);
+
     if (this.challengeIsBossLevel) {
         this.GetCurrentQuest().Cancel(); // cancel the current challenge
         GLOBAL.levelManager.RestartLevel(); // restart the whole day
     } else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
+};
+
+GlassLab.QuestManager.prototype.completeChallenge = function() {
+    GlassLab.SignalManager.challengeComplete.dispatch(true);
 };
 
 GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)
@@ -96,8 +102,4 @@ GlassLab.QuestManager.prototype._onFeedingPenResolved = function(pen, win)
         GLOBAL.audioManager.playSound("success");
         // this.completeChallenge will be called when they close the popup
     }
-};
-
-GlassLab.QuestManager.prototype.completeChallenge = function() {
-    GlassLab.SignalManager.challengeComplete.dispatch(); // if there's an action waiting for the challenge to be completed, do that
 };
