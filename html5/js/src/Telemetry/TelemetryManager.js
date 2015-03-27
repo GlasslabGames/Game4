@@ -17,6 +17,8 @@ GlassLab.TelemetryManager = function()
     this.challengesCompletedOnFirstAttempt = 0;
     this.challengeLatencySum = 0;
 
+    this.userSaveString = "{}";
+
     this.penResizes = [];
     this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
     this.SOWOs = {};
@@ -67,8 +69,25 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
             GlassLabSDK.getUserInfo(
                 function( data ){
                     console.log("[GlassLabSDK] Get User Info Successful: "+data);
+                    GlassLabSDK.getSaveGame(
+                        function(data) {
+                            console.log("[GlassLabSDK] Get Save Game - Load Success", data);
+                            this.userSaveString = data;
 
-                    this.initialized = true;
+                            this.initialized = true
+                        }.bind(this),
+                        function(data) {
+                            var dataObj = JSON.parse(data);
+                            if (dataObj.key && dataObj.key == "no.data")
+                            {
+                                this.initialized = true
+                            }
+                            else
+                            {
+                                console.error("Failure", data);
+                            }
+                        }.bind(this)
+                    );
                 }.bind(this),
                 function( data ){
                     console.log("[GlassLabSDK] Get User Info Failed: "+data);

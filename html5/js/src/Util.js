@@ -43,3 +43,27 @@ GlassLab.Util.GetLocalIsoPosition = function(sprite, out, isoX, isoY)
     }
     return pos;
 };
+
+GlassLab.Util.SetCookieData = function(key, data)
+{
+    var parsedInput = key + "=" + data;
+
+    // NOTE: This native call does not actually overwrite the entire cookie, but creates an entry using the key name
+    document.cookie = parsedInput;
+};
+
+GlassLab.Util.GetCookieData = function(key)
+{
+    var dataArray = document.cookie.split(';');
+    var keyPrefix = key + "=";
+    for (var i=dataArray.length-1; i >= 0; i--)
+    {
+        var dataEntryString = dataArray[i];
+        while(dataEntryString.charAt(0) == ' ') dataEntryString = dataEntryString.substring(1); // remove white space
+
+        if (dataEntryString.indexOf(keyPrefix) == 0)
+        {
+            return dataEntryString.substring(keyPrefix.length);
+        }
+    }
+};
