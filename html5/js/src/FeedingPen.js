@@ -160,8 +160,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     // move the creatures to be in front of the topEdge
     this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
 
-    this.height = numCreatures / Math.min(this.presetCreatureWidth, numCreatures); // keep our original creature width as set in order fulfillment, unless we have fewer creatures than that
-    this.widths[0] = Math.ceil(numCreatures / this.height);
+    this.widths[0] = Math.min(this.presetCreatureWidth, numCreatures); // keep our original creature width as set in order fulfillment, unless we have fewer creatures than that
+    this.height = Math.ceil(numCreatures / this.widths[0]);
     for (var j = 0; j < this.numFoods.length; j++) {
         this.widths[j+1] = Math.ceil(this.numFoods[j] / this.height);
         if (j < this.numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
@@ -200,8 +200,9 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
         if (maxCount && count >= maxCount) break;
     }
 
-    for (var i = 0; i < unusedObjects.length; i++) {
-        unusedObjects[i].sprite.visible = false;
+    for (var i = unusedObjects.length-1; i >= 0; i--) {
+        if (unusedObjects[i]) unusedObjects[i].sprite.visible = false;
+        else unusedObjects.splice(i, 1);
     }
 };
 
