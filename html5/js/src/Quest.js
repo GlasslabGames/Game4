@@ -100,7 +100,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
         return;
     }
 
-    GLOBAL.mailManager.ClearOrders(); // for now, erase all pending orders
+    GLOBAL.mailManager.ClearOrders(); // erase all pending orders
     if (this.rememberPreviousFailure) { // last time we played, we had to retry a level, so perfect shouldn't be true now
         this.perfect = false;
         this.rememberPreviousFailure = false; // only count the previous failure once
@@ -121,6 +121,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
 GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
     this.perfect = false; // they messed up, so no longer perfect
+
     this.challenge.Do(true); // re-do the current challenge (the parameter is relevant for RandomSelectionGroup at least)
 
     this._saveQuestState();
@@ -166,7 +167,6 @@ GlassLab.Quest.prototype._addBackgroundOrders = function() {
         order.id = this.backgroundOrders[i].orderId; // this wasn't originally part of the order data, but it will be useful to have later
         if (!GLOBAL.mailManager.isOrderComplete(order.id)) { // only add orders that the player hasn't successfully completed yet
             GLOBAL.mailManager.AddOrders(order);
-            if (GLOBAL.mailManager.availableOrders.length >= 3) break;
         }
     }
 };

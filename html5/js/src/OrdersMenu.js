@@ -138,7 +138,8 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.urgentLabel.setText(this.data.key? "Urgent!" : "");
     this.rewardAmountLabel.setText("$"+this.data.reward);
 
-    this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.mailManager.availableOrders.length)
+    //var maxOrders = 3; // In the future, if we want to limit the number of orders shown, do something like Math.min(GLOBAL.mailManager.availableOrders.length - 1, maxOrders).
+    this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.mailManager.availableOrders.length);
 
     var colors = getStringColorInfo(this.data.description);
     for (var i=colors.length-1; i >= 0; i++)
@@ -148,7 +149,7 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     }
 
     this.prevPageButton.visible = this.currentPage > 0;
-    this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1;
+    this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1; // only show 3 orders at once
 };
 
 GlassLab.OrdersMenu.prototype.SetInfo = function(data)
@@ -169,7 +170,6 @@ GlassLab.OrdersMenu.prototype.Show = function(orderNum)
     this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
 
     GlassLab.SignalManager.mailOpened.dispatch(orderNum);
-
 };
 
 GlassLab.OrdersMenu.prototype.Hide = function(auto)
