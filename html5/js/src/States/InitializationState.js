@@ -113,7 +113,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
     game.load.image('sideArrow', 'assets/images/sideArrow.png');
     game.load.image('inventoryLock', 'assets/images/HUD_items_lock.png');
-    game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
+        game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
     game.load.image('inventoryClose', 'assets/images/HUD_close.png');
     game.load.image('dashedCircle', 'assets/images/dashedCircle.png');
     game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
@@ -165,6 +165,10 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('inventoryCoin', 'assets/images/hud/hud_food/hud_food_item_coin.png');
     game.load.image('foodBarBg', 'assets/images/hud/hud_food/hud_food_bar_width.png');
     game.load.image('foodBarBgEndcap', 'assets/images/hud/hud_food/hud_food_bar_endcap.png');
+    game.load.image('foodItemEmptyTexture', 'assets/images/hud/hud_food/hud_food_item_empty_texture.png');
+    game.load.image('foodItemBg', 'assets/images/hud/hud_food/hud_food_item_bg.png');
+    game.load.image('foodLabelBg', 'assets/images/hud/hud_food/hud_food_label_bg_width.png');
+    game.load.image('foodLabelBgEndcap', 'assets/images/hud/hud_food/hud_food_label_bg_endcap.png');
 
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');

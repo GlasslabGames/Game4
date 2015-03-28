@@ -11,19 +11,15 @@ GlassLab.InventoryMenu = function(game)
     this.anchor.setTo(0, 1);
     this.x = 100;
 
+    this.dragging_item = false; // for tracking dragging state of any of "my" items
+    this.dropped_item = false; // for tracking dragging state of any of "my" items
+
     this.items = []; // is this being used?
 
     /*this.bg = game.make.graphics();
     this.addChild(this.bg);
     this._onScreenSizeChange(); // sets the BG to span the whole width of the screen
     */
-
-    // Your Funds:
-    //this.bg = this.game.make.sprite(0, 0, bgSprite);
-    //this.bg.anchor.setTo(0.5, 0.5);
-    //this.addChild(this.bg);
-    //this.bg.tint = this.bgColor;
-    //this.bg.alpha = 0.5;
 
     // money bg
     this.inventoryMoneyBg = game.make.image(-80, -132, "inventoryMoneyBg");
@@ -42,20 +38,16 @@ GlassLab.InventoryMenu = function(game)
     this.addChild(this.moneyLabel);
 
     // foodbarBg:
-    this.foodBarBgEndcapLeft = game.make.image(22, -100, "foodBarBgEndcap");
-    this.foodBarBgEndcapLeft.alpha = 0.5;
-    this.foodBarBgEndcapLeft.scale.x *= -1; // regX will now be at top-right
-    this.addChild(this.foodBarBgEndcapLeft);
-    this.foodBarBg = game.make.image(22, -100, "foodBarBg");
+    this.foodBarBg = game.make.image(2, -100, "foodBarBg");
     this.foodBarBg.alpha = 0.5;
-    this.foodBarBg.scale.x = 31.9;
+    this.foodBarBg.scale.x = 32.9;
     this.addChild(this.foodBarBg);
     this.foodBarBgEndcapRight = game.make.image(660, -100, "foodBarBgEndcap");
     this.foodBarBgEndcapRight.alpha = 0.5;
     this.addChild(this.foodBarBgEndcapRight);
 
     // foodbarItems:
-    this.itemTable = new GlassLab.UITable(game, 10, 2);
+    this.itemTable = new GlassLab.UITable(game, 10, 4);
     this.inventorySlots = [];
     for (var key in GlassLab.FoodTypes) {
         var foodInfo = GlassLab.FoodTypes[key];
@@ -65,7 +57,7 @@ GlassLab.InventoryMenu = function(game)
             this.itemTable.addManagedChild(child);
         }
     }
-    this.itemTable.x = 42;
+    this.itemTable.x = 40;
     this.itemTable.y = -60;
     this.addChild(this.itemTable);
     this.itemTable._refresh();
@@ -93,6 +85,9 @@ GlassLab.InventoryMenu.prototype._refreshCurrency = function()
     var money_str = GLOBAL.inventoryManager.money;
     money_str = "$" + money_str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // i.e. makes $1,234 or $123 etc
     this.moneyLabel.setText(money_str);
+    this.moneyLabel.anchor.x = Math.round(this.moneyLabel.width * 0.5) / this.moneyLabel.width; // round to avoid subpixel blur
+    this.moneyLabel.anchor.y = Math.round(this.moneyLabel.height * 0.5) / this.moneyLabel.height; // round to avoid subpixel blur
+
 };
 
 /*
@@ -106,6 +101,8 @@ GlassLab.InventoryMenu.prototype.Show = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("open_inventory", {});
 
+    // replace UIManager's food_button_bg with the _open version:
+
     GlassLab.SignalManager.inventoryOpened.dispatch(auto === true);
 
     this.Refresh();
@@ -116,6 +113,8 @@ GlassLab.InventoryMenu.prototype.Show = function(auto)
 GlassLab.InventoryMenu.prototype.Hide = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_inventory", {});
+
+    // replace UIManager's food_button_bg with the original version:
 
     GlassLab.SignalManager.inventoryClosed.dispatch(auto === true);
 
