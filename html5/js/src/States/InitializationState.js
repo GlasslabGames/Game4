@@ -100,6 +100,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('penTile_placeholder2.png', 'assets/images/tiles/penTile_placeholder2.png');
     */
     game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
+    
+    game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
+    game.load.image('penTooltipWidth', 'assets/images/pen/pen_tooltip_width.png');
 
     // Cloud shadow
     game.load.image('cloudShadow', 'assets/images/cloudShadow.png');
