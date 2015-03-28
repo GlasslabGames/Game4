@@ -14,12 +14,12 @@ GlassLab.CreatureManager = function (game) {
     this.creatureDatabase = {
         baby_rammus: {
             journalInfo: {
-                name: "Rammus Jerkum (juvenile)",
-                temperament: "Combative"
+                name: "Rammus Gnarlus (juvenile)",
+                temperament: "Brash"
             },
             displayNames: {
-                singular: "baby ram",
-                plural: "baby rams"
+                singular: "juvenile rammus",
+                plural: "juvenile rammuses"
             },
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "babyram",
@@ -28,12 +28,12 @@ GlassLab.CreatureManager = function (game) {
         },
         rammus: {
             journalInfo: {
-                name: "Rammus Jerkum (adult)",
-                temperament: "Combative"
+                name: "Rammus Gnarlus (adult)",
+                temperament: "Bold"
             },
             displayNames: {
-                singular: "ram",
-                plural: "rams"
+                singular: "rammus",
+                plural: "rammuses"
             },
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "ram",
@@ -42,12 +42,12 @@ GlassLab.CreatureManager = function (game) {
         },
         baby_unifox: {
             journalInfo: {
-                name: "Vulpes Unicornum (juvenile)",
-                temperament: "Shy"
+                name: "Unifoxi Elusa (juvenile)",
+                temperament: "Timid"
             },
             displayNames: {
-                singular: "baby unifox",
-                plural: "baby unifoxes"
+                singular: "juvenile unifox",
+                plural: "juvenile unifoxi"
             },
             unlocked: false,
             spriteName: "babyunifox",
@@ -57,31 +57,47 @@ GlassLab.CreatureManager = function (game) {
         },
         unifox: {
             journalInfo: {
-                name: "Vulpes Unicornum (adult)",
+                name: "Unifoxi Elusa (adult)",
                 temperament: "Shy"
             },
             displayNames: {
                 singular: "unifox",
-                plural: "unifoxes"
+                plural: "unifoxi"
             },
             unlocked: false,
             spriteName: "unifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40 },
             desiredFood: [{type: "strawberry", amount: 5}, {type: "carrot", amount: 4}]
-        } /*,
-        rammus2: { // For testing fractional food
+        },
+        baby_bird: {
             journalInfo: {
-                name: "Aqua Rammus",
-                temperament: "Combative"
+                name: "Flockin Aviarus (junevile)",
+                temperament: "Flighty"
             },
-            unlocked: true, // if the player has discovered this animal yet
-            spriteName: "sheep",
+            displayNames: {
+                singular: "juvenile flockin",
+                plural: "juvenile flockins"
+            },
+            unlocked: true,
+            spriteName: "babybird",
             fxFrames: {eat: 16, vomit: 60 },
-            spriteTint: 0xddffff,
-            desiredFood: [{type: "carrot", amount: (1/2)}, {type: "apple", amount: (5/4)}],
-            discoveredFoodCounts: {} // discoveredFoodCounts[n] will be "new" or true when they discovered the food for n creatures
-        } */
+            desiredFood: [{type: "apple", amount: (3/4)}]
+        },
+        bird: {
+            journalInfo: {
+                name: "Flockin Aviarus (adult)",
+                temperament: "Friendly"
+            },
+            displayNames: {
+                singular: "flockin",
+                plural: "flockins"
+            },
+            unlocked: true,
+            spriteName: "bird",
+            fxFrames: {eat: 16, vomit: 60 },
+            desiredFood: [{type: "apple", amount: (10/4)}, {type: "carrot", amount: (5/4)}]
+        }
     };
 
     this.creatures = [];
@@ -162,6 +178,19 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
     for (var i = 0; i < number; i ++) {
         this.CreateCreature(type, centered);
     }
+};
+
+GlassLab.CreatureManager.prototype.getMinCreatureCols = function(creatureType) {
+    var desiredFood = this.creatureDatabase[creatureType].desiredFood;
+    var min = 0;
+    // it should be fast enough to just look for the smallest int that makes both kinds of food even
+    for (var i = 1; i < 20; i++) { // put a cap at 20 just in case, but we don't expect to hit it. We except 2, 3, 4, etc
+        if (desiredFood[0].amount * i % 1 == 0 && (!desiredFood[1] || desiredFood[1].amount * i % 1 == 0)) {
+            min = i;
+            break;
+        }
+    }
+    return min;
 };
 
 GlassLab.CreatureManager.prototype._saveDiscoveredCreatures = function()

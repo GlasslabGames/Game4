@@ -83,10 +83,10 @@ GlassLab.Food = function(game, type) {
     this.dislikedBy = {}; // creature types are added once they dislike this food
 
     this.hungerBar = new GlassLab.FillBar(this.game, 160, 40);
-    this.hungerBar.sprite.angle = 90;
+    this.hungerBar.sprite.angle = -90;
     this.hungerBar.setAmount(0, 1);
     this.hungerBar.show(false);
-    this.hungerBar.sprite.x = -130;
+    this.hungerBar.sprite.x = 180;
     this.hungerBar.sprite.y = -150;
     this.sprite.addChild(this.hungerBar.sprite);
 
@@ -116,7 +116,7 @@ GlassLab.Food.prototype.BeEaten = function(amount) {
     this.health -= amount;
     if (this.health > 0) {
         //this.sprite.alpha = this.health; // TODO: show some partially eaten food
-        console.log("- Animating bar to health",this.health);
+        //console.log("- Animating bar to health",this.health);
         this.hungerBar.setAmount(0, this.health, true);
     } else {
         if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);

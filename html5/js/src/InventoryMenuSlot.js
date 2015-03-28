@@ -53,7 +53,7 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
 {
     if (GLOBAL.inventoryManager.TrySpendMoney(this.data.cost))
     {
-        this.data.unlocked = true;
+        GLOBAL.inventoryManager.unlock(this.foodType); // if we don't actually call unlock(), the unlock won't be saved
         GLOBAL.saveManager.Save(); // save when we unlock food
         this.Refresh();
         this.modal.visible = false;

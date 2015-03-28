@@ -49,6 +49,8 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
         penData.autoFill
     );
 
+    col = col || penData.startCol;
+    row = row || penData.startRow;
     if (col) pen.sprite.isoX = col * GLOBAL.tileSize;
     if (row) pen.sprite.isoY = row * GLOBAL.tileSize;
     if (col || row) pen.Resize();

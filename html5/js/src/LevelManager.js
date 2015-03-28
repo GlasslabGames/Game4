@@ -16,58 +16,53 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day3" });
 
     // TESTING LEVELS:
-    // 2
+    // 4
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
-        {type: "baby_unifox", height: 1, foodAWidth: 1,
+        {type: "baby_bird", height: 1, foodAWidth: 1,
             bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],
       looseCreatures: {
-          baby_unifox: 3,
-          baby_rammus: 3,
-          unifox: 3,
-          rammus: 3
+          baby_bird: 4
 
       },
-        objective: "Feed the ram!"
+        objective: "This is a test!"
     };
 
-    // 3
+    // 5
     this._addLevelData(new GlassLab.Level()).data = {
-        objective: "Feed the foxes with multiple kinds of food!",
+        objective: "This is a test!",
         pens: [
             {
-                type: "unifox", height: 1, foodAWidth: 1, foodBWidth: 1,
-                bottomDraggable: true, leftDraggable: true, topDraggable: true
+                type: "bird", height: 1, foodAWidth: 1, foodBWidth: 1,
+                bottomDraggable: true, leftDraggable: true, topDraggable: true,
+                startCol: -9
             }
         ],
         looseCreatures: {
-            unifox: 6,
-            rammus: 3
+            bird: 4
         }
     };
 
-    // 4
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {
-        objective: "Fill an order!",
+        objective: "Testing",
         orders: [
             {
                 "client": "Archibold Huxley III",
                 "company": "Rupture Farms",
-                //"numCreatures": 12,
-                "numFoodA": 4,
-                "type": "baby_unifox",
-                "description": "Dear Friend! I have space for 48 STRAWBERRIES. Can you send me ENOUGH UNIFOXES to eat that much food?",
-                "fulfilled": false,
+                "numFoodA": 6,
+                "type": "baby_bird",
+                "description": "blah",
                 "reward": 200
             },
             {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
-                numCreatures: 5,
+                numCreatures: 6,
                 type: "unifox",
                 description: "Dear Friend! I want 5 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
-                fulfilled: false,
+                creatureWidth: 3,
                 reward: 200
             },
             {
