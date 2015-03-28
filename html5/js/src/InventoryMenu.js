@@ -11,15 +11,23 @@ GlassLab.InventoryMenu = function(game)
     this.anchor.setTo(0, 1);
     this.x = 100;
 
-    this.items = [];
+    this.items = []; // is this being used?
 
     /*this.bg = game.make.graphics();
     this.addChild(this.bg);
     this._onScreenSizeChange(); // sets the BG to span the whole width of the screen
     */
-    this.moneyPrefixLabel = game.make.text(20,-120,"Your Funds: $", {font: "bold 14pt Arial"});
+
+    // Your Funds:
+    //this.bg = this.game.make.sprite(0, 0, bgSprite);
+    //this.bg.anchor.setTo(0.5, 0.5);
+    //this.addChild(this.bg);
+    //this.bg.tint = this.bgColor;
+    //this.bg.alpha = 0.5;
+
+    this.moneyPrefixLabel = game.make.text(20, -120, "Your Funds: ", {font: "14pt EnzoBlack"});
     this.addChild(this.moneyPrefixLabel);
-    this.moneyLabel = game.make.text(this.moneyPrefixLabel.x + this.moneyPrefixLabel.getBounds().width,this.moneyPrefixLabel.y,"1000",{font: "bold 14pt Arial"});
+    this.moneyLabel = game.make.text(this.moneyPrefixLabel.x + this.moneyPrefixLabel.getBounds().width, this.moneyPrefixLabel.y, "$0", {font: "14pt EnzoBlack"});
     this.addChild(this.moneyLabel);
     GlassLab.SignalManager.moneyChanged.add(this._refreshCurrency, this);
 
@@ -71,7 +79,9 @@ GlassLab.InventoryMenu.prototype.Refresh = function()
 
 GlassLab.InventoryMenu.prototype._refreshCurrency = function()
 {
-    this.moneyLabel.setText(GLOBAL.inventoryManager.money);
+    var money_str = GLOBAL.inventoryManager.money;
+    money_str = "$" + money_str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // i.e. makes $1,234 or $123 etc
+    this.moneyLabel.setText(money_str);
 };
 
 /*

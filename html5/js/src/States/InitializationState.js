@@ -144,6 +144,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('mailIcon_open_full', 'assets/images/hud/hud_mail/mailbox_static_full_open.png');
     game.load.image('mailIcon_full', 'assets/images/hud/hud_mail/mailbox_static_full.png');
     game.load.atlasJSONHash('mailIcon_anim', 'assets/images/hud/hud_mail/mailbox_full.png', 'assets/images/hud/hud_mail/mailbox_full.json');
+    game.load.image('foodIconBg_open', 'assets/images/hud/hud_food/hud_food_button_bg_open.png');
     game.load.image('foodIcon', 'assets/images/hud/hud_food/food_static.png');
     game.load.image('foodIcon_open', 'assets/images/hud/hud_food/food_static_open.png');
     game.load.atlasJSONHash('foodIcon_anim', 'assets/images/hud/hud_food/food_full.png', 'assets/images/hud/hud_food/food_full.json');
