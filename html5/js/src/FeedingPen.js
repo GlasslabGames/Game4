@@ -19,6 +19,8 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
+    this.presetCreatureWidth = this.widths[0]; // this is used when filling orders. It's not relevant for normal pens.
+
     // Instead of adding everything to objectRoot, make parents for the food and creatures so we can order them
     this.foodRoot = this.game.make.isoSprite();
     this.objectRoot.addChild(this.foodRoot);
@@ -143,16 +145,7 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
     }
 };
 
-// if we allow condensing odd numbers to multiple rows, this determines when to start condensing
-GlassLab.FeedingPen.MAX_PEN_HEIGHT = 5;
-
 // Resizes the pen to contain the specified number of creatures and food
-// If condenseToMultipleRows is true, it will add creatures in multiple rows where appropriate.
-/* FIXME: If we want to condenseToMultipleRows (currently we do not), fix how the food is added
- so that cases like 7:14 and 4:5 both work. Currently we add food by column first, so that 4:5 (which might happen,
- but won't be correct) looks better. If we allow 7 creatures to be split into 2 cols, we have to make sure that
- 7:14 still works since it's actually a (possible) correct solution.
- */
 GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, condenseToMultipleRows) {
     this.SetDraggableOnly(); // don't allow them to adjust the pen
 
@@ -167,23 +160,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     // move the creatures to be in front of the topEdge
     this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
 
-    if (!condenseToMultipleRows) {
-        this.widths[0] = 1; // there's always one row of creatures
-        this.height = numCreatures;
-    } else if (numCreatures == 9 && GlassLab.FeedingPen.MAX_PEN_HEIGHT < 9) {
-        // I'm adding this one special case because 3x3 is a lot better than two columns of 4 and 5.
-        // Suggestions for a general algorithm that would better deal with this case are welcome.
-        this.height = this.widths[0] = 3;
-    } else {
-        this.height = numCreatures;
-        this.widths[0] = 1;
-
-        while (this.height > GlassLab.FeedingPen.MAX_PEN_HEIGHT) {
-            this.widths[0]++;
-            this.height = Math.ceil(numCreatures / this.widths[0]);
-        }
-    }
-
+    this.height = numCreatures / Math.min(this.presetCreatureWidth, numCreatures); // keep our original creature width as set in order fulfillment, unless we have fewer creatures than that
+    this.widths[0] = Math.ceil(numCreatures / this.height);
     for (var j = 0; j < this.numFoods.length; j++) {
         this.widths[j+1] = Math.ceil(this.numFoods[j] / this.height);
         if (j < this.numFoods.length - 1) this.rightEdges[j].sprite.visible = false;

@@ -172,7 +172,8 @@ GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
     }
     if (!this.pen || !this.pen.sprite.game) { // TODO check for game is a hack since sprite may have been destroyed by level loading
         // Make a pen with the correct number of sections for the number of food types we have
-        var widths = [1];
+        var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
+        var widths = [creatureWidth];
         for (var j = 0; j < numFoodTypes; j++) widths.push(0);
         this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
         this.pen.allowFeedButton = false;
@@ -223,7 +224,7 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     this._sendTelemetry("start_order");
     GlassLab.SignalManager.orderStarted.dispatch(this.data);
 
-    // hide other stuff in the world
+    // TODO: hide other stuff in the world
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)

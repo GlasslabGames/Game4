@@ -29,7 +29,7 @@ GlassLab.LevelManager = function(game)
         objective: "This is a test!"
     };
 
-    // 3
+    // 5
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "This is a test!",
         pens: [
@@ -44,27 +44,25 @@ GlassLab.LevelManager = function(game)
         }
     };
 
-    // 4
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {
-        objective: "Fill an order!",
+        objective: "Testing",
         orders: [
             {
                 "client": "Archibold Huxley III",
                 "company": "Rupture Farms",
-                //"numCreatures": 12,
-                "numFoodA": 4,
-                "type": "baby_unifox",
-                "description": "Dear Friend! I have space for 48 STRAWBERRIES. Can you send me ENOUGH UNIFOXES to eat that much food?",
-                "fulfilled": false,
+                "numFoodA": 6,
+                "type": "baby_bird",
+                "description": "blah",
                 "reward": 200
             },
             {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
-                numCreatures: 5,
+                numCreatures: 6,
                 type: "unifox",
                 description: "Dear Friend! I want 5 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
-                fulfilled: false,
+                creatureWidth: 3,
                 reward: 200
             },
             {
