@@ -121,7 +121,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
 GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
     this.perfect = false; // they messed up, so no longer perfect
-    this.challenge.Do(); // re-do the current challenge
+    this.challenge.Do(true); // re-do the current challenge (the parameter is relevant for RandomSelectionGroup at least)
 
     this._saveQuestState();
 };

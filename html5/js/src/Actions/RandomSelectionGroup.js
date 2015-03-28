@@ -10,15 +10,18 @@ GlassLab.RandomSelectionGroup = function()
 
     this.possibilities = [];
     this.waitForComplete = true;
+    this.index = -1;
 };
 
 GlassLab.RandomSelectionGroup.prototype = Object.create(GlassLab.Action.prototype);
 GlassLab.RandomSelectionGroup.prototype.constructor = GlassLab.RandomSelectionGroup;
 
-GlassLab.RandomSelectionGroup.prototype.Do = function()
+GlassLab.RandomSelectionGroup.prototype.Do = function(redo)
 {
-    var index = Math.floor(Math.random() * this.possibilities.length);
-    this.action = GlassLab.Deserializer.deserializeObj(this.possibilities[index]);
+    if (!redo || this.index < 0) this.index = Math.floor(Math.random() * this.possibilities.length);
+    // if redo is true (and we've chosen an index already), we don't want to choose the random index again.
+
+    this.action = GlassLab.Deserializer.deserializeObj(this.possibilities[this.index]);
 
     this.action.onComplete.addOnce(this._onActionComplete, this);
     this.action.Do();

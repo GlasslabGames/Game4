@@ -3,6 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Creature Caretaker</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
     <script type="text/javascript" language="javascript">
         // function to possibly override keypress
         function trapfunction(event)
@@ -144,6 +145,10 @@
     <script src="js/src/prototype.js"></script>
 </head>
 <body style="margin:0px;">
+
+<!-- this is a hacky way to ensure fonts are finished loading before Phasor.io templates are set up.
+    i.e. they need to be used in DOM elements (these are invisible) for Phasor.io to be able to use them. -->
+<div id="font1">hack</div><div id="font2">hack</div><div id="font3">hack</div>
 
 <div id="gameContainer"></div>
 

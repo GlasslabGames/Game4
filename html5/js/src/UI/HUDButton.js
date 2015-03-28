@@ -120,6 +120,7 @@ GlassLab.HUDAnimButton = function(game, x, y, imageSprite, bgSprite, isIcon, cal
     this.fullSpriteName = imageSprite + "_full";
     if (!this.game.cache.checkImageKey(this.fullSpriteName)) this.fullSpriteName = this.defaultSpriteName; // fallback if we don't have a different sprite
 
+    this.isIcon = isIcon; // not utilized yet
     this.active = false; // this is true when they have mail in the mailbox, etc
     this.open = false; // this is true when the mail, journal, etc is currently open on the screen
 };
