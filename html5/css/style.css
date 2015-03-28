@@ -1,0 +1,36 @@
+@font-face {
+	font-family: EnzoBlack;
+	src: url('../assets/fonts/EnzoBlack.eot');
+	src: url('../assets/fonts/EnzoBlack.eot?#iefix') format('embedded-opentype'),
+		url('../assets/fonts/EnzoBlack.woff2') format('woff2'),
+		url('../assets/fonts/EnzoBlack.woff') format('woff'),
+		url('../assets/fonts/EnzoBlack.ttf') format('truetype'),
+		url('../assets/fonts/EnzoBlack.svg#EnzoBlack') format('svg');
+	font-weight: 900;
+	font-style: normal;
+}
+@font-face {
+	font-family: ArchitectsDaughter;
+	src: url('../assets/fonts/ArchitectsDaughter.eot');
+	src: url('../assets/fonts/ArchitectsDaughter.eot?#iefix') format('embedded-opentype'),
+		url('../assets/fonts/ArchitectsDaughter.woff2') format('woff2'),
+		url('../assets/fonts/ArchitectsDaughter.woff') format('woff'),
+		url('../assets/fonts/ArchitectsDaughter.ttf') format('truetype'),
+		url('../assets/fonts/ArchitectsDaughter.svg#ArchitectsDaughter') format('svg');
+	font-weight: 400;
+	font-style: normal;
+}
+@font-face {
+	font-family: AmericanTypewriter;
+	src: url('../assets/fonts/AmericanTypewriter.otf'); /* having trouble converting original .ttc font to other web formats */
+	font-weight: 400;
+	font-style: normal;
+}
+
+#gameContainer { position: absolute; top: 0; left: 0; }
+
+/* Phasor.io templates will be set up before @font-face's finish loading in the DOM,
+	so this hack ensures they're loaded beforehand. */
+#font1 { visibility: hidden; height: 0; width: 0; font: 900 14pt EnzoBlack; }
+#font2 { visibility: hidden; height: 0; width: 0; font: 400 14pt AmericanTypewriter; }
+#font3 { visibility: hidden; height: 0; width: 0; font: 400 14pt ArchitectsDaughter; }

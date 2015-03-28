@@ -5,7 +5,7 @@
 var GlassLab = GlassLab || {};
 
 /**
- * MailManager
+ * AudioManager
  */
 
 GlassLab.AudioManager = function(game)
