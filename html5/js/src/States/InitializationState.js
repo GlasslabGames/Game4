@@ -163,6 +163,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('inventoryMoneyBg', 'assets/images/hud/hud_food/hud_food_money_bg.png');
     game.load.image('inventoryCoinIcon', 'assets/images/hud/hud_food/hud_food_money_coin.png');
     game.load.image('inventoryCoin', 'assets/images/hud/hud_food/hud_food_item_coin.png');
+    game.load.image('foodBarBg', 'assets/images/hud/hud_food/hud_food_bar_width.png');
+    game.load.image('foodBarBgEndcap', 'assets/images/hud/hud_food/hud_food_bar_endcap.png');
 
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');

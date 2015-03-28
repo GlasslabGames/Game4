@@ -10,19 +10,27 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.data = GlassLab.FoodTypes[foodType];
     GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0);
 
+    // prettify the cost:
+    this.cost_display = "???";
+    if (this.data.cost > 0)
+        this.cost_display = "$" + this.data.cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // i.e. makes $1,234 or $123 etc
+
+    // set other props:
     this.anchor.setTo(0.5, 0.5);
     this.scale.setTo(0.8, 0.8);
-
     this.inputEnabled = true;
     this.events.onInputDown.add(this._onInputDown, this);
 
+    // bg:
     this.loadTexture("inventoryBg");
 
+    // slot image:
     this.foodSprite = new GlassLab.InventoryMenuItem(this.game, this.foodType);
     this.foodSprite.y = -10;
     this.addChild(this.foodSprite);
 
-    this.label = game.make.text(0, this.height / 2,"$"+this.data.cost, {fill: '#ffffff', font: "bold 10.5pt Arial"});
+    // cost:
+    this.label = game.make.text(0, this.height / 2, this.cost_display, {fill: '#ffffff', font: "bold 10.5pt Arial"});
     this.label.anchor.setTo(.5, 1);
     this.addChild(this.label);
 
@@ -41,7 +49,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             var yesButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
             var noButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseCanceled, this, 150, 60, 0xffffff, "No");
 
-            this.modal = new GlassLab.UIModal(this.game, "Purchase for $"+this.data.cost + "?", [yesButton, noButton]);
+            this.modal = new GlassLab.UIModal(this.game, "Purchase for " + this.cost_display + "?", [yesButton, noButton]);
             GLOBAL.UIManager.centerAnchor.addChild(this.modal);
         }
 
@@ -87,7 +95,7 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
         this.loadTexture("inventoryLock");
         if (this.data.cost > 0) {
             this.label.visible = true;
-            this.label.setText("$"+this.data.cost);
+            this.label.setText(this.cost_display);
             this.label.style.fill = '#ffffff';
         } else {
             this.label.visible = false;

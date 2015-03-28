@@ -154,7 +154,7 @@ GlassLab.UIManager.prototype.zoomOut = function() {
 };
 
 GlassLab.UIManager.prototype.createHud = function() {
-    var table = new GlassLab.UITable(this.game, 1, 3);
+    var table = new GlassLab.UITable(this.game, 1, 2);
     this.topRightAnchor.addChild(table);
 
     // pause icon
@@ -164,16 +164,17 @@ GlassLab.UIManager.prototype.createHud = function() {
     table.addManagedChild(button);
 
     var zoomGroup = new GlassLab.UIElement(this.game);
-    table.addManagedChild(zoomGroup);
 
-    // for some reason the position in the table is a little off unless we set the y to 1 here
-    button = new GlassLab.HUDButton(this.game, 0, 1, "zoomInIcon", "hudSettingsBg", true, this.zoomIn, this);
+    // for some reason the position in the table is a little off unless we set the y to 2 here
+    button = new GlassLab.HUDButton(this.game, 0, 2, "zoomInIcon", "hudSettingsBg", true, this.zoomIn, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight = button.getHeight();
 
-    button = new GlassLab.HUDButton(this.game, 0, 1 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, this.zoomOut, this);
+    button = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, this.zoomOut, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight += button.getHeight();
+
+    table.addManagedChild(zoomGroup);
 
     var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
         if (this.game.scale.isFullScreen)

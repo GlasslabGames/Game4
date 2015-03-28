@@ -8,17 +8,6 @@ var GlassLab = GlassLab || {};
  * FoodType - types of food
  */
 GlassLab.FoodTypes = {
-    apple: {
-        spriteName: "apple",
-        color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: -1,
-        hidden: false,
-        displayNames: {
-            singular: "apple",
-            plural: "apples"
-        }
-    },
     broccoli: {
         spriteName: "broccoli",
         color: 0x8cb149,
@@ -28,18 +17,7 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "broccoli",
             plural: "broccoli"
-        }
-    },
-    carrot: {
-        spriteName: "carrot",
-        color: 0xe37f54, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: -1,
-        hidden: false,
-        displayNames: {
-            singular: "carrot",
-            plural: "carrots"
-        }
+        },
     },
     strawberry: {
         spriteName: "strawberry",
@@ -50,7 +28,18 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "strawberry",
             plural: "strawberries"
-        }
+        },
+    },
+    apple: {
+        spriteName: "apple",
+        color: 0xc03b30, // associated color for the vomit and the hunger bar
+        unlocked: false, // Default value, unlock tracked by InventoryManager
+        cost: -1,
+        hidden: false,
+        displayNames: {
+            singular: "apple",
+            plural: "apples"
+        },
     },
     tincan: {
         spriteName: "tincan",
@@ -61,8 +50,74 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "tin can",
             plural: "tin cans"
-        }
-    }
+        },
+    },
+    carrot: {
+        spriteName: "carrot",
+        color: 0xe37f54, // associated color for the vomit and the hunger bar
+        unlocked: false, // Default value, unlock tracked by InventoryManager
+        cost: -1,
+        hidden: false,
+        displayNames: {
+            singular: "carrot",
+            plural: "carrots"
+        },
+    },
+    "item06": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 500,
+        hidden: false,
+        displayNames: {
+            singular: "tin can",
+            plural: "tin cans"
+        },
+    },
+    "item07": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 1000,
+        hidden: false,
+        displayNames: {
+            singular: "tin can",
+            plural: "tin cans"
+        },
+    },
+    "item08": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 2000,
+        hidden: false,
+        displayNames: {
+            singular: "tin can",
+            plural: "tin cans"
+        },
+    },
+    "item09": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 5000,
+        hidden: false,
+        displayNames: {
+            singular: "tin can",
+            plural: "tin cans"
+        },
+    },
+    "item10": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 10000,
+        hidden: false,
+        displayNames: {
+            singular: "tin can",
+            plural: "tin cans"
+        },
+    },
 };
 
 /**
