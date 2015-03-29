@@ -99,18 +99,9 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     }
 };
 
-GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)
-{
-    this.ordersCompleted++;
-    console.log("Orders completed: "+this.ordersCompleted);
+GlassLab.TelemetryManager.prototype.getCurrentChallengeAttempts = function() {
+    return this.challengeAttempts[this.currentChallengeId];
 };
-
-GlassLab.TelemetryManager.prototype._onLevelLost = function()
-{
-    this.attemptsOnLastProblem++;
-    console.log("Attempts: "+this.attemptsOnLastProblem);
-};
-
 
 GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDimensions, newDimensions)
 {
@@ -276,7 +267,6 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
 GlassLab.TelemetryManager.prototype._sendSOWO = function(name) {
     if (!this.SOWOs[name]) { // only send a SOWO if we haven't sent it yet
         this.SOWOs[name] = true;
-        console.log("***",name,"***");
         GlassLabSDK.saveTelemEvent(name, {});
     }
 };

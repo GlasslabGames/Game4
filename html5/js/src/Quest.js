@@ -33,6 +33,8 @@ GlassLab.Quest = function(name, data)
 
     GLOBAL.questManager.questsByName[this.name] = this;
 
+    this.failureCount = 0; // this is a count of how many times they've failed the current challenge.
+
     GlassLab.SignalManager.gameInitialized.addOnce(this._loadQuestState, this);
 };
 
@@ -50,7 +52,7 @@ GlassLab.Quest.prototype.Start = function()
         this._resetFunCountdown(); // we remember the fun countdown across multiple playthroughs
         this.inReview = savedData.inReview || false;
         this.reviewKey = savedData.reviewKey || null;
-        if ("perfect" in savedData) this.rememberPreviousFailure = !savedData.perfect;
+        this.savedFailureCount = savedData.failureCount || 0; // remember that the failure count was saved from a previous session
 
         // Allow skipping ahead via url parameters
         var index = getParameterByName("challenge"); // if just challenge, use it to set the progressionChallenge
@@ -111,10 +113,9 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     }
 
     GLOBAL.mailManager.ClearOrders(); // erase all pending orders
-    if (this.rememberPreviousFailure) { // last time we played, we had to retry a level, so perfect shouldn't be true now
-        this.perfect = false;
-        this.rememberPreviousFailure = false; // only count the previous failure once
-    } else this.perfect = true; // as long as we don't have to restart the challenge, we'll know we did it perfectly
+
+    this.failureCount = this.savedFailureCount || 0; // unless we had failures saved from last time, reset the count
+    this.savedFailureCount = 0; // only remember the previous failures once
 
     console.log("Starting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
 
@@ -130,9 +131,9 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
 
 GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
-    this.perfect = false; // they messed up, so no longer perfect
+    this.failureCount ++;
 
-    this.challenge.Do(true); // re-do the current challenge (the parameter is relevant for RandomSelectionGroup at least)
+    this.challenge.Do(true, (this.failureCount >= 3)); // re-do the current challenge, with constraints if we've made more than 3 attempts
 
     this._saveQuestState();
 };
@@ -145,8 +146,10 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
         this.funCountdown --; // we just finished a non-fun challenge, so decrease the time before the next one
     }
 
+    var perfect = this.failureCount == 0; // this will be true if they never had to redo the level
+
     if (cat.indexOf("review") != -1) { // adjust their position in the review list depending on their performance
-        this.index[cat] += (this.perfect? -2 : 1); // up 2 if they were perfect, down 1 otherwise
+        this.index[cat] += (perfect)? -2 : 1; // up 2 if they were perfect, down 1 otherwise
         if (this.index[cat] >= this.serializedChallenges[cat].length) { // if they're off the bottom of the list
             this.index[cat] = this.serializedChallenges[cat].length - 2; // go to the 2nd to last problem so they don't repeat the last one again
         }
@@ -156,7 +159,7 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
     } else {
         this.index[cat] ++; // for progression and fun, just move forward one
 
-        if (cat == "progression" && !this.perfect && this.reviewKey) { // bump them into the review challenges
+        if (cat == "progression" && !perfect && this.reviewKey) { // bump them into the review challenges
             // Note that this.reviewKey is set externally when we start a challenge (DoChallengeAction).
             this.inReview = true;
             this.index[this.reviewKey] = 0; // start at the beginning/top of the review challengess
@@ -239,7 +242,7 @@ GlassLab.Quest.prototype._saveQuestState = function()
     questData.inReview = this.inReview;
     questData.reviewKey = this.reviewKey;
     questData.index = this.index;
-    questData.perfect = this.perfect;
+    questData.failureCount = this.failureCount;
     GLOBAL.saveManager.SaveData("questState", questData);
 };
 
