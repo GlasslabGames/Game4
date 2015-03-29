@@ -15,6 +15,7 @@ GlassLab.DoChallengeAction = function(game)
     this.serializedTutorial = null;
     this.boss = false;
     this.challengeData = {};
+    this.reviewKey = null;
 };
 
 GlassLab.DoChallengeAction.prototype = Object.create(GlassLab.Action.prototype);
@@ -26,7 +27,7 @@ GlassLab.DoChallengeAction.prototype.Do = function()
 
     GlassLabSDK.setOptions({gameLevel: this.challengeId});
 
-    GlassLab.SignalManager.challengeStarted.dispatch(this.challengeId, this.challengeType, this.boss);
+    GlassLab.SignalManager.challengeStarted.dispatch(this.challengeId, this.challengeType, this.problemType, this.boss);
 
     GLOBAL.questManager.UpdateObjective(this.objective);
 
@@ -35,6 +36,9 @@ GlassLab.DoChallengeAction.prototype.Do = function()
         this.tutorial = GlassLab.Deserializer.deserializeObj(this.serializedTutorial);
         this.tutorial.Do();
     }
+
+    // we should be in a quest, and we want to remember what review section to go to if we do poorly on this challenge
+    if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey);
 };
 
 GlassLab.DoChallengeAction.prototype.completeChallenge = function()
