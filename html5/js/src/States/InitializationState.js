@@ -169,6 +169,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('foodItemBg', 'assets/images/hud/hud_food/hud_food_item_bg.png');
     game.load.image('foodLabelBg', 'assets/images/hud/hud_food/hud_food_label_bg_width.png');
     game.load.image('foodLabelBgEndcap', 'assets/images/hud/hud_food/hud_food_label_bg_endcap.png');
+    game.load.image('foodLabelBgPointer', 'assets/images/hud/hud_food/hud_food_label_bg_pointer.png');
 
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
