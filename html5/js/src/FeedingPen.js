@@ -85,7 +85,6 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
     }
 
     if (this.autoFill) {
-        console.log("Fill in with numCreatures", this.numCreatures);
         this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatureSpots, this.numCreatures,
             0, this.widths[0], true, this.creatureType);
         this.forEachCreature(function() { this.draggable = false; });

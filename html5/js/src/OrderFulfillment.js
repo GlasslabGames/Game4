@@ -122,8 +122,6 @@ GlassLab.OrderFulfillment.prototype._onTextChange = function(text)
 GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     if (!response) response = this._getResponse();
 
-    console.log("refresh pen. Response:", response,"Hint:",this.data.hint,"NumCreatures",this.data.numCreatures);
-
     // if hint is true, we have two options
     // if numCreatures is provided, add one row of food.
     // else, show the pen with the correct dimensions of food
@@ -150,7 +148,6 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
             foodCounts[1] = desiredFood[1].amount * creatureMult;
             foodTypes[1] = desiredFood[1].type;
         }
-        console.log("Hint",this.data.numCreatures || creatureMult, foodTypes, foodCounts, !this.data.numCreatures);
         this.pen.SetContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
             !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
 
@@ -291,7 +288,6 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
             var total = desiredFood[0].amount + desiredFood[1].amount;
             this.data.numFoodA = (desiredFood[0].amount / total) * this.data.totalNumFood;
             this.data.numFoodB = (desiredFood[1].amount / total) * this.data.totalNumFood;
-            console.log(this.data);
         } else {
             if (this.bg.key != "orderBg2") this.bg.loadTexture("orderBg2");
         }
