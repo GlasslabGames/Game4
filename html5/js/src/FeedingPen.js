@@ -555,10 +555,11 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     if (this.finished) return;
     this.finished = true;
 
+    var numCreatures = this.height * this.widths[0];
+
     if (!GLOBAL.mailManager.currentOrder) { // don't send telemetry if we're submitting the pen for an order
 
         // this is used for telemetry, but the actual check is in DoPenChallengeAction
-        var numCreatures = this.height * this.widths[0];
         var creatureType = this._getCurrentCreatureType();
         var telemResult = result;
         if (this.creatureType != creatureType) telemResult = "wrongCreatureType";

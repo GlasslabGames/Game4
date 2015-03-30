@@ -210,10 +210,7 @@ GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct, numC
     {
         var outcome = correct? "success" : "failure";
         if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
-            var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-            var totalPerCreature = desiredFood[0].amount + desiredFood[1].amount;
-            var targetNumCreatures = this.data.totalNumFood / totalPerCreature;
-            if (targetNumCreatures != numCreatures) outcome = "wrongNumCreatures";
+            if (this._calculateTargetNumCreatures() != numCreatures) outcome = "wrongNumCreatures";
         }
         this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
 
