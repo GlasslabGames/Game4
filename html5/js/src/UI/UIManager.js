@@ -221,6 +221,9 @@ GlassLab.UIManager.prototype.createHud = function() {
     this.itemsButton.position.setTo( (this.itemsButton.getWidth() / 2) + 20, (this.itemsButton.getHeight() / -2) - 20);
     GLOBAL.itemsButton = this.itemsButton;
 
+    this.penTooltip = new GlassLab.UIRatioTooltip(this.game, 5);
+    this.topLeftAnchor.addChild(this.penTooltip);
+
     GlassLab.SignalManager.inventoryOpened.add(function() { this.toggleOpen(true); }, this.itemsButton);
     GlassLab.SignalManager.inventoryClosed.add(function() { this.toggleOpen(false); }, this.itemsButton);
 };

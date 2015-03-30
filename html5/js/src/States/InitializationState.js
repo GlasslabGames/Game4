@@ -32,7 +32,6 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
     }
 
-
     var foodSpriteNames = ["carrot", "apple", "strawberry", "tincan", "broccoli"];
     for (var i = 0; i < foodSpriteNames.length; i++) {
         spriteName = foodSpriteNames[i];
