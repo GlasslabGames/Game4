@@ -179,7 +179,7 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
             response.push(amount);
         } else if (this.answerInputs[i].label.visible || this.data.totalNumFood) { // use whatever amount was preset
             response.push( this.answerInputs[i].label.text );
-        } else {
+        } else if (this.answerInputs[i].dragTarget.visible) { // they haven't dragged any food here yet
             valid = false;
         }
     }
