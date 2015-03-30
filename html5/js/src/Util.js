@@ -16,10 +16,12 @@ GlassLab.Util.GetGlobalIsoPosition = function(sprite, out, isoX, isoY)
     pos.setTo(typeof isoX != "undefined" ? isoX : sprite.isoX,
         typeof isoY != "undefined" ? isoY : sprite.isoY);
 
-    while (sprite.parent && sprite.parent.isoPosition) {
+    while (sprite.parent) {
         sprite = sprite.parent;
-        pos.x += sprite.isoX;
-        pos.y += sprite.isoY;
+        if (sprite.isoPosition) {
+            pos.x += sprite.isoX;
+            pos.y += sprite.isoY;
+        }
     }
     return pos;
 };
