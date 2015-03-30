@@ -25,7 +25,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.foodRoot = this.game.make.isoSprite();
     this.objectRoot.addChild(this.foodRoot);
 
-    this.creatureRoot = this.game.make.isoSprite();
+    this.creatureRoot = this.game.make.group(); // the reason this is a group and not a sprite is so we can use iso.simpleSort
     this.objectRoot.addChild(this.creatureRoot);
 
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
@@ -188,7 +188,8 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
             var obj  = unusedObjects.pop();
             if (!obj) { // we ran out of existing tiles, so make a new one
                 obj = new boundConstructor();
-                parent.addChild(obj.sprite);
+                if (parent.addChild) parent.addChild(obj.sprite); // if the parent is a sprite
+                else parent.add(obj.sprite); // if the parent is a group
             }
             obj.setType(targetType);
             obj.sprite.visible = true;
@@ -447,7 +448,7 @@ GlassLab.FeedingPen.prototype.tryAddCreature = function(creature, tile) {
         return false;
     }
     this.creatureSpots[row][col] = creature;
-    this.creatureRoot.addChild(creature.sprite);
+    this.creatureRoot.add(creature.sprite);
     creature.pen = this;
     this._repositionCreatures();
     this._onCreatureContentsChanged();
@@ -506,6 +507,7 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
           }
       }
   }
+    if (this.creatureRoot) this.game.iso.simpleSort(this.creatureRoot); // sort the creatures so they don't overlap incorrectly
 };
 
 // when the size of the creature section or the number of creatures changes
