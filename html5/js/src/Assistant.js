@@ -85,7 +85,6 @@ GlassLab.Assistant.prototype.onPenLoaded = function() {
 };
 
 GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
-    console.log("order intro");
     this.state = GlassLab.Assistant.STATES.ORDER_INTRO;
     this.showButtons(false);
     var orderSegment;
@@ -99,7 +98,6 @@ GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
 };
 
 GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, lastChance) {
-    console.log("order food chosen");
     this.state = GlassLab.Assistant.STATES.ORDER_FOOD_CHOSEN;
     this.showButtons(false);
 
@@ -132,7 +130,6 @@ GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, la
 };
 
 GlassLab.Assistant.prototype._enterStateOrderCrateLoaded = function() {
-    console.log("order crate loaded");
     this.state = GlassLab.Assistant.STATES.ORDER_CRATE_LOADED;
     this.showButtons(true);
     var text = "Is this what you wanted?";
@@ -141,7 +138,6 @@ GlassLab.Assistant.prototype._enterStateOrderCrateLoaded = function() {
 };
 
 GlassLab.Assistant.prototype._enterStateOrderCrateReady = function(lastChance) {
-    console.log("order crate ready");
     this.state = GlassLab.Assistant.STATES.ORDER_CRATE_READY;
     this.showButtons(false);
     GLOBAL.orderFulfillment.submitButton.setEnabled(true);

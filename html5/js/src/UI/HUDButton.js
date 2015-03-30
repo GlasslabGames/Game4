@@ -19,12 +19,38 @@ GlassLab.HUDButton = function(game, x, y, imageSprite, bgSprite, isIcon, callbac
     this.imageColor = 0xcccccc;
     this.imageOverColor = 0x4c4c4c;
 
-    this.bg = this.game.make.sprite(0, 0, bgSprite);
-    this.bg.anchor.setTo(0.5, 0.5);
-    this.addChild(this.bg);
-    this.bg.tint = this.bgColor;
-    this.bg.alpha = 0.5;
+    // BG sprite(s):
+    // bgSprite is a string or an obj (containing 2 bgSprite strings, or for normal state and one for open state.)
+    // this.bg will be a pointer to the currently used bgSprite.
+    // leave this.bg_open = null to just just 1 sprite all the time.
+    // ** currently, only HUDAminButton alters the value of this.bg upon opening and closing the inventory.
+    this.bg_open = null; // alternate bg sprite for open state. (typically not used, but the foodIcon uses it)
+    if (typeof(bgSprite) == "string") {
+        this.bg = this.game.make.sprite(0, 0, bgSprite);
+        this.bg.anchor.setTo(0.5, 0.5);
+        this.bg.tint = this.bgColor;
+        this.bg.alpha = 0.5;
+        this.addChild(this.bg);
+    }
+    else if (typeof(bgSprite) == "object") {
+        // obj should be: { "bg": "key", "bg_open": "key" }
+        this.bg_normal = this.game.make.sprite(0, 0, bgSprite.bg);
+        this.bg_normal.anchor.setTo(0.5, 0.5);
+        this.bg_normal.tint = this.bgColor;
+        this.bg_normal.alpha = 0.5;
+        this.addChild(this.bg_normal);
 
+        // create optional "open" state for bg, but make it invisible:
+        this.bg_open = this.game.make.sprite(0, 0, bgSprite.bg_open);
+        this.bg_open.anchor.setTo(0.5, 0.5);
+        this.bg_open.tint = this.bgColor;
+        this.bg_open.alpha = 0;
+        this.addChild(this.bg_open);
+
+        this.bg = this.bg_normal; // init bg to normal state
+    }
+
+    // image sprite:
     this.image = this.game.make.sprite(0, 0, imageSprite);
     this.image.anchor.setTo(0.5, 0.5);
     this.addChild(this.image);
@@ -105,13 +131,15 @@ GlassLab.HUDButton.prototype.getHeight = function() {
     return this.bg.height;
 };
 
+
 /**
  * HUDAnimButton - for the journal, food, etc buttons
  */
 GlassLab.HUDAnimButton = function(game, x, y, imageSprite, bgSprite, isIcon, callback, callbackContext)
 {
-    GlassLab.HUDButton.prototype.constructor.call(this, game, x, y, imageSprite, bgSprite, false, callback, callbackContext);
+    GlassLab.HUDButton.prototype.constructor.call(this, game, x, y, imageSprite, bgSprite, isIcon, callback, callbackContext);
 
+    // imageSprites for closed, full, open, open-full, and animated states:
     this.defaultSpriteName = imageSprite;
     this.openSpriteName = imageSprite + "_open";
     this.openFullSpriteName = this.openSpriteName + "_full";
@@ -120,7 +148,6 @@ GlassLab.HUDAnimButton = function(game, x, y, imageSprite, bgSprite, isIcon, cal
     this.fullSpriteName = imageSprite + "_full";
     if (!this.game.cache.checkImageKey(this.fullSpriteName)) this.fullSpriteName = this.defaultSpriteName; // fallback if we don't have a different sprite
 
-    this.isIcon = isIcon; // not utilized yet
     this.active = false; // this is true when they have mail in the mailbox, etc
     this.open = false; // this is true when the mail, journal, etc is currently open on the screen
 };
@@ -153,11 +180,25 @@ GlassLab.HUDAnimButton.prototype._refreshImage = function() {
     if (this.open) {
         if (this.full) spriteName = this.openFullSpriteName;
         else spriteName = this.openSpriteName;
+
+        // bg swap?
+        if (this.bg_open != null) {
+            this.bg = this.bg_open;
+            this.bg_normal.alpha = 0; // hide the inactive bgsprite
+        }
+
         this.isIcon = true;
     } else {
         if (this.active) spriteName = this.animatedSpriteName;
         else if (this.full) spriteName = this.fullSpriteName;
         else spriteName = this.defaultSpriteName;
+
+        // bg swap?
+        if (this.bg_open != null) {
+            this.bg = this.bg_normal; // bg_normal is defined when bg_open is defined.
+            this.bg_open.alpha = 0; // hide the inactive bgsprite
+        }
+
         this.isIcon = false;
     }
 

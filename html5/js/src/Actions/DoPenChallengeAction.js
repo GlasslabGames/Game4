@@ -14,16 +14,12 @@ GlassLab.DoPenChallengeAction.prototype = Object.create(GlassLab.DoChallengeActi
 GlassLab.DoPenChallengeAction.prototype.constructor = GlassLab.DoOrderChallengeAction;
 
 GlassLab.DoPenChallengeAction.prototype.Do = function() {
-    if (!this.objective) {
-        var name = GLOBAL.creatureManager.GetCreatureName(this.challengeData.creatureType, this.challengeData.numCreatures > 1) || "creatures";
-        this.objective = "Feed " + this.challengeData.numCreatures + " " + name + " in the pen";
-    }
 
-    GlassLab.DoChallengeAction.prototype.Do.call(this);
+    GlassLab.DoChallengeAction.prototype.Do.apply(this, arguments);
 
-    GLOBAL.creatureManager.CreateCreatures(this.challengeData.creatureType, this.challengeData.numCreatures);
+    GLOBAL.creatureManager.CreateCreatures(this.data.creatureType, this.data.numCreatures);
 
-    this.pen = GLOBAL.penManager.CreatePen(this.challengeData, this.challengeData.startCol, this.challengeData.startRow);
+    this.pen = GLOBAL.penManager.CreatePen(this.data, this.data.startCol, this.data.startRow);
     this.pen.onResolved.add(this._onPenResolved, this);
 };
 
@@ -35,8 +31,8 @@ GlassLab.DoPenChallengeAction.prototype._onDestroy = function() {
 
 GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatureType, creatureCount) {
     this.result = result;
-    if (creatureType != this.challengeData.creatureType) this.result = "wrongCreatureType";
-    else if (creatureCount < this.challengeData.numCreatures) this.result = "wrongCreatureNumber";
+    if (creatureType != this.data.creatureType) this.result = "wrongCreatureType";
+    else if (creatureCount < this.data.numCreatures) this.result = "wrongCreatureNumber";
 
     GLOBAL.game.time.events.add(2000, this._showResult, this);
 };
@@ -69,4 +65,9 @@ GlassLab.DoPenChallengeAction.prototype.completeChallenge = function() {
 GlassLab.DoPenChallengeAction.prototype.failChallenge = function() {
     if (this.modal) this.modal.destroy();
     GlassLab.DoChallengeAction.prototype.failChallenge.call(this);
+};
+
+GlassLab.DoPenChallengeAction.prototype.getDefaultObjective = function() {
+    var name = GLOBAL.creatureManager.GetCreatureName(this.challengeData.creatureType, this.challengeData.numCreatures > 1) || "creatures";
+    return "Feed " + this.challengeData.numCreatures + " " + name + " in the pen";
 };
