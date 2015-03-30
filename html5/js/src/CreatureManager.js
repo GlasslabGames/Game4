@@ -174,7 +174,6 @@ GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 };
 
 GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, centered) {
-    console.log("Create creatures:", type, number, centered);
     for (var i = 0; i < number; i ++) {
         this.CreateCreature(type, centered);
     }

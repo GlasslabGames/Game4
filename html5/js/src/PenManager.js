@@ -39,6 +39,10 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
         (penData.foodWidth || penData.foodAWidth || 1)
     ];
     if (penData.foodBWidth) widths.push(penData.foodBWidth);
+    else { // Add a 3rd section if the creature wants more than 1 kind of food
+        var info = GLOBAL.creatureManager.GetCreatureData(penData.type || penData.creatureType);
+        if (info && info.desiredFood.length > 1) widths.push(1);
+    }
 
     var pen = new GlassLab.FeedingPen(
         this.game,

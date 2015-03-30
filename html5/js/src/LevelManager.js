@@ -64,16 +64,17 @@ GlassLab.LevelManager = function(game)
                 numCreatures: 6,
                 type: "unifox",
                 description: "Dear Friend! I want 5 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
-                creatureWidth: 3,
-                reward: 200
+                reward: 200,
+                hint: true
             },
             {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
-                numCreatures: 7,
+                numFoodA: 9,
                 type: "baby_rammus",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
+                hint: true,
                 reward: 200
             }
         ]
