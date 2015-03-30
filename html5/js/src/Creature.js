@@ -408,7 +408,7 @@ GlassLab.Creature.prototype._move = function() {
 
 GlassLab.Creature.prototype.tryWalkToNextFood = function (food) {
     var foodInfo = this.targetFood.shift();
-    if (!foodInfo) {
+    if (!foodInfo || !foodInfo.food) {
         if (this.getIsSatisfied()) this.FinishEating("satisfied");
         else this.FinishEating("hungry");
     } else if (!this.desiredAmountsOfFood[foodInfo.food.type]) { // we don't want this food

@@ -57,7 +57,7 @@ GlassLab.OrderFulfillment = function(game)
         var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC, "orderEntryField");
         answerInput.x = 50;
         answerInput.y = rowY;
-        answerInput.SetInputLimit(2);
+        answerInput.SetInputLimit(3);
         this.answerInputRoot.addChild(answerInput);
 
         var inputErrorGraphic = this.game.make.graphics();

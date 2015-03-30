@@ -82,7 +82,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: true,
             spriteName: "babybird",
             fxFrames: {eat: 16, vomit: 60 },
-            desiredFood: [{type: "apple", amount: (3/4)}]
+            desiredFood: [{type: "apple", amount: (4/3)}] // 3 birds eat 4 food
         },
         bird: {
             journalInfo: {

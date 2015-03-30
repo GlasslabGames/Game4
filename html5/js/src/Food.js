@@ -56,7 +56,7 @@ GlassLab.FoodTypes = {
         spriteName: "carrot",
         color: 0xe37f54, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: -1,
+        cost: 1,
         hidden: false,
         displayNames: {
             singular: "Carrot",
@@ -169,7 +169,7 @@ GlassLab.Food.prototype.placeOnTile = function(tile) {
 GlassLab.Food.prototype.BeEaten = function(amount) {
     amount = Math.min(amount, this.health); // can't eat more than we have left
     this.health -= amount;
-    if (this.health > 0) {
+    if (this.health > 0.0001) {
         //this.sprite.alpha = this.health; // TODO: show some partially eaten food
         //console.log("- Animating bar to health",this.health);
         this.hungerBar.setAmount(0, this.health, true);
