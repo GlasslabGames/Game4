@@ -56,6 +56,15 @@ GlassLab.UITable.prototype.replaceChildAt = function(x, y, child)
     this.managedChildren[index] = child;
 };
 
+GlassLab.UITable.prototype.getChildIndex = function(child)
+{
+    var c = this.managedChildren.indexOf(child);
+    if (c > -1)
+        return c;
+    else
+        return null;
+};
+
 GlassLab.UITable.prototype._refresh = function()
 {
     // TODO: Possible to optimize the loops to not calculate row/column every iteration
