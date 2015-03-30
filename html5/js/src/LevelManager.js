@@ -14,8 +14,10 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day1" });
     this._addLevelData({ quest: "day2" });
     this._addLevelData({ quest: "day3" });
+    this._addLevelData({ quest: "day4" });
+    this._addLevelData({ quest: "day5" });
 
-    // TESTING LEVELS:
+    /* TESTING LEVELS:
     // 4
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
@@ -90,7 +92,7 @@ GlassLab.LevelManager = function(game)
 
     // 6
     this._addLevelData(new GlassLab.Level()).data = {};
-
+    */
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
