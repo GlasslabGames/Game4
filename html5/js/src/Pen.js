@@ -68,13 +68,6 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     this.sprite.addChild(this.bottomEdge.sprite);
 
-    var style = { font: "65px Arial Black", fill: "#ffffff", align: "center", stroke: "#000000", strokeThickness: 8 };
-    this.ratioLabel = game.make.text(0, 0, "1 : 2", style);
-    this.ratioLabel.anchor.set(0.5, 1);
-    this.sprite.addChild(this.ratioLabel);
-    this.ratioLabel.x = this.topEdge.sprite.x;
-    this.ratioLabel.y = this.topEdge.sprite.y - GLOBAL.tileSize * 1.5;
-
     this.penStyle = GlassLab.Pen.STYLES.gate; // change this to toggle the pen's appearance
 
     this.Resize();
@@ -224,11 +217,6 @@ GlassLab.Pen.prototype.Resize = function() {
     }
 
     this._placeArrows();
-
-    this.ratioLabel.text = this.widths[0] * this.height;
-    for (var i = 1, len = this.widths.length; i < len; i++) {
-        this.ratioLabel.text += " : " + (this.widths[i] * this.height);
-    }
 };
 
 GlassLab.Pen.prototype._resetEdges = function() {

@@ -61,6 +61,20 @@ GlassLab.UIGrid.prototype.insertManagedChild = function(child, col, row, refresh
     if (refresh) this.refresh();
 };
 
+GlassLab.UIGrid.prototype.removeManagedChild = function(child, refresh)
+{
+    for (var row = 0, len = this.managedChildren.length; row < len; row++) {
+        for (var col = 0; col < this.numCols; col++) {
+            if (this.managedChildren[row][col] === child) { // assume that it won't be a falsey value - it should be a sprite or displayable object
+                this.removeChild(this.managedChildren[row][col]);
+                this.managedChildren[row][col] = null;
+                break;
+            }
+        }
+    }
+    if (refresh) this.refresh();
+};
+
 GlassLab.UIGrid.prototype.removeManagedChildren = function(refresh)
 {
     for (var row = 0, len = this.managedChildren.length; row < len; row++) {

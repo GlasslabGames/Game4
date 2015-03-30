@@ -34,7 +34,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.onResolved = new Phaser.Signal();
 
-    this.ratioLabel.x -= GLOBAL.tileSize * 0.75;
     this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 1.25, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
         'button', this.FeedCreatures, this, 1, 0, 1);
     this.button.anchor.set(0.5, 1);
@@ -57,15 +56,6 @@ GlassLab.FeedingPen.prototype.Resize = function() {
     this._updateCreatureSpotsAfterResize();
 
     this.refreshContents();
-
-    // If we've set a specific number of food & creatures, use that instead of the default which was set in Pen
-    // But it would be better to rewrite the Pen one to count the number of food / creatures currently in the pen.
-    if (this.numFoods && this.numCreatures) {
-        this.ratioLabel.text = this.numCreatures;
-        for (var l = 0; l < this.numFoods.length; l++) {
-            this.ratioLabel.text += " : " + this.numFoods[l];
-        }
-    }
 
     this._onCreatureContentsChanged();
 };
@@ -508,7 +498,7 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
 
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
-    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // TODO: Use different signal
     this._refreshFeedButton();
 };
 
