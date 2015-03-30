@@ -99,18 +99,9 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     }
 };
 
-GlassLab.TelemetryManager.prototype._onOrderCompleted = function(order)
-{
-    this.ordersCompleted++;
-    console.log("Orders completed: "+this.ordersCompleted);
+GlassLab.TelemetryManager.prototype.getCurrentChallengeAttempts = function() {
+    return this.challengeAttempts[this.currentChallengeId];
 };
-
-GlassLab.TelemetryManager.prototype._onLevelLost = function()
-{
-    this.attemptsOnLastProblem++;
-    console.log("Attempts: "+this.attemptsOnLastProblem);
-};
-
 
 GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDimensions, newDimensions)
 {
@@ -120,7 +111,7 @@ GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDim
 };
 
 
-GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, challengeType)
+GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, challengeType, problemType)
 {
     // These things should be set whether we're starting a new challenge or just restarting
     this.challengeAttemptStartTime = GLOBAL.game.time.now;
@@ -130,9 +121,10 @@ GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, challenge
 
     this.currentChallengeId = id;
     this.currentChallengeType = challengeType;
+    this.currentProblemType = problemType;
     this.challengeOriginalStartTime = GLOBAL.game.time.now;
 
-    GlassLabSDK.saveTelemEvent("start_challenge", {challenge_type: challengeType});
+    GlassLabSDK.saveTelemEvent("start_challenge", {challenge_type: challengeType, problemType: problemType});
 };
 
 GlassLab.TelemetryManager.prototype._onChallengeComplete = function(success)
@@ -144,6 +136,7 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function(success)
 
     GlassLabSDK.saveTelemEvent("submit_answer", {
         challenge_type: this.currentChallengeType,
+        problem_type: this.currentProblemType,
         success: success,
         attempt_count: attempts,
         latency: (GLOBAL.game.time.now - this.challengeAttemptStartTime) / 1000
@@ -157,9 +150,12 @@ GlassLab.TelemetryManager.prototype._onChallengeComplete = function(success)
 
 GlassLab.TelemetryManager.prototype._onChallengeFailure = function()
 {
-    GlassLabSDK.saveTelemEvent("fail_challenge", {});
+    GlassLabSDK.saveTelemEvent("fail_challenge", {
+        challenge_type: this.currentChallengeType,
+        problem_type: this.currentProblemType
+    });
 
-    this._checkFailureSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType);
+    this._checkFailureSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType, this.currentProblemType);
 };
 
 GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
@@ -167,6 +163,7 @@ GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
     var latency = (GLOBAL.game.time.now - this.challengeOriginalStartTime) / 1000;
     GlassLabSDK.saveTelemEvent("complete_challenge", {
         challenge_type: this.currentChallengeType,
+        problem_type: this.currentProblemType,
         attempt_count: this.challengeAttempts[this.currentChallengeId],
         total_latency: latency
     });
@@ -200,11 +197,11 @@ GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
         value: this.challengeLatencySum / this.challengesCompleted
     });
 
-    this._checkSuccessSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType);
+    this._checkSuccessSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType, this.currentProblemType);
 };
 
-GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, attempts, challengeType) {
-    var problemType = challengeId.split(".")[2].toLowerCase(); // make sure to update this if the challenge ID format changes
+GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, attempts, challengeType, problemType) {
+    var problemType = problemType.substring(problemType.length - 3).toUpperCase(); // make sure to update this if the problem type format changes
     var lastIntroChallengeId = "0.04."; // FIXME if we change the level IDs
     var lastPart2ChallengeId = "2.05.";
 
@@ -226,15 +223,15 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
         if (!this.problemTypesCompletedPerfectly[problemType]) {
             this.problemTypesCompletedPerfectly[problemType] = true;
             // the following SOs will be sent as soon as the player completes at least one problem of the specifies types perfectly
-            if (this.problemTypesCompletedPerfectly.md && this.problemTypesCompletedPerfectly.nd) this._sendSOWO("so4");
-            if (this.problemTypesCompletedPerfectly.ms && this.problemTypesCompletedPerfectly.ns) this._sendSOWO("so5");
-            if (this.problemTypesCompletedPerfectly.mt) this._sendSOWO("so6");
+            if (this.problemTypesCompletedPerfectly.MF && this.problemTypesCompletedPerfectly.NF) this._sendSOWO("so4");
+            if (this.problemTypesCompletedPerfectly.MC && this.problemTypesCompletedPerfectly.NC) this._sendSOWO("so5");
+            if (this.problemTypesCompletedPerfectly.MT) this._sendSOWO("so6");
         }
     }
 
     if (challengeId.indexOf(lastPart2ChallengeId) != -1 && perfectProgressions[1] && perfectProgressions[2]) this._sendSOWO("so7"); // all challenges in parts 1 and 2 were completed in 1 attempt
 
-    if (problemType == "mt") this._sendSOWO("so8"); // the player has completed an advanced challenge (in any number of attempts)
+    if (problemType == "MT") this._sendSOWO("so8"); // the player has completed an advanced challenge (in any number of attempts)
 
     var section = parseInt(challengeId.split(".")[0]);
     if (section > 0) { // we need to track these for wo2 and 3
@@ -244,7 +241,7 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
     }
 };
 
-GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, attempts, challengeType) {
+GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, attempts, challengeType, problemType) {
     var section = challengeId.split(".")[0]; // make sure to update this if the challenge ID format changes
     if (section == "0") {
         if (attempts == 3) this._sendSOWO("wo1"); // more than 3 attempts to complete an intro challenge
@@ -254,15 +251,15 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
     }
 
     if (attempts == 2) { // note that we only want to increment the count when the attempt is 2 and not do it again when > 2
-        var problemType = challengeId.split(".")[2].toLowerCase(); // make sure to update this if the challenge ID format changes
+        var problemType = problemType.substring(problemType.length - 3).toUpperCase(); // make sure to update this if the problem type format changes
         this.problemTypesFailedTwiceCount[problemType] = this.problemTypesFailedTwiceCount[problemType] || 0;
         this.problemTypesFailedTwiceCount[problemType] ++;
         if (this.problemTypesFailedTwiceCount[problemType] >= 2) {
-            if (problemType == "nd") this._sendSOWO("wo4");
-            else if (problemType == "md") this._sendSOWO("wo5");
-            else if (problemType == "ms") this._sendSOWO("wo6");
-            else if (problemType == "ns") this._sendSOWO("wo7");
-            else if (problemType == "mt") this._sendSOWO("wo8");
+            if (problemType == "NF") this._sendSOWO("wo4");
+            else if (problemType == "MF") this._sendSOWO("wo5");
+            else if (problemType == "MC") this._sendSOWO("wo6");
+            else if (problemType == "NC") this._sendSOWO("wo7");
+            else if (problemType == "MT") this._sendSOWO("wo8");
         }
     }
 };
@@ -270,7 +267,6 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
 GlassLab.TelemetryManager.prototype._sendSOWO = function(name) {
     if (!this.SOWOs[name]) { // only send a SOWO if we haven't sent it yet
         this.SOWOs[name] = true;
-        console.log("***",name,"***");
         GlassLabSDK.saveTelemEvent(name, {});
     }
 };
@@ -294,15 +290,6 @@ GlassLab.TelemetryManager.prototype._loadData = function() {
         var data = GLOBAL.saveManager.LoadData("telemetryData");
         for (var key in data) {
             this[key] = data[key];
-        }/*
-        this.challengesCompleted = data.challengesCompleted || 0;
-        this.challengesCompletedOnFirstAttempt = data.challengesCompletedOnFirstAttempt || 0;
-        this.challengeLatencySum = data.challengeLatencySum || 0;
-        this.challengeAttempts = data.challengeAttempts || {};
-        this.SOWOs = data.SOWOs || {};
-        this.problemTypesCompletedPerfectly = data.problemTypesCompletedPerfectly || {};
-        this.problemTypesFailedTwiceCount = data.problemTypesFailedTwiceCount || {};
-        this.pastFirstNonIntroPenChallenge = data.pastFirstNonIntroPenChallenge;
-        this.pastFirstNonIntroOrderChallenge = data.pastFirstNonIntroOrderChallenge;*/
+        }
     }
 };

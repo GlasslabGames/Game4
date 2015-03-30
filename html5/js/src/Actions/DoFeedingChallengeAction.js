@@ -16,14 +16,9 @@ GlassLab.DoFeedingChallengeAction.prototype.constructor = GlassLab.DoFeedingChal
 
 GlassLab.DoFeedingChallengeAction.prototype.Do = function()
 {
-    if (!this.objective) {
-        var name = GLOBAL.creatureManager.GetCreatureName(this.challengeData.creatureType, this.challengeData.numCreatures > 1) || "creatures";
-        this.objective = "Feed " + this.challengeData.numCreatures + " " + name;
-    }
-
     GlassLab.DoChallengeAction.prototype.Do.call(this);
 
-    GLOBAL.creatureManager.CreateCreatures(this.challengeData.creatureType, this.challengeData.numCreatures, this.challengeData.centered);
+    GLOBAL.creatureManager.CreateCreatures(this.data.creatureType, this.data.numCreatures, this.data.centered);
 
     this.numFed = 0;
     GlassLab.SignalManager.creatureFed.remove(this._onCreatureFed, this); // avoid duplicate events
@@ -33,9 +28,9 @@ GlassLab.DoFeedingChallengeAction.prototype.Do = function()
 GlassLab.DoFeedingChallengeAction.prototype._onCreatureFed = function(creature)
 {
     console.log("OnCreatureFed",creature.name);
-    if (creature.type == this.challengeData.creatureType) this.numFed++;
+    if (creature.type == this.data.creatureType) this.numFed++;
 
-    if (this.numFed >= this.challengeData.numCreatures) {
+    if (this.numFed >= this.data.numCreatures) {
         GLOBAL.game.time.events.add(1000, this.completeChallenge, this);
     }
 };
@@ -43,4 +38,9 @@ GlassLab.DoFeedingChallengeAction.prototype._onCreatureFed = function(creature)
 GlassLab.DoFeedingChallengeAction.prototype._onDestroy = function() {
     GlassLab.DoChallengeAction.prototype._onDestroy.call(this);
     GlassLab.SignalManager.creatureFed.remove(this._onCreatureFed, this);
+};
+
+GlassLab.DoFeedingChallengeAction.prototype.getDefaultObjective = function() {
+    var name = GLOBAL.creatureManager.GetCreatureName(this.challengeData.creatureType, this.challengeData.numCreatures > 1) || "creatures";
+    return "Feed " + this.challengeData.numCreatures + " " + name;
 };

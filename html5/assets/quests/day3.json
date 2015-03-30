@@ -3,11 +3,25 @@
   "progression": [
     {
      "__type": "DoPenChallengeAction",
-     "challengeId": "1.05b.nd",
-     "problemType": "ND",
+     "challengeId": "0.04a",
+     "problemType": "2US1MC",
+     "reviewKey": "fox_intro",
      "challengeData": {
         "creatureType": "baby_unifox",
-        "numCreatures": 10,
+        "numCreatures": 2,
+        "maxHeight": 1,
+        "creatureWidth": 2,
+        "startCol": -8
+      }
+    },
+    {
+     "__type": "DoPenChallengeAction",
+     "challengeId": "1.05b",
+     "problemType": "2US1NC",
+     "reviewKey": "start",
+     "challengeData": {
+        "creatureType": "baby_unifox",
+        "numCreatures": 11,
         "bottomDraggable":true,
         "topDraggable":true,
         "leftDraggable":true
@@ -18,8 +32,9 @@
       "possibilities": [
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "1.09.ns",
-          "problemType": "NS",
+          "challengeId": "1.09a",
+          "problemType": "2US2NF",
+          "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "baby_unifox",
@@ -30,34 +45,37 @@
         },
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "1.08.nd",
-          "problemType": "ND",
+          "challengeId": "1.08",
+          "problemType": "2US1NC",
+          "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "baby_unifox",
-            "numCreatures": 11,
-            "description": "Dear Friend! I have 11 BABY UNIFOXES. Please send me enough food for all of them!",
+            "numCreatures": 15,
+            "description": "Dear Friend! I have 15 BABY UNIFOXES. Please send me enough food for all of them!",
             "reward": 200
           }
         },
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "1.07.ms",
-          "problemType": "MS",
+          "challengeId": "1.07a",
+          "problemType": "2US2MF",
+          "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "baby_unifox",
-            "numFoodA": 36,
-            "description": "Dear Friend! I have 36 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-            "reward": 200
+            "numFoodA": 32,
+            "description": "Dear Friend! I have 32 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
+            "reward": 200,
+            "creatureWidth": 2
           }
         }
       ]
     },
     {
       "__type": "DoOrderChallengeAction",
-      "challengeId": "1.06.ms",
-      "problemType": "MS",
+      "challengeId": "1.06",
+      "problemType": "2UR1MF",
       "challengeData": {
           "client": "Archibold Huxley III",
           "creatureType": "baby_rammus",
@@ -94,162 +112,206 @@
       ]
     }
   ],
-  "reviewChallenges": [
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.05c.nd",
-     "problemType": "ND",
-     "challengeData": {
-        "creatureType": "baby_unifox",
-        "numCreatures": 13,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "leftDraggable": true
+  "reviewChallenges": {
+    "middle": [
+      {
+       "__type": "DoOrderChallengeAction",
+       "challengeId": "1.07b",
+       "problemType": "2US2MF",
+       "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "baby_unifox",
+          "numFoodA": 48,
+          "description": "Dear Friend! I have 48 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
+          "reward": 200,
+          "creatureWidth": 2
+        }
+      },
+      {
+      "__type": "RandomSelectionGroup",
+      "possibilities": [
+        {
+         "__type": "DoPenChallengeAction",
+         "challengeId": "1.05c",
+         "problemType": "2US1NC",
+         "challengeData": {
+            "creatureType": "baby_unifox",
+            "numCreatures": 13,
+            "bottomDraggable": true,
+            "topDraggable": true,
+            "leftDraggable": true
+          }
+        },
+        {
+         "__type": "DoPenChallengeAction",
+         "challengeId": "1.05a",
+         "problemType": "2US1NC",
+         "challengeData": {
+            "creatureType": "baby_unifox",
+            "numCreatures": 7,
+            "bottomDraggable": true,
+            "topDraggable": true,
+            "leftDraggable": true
+          }
+        }
+      ]
+      },
+      {
+        "__type": "DoOrderChallengeAction",
+        "challengeId": "1.04a",
+        "problemType": "2US1MC",
+        "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "baby_unifox",
+          "numCreatures": 8,
+          "description": "Dear Friend! I have 8 BABY UNIFOXES. Please send me enough food for all of them!",
+          "reward": 200,
+          "creatureWidth": 2
+        }
       }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.05a.nd",
-     "problemType": "ND",
-     "challengeData": {
-        "creatureType": "baby_unifox",
-        "numCreatures": 7,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "leftDraggable": true
+    ],
+    "start": [
+      {
+        "__type": "RandomSelectionGroup",
+        "possibilities": [
+          {
+            "__type": "DoOrderChallengeAction",
+            "challengeId": "1.03a",
+            "problemType": "2UR1MC",
+            "challengeData": {
+              "client": "Archibold Huxley III",
+              "creatureType": "baby_rammus",
+              "numCreatures": 7,
+              "description": "Dear Friend! I have 7 BABY RAMS. Please send me enough food for all of them!",
+              "reward": 200
+            }
+          },
+          {
+            "__type": "DoOrderChallengeAction",
+            "challengeId": "1.03c",
+            "problemType": "2UR1MC",
+            "challengeData": {
+              "client": "Archibold Huxley III",
+              "creatureType": "baby_rammus",
+              "numCreatures": 13,
+              "description": "Dear Friend! I have 13 BABY RAMS. Please send me enough food for all of them!",
+              "reward": 200
+            }
+          }
+        ]
+      },
+      {
+        "__type": "RandomSelectionGroup",
+        "possibilities": [
+          {
+            "__type": "DoPenChallengeAction",
+            "challengeId": "1.02c",
+            "problemType": "2US1MC",
+            "challengeData": {
+              "creatureType": "baby_unifox",
+              "numCreatures": 14,
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "leftDraggable": true,
+              "maxHeight": 14,
+              "creatureWidth": 2
+            }
+          },
+          {
+           "__type": "DoPenChallengeAction",
+           "challengeId": "1.02b",
+           "problemType": "2US1MC",
+           "challengeData": {
+              "creatureType": "baby_unifox",
+              "numCreatures": 12,
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "leftDraggable": true,
+              "maxHeight": 12,
+              "creatureWidth": 2
+            }
+          }
+        ]
+      },
+      {
+        "__type": "RandomSelectionGroup",
+        "possibilities": [
+          {
+           "__type": "DoPenChallengeAction",
+           "challengeId": "1.01b",
+           "problemType": "2UR1MC",
+           "challengeData": {
+              "creatureType": "baby_rammus",
+              "numCreatures": 9,
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "leftDraggable": true,
+              "maxHeight": 9
+            }
+          },
+          {
+           "__type": "DoPenChallengeAction",
+           "challengeId": "1.01a",
+           "problemType": "2UR1MC",
+           "challengeData": {
+              "creatureType": "baby_rammus",
+              "numCreatures": 5,
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "leftDraggable": true,
+              "maxHeight": 5
+            }
+          }
+        ]
+      } 
+    ],
+    "fox_intro": [
+      {
+       "__type": "DoPenChallengeAction",
+       "challengeId": "0.04b",
+       "problemType": "2US1MC",
+       "challengeData": {
+          "creatureType": "baby_unifox",
+          "numCreatures": 6,
+          "bottomDraggable": true,
+          "topDraggable": true,
+          "leftDraggable": true,
+          "maxHeight": 6,
+          "creatureWidth": 2
+        }
       }
-    },
-    {
-      "__type": "DoOrderChallengeAction",
-      "challengeId": "1.04a.md",
-      "problemType": "MD",
-      "challengeData": {
-        "client": "Archibold Huxley III",
-        "creatureType": "baby_unifox",
-        "numCreatures": 9,
-        "description": "Dear Friend! I have 9 BABY UNIFOXES. Please send me enough food for all of them!",
-        "reward": 200
-      }
-    },
-    {
-      "__type": "DoOrderChallengeAction",
-      "challengeId": "1.03a.md",
-      "problemType": "MD",
-      "challengeData": {
-        "client": "Archibold Huxley III",
-        "creatureType": "baby_rammus",
-        "numCreatures": 7,
-        "description": "Dear Friend! I have 7 BABY RAMS. Please send me enough food for all of them!",
-        "reward": 200
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.02c.md",
-     "problemType": "MD",
-     "challengeData": {
-        "creatureType": "baby_unifox",
-        "numCreatures": 15,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "leftDraggable": true,
-        "maxHeight": 15
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.02b.md",
-     "problemType": "MD",
-     "challengeData": {
-        "creatureType": "baby_unifox",
-        "numCreatures": 12,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "leftDraggable": true,
-        "maxHeight": 12
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.02a.md",
-     "problemType": "MD",
-     "challengeData": {
-        "creatureType": "baby_unifox",
-        "numCreatures": 6,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "leftDraggable": true,
-        "maxHeight": 6
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.01c.md",
-     "problemType": "MD",
-     "challengeData": {
-        "creatureType": "baby_rammus",
-        "numCreatures": 9,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "leftDraggable": true,
-        "maxHeight": 9
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.01b.md",
-     "problemType": "MD",
-     "challengeData": {
-        "creatureType": "baby_rammus",
-        "numCreatures": 5,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "leftDraggable": true,
-        "maxHeight": 5
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "1.01a.md",
-     "problemType": "MD",
-     "challengeData": {
-        "creatureType": "baby_rammus",
-        "numCreatures": 3,
-        "bottomDraggable": true,
-        "topDraggable": true,
-        "maxHeight": 3
-      }
-    }
-  ],
+    ]
+  },
   "funChallenges": [
 
   ],
   "backgroundOrders": [
     {
-      "orderId": "bg1",
-      "problemType": "ND",
+      "orderId": "1.09b",
+      "problemType": "2US2NF",
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "baby_unifox",
-        "numFoodA": 48,
-        "description": "Dear Friend! I have 48 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
+        "numFoodA": 68,
+        "description": "Dear Friend! I have 68 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
         "reward": 200
       }
     },
     {
-      "orderId": "1.04b.md",
-      "problemType": "MD",
+      "orderId": "1.04b",
+      "problemType": "2US1MC",
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "baby_unifox",
         "numCreatures": 18,
         "description": "Dear Friend! I have 18 BABY UNIFOXES. Please send me enough food for all of them!",
-        "reward": 200
+        "reward": 200,
+        "creatureWidth": 2
       }
     },
     {
       "orderId": "1.03b.md",
-      "problemType": "MD",
+      "problemType": "2UR1MC",
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "baby_rammus",

@@ -16,12 +16,10 @@ GlassLab.DoOrderChallengeAction.prototype.constructor = GlassLab.DoOrderChalleng
 
 GlassLab.DoOrderChallengeAction.prototype.Do = function()
 {
-    if (!this.objective) this.objective = "Fulfill an urgent order";
+    GlassLab.DoChallengeAction.prototype.Do.apply(this, arguments);
 
-    GlassLab.DoChallengeAction.prototype.Do.call(this);
-
-    this.challengeData.key = true; // mark that this order is key for this challenge
-    GLOBAL.mailManager.AddOrders(this.challengeData);
+    this.data.key = true; // mark that this order is key for this challenge
+    GLOBAL.mailManager.AddOrders(this.data);
 
     GlassLab.SignalManager.orderResolved.remove(this._onOrderResolved, this); // make sure we don't have two copies
     GlassLab.SignalManager.orderResolved.add(this._onOrderResolved, this);
@@ -37,4 +35,8 @@ GlassLab.DoOrderChallengeAction.prototype._onOrderResolved = function(order, suc
 
     if (success) this.completeChallenge();
     else this.failChallenge();
+};
+
+GlassLab.DoOrderChallengeAction.prototype.getDefaultObjective = function() {
+    return "Fulfill an urgent order";
 };
