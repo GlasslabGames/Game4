@@ -18,9 +18,6 @@ GlassLab.UIManager = function(game)
     this.centerAnchor.addChild(this.bonusModal);
     this.bonusModal.visible = false;
 
-    //game.input.onDown.add(this._globalDown, this); // Global input down handler
-    game.input.onUp.add(this._onGlobalUp, this); // Global input down handler
-
     this.tutorialArrow = this.game.add.sprite(0,0,"tutorialArrow");
     this.tutorialArrow.scale.set(0.5, 0.5);
     this.tutorialArrow.anchor.set(1.1, 0.5);
@@ -29,11 +26,17 @@ GlassLab.UIManager = function(game)
     this.tutorialArrow.visible = false;
 
     this.createHud();
+
+    GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
+};
+
+GlassLab.UIManager.prototype._onInitGame = function() {
+    this.game.input.onUp.add(this._onGlobalUp, this); // wait until now to add the global input listener. It gets wiped between states.
 };
 
 GlassLab.UIManager.prototype._onGlobalUp = function(pointer, DOMevent)
 {
-    if (GLOBAL.stickyMode && GLOBAL.dragTarget) { // if we were dragging something with sticky mode, release it when we click
+    if (GLOBAL.dragTarget && GLOBAL.dragTarget.stickyDrag) { // if we were dragging something with sticky mode, release it when we click
         if (GLOBAL.dragTarget.OnStickyDrop) GLOBAL.dragTarget.OnStickyDrop(); // e.g. UIDraggable
         GLOBAL.dragTarget = null;
         GLOBAL.justDropped = true;
