@@ -8,17 +8,6 @@ var GlassLab = GlassLab || {};
  * FoodType - types of food
  */
 GlassLab.FoodTypes = {
-    apple: {
-        spriteName: "apple",
-        color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: -1,
-        hidden: false,
-        displayNames: {
-            singular: "apple",
-            plural: "apples"
-        }
-    },
     broccoli: {
         spriteName: "broccoli",
         color: 0x8cb149,
@@ -26,20 +15,9 @@ GlassLab.FoodTypes = {
         cost: -1,
         hidden: false,
         displayNames: {
-            singular: "broccoli",
-            plural: "broccoli"
-        }
-    },
-    carrot: {
-        spriteName: "carrot",
-        color: 0xe37f54, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: -1,
-        hidden: false,
-        displayNames: {
-            singular: "carrot",
-            plural: "carrots"
-        }
+            singular: "Broccoli",
+            plural: "Broccoli"
+        },
     },
     strawberry: {
         spriteName: "strawberry",
@@ -48,9 +26,20 @@ GlassLab.FoodTypes = {
         cost: -1,
         hidden: false,
         displayNames: {
-            singular: "strawberry",
-            plural: "strawberries"
-        }
+            singular: "Strawberry",
+            plural: "Strawberries"
+        },
+    },
+    apple: {
+        spriteName: "apple",
+        color: 0xc03b30, // associated color for the vomit and the hunger bar
+        unlocked: false, // Default value, unlock tracked by InventoryManager
+        cost: -1,
+        hidden: false,
+        displayNames: {
+            singular: "Apple",
+            plural: "Apples"
+        },
     },
     tincan: {
         spriteName: "tincan",
@@ -59,10 +48,76 @@ GlassLab.FoodTypes = {
         cost: 1,
         hidden: false,
         displayNames: {
-            singular: "tin can",
-            plural: "tin cans"
-        }
-    }
+            singular: "Tin Can",
+            plural: "Tin Cans"
+        },
+    },
+    carrot: {
+        spriteName: "carrot",
+        color: 0xe37f54, // associated color for the vomit and the hunger bar
+        unlocked: false, // Default value, unlock tracked by InventoryManager
+        cost: -1,
+        hidden: false,
+        displayNames: {
+            singular: "Carrot",
+            plural: "Carrots"
+        },
+    },
+    corn: {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 500,
+        hidden: false,
+        displayNames: {
+            singular: "Corn",
+            plural: "Corn"
+        },
+    },
+    "item07": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 1000,
+        hidden: false,
+        displayNames: {
+            singular: "Tin Can",
+            plural: "Tin Cans"
+        },
+    },
+    "item08": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 2000,
+        hidden: false,
+        displayNames: {
+            singular: "Tin Can",
+            plural: "Tin Cans"
+        },
+    },
+    "item09": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 5000,
+        hidden: false,
+        displayNames: {
+            singular: "Tin Can",
+            plural: "Tin Cans"
+        },
+    },
+    "item10": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 7500,
+        hidden: false,
+        displayNames: {
+            singular: "Tin Can",
+            plural: "Tin Cans"
+        },
+    },
 };
 
 /**
