@@ -122,16 +122,39 @@ GlassLab.OrderFulfillment.prototype._onTextChange = function(text)
 GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     if (!response) response = this._getResponse();
 
+    console.log("refresh pen. Response:", response,"Hint:",this.data.hint,"NumCreatures",this.data.numCreatures);
+
+    // if hint is true, we have two options
+    // if numCreatures is provided, add one row of food.
+    // else, show the pen with the correct dimensions of food
     if (response) {
         var numCreatures = response.shift();
         this._createPen(response.length);
         this.pen.SetContents(this.data.creatureType, numCreatures, this.foodTypes, response);
 
         this._focusCamera();
-    } else if (this.data.numCreatures) { // create a pen showing only the creatures as long as we know how many creatures there are
-        this._createPen();
-        this.pen.SetContents(this.data.creatureType, this.data.numCreatures, this.foodTypes, []);
+    } else if (this.data.hint) { // for a hint, show one row of food
+        var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
+        this._createPen(desiredFood.length);
 
+        var creatureMult = 0; // determines how much food to show.
+        if (this.data.numCreatures) { // when the number of creatures is provided, give them a hint of a single row of food
+            creatureMult = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
+        } else {
+            creatureMult = this._calculateTargetNumCreatures(); // otherwise, give them enough food for all the creatures.
+        }
+
+        var foodCounts = [desiredFood[0].amount * creatureMult];
+        var foodTypes = [desiredFood[0].type];
+        if (desiredFood[1]) {
+            foodCounts[1] = desiredFood[1].amount * creatureMult;
+            foodTypes[1] = desiredFood[1].type;
+        }
+        console.log("Hint",this.data.numCreatures || creatureMult, foodTypes, foodCounts, !this.data.numCreatures);
+        this.pen.SetContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
+            !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
+
+        this._focusCamera();
     } else if (this.pen) { // we have a pen with no purpose, so remove it
         this.pen.sprite.destroy();
         this.pen = null;
@@ -159,6 +182,8 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
             response.push(amount);
         } else if (this.answerInputs[i].label.visible || this.data.totalNumFood) { // use whatever amount was preset
             response.push( this.answerInputs[i].label.text );
+        } else {
+            valid = false;
         }
     }
     if (!valid) return false;
@@ -384,14 +409,7 @@ GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calcula
     var response = this._getResponse();
 
     // figure out the correct answer
-    var targetNumCreatures = this.data.numCreatures || 0;
-    if (!targetNumCreatures) {
-        if (this.data.numFoodA) targetNumCreatures = this.data.numFoodA / creatureInfo.desiredFood[0].amount;
-        else if (this.data.numFoodB) targetNumCreatures = this.data.numFoodB / creatureInfo.desiredFood[1].amount;
-        else if (this.data.totalNumFood) {
-            targetNumCreatures = this.data.totalNumFood / (creatureInfo.desiredFood[0].amount + creatureInfo.desiredFood[1].amount);
-        }
-    }
+    var targetNumCreatures = this._calculateTargetNumCreatures();
 
     var data = {
         order_id: this.data.id || "",
@@ -418,4 +436,17 @@ GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calcula
         && data.foodA_count == data.target_foodB_count && data.foodB_count == data.target_foodA_count));
     }
     GlassLabSDK.saveTelemEvent(eventName, data);
+};
+
+GlassLab.OrderFulfillment.prototype._calculateTargetNumCreatures = function() {
+    if (this.data.numCreatures) return this.data.numCreatures;
+
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType);
+
+    if (this.data.numFoodA) return this.data.numFoodA / creatureInfo.desiredFood[0].amount;
+    else if (this.data.numFoodB) return this.data.numFoodB / creatureInfo.desiredFood[1].amount;
+    else if (this.data.totalNumFood) {
+        return this.data.totalNumFood / (creatureInfo.desiredFood[0].amount + creatureInfo.desiredFood[1].amount);
+    }
+    return -1;
 };

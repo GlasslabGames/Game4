@@ -85,6 +85,7 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
     }
 
     if (this.autoFill) {
+        console.log("Fill in with numCreatures", this.numCreatures);
         this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatureSpots, this.numCreatures,
             0, this.widths[0], true, this.creatureType);
         this.forEachCreature(function() { this.draggable = false; });
@@ -146,7 +147,7 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
 };
 
 // Resizes the pen to contain the specified number of creatures and food
-GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, condenseToMultipleRows) {
+GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, hideCreatures, singleFoodRow) {
     this.SetDraggableOnly(); // don't allow them to adjust the pen
 
     this.creatureType = creatureType;
@@ -163,9 +164,10 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.widths[0] = Math.min(this.presetCreatureWidth, numCreatures); // keep our original creature width as set in order fulfillment, unless we have fewer creatures than that
     this.height = Math.ceil(numCreatures / this.widths[0]);
     for (var j = 0; j < this.numFoods.length; j++) {
-        this.widths[j+1] = Math.ceil(this.numFoods[j] / this.height);
+        this.widths[j+1] = (singleFoodRow)? this.numFoods[j] : (Math.ceil(this.numFoods[j] / this.height));
         if (j < this.numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
     }
+    if (hideCreatures) this.numCreatures = 0; // keep the same widths and height, but don't add any creatures
     this.centerEdge.sprite.visible = false;
 
     this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
@@ -180,8 +182,10 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
     list.length = 0; // empty the list. Setting it to [] would break the passed-in reference.
 
     for (var row = 0; row < this.height; row++) {
+        if ((maxCount || maxCount === 0) && count >= maxCount) break;
         list.push([]);
         for (var col = startCol; col < endCol; col ++) {
+            if ((maxCount || maxCount === 0) && count >= maxCount) break;
             var obj  = unusedObjects.pop();
             if (!obj) { // we ran out of existing tiles, so make a new one
                 obj = new boundConstructor();
@@ -195,9 +199,7 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
             obj.pen = this;
             list[row].push(obj);
             count++;
-            if (maxCount && count >= maxCount) break;
         }
-        if (maxCount && count >= maxCount) break;
     }
 
     for (var i = unusedObjects.length-1; i >= 0; i--) {
