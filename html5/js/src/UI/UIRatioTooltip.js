@@ -101,6 +101,8 @@ GlassLab.UIRatioTooltip.prototype.Show = function(targetPen)
 
     this.Refresh();
 
+    this._refreshPosition();
+
     this.scale.y = 0;
     this.game.add.tween(this.scale).to({y: 1}, 600, Phaser.Easing.Elastic.Out, true);
 };
@@ -171,6 +173,11 @@ GlassLab.UIRatioTooltip.prototype.Hide = function()
 };
 
 GlassLab.UIRatioTooltip.prototype._onUpdate = function(dt)
+{
+    this._refreshPosition();
+};
+
+GlassLab.UIRatioTooltip.prototype._refreshPosition = function()
 {
     var pointer = this.game.input.activePointer;
     if (pointer)
