@@ -434,3 +434,35 @@ GlassLab.Pen.prototype._onOffLever = function() {
 
 // this is overwritten in Feeding Pen
 GlassLab.Pen.prototype._onLeverPulled = function() {};
+
+// given the place where the user wants to put this edge, return the closest location it could be set to
+GlassLab.Pen.prototype.GetValidEdgePos = function(edge, edgeIndex, targetPos) {
+    // First, make sure we don't exceed the max height that's possible for this pen
+    if (this.maxHeight) {
+        if (edge == GlassLab.Edge.SIDES.top) {
+            targetPos = Math.max( targetPos, (this.height - this.maxHeight) * GLOBAL.tileSize);
+        } else if (edge == GlassLab.Edge.SIDES.bottom) {
+            targetPos = Math.min( targetPos, (this.maxHeight - this.height) * GLOBAL.tileSize);
+        }
+    }
+
+    // Then check that our pen isn't exceeding the size of the pen area (currently the whole world, but it could be changed)
+
+    var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    var topRow = originTile.row, leftCol = originTile.col, bottomRow = originTile.row + this.height, rightCol = originTile.col + this.getFullWidth();
+
+    // note that we could change these later to reflect parts of the world that don't allow the pen.
+    var minRow = 0, maxRow = GLOBAL.tileManager.GetMapHeight(), minCol = 0, maxCol = GLOBAL.tileManager.GetMapWidth();
+
+    if (edge == GlassLab.Edge.SIDES.top) {
+        targetPos = Math.max( targetPos, (minRow - topRow) * GLOBAL.tileSize);
+    } else if (edge == GlassLab.Edge.SIDES.bottom) {
+        targetPos = Math.min( targetPos, (maxRow - bottomRow) * GLOBAL.tileSize);
+    } else if (edge == GlassLab.Edge.SIDES.left) {
+        targetPos = Math.max( targetPos, (minCol - leftCol) * GLOBAL.tileSize);
+    } else if (edge == GlassLab.Edge.SIDES.right) {
+        targetPos = Math.min( targetPos, (maxCol - rightCol) * GLOBAL.tileSize);
+    }
+
+    return targetPos;
+};
