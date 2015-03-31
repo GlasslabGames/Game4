@@ -11,17 +11,18 @@ GlassLab.InventoryMenu = function(game)
     this.anchor.setTo(0, 1);
     this.x = 100;
 
-    this.dragging_item = false; // for tracking dragging state of any of "my" items
-    this.dropped_item = false; // for tracking dragging state of any of "my" items
+    // for tracking drag/drop state of any of inventory items (used to finesse onOver/onOut visual changes of items):
+    this.dragging_item = false;
+    this.dropped_item = false;
 
-    this.items = []; // is this being used?
+    this.items = []; // not certain if this is being used
 
     /*this.bg = game.make.graphics();
     this.addChild(this.bg);
     this._onScreenSizeChange(); // sets the BG to span the whole width of the screen
     */
 
-    // money bg
+    // money bg:
     this.inventoryMoneyBg = game.make.image(-80, -132, "inventoryMoneyBg");
     this.inventoryMoneyBg.tint = 0x000000;
     this.inventoryMoneyBg.alpha = 0.5;
@@ -37,7 +38,7 @@ GlassLab.InventoryMenu = function(game)
     this.moneyLabel.anchor.set(0.5);
     this.addChild(this.moneyLabel);
 
-    // foodbarBg:
+    // foodBar:
     this.foodBarBg = game.make.image(2, -100, "foodBarBg");
     this.foodBarBg.alpha = 0.5;
     this.foodBarBg.scale.x = 32.9;
@@ -101,8 +102,6 @@ GlassLab.InventoryMenu.prototype.Show = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("open_inventory", {});
 
-    // replace UIManager's food_button_bg with the _open version:
-
     GlassLab.SignalManager.inventoryOpened.dispatch(auto === true);
 
     this.Refresh();
@@ -113,8 +112,6 @@ GlassLab.InventoryMenu.prototype.Show = function(auto)
 GlassLab.InventoryMenu.prototype.Hide = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_inventory", {});
-
-    // replace UIManager's food_button_bg with the original version:
 
     GlassLab.SignalManager.inventoryClosed.dispatch(auto === true);
 

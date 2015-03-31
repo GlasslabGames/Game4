@@ -59,12 +59,25 @@ GlassLab.State.Game.prototype.update = function()
         tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
     }
 
-    if (false && tileSprite != GLOBAL.highlightedTile)
+    if (tileSprite != GLOBAL.highlightedTile)
     {
+        // Entered tile in pen
+        if (tileSprite && tileSprite.inPen && (!GLOBAL.highlightedTile || (GLOBAL.highlightedTile.inPen != tileSprite.inPen)))
+        {
+            GLOBAL.UIManager.penTooltip.Show(tileSprite.inPen);
+        }
+        else if (GLOBAL.highlightedTile && GLOBAL.highlightedTile.inPen && (!tileSprite || !tileSprite.inPen)) // exited tile in pen
+        {
+            GLOBAL.UIManager.penTooltip.Hide();
+        }
+
+        /*
+        // Highlight tile
         if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
         if (tileSprite) tileSprite.tint = 0xBFE2F2; //previous color was 0x86bfda (good for night) but I lightened it
+        */
+
         GLOBAL.highlightedTile = tileSprite;
-        // console.log(GLOBAL.penManager.pens[0]._getSection(tileSprite)); // for debugging the pen position
     }
 
     GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position

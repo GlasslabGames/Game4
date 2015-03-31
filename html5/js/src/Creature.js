@@ -337,8 +337,8 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
 
         GLOBAL.tileManager.GetTileWorldPosition(tileIndex.x, tileIndex.y, this.targetPosition); // Set target position to target tile position
         // Offset position slightly
-        this.targetPosition.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
-        this.targetPosition.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+        //this.targetPosition.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
+        //this.targetPosition.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
         GlassLab.Util.GetLocalIsoPosition(this.sprite, this.targetPosition, this.targetPosition.x, this.targetPosition.y);
 
         var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);

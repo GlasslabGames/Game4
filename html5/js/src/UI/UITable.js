@@ -48,12 +48,37 @@ GlassLab.UITable.prototype._onChildChanged = function(child)
     this._refresh();
 };
 
+GlassLab.UITable.prototype.removeManagedChild = function(child, refresh)
+{
+    var childIndex = this.managedChildren.indexOf(child);
+    if (childIndex != -1)
+    {
+        this.removeChild(child);
+        this.managedChildren.splice(childIndex, 1);
+
+        if (refresh) this.refresh();
+    }
+    else
+    {
+        console.error("Tried to remove child from UITable.managedChildren that isn't in the list!");
+    }
+};
+
 GlassLab.UITable.prototype.replaceChildAt = function(x, y, child)
 {
     var index = x + y*this.cellWidth;
 
     var prevChild = this.managedChildren[index];
     this.managedChildren[index] = child;
+};
+
+GlassLab.UITable.prototype.getChildIndex = function(child)
+{
+    var c = this.managedChildren.indexOf(child);
+    if (c > -1)
+        return c;
+    else
+        return null;
 };
 
 GlassLab.UITable.prototype._refresh = function()
@@ -180,12 +205,11 @@ GlassLab.UITable.prototype.getRowYCoord = function(rowNum) {
 };
 
 GlassLab.UITable.prototype.getWidth = function() {
-  var width = 0;
+  var width = Math.max((this._columnLengths.length - 2) * this.padding, 0);
   for (var j=0; j < this._columnLengths.length; j++)
   {
-    width += this._columnLengths[j] + this.padding;
+    width += this._columnLengths[j];
   }
-  width -= this.padding; // because an extra was added at the end
   return width;
 };
 

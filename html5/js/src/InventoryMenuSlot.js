@@ -81,15 +81,15 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.hoverLabelCoin.anchor.setTo(.5, .5);
     this.hoverLabelCoin.alpha = 0;
 
-
-    // setup remaining hover label properties, then add hoverLabel parts as children:
-    this.UpdateHoverLabel(); // sets text anchors, hover label bg positions and scale
+    // add hoverLabel parts as children:
     this.addChild(this.hoverLabelBg);
     this.addChild(this.hoverLabelBgEndcapLeft);
     this.addChild(this.hoverLabelBgEndcapRight);
     this.addChild(this.hoverLabelBgPointer);
     this.addChild(this.hoverLabel);
     this.addChild(this.hoverLabelCoin);
+
+    this.UpdateHoverLabel(); // sets text anchors, hover label bg positions and scale
 
 
     // mouse events:
@@ -142,11 +142,39 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseCanceled = function()
 
 GlassLab.InventoryMenuSlot.prototype.UpdateHoverLabel = function()
 {
+    // calculates sizes, scales, text anchors, etc of various components of the hoverLabel:
     this.hoverLabel.anchor.x = Math.round(this.hoverLabel.width * 0.5) / this.hoverLabel.width; // round to avoid subpixel blur
     this.hoverLabel.anchor.y = Math.round(this.hoverLabel.height * 0.5) / this.hoverLabel.height; // round to avoid subpixel blur
     this.hoverLabelBg.scale.x = (this.hoverLabel.width + 30) / this.hoverLabelBg._original_width; // 15px padding before endcaps
     this.hoverLabelBgEndcapLeft.x = 0 - (this.hoverLabel.width/2 + 15);
     this.hoverLabelBgEndcapRight.x = this.hoverLabel.width/2 + 15;
+
+    // scoot inward if the label extends too far past either end of this.parent.parent.foodBarBg:
+    if (this.parent != null && this.parent.getChildIndex(this) != null) {
+        var my_slot_i = this.parent.getChildIndex(this);
+        var left_edge_offset = Math.round((this.parent.managedChildren[my_slot_i].x + this.texture.width/2) + this.hoverLabelBgEndcapLeft.x);
+        var right_edge_offset = (this.parent.managedChildren[my_slot_i].x + this.texture.width/2) + this.hoverLabelBgEndcapRight.x;
+        right_edge_offset = Math.round(right_edge_offset - this.parent.parent.foodBarBgEndcapRight.x);
+        
+        // hacky hardcoded nudging - TODO: base this on UITable's padding values and InventoryMenu's foodBarBg.x:
+        left_edge_offset -= 2;
+        right_edge_offset -= 3;
+
+        if (left_edge_offset < 0) {
+            this.hoverLabel.x -= left_edge_offset;
+            this.hoverLabelBg.x -= left_edge_offset;
+            this.hoverLabelBgEndcapLeft.x -= left_edge_offset;
+            this.hoverLabelBgEndcapRight.x -= left_edge_offset;
+            this.hoverLabelCoin.x -= left_edge_offset;
+        }
+        else if (right_edge_offset > 0) {
+            this.hoverLabel.x -= right_edge_offset;
+            this.hoverLabelBg.x -= right_edge_offset;
+            this.hoverLabelBgEndcapLeft.x -= right_edge_offset;
+            this.hoverLabelBgEndcapRight.x -= right_edge_offset;
+            this.hoverLabelCoin.x -= right_edge_offset;
+        }
+    }
 };
 
 GlassLab.InventoryMenuSlot.prototype.Refresh = function()
