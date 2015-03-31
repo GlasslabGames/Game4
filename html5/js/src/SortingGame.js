@@ -202,7 +202,7 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
     var totalFoodShown = 0;
     for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
         totalFoodDesired += creatureInfo.desiredFood[i].amount * this.numCreatures;
-        totalFoodShown += this.numFood || 0;
+        totalFoodShown += this.numFood[i] || 0;
     }
 
     if (totalFoodShown < totalFoodDesired) this.targetValue = GlassLab.SortingGame.COMPARISON_VALUES.tooLittle;
