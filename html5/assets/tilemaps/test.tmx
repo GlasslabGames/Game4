@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="Tiles.tsx"/>
  <layer name="Tile Layer 1" width="40" height="40">
   <data encoding="base64" compression="zlib">
-   eJzd1lELgzAMBOC+Cjpf/P+/dQwcSGlr27tLog+BMWF+XlKXI6W0XOoIWFFdiC/yM0W3Wc9q7/2WRnnm0XKpra3fHHVZ9x7xWThr99wrFcFYs/V6VbYRl1WeiE1tRLL7nKXs84xvu/h+n9ezak6P3v6zK/lyp6dvTfc+xMiYv3wOmT1G3y2955npK/VqH7j+tPxY7ximj3V+lTmqfCyj6n+YZVTvMqydgembmcet8J3F3ork6LFXR+hrz0zmXvV+jxiVOz3bp8pjxmTds5GsIs2T5+y/0Wdle6r1zU7E/AUs7GgY
+   eJzt2MkKhDAQBNC+BtS5+P/fOgwoBMnWewlzKPCg8qhWSTyJqFQ5OynK9O67Eo7rI4iVc9aXxNYyaq3WNmunl21knDkLxdg0zkgbd+ZZtp4RydYyotl6RiTbyJftGvmyTdG+44rWaO3bK9/veLsiNXr0d3dn4fN4N27fRpi+2qh5DtG+eyPj6vmzWUlnaeVD7+/ve6cP1Yi29ov27crrUdeAdXfPdX626w2+2T4O0YawV+L+Q0CzZRm5/2CijC0Xtz8PI8ey6tOaJT1ZWa3n59lplMfDKbF+AUdgW9M=
   </data>
  </layer>
 </map>

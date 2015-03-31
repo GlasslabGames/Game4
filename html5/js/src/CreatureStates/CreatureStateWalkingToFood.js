@@ -60,7 +60,8 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
             this.stopped = false;
         }
         var delta = Phaser.Point.subtract(GlassLab.Util.GetGlobalIsoPosition(this.foodInfo.food.sprite), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
-        if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're still far from the food
+        var deltaMagSq = delta.getMagnitudeSq();
+        if (deltaMagSq > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're still far from the food
             // check if we're too close to the creature in front. but if that creature is already finished eating, we have to be allowed to walk by them.
             if (this.creature.creatureInFront && !(this.creature.creatureInFront.state instanceof GlassLab.CreatureStateWaitingForFood)) {
                 var dist = Phaser.Point.subtract(GlassLab.Util.GetGlobalIsoPosition(this.creature.creatureInFront.sprite), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
