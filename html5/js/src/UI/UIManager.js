@@ -8,7 +8,7 @@ GlassLab.UIManager = function(game)
 {
     this.game = game;
     this.dragTargets = [];
-    this.zoomTo(0.25);
+    this.zoomTo(GlassLab.UIManager.startZoom);
 
     this._createAnchors();
 
@@ -140,8 +140,10 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
     return label.text; // returns the text with newlines inserted
 };
 
-GlassLab.UIManager.maxZoom = 1;
-GlassLab.UIManager.minZoom = 0.125;
+GlassLab.UIManager.zoomAmount = 1.5;
+GlassLab.UIManager.startZoom = 0.4;
+GlassLab.UIManager.maxZoom = GlassLab.UIManager.startZoom * GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
 
 GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
     this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
@@ -149,11 +151,11 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
 };
 
 GlassLab.UIManager.prototype.zoomIn = function() {
-    this.zoomTo(this.zoomLevel * 2);
+    this.zoomTo(this.zoomLevel * GlassLab.UIManager.zoomAmount);
 };
 
 GlassLab.UIManager.prototype.zoomOut = function() {
-    this.zoomTo(this.zoomLevel / 2);
+    this.zoomTo(this.zoomLevel / GlassLab.UIManager.zoomAmount);
 };
 
 GlassLab.UIManager.prototype.createHud = function() {
