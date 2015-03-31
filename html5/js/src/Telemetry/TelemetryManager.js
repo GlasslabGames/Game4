@@ -223,8 +223,8 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
         if (!this.problemTypesCompletedPerfectly[problemType]) {
             this.problemTypesCompletedPerfectly[problemType] = true;
             // the following SOs will be sent as soon as the player completes at least one problem of the specifies types perfectly
-            if (this.problemTypesCompletedPerfectly.MF && this.problemTypesCompletedPerfectly.NF) this._sendSOWO("so4");
-            if (this.problemTypesCompletedPerfectly.MC && this.problemTypesCompletedPerfectly.NC) this._sendSOWO("so5");
+            if (this.problemTypesCompletedPerfectly.NC && this.problemTypesCompletedPerfectly.NF) this._sendSOWO("so4");
+            if (this.problemTypesCompletedPerfectly.MC && this.problemTypesCompletedPerfectly.MF) this._sendSOWO("so5");
             if (this.problemTypesCompletedPerfectly.MT) this._sendSOWO("so6");
         }
     }
@@ -255,10 +255,10 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
         this.problemTypesFailedTwiceCount[problemType] = this.problemTypesFailedTwiceCount[problemType] || 0;
         this.problemTypesFailedTwiceCount[problemType] ++;
         if (this.problemTypesFailedTwiceCount[problemType] >= 2) {
-            if (problemType == "NF") this._sendSOWO("wo4");
-            else if (problemType == "MF") this._sendSOWO("wo5");
-            else if (problemType == "MC") this._sendSOWO("wo6");
-            else if (problemType == "NC") this._sendSOWO("wo7");
+            if (problemType == "NC") this._sendSOWO("wo4");
+            else if (problemType == "MC") this._sendSOWO("wo5");
+            else if (problemType == "MF") this._sendSOWO("wo6");
+            else if (problemType == "NF") this._sendSOWO("wo7");
             else if (problemType == "MT") this._sendSOWO("wo8");
         }
     }
