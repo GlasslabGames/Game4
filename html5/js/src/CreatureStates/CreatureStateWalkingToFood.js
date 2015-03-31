@@ -71,12 +71,13 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
                     return;
                 }
             }
-        // When close and running, slow down
-        if ( this.speed >= this.creature.moveSpeed + .5 && deltaMagSq - this.speed*this.speed < GLOBAL.tileSize * GLOBAL.tileSize * 1.5625)
-        {
-            this.speed = this.creature.moveSpeed - .25 + (Math.random() * 0.5); // adjust by +- 0.25
-            this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
-        }
+
+            // When close and running, slow down
+            if ( this.speed >= this.creature.moveSpeed + .5 && deltaMagSq - this.speed*this.speed < GLOBAL.tileSize * GLOBAL.tileSize * 1.5625)
+            {
+                this.speed = this.creature.moveSpeed - .25 + (Math.random() * 0.5); // adjust by +- 0.25
+                this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
+            }
 
             delta.setMagnitude(this.speed);
             Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
