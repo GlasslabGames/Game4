@@ -20,8 +20,8 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.prevIsoPos = new Phaser.Point();
     this.prevTile = null;
 
-    this.sprite.events.onInputUp.add(this._onUp, this);
-    this.sprite.events.onInputDown.add(this._onDown, this);
+    //this.sprite.events.onInputUp.add(this._onUp, this);
+    //this.sprite.events.onInputDown.add(this._onDown, this);
 
     this.sprite.scale.setTo(-0.5, 0.5);
 
@@ -95,6 +95,16 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
     this.foodDroppedHandler = GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
+
+    this.draggableComponent = new GlassLab.UIDraggable(this.game);
+    this.sprite.addChild(this.draggableComponent);
+    var hitArea = new Phaser.Circle(0, -110, 250)
+    this.draggableComponent.hitArea = hitArea;
+    // uncomment the next line to check the position of the hit area
+    this.draggableComponent.addChild(this.game.make.graphics().beginFill("0xffffff", 0.5).drawCircle(hitArea.x, hitArea.y, hitArea.diameter));
+    this.draggableComponent.events.onStartDrag.add(this._startDrag, this);
+    this.draggableComponent.events.onEndDrag.add(this._endDrag, this);
+    this.draggableComponent.dynamicParents = true; // TODO: why doesn't this work
 
     // FINALLY, start the desired state
     if (startInPen) {
@@ -283,17 +293,14 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 };
 
 GlassLab.Creature.prototype._startDrag = function () {
-    if (GLOBAL.dragTarget != null) return;
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     if (this.pen) this.exitPen(this.pen);
     this.currentPath = [];
     this.targetPosition.x = Number.NaN;
-    GLOBAL.dragTarget = this;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
 GlassLab.Creature.prototype._endDrag = function () {
-    GLOBAL.dragTarget = null;
     this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 

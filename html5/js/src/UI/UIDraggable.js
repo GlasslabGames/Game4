@@ -15,6 +15,7 @@ GlassLab.UIDraggable = function(game) {
     this.events.onDrop = new Phaser.Signal(); // signal is sent when this is dropped on a target that wants it
     this.events.onStartDrag = new Phaser.Signal(); // signal is sent when this is dropped on a target that wants it
     this.events.onEndDrag = new Phaser.Signal(); // signal is sent when this is dropped on a target that wants it
+    this.events.onDrag = new Phaser.Signal(); // whenever the dragged object is moved
 
     this.draggable = true; // can be switched off
     this.dragging = false;
@@ -73,6 +74,11 @@ GlassLab.UIDraggable.prototype._onUpdate = function() {
 
         this.x = mousePoint.x;
         this.y = mousePoint.y;
+
+        if (this.prevPos) {
+            this.events.onDrag.dispatch(Phaser.Point.subtract(mousePoint, this.prevPos));
+        }
+        this.prevPos = new Phaser.Point(mousePoint.x, mousePoint.y);
     }
 };
 

@@ -19,6 +19,8 @@ GlassLab.CreatureStateDragged.prototype.Enter = function()
   GlassLab.CreatureState.prototype.Enter.call(this);
   this.creature.PlayAnim('walk', true, this.creature.baseAnimSpeed * 4);
   this.creature.shadow.y = 150;
+
+    this.creature.draggableComponent.events.onDrag.add(this._onDrag, this);
 };
 
 GlassLab.CreatureStateDragged.prototype.Exit = function()
@@ -30,13 +32,16 @@ GlassLab.CreatureStateDragged.prototype.Exit = function()
     this.creature.StopAnim();
   //var offset = (); // offset by the shadow position
   this.creature.shadow.y = 0;
+
+    this.creature.draggableComponent.events.onDrag.remove(this._onDrag, this);
+
 };
 
-GlassLab.CreatureStateDragged.prototype.Update = function()
-{
-  var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
-  this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
-  Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
-  this.creature.sprite.isoX = cursorIsoPosition.x;
-  this.creature.sprite.isoY = cursorIsoPosition.y;
+
+GlassLab.CreatureStateDragged.prototype._onDrag = function(movement) {
+    var isoPos = this.game.iso.unproject(movement);
+    isoPos.x *= this.creature.sprite.scale.x;
+    isoPos.y *= this.creature.sprite.scale.y;
+    this.creature.sprite.isoX += isoPos.x;
+    this.creature.sprite.isoY += isoPos.y;
 };

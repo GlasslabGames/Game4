@@ -314,7 +314,7 @@
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "rammus",
-        "numTotalFood": 216,
+        "totalNumFood": 216,
         "description": "Dear Friend! I have 216 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
         "reward": 200
       }
@@ -325,7 +325,7 @@
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "baby_bird",
-        "numCFood": 84,
+        "numFoodA": 84,
         "description": "Dear Friend! I have 84 MEAT. Please send me the exact number of BABY BIRDS to eat all my food!",
         "reward": 200,
         "creatureWidth": 3
