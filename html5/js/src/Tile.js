@@ -70,28 +70,31 @@ GlassLab.Tile.prototype.isTarget = function(creature) {
 
 GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
     this.inPen = pen;
+    // check if tile is within food area
+    var inFeedingArea = this.inPen && !this.inPen._containsTile(this, true);
 
-    // Check neighboring pens
-    var tile;
+
+    // Check neighboring tiles for collision
+    var tile, neighborInFeedingArea;
     if (tile = GLOBAL.tileManager.GetTile(this.col+1, this.row))
     {
-        this.GetTileData().collideRight = tile.inPen != this.inPen;
-        tile.GetTileData().collideLeft = tile.inPen != this.inPen;
+        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+        this.GetTileData().collideRight = tile.GetTileData().collideLeft = inFeedingArea != neighborInFeedingArea;
     }
     if (tile = GLOBAL.tileManager.GetTile(this.col-1, this.row))
     {
-        this.GetTileData().collideLeft = tile.inPen != this.inPen;
-        tile.GetTileData().collideRight = tile.inPen != this.inPen;
-    }
-    if (tile = GLOBAL.tileManager.GetTile(this.col, this.row+1))
-    {
-        this.GetTileData().collideUp = tile.inPen != this.inPen;
-        tile.GetTileData().collideDown = tile.inPen != this.inPen;
+        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+        this.GetTileData().collideLeft = tile.GetTileData().collideRight = inFeedingArea != neighborInFeedingArea;
     }
     if (tile = GLOBAL.tileManager.GetTile(this.col, this.row-1))
     {
-        this.GetTileData().collideDown = tile.inPen != this.inPen;
-        tile.GetTileData().collideUp = tile.inPen != this.inPen;
+        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+        this.GetTileData().collideUp = tile.GetTileData().collideDown = inFeedingArea != neighborInFeedingArea;
+    }
+    if (tile = GLOBAL.tileManager.GetTile(this.col, this.row+1))
+    {
+        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+        this.GetTileData().collideDown = tile.GetTileData().collideUp = inFeedingArea != neighborInFeedingArea;
     }
 
     if (pen)
@@ -133,8 +136,7 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
 GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
     var tileProperties = GLOBAL.tileManager.tilemap.tilesets[0].tileproperties[this.type];
     return (tileProperties.hasOwnProperty("walkable") && tileProperties.walkable === "true") // Walkable
-        && (!this.inPen || this.getObjectsInTile().length == 0)
-        && (!this.targetCreatureType || this.targetCreatureType == creatureType); // allow walking in pen if the creature type matches;
+        && (!this.inPen || this.inPen._containsTile(this, true));
 };
 
 GlassLab.Tile.prototype.getObjectsInTile = function() {

@@ -258,7 +258,7 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
     if (path.nodes.length > 0)
     {
         var pathDelta = GlassLab.Util.POINT2.setTo(0,0);
-        this.currentPath.push(goal);
+        this.currentPath.push(path.nodes[0]);
 
         for (var i=1; i < path.nodes.length; i++)
         {
