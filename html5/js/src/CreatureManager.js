@@ -79,7 +79,7 @@ GlassLab.CreatureManager = function (game) {
                 singular: "juvenile flockin",
                 plural: "juvenile flockins"
             },
-            unlocked: true,
+            unlocked: false,
             spriteName: "babybird",
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "apple", amount: (4/3)}] // 3 birds eat 4 food
@@ -93,7 +93,7 @@ GlassLab.CreatureManager = function (game) {
                 singular: "flockin",
                 plural: "flockins"
             },
-            unlocked: true,
+            unlocked: false,
             spriteName: "bird",
             fxFrames: {eat: 16, vomit: 60 },
             desiredFood: [{type: "apple", amount: (10/4)}, {type: "carrot", amount: (5/4)}]
