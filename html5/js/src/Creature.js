@@ -96,15 +96,16 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
     this.foodDroppedHandler = GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
 
+    // We want the creatures drag/drop vs stickydrag behavior to match UIDraggable, so add one as a component here
     this.draggableComponent = new GlassLab.UIDraggable(this.game);
     this.sprite.addChild(this.draggableComponent);
-    var hitArea = new Phaser.Circle(0, -110, 250)
+    var hitArea = new Phaser.Circle(0, -110, 250);
     this.draggableComponent.hitArea = hitArea;
     // uncomment the next line to check the position of the hit area
-    this.draggableComponent.addChild(this.game.make.graphics().beginFill("0xffffff", 0.5).drawCircle(hitArea.x, hitArea.y, hitArea.diameter));
+    //this.draggableComponent.addChild(this.game.make.graphics().beginFill("0xffffff", 0.5).drawCircle(hitArea.x, hitArea.y, hitArea.diameter));
     this.draggableComponent.events.onStartDrag.add(this._startDrag, this);
     this.draggableComponent.events.onEndDrag.add(this._endDrag, this);
-    this.draggableComponent.dynamicParents = true; // TODO: why doesn't this work
+    this.draggableComponent.dontMoveWhileDragging = true; // we're just using it to get the start and end drag events
 
     // FINALLY, start the desired state
     if (startInPen) {

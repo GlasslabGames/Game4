@@ -26,8 +26,9 @@ GlassLab.UIDraggable = function(game) {
     this.dropValidator = function(target) { return true; }; // overwrite this with a custom function
     this.destroyOnSuccessfulDrop = false; // if true, if we're able to validate the drop, destroy ourselves
     this.snap = false; // if true, we center over the mouse instead of keeping an offset
-    this.dynamicParents = false; // if true, we recalculate the scale & position of all the parents every update. Should be false mostly.
+    this.dynamicParents = false; // if true, we recalculate the scale & position of all the parents every update. Should be false mostly. (I don't think this works as intended at the moment, but it's not being used at the moment)
     this.clickLeeway = 5; // how much we allow them to move the mouse within a click before it's counted as a drag
+    this.dontMoveWhileDragging = false; // this is a little weird, but if this is set to true, we don't actually follow the mouse, just send the start and stop drag events
 };
 
 GlassLab.UIDraggable.prototype = Object.create(GlassLab.UIElement.prototype);
@@ -65,6 +66,8 @@ GlassLab.UIDraggable.prototype._onUpdate = function() {
             if (distance > this.clickLeeway) this.moved = true;
         }
         this.prevMousePos = new Phaser.Point(mousePoint.x, mousePoint.y);
+
+        if (this.dontMoveWhileDragging) return; // in this case, we just want to know when we start and stop dragging, not actually do the movement
 
         if (this.dynamicParents) this._calculateAdjustments(); // else, continue to use the adjustment we calculated when starting drag
 
