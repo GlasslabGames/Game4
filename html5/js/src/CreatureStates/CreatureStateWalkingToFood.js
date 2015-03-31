@@ -48,25 +48,46 @@ GlassLab.CreatureStateWalkingToFood.prototype.Exit = function()
 
 GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
 {
-    var delta = Phaser.Point.subtract(GlassLab.Util.GetGlobalIsoPosition(this.foodInfo.food.sprite), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
-    var deltaMagSq = delta.getMagnitudeSq();
-    if (deltaMagSq > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're far from the carrot
+    if (this.delayCountdown > 0) {
+        this.delayCountdown--;
+    } else {
+        if (this.stopped) {
         delta.setMagnitude(this.speed);
         Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
         this.creature.sprite.isoX = delta.x;
         this.creature.sprite.isoY = delta.y;
-
+            this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
+            this.stopped = false;
+        }
+        var delta = Phaser.Point.subtract(GlassLab.Util.GetGlobalIsoPosition(this.foodInfo.food.sprite), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
+        if (delta.getMagnitudeSq() > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're still far from the food
+            // check if we're too close to the creature in front. but if that creature is already finished eating, we have to be allowed to walk by them.
+            if (this.creature.creatureInFront && !(this.creature.creatureInFront.state instanceof GlassLab.CreatureStateWaitingForFood)) {
+                var dist = Phaser.Point.subtract(GlassLab.Util.GetGlobalIsoPosition(this.creature.creatureInFront.sprite), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
+                if (dist.getMagnitudeSq() < Math.pow(GLOBAL.tileSize * 0.75, 2)) { // too close to the creature in front, so wait for it to advance
+                    this.delayCountdown = 50; // wait a while before trying to move forward again
+                    this.creature.StopAnim();
+                    this.stopped = true;
+                    return;
+                }
+            }
         // When close and running, slow down
         if ( this.speed >= this.creature.moveSpeed + .5 && deltaMagSq - this.speed*this.speed < GLOBAL.tileSize * GLOBAL.tileSize * 1.5625)
         {
             this.speed = this.creature.moveSpeed - .25 + (Math.random() * 0.5); // adjust by +- 0.25
             this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
         }
+
+            delta.setMagnitude(this.speed);
+            Phaser.Point.add(this.creature.sprite.isoPosition, delta, delta);
+            this.creature.sprite.isoX = delta.x;
+            this.creature.sprite.isoY = delta.y;
+        }
+        else {
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.foodInfo));
+        }
+        //this.creature._move(); // If we use pathing
     }
-    else {
-        this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.foodInfo));
-    }
-    //this.creature._move(); // If we use pathing
 };
 
 /*

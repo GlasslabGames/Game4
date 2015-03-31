@@ -18,7 +18,9 @@ GlassLab.QuestManager = function(game)
     this.quests = [
         new GlassLab.Quest("day1", this.game.cache.getJSON("day1")),
         new GlassLab.Quest("day2", this.game.cache.getJSON("day2")),
-        new GlassLab.Quest("day3", this.game.cache.getJSON("day3"))
+        new GlassLab.Quest("day3", this.game.cache.getJSON("day3")),
+        new GlassLab.Quest("day4", this.game.cache.getJSON("day4")),
+        new GlassLab.Quest("day5", this.game.cache.getJSON("day5"))
     ];
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);

@@ -20,8 +20,8 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.prevIsoPos = new Phaser.Point();
     this.prevTile = null;
 
-    this.sprite.events.onInputUp.add(this._onUp, this);
-    this.sprite.events.onInputDown.add(this._onDown, this);
+    //this.sprite.events.onInputUp.add(this._onUp, this);
+    //this.sprite.events.onInputDown.add(this._onDown, this);
 
     this.sprite.scale.setTo(-0.5, 0.5);
 
@@ -95,6 +95,17 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
     this.foodDroppedHandler = GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
+
+    // We want the creatures drag/drop vs stickydrag behavior to match UIDraggable, so add one as a component here
+    this.draggableComponent = new GlassLab.UIDraggable(this.game);
+    this.sprite.addChild(this.draggableComponent);
+    var hitArea = new Phaser.Circle(0, -110, 250);
+    this.draggableComponent.hitArea = hitArea;
+    // uncomment the next line to check the position of the hit area
+    //this.draggableComponent.addChild(this.game.make.graphics().beginFill("0xffffff", 0.5).drawCircle(hitArea.x, hitArea.y, hitArea.diameter));
+    this.draggableComponent.events.onStartDrag.add(this._startDrag, this);
+    this.draggableComponent.events.onEndDrag.add(this._endDrag, this);
+    this.draggableComponent.dontMoveWhileDragging = true; // we're just using it to get the start and end drag events
 
     // FINALLY, start the desired state
     if (startInPen) {
@@ -283,17 +294,14 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 };
 
 GlassLab.Creature.prototype._startDrag = function () {
-    if (GLOBAL.dragTarget != null) return;
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     if (this.pen) this.exitPen(this.pen);
     this.currentPath = [];
     this.targetPosition.x = Number.NaN;
-    GLOBAL.dragTarget = this;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
 GlassLab.Creature.prototype._endDrag = function () {
-    GLOBAL.dragTarget = null;
     this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
@@ -408,7 +416,7 @@ GlassLab.Creature.prototype._move = function() {
 
 GlassLab.Creature.prototype.tryWalkToNextFood = function (food) {
     var foodInfo = this.targetFood.shift();
-    if (!foodInfo) {
+    if (!foodInfo || !foodInfo.food) {
         if (this.getIsSatisfied()) this.FinishEating("satisfied");
         else this.FinishEating("hungry");
     } else if (!this.desiredAmountsOfFood[foodInfo.food.type]) { // we don't want this food

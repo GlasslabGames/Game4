@@ -28,15 +28,15 @@ GlassLab.CreatureStateDragged.prototype.Exit = function()
   this.creature.setIsoPos(tile.isoX, tile.isoY);
 
     this.creature.StopAnim();
-  //var offset = (); // offset by the shadow position
-  this.creature.shadow.y = 0;
+    this.creature.shadow.y = 0;
+
 };
 
-GlassLab.CreatureStateDragged.prototype.Update = function()
-{
-  var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
-  this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
-  Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
-  this.creature.sprite.isoX = cursorIsoPosition.x;
-  this.creature.sprite.isoY = cursorIsoPosition.y;
+
+GlassLab.CreatureStateDragged.prototype.Update = function() {
+    var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
+    this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+    Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
+    this.creature.sprite.isoX = cursorIsoPosition.x;
+    this.creature.sprite.isoY = cursorIsoPosition.y;
 };

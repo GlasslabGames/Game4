@@ -14,9 +14,11 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day1" });
     this._addLevelData({ quest: "day2" });
     this._addLevelData({ quest: "day3" });
+    this._addLevelData({ quest: "day4" });
+    this._addLevelData({ quest: "day5" });
 
     // TESTING LEVELS:
-    // 4
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
         {type: "baby_bird", height: 1, foodAWidth: 1,
@@ -29,7 +31,7 @@ GlassLab.LevelManager = function(game)
         objective: "This is a test!"
     };
 
-    // 5
+    // 7
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "This is a test!",
         pens: [
@@ -44,7 +46,7 @@ GlassLab.LevelManager = function(game)
         }
     };
 
-    // 6
+    // 8
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Testing",
         orders: [
@@ -78,7 +80,7 @@ GlassLab.LevelManager = function(game)
         ]
     };
 
-    // 5
+    // 9
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
             {type: "baby_unifox", foodBWidth: 0, bottomDraggable: true, leftDraggable: true, topDraggable: true}
@@ -89,8 +91,10 @@ GlassLab.LevelManager = function(game)
         objective: "Feed the rams!"
     };
 
-    // 6
-    this._addLevelData(new GlassLab.Level()).data = {};
+    // 10
+    this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {
+        baby_rammus: 1
+    }};
 
 };
 

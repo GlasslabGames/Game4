@@ -25,7 +25,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.foodRoot = this.game.make.isoSprite();
     this.objectRoot.addChild(this.foodRoot);
 
-    this.creatureRoot = this.game.make.isoSprite();
+    this.creatureRoot = this.game.make.group(); // the reason this is a group and not a sprite is so we can use iso.simpleSort
     this.objectRoot.addChild(this.creatureRoot);
 
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
@@ -178,7 +178,8 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
             var obj  = unusedObjects.pop();
             if (!obj) { // we ran out of existing tiles, so make a new one
                 obj = new boundConstructor();
-                parent.addChild(obj.sprite);
+                if (parent.addChild) parent.addChild(obj.sprite); // if the parent is a sprite
+                else parent.add(obj.sprite); // if the parent is a group
             }
             obj.setType(targetType);
             obj.sprite.visible = true;
@@ -244,24 +245,25 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             while (!creatureRow[0]) creatureRow.shift(); // the creatures might be offset b/c they are added from the right instead of the left
 
             // If the creatures want fractional amounts of food, then some initial pieces of food are shared.
-            var sharedCols = Math.floor(remainder * creatureRow.length); // cols of food that multiple creatures will take a bite of
+            var sharedCols = Math.floor(remainder * creatureRow.length + 0.00001); // cols of food that multiple creatures will take a bite of. We add a bit because 0.33333 * 3 was rounding down to 0.
             if (sharedCols) {
                 var cleanupCreatures = creatureRow.length % sharedCols; // number of creatures that don't fall into the normal flow of sharing food
+                //console.log("remainder:",remainder,"sharedCols:",sharedCols,"cleanupCreatures",cleanupCreatures);
 
                 // To assign the shared cols, we walk through the creatures and try to give them all the right food
-                for (var col = 0; col < (sharedCols / remainder); col++) {
+                for (var col = 0; col < creatureRow.length; col++) {
                     if (col < cleanupCreatures) {
                         // this creature gets to clean up several uneaten bits of food
                         for (var i = 0; i < (sharedCols / cleanupCreatures); i++) {
                             var index = (i * cleanupCreatures) + col;
-                            creatureRow[col].addTargetFood(foodRow[index]);
                             //console.log("Fractional food",index,"to cleanup creature",col);
+                            creatureRow[col].addTargetFood(foodRow[index]);
                         }
                     } else {
                         // no other creatures eat more than one shared food
                         var index = (col - cleanupCreatures) % sharedCols;
-                        creatureRow[col].addTargetFood(foodRow[index], true); // true = we only eat some of the food
                         //console.log("Fractional food",index,"to creature",col);
+                        creatureRow[col].addTargetFood(foodRow[index], true); // true = we only eat some of the food
                     }
                 }
             }
@@ -301,6 +303,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             var creature = creatureRow[col];
             if (!creature) continue; // when there's an uneven number of creatures, the creatures might start at 1 instead of 0
             var time = ((creatureRow.length - col) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
+            if (creatureRow[col+1]) creature.creatureInFront = creatureRow[col+1]; // this is used to stop creatures from walking on top of each other
             this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
         }
     }
@@ -435,7 +438,7 @@ GlassLab.FeedingPen.prototype.tryAddCreature = function(creature, tile) {
         return false;
     }
     this.creatureSpots[row][col] = creature;
-    this.creatureRoot.addChild(creature.sprite);
+    this.creatureRoot.add(creature.sprite);
     creature.pen = this;
     this._repositionCreatures();
     this._onCreatureContentsChanged();
@@ -494,6 +497,7 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
           }
       }
   }
+    if (this.creatureRoot) this.game.iso.simpleSort(this.creatureRoot); // sort the creatures so they don't overlap incorrectly
 };
 
 // when the size of the creature section or the number of creatures changes
@@ -541,10 +545,11 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     if (this.finished) return;
     this.finished = true;
 
+    var numCreatures = this.height * this.widths[0];
+
     if (!GLOBAL.mailManager.currentOrder) { // don't send telemetry if we're submitting the pen for an order
 
         // this is used for telemetry, but the actual check is in DoPenChallengeAction
-        var numCreatures = this.height * this.widths[0];
         var creatureType = this._getCurrentCreatureType();
         var telemResult = result;
         if (this.creatureType != creatureType) telemResult = "wrongCreatureType";

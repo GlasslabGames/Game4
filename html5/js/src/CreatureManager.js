@@ -10,7 +10,7 @@ var GlassLab = GlassLab || {};
 GlassLab.CreatureManager = function (game) {
     this.game = game;
     GLOBAL.creatureManager = this;
-    this.creatureList = ["baby_rammus", "rammus", "baby_unifox", "unifox"]; // list of creatures in the order they should appear in the journal
+    this.creatureList = ["baby_rammus", "rammus", "baby_unifox", "unifox", "baby_bird", "bird"]; // list of creatures in the order they should appear in the journal
     this.creatureDatabase = {
         baby_rammus: {
             journalInfo: {
@@ -82,7 +82,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: true,
             spriteName: "babybird",
             fxFrames: {eat: 16, vomit: 60 },
-            desiredFood: [{type: "apple", amount: (3/4)}]
+            desiredFood: [{type: "apple", amount: (4/3)}] // 3 birds eat 4 food
         },
         bird: {
             journalInfo: {
