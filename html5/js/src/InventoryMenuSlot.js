@@ -72,7 +72,7 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.hoverLabelBgEndcapRight.scale.x *= -1;
     this.hoverLabelBgEndcapRight.tint = 0x000000;
 
-    this.hoverLabelBgPointer = this.game.make.image(0, hoverLabelY + 21, "foodLabelBgPointer");
+    this.hoverLabelBgPointer = this.game.make.image(0, hoverLabelY + 22.5, "foodLabelBgPointer");
     this.hoverLabelBgPointer.anchor.setTo(.5, .5);
     this.hoverLabelBgPointer.alpha = 0;
     this.hoverLabelBgPointer.tint = 0x000000;
