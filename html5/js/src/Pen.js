@@ -380,7 +380,7 @@ GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
 
     // All cases outside
-    if (tile.col < originTile.col || tile.row < originTile.row || tile.row > originTile.row + this.height)
+    if (!originTile || tile.col < originTile.col || tile.row < originTile.row || tile.row > originTile.row + this.height)
     {
         return false;
     }
