@@ -26,8 +26,8 @@ GlassLab.State.Game.prototype.create = function()
     game.camera.y = -game.camera.height/2;
 
     // start with the sound effects off during development.
-    GLOBAL.audioManager.toggleMusic(false);
-    GLOBAL.audioManager.toggleSoundEffects(false);
+    GLOBAL.audioManager.toggleMusic(GlassLab.Util.HasCookieData("musicOn") ? GlassLab.Util.GetCookieData("musicOn") == 'true' : true);
+    GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
 };
 
 GlassLab.State.Game.prototype.update = function()

@@ -30,6 +30,15 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.atlasJSONHash(spriteName+'_poop', 'assets/images/creatures/'+spriteName+'_poop.png', 'assets/images/creatures/'+spriteName+'_poop.json');
         game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
+
+        game.load.audio(spriteName+'_sfx_footstep0', 'assets/audio/sfx/'+spriteName+'_footsteps_1.mp3');
+        game.load.audio(spriteName+'_sfx_footstep1', 'assets/audio/sfx/'+spriteName+'_footsteps_2.mp3');
+        game.load.audio(spriteName+'_sfx_footstep2', 'assets/audio/sfx/'+spriteName+'_footsteps_3.mp3');
+        game.load.audio(spriteName+'_sfx_footstep3', 'assets/audio/sfx/'+spriteName+'_footsteps_4.mp3');
+        game.load.audio(spriteName+'_sfx_footstep4', 'assets/audio/sfx/'+spriteName+'_footsteps_4x.mp3');
+        game.load.audio(spriteName+'_sfx_throwup', 'assets/audio/sfx/'+spriteName+'_throwup.mp3');
+        game.load.audio(spriteName+'_sfx_happy', 'assets/audio/sfx/'+spriteName+'_happy.mp3');
+        game.load.audio(spriteName+'_sfx_eat', 'assets/audio/sfx/'+spriteName+'_eat.mp3');
     }
 
     var foodSpriteNames = ["carrot", "apple", "strawberry", "tincan", "broccoli"];
@@ -183,14 +192,15 @@ GlassLab.State.Init.prototype.preload = function()
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 
-    game.load.audio('backgroundMusic', 'assets/audio/gameplaybgm1.mp3');
-    game.load.audio('bonusMusic', 'assets/audio/bgm_bonus.mp3');
-    game.load.audio('eatingSound', 'assets/audio/eating.mp3');
-    game.load.audio('footstepsSound', 'assets/audio/footsteps.mp3');
-    game.load.audio('vomitSound', 'assets/audio/vomit.mp3');
-    game.load.audio('failSound', 'assets/audio/fail.mp3');
-    game.load.audio('successSound', 'assets/audio/success.mp3');
-    game.load.audio('clickSound', 'assets/audio/button_click.mp3');
+    game.load.audio('backgroundMusic', 'assets/audio/bgm/cc_in-game_music_loop.mp3');
+    game.load.audio('menuMusic', 'assets/audio/bgm/cc_menu_music_loop.mp3');
+    game.load.audio('bonusMusic', 'assets/audio/bgm/cc_menu_music_loop.mp3');
+    game.load.audio('failSound', 'assets/audio/sfx/lose_mini_game.mp3');
+    game.load.audio('successSound', 'assets/audio/sfx/win_mini_game.mp3');
+    game.load.audio('clickSound', 'assets/audio/sfx/general_click.mp3');
+    game.load.audio('popUpSound', 'assets/audio/sfx/pop_up_notification.mp3');
+    game.load.audio('gateDropSound', 'assets/audio/sfx/drop_pen_gate.mp3');
+    game.load.audio('mailNoticeSound', 'assets/audio/sfx/mail_notice.mp3');
 
     // Quests
     game.load.json('day1', 'assets/quests/day1.json');

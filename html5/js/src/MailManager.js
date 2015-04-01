@@ -43,6 +43,7 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
             }, this, 150, 60, 0xffffff, "Ok");
             modal = new GlassLab.UIModal(this.game, "You don't have any mail!", button);
             GLOBAL.UIManager.centerAnchor.addChild(modal);
+            modal.Show();
         }
     }
     else
@@ -113,6 +114,9 @@ GlassLab.MailManager.prototype.completeOrder = function(order, result)
     this.currentOrder = null;
 
     this.rewards.push(order); // the reward popup will send OrderResolved when it's closed
+
+    GLOBAL.audioManager.playSound("mailNoticeSound");
+
     GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
     GlassLab.SignalManager.rewardAdded.dispatch(order);
 };

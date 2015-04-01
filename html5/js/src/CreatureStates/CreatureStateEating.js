@@ -57,7 +57,8 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
     var hideBarAfter = (this.creature.pen? null : 1); // if we're in the pen, keep the hunger bar up. Else show it briefly.
     this.creature.ShowHungerBar(this.amountEaten, this.food.type, hideBarAfter);
     // if (this is on screen) // TODO
-    GLOBAL.audioManager.playSound("eating");
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
+    this.footstepSound = GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {

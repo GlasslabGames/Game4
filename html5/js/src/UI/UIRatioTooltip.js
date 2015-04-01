@@ -97,9 +97,12 @@ GlassLab.UIRatioTooltip.prototype.Show = function(targetPen)
         GlassLab.SignalManager.update.add(this._onUpdate, this);
         GlassLab.SignalManager.penFoodTypeSet.add(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.add(this.Refresh, this);
+        GlassLab.SignalManager.levelStarted.add(this.Hide, this);
     }
 
     this.Refresh();
+
+    this._refreshPosition();
 
     this.scale.y = 0;
     this.game.add.tween(this.scale).to({y: 1}, 600, Phaser.Easing.Elastic.Out, true);
@@ -167,10 +170,16 @@ GlassLab.UIRatioTooltip.prototype.Hide = function()
         GlassLab.SignalManager.update.remove(this._onUpdate, this);
         GlassLab.SignalManager.penFoodTypeSet.remove(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.remove(this.Refresh, this);
+        GlassLab.SignalManager.levelStarted.remove(this.Hide, this);
     }
 };
 
 GlassLab.UIRatioTooltip.prototype._onUpdate = function(dt)
+{
+    this._refreshPosition();
+};
+
+GlassLab.UIRatioTooltip.prototype._refreshPosition = function()
 {
     var pointer = this.game.input.activePointer;
     if (pointer)

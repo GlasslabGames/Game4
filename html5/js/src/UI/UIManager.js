@@ -16,7 +16,6 @@ GlassLab.UIManager = function(game)
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
     this.bonusModal = new GlassLab.UIModal(this.game, "Great job! Now it's time for\nBONUS GAME!", nextButton);
     this.centerAnchor.addChild(this.bonusModal);
-    this.bonusModal.visible = false;
 
     this.tutorialArrow = this.game.add.sprite(0,0,"tutorialArrow");
     this.tutorialArrow.scale.set(0.5, 0.5);
@@ -105,7 +104,7 @@ GlassLab.UIManager.prototype.hideArrow = function() {
 
 GlassLab.UIManager.prototype._onBonusPressed = function()
 {
-    this.bonusModal.visible = false;
+    this.bonusModal.Hide();
     GLOBAL.sortingGame.start();
 };
 
@@ -258,7 +257,14 @@ GlassLab.UIManager.prototype._refreshMailButton = function() {
             }
         }
     }
-    this.mailButton.toggleActive(active && !GLOBAL.mailManager.currentOrder);
+
+    var willActivateMailButton = active && !GLOBAL.mailManager.currentOrder;
+    if (!this.mailButton.active && willActivateMailButton)
+    {
+        GLOBAL.audioManager.playSound("mailNoticeSound");
+    }
+
+    this.mailButton.toggleActive(willActivateMailButton);
 };
 
 GlassLab.UIManager.prototype._onMailButton = function() {

@@ -41,7 +41,8 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   vomit.events.onAnimationComplete.add(this._onVomitAnimEnded, vomit);
 
     // if (this is on screen) // TODO
-    GLOBAL.audioManager.playSound("vomit");
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
+    this.footstepSound = GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_throwup");
 };
 
 GlassLab.CreatureStateVomiting.prototype._onVomitAnimEnded = function(vomit) {

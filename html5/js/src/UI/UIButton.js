@@ -29,7 +29,7 @@ GlassLab.UIButton.prototype.setEnabled = function(enabled) {
 };
 
 GlassLab.UIButton.prototype._onUp = function() {
-    GLOBAL.audioManager.playSound("click");
+    GLOBAL.audioManager.playSound("clickSound");
     if (this.callback) this.callback.apply(this.callbackContext, arguments);
 };
 

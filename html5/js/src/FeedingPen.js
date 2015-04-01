@@ -613,8 +613,6 @@ GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
 };
 
 GlassLab.FeedingPen.prototype._onLeverPulled = function() {
-    GLOBAL.audioManager.playSound("click"); // generic interaction sound
-
     var leverAnim;
 
     this._refreshFeedButton();
@@ -626,8 +624,12 @@ GlassLab.FeedingPen.prototype._onLeverPulled = function() {
         if (this.gateLever.spriteName != "gateSwitchFail") this.gateLever.loadTexture("gateSwitchFail");
         this.gateLever.animations.add('anim');
         leverAnim = this.gateLever.animations.play('anim', 48);
+
+        GLOBAL.audioManager.playSound("clickSound"); // generic interaction sound
     } else {
         this.gateLight.animations.stop(true);
+
+        GLOBAL.audioManager.playSound("gateDropSound"); // generic interaction sound
 
         if (this.gateLever.spriteName != "gateSwitchFlip") this.gateLever.loadTexture("gateSwitchFlip");
         this.gateLever.animations.add('anim');

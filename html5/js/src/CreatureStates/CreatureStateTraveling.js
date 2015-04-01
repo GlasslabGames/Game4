@@ -19,7 +19,8 @@ GlassLab.CreatureStateTraveling.prototype.Enter = function() {
 
     this.creature.PathToIsoPosition(this.target.pos.x, this.target.pos.y);
 
-    this.footstepSound = GLOBAL.audioManager.playSound("footsteps", true, true);
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
+    this.footstepSound = GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_footstep"+Math.floor(Math.random()*5.0), false, true);
 
     this.creature.onDestinationReached.add(this._onDestinationReached, this);
 };

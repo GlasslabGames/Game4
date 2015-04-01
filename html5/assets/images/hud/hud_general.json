@@ -1,0 +1,172 @@
+{"frames": {
+
+"food_static.png":
+{
+	"frame": {"x":215,"y":32,"w":62,"h":53},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":10,"w":62,"h":53},
+	"sourceSize": {"w":80,"h":100}
+},
+"food_static_open.png":
+{
+	"frame": {"x":278,"y":32,"w":61,"h":52},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":10,"w":61,"h":52},
+	"sourceSize": {"w":80,"h":100}
+},
+"hud_button_panel.png":
+{
+	"frame": {"x":1,"y":32,"w":80,"h":80},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":80},
+	"sourceSize": {"w":80,"h":80}
+},
+"hud_button_settings_rounded.png":
+{
+	"frame": {"x":340,"y":82,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40}
+},
+"hud_button_settings_square.png":
+{
+	"frame": {"x":399,"y":81,"w":40,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":43},
+	"sourceSize": {"w":40,"h":43}
+},
+"hud_current_quest_arrow.png":
+{
+	"frame": {"x":246,"y":107,"w":28,"h":14},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":28,"h":14},
+	"sourceSize": {"w":28,"h":14}
+},
+"hud_current_quest_background.png":
+{
+	"frame": {"x":1,"y":1,"w":520,"h":30},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":520,"h":30},
+	"sourceSize": {"w":520,"h":30}
+},
+"hud_icon_enter_fullscreen.png":
+{
+	"frame": {"x":309,"y":85,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":30,"h":30}
+},
+"hud_icon_exit_fullscreen.png":
+{
+	"frame": {"x":215,"y":86,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":30},
+	"sourceSize": {"w":30,"h":30}
+},
+"hud_icon_pause.png":
+{
+	"frame": {"x":246,"y":86,"w":20,"h":20},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":20},
+	"sourceSize": {"w":20,"h":20}
+},
+"hud_icon_zoomin.png":
+{
+	"frame": {"x":522,"y":1,"w":30,"h":33},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":33},
+	"sourceSize": {"w":30,"h":33}
+},
+"hud_icon_zoomout.png":
+{
+	"frame": {"x":278,"y":85,"w":30,"h":33},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":33},
+	"sourceSize": {"w":30,"h":33}
+},
+"hud_questbar_large_dot.png":
+{
+	"frame": {"x":440,"y":97,"w":20,"h":20},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":20},
+	"sourceSize": {"w":20,"h":20}
+},
+"hud_questbar_small_dot.png":
+{
+	"frame": {"x":381,"y":82,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
+},
+"mailbox_static.png":
+{
+	"frame": {"x":340,"y":32,"w":58,"h":49},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":19,"w":58,"h":49},
+	"sourceSize": {"w":80,"h":100}
+},
+"mailbox_static_empty_open.png":
+{
+	"frame": {"x":399,"y":32,"w":57,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":20,"w":57,"h":48},
+	"sourceSize": {"w":80,"h":100}
+},
+"mailbox_static_full.png":
+{
+	"frame": {"x":82,"y":32,"w":66,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":10,"w":66,"h":61},
+	"sourceSize": {"w":80,"h":100}
+},
+"mailbox_static_full_open.png":
+{
+	"frame": {"x":149,"y":32,"w":65,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":10,"w":65,"h":61},
+	"sourceSize": {"w":80,"h":100}
+},
+"notes_static.png":
+{
+	"frame": {"x":457,"y":32,"w":52,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":9,"w":52,"h":64},
+	"sourceSize": {"w":80,"h":100}
+},
+"notes_static_open.png":
+{
+	"frame": {"x":510,"y":35,"w":51,"h":63},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":10,"w":51,"h":63},
+	"sourceSize": {"w":80,"h":100}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "hud_general.png",
+	"format": "RGBA8888",
+	"size": {"w":562,"h":125},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:9dbadd2f43d191f5af20a1c9f642aad8:bddde6c4fa084798f3f6657a22b43a9e:4065b68689114d626fd1af8c3b3779ad$"
+}
+}

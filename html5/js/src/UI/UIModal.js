@@ -36,11 +36,22 @@ GlassLab.UIModal = function(game, text, buttons)
     this.maxLabelWidth = 400; // only relevant when wrapText is on
 
     this.resize();
+
+    this.visible = false;
 };
 
 // Extends Sprite
 GlassLab.UIModal.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIModal.prototype.constructor = Phaser.UIModal;
+
+GlassLab.UIModal.prototype.Show = function() {
+    GLOBAL.audioManager.playSound("popUpSound");
+    this.visible = true;
+};
+
+GlassLab.UIModal.prototype.Hide = function() {
+    this.visible = false;
+};
 
 GlassLab.UIModal.prototype.setText = function(text, wrap) {
     if (wrap) {

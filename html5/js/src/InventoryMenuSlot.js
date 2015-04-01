@@ -115,7 +115,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             GLOBAL.UIManager.centerAnchor.addChild(this.modal);
         }
 
-        this.modal.visible = true;
+        this.modal.Show();
     }
 };
 
@@ -125,7 +125,7 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
         GLOBAL.inventoryManager.unlock(this.foodType); // if we don't actually call unlock(), the unlock won't be saved
         GLOBAL.saveManager.Save(); // save when we unlock food
         this.Refresh();
-        this.modal.visible = false;
+        this.modal.Hide();
     }
     else {
         // Failed, not enough money
@@ -322,7 +322,7 @@ GlassLab.InventoryMenuItem.prototype._onStartDrag = function()
 
 GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
 {
-    GLOBAL.audioManager.playSound("click"); // generic interaction sound
+    GLOBAL.audioManager.playSound("clickSound"); // generic interaction sound
 
     if (target) { // we dropped it on an acceptable uiDragTarget
         this._jumpToStart(); // move the sprite back
