@@ -43,7 +43,7 @@ GlassLab.UIDraggable.prototype._onDestroy = function() {
 };
 
 GlassLab.UIDraggable.prototype._onDown = function(sprite, pointer) {
-    if (!this.dragging) this._startDrag(pointer);
+    if (!this.dragging && !GLOBAL.dragTarget) this._startDrag(pointer);
 };
 
 GlassLab.UIDraggable.prototype._onUp = function(sprite, pointer) {

@@ -117,7 +117,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     this.failureCount = this.savedFailureCount || 0; // unless we had failures saved from last time, reset the count
     this.savedFailureCount = 0; // only remember the previous failures once
 
-    console.log("Starting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
+    console.log("Starting",this.name,"challenge:",this.currentChallengeCategory,this.index[this.currentChallengeCategory]+1);
 
     this.challenge = this._getNextChallenge(this.currentChallengeCategory);
     this.challenge.onComplete.remove(this._onChallengeComplete, this); // in case we had previously added this listener, remove it to make sure we have just one copy
