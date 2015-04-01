@@ -24,6 +24,8 @@ GlassLab.MailManager = function(game)
     this.rewards = [];
 
     GlassLab.SignalManager.orderStarted.add(this._onOrderStarted, this);
+    GlassLab.SignalManager.orderCanceled.add(this._onOrderCanceled, this);
+    GlassLab.SignalManager.orderResolved.add(this._onOrderResolved, this);
 };
 
 GlassLab.MailManager.prototype.ShowMail = function(auto)
@@ -86,11 +88,17 @@ GlassLab.MailManager.prototype.ClearOrders = function()
 GlassLab.MailManager.prototype._onOrderStarted = function(order) {
     this.currentOrder = order;
     GlassLab.SignalManager.ordersChanged.dispatch(order);
+    this.enterOrderFulfillment();
 };
 
 GlassLab.MailManager.prototype._onOrderCanceled = function(order) {
     this.currentOrder = null;
     GlassLab.SignalManager.ordersChanged.dispatch(order);
+    this.exitOrderFulfillment();
+};
+
+GlassLab.MailManager.prototype._onOrderResolved = function(order) {
+    this.exitOrderFulfillment();
 };
 
 GlassLab.MailManager.prototype.completeOrder = function(order, result)
@@ -126,4 +134,14 @@ GlassLab.MailManager.prototype.isOrderComplete = function(orderId) {
         this.ordersCompleted = GLOBAL.saveManager.LoadData("ordersCompleted");
     }
     return this.ordersCompleted.indexOf(orderId) != -1;
+};
+
+GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
+    GLOBAL.penManager.hidePens();
+    GLOBAL.creatureManager.hideCreatures();
+};
+
+GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
+    GLOBAL.penManager.showPens();
+    GLOBAL.creatureManager.showCreatures();
 };

@@ -237,6 +237,16 @@ GlassLab.Pen.prototype._resetTiles = function() {
     GLOBAL.tileManager.clearPenTiles();
 };
 
+GlassLab.Pen.prototype.hide = function() {
+    this.sprite.visible = false;
+    GLOBAL.tileManager.clearPenTiles();
+};
+
+GlassLab.Pen.prototype.show = function() {
+    this.sprite.visible = true;
+    this.Resize(); // refresh and show bg tiles again
+};
+
 // The following functions can be overwritten to show different pens (e.g. the crate for shipping)
 GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow) {
     var spriteName, anchor, atlasName;
