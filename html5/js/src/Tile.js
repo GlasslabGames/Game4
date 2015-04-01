@@ -69,6 +69,8 @@ GlassLab.Tile.prototype.isTarget = function(creature) {
 };
 
 GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
+    GlassLab.SignalManager.tilePenStateChanged.dispatch(this, pen);
+
     this.inPen = pen;
     // check if tile is within food area
     var inFeedingArea = this.inPen && !this.inPen._containsTile(this, true);
