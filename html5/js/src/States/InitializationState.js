@@ -239,8 +239,9 @@ GlassLab.State.Init.prototype.create = function()
     game.iso.anchor.setTo(0,0);
     game.iso.projectionAngle = 0.52359877559829887307710723054658; // 30 degree angle
 
-    GLOBAL.UILayer = game.add.group();
     GLOBAL.WorldLayer = game.add.group();
+    GLOBAL.UILayer = game.add.group();
+    GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = false;
 
     GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
 
@@ -287,9 +288,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
 
     // Add UI
-    var uiGroup = game.add.group();
-    GLOBAL.UIGroup = uiGroup;
-
     GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
 
     // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
@@ -324,7 +322,7 @@ GlassLab.State.Init.prototype.create = function()
 
     var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
     versionLabel.fixedToCamera = true;
-    GLOBAL.UIGroup.add(versionLabel);
+    GLOBAL.UILayer.add(versionLabel);
 
     GLOBAL.sortingGame = new GlassLab.SortingGame(game);
     GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame);
@@ -355,6 +353,9 @@ GlassLab.State.Init.prototype.update = function()
     {
         GLOBAL.loadingText.destroy();
         delete GLOBAL.loadingText;
+
+        GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
+
         this.game.state.start("Game", false);
     }
 };
