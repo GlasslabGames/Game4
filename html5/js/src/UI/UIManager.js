@@ -46,34 +46,34 @@ GlassLab.UIManager.prototype._createAnchors = function()
 {
     // Top left
     this.topLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 0);
-    GLOBAL.UIGroup.add(this.topLeftAnchor);
+    GLOBAL.UILayer.add(this.topLeftAnchor);
     // Top center
     this.topAnchor = new GlassLab.UIAnchor(this.game, .5, 0);
-    GLOBAL.UIGroup.add(this.topAnchor);
+    GLOBAL.UILayer.add(this.topAnchor);
     // Top right
     this.topRightAnchor = new GlassLab.UIAnchor(this.game, 1, 0);
-    GLOBAL.UIGroup.add(this.topRightAnchor);
+    GLOBAL.UILayer.add(this.topRightAnchor);
 
     // Left
     this.leftAnchor = new GlassLab.UIAnchor(this.game, 0, .5);
-    GLOBAL.UIGroup.add(this.leftAnchor);
+    GLOBAL.UILayer.add(this.leftAnchor);
     // Right
     this.rightAnchor = new GlassLab.UIAnchor(this.game, 1, .5);
-    GLOBAL.UIGroup.add(this.rightAnchor);
+    GLOBAL.UILayer.add(this.rightAnchor);
 
     // Bottom left
     this.bottomLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 1);
-    GLOBAL.UIGroup.add(this.bottomLeftAnchor);
+    GLOBAL.UILayer.add(this.bottomLeftAnchor);
     // Bottom center
     this.bottomAnchor = new GlassLab.UIAnchor(this.game, .5, 1);
-    GLOBAL.UIGroup.add(this.bottomAnchor);
+    GLOBAL.UILayer.add(this.bottomAnchor);
     // Bottom right
     this.bottomRightAnchor = new GlassLab.UIAnchor(this.game, 1, 1);
-    GLOBAL.UIGroup.add(this.bottomRightAnchor);
+    GLOBAL.UILayer.add(this.bottomRightAnchor);
 
     // Center - above the rest for convenient use with modals, etc
     this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
-    GLOBAL.UIGroup.add(this.centerAnchor);
+    GLOBAL.UILayer.add(this.centerAnchor);
 };
 
 GlassLab.UIManager.prototype.showAnchoredArrow = function(direction, anchorName, x, y) {
