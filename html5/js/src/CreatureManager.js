@@ -179,11 +179,20 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
     }
 };
 
+
+GlassLab.CreatureManager.prototype.getCreatureWantsFractionalFood = function(creatureType) {
+    var desiredFood = this.creatureDatabase[creatureType].desiredFood;
+    for (var i = 0; i < desiredFood.length; i++) {
+        if (desiredFood[i].amount % 1 != 0) return true;
+    }
+    return false;
+};
+
 GlassLab.CreatureManager.prototype.getMinCreatureCols = function(creatureType) {
     var desiredFood = this.creatureDatabase[creatureType].desiredFood;
     var min = 0;
     // it should be fast enough to just look for the smallest int that makes both kinds of food even
-    for (var i = 1; i < 20; i++) { // put a cap at 20 just in case, but we don't expect to hit it. We except 2, 3, 4, etc
+    for (var i = 1; i < 20; i++) { // put a cap at 20 just in case, but we don't expect to hit it. We expect 2, 3, 4, etc
         if (desiredFood[0].amount * i % 1 == 0 && (!desiredFood[1] || desiredFood[1].amount * i % 1 == 0)) {
             min = i;
             break;

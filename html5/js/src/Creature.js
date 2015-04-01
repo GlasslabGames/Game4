@@ -414,7 +414,7 @@ GlassLab.Creature.prototype._move = function() {
     }
 };
 
-GlassLab.Creature.prototype.tryWalkToNextFood = function (food) {
+GlassLab.Creature.prototype.tryWalkToNextFood = function () {
     var foodInfo = this.targetFood.shift();
     if (!foodInfo || !foodInfo.food) {
         if (this.getIsSatisfied()) this.FinishEating("satisfied");
@@ -437,6 +437,7 @@ GlassLab.Creature.prototype.FinishEating = function (result, food) {
     }
     // else they would have started vomiting already
     this.pen.SetCreatureFinishedEating(result);
+    this.finishedEating = true; // checked by other creatures
 };
 
 GlassLab.Creature.prototype.resetFoodEaten = function () {
