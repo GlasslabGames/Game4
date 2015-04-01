@@ -139,9 +139,15 @@ GlassLab.MailManager.prototype.isOrderComplete = function(orderId) {
 GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
     GLOBAL.penManager.hidePens();
     GLOBAL.creatureManager.hideCreatures();
+    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+        GLOBAL.foodLayer.getChildAt(i).visible = false;
+    }
 };
 
 GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
     GLOBAL.penManager.showPens();
     GLOBAL.creatureManager.showCreatures();
+    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+        GLOBAL.foodLayer.getChildAt(i).visible = true;
+    }
 };

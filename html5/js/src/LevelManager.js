@@ -201,6 +201,11 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
 
     GLOBAL.tileManager.clearTiles();
 
+    // It would be nice to pull this functionality into a manager, but we don't have a Food Manager atm. It doesn't belong in TileManager though.
+    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+        GLOBAL.foodLayer.getChildAt(i).destroy();
+    }
+
     GLOBAL.orderFulfillment.pen = null; // clear the reference to the pen
 
     GLOBAL.inventoryMenu.Hide(true);
