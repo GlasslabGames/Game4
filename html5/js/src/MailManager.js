@@ -23,6 +23,8 @@ GlassLab.MailManager = function(game)
     this.ordersCompleted = []; // list of completed background orders by ID so we don't add them again
     this.rewards = [];
 
+    GlassLab.SignalManager.penFeedingStarted.add(this.HideMail, this); // hide when we start feeding in the pen
+
     GlassLab.SignalManager.orderStarted.add(this._onOrderStarted, this);
     GlassLab.SignalManager.orderCanceled.add(this._onOrderCanceled, this);
     GlassLab.SignalManager.orderResolved.add(this._onOrderResolved, this);

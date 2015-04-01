@@ -238,7 +238,6 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     this.crateLoaded = false;
     GLOBAL.assistant.startOrder(data);
 
-    GLOBAL.ordersButton.visible = false;
     GLOBAL.inventoryMenu.Show(true);
 
     this._sendTelemetry("start_order");
@@ -259,7 +258,6 @@ GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
     }
 
     GLOBAL.assistant.endOrder();
-    GLOBAL.ordersButton.visible = true;
     GLOBAL.inventoryMenu.Hide(true);
 };
 
