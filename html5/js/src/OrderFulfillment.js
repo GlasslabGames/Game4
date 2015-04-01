@@ -101,6 +101,7 @@ GlassLab.OrderFulfillment = function(game)
     this.cancelButton = game.make.button(-140, -440, "cancelButton", function(){
         this.Hide(true);
         GlassLabSDK.saveTelemEvent("cancel_order", {});
+        GlassLab.SignalManager.orderCanceled.dispatch(this.data);
     }, this);
     this.cancelButton.scale.setTo(0.5, 0.5);
     this.sprite.addChild(this.cancelButton);
@@ -237,13 +238,10 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     this.crateLoaded = false;
     GLOBAL.assistant.startOrder(data);
 
-    GLOBAL.ordersButton.visible = false;
     GLOBAL.inventoryMenu.Show(true);
 
     this._sendTelemetry("start_order");
     GlassLab.SignalManager.orderStarted.dispatch(this.data);
-
-    // TODO: hide other stuff in the world
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
@@ -260,7 +258,6 @@ GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
     }
 
     GLOBAL.assistant.endOrder();
-    GLOBAL.ordersButton.visible = true;
     GLOBAL.inventoryMenu.Hide(true);
 };
 

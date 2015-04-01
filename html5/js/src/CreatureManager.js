@@ -179,6 +179,23 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
     }
 };
 
+GlassLab.CreatureManager.prototype.hideCreatures = function() {
+    for (var i = 0; i < this.creatures.length; i++) {
+        this.creatures[i].sprite.visible = false;
+        if (!this.creatures[i].pen) { // if we're in a pen, we can chill
+            this.creatures[i].StateTransitionTo(new GlassLab.CreatureState(this.game, this.creatures[i])); // else, go to a blank state
+        }
+    }
+};
+
+GlassLab.CreatureManager.prototype.showCreatures = function() {
+    for (var i = 0; i < this.creatures.length; i++) {
+        this.creatures[i].sprite.visible = true;
+        if (!this.creatures[i].pen) { // if we're in a pen, we can chill
+            this.creatures[i].lookForTargets();
+        }
+    }
+};
 
 GlassLab.CreatureManager.prototype.getCreatureWantsFractionalFood = function(creatureType) {
     var desiredFood = this.creatureDatabase[creatureType].desiredFood;

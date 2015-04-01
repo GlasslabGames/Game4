@@ -214,10 +214,6 @@ GlassLab.TileManager.prototype.clearTiles = function()
         }
     }
   }
-
-    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
-        GLOBAL.foodLayer.getChildAt(i).destroy();
-    }
 };
 
 GlassLab.TileManager.prototype.getObjectsInTile = function(col, row) {
