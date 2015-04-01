@@ -56,12 +56,12 @@ GlassLab.CreatureStateVomiting.prototype.Exit = function() {
 };
 
 GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
-  if (this.creature.pen) {
-    this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this.creature, true));
-    this.creature.FinishEating("sick");
-  } else {
-    this.creature.Emote(false);
-    this.creature.resetFoodEaten();
-    this.creature.lookForTargets();
-  }
+    if (this.creature.pen) {
+        this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, Number.MAX_VALUE));
+        this.creature.FinishEating("sick");
+    } else {
+        this.creature.Emote(false);
+        this.creature.resetFoodEaten();
+        this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 3000));
+    }
 };

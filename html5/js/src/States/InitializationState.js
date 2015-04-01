@@ -28,6 +28,9 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');
         game.load.atlasJSONHash(spriteName+'_vomit', 'assets/images/creatures/'+spriteName+'_vomit.png', 'assets/images/creatures/'+spriteName+'_vomit.json');
         game.load.atlasJSONHash(spriteName+'_poop', 'assets/images/creatures/'+spriteName+'_poop.png', 'assets/images/creatures/'+spriteName+'_poop.json');
+        game.load.atlasJSONHash(spriteName+'_cry_end', 'assets/images/creatures/'+spriteName+'_cry_end.png', 'assets/images/creatures/'+spriteName+'_cry_end.json');
+        game.load.atlasJSONHash(spriteName+'_cry_loop', 'assets/images/creatures/'+spriteName+'_cry_loop.png', 'assets/images/creatures/'+spriteName+'_cry_loop.json');
+        game.load.atlasJSONHash(spriteName+'_cry_start', 'assets/images/creatures/'+spriteName+'_cry_start.png', 'assets/images/creatures/'+spriteName+'_cry_start.json');
         game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
 
