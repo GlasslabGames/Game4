@@ -354,8 +354,6 @@ GlassLab.State.Init.prototype.update = function()
         GLOBAL.loadingText.destroy();
         delete GLOBAL.loadingText;
 
-        GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
-
         this.game.state.start("Game", false);
     }
 };
