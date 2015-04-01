@@ -481,6 +481,11 @@ GlassLab.Creature.prototype.resetTargetFood = function() {
 };
 
 GlassLab.Creature.prototype.Emote = function (happy, callback) {
+    if (happy)
+    {
+        var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.type);
+        GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_happy");
+    }
     var spriteName = (happy) ? "happyEmote" : "angryEmote";
     if (this.emote) this._afterEmote();
     this.emote = this.game.make.sprite(0, 0, spriteName);

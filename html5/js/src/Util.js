@@ -87,3 +87,21 @@ GlassLab.Util.GetCookieData = function(key)
         }
     }
 };
+
+GlassLab.Util.HasCookieData = function(key)
+{
+    var dataArray = document.cookie.split(';');
+    var keyPrefix = key + "=";
+    for (var i=dataArray.length-1; i >= 0; i--)
+    {
+        var dataEntryString = dataArray[i];
+        while(dataEntryString.charAt(0) == ' ') dataEntryString = dataEntryString.substring(1); // remove white space
+
+        if (dataEntryString.indexOf(keyPrefix) == 0)
+        {
+            return true;
+        }
+    }
+
+    return false;
+};

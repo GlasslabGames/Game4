@@ -68,6 +68,7 @@ GlassLab.RewardPopup.prototype.Show = function(data)
     this.data = data;
     this.visible = true;
     this.reward = (data.outcome == "success")? data.reward : 0;
+    this.modal.Show();
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
 
     this.button.label.text = (data.outcome == "success")? "Collect Payment!" : "I'll do better next time!";
@@ -99,9 +100,9 @@ GlassLab.RewardPopup.prototype.Show = function(data)
     if (this.emote.spriteName != emoteSpriteName) this.emote.loadTexture(emoteSpriteName);
 
     if (data.outcome == "success") {
-        GLOBAL.audioManager.playSound("success");
+        GLOBAL.audioManager.playSound("successSound");
     } else {
-        GLOBAL.audioManager.playSound("fail");
+        GLOBAL.audioManager.playSound("failSound");
     }
 
     GlassLab.SignalManager.mailOpened.dispatch(); // eh, not sure we should be using this event :?
@@ -111,6 +112,7 @@ GlassLab.RewardPopup.prototype.Show = function(data)
 GlassLab.RewardPopup.prototype.Hide = function()
 {
     this.visible = false;
+    this.modal.Hide();
 
     if (this.data) {
         // Since the reward popup shows the results of an order, closing it is the final step in resolving an order

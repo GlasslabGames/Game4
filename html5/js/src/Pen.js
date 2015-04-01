@@ -148,7 +148,7 @@ GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
 
     this.Resize();
 
-    GLOBAL.audioManager.playSound("click"); // generic interaction sound
+    GLOBAL.audioManager.playSound("clickSound"); // generic interaction sound
 
     GlassLab.SignalManager.penResized.dispatch(this, prevDimensions, this.getDimensionEncoding());
 

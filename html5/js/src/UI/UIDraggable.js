@@ -104,7 +104,7 @@ GlassLab.UIDraggable.prototype._startDrag = function(pointer) {
     this.prevMousePos = null;
     this._applyDragEffect();
     this.events.onStartDrag.dispatch();
-    GLOBAL.audioManager.playSound("click");
+    GLOBAL.audioManager.playSound("clickSound");
 };
 
 GlassLab.UIDraggable.prototype._endDrag = function() {
@@ -124,7 +124,7 @@ GlassLab.UIDraggable.prototype._endDrag = function() {
         this.events.onDrop.dispatch(target);
         if (this.destroyOnSuccessfulDrop) this.destroy();
     }
-    GLOBAL.audioManager.playSound("click");
+    GLOBAL.audioManager.playSound("clickSound");
 
 };
 

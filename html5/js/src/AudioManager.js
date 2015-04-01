@@ -20,6 +20,10 @@ GlassLab.AudioManager = function(game)
     this.maxPoolSize = 3; // i.e. no more than 3 copies of each sound can play at the same time
 };
 
+GlassLab.AudioManager.SOUND_GROUPS = {
+
+};
+
 GlassLab.AudioManager.prototype.toggleMusic = function(on)
 {
     if (typeof on == 'undefined') on = !this.musicOn;
@@ -29,6 +33,8 @@ GlassLab.AudioManager.prototype.toggleMusic = function(on)
     } else {
         this.currentMusic.stop();
     }
+
+    GlassLab.Util.SetCookieData("musicOn", this.musicOn);
 };
 
 // switches the current music we want to play in this area (even if the music is currently turned off)
@@ -61,13 +67,14 @@ GlassLab.AudioManager.prototype.toggleSoundEffects = function(on)
             }
         }
     }
-};
 
+    GlassLab.Util.SetCookieData("sfxOn", this.soundEffectsOn);
+};
 
 // plays a sound from our pool
 GlassLab.AudioManager.prototype.playSound = function(key, randomStart, loop)
 {
-    if (key.indexOf("Sound") == -1) key += "Sound"; // e.g. you can use either "eating" or "eatingSound" as the key
+    //if (key.indexOf("Sound") == -1) key += "Sound"; // e.g. you can use either "eating" or "eatingSound" as the key
 
     var sound;
 

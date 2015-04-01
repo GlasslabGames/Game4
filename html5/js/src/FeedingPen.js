@@ -613,7 +613,7 @@ GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
 };
 
 GlassLab.FeedingPen.prototype._onLeverPulled = function() {
-    GLOBAL.audioManager.playSound("click"); // generic interaction sound
+    GLOBAL.audioManager.playSound("gateDropSound"); // generic interaction sound
 
     var leverAnim;
 

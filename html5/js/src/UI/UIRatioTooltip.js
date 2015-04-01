@@ -97,6 +97,7 @@ GlassLab.UIRatioTooltip.prototype.Show = function(targetPen)
         GlassLab.SignalManager.update.add(this._onUpdate, this);
         GlassLab.SignalManager.penFoodTypeSet.add(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.add(this.Refresh, this);
+        GlassLab.SignalManager.levelStarted.add(this.Hide, this);
     }
 
     this.Refresh();
@@ -169,6 +170,7 @@ GlassLab.UIRatioTooltip.prototype.Hide = function()
         GlassLab.SignalManager.update.remove(this._onUpdate, this);
         GlassLab.SignalManager.penFoodTypeSet.remove(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.remove(this.Refresh, this);
+        GlassLab.SignalManager.levelStarted.remove(this.Hide, this);
     }
 };
 
