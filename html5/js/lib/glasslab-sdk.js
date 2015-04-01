@@ -674,6 +674,8 @@ either expressed or implied, of the FreeBSD Project.
 
   _GlassLabSDK.prototype.saveTelemEvent = function( name, data, success, error ) {
     // Add the request to the queue
+    this._gameSessionEventOrder++;
+    this._playSessionEventOrder++;
     _pushToDispatchQueue({
         method: "POST",
         apiKey: "saveTelemEvent",
@@ -688,8 +690,8 @@ either expressed or implied, of the FreeBSD Project.
           gameLevel: this._options.gameLevel,
           gameSessionId: "$gameSessionId$",
           playSessionId: "$playSessionId$",
-          gameSessionEventOrder: this._gameSessionEventOrder++,
-          playSessionEventOrder: this._playSessionEventOrder++,
+          gameSessionEventOrder: this._gameSessionEventOrder,
+          playSessionEventOrder: this._playSessionEventOrder,
           totalTimePlayed: this._totalTimePlayed,
           eventName: name,
           eventData: data
