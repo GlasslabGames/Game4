@@ -72,7 +72,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "unifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40 },
-            desiredFood: [{type: "strawberry", amount: 5}, {type: "pizza", amount: 4}]
+            desiredFood: [{type: "strawberry", amount: 4}, {type: "pizza", amount: 5}]
         },
         baby_bird: {
             journalInfo: {
