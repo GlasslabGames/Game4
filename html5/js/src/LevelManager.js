@@ -17,7 +17,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day4" });
     this._addLevelData({ quest: "day5" });
 
-    // TESTING LEVELS:
+    /*/ TESTING LEVELS:
     // 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
@@ -95,7 +95,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {
         baby_rammus: 1
     }};
-
+    */
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
@@ -200,6 +200,11 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
     GLOBAL.creatureManager.DestroyAllCreatures();
 
     GLOBAL.tileManager.clearTiles();
+
+    // It would be nice to pull this functionality into a manager, but we don't have a Food Manager atm. It doesn't belong in TileManager though.
+    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+        GLOBAL.foodLayer.getChildAt(i).destroy();
+    }
 
     GLOBAL.orderFulfillment.pen = null; // clear the reference to the pen
 

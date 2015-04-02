@@ -18,6 +18,8 @@ GlassLab.UIRatioTooltip = function(game, padding)
 
     this.visible = false;
 
+    this.checkInPenOnUpdate = false;
+
     this.bgContainer = new GlassLab.UITable(game, 3, 0);
     var bgLeft = this.game.make.sprite(0,0,"penTooltipCap");
     this.bgContainer.addManagedChild(bgLeft);
@@ -97,7 +99,7 @@ GlassLab.UIRatioTooltip.prototype.Show = function(targetPen)
         GlassLab.SignalManager.update.add(this._onUpdate, this);
         GlassLab.SignalManager.penFoodTypeSet.add(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.add(this.Refresh, this);
-        GlassLab.SignalManager.levelStarted.add(this.Hide, this);
+        GlassLab.SignalManager.tilePenStateChanged.add(this._onTilePenStateChanged, this);
     }
 
     this.Refresh();
@@ -151,11 +153,40 @@ GlassLab.UIRatioTooltip.prototype.Refresh = function()
     this.arrow.y = this.bgContainer.getHeight();
 };
 
+GlassLab.UIRatioTooltip.prototype._onTilePenStateChanged = function(pen, tile)
+{
+    this.checkInPenOnUpdate = true;
+};
+
 GlassLab.UIRatioTooltip.prototype._onPenFoodTypeChanged = function(pen, food)
 {
     if (pen == this.pen)
     {
         this.Refresh();
+    }
+};
+
+GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
+{
+    this.checkInPenOnUpdate = false;
+    var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
+    this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+    Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
+    var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
+    if (tileSprite)
+    {
+        if (!tileSprite.inPen)
+        {
+            this.Hide();
+        }
+        else
+        {
+            this.Show(tileSprite.inPen);
+        }
+    }
+    else
+    {
+        this.Hide();
     }
 };
 
@@ -170,13 +201,17 @@ GlassLab.UIRatioTooltip.prototype.Hide = function()
         GlassLab.SignalManager.update.remove(this._onUpdate, this);
         GlassLab.SignalManager.penFoodTypeSet.remove(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.remove(this.Refresh, this);
-        GlassLab.SignalManager.levelStarted.remove(this.Hide, this);
+        GlassLab.SignalManager.tilePenStateChanged.remove(this._onTilePenStateChanged, this);
     }
 };
 
 GlassLab.UIRatioTooltip.prototype._onUpdate = function(dt)
 {
     this._refreshPosition();
+    if (this.checkInPenOnUpdate)
+    {
+        this._checkMouseOverPen();
+    }
 };
 
 GlassLab.UIRatioTooltip.prototype._refreshPosition = function()

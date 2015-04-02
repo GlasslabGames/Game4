@@ -46,34 +46,34 @@ GlassLab.UIManager.prototype._createAnchors = function()
 {
     // Top left
     this.topLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 0);
-    GLOBAL.UIGroup.add(this.topLeftAnchor);
+    GLOBAL.UILayer.add(this.topLeftAnchor);
     // Top center
     this.topAnchor = new GlassLab.UIAnchor(this.game, .5, 0);
-    GLOBAL.UIGroup.add(this.topAnchor);
+    GLOBAL.UILayer.add(this.topAnchor);
     // Top right
     this.topRightAnchor = new GlassLab.UIAnchor(this.game, 1, 0);
-    GLOBAL.UIGroup.add(this.topRightAnchor);
+    GLOBAL.UILayer.add(this.topRightAnchor);
 
     // Left
     this.leftAnchor = new GlassLab.UIAnchor(this.game, 0, .5);
-    GLOBAL.UIGroup.add(this.leftAnchor);
+    GLOBAL.UILayer.add(this.leftAnchor);
     // Right
     this.rightAnchor = new GlassLab.UIAnchor(this.game, 1, .5);
-    GLOBAL.UIGroup.add(this.rightAnchor);
+    GLOBAL.UILayer.add(this.rightAnchor);
 
     // Bottom left
     this.bottomLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 1);
-    GLOBAL.UIGroup.add(this.bottomLeftAnchor);
+    GLOBAL.UILayer.add(this.bottomLeftAnchor);
     // Bottom center
     this.bottomAnchor = new GlassLab.UIAnchor(this.game, .5, 1);
-    GLOBAL.UIGroup.add(this.bottomAnchor);
+    GLOBAL.UILayer.add(this.bottomAnchor);
     // Bottom right
     this.bottomRightAnchor = new GlassLab.UIAnchor(this.game, 1, 1);
-    GLOBAL.UIGroup.add(this.bottomRightAnchor);
+    GLOBAL.UILayer.add(this.bottomRightAnchor);
 
     // Center - above the rest for convenient use with modals, etc
     this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
-    GLOBAL.UIGroup.add(this.centerAnchor);
+    GLOBAL.UILayer.add(this.centerAnchor);
 };
 
 GlassLab.UIManager.prototype.showAnchoredArrow = function(direction, anchorName, x, y) {
@@ -213,12 +213,17 @@ GlassLab.UIManager.prototype.createHud = function() {
     // mail/orders:
     this.mailButton = new GlassLab.HUDAnimButton(this.game, 0,0, "mailIcon", "hudBg", false, this._onMailButton, this );
     this.mailButton.image.position.setTo(0, 10);
-    GLOBAL.ordersButton = this.mailButton;
     table.addManagedChild(this.mailButton, true);
 
     GlassLab.SignalManager.mailOpened.add(function() { this.toggleOpen(true); }, this.mailButton);
     GlassLab.SignalManager.mailClosed.add(function() { this.toggleOpen(false); }, this.mailButton);
     GlassLab.SignalManager.ordersChanged.add(this._refreshMailButton, this);
+
+    GlassLab.SignalManager.orderStarted.add(function() { this.visible = false; }, this.mailButton); // hide when we start filling an order
+    GlassLab.SignalManager.orderCanceled.add(function() { this.visible = true; }, this.mailButton); // show if we cancel the order
+    GlassLab.SignalManager.orderShipped.add(function() { this.visible = true; }, this.mailButton); // show once the order is fully shipped
+    GlassLab.SignalManager.penFeedingStarted.add(function() { this.visible = false; }, this.mailButton); // hide when we start feeding in the pen
+    GlassLab.SignalManager.challengeStarted.add(function() { this.visible = true; }, this.mailButton); // show again at the start of a challenge
 
     table.position.setTo( (table.getWidth() / 2) + 20, (this.mailButton.getHeight() / 2) + 20 );
 

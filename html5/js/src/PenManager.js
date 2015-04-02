@@ -86,7 +86,18 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     });
 
     return pen;
+};
 
+GlassLab.PenManager.prototype.hidePens = function() {
+    for (var i = 0; i < this.pens.length; i++) {
+        this.pens[i].hide();
+    }
+};
+
+GlassLab.PenManager.prototype.showPens = function() {
+    for (var i = 0; i < this.pens.length; i++) {
+        this.pens[i].show();
+    }
 };
 
 GlassLab.PenManager.prototype.DestroyAllPens = function()

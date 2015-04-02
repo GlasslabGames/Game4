@@ -69,6 +69,8 @@ GlassLab.Tile.prototype.isTarget = function(creature) {
 };
 
 GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
+    GlassLab.SignalManager.tilePenStateChanged.dispatch(this, pen);
+
     this.inPen = pen;
     // check if tile is within food area
     var inFeedingArea = this.inPen && !this.inPen._containsTile(this, true);
@@ -156,5 +158,10 @@ GlassLab.Tile.prototype.getObjectsInTile = function() {
 };
 
 GlassLab.Tile.prototype.canDropFood = function() {
-    return (this.type != GlassLab.Tile.TYPES.water && !this.inPen && !this.food);
+    if (!this.getIsWalkable() || this.inPen) return false;
+    // else check against other food
+    for (var i = 0; i < GLOBAL.foodInWorld.length; i++) {
+        if (GLOBAL.foodInWorld[i].getTile() == this) return false;
+    }
+    return true;
 };

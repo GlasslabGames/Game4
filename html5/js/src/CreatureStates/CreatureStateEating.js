@@ -17,7 +17,7 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
-    this.anim = this.creature.PlayAnim("eat", false, this.creature.baseAnimSpeed);
+    this.anim = this.creature.PlayAnim("eat", false, this.creature.baseAnimSpeed, true); // restart if we were playing an eat anim
     this.chomped = false;
     if (this.anim) {
         this.anim.onComplete.addOnce(this.StopEating, this);
@@ -54,17 +54,20 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
     this.chomped = true;
     this.amountEaten = this.food.BeEaten(this.amountToEat);
     this.creature.lastEatenFoodInfo = this.food.info;
-    var hideBarAfter = (this.creature.pen? null : 1); // if we're in the pen, keep the hunger bar up. Else show it briefly.
+    var hideBarAfter = (this.creature.pen? null : 2); // if we're in the pen, keep the hunger bar up. Else show it briefly.
     this.creature.ShowHungerBar(this.amountEaten, this.food.type, hideBarAfter);
     // if (this is on screen) // TODO
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
-    this.footstepSound = GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
+
+    GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
     if (!this.chomped) this._onChomp();
 
     this.creature.foodEaten[this.food.type] += this.amountEaten;
+
+    GlassLab.SignalManager.creatureEats.dispatch(this.creature);
 
     // Choose which state to go to based on the situation...
     if (this.creature.getIsSick()) {

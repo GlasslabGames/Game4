@@ -357,8 +357,8 @@ GlassLab.FeedingPen.prototype._sortObjectsByGrid = function(fromList, byCol, col
 
 // returns a list of all the spots a creature could enter, formatted like { target: pen, type: "pen", pos: world position}
 GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
-    // if we already pulled the lever, don't allow any more creatures to enter
-    if (this.feeding) return [];
+    // if we already pulled the lever (or this pen is currently hidden), don't allow any more creatures to enter
+    if (this.feeding || !this.sprite.visible) return [];
 
     // if we can't accept this creature type, don't return any spots
     if (creatureType && !this._getCreatureTypeCanEnter(creatureType)) return [];
