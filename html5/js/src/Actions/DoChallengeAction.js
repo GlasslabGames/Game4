@@ -36,7 +36,9 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
     }
 
     // we should be in a quest, and we want to remember what review section to go to if we do poorly on this challenge
-    if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey);
+    if (GLOBAL.questManager.GetCurrentQuest()) {
+        GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey, this.reviewKeyForFailure);
+    }
 
     // To avoid modifying the original challengeData, we make a copy for child classes (DoPenAction, etc) to use and then apply constraints
     this.data = {};

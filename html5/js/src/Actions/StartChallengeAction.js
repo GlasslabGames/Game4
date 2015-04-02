@@ -25,7 +25,7 @@ GlassLab.StartChallengeAction.prototype.Do = function()
     GLOBAL.questManager.UpdateObjective(this.objective);
 
     // we should be in a quest, and we want to remember what review section to go to if we do poorly on this challenge
-    if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey);
+    if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey, this.reviewKeyForFailure);
 
     this._complete();
 };

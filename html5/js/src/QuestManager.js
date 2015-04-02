@@ -79,10 +79,14 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
 GlassLab.QuestManager.prototype.failChallenge = function() {
     GlassLab.SignalManager.challengeComplete.dispatch(false);
 
+    /* This is how we used to do the boss level, but no longer
     if (this.challengeIsBossLevel) {
         this.GetCurrentQuest().Cancel(); // cancel the current challenge
         GLOBAL.levelManager.RestartLevel(); // restart the whole day
-    } else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
+    */
+    var quest = this.GetCurrentQuest();
+    if (quest.failureReviewKey) quest.jumpToReview(quest.failureReviewKey);
+    else quest.restartChallenge(); // restart the current challenge
 };
 
 GlassLab.QuestManager.prototype.completeChallenge = function() {
