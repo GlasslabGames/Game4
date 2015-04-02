@@ -543,7 +543,6 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
 };
 
 GlassLab.Creature.prototype.lookForTargets = function () {
-    console.log("Look for targets", this.state);
     var targets = []; // a list of targets like { pos: world position, pen: pen} or { pos: world position, food: food }
     // Look for pen spots we could enter
     for (var i = 0; i < GLOBAL.penManager.pens.length; i++) {
@@ -592,7 +591,6 @@ GlassLab.Creature.prototype.lookForTargets = function () {
 };
 
 GlassLab.Creature.prototype.tryReachTarget = function(target) {
-    console.log("Try reach target",target);
     if (target.pen) {
         if (!this.tryEnterPen(target.pen)) { // try to enter the pen, but if we can't (someone else is there):
             this.Emote(false); // emote sad that we can't enter the pen
@@ -615,7 +613,6 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
 
 // call this to eat some food outside of a pen
 GlassLab.Creature.prototype.eatFreeFood = function (food) {
-    console.log("Eat free food");
     var result = "hungry";
     // check what the result will be when we add 1 whole food
     this.foodEaten[food.type] += 1;
