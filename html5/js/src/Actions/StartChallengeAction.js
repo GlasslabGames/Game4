@@ -19,7 +19,18 @@ GlassLab.StartChallengeAction.prototype.constructor = GlassLab.StartChallengeAct
 
 GlassLab.StartChallengeAction.prototype.Do = function()
 {
+    GlassLabSDK.endSessionAndFlush(function(data){
+        console.log("Session ended: "+data);
+    }.bind(this), function(data) {
+        console.log("Session end failed: "+data);
+    }.bind(this));
     GlassLabSDK.setOptions({gameLevel: this.id});
+    GlassLabSDK.startSession(function(data){
+        console.log("Session started: "+data);
+    }.bind(this), function(data) {
+        console.log("Session start failed: "+data);
+    }.bind(this));
+
     GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.challengeType, this.problemType, this.bossLevel);
 
     GLOBAL.questManager.UpdateObjective(this.objective);

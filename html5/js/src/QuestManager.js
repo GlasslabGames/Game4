@@ -99,3 +99,16 @@ GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)
 
     GlassLab.SignalManager.objectiveUpdated.dispatch(this._currentObjective);
 };
+
+// We need away to assign each bonus round an id that we can use for the gameLevel in the SDK
+GlassLab.QuestManager.prototype.getBonusRoundId = function() {
+    var level = GLOBAL.levelManager.currentLevel + 1;
+    var name = "bonusRound"+level;
+
+    var quest = this.GetCurrentQuest();
+    if (quest && quest.index) {
+        var index = quest.index.progression + 1;
+        name += "." + index;
+    }
+    return name;
+};

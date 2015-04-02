@@ -27,7 +27,17 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
 {
     GLOBAL.levelManager._destroyCurrentLevel(); // wipe the world in preparation
 
+    GlassLabSDK.endSessionAndFlush(function(data){
+        console.log("Session ended: "+data);
+    }.bind(this), function(data) {
+        console.log("Session end failed: "+data);
+    }.bind(this));
     GlassLabSDK.setOptions({gameLevel: this.challengeId});
+    GlassLabSDK.startSession(function(data){
+        console.log("Session started: "+data);
+    }.bind(this), function(data) {
+        console.log("Session start failed: "+data);
+    }.bind(this));
 
     this.tutorial = null;
     if (this.serializedTutorial) {
