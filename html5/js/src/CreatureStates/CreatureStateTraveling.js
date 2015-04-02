@@ -35,7 +35,7 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
 };
 
 GlassLab.CreatureStateTraveling.prototype.Update = function() {
-    this.creature._move();
+    this.creature._move(this.creature.moveSpeed+5);
 };
 
 GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creature)

@@ -448,16 +448,21 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
     }
 };
 
-GlassLab.Creature.prototype._move = function() {
+GlassLab.Creature.prototype._move = function(moveSpeed) {
     if (isNaN(this.targetPosition.x) && !this._setNextTargetPosition())
     {
         return;
     }
 
+    if (typeof moveSpeed == 'undefined')
+    {
+        moveSpeed = this.moveSpeed;
+    }
+
     // Move towards current point
     var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);
-    if (delta.getMagnitudeSq() > this.moveSpeed * this.moveSpeed) {
-        delta.setMagnitude(this.moveSpeed);
+    if (delta.getMagnitudeSq() > moveSpeed * moveSpeed) {
+        delta.setMagnitude(moveSpeed);
     }
     else {
         // If the delta magnitude is less than our move speed, we're done after this frame.
