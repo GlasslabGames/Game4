@@ -280,8 +280,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
 
-    GLOBAL.effectLayer = game.make.group();
-
     GLOBAL.paused = false;
 
     // Add clouds
