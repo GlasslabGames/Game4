@@ -20,7 +20,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day7" });
 
     // TESTING LEVELS:
-    // 6
+    /*/ 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
         {type: "baby_bird",
@@ -32,7 +32,7 @@ GlassLab.LevelManager = function(game)
       },
         objective: "This is a test!"
     };
-    /*
+
     // 7
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "This is a test!",

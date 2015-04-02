@@ -27,8 +27,8 @@ GlassLab.SortingGame = function(game) {
     this.root.addChild(label);
 
     /* tests
-    this.addCard( "rammus", 4, 4, GlassLab.SortingGameCard.DISPLAY_STYLES.spritesOnly);
-    this.addCard( "unifox", 2, [1,2], GlassLab.SortingGameCard.DISPLAY_STYLES.spritesOnly);
+    this.addCard( "rammus", 2, 4, GlassLab.SortingGameCard.DISPLAY_STYLES.spritesOnly);
+    this.addCard( "unifox", 1, [1,7], GlassLab.SortingGameCard.DISPLAY_STYLES.spritesOnly);
     this.addCard( "rammus", 6, 3, GlassLab.SortingGameCard.DISPLAY_STYLES.numbersOnly);
     */
 
@@ -311,33 +311,38 @@ GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
 GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
 
-    var colWidth = 55, rowHeight = 35;
-    this.displaySprite = this.game.make.sprite((this.actualWidth - colWidth * this.numCreatures) / 2 + colWidth / 2, rowHeight / 2 + 15);
+    var colWidth = 45, rowHeight = 35;
+    var maxCols = 5;
+    this.displaySprite = this.game.make.sprite(colWidth / 2, rowHeight / 2 + 15);
     this.addChild(this.displaySprite);
 
     var foodLeft = {}; // track the total number of food left to split among all creatures
 
-    for (var col = 0; col < this.numCreatures; col++) {
-        var creature = this.game.make.sprite(col * colWidth, 0, creatureInfo.spriteName+"_idle");
-        creature.scale.setTo(0.1, 0.1);
+    var width = this.numCreatures * colWidth;
+    var offset = (this.getWidth() - width) / 2;
+    for (var i = 0; i < this.numCreatures; i++) {
+        var creature = this.game.make.sprite(i * colWidth + offset, 0, creatureInfo.spriteName + "_art");
+        creature.scale.setTo(0.2, 0.2);
         creature.anchor.setTo(0.5, 0.5);
         this.displaySprite.addChild(creature);
+    }
 
-        var row = 1;
-        for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
-            var foodType = creatureInfo.desiredFood[i].type;
-            var foodInfo = GlassLab.FoodTypes[foodType];
-            if (!(foodType in foodLeft)) foodLeft[foodType] = this.numFood[i]; // start tracking the amount of food left
-            var n = Math.min(Math.ceil(this.numFood[i] / this.numCreatures), foodLeft[foodType]);
-            // the amount of food to show is usually just the total divided among the creatures, but reduce it if we have an odd amount of food left
-            for (var j = 0; j < n; j++) {
-                var food = this.game.make.sprite(col * colWidth, (row++) * rowHeight + 10, foodInfo.spriteName);
-                food.scale.setTo(0.15, 0.15);
-                food.anchor.setTo(0.5, 0.5);
-                this.displaySprite.addChild(food);
-                foodLeft[foodType] --;
-            }
+    var row, lastRow = 1;
+    for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
+        var width = Math.min(this.numFood[i], maxCols) * colWidth;
+        var offset = (this.getWidth() - width) / 2;
+
+        var foodType = creatureInfo.desiredFood[i].type;
+        var foodInfo = GlassLab.FoodTypes[foodType];
+        for (var j = 0; j < this.numFood[i]; j++) {
+            var col = j % maxCols;
+            row = Math.floor(j / maxCols) + lastRow;
+            var food = this.game.make.sprite(col * colWidth + offset, row * rowHeight + 10, foodInfo.spriteName);
+            food.scale.setTo(0.5, 0.5);
+            food.anchor.setTo(0.5, 0.5);
+            this.displaySprite.addChild(food);
         }
+        lastRow = row + 1;
     }
 };
 
@@ -348,8 +353,8 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
     this.displaySprite = this.game.make.sprite(this.actualWidth / 2 - 40, rowHeight / 2 + 15);
     this.addChild(this.displaySprite);
 
-    var creature = this.game.make.sprite(0, 0, creatureInfo.spriteName+"_idle");
-    creature.scale.setTo(0.15, 0.15);
+    var creature = this.game.make.sprite(0, 0, creatureInfo.spriteName+"_art");
+    creature.scale.setTo(0.3, 0.3);
     creature.anchor.setTo(0.5, 0.5);
     this.displaySprite.addChild(creature);
 
@@ -362,7 +367,7 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
         var numFoods = this.numFood[i] || 0;
         if (numFoods) {
             var food = this.game.make.sprite(0, (i+1) * rowHeight + 10, foodInfo.spriteName);
-            food.scale.setTo(0.25, 0.25);
+            food.scale.setTo(0.75, 0.75);
             food.anchor.setTo(0.5, 0.5);
             this.displaySprite.addChild(food);
 
