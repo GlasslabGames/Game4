@@ -17,7 +17,7 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "Broccoli",
             plural: "Broccoli"
-        },
+        }
     },
     strawberry: {
         spriteName: "strawberry",
@@ -28,7 +28,7 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "Strawberry",
             plural: "Strawberries"
-        },
+        }
     },
     apple: {
         spriteName: "apple",
@@ -39,7 +39,7 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "Apple",
             plural: "Apples"
-        },
+        }
     },
     tincan: {
         spriteName: "tincan",
@@ -50,7 +50,7 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "Tin Can",
             plural: "Tin Cans"
-        },
+        }
     },
     carrot: {
         spriteName: "carrot",
@@ -61,7 +61,7 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "Carrot",
             plural: "Carrots"
-        },
+        }
     },
     corn: {
         spriteName: "tincan",
@@ -72,7 +72,7 @@ GlassLab.FoodTypes = {
         displayNames: {
             singular: "Corn",
             plural: "Corn"
-        },
+        }
     },
     "item07": {
         spriteName: "tincan",
@@ -81,9 +81,9 @@ GlassLab.FoodTypes = {
         cost: 1000,
         hidden: false,
         displayNames: {
-            singular: "Tin Can",
-            plural: "Tin Cans"
-        },
+            singular: "Donut",
+            plural: "Donuts"
+        }
     },
     "item08": {
         spriteName: "tincan",
@@ -92,9 +92,9 @@ GlassLab.FoodTypes = {
         cost: 2000,
         hidden: false,
         displayNames: {
-            singular: "Tin Can",
-            plural: "Tin Cans"
-        },
+            singular: "Meat",
+            plural: "Meat"
+        }
     },
     "item09": {
         spriteName: "tincan",
@@ -103,9 +103,9 @@ GlassLab.FoodTypes = {
         cost: 5000,
         hidden: false,
         displayNames: {
-            singular: "Tin Can",
-            plural: "Tin Cans"
-        },
+            singular: "Mushroom",
+            plural: "Mushroom"
+        }
     },
     "item10": {
         spriteName: "tincan",
@@ -114,10 +114,21 @@ GlassLab.FoodTypes = {
         cost: 7500,
         hidden: false,
         displayNames: {
-            singular: "Tin Can",
-            plural: "Tin Cans"
-        },
+            singular: "Pizza",
+            plural: "Pizza"
+        }
     },
+    "item11": {
+        spriteName: "tincan",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 7500,
+        hidden: false,
+        displayNames: {
+            singular: "Taco",
+            plural: "Taco"
+        }
+    }
 };
 
 /**
