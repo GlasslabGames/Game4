@@ -149,7 +149,7 @@
           "problemType": "C"
         },
         {
-          "creatureType": "baby_bird",
+          "creatureType": "rammus",
           "numCreatures": 4,
           "numFood": [12,18],
           "displayMode": "numbersOnly",
