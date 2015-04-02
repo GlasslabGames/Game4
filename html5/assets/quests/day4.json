@@ -111,7 +111,6 @@
             "client": "Archibold Huxley III",
             "creatureType": "rammus",
             "numFoodB": 130,
-            "noFoodEntries": true,
             "description": "Dear Friend! I have 130 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
             "reward": 200
           }

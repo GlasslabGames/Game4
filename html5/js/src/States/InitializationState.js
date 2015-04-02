@@ -211,6 +211,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.json('day4', 'assets/quests/day4.json');
     game.load.json('day5', 'assets/quests/day5.json');
     game.load.json('day6', 'assets/quests/day6.json');
+    game.load.json('day7', 'assets/quests/day7.json');
 
     game.plugins.add(Phaser.Plugin.Isometric);
     GLOBAL.astar = game.plugins.add(Phaser.Plugin.AStar);

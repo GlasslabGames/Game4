@@ -50,11 +50,6 @@ GlassLab.ActionGroup.prototype._step = function() {
     }
 };
 
-GlassLab.ActionGroup.prototype.Redo = function() {
-
-    this.Do();
-};
-
 GlassLab.ActionGroup.prototype._onDestroy = function()
 {
     if (this._deserializedActions) {

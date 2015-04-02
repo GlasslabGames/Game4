@@ -17,6 +17,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day4" });
     this._addLevelData({ quest: "day5" });
     this._addLevelData({ quest: "day6" });
+    this._addLevelData({ quest: "day7" });
 
     /*/ TESTING LEVELS:
     // 6
@@ -127,7 +128,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
             console.log("Session start failed: "+data);
         }.bind(this));
 
-        console.log("Starting level", levelNum, this.levels[levelNum], this.levels[levelNum].data);
+        //console.log("Starting level", levelNum, this.levels[levelNum], this.levels[levelNum].data);
         this.currentLevel = levelNum;
 
         var level = this.levels[levelNum];
