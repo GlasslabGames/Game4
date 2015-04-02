@@ -129,7 +129,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.onPathChanged = new Phaser.Signal();
     this.onDestinationReached = new Phaser.Signal();
 
-    GLOBAL.c = this;
+    GlassLab.SignalManager.tilePenStateChanged.add(this._onTilePenStateChanged, this);
 };
 
 GlassLab.Creature.prototype._onDestroy = function () {
@@ -141,6 +141,81 @@ GlassLab.Creature.prototype._onDestroy = function () {
     if (this.state) this.state.Exit(); // wrap up the current state
 
     GLOBAL.creatureManager.RemoveCreature(this);
+};
+
+GlassLab.Creature.prototype._onTilePenStateChanged = function(tile, pen)
+{
+    if (!pen)
+    {
+        return;
+    }
+
+    var globalPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var currentTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPosition.x, globalPosition.y);
+    // If the tile changed is the same as the tile we're in, we need to move out
+    if (currentTile == tile && pen != this.pen)
+    {
+        if (this.pen)
+        {
+            // You're screwed, you somehow got edged out of a pen while in a pen
+            console.error("Somehow edged away a creature with a pen when it was already in a pen?");
+        }
+
+        // Find closest empty tile
+        var emptyTile = null;
+        var searchDistance = 0; // distance vertically and horizontally away
+        var tile = null;
+        var mapWidth = GLOBAL.tileManager.GetMapWidth();
+        var mapHeight = GLOBAL.tileManager.GetMapHeight();
+        // TODO: Mas inefficient
+        while (!emptyTile || searchDistance > mapWidth || searchDistance > mapHeight)
+        {
+            searchDistance++;
+            for (var i = -searchDistance; i <= searchDistance; i++)
+            {
+                tile = GLOBAL.tileManager.GetTile(currentTile.col - searchDistance, currentTile.row+i);
+                if (tile && tile.getIsWalkable())
+                {
+                    emptyTile = tile;
+                    break;
+                }
+
+                tile = GLOBAL.tileManager.GetTile(currentTile.col + searchDistance, currentTile.row+i);
+                if (tile && tile.getIsWalkable())
+                {
+                    emptyTile = tile;
+                    break;
+                }
+
+                if (i != -searchDistance && i != searchDistance)
+                {
+                    tile = GLOBAL.tileManager.GetTile(currentTile.col + i, currentTile.row - searchDistance);
+                    if (tile && tile.getIsWalkable())
+                    {
+                        emptyTile = tile;
+                        break;
+                    }
+
+                    tile = GLOBAL.tileManager.GetTile(currentTile.col + i, currentTile.row + searchDistance);
+                    if (tile && tile.getIsWalkable())
+                    {
+                        emptyTile = tile;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (emptyTile)
+        {
+            this.moveToTile(emptyTile.col, emptyTile.row);
+            this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
+        }
+        else
+        {
+            console.error("Creature didn't have an empty tile to get pushed into!")
+        }
+    }
 };
 
 GlassLab.Creature.prototype.print = function () {

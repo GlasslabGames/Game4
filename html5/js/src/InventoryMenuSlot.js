@@ -342,23 +342,26 @@ GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
     }
 
     // Dropped on world
-    var pointer = this.game.input.activePointer;
-    var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
-    if (tile && tile.canDropFood()) { // valid tile
-        var food = new GlassLab.Food(this.game, this.foodType);
-        GLOBAL.foodLayer.add(food.sprite);
-        food.placeOnTile(tile);
+    if (!GLOBAL.orderFulfillment.sprite.visible)
+    {
+        var pointer = this.game.input.activePointer;
+        var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
+        if (tile && tile.canDropFood()) { // valid tile
+            var food = new GlassLab.Food(this.game, this.foodType);
+            GLOBAL.foodLayer.add(food.sprite);
+            food.placeOnTile(tile);
 
-        GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
-        GlassLab.SignalManager.foodDropped.dispatch(food); // we should have this before targetsChanged
-        GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+            GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
+            GlassLab.SignalManager.foodDropped.dispatch(food); // we should have this before targetsChanged
+            GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 
-        this._jumpToStart();
+            this._jumpToStart();
+        }
+        else  if (tile && tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {
+            this._jumpToStart();
+        }
+        // else, it will fly back thanks to uiDraggable
     }
-    else  if (tile && tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {
-        this._jumpToStart();
-    }
-    // else, it will fly back thanks to uiDraggable
 
     this.parent.parent.dropped_item = true; // this.parent.parent = InventoryMenu
     this.parent.parent.dragging_item = false;
