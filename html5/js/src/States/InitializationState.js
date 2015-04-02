@@ -28,6 +28,9 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.atlasJSONHash(spriteName+'_eat', 'assets/images/creatures/'+spriteName+'_eat.png', 'assets/images/creatures/'+spriteName+'_eat.json');
         game.load.atlasJSONHash(spriteName+'_vomit', 'assets/images/creatures/'+spriteName+'_vomit.png', 'assets/images/creatures/'+spriteName+'_vomit.json');
         game.load.atlasJSONHash(spriteName+'_poop', 'assets/images/creatures/'+spriteName+'_poop.png', 'assets/images/creatures/'+spriteName+'_poop.json');
+        game.load.atlasJSONHash(spriteName+'_cry_end', 'assets/images/creatures/'+spriteName+'_cry_end.png', 'assets/images/creatures/'+spriteName+'_cry_end.json');
+        game.load.atlasJSONHash(spriteName+'_cry_loop', 'assets/images/creatures/'+spriteName+'_cry_loop.png', 'assets/images/creatures/'+spriteName+'_cry_loop.json');
+        game.load.atlasJSONHash(spriteName+'_cry_start', 'assets/images/creatures/'+spriteName+'_cry_start.png', 'assets/images/creatures/'+spriteName+'_cry_start.json');
         game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
 
@@ -236,8 +239,9 @@ GlassLab.State.Init.prototype.create = function()
     game.iso.anchor.setTo(0,0);
     game.iso.projectionAngle = 0.52359877559829887307710723054658; // 30 degree angle
 
-    GLOBAL.UILayer = game.add.group();
     GLOBAL.WorldLayer = game.add.group();
+    GLOBAL.UILayer = game.add.group();
+    GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = false;
 
     GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
 
@@ -284,9 +288,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
 
     // Add UI
-    var uiGroup = game.add.group();
-    GLOBAL.UIGroup = uiGroup;
-
     GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
 
     // Point to track last mouse position (for some reason Phaser.Pointer.movementX/Y doesn't seem to work)
@@ -321,7 +322,7 @@ GlassLab.State.Init.prototype.create = function()
 
     var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
     versionLabel.fixedToCamera = true;
-    GLOBAL.UIGroup.add(versionLabel);
+    GLOBAL.UILayer.add(versionLabel);
 
     GLOBAL.sortingGame = new GlassLab.SortingGame(game);
     GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame);
@@ -352,6 +353,7 @@ GlassLab.State.Init.prototype.update = function()
     {
         GLOBAL.loadingText.destroy();
         delete GLOBAL.loadingText;
+
         this.game.state.start("Game", false);
     }
 };

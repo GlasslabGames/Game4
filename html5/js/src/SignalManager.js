@@ -46,6 +46,7 @@ GlassLab.SignalManager = {
     feedingPenResolved: new Phaser.Signal(), // (FeedingPen, bool) => source, win/loss
     penFeedingStarted: new Phaser.Signal(),
     penFoodTypeSet: new Phaser.Signal(), // pen, food type added, list of food types
+    tilePenStateChanged: new Phaser.Signal(), // tile, pen - Sent when a tile's SetInPen is called
 
     // Order Events
     ordersChanged: new Phaser.Signal(), // when an order is added or removed

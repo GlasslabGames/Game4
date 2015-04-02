@@ -28,6 +28,8 @@ GlassLab.State.Game.prototype.create = function()
     // start with the sound effects off during development.
     GLOBAL.audioManager.toggleMusic(GlassLab.Util.HasCookieData("musicOn") ? GlassLab.Util.GetCookieData("musicOn") == 'true' : true);
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
+    
+    GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
 };
 
 GlassLab.State.Game.prototype.update = function()
@@ -53,7 +55,7 @@ GlassLab.State.Game.prototype.update = function()
     }
     else //if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
     {
-        cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
+        var cursorIsoPosition = new Phaser.Point(game.input.activePointer.worldX,game.input.activePointer.worldY);
         game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
         Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
         tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);

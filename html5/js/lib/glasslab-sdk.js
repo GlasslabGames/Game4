@@ -637,7 +637,7 @@ either expressed or implied, of the FreeBSD Project.
 
     console.log( "[GlassLabSDK] start printing dispatch queue on end session" );
     for( var i = 0; i < this._dispatchQueue.length; i++ ) {
-      console.log( this._dispatchQueue[ i ].apiKey + ": " + this._dispatchQueue[ i ].data );
+      console.log( this._dispatchQueue[ i ].apiKey + ": ", this._dispatchQueue[ i ].data );
     }
     console.log( "[GlassLabSDK] end printing dispatch queue on end session" );
 

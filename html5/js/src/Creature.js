@@ -15,6 +15,8 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.game = game;
     this.state = null;
 
+    this.isCrying = false;
+
     this.sprite.inputEnabled = true;
     this.sprite.draggable = false; // set this in each state
     this.prevIsoPos = new Phaser.Point();
@@ -66,9 +68,10 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.shadow.scale.setTo(0.5, 0.5);
 
     this.animSprites = {};
-    var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit"];
+    var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit", "cry_start", "cry_loop", "cry_end"];
     for (var i = 0; i < animNames.length; i++) {
-        var spriteName = info.spriteName + "_" + animNames[i];
+        var animName = animNames[i];
+        var spriteName = info.spriteName + "_" + animName;
         var animSprite = this.game.make.sprite(0, 0, spriteName);
 
         GLOBAL.resourceManager.preloadResource(spriteName);
@@ -77,13 +80,18 @@ GlassLab.Creature = function (game, type, startInPen) {
         animSprite.animations.add('anim'); // this animation uses the whole spritesheet
         this.sprite.addChild(animSprite);
 
-        if (animNames[i] != "idle")
+        if (animName != "idle")
         {
+            // TODO: Remove the need for this hack, cry animations have slightly different anchor point
+            if (animName == "cry_start" || animName == "cry_loop" || animName == "cry_end")
+            {
+                animSprite.anchor.setTo(0.5, .71);
+            }
             animSprite.visible = false;
         }
 
         animSprite.tint = info.spriteTint || 0xffffff; // temporary way to distinguish creatures
-        this.animSprites[animNames[i]] = animSprite;
+        this.animSprites[animName] = animSprite;
     }
 
     this.spriteHeight = this.animSprites.idle.height; // for future reference
@@ -120,6 +128,8 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.onPathChanged = new Phaser.Signal();
     this.onDestinationReached = new Phaser.Signal();
+
+    GLOBAL.c = this;
 };
 
 GlassLab.Creature.prototype._onDestroy = function () {
@@ -310,8 +320,8 @@ GlassLab.Creature.prototype.OnStickyDrop = function () { // called by (atm) prot
 };
 
 
-GlassLab.Creature.prototype._onUpdate = function () {
-    if (this.state) this.state.Update();
+GlassLab.Creature.prototype._onUpdate = function (dt) {
+    if (this.state) this.state.Update(dt);
 
 };
 
@@ -426,6 +436,7 @@ GlassLab.Creature.prototype.tryWalkToNextFood = function () {
     }
 };
 
+// NOTE: This function assumes creature is in a pen
 GlassLab.Creature.prototype.FinishEating = function (result, food) {
     this.hungerBar.show(false);
     if (result == "dislike") {
@@ -434,6 +445,10 @@ GlassLab.Creature.prototype.FinishEating = function (result, food) {
         this.Emote(true);
     } else if (result == "hungry") {
         this.thoughtBubble.show(null, this.getDesiredFood());
+        if (this.pen)
+        {
+            this.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this, Number.MAX_VALUE));
+        }
     }
     // else they would have started vomiting already
     this.pen.SetCreatureFinishedEating(result);

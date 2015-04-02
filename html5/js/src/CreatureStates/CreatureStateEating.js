@@ -58,7 +58,8 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
     this.creature.ShowHungerBar(this.amountEaten, this.food.type, hideBarAfter);
     // if (this is on screen) // TODO
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
-    this.footstepSound = GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
+
+    GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
