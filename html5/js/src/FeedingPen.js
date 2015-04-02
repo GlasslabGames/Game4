@@ -536,7 +536,7 @@ GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(result) {
     this.unfedCreatures --;
     if (result != "satisfied") this.result = result; // even if one creature is satisfied, don't let it overwrite the result of other creatures
     if (this.unfedCreatures <= 0) {
-        this.FinishFeeding(result);
+        this.FinishFeeding(this.result);
     }
 };
 
