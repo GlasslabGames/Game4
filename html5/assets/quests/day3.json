@@ -9,8 +9,28 @@
         "creatureType": "baby_unifox",
         "numCreatures": 2,
         "maxHeight": 1,
-        "creatureWidth": 2,
-        "startCol": -8
+        "creatureWidth": 2
+      },
+      "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Feeding those rams has attracted some shy unifoxi! *Unifoxi* will only eat in the pen, together. Try to feed these some *strawberries.*"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "penFoodTypeSet"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
       }
     },
     {
