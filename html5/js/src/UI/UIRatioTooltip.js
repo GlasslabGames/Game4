@@ -56,7 +56,7 @@ GlassLab.UIRatioTooltip = function(game, padding)
     this.contentsContainer.addManagedChild(colon);
 
     this.foodIcon = this.game.make.sprite(0, 0, "apple");
-    this.foodIcon.scale.setTo(.25, .25);
+    this.foodIcon.scale.setTo(.5, .5);
     this.foodIcon.anchor.setTo(0, .5);
     this.contentsContainer.addManagedChild(this.foodIcon);
 
@@ -69,7 +69,7 @@ GlassLab.UIRatioTooltip = function(game, padding)
     this.contentsContainer.addManagedChild(this.colon2);
 
     this.foodIcon2 = this.game.make.sprite(0, 0, "apple");
-    this.foodIcon2.scale.setTo(.25, .25);
+    this.foodIcon2.scale.setTo(.5, .5);
     this.foodIcon2.anchor.setTo(0, .5);
     this.contentsContainer.addManagedChild(this.foodIcon2);
 

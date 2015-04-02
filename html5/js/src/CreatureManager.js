@@ -72,7 +72,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "unifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40 },
-            desiredFood: [{type: "strawberry", amount: 5}, {type: "carrot", amount: 4}]
+            desiredFood: [{type: "strawberry", amount: 5}, {type: "pizza", amount: 4}]
         },
         baby_bird: {
             journalInfo: {
@@ -87,7 +87,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "babybird",
             fxFrames: {eat: 16, vomit: 60 },
-            desiredFood: [{type: "apple", amount: (4/3)}] // 3 birds eat 4 food
+            desiredFood: [{type: "meat", amount: (4/3)}] // 3 birds eat 4 food
         },
         bird: {
             journalInfo: {
@@ -102,7 +102,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "bird",
             fxFrames: {eat: 16, vomit: 60 },
-            desiredFood: [{type: "apple", amount: (10/4)}, {type: "carrot", amount: (5/4)}]
+            desiredFood: [{type: "meat", amount: (10/4)}, {type: "taco", amount: (5/4)}]
         }
     };
 

@@ -15,7 +15,7 @@ GlassLab.CreatureStateVomiting.constructor = GlassLab.CreatureStateVomiting;
 
 GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.anim = this.creature.PlayAnim("vomit", false, this.creature.baseAnimSpeed);
+  this.anim = this.creature.PlayAnim("vomit", false, this.creature.baseAnimSpeed, true);
   this.anim.onComplete.addOnce(this._onFinishVomiting, this);
   this.spewed = false;
   this.creature.draggable = false;
@@ -29,13 +29,21 @@ GlassLab.CreatureStateVomiting.prototype.Update = function() {
 
 GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   this.spewed = true;
-  var vomit = this.game.make.sprite(-20,-190, "vomit"); //-420,-155
+  var vomit = this.game.make.isoSprite(0,0,0, "vomit");
   vomit.anchor.set(1,0);
   vomit.tint = this.creature.lastEatenFoodInfo? this.creature.lastEatenFoodInfo.color : 0xBFDB9A; // default vomit color
   GLOBAL.effectLayer.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
   vomit.scale.setTo(this.creature.sprite.scale.x, this.creature.sprite.scale.y);
-  vomit.x = this.creature.sprite.x;
-  vomit.y = this.creature.sprite.y - 45;
+    var globalPos = GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite);
+  vomit.isoX = globalPos.x;
+  vomit.isoY = globalPos.y;
+    if (this.creature.sprite.scale.x > 0) {
+        vomit.isoX -= 50;
+        vomit.isoY -= 70;
+    } else {
+        vomit.isoX -= 70;
+        vomit.isoY -= 50;
+    }
   vomit.animations.add("anim");
   vomit.animations.play("anim", this.creature.baseAnimSpeed, false);
   vomit.events.onAnimationComplete.add(this._onVomitAnimEnded, vomit);
@@ -60,8 +68,11 @@ GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, Number.MAX_VALUE));
         this.creature.FinishEating("sick");
     } else {
-        this.creature.Emote(false);
         this.creature.resetFoodEaten();
-        this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 3000));
+        if (this.food) { // only start crying if we had food, which means we're not just purging before entering a pen
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 3000));
+        } else { // else we were probably about to enter a pen, so look for it again
+            this.creature.lookForTargets();
+        }
     }
 };

@@ -292,6 +292,10 @@ GlassLab.InventoryMenuItem = function(game, foodType)
     GlassLab.UIDraggable.prototype.constructor.call(this, game, 0, 0);
     //this.is_dragging = false;
 
+    var hitArea = new Phaser.Rectangle(-40, -45, 80, 90);
+    this.hitArea = hitArea;
+    //this.addChild(this.game.make.graphics().beginFill("0xffffff", 0.5).drawRect(hitArea.x, hitArea.y, hitArea.width, hitArea.height));
+
     this.events.onEndDrag.add(this._onEndDrag, this);
     this.events.onInputOver.add(this._onOver, this);
     this.events.onInputOut.add(this._onOut, this);
@@ -299,7 +303,7 @@ GlassLab.InventoryMenuItem = function(game, foodType)
 
     this.loadTexture( this.data.spriteName );
     this.anchor.setTo(0.5, 0.5);
-    this.scale.setTo(0.25, 0.25);
+    this.scale.setTo(0.8, 0.8);
 };
 
 GlassLab.InventoryMenuItem.prototype = Object.create(GlassLab.UIDraggable.prototype);
