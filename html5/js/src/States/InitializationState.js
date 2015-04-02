@@ -44,10 +44,14 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.audio(spriteName+'_sfx_eat', 'assets/audio/sfx/'+spriteName+'_eat.mp3');
     }
 
-    var foodSpriteNames = ["carrot", "apple", "strawberry", "tincan", "broccoli"];
-    for (var i = 0; i < foodSpriteNames.length; i++) {
-        spriteName = foodSpriteNames[i];
-        game.load.image(spriteName, 'assets/images/food/'+spriteName+'.png');
+    var basicFoodSpriteNames = ["apple", "broccoli", "corn", "donut", "meat", "mushroom", "pizza", "strawberry", "taco", "tincan"];
+    for (var i = 0; i < basicFoodSpriteNames.length; i++) {
+        game.load.image(basicFoodSpriteNames[i], 'assets/images/food/food_standard/food_standard_'+basicFoodSpriteNames[i]+'.png');
+    }
+
+    var animFoodSpriteNames = ["apple", "strawberry", "tincan", "broccoli"];
+    for (var i = 0; i < animFoodSpriteNames.length; i++) {
+        spriteName = animFoodSpriteNames[i];
         game.load.atlasJSONHash(spriteName+'_eaten', 'assets/images/food/'+spriteName+'_death_VFX.png', 'assets/images/food/'+spriteName+'_death_VFX.json');
         game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_VFX.png', 'assets/images/food/'+spriteName+'_long_death_VFX.json');
     }

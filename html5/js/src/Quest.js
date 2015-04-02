@@ -74,8 +74,10 @@ GlassLab.Quest.prototype.Start = function()
 
 
         GLOBAL.dayManager.dayMeter.SetDots(this.serializedChallenges.progression.length);
-        for (var i=0; i < this.unlockedFood.length; i++) {
-            GLOBAL.inventoryManager.unlock(this.unlockedFood[i]);
+        if (this.unlockedFood) {
+            for (var i=0; i < this.unlockedFood.length; i++) {
+                GLOBAL.inventoryManager.unlock(this.unlockedFood[i]);
+            }
         }
 
         GlassLab.SignalManager.questStarted.dispatch(this);

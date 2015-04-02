@@ -1,5 +1,4 @@
 {
-  "unlockedItems": ["strawberry", "broccoli", "apple", "tincan", "meat"],
   "progression": [
     {
      "_comment": "============ ******************************** THIS IS WHERE PROGRESSION BEGINS ******************************** ==============",      
@@ -193,7 +192,7 @@
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "baby_bird",
-        "numFood": 84,
+        "numFoodA": 84,
         "description": "Dear Friend! I have 84 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
         "reward": 200,
         "creatureWidth": 3

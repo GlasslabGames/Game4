@@ -11,7 +11,7 @@ GlassLab.FoodTypes = {
     broccoli: {
         spriteName: "broccoli",
         color: 0x8cb149,
-        unlocked: false,
+        unlocked: true,
         cost: -1,
         hidden: false,
         displayNames: {
@@ -22,7 +22,7 @@ GlassLab.FoodTypes = {
     strawberry: {
         spriteName: "strawberry",
         color: 0xef5067,
-        unlocked: false,
+        unlocked: true,
         cost: -1,
         hidden: false,
         displayNames: {
@@ -30,103 +30,92 @@ GlassLab.FoodTypes = {
             plural: "Strawberries"
         }
     },
-    apple: {
-        spriteName: "apple",
-        color: 0xc03b30, // associated color for the vomit and the hunger bar
+    meat: {
+        spriteName: "meat",
+        color: 0x975f3d, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: -1,
-        hidden: false,
-        displayNames: {
-            singular: "Apple",
-            plural: "Apples"
-        }
-    },
-    tincan: {
-        spriteName: "tincan",
-        color: 0x99a2ac,
-        unlocked: false,
-        cost: 1,
-        hidden: false,
-        displayNames: {
-            singular: "Tin Can",
-            plural: "Tin Cans"
-        }
-    },
-    carrot: {
-        spriteName: "carrot",
-        color: 0xe37f54, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: 1,
-        hidden: false,
-        displayNames: {
-            singular: "Carrot",
-            plural: "Carrots"
-        }
-    },
-    corn: {
-        spriteName: "tincan",
-        color: 0x99a2ac,
-        unlocked: false,
-        cost: 500,
-        hidden: false,
-        displayNames: {
-            singular: "Corn",
-            plural: "Corn"
-        }
-    },
-    "item07": {
-        spriteName: "tincan",
-        color: 0x99a2ac,
-        unlocked: false,
-        cost: 1000,
-        hidden: false,
-        displayNames: {
-            singular: "Donut",
-            plural: "Donuts"
-        }
-    },
-    "item08": {
-        spriteName: "tincan",
-        color: 0x99a2ac,
-        unlocked: false,
-        cost: 2000,
+        cost: 50,
         hidden: false,
         displayNames: {
             singular: "Meat",
             plural: "Meat"
         }
     },
-    "item09": {
+    tincan: {
         spriteName: "tincan",
         color: 0x99a2ac,
         unlocked: false,
-        cost: 5000,
+        cost: 100,
         hidden: false,
         displayNames: {
-            singular: "Mushroom",
-            plural: "Mushroom"
+            singular: "Can",
+            plural: "Cans"
         }
     },
-    "item10": {
-        spriteName: "tincan",
-        color: 0x99a2ac,
-        unlocked: false,
-        cost: 7500,
+    apple: {
+        spriteName: "apple",
+        color: 0xc03b30, // associated color for the vomit and the hunger bar
+        unlocked: false, // Default value, unlock tracked by InventoryManager
+        cost: 20,
         hidden: false,
         displayNames: {
-            singular: "Pizza",
-            plural: "Pizza"
+            singular: "Apple",
+            plural: "Apples"
         }
     },
-    "item11": {
-        spriteName: "tincan",
-        color: 0x99a2ac,
+    taco: {
+        spriteName: "taco",
+        color: 0xf6cf62,
         unlocked: false,
-        cost: 7500,
+        cost: 200,
         hidden: false,
         displayNames: {
             singular: "Taco",
-            plural: "Taco"
+            plural: "Tacos"
+        }
+    },
+    corn: {
+        spriteName: "corn",
+        color: 0x99a2ac,
+        unlocked: false,
+        cost: 20,
+        hidden: false,
+        displayNames: {
+            singular: "Corn",
+            plural: "Corn"
+        }
+    },
+    pizza: {
+        spriteName: "pizza",
+        color: 0xe4b76e,
+        unlocked: false,
+        cost: 200,
+        hidden: false,
+        displayNames: {
+            singular: "Pizza",
+            plural: "Pizzas"
+        }
+    },
+    mushroom: {
+        spriteName: "mushroom",
+        color: 0xca5d5c,
+        unlocked: false,
+        cost: 100,
+        hidden: false,
+        displayNames: {
+            singular: "Mushroom",
+            plural: "Mushrooms"
+        }
+    },
+    donut: {
+        spriteName: "donut",
+        color: 0xf696ed,
+        unlocked: false,
+        cost: 2000,
+        hidden: false,
+        displayNames: {
+            singular: "Donut",
+            plural: "Donuts"
         }
     }
 };

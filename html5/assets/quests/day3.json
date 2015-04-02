@@ -1,5 +1,4 @@
 {
-  "unlockedItems": ["strawberry", "broccoli", "apple"],
   "progression": [
     {
      "__type": "DoPenChallengeAction",
