@@ -45,10 +45,10 @@ GlassLab.DoPenChallengeAction.prototype._showResult = function() {
         var retryButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.failChallenge, this, 150, 60, 0xffffff, "Retry");
         var text = "Oops, ";
         if (this.result == "wrongCreatureType") text += "that wasn't the right kind of creature.";
-        else if (this.result == "wrongCreatureNumber") text += "some creatures were left out of the pen.";
         else if (this.result == "dislike") text += "that wasn't the right kind of food.";
         else if (this.result == "hungry") text += "your creatures are still hungry.";
         else if (this.result == "sick") text += "your creatures ate too much!";
+        else if (this.result == "wrongCreatureNumber") text += "some creatures were left out of the pen.";
         else text += "that wasn't right."; // fallback
 
         this.modal = new GlassLab.UIModal(GLOBAL.game, "", retryButton);
