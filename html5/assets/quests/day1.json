@@ -6,8 +6,8 @@
       "serializedActions": [
         {
           "__type": "StartChallengeAction",
-          "id": "0.01.md",
-          "problemType": "MD",
+          "id": "T1.01",
+          "problemType": "2UR_intro_baby_ram",
           "challengeType": "handfeeding",
           "objective": "Hand-feed 1 baby ram!"
         },
@@ -20,7 +20,7 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "There you are! These creatures need your help! Open your *inventory* to feed this *baby ram.*"
+          "text": "There you are, Rancher! I’m your assistant, Snedley. We’re burning daylight, so best get started. Your *cargo* is in here."
         },
         {
           "__type": "ShowArrowAction",
@@ -47,7 +47,7 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "Drag food onto the grass to see what the ram likes to eat!"
+          "text": "Let’s see if we can attract some *creatures*. Try putting some food on the grass."
         },
         {
           "__type": "WaitForCondition",
@@ -61,6 +61,31 @@
         {
           "__type": "HideAssistantDialogueAction"
         },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "creatureEats"
+            }
+          ]
+        },
+        {
+          "__type": "ShowAssistantDialogueAction",
+          "text": "Hmm, it liked that broccoli, but it's not full yet. See how *much broccoli* it needs."
+        },
+        {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "SignalCondition",
+              "signalName": "creatureEats"
+            }
+          ]
+        },
+        {
+          "__type": "HideAssistantDialogueAction"
+        },                                
         {
           "__type": "WaitForCondition",
           "conditions": [
@@ -123,27 +148,66 @@
       "data": [
         {
           "creatureType": "baby_rammus",
-          "numCreatures": 1,
-          "numFood": 2,
+          "numCreatures": 2,
+          "numFood": 3,
           "displayMode": "spritesOnly",
-          "challengeType": "D"
+          "problemType": "C"
         },
         {
           "creatureType": "baby_rammus",
           "numCreatures": 1,
           "numFood": 3,
           "displayMode": "spritesOnly",
-          "challengeType": "E"
+          "problemType": "E"
         },
         {
           "creatureType": "baby_rammus",
           "numCreatures": 1,
           "numFood": 4,
           "displayMode": "spritesOnly",
-          "challengeType": "D"
+          "problemType": "F"
         }
       ]
-    }
+    },
+    { 
+     "__type": "DoFeedingChallengeAction",
+     "challengeId": "T2.01-REPLACE",
+     "problemType": "3UR_intro_adult_rammus-REPLACE",
+     "challengeData": {
+        "creatureType": "baby_rammus",
+        "numCreatures": 3      
+    },
+      "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "creatureFed"
+              }
+            ]
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Hmm. Feeding creatures one by one this way is tedious. If only there were a better way..."
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "creatureFed"
+              }
+            ] 
+          },
+          {
+            "__type": "HideAssistantDialogueAction"            
+          }
+        ]
+      }          
+  }
   ],
   "reviewChallenges": [],
   "funChallenges": [],

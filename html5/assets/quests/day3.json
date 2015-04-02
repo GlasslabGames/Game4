@@ -3,9 +3,8 @@
   "progression": [
     {
      "__type": "DoPenChallengeAction",
-     "challengeId": "0.04a",
-     "problemType": "2US1MC",
-     "reviewKey": "fox_intro",
+     "challengeId": "T1.07a",
+     "problemType": "2US_intro_baby_unifox",
      "challengeData": {
         "creatureType": "baby_unifox",
         "numCreatures": 2,
@@ -26,6 +25,32 @@
         "topDraggable":true,
         "leftDraggable":true
       }
+    },
+    {
+    "__type": "DoBonusRoundAction",
+    "data": [
+        {
+          "creatureType": "baby_unifox",
+          "numCreatures": 2,
+          "numFood": 7,
+          "displayMode": "spritesOnly",
+          "problemType": "F"
+        },
+        {
+          "creatureType": "baby_unifox",
+          "numCreatures": 5,
+          "numFood": 20,
+          "displayMode": "numbersOnly",
+          "problemType": "CE"
+        },
+        {
+          "creatureType": "baby_unifox",
+          "numCreatures": 6,
+          "numFood": 22,
+          "displayMode": "numbersOnly",
+          "problemType": "CC"
+        }
+      ]
     },
     {
       "__type": "RandomSelectionGroup",
@@ -83,31 +108,32 @@
           "description": "Dear Friend! I have 24 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
           "reward": 200
         },
-      "boss": true
+      "boss": true,
+      "reviewKeyForFailure": "middle"
     },
     {
     "__type": "DoBonusRoundAction",
     "data": [
         {
-          "creatureType": "baby_unifox",
-          "numCreatures": 6,
-          "numFood": 12,
-          "displayMode": "numbersOnly",
-          "problemType": "CS"
-        },
-        {
-          "creatureType": "baby_unifox",
-          "numCreatures": 6,
-          "numFood": 24,
-          "displayMode": "numbersOnly",
+          "creatureType": "baby_rammus",
+          "numCreatures": 3,
+          "numFood": 9,
+          "displayMode": "spritesOnly",
           "problemType": "CE"
         },
         {
           "creatureType": "baby_unifox",
-          "numCreatures": 6,
-          "numFood": 20,
+          "numCreatures": 3,
+          "numFood": 8,
+          "displayMode": "spritesOnly",
+          "problemType": "C"
+        },
+        {
+          "creatureType": "baby_unifox",
+          "numCreatures": 4,
+          "numFood": 17,
           "displayMode": "numbersOnly",
-          "problemType": "CD"
+          "problemType": "CF"
         }
       ]
     }
@@ -213,7 +239,7 @@
               "bottomDraggable": true,
               "topDraggable": true,
               "leftDraggable": true,
-              "maxHeight": 14,
+              "maxHeight": 7,
               "creatureWidth": 2
             }
           },
@@ -227,7 +253,7 @@
               "bottomDraggable": true,
               "topDraggable": true,
               "leftDraggable": true,
-              "maxHeight": 12,
+              "maxHeight": 6,
               "creatureWidth": 2
             }
           }
@@ -264,22 +290,6 @@
           }
         ]
       } 
-    ],
-    "fox_intro": [
-      {
-       "__type": "DoPenChallengeAction",
-       "challengeId": "0.04b",
-       "problemType": "2US1MC",
-       "challengeData": {
-          "creatureType": "baby_unifox",
-          "numCreatures": 6,
-          "bottomDraggable": true,
-          "topDraggable": true,
-          "leftDraggable": true,
-          "maxHeight": 6,
-          "creatureWidth": 2
-        }
-      }
     ]
   },
   "funChallenges": [

@@ -1,69 +1,30 @@
 {
-  "unlockedItems": ["strawberry", "broccoli", "apple", "tincan", "meat", "pizza"],
+  "unlockedItems": ["strawberry", "broccoli", "apple", "tincan", "meat"],
   "progression": [
     {
+     "_comment": "============ ******************************** THIS IS WHERE PROGRESSION BEGINS ******************************** ==============",      
      "__type": "DoPenChallengeAction",
      "challengeId": "T3.01a",
-     "problemType": "3BR_intro_adult_bird",
+     "problemType": "2BR_intro_baby_bird",
      "challengeData": {
-        "creatureType": "bird",
-        "numCreatures": 4,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true,
-        "maxHeight": 1, 
-        "creatureWidth": 4
+        "creatureType": "baby_bird",
+        "numCreatures": 3,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true
       }
     },
     {
      "__type": "DoPenChallengeAction",
-     "challengeId": "T3.01b",
-     "problemType": "3BR1MC",
+     "challengeId": "3.02b",
+     "problemType": "2BR1MC",
      "reviewKey": "start",
      "challengeData": {
-        "creatureType": "bird",
-        "numCreatures": 16,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true,
-        "creatureWidth": 4
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "T3.02",
-     "problemType": "3US_intro_adult_unifox",
-     "challengeData": {
-        "creatureType": "unifox",
-        "numCreatures": 2,
-        "maxHeight": 1, 
-        "creatureWidth": 2
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "T3.03a",
-     "problemType": "3US1MC",
-     "challengeData": {
-        "creatureType": "unifox",
-        "numCreatures": 10,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true,
-        "creatureWidth": 2
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "3.07b",
-     "problemType": "3US1NC",
-     "reviewKey": "start",
-     "challengeData": {
-        "creatureType": "unifox",
-        "numCreatures": 17,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true
+        "creatureType": "baby_bird",
+        "numCreatures": 18,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true
       }
     },
     {
@@ -71,24 +32,24 @@
     "data": [
         {
           "creatureType": "baby_bird",
-          "numCreatures": 6,
-          "numFood": 12,
-          "displayMode": "numbersOnly",
-          "problemType": "CS"
+          "numCreatures": 2,
+          "numFood": 4,
+          "displayMode": "spritesOnly",
+          "problemType": "C"
         },
         {
           "creatureType": "baby_bird",
-          "numCreatures": 6,
-          "numFood": 24,
+          "numCreatures": 9,
+          "numFood": 12,
           "displayMode": "numbersOnly",
           "problemType": "CE"
         },
         {
           "creatureType": "baby_bird",
-          "numCreatures": 6,
-          "numFood": 20,
-          "displayMode": "numbersOnly",
-          "problemType": "CD"
+          "numCreatures": 2,
+          "numFood": 3,
+          "displayMode": "spritesOnly",
+          "problemType": "CF"
         }
       ]
     },
@@ -97,312 +58,121 @@
       "possibilities": [
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "3.15",
-          "problemType": "3US2NT",
+          "challengeId": "3.04b",
+          "problemType": "2BR2MF",
           "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
-            "creatureType": "unifox",
-            "totalNumFood": 279,
-            "description": "Dear Friend! I have 279 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
+            "creatureType": "baby_bird",
+            "numFoodA": 52,
+            "description": "Dear Friend! I have 52 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
             "reward": 200
-          }
-        },
-        {
-          "__type": "DoOrderChallengeAction",
-          "challengeId": "3.14",
-          "problemType": "3US2NF",
-          "reviewKey": "middle",
-          "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "unifox",
-            "numFoodA": 116,
-            "description": "Dear Friend! I have 116 STRAWBERRIES. Please send me the exact number of ADULT UNIFOXES to eat all my food!",
-            "reward": 200
-          }
-        },
-        {
-          "__type": "DoOrderChallengeAction",
-          "challengeId": "3.09",
-          "problemType": "3BR3MF",
-          "reviewKey": "middle",
-          "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "bird",
-            "numFoodA": 72,
-            "description": "Dear Friend! I have 72 MEAT. Please send me the exact number of ADULT BIRDS to eat all my food! How much of each food type do I have?",
-            "reward": 200,
-            "creatureWidth": 4
           }
         }
       ]
     },
     {
       "__type": "DoOrderChallengeAction",
-      "challengeId": "3.12",
-      "problemType": "3BR2MT",
+      "_comment": "============ ******************************** EVAN PLZ FIX THESE - BABY BIRD BOSS NEEDED ******************************** ==============",        
+      "challengeId": "3.04d",
+      "problemType": "2BR2MF",
       "challengeData": {
           "client": "Archibold Huxley III",
-          "creatureType": "bird",
-          "totalNumFood": 210,
-          "description": "Dear Friend! I have 210 TOTAL FOOD. Please send me the exact number of ADULT BIRDS to eat all my food!",
-          "reward": 200,
-          "creatureWidth": 4
+          "creatureType": "baby_bird",
+          "numFoodA": 104,
+          "description": "Dear Friend! I have 104 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "reward": 200
         },
-      "boss": true
+      "boss": true,
+      "reviewKeyForFailure": "middle"
     },
     {
     "__type": "DoBonusRoundAction",
     "data": [
-        {
-          "creatureType": "adult_rammus",
-          "numCreatures": 6,
-          "numFood": 12,
+        {        
+          "creatureType": "baby_bird",
+          "numCreatures": 5,
+          "numFood": 7,
           "displayMode": "numbersOnly",
-          "problemType": "CS"
+          "problemType": "CF"
         },
         {
-          "creatureType": "adult_rammus",
-          "numCreatures": 6,
-          "numFood": 24,
-          "displayMode": "numbersOnly",
-          "problemType": "CE"
+          "creatureType": "baby_bird",
+          "numCreatures": 3,
+          "numFood": 3,
+          "displayMode": "spritesOnly",
+          "problemType": "F"
         },
         {
-          "creatureType": "adult_rammus",
-          "numCreatures": 6,
-          "numFood": 20,
+          "creatureType": "baby_bird",
+          "numCreatures": 4,
+          "numFood": 5,
           "displayMode": "numbersOnly",
-          "problemType": "CD"
+          "problemType": "CC"
         }
       ]
     }
   ],
   "reviewChallenges": {
+    "_comment": "============ ******************************** THIS IS WHERE REVIEW CHALLENGES BEGIN ******************************** ==============",    
     "middle": [
       {
-       "__type": "DoOrderChallengeAction",
-       "challengeId": "3.13",
-       "problemType": "3US1NF",
-       "challengeData": {
+       "_comment": "============ ******************************** THE MIDDLE SET OF REVIEW PROBLEMS ******************************** ==============",        
+        "__type": "DoOrderChallengeAction",
+        "challengeId": "3.03a",
+        "problemType": "2BR1MF",
+        "challengeData": {
           "client": "Archibold Huxley III",
-          "creatureType": "unifox",
-          "numFoodB": 115,
-          "description": "Dear Friend! I have 115 PIZZA SLICES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-          "reward": 200
+          "creatureType": "baby_bird",
+          "numFood": 44,
+          "description": "Dear Friend! I have 44 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "reward": 200,
+          "creatureWidth": 3
         }
       },
       {
-      "__type": "RandomSelectionGroup",
-      "possibilities": [
-        {
-         "__type": "DoOrderChallengeAction",
-         "challengeId": "3.10",
-         "problemType": "3BR2MF",
-         "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "bird",
-            "numFoodB": 120,
-          "description": "Dear Friend! I have 120 TACOS. Please send me the exact number of ADULT BIRDS to eat all my food!",
-          "reward": 200,
-          "creatureWidth": 4
-          }
-        },
-        {
         "__type": "DoOrderChallengeAction",
-        "challengeId": "3.08",
-        "problemType": "3US1MT",
+        "challengeId": "3.02b",
+        "problemType": "2BR2MC",
         "challengeData": {
           "client": "Archibold Huxley III",
-          "creatureType": "unifox",
-          "totalNumFood": 216,
-          "description": "Dear Friend! I have 216 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food!",
+          "creatureType": "baby_bird",
+          "numCreatures": 30,
+          "description": "Dear Friend! I have 30 BABY FLOCKINS. Please send me enough food for all of them!",
           "reward": 200,
-          "creatureWidth": 2
+          "creatureWidth": 3
         }
-        }
-      ]
-    },
-    {
-      "__type": "RandomSelectionGroup",
-      "possibilities": [
-        {
-         "__type": "DoPenChallengeAction",
-         "challengeId": "3.07c",
-         "problemType": "3US2NC",
-         "challengeData": {
-          "creatureType": "unifox",
-          "numCreatures": 27,
-          "bottomDraggable":true,
-          "topDraggable":true,
-          "leftDraggable":true
-          }
-        },
-        {
-         "__type": "DoPenChallengeAction",
-         "challengeId": "3.07a",
-         "problemType": "3US1NC",
-         "challengeData": {
-          "creatureType": "unifox",
-          "numCreatures": 19,
-          "bottomDraggable":true,
-          "topDraggable":true,
-          "leftDraggable":true
-          }
-        }
-      ]
-    },
-    {
-      "__type": "RandomSelectionGroup",
-      "possibilities": [
-        {
-          "__type": "DoOrderChallengeAction",
-          "challengeId": "3.06",
-          "problemType": "3US2MF",
-          "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "unifox",
-            "numFoodA": 136,
-            "description": "Dear Friend! I have 136 STRAWBERRIES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-            "reward": 200,
-            "creatureWidth": 2
-          }
-        },
-        {
-          "__type": "DoOrderChallengeAction",
-          "challengeId": "3.05",
-          "problemType": "3US1MF",
-          "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "unifox",
-            "numFoodB": 90,
-            "description": "Dear Friend! I have 90 PIZZA SLICES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-            "reward": 200,
-            "creatureWidth": 2
-          }
-        }
-      ]
-    }
+      }
     ],
     "start": [
       {
+        "_comment": "============ ******************************** THE STARTING SET OF REVIEW PROBLEMS ******************************** ==============",         
         "__type": "RandomSelectionGroup",
         "possibilities": [
           {
-            "__type": "DoOrderChallengeAction",
-            "challengeId": "3.04a",
-            "problemType": "3BR1MC",
+            "__type": "DoPenChallengeAction",
+            "challengeId": "3.01a",
+            "problemType": "2BR1MC",
             "challengeData": {
               "client": "Archibold Huxley III",
-              "creatureType": "bird",
-              "numCreatures": 48,
-              "description": "Dear Friend! I have 48 ADULT BIRDS. Please send me enough food for all of them!",
+              "creatureType": "baby_bird",
+              "numCreatures": 12,
+              "description": "Dear Friend! I have 12 BABY FLOCKINS. Please send me enough food for all of them!",
               "reward": 200,
-              "creatureWidth": 4
-            }
-          }
-        ]
-      },
-      {
-        "__type": "RandomSelectionGroup",
-        "possibilities": [
-          {
-            "__type": "DoPenChallengeAction",
-            "challengeId": "3.03c",
-            "problemType": "3BR2MC",
-            "challengeData": {
-              "creatureType": "bird",
-              "numCreatures": 56,
-              "bottomDraggable":true,
-              "topDraggable":true,
-              "leftDraggable":true,
-              "creatureWidth": 4
+              "creatureWidth": 3
             }
           },
           {
             "__type": "DoPenChallengeAction",
-            "challengeId": "3.03b",
-            "problemType": "3BR1MC",
+            "challengeId": "3.01c",
+            "problemType": "2BR1MC",
             "challengeData": {
-              "creatureType": "bird",
-              "numCreatures": 32,
-              "bottomDraggable":true,
-              "topDraggable":true,
-              "leftDraggable":true,
-              "creatureWidth": 4
-            }
-          },
-          {
-            "__type": "DoPenChallengeAction",
-            "challengeId": "3.03a",
-            "problemType": "3BR1MC",
-            "challengeData": {
-              "creatureType": "bird",
-              "numCreatures": 24,
-              "bottomDraggable":true,
-              "topDraggable":true,
-              "leftDraggable":true,
-              "creatureWidth": 4
-            }
-          }
-        ]
-      },
-      {
-          "__type": "DoOrderChallengeAction",
-          "challengeId": "3.02a",
-          "problemType": "3US2MC",
-          "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "unifox",
-            "numCreatures": 30,
-            "description": "Dear Friend! I have 30 ADULT UNIFOX. Please send me enough food for all of them!",
-            "reward": 200,
-            "creatureWidth": 2
-          }
-      },
-      {
-        "__type": "RandomSelectionGroup",
-        "possibilities": [
-          {
-           "__type": "DoPenChallengeAction",
-           "challengeId": "3.01c",
-           "problemType": "3US2MC",
-           "challengeData": {
-              "creatureType": "unifox",
-              "numCreatures": 28,
-              "bottomDraggable": true,
-              "topDraggable": true,
-              "leftDraggable": true,
-              "maxHeight": 14,
-              "creatureWidth": 2
-            }
-          },
-          {
-           "__type": "DoPenChallengeAction",
-           "challengeId": "3.01b",
-           "problemType": "3US1MC",
-           "challengeData": {
-              "creatureType": "unifox",
-              "numCreatures": 22,
-              "bottomDraggable": true,
-              "topDraggable": true,
-              "leftDraggable": true,
-              "maxHeight": 11,
-              "creatureWidth": 2
-            }
-          },
-          {
-           "__type": "DoPenChallengeAction",
-           "challengeId": "3.01a",
-           "problemType": "3US1MC",
-           "challengeData": {
-              "creatureType": "unifox",
-              "numCreatures": 18,
-              "bottomDraggable": true,
-              "topDraggable": true,
-              "leftDraggable": true,
-              "maxHeight": 9,
-              "creatureWidth": 2
+              "client": "Archibold Huxley III",
+              "creatureType": "baby_bird",
+              "numCreatures": 27,
+              "description": "Dear Friend! I have 27 BABY FLOCKINS. Please send me enough food for all of them!",
+              "reward": 200,
+              "creatureWidth": 3
             }
           }
         ]
@@ -417,38 +187,28 @@
   ],
   "backgroundOrders": [
     {
-      "orderId": "3.11",
-      "problemType": "3US2NC",
+      "_comment": "============ ******************************** THIS IS WHERE BACKGROUND ORDERS BEGIN ******************************** ==============",      
+      "orderId": "3.03c",
+      "problemType": "2BR2MF",
       "orderData": {
         "client": "Archibold Huxley III",
-        "creatureType": "unifox",
-        "numCreatures": 27,
-        "description": "Dear Friend! I have 27 ADULT UNIFOX. Please send me enough food for all of them!",
-        "reward": 200
+        "creatureType": "baby_bird",
+        "numFood": 84,
+        "description": "Dear Friend! I have 84 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+        "reward": 200,
+        "creatureWidth": 3
       }
     },
     {
-      "orderId": "3.04b",
-      "problemType": "3BR2MC",
+      "orderId": "3.02a",
+      "problemType": "2BR1MC",
       "orderData": {
         "client": "Archibold Huxley III",
-        "creatureType": "bird",
-        "numCreatures": 96,
-        "description": "Dear Friend! I have 96 ADULT BIRDS. Please send me enough food for all of them!",
+        "creatureType": "baby_bird",
+        "numCreatures": 24,
+        "description": "Dear Friend! I have 24 BABY FLOCKINS. Please send me enough food for all of them!",
         "reward": 200,
-        "creatureWidth": 4
-      }
-    },
-    {
-      "orderId": "3.02b",
-      "problemType": "3US2MC",
-      "orderData": {
-        "client": "Archibold Huxley III",
-        "creatureType": "unifox",
-        "numCreatures": 34,
-        "description": "Dear Friend! I have 34 ADULT UNIFOX. Please send me enough food for all of them!",
-        "reward": 200,
-        "creatureWidth": 2
+        "creatureWidth": 3
       }
     }
   ]

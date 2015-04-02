@@ -2,77 +2,73 @@
   "unlockedItems": ["strawberry", "broccoli", "apple", "tincan", "meat"],
   "progression": [
     {
+     "_comment": "============ ******************************** THIS IS WHERE PROGRESSION BEGINS ******************************** ==============",  
      "__type": "DoFeedingChallengeAction",
      "challengeId": "T2.01",
      "problemType": "3UR_intro_adult_rammus",
      "challengeData": {
         "creatureType": "rammus",
-        "numCreatures": 1
-      }
+        "numCreatures": 1      
     },
+      "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "One of the rammuses has *grown up*. It now needs *two* kinds of food. See if you can *feed it.*"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "creatureEats"
+              }
+            ]
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "That's it! But it wants *two kinds of food*. What else might it want?"
+          }
+        ]
+      } 
+    },   
     {
      "__type": "DoPenChallengeAction",
-     "challengeId": "T2.02a",
+     "challengeId": "2.01c",
      "problemType": "3UR1MC",
-     "challengeData": {
-        "creatureType": "rammus",
-        "numCreatures": 4,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "T2.03a",
-     "problemType": "2BR_intro_baby_bird",
-     "challengeData": {
-        "creatureType": "baby_bird",
-        "numCreatures": 3,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true,
-        "maxHeight": 1, 
-        "creatureWidth": 3
-      }
-    },
-    {
-     "__type": "DoPenChallengeAction",
-     "challengeId": "2.03b",
-     "problemType": "2BR1MC",
      "reviewKey": "start",
      "challengeData": {
-        "creatureType": "baby_bird",
-        "numCreatures": 18,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true,
-        "creatureWidth": 3
+        "creatureType": "rammus",
+        "numCreatures": 14,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true
       }
     },
     {
-    "__type": "DoBonusRoundAction",
-    "data": [
+      "__type": "DoBonusRoundAction",
+      "data": [
         {
-          "creatureType": "baby_bird",
-          "numCreatures": 6,
-          "numFood": 12,
-          "displayMode": "numbersOnly",
-          "problemType": "CS"
+          "creatureType": "rammus",
+          "numCreatures": 1,
+          "numFood": [2,5],
+          "displayMode": "spritesOnly",
+          "problemType": "F"
         },
         {
-          "creatureType": "baby_bird",
-          "numCreatures": 6,
-          "numFood": 24,
+          "creatureType": "rammus",
+          "numCreatures": 4,
+          "numFood": [12,20],
           "displayMode": "numbersOnly",
           "problemType": "CE"
         },
         {
-          "creatureType": "baby_bird",
-          "numCreatures": 6,
-          "numFood": 20,
+          "creatureType": "rammus",
+          "numCreatures": 2,
+          "numFood": [6,9],
           "displayMode": "numbersOnly",
-          "problemType": "CD"
+          "problemType": "CC"
         }
       ]
     },
@@ -81,41 +77,42 @@
       "possibilities": [
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "2.07b",
-          "problemType": "2BR2MF",
-          "reviewKey": "middle",
-          "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "baby_bird",
-            "numFoodA": 52,
-            "description": "Dear Friend! I have 52 MEAT. Please send me the exact number of BABY BIRDS to eat all my food!",
-            "reward": 200
-          }
-        },
-        {
-          "__type": "DoOrderChallengeAction",
-          "challengeId": "2.08a",
-          "problemType": "3UR2MT",
+          "challengeId": "2.05a",
+          "problemType": "3UR2MTa",
           "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "rammus",
             "totalNumFood": 112,
             "noFoodEntries": true,
-            "description": "Dear Friend! I have 112 TOTAL FOOD. Please send me the exact number of ADULT RAMS to eat all my food!",
+            "description": "Dear Friend! I have 112 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
             "reward": 200
           }
         },
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "2.09a",
-          "problemType": "3UR2MT",
+          "challengeId": "2.06b",
+          "problemType": "3UR2MTb",
           "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "rammus",
             "totalNumFood": 184,
-            "description": "Dear Friend! I have 184 TOTAL FOOD. Please send me the exact number of ADULT RAMS to eat all my food! How much of each food type do I have?",
+            "description": "Dear Friend! I have 184 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+            "reward": 200
+          }
+        },
+        {
+          "__type": "DoOrderChallengeAction",
+          "challengeId": "2.04b",
+          "problemType": "3UR2MF",
+          "reviewKey": "middle",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "rammus",
+            "numFoodB": 130,
+            "noFoodEntries": true,
+            "description": "Dear Friend! I have 130 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
             "reward": 200
           }
         }
@@ -129,129 +126,106 @@
           "client": "Archibold Huxley III",
           "creatureType": "rammus",
           "numFoodA": 48,
-          "description": "Dear Friend! I have 48 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
+          "description": "Dear Friend! I have 48 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
           "reward": 200
         },
-      "boss": true
+      "boss": true,
+      "reviewKeyForFailure": "middle"
     },
     {
     "__type": "DoBonusRoundAction",
     "data": [
-        {
+        {            
           "creatureType": "rammus",
-          "numCreatures": 6,
-          "numFood": 12,
+          "numCreatures": 3,
+          "numFood": [10,15],
           "displayMode": "numbersOnly",
-          "problemType": "CS"
+          "problemType": "CF"
         },
         {
           "creatureType": "rammus",
-          "numCreatures": 6,
-          "numFood": 24,
-          "displayMode": "numbersOnly",
-          "problemType": "CE"
+          "numCreatures": 2,
+          "numFood": [3,5],
+          "displayMode": "spritesOnly",
+          "problemType": "C"
         },
         {
-          "creatureType": "rammus",
-          "numCreatures": 6,
-          "numFood": 20,
+          "creatureType": "baby_bird",
+          "numCreatures": 4,
+          "numFood": [12,18],
           "displayMode": "numbersOnly",
-          "problemType": "CD"
+          "problemType": "CC"
         }
       ]
     }
   ],
   "reviewChallenges": {
+    "_comment": "============ ******************************** THIS IS WHERE REVIEW CHALLENGES BEGIN ******************************** ==============",    
     "middle": [
       {
+      "_comment": "============ ******************************** THE MIDDLE SET OF REVIEW PROBLEMS ******************************** ==============",
+      "__type": "RandomSelectionGroup",
+      "possibilities": [
+      {         
        "__type": "DoOrderChallengeAction",
-       "challengeId": "2.08b",
-       "problemType": "3UR2MT",
+       "challengeId": "2.06a",
+       "problemType": "3UR2MTb",
        "challengeData": {
           "client": "Archibold Huxley III",
           "creatureType": "rammus",
           "totalNumFood": 120,
-          "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMS to eat all my food! How much of each food type do I have?",
+          "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
           "reward": 200
         }
+      },
+      {         
+       "__type": "DoOrderChallengeAction",
+       "challengeId": "2.05b",
+       "problemType": "3UR2MTa",
+       "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "rammus",
+          "totalNumFood": 136,
+          "noFoodEntries": true,
+          "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+          "reward": 200
+        }
+      }
+      ]
       },
       {
       "__type": "RandomSelectionGroup",
       "possibilities": [
         {
          "__type": "DoOrderChallengeAction",
-         "challengeId": "2.06",
+         "challengeId": "2.04a",
          "problemType": "3UR2MF",
          "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "rammus",
             "numFoodB": 65,
-          "description": "Dear Friend! I have 65 TINCANS. Please send me the exact number of ADULT RAMS to eat all my food!",
+          "description": "Dear Friend! I have 65 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+          "reward": 200
+          }
+        },
+        {
+         "__type": "DoOrderChallengeAction",
+         "challengeId": "2.03b",
+         "problemType": "3UR2MF",
+         "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "rammus",
+            "numFoodA": 54,
+          "description": "Dear Friend! I have 54 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
           "reward": 200
           }
         }
       ]
-      },
-      {
-        "__type": "DoOrderChallengeAction",
-        "challengeId": "2.07a",
-        "problemType": "2BR1MF",
-        "challengeData": {
-          "client": "Archibold Huxley III",
-          "creatureType": "baby_bird",
-          "numFood": 44,
-          "description": "Dear Friend! I have 44 MEAT. Please send me the exact number of BABY BIRDS to eat all my food!",
-          "reward": 200,
-          "creatureWidth": 3
-        }
-      },
-      {
-        "__type": "DoOrderChallengeAction",
-        "challengeId": "2.04a",
-        "problemType": "2BR1MC",
-        "challengeData": {
-          "client": "Archibold Huxley III",
-          "creatureType": "baby_bird",
-          "numCreatures": 30,
-          "description": "Dear Friend! I have 30 BABY BIRDS. Please send me enough food for all of them!",
-          "reward": 200,
-          "creatureWidth": 3
-        }
-      }
+    }
     ],
     "start": [
       {
-        "__type": "RandomSelectionGroup",
-        "possibilities": [
-          {
-            "__type": "DoOrderChallengeAction",
-            "challengeId": "2.03a",
-            "problemType": "2BR1MC",
-            "challengeData": {
-              "client": "Archibold Huxley III",
-              "creatureType": "baby_bird",
-              "numCreatures": 12,
-              "description": "Dear Friend! I have 12 BABY BIRDS. Please send me enough food for all of them!",
-              "reward": 200,
-              "creatureWidth": 3
-            }
-          },
-          {
-            "__type": "DoOrderChallengeAction",
-            "challengeId": "2.03c",
-            "problemType": "2BR1MC",
-            "challengeData": {
-              "client": "Archibold Huxley III",
-              "creatureType": "baby_bird",
-              "numCreatures": 27,
-              "description": "Dear Friend! I have 27 BABY BIRDS. Please send me enough food for all of them!",
-              "reward": 200,
-              "creatureWidth": 3
-            }
-          }
-        ]
-      },
-      {
+       "_comment": "============ ******************************** THE STARTING SET OF REVIEW PROBLEMS ******************************** ==============",         
         "__type": "RandomSelectionGroup",
         "possibilities": [
           {
@@ -263,6 +237,18 @@
               "creatureType": "rammus",
               "numCreatures": 15,
               "description": "Dear Friend! I have 15 ADULT RAMMUSES. Please send me enough food for all of them!",
+              "reward": 200
+            }
+          },
+          {
+            "__type": "DoOrderChallengeAction",
+            "challengeId": "2.02c",
+            "problemType": "3UR2MC",
+            "challengeData": {
+              "client": "Archibold Huxley III",
+              "creatureType": "rammus",
+              "numCreatures": 22,
+              "description": "Dear Friend! I have 22 ADULT RAMMUSES. Please send me enough food for all of them!",
               "reward": 200
             }
           }
@@ -280,8 +266,7 @@
               "numCreatures": 10,
               "bottomDraggable": true,
               "topDraggable": true,
-              "leftDraggable": true,
-              "maxHeight": 10
+              "leftDraggable": true
             }
           },
           {
@@ -293,24 +278,21 @@
               "numCreatures": 8,
               "bottomDraggable": true,
               "topDraggable": true,
-              "leftDraggable": true,
-              "maxHeight": 8
+              "leftDraggable": true
             }
           }
         ]
       } 
-    ],
-    "bird_intro": [
-
     ]
   },
   "funChallenges": [
-
+    
   ],
   "backgroundOrders": [
     {
-      "orderId": "2.09b",
-      "problemType": "3UR2MT",
+       "_comment": "============ ******************************** THIS IS WHERE BACKGROUND ORDERS BEGIN ******************************** ==============",    
+      "orderId": "2.06c",
+      "problemType": "3UR2MTb",
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "rammus",
@@ -319,28 +301,27 @@
         "reward": 200
       }
     },
-    {
-      "orderId": "2.07c",
-      "problemType": "2BR2MF",
+    {  
+      "orderId": "2.05c",
+      "problemType": "3UR2MTa",
       "orderData": {
         "client": "Archibold Huxley III",
-        "creatureType": "baby_bird",
-        "numFoodA": 84,
-        "description": "Dear Friend! I have 84 MEAT. Please send me the exact number of BABY BIRDS to eat all my food!",
-        "reward": 200,
-        "creatureWidth": 3
+        "creatureType": "rammus",
+        "totalNumFood": 192,
+        "noFoodEntries": true,
+        "description": "Dear Friend! I have 216 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+        "reward": 200
       }
     },
-    {
-      "orderId": "2.04b",
-      "problemType": "2BR1MC",
+    {  
+      "orderId": "2.04c",
+      "problemType": "3UR2MF",
       "orderData": {
         "client": "Archibold Huxley III",
-        "creatureType": "baby_bird",
-        "numCreatures": 24,
-        "description": "Dear Friend! I have 24 BABY BIRDS. Please send me enough food for all of them!",
-        "reward": 200,
-        "creatureWidth": 3
+        "creatureType": "rammus",
+        "numFoodB": 95,
+        "description": "Dear Friend! I have 95 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+        "reward": 200
       }
     },
     {

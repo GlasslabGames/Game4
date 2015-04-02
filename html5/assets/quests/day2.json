@@ -3,8 +3,9 @@
   "progression": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "0.02.md",
-      "problemType": "MD",
+      "challengeId": "T1.02a",
+      "problemType": "2UR1MC",
+      "reviewKey": "baby_ram_pen",
       "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 3,
@@ -108,16 +109,13 @@
     },
     {
       "__type": "DoOrderChallengeAction",
-      "challengeId": "0.04.ms",
-      "problemType": "MS",
-      "boss": true,
-      "challengeData": {
-        "client": "Archibold Huxley III",
-        "company": "Rupture Farms",
-        "numFoodA": 21,
-        "type": "baby_rammus",
-        "description": "Dear Friend! I have 21 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
-        "fulfilled": false,
+       "challengeId": "T1.03",
+       "problemType": "2UR1MC",
+       "challengeData": {
+       "client": "Archibold Huxley III",
+       "creatureType": "baby_rammus",
+       "numCreatures": 4,
+       "description": "Dear Friend! I have 4 BABY RAMMUSES. Please send me enough food for all of them!",
         "reward": 200
       },
       "serializedTutorial": {
@@ -201,37 +199,129 @@
       }
     },
     {
+      "__type": "DoOrderChallengeAction",
+      "challengeId": "T1.05",
+      "problemType": "2UR1MF",
+      "challengeData": {
+        "client": "Archibold Huxley III",
+        "company": "Rupture Farms",
+        "numFoodA": 15,
+        "type": "baby_rammus",
+        "description": "Dear Friend! I have 15 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
+        "reward": 200
+      },
+      "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "mailOpened"
+              }
+            ]
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Ah, a tricky one. This order is *reversed* - they want you to ship *enough rammuses for their food*."
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "orderStarted"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "orderShipped"
+              }
+            ]
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Now open your *mail* to see their reply."
+          },
+          {
+            "__type": "ShowArrowAction",
+            "direction": "up",
+            "anchor": "topLeftAnchor",
+            "xPosition": 60,
+            "yPosition": 200
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "mailOpened"
+              }
+            ]
+          },
+          {
+            "__type": "HideArrowAction"
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
+      }      
+    }, 
+    {
+      "__type": "DoPenChallengeAction",
+      "challengeId": "T1.04",
+      "problemType": "2UR1MC",
+      "challengeData": {
+        "creatureType": "baby_rammus",
+        "numCreatures": 30,
+        "creatureWidth": 2,
+        "bottomDraggable":true,
+        "topDraggable":true,
+        "leftDraggable":true       
+      }      
+    },           
+    {
       "__type": "DoBonusRoundAction",
       "data": [
         {
           "creatureType": "baby_rammus",
-          "numCreatures": 2,
-          "numFood": 4,
+          "numCreatures": 3,
+          "numFood": 10,
           "displayMode": "spritesOnly",
-          "challengeType": "CS"
+          "problemType": "CF"
         },
         {
           "creatureType": "baby_rammus",
           "numCreatures": 2,
           "numFood": 6,
           "displayMode": "spritesOnly",
-          "challengeType": "CE"
+          "problemType": "CE"
         },
         {
           "creatureType": "baby_rammus",
-          "numCreatures": 2,
-          "numFood": 9,
-          "displayMode": "spritesOnly",
-          "challengeType": "CD"
+          "numCreatures": 4,
+          "numFood": 11,
+          "displayMode": "numbersOnly",
+          "problemType": "CC"
         }
       ]
     }
   ],
-  "reviewChallenges": [
+  "reviewChallenges": {
+    "baby_ram_pen": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "0.03.md",
-      "problemType": "MD",
+      "challengeId": "T1.02b",
+      "problemType": "2UR1MC",
       "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 4,
@@ -240,7 +330,8 @@
         "leftDraggable":true
       }
     }
-  ],
+    ]
+  },
   "funChallenges": [],
   "backgroundOrders": []
 }

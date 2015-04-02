@@ -16,6 +16,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day3" });
     this._addLevelData({ quest: "day4" });
     this._addLevelData({ quest: "day5" });
+    this._addLevelData({ quest: "day6" });
 
     /*/ TESTING LEVELS:
     // 6
