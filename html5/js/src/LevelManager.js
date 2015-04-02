@@ -17,7 +17,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day4" });
     this._addLevelData({ quest: "day5" });
 
-    // TESTING LEVELS:
+    /*/ TESTING LEVELS:
     // 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
@@ -93,10 +93,10 @@ GlassLab.LevelManager = function(game)
 
     // 10
     this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {
-        rammus: 1,
-        baby_rammus: 1
+        bird: 1,
+        baby_bird: 1
     }};
-
+    */
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)

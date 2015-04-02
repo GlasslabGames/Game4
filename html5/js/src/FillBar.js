@@ -47,9 +47,10 @@ GlassLab.FillBar = function(game, width, height, sections) {
     // add a background for each section
     var maxPercent = this.sections[this.sectionOrder[0]].percent;
     for (var i = 0; i < this.sectionOrder.length; i++) {
-        var yOffset = (this.height + borderSize * 3) * (this.sectionOrder.length - 1 - i);
-        var width = this.width * (this.sections[this.sectionOrder[i]].percent / maxPercent);
-        bg.drawRect(-borderSize, borderSize - yOffset, width + 2*borderSize, -this.height - 2*borderSize);
+        var section = this.sections[this.sectionOrder[i]];
+        section.yOffset = (this.height + borderSize * 3) * (this.sectionOrder.length - 1 - i);
+        section.totalWidth = this.width * (section.percent / maxPercent);
+        bg.drawRect(-borderSize, borderSize - section.yOffset, section.totalWidth + 2*borderSize, -this.height - 2*borderSize);
     }
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -141,9 +142,8 @@ GlassLab.FillBar.prototype._onUpdate = function() {
 
 GlassLab.FillBar.prototype._redraw = function() {
     this.fill.clear();
-    var x = 0;
-    for (var key in this.sections) {
-        var section = this.sections[key];
+    for (var i = 0; i < this.sectionOrder.length; i++) {
+        var section = this.sections[this.sectionOrder[i]];
         var amount = section.amount;
         if (section.amount > 1) {
             amount = 1;
@@ -151,8 +151,7 @@ GlassLab.FillBar.prototype._redraw = function() {
         } else {
             this.fill.beginFill(section.color);
         }
-        var width = this.width * amount * section.percent;
-        this.fill.drawRect(x, 0, width, -this.height);
-        x += width;
+        var width = section.totalWidth * amount;
+        this.fill.drawRect(0, - section.yOffset, width, -this.height);
     }
 };
