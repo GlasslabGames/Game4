@@ -69,34 +69,37 @@ GlassLab.Tile.prototype.isTarget = function(creature) {
 };
 
 GlassLab.Tile.prototype.setInPen = function(pen, targetCreatureType) {
-    GlassLab.SignalManager.tilePenStateChanged.dispatch(this, pen);
+    if (this.inPen != pen)
+    {
+        GlassLab.SignalManager.tilePenStateChanged.dispatch(this, pen);
 
-    this.inPen = pen;
-    // check if tile is within food area
-    var inFeedingArea = this.inPen && !this.inPen._containsTile(this, true);
+        this.inPen = pen;
+        // check if tile is within food area
+        var inFeedingArea = this.inPen && !this.inPen._containsTile(this, true);
 
 
-    // Check neighboring tiles for collision
-    var tile, neighborInFeedingArea;
-    if (tile = GLOBAL.tileManager.GetTile(this.col+1, this.row))
-    {
-        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
-        this.GetTileData().collideRight = tile.GetTileData().collideLeft = inFeedingArea != neighborInFeedingArea;
-    }
-    if (tile = GLOBAL.tileManager.GetTile(this.col-1, this.row))
-    {
-        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
-        this.GetTileData().collideLeft = tile.GetTileData().collideRight = inFeedingArea != neighborInFeedingArea;
-    }
-    if (tile = GLOBAL.tileManager.GetTile(this.col, this.row-1))
-    {
-        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
-        this.GetTileData().collideUp = tile.GetTileData().collideDown = inFeedingArea != neighborInFeedingArea;
-    }
-    if (tile = GLOBAL.tileManager.GetTile(this.col, this.row+1))
-    {
-        neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
-        this.GetTileData().collideDown = tile.GetTileData().collideUp = inFeedingArea != neighborInFeedingArea;
+        // Check neighboring tiles for collision
+        var tile, neighborInFeedingArea;
+        if (tile = GLOBAL.tileManager.GetTile(this.col+1, this.row))
+        {
+            neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+            this.GetTileData().collideRight = tile.GetTileData().collideLeft = inFeedingArea != neighborInFeedingArea;
+        }
+        if (tile = GLOBAL.tileManager.GetTile(this.col-1, this.row))
+        {
+            neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+            this.GetTileData().collideLeft = tile.GetTileData().collideRight = inFeedingArea != neighborInFeedingArea;
+        }
+        if (tile = GLOBAL.tileManager.GetTile(this.col, this.row-1))
+        {
+            neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+            this.GetTileData().collideUp = tile.GetTileData().collideDown = inFeedingArea != neighborInFeedingArea;
+        }
+        if (tile = GLOBAL.tileManager.GetTile(this.col, this.row+1))
+        {
+            neighborInFeedingArea = tile.inPen && !tile.inPen._containsTile(tile, true);
+            this.GetTileData().collideDown = tile.GetTileData().collideUp = inFeedingArea != neighborInFeedingArea;
+        }
     }
 
     if (pen)
