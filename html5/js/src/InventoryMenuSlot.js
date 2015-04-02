@@ -142,6 +142,13 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseCanceled = function()
 
 GlassLab.InventoryMenuSlot.prototype.UpdateHoverLabel = function()
 {
+    // init all x coords to original values to make sure the scooting calculations aren't compounded:
+    this.hoverLabel.x = 0;
+    this.hoverLabelBg.x = 0;
+    this.hoverLabelBgEndcapLeft.x = 0;
+    this.hoverLabelBgEndcapRight.x = 0;
+    this.hoverLabelCoin.x = 45;
+
     // calculates sizes, scales, text anchors, etc of various components of the hoverLabel:
     this.hoverLabel.anchor.x = Math.round(this.hoverLabel.width * 0.5) / this.hoverLabel.width; // round to avoid subpixel blur
     this.hoverLabel.anchor.y = Math.round(this.hoverLabel.height * 0.5) / this.hoverLabel.height; // round to avoid subpixel blur
