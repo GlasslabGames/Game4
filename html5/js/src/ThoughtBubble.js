@@ -23,7 +23,7 @@ GlassLab.ThoughtBubble = function(game) {
 
     this.foodSprite = this.game.make.sprite(0, 0, "apple");
     this.foodSprite.anchor.setTo(0.5, 0.5);
-    this.foodSprite.scale.setTo(0.5, 0.5);
+    this.foodSprite.scale.setTo(1.2, 1.2);
     this.foodSprite.alpha = 0.75;
     this.bubbleContents.addChild(this.foodSprite);
 

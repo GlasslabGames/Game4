@@ -125,27 +125,41 @@ GlassLab.FoodTypes = {
  */
 GlassLab.Food = function(game, type) {
     this.type = type;
-    this.info = GlassLab.FoodTypes[type];
-    this.sprite = game.make.isoSprite(0,0,0, this.info.spriteName+"_eaten"); // we start with this animation but don't play it until it gets eaten
-    this.sprite.animations.add('anim');
-
-    this.sprite.scale.x = this.sprite.scale.y = 0.4;
     this.game = game;
-    this.sprite.anchor.setTo(0.4, 1); // this anchor is specific to the carrot, so generify later
+    this.sprite = game.make.isoSprite(0,0,0);
+    this._setImage();
 
     this.health = 1; // food can be partially eaten. health 0 means it's totally eaten.
     this.eaten = false; // set to true as soon as the creature starts eating it
     this.dislikedBy = {}; // creature types are added once they dislike this food
 
-    this.hungerBar = new GlassLab.FillBar(this.game, 160, 40);
+    this.hungerBar = new GlassLab.FillBar(this.game, 60, 25);
+    this.hungerBar.sprite.scale.setTo(0.5, 0.5);
     this.hungerBar.sprite.angle = -90;
     this.hungerBar.setAmount(0, 1);
     this.hungerBar.show(false);
-    this.hungerBar.sprite.x = 180;
-    this.hungerBar.sprite.y = -150;
+    this.hungerBar.sprite.x = 60;
+    this.hungerBar.sprite.y = -60;
     this.sprite.addChild(this.hungerBar.sprite);
 
     this.sprite.events.onDestroy.add(this._onDestroy, this);
+};
+
+GlassLab.Food.prototype._setImage = function() {
+    this.info = GlassLab.FoodTypes[this.type];
+    this.hasAnimations = this.game.cache.checkImageKey(this.info.spriteName+"_eaten");
+
+    var key = (this.hasAnimations)? this.info.spriteName+"_eaten" : this.info.spriteName;
+    if (!this.image) {
+        this.image = this.game.make.sprite(0, 0, key);
+        this.sprite.addChild(this.image);
+    }
+    else if (this.image.key != key) this.image.loadTexture(key);
+
+    if (this.hasAnimations) this.image.animations.add('anim');
+    this.image.scale.x = this.image.scale.y = (this.hasAnimations)? 0.4 : 1.25;
+    if (this.hasAnimations) this.image.anchor.setTo(0.4, 1);
+    else this.image.anchor.setTo(0.4, 0.7); // this anchor is specific to the carrot, so generify later
 };
 
 GlassLab.Food.prototype._onDestroy = function() {
@@ -174,21 +188,28 @@ GlassLab.Food.prototype.BeEaten = function(amount) {
         this.hungerBar.setAmount(0, this.health, true);
     } else {
         if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
-        var anim = this.sprite.animations.play('anim', 24);
-        anim.onComplete.add(this._afterEaten, this);
+        if (this.hasAnimations) {
+            var anim = this.image.animations.play('anim', 24);
+            anim.onComplete.add(this._afterEaten, this);
+        } else {
+            this._afterEaten(1000);
+        }
     }
     return amount; // return the actual amount that was eaten
 };
 
 GlassLab.Food.prototype.setAnimStyle = function(style) {
-  if (style) {
-      this.sprite.loadTexture(this.info.spriteName+"_eaten_"+style)
-      this.sprite.animations.add('anim');
+  if (style && this.hasAnimations) {
+      if (this.image.key != this.info.spriteName+"_eaten_"+style) {
+          this.image.loadTexture(this.info.spriteName+"_eaten_"+style)
+          this.image.animations.add('anim');
+      }
   }
 };
 
-GlassLab.Food.prototype._afterEaten = function() {
-  var tween = this.game.add.tween(this.sprite).to( { alpha: 0 }, 3000, "Linear", true);
+GlassLab.Food.prototype._afterEaten = function(fadeTime) {
+    fadeTime = fadeTime || 3000;
+  var tween = this.game.add.tween(this.image).to( { alpha: 0 }, 3000, "Linear", true);
   tween.onComplete.add( function() {this.sprite.destroy();}, this);
 };
 
@@ -210,8 +231,7 @@ GlassLab.Food.prototype.setType = function(type)
     if (type == this.type) return;
 
     this.type = type;
-    this.info = GlassLab.FoodTypes[type];
-    this.sprite.loadTexture(this.info.spriteName+"_eaten");
+    this._setImage();
 };
 
 GlassLab.Food.prototype.getTargets = function()

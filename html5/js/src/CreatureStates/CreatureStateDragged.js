@@ -17,7 +17,7 @@ GlassLab.CreatureStateDragged.constructor = GlassLab.CreatureStateDragged;
 GlassLab.CreatureStateDragged.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.PlayAnim('walk', true, this.creature.baseAnimSpeed * 4);
+  this.creature.PlayAnim('walk', true, this.creature.baseAnimSpeed * 5);
   this.creature.shadow.y = 150;
 };
 
@@ -31,7 +31,6 @@ GlassLab.CreatureStateDragged.prototype.Exit = function()
     this.creature.shadow.y = 0;
 
 };
-
 
 GlassLab.CreatureStateDragged.prototype.Update = function() {
     var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
