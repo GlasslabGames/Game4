@@ -50,7 +50,7 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.addChild(this.label);
 
     // hoverLabel above slot (show on hover):
-    var hoverLabelY = Math.round((this.height / -2)) - 36; // 36px above top edge of slot
+    var hoverLabelY = Math.round((this.height / -2)) - 37; // 37px above top edge of slot
 
     this.hoverLabel = game.make.text(0, hoverLabelY + 2, this.data.displayNames["singular"], {fill: '#ffffff', font: "16px EnzoBlack"});
     this.hoverLabel.alpha = 0;
@@ -72,9 +72,10 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.hoverLabelBgEndcapRight.scale.x *= -1;
     this.hoverLabelBgEndcapRight.tint = 0x000000;
 
-    this.hoverLabelBgPointer = this.game.make.image(0, hoverLabelY + 21, "foodLabelBgPointer");
+    this.hoverLabelBgPointer = this.game.make.image(0, hoverLabelY + 22, "questObjectiveArrow");
     this.hoverLabelBgPointer.anchor.setTo(.5, .5);
     this.hoverLabelBgPointer.alpha = 0;
+    this.hoverLabelBgPointer.scale.y *= -1;
     this.hoverLabelBgPointer.tint = 0x000000;
 
     this.hoverLabelCoin = game.make.image(45, hoverLabelY, "inventoryCoinIcon");
