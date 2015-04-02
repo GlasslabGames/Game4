@@ -21,7 +21,6 @@ GlassLab.FillBar = function(game, width, height, sections) {
     var borderSize = 8;
     var bg = game.add.graphics(0, 0);
     bg.beginFill(0xffffff);
-    bg.drawRect(-borderSize, borderSize, this.width + 2*borderSize, -this.height - 2*borderSize);
     this.sprite.addChild(bg);
     bg.x = -this.width / 2;
 
@@ -29,12 +28,28 @@ GlassLab.FillBar = function(game, width, height, sections) {
     this.fill.x = -this.width / 2;
     this.sprite.addChild(this.fill);
 
-    this.sections = sections || {0: {percent: 1, color: GlassLab.FillBar.GOOD_COLOR }};
+    sections = sections || {0: {percent: 1, color: GlassLab.FillBar.GOOD_COLOR }};
+    this.sections = sections;
 
+    this.sectionOrder = [];
     for (var key in this.sections) {
         this.sections[key].amount = this.sections[key].amount || 0;
         this.sections[key].targetAmount = -1;
         this.sections[key].dAmount = 0;
+        this.sectionOrder.push(key);
+    }
+
+    // order the sections from largest to smallest
+    this.sectionOrder.sort(function(a, b) {
+        return sections[b].percent - sections[a].percent;
+    });
+
+    // add a background for each section
+    var maxPercent = this.sections[this.sectionOrder[0]].percent;
+    for (var i = 0; i < this.sectionOrder.length; i++) {
+        var yOffset = (this.height + borderSize * 3) * (this.sectionOrder.length - 1 - i);
+        var width = this.width * (this.sections[this.sectionOrder[i]].percent / maxPercent);
+        bg.drawRect(-borderSize, borderSize - yOffset, width + 2*borderSize, -this.height - 2*borderSize);
     }
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);

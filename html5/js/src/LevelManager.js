@@ -17,7 +17,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day4" });
     this._addLevelData({ quest: "day5" });
 
-    /*/ TESTING LEVELS:
+    // TESTING LEVELS:
     // 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
@@ -93,9 +93,10 @@ GlassLab.LevelManager = function(game)
 
     // 10
     this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {
+        rammus: 1,
         baby_rammus: 1
     }};
-    */
+
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
@@ -158,7 +159,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
             for (var j = 0; j < levelData.looseCreatures[type]; j++) {
                 var creature = new GlassLab.Creature(this.game, type);
                 GLOBAL.creatureLayer.add(creature.sprite);
-                creature.moveToRandomTile();
+                //creature.moveToRandomTile();
                 creature.lookForTargets();
                 creature.name = "creature"+j; // for debugging
             }
