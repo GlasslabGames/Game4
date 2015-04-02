@@ -40,7 +40,7 @@ GlassLab.Quest = function(name, data)
 
 GlassLab.Quest.prototype.Start = function()
 {
-    console.log("Starting quest", this.name, this.savedState);
+    //console.log("Starting quest", this.name, this.savedState);
     if (!this._isStarted)
     {
         this._isStarted = true;
@@ -107,7 +107,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
         this.currentChallengeCategory = "progression";
         GLOBAL.dayManager.AdvanceTo(this.index.progression);
     } else { // We don't have another challenge! The quest is over!
-        console.log("End the quest!");
+        //console.log("End the quest!");
         this._complete();
         return;
     }
@@ -171,6 +171,14 @@ GlassLab.Quest.prototype._onChallengeComplete = function() {
     this._startNextChallenge();
 };
 
+GlassLab.Quest.prototype.jumpToReview = function(reviewKey) {
+    this.reviewKey = reviewKey || this.reviewKey;
+    this.inReview = true;
+    this.index[this.reviewKey] = 0;
+    this.challenge.Destroy();
+    this._startNextChallenge(); // it will start the appropriate review challenge
+};
+
 GlassLab.Quest.prototype._resetFunCountdown = function() {
     this.funCountdown = Math.floor(Math.random() * 2) + 2; // how long until the next fun challenge, 2-3
 };
@@ -227,12 +235,15 @@ GlassLab.Quest.prototype._complete = function()
     }
 };
 
-GlassLab.Quest.prototype.setReviewKey = function(key) {
+GlassLab.Quest.prototype.setReviewKey = function(key, failureKey) {
     // This gets called from DoChallengeAction so that we know what review section to go to if we do poorly on this challenge.
     // We can't just check the serialized actions because the top level might be a random group, etc.
     // If we're starting a progression challenge, we want to set the reviewKey even if it gets set to null.
     // But otherwise, we don't want to change it (else it would be set to null whenever we started a review challenge too)
-    if (this.currentChallengeCategory == "progression") this.reviewKey = (key)? "review_"+key : null;
+    if (this.currentChallengeCategory == "progression") {
+        this.reviewKey = (key) ? "review_" + key : null;
+        this.failureReviewKey = (failureKey) ? "review_" + failureKey : null;
+    }
 };
 
 GlassLab.Quest.prototype._saveQuestState = function()

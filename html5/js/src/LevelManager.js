@@ -16,6 +16,8 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day3" });
     this._addLevelData({ quest: "day4" });
     this._addLevelData({ quest: "day5" });
+    this._addLevelData({ quest: "day6" });
+    this._addLevelData({ quest: "day7" });
 
     /*/ TESTING LEVELS:
     // 6
@@ -93,7 +95,8 @@ GlassLab.LevelManager = function(game)
 
     // 10
     this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {
-        baby_rammus: 1
+        bird: 1,
+        baby_bird: 1
     }};
     */
 };
@@ -109,23 +112,7 @@ GlassLab.LevelManager.prototype.LoadLevel = function(levelNum)
 {
     if (levelNum < this.levels.length)
     {
-        if (typeof this.currentLevel != "undefined" && this.currentLevel > -1) {
-            GlassLabSDK.saveTelemEvent("finish_day", {day: this.currentLevel + 1});
-
-            GlassLabSDK.endSessionAndFlush(function(data){
-                console.log("Session ended: "+data);
-            }.bind(this), function(data) {
-                console.log("Session end failed: "+data);
-            }.bind(this));
-        }
-
-        GlassLabSDK.startSession(function(data){
-            console.log("Session started: "+data);
-        }.bind(this), function(data) {
-            console.log("Session start failed: "+data);
-        }.bind(this));
-
-        console.log("Starting level", levelNum, this.levels[levelNum], this.levels[levelNum].data);
+        //console.log("Starting level", levelNum, this.levels[levelNum], this.levels[levelNum].data);
         this.currentLevel = levelNum;
 
         var level = this.levels[levelNum];
@@ -158,7 +145,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
             for (var j = 0; j < levelData.looseCreatures[type]; j++) {
                 var creature = new GlassLab.Creature(this.game, type);
                 GLOBAL.creatureLayer.add(creature.sprite);
-                creature.moveToRandomTile();
+                //creature.moveToRandomTile();
                 creature.lookForTargets();
                 creature.name = "creature"+j; // for debugging
             }

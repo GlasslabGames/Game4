@@ -1,0 +1,36 @@
+{
+  "unlockedItems": ["strawberry", "broccoli", "apple", "tincan", "meat", "pizza", "corn", "taco"],
+  "progression": [
+    {
+		"__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "SetObjectiveAction",
+            "text": "Have fun!"
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Congratulations, you've finished the game! Thanks for playing!"
+          },   
+          {
+     	 "__type": "CreateCreaturesAction",
+    	 	"data": {
+    	 	"baby_rammus": 20,
+  	      	"rammus": 20,
+  	      	"unifox": 20,
+   	     	"baby_unifox": 20,
+  	      	"bird": 20,
+   	     	"baby_bird": 20
+    		}
+        },
+          {
+            "__type": "WaitForCondition",
+            "conditions": []
+          }
+    	]
+	}
+  ],
+  "reviewChallenges": {},
+  "funChallenges": [],
+  "backgroundOrders": []
+}

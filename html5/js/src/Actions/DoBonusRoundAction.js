@@ -17,6 +17,18 @@ GlassLab.DoBonusRoundAction.prototype.constructor = GlassLab.DoBonusRoundAction;
 
 GlassLab.DoBonusRoundAction.prototype.Do = function()
 {
+    GlassLabSDK.endSessionAndFlush(function(data){
+        console.log("Session ended: "+data);
+    }.bind(this), function(data) {
+        console.log("Session end failed: "+data);
+    }.bind(this));
+    GlassLabSDK.setOptions({gameLevel: GLOBAL.questManager.getBonusRoundId()});
+    GlassLabSDK.startSession(function(data){
+        console.log("Session started: "+data);
+    }.bind(this), function(data) {
+        console.log("Session start failed: "+data);
+    }.bind(this));
+
     if (this.startImmediately) {
         GLOBAL.sortingGame.start(this.data);
     } else {

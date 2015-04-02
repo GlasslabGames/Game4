@@ -20,7 +20,9 @@ GlassLab.QuestManager = function(game)
         new GlassLab.Quest("day2", this.game.cache.getJSON("day2")),
         new GlassLab.Quest("day3", this.game.cache.getJSON("day3")),
         new GlassLab.Quest("day4", this.game.cache.getJSON("day4")),
-        new GlassLab.Quest("day5", this.game.cache.getJSON("day5"))
+        new GlassLab.Quest("day5", this.game.cache.getJSON("day5")),
+        new GlassLab.Quest("day6", this.game.cache.getJSON("day6")),
+        new GlassLab.Quest("day7", this.game.cache.getJSON("day7"))
     ];
 
     GlassLab.SignalManager.questStarted.add(this._onQuestStarted, this);
@@ -77,10 +79,14 @@ GlassLab.QuestManager.prototype._onQuestEnded = function(quest)
 GlassLab.QuestManager.prototype.failChallenge = function() {
     GlassLab.SignalManager.challengeComplete.dispatch(false);
 
+    /* This is how we used to do the boss level, but no longer
     if (this.challengeIsBossLevel) {
         this.GetCurrentQuest().Cancel(); // cancel the current challenge
         GLOBAL.levelManager.RestartLevel(); // restart the whole day
-    } else this.GetCurrentQuest().restartChallenge(); // restart the current challenge
+    */
+    var quest = this.GetCurrentQuest();
+    if (quest.failureReviewKey) quest.jumpToReview(quest.failureReviewKey);
+    else quest.restartChallenge(); // restart the current challenge
 };
 
 GlassLab.QuestManager.prototype.completeChallenge = function() {
@@ -92,4 +98,17 @@ GlassLab.QuestManager.prototype.UpdateObjective = function(objectiveText)
     this._currentObjective = objectiveText;
 
     GlassLab.SignalManager.objectiveUpdated.dispatch(this._currentObjective);
+};
+
+// We need away to assign each bonus round an id that we can use for the gameLevel in the SDK
+GlassLab.QuestManager.prototype.getBonusRoundId = function() {
+    var level = GLOBAL.levelManager.currentLevel + 1;
+    var name = "bonusRound"+level;
+
+    var quest = this.GetCurrentQuest();
+    if (quest && quest.index) {
+        var index = quest.index.progression + 1;
+        name += "." + index;
+    }
+    return name;
 };

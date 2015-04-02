@@ -27,7 +27,17 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
 {
     GLOBAL.levelManager._destroyCurrentLevel(); // wipe the world in preparation
 
+    GlassLabSDK.endSessionAndFlush(function(data){
+        console.log("Session ended: "+data);
+    }.bind(this), function(data) {
+        console.log("Session end failed: "+data);
+    }.bind(this));
     GlassLabSDK.setOptions({gameLevel: this.challengeId});
+    GlassLabSDK.startSession(function(data){
+        console.log("Session started: "+data);
+    }.bind(this), function(data) {
+        console.log("Session start failed: "+data);
+    }.bind(this));
 
     this.tutorial = null;
     if (this.serializedTutorial) {
@@ -36,7 +46,9 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
     }
 
     // we should be in a quest, and we want to remember what review section to go to if we do poorly on this challenge
-    if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey);
+    if (GLOBAL.questManager.GetCurrentQuest()) {
+        GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey, this.reviewKeyForFailure);
+    }
 
     // To avoid modifying the original challengeData, we make a copy for child classes (DoPenAction, etc) to use and then apply constraints
     this.data = {};

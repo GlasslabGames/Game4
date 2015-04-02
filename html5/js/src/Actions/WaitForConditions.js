@@ -8,6 +8,7 @@ GlassLab.WaitForCondition = function()
 {
     GlassLab.Action.prototype.constructor.call(this);
 
+    this.conditions = [];
     this._deserializedConditions = []; // deserialized conditions
 };
 

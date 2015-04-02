@@ -19,13 +19,24 @@ GlassLab.StartChallengeAction.prototype.constructor = GlassLab.StartChallengeAct
 
 GlassLab.StartChallengeAction.prototype.Do = function()
 {
+    GlassLabSDK.endSessionAndFlush(function(data){
+        console.log("Session ended: "+data);
+    }.bind(this), function(data) {
+        console.log("Session end failed: "+data);
+    }.bind(this));
     GlassLabSDK.setOptions({gameLevel: this.id});
+    GlassLabSDK.startSession(function(data){
+        console.log("Session started: "+data);
+    }.bind(this), function(data) {
+        console.log("Session start failed: "+data);
+    }.bind(this));
+
     GlassLab.SignalManager.challengeStarted.dispatch(this.id, this.challengeType, this.problemType, this.bossLevel);
 
     GLOBAL.questManager.UpdateObjective(this.objective);
 
     // we should be in a quest, and we want to remember what review section to go to if we do poorly on this challenge
-    if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey);
+    if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().setReviewKey(this.reviewKey, this.reviewKeyForFailure);
 
     this._complete();
 };
