@@ -117,17 +117,6 @@ GlassLab.FoodTypes = {
             singular: "Pizza",
             plural: "Pizza"
         }
-    },
-    "item11": {
-        spriteName: "tincan",
-        color: 0x99a2ac,
-        unlocked: false,
-        cost: 7500,
-        hidden: false,
-        displayNames: {
-            singular: "Taco",
-            plural: "Taco"
-        }
     }
 };
 
