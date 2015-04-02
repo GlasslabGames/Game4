@@ -15,7 +15,8 @@ GlassLab.CreatureManager = function (game) {
         baby_rammus: {
             journalInfo: {
                 name: "Rammus Gnarlus (juvenile)",
-                temperament: "Brash"
+                temperament: "Brash",
+                numCreatures: 1
             },
             displayNames: {
                 singular: "juvenile rammus",
@@ -29,7 +30,8 @@ GlassLab.CreatureManager = function (game) {
         rammus: {
             journalInfo: {
                 name: "Rammus Gnarlus (adult)",
-                temperament: "Bold"
+                temperament: "Bold",
+                numCreatures: 1
             },
             displayNames: {
                 singular: "rammus",
@@ -43,7 +45,8 @@ GlassLab.CreatureManager = function (game) {
         baby_unifox: {
             journalInfo: {
                 name: "Unifoxi Elusa (juvenile)",
-                temperament: "Timid"
+                temperament: "Timid",
+                numCreatures: 2
             },
             displayNames: {
                 singular: "juvenile unifox",
@@ -58,7 +61,8 @@ GlassLab.CreatureManager = function (game) {
         unifox: {
             journalInfo: {
                 name: "Unifoxi Elusa (adult)",
-                temperament: "Shy"
+                temperament: "Shy",
+                numCreatures: 2
             },
             displayNames: {
                 singular: "unifox",
@@ -73,7 +77,8 @@ GlassLab.CreatureManager = function (game) {
         baby_bird: {
             journalInfo: {
                 name: "Flockin Aviarus (junevile)",
-                temperament: "Flighty"
+                temperament: "Flighty",
+                numCreatures: 3
             },
             displayNames: {
                 singular: "juvenile flockin",
@@ -87,7 +92,8 @@ GlassLab.CreatureManager = function (game) {
         bird: {
             journalInfo: {
                 name: "Flockin Aviarus (adult)",
-                temperament: "Friendly"
+                temperament: "Friendly",
+                numCreatures: 4
             },
             displayNames: {
                 singular: "flockin",
@@ -179,6 +185,23 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
     }
 };
 
+GlassLab.CreatureManager.prototype.hideCreatures = function() {
+    for (var i = 0; i < this.creatures.length; i++) {
+        this.creatures[i].sprite.visible = false;
+        if (!this.creatures[i].pen) { // if we're in a pen, we can chill
+            this.creatures[i].StateTransitionTo(new GlassLab.CreatureState(this.game, this.creatures[i])); // else, go to a blank state
+        }
+    }
+};
+
+GlassLab.CreatureManager.prototype.showCreatures = function() {
+    for (var i = 0; i < this.creatures.length; i++) {
+        this.creatures[i].sprite.visible = true;
+        if (!this.creatures[i].pen) { // if we're in a pen, we can chill
+            this.creatures[i].lookForTargets();
+        }
+    }
+};
 
 GlassLab.CreatureManager.prototype.getCreatureWantsFractionalFood = function(creatureType) {
     var desiredFood = this.creatureDatabase[creatureType].desiredFood;

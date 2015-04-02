@@ -158,5 +158,10 @@ GlassLab.Tile.prototype.getObjectsInTile = function() {
 };
 
 GlassLab.Tile.prototype.canDropFood = function() {
-    return (this.type != GlassLab.Tile.TYPES.water && !this.inPen && !this.food);
+    if (!this.getIsWalkable() || this.inPen) return false;
+    // else check against other food
+    for (var i = 0; i < GLOBAL.foodInWorld.length; i++) {
+        if (GLOBAL.foodInWorld[i].getTile() == this) return false;
+    }
+    return true;
 };

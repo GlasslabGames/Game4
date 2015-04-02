@@ -213,12 +213,17 @@ GlassLab.UIManager.prototype.createHud = function() {
     // mail/orders:
     this.mailButton = new GlassLab.HUDAnimButton(this.game, 0,0, "mailIcon", "hudBg", false, this._onMailButton, this );
     this.mailButton.image.position.setTo(0, 10);
-    GLOBAL.ordersButton = this.mailButton;
     table.addManagedChild(this.mailButton, true);
 
     GlassLab.SignalManager.mailOpened.add(function() { this.toggleOpen(true); }, this.mailButton);
     GlassLab.SignalManager.mailClosed.add(function() { this.toggleOpen(false); }, this.mailButton);
     GlassLab.SignalManager.ordersChanged.add(this._refreshMailButton, this);
+
+    GlassLab.SignalManager.orderStarted.add(function() { this.visible = false; }, this.mailButton); // hide when we start filling an order
+    GlassLab.SignalManager.orderCanceled.add(function() { this.visible = true; }, this.mailButton); // show if we cancel the order
+    GlassLab.SignalManager.orderShipped.add(function() { this.visible = true; }, this.mailButton); // show once the order is fully shipped
+    GlassLab.SignalManager.penFeedingStarted.add(function() { this.visible = false; }, this.mailButton); // hide when we start feeding in the pen
+    GlassLab.SignalManager.challengeStarted.add(function() { this.visible = true; }, this.mailButton); // show again at the start of a challenge
 
     table.position.setTo( (table.getWidth() / 2) + 20, (this.mailButton.getHeight() / 2) + 20 );
 

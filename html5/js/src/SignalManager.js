@@ -38,7 +38,8 @@ GlassLab.SignalManager = {
 
     // Creature Events
     creatureTargetsChanged: new Phaser.Signal(),
-    creatureFed: new Phaser.Signal(),
+    creatureEats: new Phaser.Signal(),
+    creatureFed: new Phaser.Signal(), // when it's satisfied
 
     // Pen Events
     penResized: new Phaser.Signal(), // (FeedingPen, string, string) => source, prevDimensions, newDimensions // only when the player resizes it
@@ -51,6 +52,7 @@ GlassLab.SignalManager = {
     ordersChanged: new Phaser.Signal(), // when an order is added or removed
     rewardAdded: new Phaser.Signal(), // when the reward message is added (currently used in Day2 tutorial)
     orderStarted: new Phaser.Signal(), // (order) => order that was started
+    orderCanceled: new Phaser.Signal(), // (order) => order that was canceled
     orderResolved: new Phaser.Signal(), // (order, result) => after the order finishes and the player closes the reward popup
     orderShipped: new Phaser.Signal(), // (order, result) => after the order is sent off and the player has to open the reward popup to proceed
 

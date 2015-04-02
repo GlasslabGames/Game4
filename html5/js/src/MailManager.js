@@ -23,7 +23,11 @@ GlassLab.MailManager = function(game)
     this.ordersCompleted = []; // list of completed background orders by ID so we don't add them again
     this.rewards = [];
 
+    GlassLab.SignalManager.penFeedingStarted.add(this.HideMail, this); // hide when we start feeding in the pen
+
     GlassLab.SignalManager.orderStarted.add(this._onOrderStarted, this);
+    GlassLab.SignalManager.orderCanceled.add(this._onOrderCanceled, this);
+    GlassLab.SignalManager.orderResolved.add(this._onOrderResolved, this);
 };
 
 GlassLab.MailManager.prototype.ShowMail = function(auto)
@@ -86,11 +90,17 @@ GlassLab.MailManager.prototype.ClearOrders = function()
 GlassLab.MailManager.prototype._onOrderStarted = function(order) {
     this.currentOrder = order;
     GlassLab.SignalManager.ordersChanged.dispatch(order);
+    this.enterOrderFulfillment();
 };
 
 GlassLab.MailManager.prototype._onOrderCanceled = function(order) {
     this.currentOrder = null;
     GlassLab.SignalManager.ordersChanged.dispatch(order);
+    this.exitOrderFulfillment();
+};
+
+GlassLab.MailManager.prototype._onOrderResolved = function(order) {
+    this.exitOrderFulfillment();
 };
 
 GlassLab.MailManager.prototype.completeOrder = function(order, result)
@@ -126,4 +136,20 @@ GlassLab.MailManager.prototype.isOrderComplete = function(orderId) {
         this.ordersCompleted = GLOBAL.saveManager.LoadData("ordersCompleted");
     }
     return this.ordersCompleted.indexOf(orderId) != -1;
+};
+
+GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
+    GLOBAL.penManager.hidePens();
+    GLOBAL.creatureManager.hideCreatures();
+    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+        GLOBAL.foodLayer.getChildAt(i).visible = false;
+    }
+};
+
+GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
+    GLOBAL.penManager.showPens();
+    GLOBAL.creatureManager.showCreatures();
+    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+        GLOBAL.foodLayer.getChildAt(i).visible = true;
+    }
 };

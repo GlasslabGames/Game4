@@ -145,7 +145,7 @@ either expressed or implied, of the FreeBSD Project.
 
   _GlassLabSDK.prototype._getDefaultOptions = function() {
     return {
-      sdkVersion:   "0.3.2", 
+      sdkVersion:   "0.3.3", 
 
       uri:          window.location.protocol + "//" + window.location.host,
       gameId:       "TEST",
@@ -637,7 +637,7 @@ either expressed or implied, of the FreeBSD Project.
 
     console.log( "[GlassLabSDK] start printing dispatch queue on end session" );
     for( var i = 0; i < this._dispatchQueue.length; i++ ) {
-      console.log( this._dispatchQueue[ i ].apiKey + ": ", this._dispatchQueue[ i ].data );
+      console.log( this._dispatchQueue[ i ].apiKey, ": ", JSON.stringify( this._dispatchQueue[ i ].data ) );
     }
     console.log( "[GlassLabSDK] end printing dispatch queue on end session" );
 
@@ -674,8 +674,8 @@ either expressed or implied, of the FreeBSD Project.
 
   _GlassLabSDK.prototype.saveTelemEvent = function( name, data, success, error ) {
     // Add the request to the queue
-    this._gameSessionEventOrder++;
-    this._playSessionEventOrder++;
+    var sorder = this._gameSessionEventOrder;
+    var porder = this._playSessionEventOrder;
     _pushToDispatchQueue({
         method: "POST",
         apiKey: "saveTelemEvent",
@@ -690,8 +690,8 @@ either expressed or implied, of the FreeBSD Project.
           gameLevel: this._options.gameLevel,
           gameSessionId: "$gameSessionId$",
           playSessionId: "$playSessionId$",
-          gameSessionEventOrder: this._gameSessionEventOrder,
-          playSessionEventOrder: this._playSessionEventOrder,
+          gameSessionEventOrder: sorder,
+          playSessionEventOrder: porder,
           totalTimePlayed: this._totalTimePlayed,
           eventName: name,
           eventData: data
@@ -700,7 +700,7 @@ either expressed or implied, of the FreeBSD Project.
             if( GlassLabSDK._displayLogs ) {
                 console.log(">>>",name,":",data);
             }
-          console.log( "[GlassLabSDK] telemetry success: " + GlassLabSDK._activeGameSessionId );
+          console.log( "[GlassLabSDK] telemetry success: " + GlassLabSDK._activeGameSessionId + ", " + name + ":" + data );
           defaultSuccessCallback( success, responseData );
 
           // Send the next item in the message queue
@@ -710,6 +710,9 @@ either expressed or implied, of the FreeBSD Project.
           defaultErrorCallback( error, responseData );
         }
       });
+
+    this._gameSessionEventOrder++;
+    this._playSessionEventOrder++;
   };
 
   _GlassLabSDK.prototype.sendTotalTimePlayed = function( success, error ) {

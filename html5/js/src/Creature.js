@@ -183,8 +183,8 @@ GlassLab.Creature.prototype.moveToRandomTile = function () {
     }
 };
 
-GlassLab.Creature.prototype.PlayAnim = function (anim, loop, framerate) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
-    if (anim == this.currentAnimName) return; // no need to do anything
+GlassLab.Creature.prototype.PlayAnim = function (anim, loop, framerate, restart) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
+    if (anim == this.currentAnimName && !restart) return this.currentAnim; // no need to change anything
     var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
 
     if (anim) this.facingBack = anim.indexOf("back") > -1; // remember if we're facing back for next time
@@ -198,14 +198,14 @@ GlassLab.Creature.prototype.PlayAnim = function (anim, loop, framerate) { // ani
         var animation = this.animSprites[animName];
         if (animName == anim) {
             animation.visible = true;
-            playedAnim = animation.animations.play('anim', framerate, loop);
+            this.currentAnim = animation.animations.play('anim', framerate, loop);
         } else {
             animation.visible = false;
             animation.animations.stop();
         }
     }
 
-    return playedAnim;
+    return this.currentAnim;
 };
 
 GlassLab.Creature.prototype.StopAnim = function () {
