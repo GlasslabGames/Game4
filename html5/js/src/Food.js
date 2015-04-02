@@ -162,8 +162,7 @@ GlassLab.Food.getName = function(type, plural) {
 GlassLab.Food.prototype.placeOnTile = function(tile) {
   this.sprite.isoX = tile.isoX;
   this.sprite.isoY = tile.isoY;
-  //tile.onFoodAdded(this);
-    GLOBAL.foodInWorld.push(this);
+  GLOBAL.foodInWorld.push(this);
 };
 
 GlassLab.Food.prototype.BeEaten = function(amount) {

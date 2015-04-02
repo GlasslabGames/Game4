@@ -135,7 +135,7 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
     }
 };
 
-GlassLab.Tile.prototype.getIsWalkable = function() {
+GlassLab.Tile.prototype.getIsWalkable = function(creatureType) {
     var tileProperties = GLOBAL.tileManager.tilemap.tilesets[0].tileproperties[this.type];
     return (tileProperties.hasOwnProperty("walkable") && tileProperties.walkable === "true") // Walkable
         && (!this.inPen || this.inPen._containsTile(this, true));
@@ -158,5 +158,10 @@ GlassLab.Tile.prototype.getObjectsInTile = function() {
 };
 
 GlassLab.Tile.prototype.canDropFood = function() {
-    return (this.getIsWalkable() && !this.inPen && !this.food);
+    if (!this.getIsWalkable() || this.inPen) return false;
+    // else check against other food
+    for (var i = 0; i < GLOBAL.foodInWorld.length; i++) {
+        if (GLOBAL.foodInWorld[i].getTile() == this) return false;
+    }
+    return true;
 };
