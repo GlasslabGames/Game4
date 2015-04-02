@@ -51,7 +51,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     };
     this.hungerBar = new GlassLab.FillBar(this.game, 250, 50 / info.desiredFood.length, hungerBarSections);
     this.sprite.addChild(this.hungerBar.sprite);
-    this.hungerBar.sprite.visible = true;
+    this.hungerBar.sprite.visible = false;
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
     this.thoughtBubble.position.setTo(-100, -225);
