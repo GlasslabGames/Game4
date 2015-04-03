@@ -202,19 +202,19 @@ GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
 
 GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, attempts, challengeType, problemType) {
     var problemType = problemType.substring(problemType.length - 3).toUpperCase(); // make sure to update this if the problem type format changes
-    var lastIntroChallengeId = "0.04."; // FIXME if we change the level IDs
-    var lastPart2ChallengeId = "2.05.";
+    var lastIntroChallengeId = "T1.04"; // FIXME if we change the level IDs
+    var lastPart2ChallengeId = "2.05";
 
     var perfectProgressions = {};
     for (var id in this.challengeAttempts) {
-        var section = parseInt(id.split(".")[0]); // make sure to update this if the challenge ID format changes
+        var section = id.split(".")[0]; // make sure to update this if the challenge ID format changes
         if (section in perfectProgressions) {
             perfectProgressions[section] = perfectProgressions[section] && (this.challengeAttempts[id] == 1);
         } else {
             perfectProgressions[section] = (this.challengeAttempts[id] == 1);
         }
     }
-    if (challengeId.indexOf(lastIntroChallengeId) != -1 && perfectProgressions[0]) this._sendSOWO("so1"); // all intro levels were successful on the 1st attempt
+    if (challengeId == lastIntroChallengeId && perfectProgressions["T1"]) this._sendSOWO("so1"); // all intro levels were successful on the 1st attempt
 
     if (challengeType == "pen") this._sendSOWO("so2"); // first successful pen (it will only be sent if it hasn't been sent yet.)
     else if (challengeType == "order") this._sendSOWO("so3"); // first successful order
@@ -229,7 +229,7 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
         }
     }
 
-    if (challengeId.indexOf(lastPart2ChallengeId) != -1 && perfectProgressions[1] && perfectProgressions[2]) this._sendSOWO("so7"); // all challenges in parts 1 and 2 were completed in 1 attempt
+    if (challengeId == lastPart2ChallengeId && perfectProgressions[1] && perfectProgressions[2]) this._sendSOWO("so7"); // all challenges in parts 1 and 2 were completed in 1 attempt
 
     if (problemType == "MT") this._sendSOWO("so8"); // the player has completed an advanced challenge (in any number of attempts)
 
@@ -243,7 +243,7 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
 
 GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, attempts, challengeType, problemType) {
     var section = challengeId.split(".")[0]; // make sure to update this if the challenge ID format changes
-    if (section == "0") {
+    if (section.indexOf("T") != -1) {
         if (attempts == 3) this._sendSOWO("wo1"); // more than 3 attempts to complete an intro challenge
     } else if (attempts == 4) {
         if (challengeType == "order" && !this.pastFirstNonIntroOrderChallenge) this._sendSOWO("wo2"); // more than 4 attempts for the first order challenge (they haven't beaten one before)
