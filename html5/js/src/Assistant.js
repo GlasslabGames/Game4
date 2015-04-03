@@ -20,12 +20,12 @@ GlassLab.Assistant = function(game) {
     this.speechBubble.anchor.set(1, 0.5);
     this.sprite.addChild(this.speechBubble);
 
-    var style = { font: "14px Arial", fill: GlassLab.Assistant.TEXT_COLOR, align: "left" };
-    this.label = game.make.text(-510, -120, "Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet",style);
+    var style = { font: "16px Arial", fill: GlassLab.Assistant.TEXT_COLOR, align: "left" };
+    this.label = game.make.text(-515, -125, "Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet",style);
     this.label.align = "left";
     this.label.anchor.set(0, 0);
     this.sprite.addChild(this.label);
-    this.labelWidth = 310;
+    this.labelWidth = 320;
 
     this.cancelButton = new GlassLab.UIRectButton(this.game, -535, -40, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
     this.continueButton = new GlassLab.UIRectButton(this.game, -345, -40, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
