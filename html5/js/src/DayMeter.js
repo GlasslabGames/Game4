@@ -20,7 +20,7 @@ GlassLab.DayMeter = function(game)
     this.challengeDots = [];
 
     this.objectiveContainer = game.make.sprite(0, 30);
-    this.objectiveContainer.alpha = 0;
+    //this.objectiveContainer.alpha = 0;
     this.barContainer.addChild(this.objectiveContainer);
 
     this.objectiveBg = game.make.sprite(-20,0, "questObjectiveBg");
@@ -34,7 +34,7 @@ GlassLab.DayMeter = function(game)
     this.objectiveArrow.alpha = 0.5;
     this.objectiveContainer.addChild(this.objectiveArrow);
 
-    this.objectiveLabel = game.make.text(0, 15, "", {fill: "#ffffff", font: "bold 16px Arial"});
+    this.objectiveLabel = game.make.text(0, 17, "", {fill: "#ffffff", font: "bold 16px Arial"});
     this.objectiveLabel.anchor.setTo(0, 0.5);
     this.objectiveContainer.addChild(this.objectiveLabel);
 
@@ -63,25 +63,26 @@ GlassLab.DayMeter.prototype._onObjectiveUpdated = function(objectiveText)
 {
     this.objectiveLabel.setText(objectiveText);
 
-    if (!this.objectiveLabelAlertTween)
-    {
-        this.objectiveContainer.alpha = 0;
-        this.objectiveLabelAlertTween = this.game.add.tween(this.objectiveContainer).to( {alpha: 1}, 250, "Linear").to( {alpha:1}, 3000).loop(true);
-        this.objectiveLabelAlertTween.onRepeat.add(function(){
-            this.objectiveLabelAlertTween.pause();
-            this._onInputOut();
-        }, this);
-    }
-
-    this.objectiveLabelAlertTween.resume();
-    this.objectiveLabelAlertTween.start();
+    //this._showObjective(this._onInputOut.bind(this));
 };
 
 GlassLab.DayMeter.prototype._onInputOver = function()
 {
-    if (this.mouseOutTimer) this.game.time.events.remove(this.mouseOutTimer);
+    //if (this.mouseOutTimer) this.game.time.events.remove(this.mouseOutTimer);
     this.sun.animations.play("spin");
 
+    //this._showObjective();
+};
+
+GlassLab.DayMeter.prototype._onInputOut = function()
+{
+    //if (this.mouseOutTimer) this.game.time.events.remove(this.mouseOutTimer);
+    //this.mouseOutTimer = this.game.time.events.add(3000, this._hideObjective, this);
+    this.sun.animations.play("idle");
+};
+
+GlassLab.DayMeter.prototype._showObjective = function(onTweenComplete)
+{
     if (this.objectiveLabelAlertTween && !this.objectiveLabelAlertTween.isPaused)
     {
         return;
@@ -94,6 +95,7 @@ GlassLab.DayMeter.prototype._onInputOver = function()
         this.objectiveLabelTweenIn = this.game.add.tween(this.objectiveContainer).to( {alpha: 1}, 250, "Linear").loop(true);
         this.objectiveLabelTweenIn.onRepeat.add(function(){
             this.pause();
+            onTweenComplete();
         }, this.objectiveLabelTweenIn);
     }
 
@@ -102,16 +104,8 @@ GlassLab.DayMeter.prototype._onInputOver = function()
     {
         this.objectiveLabelTweenOut.pause();
     }
-
     this.objectiveLabelTweenIn.resume();
     this.objectiveLabelTweenIn.start();
-};
-
-GlassLab.DayMeter.prototype._onInputOut = function()
-{
-    if (this.mouseOutTimer) this.game.time.events.remove(this.mouseOutTimer);
-    this.mouseOutTimer = this.game.time.events.add(3000, this._hideObjective, this);
-    this.sun.animations.play("idle");
 };
 
 GlassLab.DayMeter.prototype._hideObjective = function() {

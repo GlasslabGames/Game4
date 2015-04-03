@@ -7,7 +7,7 @@
 GlassLab.CreatureStateTraveling = function(game, owner, target)
 {
     GlassLab.CreatureState.call(this, game, owner);
-    this.speedAdjustment = 5;
+    this.originalSpeed = this.creature.moveSpeed;
     this.target = target;
 };
 
@@ -16,9 +16,10 @@ GlassLab.CreatureStateTraveling.constructor = GlassLab.CreatureStateTraveling;
 
 GlassLab.CreatureStateTraveling.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
-    this.creature.draggable = true;
+    this.creature.draggableComponent.draggable = true;
 
-    this.speedAdjustment = Math.random()*2 + 4.5;
+    this.originalSpeed = this.creature.moveSpeed;
+    this.creature.moveSpeed += 1.5 + Math.random() * 2;
 
     this.creature.PathToIsoPosition(this.target.pos.x, this.target.pos.y);
 
@@ -32,13 +33,15 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
 {
     GlassLab.CreatureState.prototype.Exit.call(this);
 
+    this.creature.moveSpeed = this.originalSpeed;
+
     if (this.footstepSound) this.footstepSound.stop();
 
     this.creature.onDestinationReached.remove(this._onDestinationReached, this);
 };
 
 GlassLab.CreatureStateTraveling.prototype.Update = function() {
-    this.creature._move(this.creature.moveSpeed+this.speedAdjustment);
+    this.creature._move(this.creature.moveSpeed);
 };
 
 GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creature)

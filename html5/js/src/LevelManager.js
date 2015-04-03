@@ -133,6 +133,10 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
 {
     this._destroyCurrentLevel();
 
+    var level = new GlassLab.Level();
+    level.data = levelData;
+    GlassLab.SignalManager.levelStarted.dispatch(level);
+
     if (levelData.pens) {
         for (var i = 0; i < levelData.pens.length; i++) {
             var penData = levelData.pens[i];
@@ -174,10 +178,6 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
     {
         GLOBAL.questManager.UpdateObjective(levelData.objective);
     }
-
-    var level = new GlassLab.Level();
-    level.data = levelData;
-    GlassLab.SignalManager.levelStarted.dispatch(level);
 };
 
 GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
