@@ -138,9 +138,6 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
     game.load.image('penArrowUp', 'assets/images/penArrow_upward.png');
 
-    game.load.image('assistant', 'assets/images/assistant.png');
-    game.load.image('speech_bubble', 'assets/images/speech_bubble1.png');
-
     game.load.image('bigO', 'assets/images/matchingGame_o.png');
     game.load.image('bigX', 'assets/images/matchingGame_x.png');
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
@@ -195,6 +192,13 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('redX', 'assets/images/thought_bubble/thought_bubble_red_x.png');
     game.load.image('thoughtBubbleStem', 'assets/images/thought_bubble/thought_bubble_stem.png');
     game.load.atlasJSONHash('thoughtBubble', 'assets/images/thought_bubble/thought_bubble.png', 'assets/images/thought_bubble/thought_bubble.json');
+
+    // assistant
+    game.load.image('assistantIcon', 'assets/images/assistant.png');
+    game.load.image('speech_bubble', 'assets/images/assistant/assistant_speech.png');
+    game.load.image('speech_bubble_small', 'assets/images/assistant/assistant_speech_min.png');
+    game.load.image('speech_bubble_dots', 'assets/images/assistant/assistant_speech_min_dots.png');
+    game.load.atlasJSONHash('assistantAnim', 'assets/images/assistant/assistant_animations.png', 'assets/images/assistant/assistant_animations.json');
 
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
@@ -319,8 +323,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.inventoryMenu = inventoryMenu;
 
     var assistant = new GlassLab.Assistant(game);
-    assistant.sprite.x = -80;
-    assistant.sprite.y = -100;
     GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
     GLOBAL.assistant = assistant;
 

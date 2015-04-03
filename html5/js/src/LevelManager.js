@@ -47,7 +47,7 @@ GlassLab.LevelManager = function(game)
             bird: 4
         }
     };
-
+    */
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Testing",
@@ -72,8 +72,19 @@ GlassLab.LevelManager = function(game)
             {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
-                numFoodA: 9,
-                type: "baby_rammus",
+                totalNumFood: 9,
+                type: "rammus",
+                description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+                fulfilled: false,
+                hint: true,
+                reward: 200
+            },
+            {
+                client: "Archibold Huxley III",
+                company: "Rupture Farms",
+                totalNumFood: 9,
+                noFoodEntries: true,
+                type: "bird",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
                 hint: true,
@@ -81,7 +92,7 @@ GlassLab.LevelManager = function(game)
             }
         ]
     };
-
+    /*
     // 9
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
