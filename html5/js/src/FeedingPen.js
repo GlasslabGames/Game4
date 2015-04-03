@@ -375,12 +375,11 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
         if (spots.length) break; // stop as soon as we found any spots in the row closest to the fence
     }
 
-    if (!spots.length) { // there were no open spots, so add occupied spots as a target to go be sad by. All spots will work
-        for (var col = this.widths[0] - 1; col >= 0; col--) {
-            for (var row = 0; row < this.creatureSpots.length; row++) {
-                var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * (col-1), this.sprite.isoY + GLOBAL.tileSize * row );
-                spots.push({ pen: this, pos: pos, priority: 0.1, full: true }); // full is used to check specifically if the creature should vomit/poop before entering
-            }
+    if (!spots.length) { // there were no open spots, so add occupied spots as a target to go be sad by. Add spots outside the waiting area
+        var col = -1;
+        for (var row = 0; row < this.creatureSpots.length; row++) {
+            var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * col, this.sprite.isoY + GLOBAL.tileSize * row );
+            spots.push({ pen: this, pos: pos, priority: 0.1, full: true }); // full is used to check specifically if the creature should vomit/poop before entering
         }
     }
     return spots;
