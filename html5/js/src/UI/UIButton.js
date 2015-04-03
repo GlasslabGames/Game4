@@ -47,7 +47,7 @@ GlassLab.UIRectButton = function(game, x, y, callback, callbackContext, width, h
     this.graphic.beginFill(color).lineStyle(3, 0x000000).drawRect(0,0,width,height);
     this.addChild(this.graphic);
 
-    var style = { font: (fontsize || 20) + "px EnzoBlack", fill: "#000000", align: "center" };
+    var style = { font: "bold " + (fontsize || 20) + "px Arial", fill: "#000000", align: "center" };
     this.label = game.make.text(width/2, height/2, text, style);
     this.label.anchor.setTo(0.5, 0.5);
     this.addChild(this.label);

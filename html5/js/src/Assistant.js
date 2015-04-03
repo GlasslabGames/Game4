@@ -20,7 +20,7 @@ GlassLab.Assistant = function(game) {
     this.speechBubble.anchor.set(1, 0.5);
     this.sprite.addChild(this.speechBubble);
 
-    var style = { font: "14px EnzoBlack", fill: GlassLab.Assistant.TEXT_COLOR, align: "left" };
+    var style = { font: "14px Arial", fill: GlassLab.Assistant.TEXT_COLOR, align: "left" };
     this.label = game.make.text(-510, -120, "Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet",style);
     this.label.align = "left";
     this.label.anchor.set(0, 0);
@@ -46,7 +46,7 @@ GlassLab.Assistant = function(game) {
 
 GlassLab.Assistant.STATES = {ORDER_INTRO: "ORDER_INTRO", ORDER_FOOD_CHOSEN: "ORDER_FOOD_CHOSEN", ORDER_CRATE_LOADED: "ORDER_CRATE_LOADED", ORDER_CRATE_READY: "ORDER_CRATE_READY"};
 
-GlassLab.Assistant.TEXT_COLOR = "#cccccc"; // base color, used to stop highlights
+GlassLab.Assistant.TEXT_COLOR = "#ffffff"; // base color, used to stop highlights
 GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR = "#FFB300"; // used to color parts of the text
 
 // For tutorial popup
@@ -179,8 +179,9 @@ GlassLab.Assistant.prototype._setText = function(text) {
     var words = text.split(" ");
 
     var testWord;
-    var splitText = ""; // a string containing the text we want with the * in it
-    for (var i = 0; i < words.length; i++) {
+    var splitText = words[0]; // a string containing the text we want with the * in it
+    for (var i = 1; i < words.length; i++) {
+        this.label.text = splitText.replace(/\*/g, ""); // the label should have the text with *s
         testWord = words[i].replace("*", ""); // consider the next word (without *s)
         this.label.text += " "+ testWord; // test what happens if we append the word
         if (this.label.width > this.labelWidth) { // if that makes the label too wide
@@ -188,7 +189,6 @@ GlassLab.Assistant.prototype._setText = function(text) {
         } else {
             splitText += " " + words[i]; // apply it with a space (but not using the testWord)
         }
-        this.label.text = splitText.replace(/\*/g, ""); // the label should have the text with *s
     }
 
     // Then find all the places where we put a * to indicate a color change. These indices have to be offset a little when we see a newline.
