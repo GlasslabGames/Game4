@@ -279,7 +279,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             // For each creature, assign it the appropriate amount of food (more if it's lucky or less if it's unlucky.)
             var foodCol = sharedCols - 1;
             for (var col = 0; col < creatureRow.length; col++) {
-                var n = (col < luckyCreatures? bigN : littleN); // figure out how big a section of food this creature gets
+                var n = ((creatureRow.length - col) <= luckyCreatures? bigN : littleN); // creatures with higher cols are lucky
                 for (var j = 0; j < n; j++) { // assign each food in this group to the current creature
                     if (foodCol ++ < foodRow.length) {
                         if (!creatureRow[col] || !foodRow[foodCol]) {
@@ -287,7 +287,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                             return;
                         }
                         creatureRow[col].addTargetFood(foodRow[foodCol]);
-                        //console.log("Whole food",foodCol,"to creature",col);
+                        //console.log("Whole food",foodCol,"to creature",col,"isLucky?",col<luckyCreatures,"numLucky:",luckyCreatures);
                     }
                 }
             }
