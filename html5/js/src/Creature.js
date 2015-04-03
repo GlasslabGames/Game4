@@ -145,6 +145,8 @@ GlassLab.Creature.prototype._onDestroy = function () {
     if (this.state) this.state.Exit(); // wrap up the current state
 
     GLOBAL.creatureManager.RemoveCreature(this);
+
+    GlassLab.SignalManager.tilePenStateChanged.remove(this._onTilePenStateChanged, this);
 };
 
 GlassLab.Creature.prototype._onTilePenStateChanged = function(tile, pen)
