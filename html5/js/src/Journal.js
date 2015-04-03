@@ -30,6 +30,7 @@ GlassLab.Journal = function(game) {
     this.nameLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.nameLabel);
 
+    /*
     var temperamentTitleLabel = game.make.text(-90, 100, "Temperament:", {font: "bold 14pt Arial"});
     temperamentTitleLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(temperamentTitleLabel);
@@ -37,15 +38,16 @@ GlassLab.Journal = function(game) {
     this.temperamentLabel = game.make.text(-90, 130, "Combative", {font: "bold 14pt Arial"});
     this.temperamentLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.temperamentLabel);
+    */
 
-    var dietTitleLabel = game.make.text(90, 100, "Daily Diet:", {font: "bold 14pt Arial"});
+    var dietTitleLabel = game.make.text(0, 80, "Daily Diet:", {font: "bold 14pt Arial"});
     dietTitleLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(dietTitleLabel);
 
-    this.dailyDiet = game.make.sprite(50, 130);
+    this.dailyDiet = game.make.sprite(20, 110);
     this.sprite.addChild(this.dailyDiet);
 
-    this.unknownDietLabel = game.make.text(90, 130, "Unknown", {font: "bold 14pt Arial"});
+    this.unknownDietLabel = game.make.text(0, 110, "???", {font: "bold 14pt Arial"});
     this.unknownDietLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.unknownDietLabel);
 
@@ -100,10 +102,9 @@ GlassLab.Journal.prototype.Show = function(auto, creatureType)
 GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
 {
     var creatureData = GLOBAL.creatureManager.GetCreatureData(creatureType);
-    console.log(creatureType, creatureData);
 
     this.nameLabel.setText(creatureData.unlocked? creatureData.journalInfo.name : "Species Unknown");
-    this.temperamentLabel.setText(creatureData.unlocked? creatureData.journalInfo.temperament : "Unknown");
+    //this.temperamentLabel.setText(creatureData.unlocked? creatureData.journalInfo.temperament : "Unknown");
 
     if (creatureData.unlocked) {
         this.creatureArt.loadTexture(creatureData.spriteName+"_art");
@@ -122,33 +123,50 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     this.dailyDiet.visible = creatureData.unlocked;
     this.unknownDietLabel.visible = !creatureData.unlocked;
     var numCols = 5; // how many foods to display in a single row
-    var unitSize = 30;
     var maxRowLength = 0;
+    var unitSize = 40;
+
     if (creatureData.unlocked) {
         var unusedChildren = this.dailyDiet.children.slice();
         var n = 0;
+
+        var addDietChild = function(spriteName, scale)
+        {
+            var child = unusedChildren.pop();
+            if (!child)
+            {
+                child = this.game.make.sprite();
+                this.dailyDiet.addChild(child);
+                child.anchor.setTo(0.5, 0);
+            }
+            child.scale.setTo(scale, scale);
+            child.visible = true;
+            child.x = (n % numCols) * unitSize;
+            if (n % numCols > maxRowLength) maxRowLength = n % numCols;
+            child.y = Math.floor(n / numCols) * unitSize;
+            n++;
+            child.loadTexture(spriteName)
+        }.bind(this);
+
+        // Setup creatures
+        for (var i = 0, len = creatureData.journalInfo.numCreatures; i < len; i++)
+        {
+            var spriteName = creatureData.spriteName + "_sticker";
+            addDietChild(spriteName, .32);
+        }
+
+        // Setup food
         for (var i = 0, len = creatureData.desiredFood.length; i < len; i++) {
             var spriteName = GlassLab.FoodTypes[creatureData.desiredFood[i].type].spriteName;
-            for (var j = 0, len2 = creatureData.desiredFood[i].amount; j < len2; j++) {
-                var child = unusedChildren.pop();
-                if (!child) {
-                    child = this.game.make.sprite();
-                    child.anchor.setTo(0.5, 0);
-                    child.scale.setTo(0.15, 0.15);
-                    this.dailyDiet.addChild(child);
-                }
-                child.visible = true;
-                child.x = (n % numCols) * unitSize;
-                if (n % numCols > maxRowLength) maxRowLength = n % numCols;
-                child.y = Math.floor(n / numCols) * unitSize;
-                n++;
-                child.loadTexture(spriteName);
+            for (var j = 0, len2 = creatureData.desiredFood[i].amount * creatureData.journalInfo.numCreatures; j < len2; j++) {
+                addDietChild(spriteName, .5);
             }
         }
         for (var k = 0; k < unusedChildren.length; k++) {
             unusedChildren[k].visible = false;
         }
-        this.dailyDiet.x = 80 - (maxRowLength * unitSize / 2)
+
+        this.dailyDiet.x = -(maxRowLength * unitSize / 2)
     }
 
     if (creatureData.unlocked == "new") {
@@ -167,8 +185,8 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
 GlassLab.Journal.prototype._revealCreatureInfo = function() {
     this.game.add.tween(this.creatureArt).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true );
     this.game.add.tween(this.nameLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1000 );
-    this.game.add.tween(this.temperamentLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
-    this.game.add.tween(this.dailyDiet).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 2000 );
+    //this.game.add.tween(this.temperamentLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
+    this.game.add.tween(this.dailyDiet).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
 };
 
 GlassLab.Journal.prototype.Hide = function(auto)
