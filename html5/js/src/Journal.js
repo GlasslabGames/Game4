@@ -17,16 +17,16 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.alerts);
 
     // Creature Picture
-    this.creatureSilhouette = game.make.sprite(0, 30);
+    this.creatureSilhouette = game.make.sprite(0, 20);
     this.creatureSilhouette.anchor.setTo(.5, 1);
     this.sprite.addChild(this.creatureSilhouette);
 
-    this.creatureArt = game.make.sprite(0, 30);
+    this.creatureArt = game.make.sprite(0, 20);
     this.creatureArt.anchor.setTo(.5, 1);
     this.sprite.addChild(this.creatureArt);
 
     // Creature info
-    this.nameLabel = game.make.text(0, 50, "Species Unknown", {font: "bold 14pt Arial"});
+    this.nameLabel = game.make.text(0, 30, "Species Unknown", {font: "bold 14pt Arial"});
     this.nameLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.nameLabel);
 
@@ -40,11 +40,11 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.temperamentLabel);
     */
 
-    var dietTitleLabel = game.make.text(0, 80, "Daily Diet:", {font: "bold 14pt Arial"});
+    var dietTitleLabel = game.make.text(0, 60, "Daily Diet:", {font: "bold 14pt Arial"});
     dietTitleLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(dietTitleLabel);
 
-    this.dailyDiet = game.make.sprite(20, 110);
+    this.dailyDiet = game.make.sprite(20, 80);
     this.sprite.addChild(this.dailyDiet);
 
     this.unknownDietLabel = game.make.text(0, 110, "???", {font: "bold 14pt Arial"});
@@ -122,7 +122,7 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     // Fill in the Daily Diet if we know it
     this.dailyDiet.visible = creatureData.unlocked;
     this.unknownDietLabel.visible = !creatureData.unlocked;
-    var numCols = 5; // how many foods to display in a single row
+    var numCols = 7; // how many foods to display in a single row
     var maxRowLength = 0;
     var unitSize = 40;
 
@@ -145,7 +145,7 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
             if (n % numCols > maxRowLength) maxRowLength = n % numCols;
             child.y = Math.floor(n / numCols) * unitSize;
             n++;
-            child.loadTexture(spriteName)
+            child.loadTexture(spriteName);
         }.bind(this);
 
         // Setup creatures
@@ -157,9 +157,9 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
 
         // Setup food
         for (var i = 0, len = creatureData.desiredFood.length; i < len; i++) {
-            var spriteName = GlassLab.FoodTypes[creatureData.desiredFood[i].type].spriteName;
+            var spriteName = GlassLab.FoodTypes[creatureData.desiredFood[i].type].spriteName + "_sticker";
             for (var j = 0, len2 = creatureData.desiredFood[i].amount * creatureData.journalInfo.numCreatures; j < len2; j++) {
-                addDietChild(spriteName, .5);
+                addDietChild(spriteName, .7);
             }
         }
         for (var k = 0; k < unusedChildren.length; k++) {
