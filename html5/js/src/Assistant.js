@@ -52,7 +52,7 @@ GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR = "#FFB300"; // used to color parts of t
 // For tutorial popup
 GlassLab.Assistant.prototype.show = function(text, showButton) {
     if (!this.sprite.visible) {
-        this.game.time.events.add(0, function() { this.portrait.play("in"); }, this);
+        this.game.time.events.add(1, function() { this.portrait.play("in"); }, this);
     }
     this.sprite.visible = true;
     this.showButtons(false);
@@ -64,7 +64,9 @@ GlassLab.Assistant.prototype.show = function(text, showButton) {
 GlassLab.Assistant.prototype.hide = function() {
     if (!this.order) {
         var anim = this.portrait.play("out");
-        anim.onComplete.add(function() { this.sprite.visible = false; }, this);
+        anim.onComplete.add(function() {
+            if (!this.order && !this.inTutorial) this.sprite.visible = false;
+        }, this);
     }
     this.advanceTutorialButton.visible = false;
     this.inTutorial = false;
@@ -176,21 +178,21 @@ GlassLab.Assistant.prototype._setText = function(text) {
     // Split the text into lines by making sure it doesn't get too wide
     var words = text.split(" ");
 
-    this.label.text = words[0];
-    var prevText, testWord;
-    for (var i = 1; i < words.length; i++) {
-        prevText = this.label.text;
-        testWord = words[i].replace("*", ""); // ignore the *s for now
+    var testWord;
+    var splitText = ""; // a string containing the text we want with the * in it
+    for (var i = 0; i < words.length; i++) {
+        testWord = words[i].replace("*", ""); // consider the next word (without *s)
         this.label.text += " "+ testWord; // test what happens if we append the word
         if (this.label.width > this.labelWidth) { // if that makes the label too wide
-            this.label.text = prevText + "\n" + words[i]; // make a new line instead
+            splitText += "\n" + words[i]; // make a new line instead
         } else {
-            this.label.text = prevText + " " + words[i]; // apply it with a space (but not using the testWord)
+            splitText += " " + words[i]; // apply it with a space (but not using the testWord)
         }
+        this.label.text = splitText.replace(/\*/g, ""); // the label should have the text with *s
     }
 
     // Then find all the places where we put a * to indicate a color change. These indices have to be offset a little when we see a newline.
-    text = this.label.text;
+    text = splitText;
     var colorIndices = [];
     var index = 0; // this index is offset when we see a newline
     for (var k = 0; k < text.length; k++) {

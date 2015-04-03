@@ -62,14 +62,26 @@
             "__type": "HideAssistantDialogueAction"
           },
           {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "GlobalVariableGreaterThanCondition",
-                "variableName": "GLOBAL.creatureManager.numCreaturesInPen",
-                "number": 2
-              }
-            ]
+            "__type": "ConditionalAction",
+            "serializedCondition": {
+              "__type": "GlobalVariableGreaterThanCondition",
+              "variableName": "GLOBAL.penManager.pens[0].canFeed",
+              "number": 0
+            },
+            "serializedFalseAction": {
+              "__type": "ActionGroup",
+              "serializedActions": [
+                {
+                  "__type": "WaitForCondition",
+                  "conditions": [
+                    {
+                      "__type": "SignalCondition",
+                      "signalName": "penReady"
+                    }
+                  ]
+                }
+              ]
+            }
           },
           {
             "__type": "ConditionalAction",
@@ -83,7 +95,7 @@
               "serializedActions": [
                 {
                   "__type": "ShowAssistantDialogueAction",
-                  "text": "Very nice. Now *pull the lever* to feed them."
+                  "text": "Very nice. Now *pull the red lever* to feed them."
                 },
                 {
                   "__type": "WaitForCondition",
