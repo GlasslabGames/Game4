@@ -15,7 +15,7 @@ GlassLab.CreatureStateIdle.constructor = GlassLab.CreatureStateIdle;
 GlassLab.CreatureStateIdle.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
-    this.creature.draggable = true;
+    this.creature.draggableComponent.draggable = true;
     this.creature._clearPath();
 
     this.speed = this.creature.moveSpeed / 2;

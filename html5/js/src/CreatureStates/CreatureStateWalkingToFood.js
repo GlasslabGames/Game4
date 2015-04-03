@@ -17,7 +17,7 @@ GlassLab.CreatureStateWalkingToFood.constructor = GlassLab.CreatureStateWalkingT
 GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
-    this.creature.draggable = false;
+    this.creature.draggableComponent.draggable = false;
 
     // as long as we don't eat fractional food, run ahead to the first food we want (it's just too confusing with fractional food)
     var run = false;

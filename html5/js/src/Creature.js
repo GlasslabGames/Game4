@@ -18,7 +18,6 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.isCrying = false;
 
     this.sprite.inputEnabled = true;
-    this.sprite.draggable = false; // set this in each state
     this.prevIsoPos = new Phaser.Point();
     this.prevTile = null;
 
@@ -740,8 +739,9 @@ GlassLab.Creature.prototype.tryEnterPen = function (pen) {
     //console.log(this.name,"trying to enter pen");
     var tile = this.getTile();
     if (pen.canAddCreature(this, tile)) { // note that this will parent the creature under the pen
+        var returnValue = pen.tryAddCreature(this, tile);
         this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
-        return pen.tryAddCreature(this, tile);
+        return returnValue;
     } else {
         return false;
     }
