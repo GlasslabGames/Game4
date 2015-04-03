@@ -220,16 +220,21 @@ GlassLab.TileManager.prototype.getObjectsInTile = function(col, row) {
     return this.getTile(col, row).getObjectsInTile();
 };
 
-GlassLab.TileManager.prototype.getRandomWalkableTile = function() {
-  var randCol = parseInt(Math.random() * this.GetMapWidth());
-  var randRow = parseInt(Math.random() * this.GetMapHeight());
-  var targetTile = this.GetTile(randCol, randRow);
+GlassLab.TileManager.prototype.getRandomWalkableTile = function(limit) {
+    limit = limit || 0;
+    var maxWidth = limit || this.GetMapWidth();
+    var maxHeight = limit || this.GetMapHeight();
   var n = 0;
+    var targetTile;
   while ((!targetTile || !targetTile.getIsWalkable()) && n++ < 3000) // safeguard against infinite loops
   {
-    randCol = parseInt(Math.random() * this.GetMapWidth());
-    randRow = parseInt(Math.random() * this.GetMapHeight());
-    targetTile = this.GetTile(randCol, randRow);
+      var randCol = parseInt(Math.random() * maxWidth) - parseInt(limit / 2);
+      var randRow = parseInt(Math.random() * maxHeight) - parseInt(limit / 2);
+      if (limit) {
+        randCol += this.GetMapWidth() / 2;
+        randRow += this.GetMapHeight() / 2;
+      }
+      targetTile = this.GetTile(randCol, randRow);
   }
   return targetTile;
 };
