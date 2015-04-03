@@ -53,8 +53,6 @@ GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR = "#FFB300"; // used to color parts of t
 GlassLab.Assistant.prototype.show = function(text, showButton) {
     if (!this.sprite.visible) {
         this.game.time.events.add(1, function() { this.portrait.play("in"); }, this);
-    } else {
-        this.portrait.setFrame("assistant_in_014.png");
     }
     this.sprite.visible = true;
     this.showButtons(false);
@@ -188,11 +186,11 @@ GlassLab.Assistant.prototype._setText = function(text) {
         } else {
             splitText += " " + words[i]; // apply it with a space (but not using the testWord)
         }
-        this.label.text = splitText.replace("*", ""); // the label should have the text with *s
+        this.label.text = splitText.replace(/\*/g, ""); // the label should have the text with *s
     }
 
     // Then find all the places where we put a * to indicate a color change. These indices have to be offset a little when we see a newline.
-    text = this.label.text;
+    text = splitText;
     var colorIndices = [];
     var index = 0; // this index is offset when we see a newline
     for (var k = 0; k < text.length; k++) {
