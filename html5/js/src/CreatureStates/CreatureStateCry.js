@@ -48,21 +48,37 @@ GlassLab.CreatureStateCry.prototype.Cry = function() {
     {
         this.startingCry = true;
 
-        this.creature.PlayAnim("cry_start").onComplete.add(function()
+        var animation = this.creature.PlayAnim("cry_start");
+        if (animation)
         {
-            this.creature.PlayAnim("cry_loop", true);
-            this.isCrying = true;
-        }, this);
+            animation.onComplete.addOnce(function()
+            {
+                this.creature.PlayAnim("cry_loop", true);
+                this.isCrying = true;
+            }, this);
+        }
+        else
+        {
+            console.error("Creature tried to cry but couldn't find animation...");
+        }
     }
 };
 
 GlassLab.CreatureStateCry.prototype.StopCrying = function() {
     if (this.isCrying)
     {
-        this.creature.PlayAnim("cry_end").onComplete.add(function()
+        var animation = this.creature.PlayAnim("cry_end");
+        if (animation)
         {
-            this.creature.lookForTargets();
-        }, this);
+            animation.onComplete.addOnce(function()
+            {
+                this.creature.lookForTargets();
+            }, this);
+        }
+        else
+        {
+            console.error("Creature tried to stop crying but couldn't find animation...");
+        }
 
         this.isCrying = false;
     }
