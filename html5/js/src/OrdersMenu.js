@@ -40,7 +40,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.clientNameLabel = game.make.text(this.clientLabel.x+5,this.clientLabel.y + this.clientLabel.height, "{clientName}", {font: '10pt Arial'});
     this.sprite.addChild(this.clientNameLabel);
 
-    this.urgentLabel = game.make.text(120,78, "Urgent!", {font: 'bold 10pt Arial'});
+    this.urgentLabel = game.make.text(120,78, "Urgent!", {font: 'bold 10pt Arial', fill: '#ff0000'});
     this.sprite.addChild(this.urgentLabel);
 
     this.rewardLabel = game.make.text(120,115, "Payment:", {font: 'bold 10pt Arial'});

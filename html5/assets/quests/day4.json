@@ -7,7 +7,8 @@
      "problemType": "3UR_intro_adult_rammus",
      "challengeData": {
         "creatureType": "rammus",
-        "numCreatures": 1      
+        "numCreatures": 1,
+        "centered": true
     },
       "serializedTutorial": {
         "__type": "ActionGroup",

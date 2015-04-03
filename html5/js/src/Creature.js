@@ -247,7 +247,7 @@ GlassLab.Creature.prototype.moveToTile = function (col, row) {
 };
 
 GlassLab.Creature.prototype.moveToRandomTile = function () {
-    var tile = GLOBAL.tileManager.getRandomWalkableTile();
+    var tile = GLOBAL.tileManager.getRandomWalkableTile(15); // start around the center
 
     this.sprite.isoX = tile.isoX;
     this.sprite.isoY = tile.isoY;

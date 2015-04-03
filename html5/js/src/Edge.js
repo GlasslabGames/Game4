@@ -32,6 +32,7 @@ GlassLab.Edge = function(pen, side, sideIndex) {
 
     this.draggable = true;
     this.dragging = false;
+    this.moved = false;
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.cursors = this.game.input.keyboard.createCursorKeys(); // for testing
@@ -122,22 +123,24 @@ GlassLab.Edge.prototype.placeArrow = function(col, row) {
 };
 
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
-    if (!GLOBAL.stickyMode && !this.dragging && this.draggable) {
-        this._startDrag();
-    }
+    if (!this.dragging && !GLOBAL.dragTarget) this._startDrag(pointer);
 };
 
 GlassLab.Edge.prototype._onUp = function( target, pointer ) {
-    if (this.draggable && GLOBAL.stickyMode && !GLOBAL.dragTarget && !GLOBAL.justDropped) {
-        this._startDrag();
-    } else if (!GLOBAL.stickyMode && GLOBAL.dragTarget == this) {
-        this._endDrag();
+    if (this.dragging) {
+        if (this.moved) { // they held the mouse down and moved it, so it's normal drag and drop behavior
+            this._endDrag();
+        } else {
+            this.stickyDrag = true; // we clicked without moving, so start sticky drag
+        }
     }
 };
 
 GlassLab.Edge.prototype._startDrag = function() {
     if (GLOBAL.dragTarget != null) return;
     this.dragging = true;
+    this.moved = false;
+    this.stickyDrag = false;
     this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
     Phaser.Point.divide(this.initialCursorIsoPos, GLOBAL.WorldLayer.scale, this.initialCursorIsoPos);
     GLOBAL.dragTarget = this;
@@ -177,6 +180,7 @@ GlassLab.Edge.prototype._onUpdate = function() {
         var cursorIsoPosition = this.game.iso.unproject(this.game.input.activePointer.position);
         Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
         cursorDifference = Phaser.Point.subtract(cursorIsoPosition, this.initialCursorIsoPos);
+        if (cursorDifference.getMagnitudeSq() > 5) this.moved = true;
         var ts = GLOBAL.tileSize;
         var targetPos = { x: this.sprite.isoX, y: this.sprite.isoY };
         var closestGridPos, flooredGridPos; // flooredGrid is the gridline closest to the center of the pen
