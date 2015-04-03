@@ -8,23 +8,27 @@ GlassLab.Assistant = function(game) {
     this.game = game;
     this.sprite = game.make.sprite();
 
-    this.portrait = game.make.sprite(0,0, "assistant");
-    this.portrait.anchor.set(0.5, 0.5);
+    this.portrait = game.make.sprite(0,0, "assistantAnim");
+    this.portrait.animations.add("in", Phaser.Animation.generateFrameNames("assistant_in_",0,14,".png",3), 48, false);
+    this.portrait.animations.add("out", Phaser.Animation.generateFrameNames("assistant_out_",0,10,".png",3), 48, false);
+    this.portrait.anchor.set(1, 1);
     this.sprite.addChild(this.portrait);
 
-    this.speechBubble = game.make.sprite(-80,0, "speech_bubble");
+    this.speechBubble = game.make.sprite(-160,-80, "speech_bubble");
+    this.speechBubble.tint = 0x000000;
+    this.speechBubble.alpha = 0.75;
     this.speechBubble.anchor.set(1, 0.5);
     this.sprite.addChild(this.speechBubble);
 
-    var style = { font: "18px Arial", fill: "#000000", align: "center" };
-    this.label = game.make.text(-500, -40, "Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet",style);
+    var style = { font: "14px EnzoBlack", fill: GlassLab.Assistant.TEXT_COLOR, align: "left" };
+    this.label = game.make.text(-510, -120, "Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet",style);
     this.label.align = "left";
     this.label.anchor.set(0, 0);
     this.sprite.addChild(this.label);
-    this.labelWidth = 370;
+    this.labelWidth = 310;
 
-    this.cancelButton = new GlassLab.UIRectButton(this.game, -500, 10, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
-    this.continueButton = new GlassLab.UIRectButton(this.game, -310, 10, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
+    this.cancelButton = new GlassLab.UIRectButton(this.game, -535, -40, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
+    this.continueButton = new GlassLab.UIRectButton(this.game, -345, -40, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
     this.advanceTutorialButton = new GlassLab.UIRectButton(this.game, -200, 10, this._onAdvanceTutorialPressed, this, 75, 40, 0xffffff, "OK", 18);
     this.advanceTutorialButton.visible = false;
     this.sprite.addChild(this.cancelButton);
@@ -42,11 +46,14 @@ GlassLab.Assistant = function(game) {
 
 GlassLab.Assistant.STATES = {ORDER_INTRO: "ORDER_INTRO", ORDER_FOOD_CHOSEN: "ORDER_FOOD_CHOSEN", ORDER_CRATE_LOADED: "ORDER_CRATE_LOADED", ORDER_CRATE_READY: "ORDER_CRATE_READY"};
 
-GlassLab.Assistant.TEXT_COLOR = "#000000"; // base color, used to stop highlights
+GlassLab.Assistant.TEXT_COLOR = "#cccccc"; // base color, used to stop highlights
 GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR = "#FFB300"; // used to color parts of the text
 
 // For tutorial popup
 GlassLab.Assistant.prototype.show = function(text, showButton) {
+    if (!this.sprite.visible) {
+        this.game.time.events.add(0, function() { this.portrait.play("in"); }, this);
+    }
     this.sprite.visible = true;
     this.showButtons(false);
     this.advanceTutorialButton.visible = showButton;
@@ -55,13 +62,19 @@ GlassLab.Assistant.prototype.show = function(text, showButton) {
 };
 
 GlassLab.Assistant.prototype.hide = function() {
-    if (!this.order) this.sprite.visible = false; // hide ourselves UNLESS we already started an order
+    if (!this.order) {
+        var anim = this.portrait.play("out");
+        anim.onComplete.add(function() { this.sprite.visible = false; }, this);
+    }
     this.advanceTutorialButton.visible = false;
     this.inTutorial = false;
 };
 
 // For use when completing an order
 GlassLab.Assistant.prototype.startOrder = function(order) {
+    if (!this.sprite.visible) {
+        this.game.time.events.add(0, function() { this.portrait.play("in"); }, this);
+    }
     this.sprite.visible = true;
     this.numberOfReloads = 0;
     this._enterStateOrderIntro(order);
@@ -70,7 +83,8 @@ GlassLab.Assistant.prototype.startOrder = function(order) {
 
 GlassLab.Assistant.prototype.endOrder = function(order) {
     if (!this.inTutorial) { // this prevents an issue where the tutorial dialogue was closed when the order ended
-        this.sprite.visible = false;
+        var anim = this.portrait.play("out");
+        anim.onComplete.add(function() { this.sprite.visible = false; }, this);
     }
     this.order = null;
 };
@@ -88,13 +102,15 @@ GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
     this.state = GlassLab.Assistant.STATES.ORDER_INTRO;
     this.showButtons(false);
     var orderSegment;
-    if (order.numCreatures) {
-        orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.creatureType, (order.numCreatures > 1)) + "*";
+    if (order.totalNumFood && !order.noFoodEntries) {
+        orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " and the correct amount of each food.* What";
+    } else if (!order.totalNumFood && order.numCreatures) {
+        orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.creatureType, (order.numCreatures > 1)) + ".* What";
     } else {
-        orderSegment = "*enough creatures to eat this food*";
+        orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " to eat this food.* How many";
     }
 
-    this._setText("I see, an order from "+order.client+" for "+orderSegment+". What shall I load the crate with?");
+    this._setText("I see, an order from "+order.client+" for "+orderSegment+" should I load into the crate?");
 };
 
 GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, lastChance) {
@@ -223,11 +239,11 @@ GlassLab.Assistant.prototype.showButtons = function(show) {
 };
 
 GlassLab.Assistant.prototype._onInventoryOpened = function() {
-    this.sprite.y = -200;
+    this.sprite.y = -110;
 };
 
 GlassLab.Assistant.prototype._onInventoryClosed = function() {
-    this.sprite.y = -90;
+    this.sprite.y = 0;
 };
 
 /*

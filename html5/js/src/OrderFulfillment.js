@@ -18,18 +18,18 @@ GlassLab.OrderFulfillment = function(game)
     this.bg.anchor.setTo(1,1);
     this.sprite.addChild(this.bg);
 
-    var foodScale = 0.25;
+    var foodScale = 0.75;
 
     // The total food label is special and above the other answer inputs
     this.totalFoodRoot = game.make.sprite(-180, -315);
     var totalFoodSprite1 = game.make.sprite(0, 0, "apple");
     totalFoodSprite1.anchor.setTo(.5, .5);
-    totalFoodSprite1.scale.setTo(foodScale, foodScale);
+    totalFoodSprite1.scale.setTo(foodScale * 0.8, foodScale * 0.8);
     this.totalFoodRoot.addChild(totalFoodSprite1);
 
     var totalFoodSprite2 = game.make.sprite(60, 0, "apple");
     totalFoodSprite2.anchor.setTo(.5, .5);
-    totalFoodSprite2.scale.setTo(foodScale, foodScale);
+    totalFoodSprite2.scale.setTo(foodScale * 0.8, foodScale * 0.8);
     this.totalFoodRoot.addChild(totalFoodSprite2);
     this.totalFoodSprites = [totalFoodSprite1, totalFoodSprite2];
 
@@ -37,7 +37,7 @@ GlassLab.OrderFulfillment = function(game)
     plusLabel.anchor.setTo(.5, .5);
     this.totalFoodRoot.addChild(plusLabel);
 
-    var equalsLabel = game.make.text(90, 0, "=", {font: "bold 20px Helvetica"});
+    var equalsLabel = game.make.text(95, 0, "=", {font: "bold 20px Helvetica"});
     equalsLabel.anchor.setTo(.5, .5);
     this.totalFoodRoot.addChild(equalsLabel);
 
@@ -71,7 +71,7 @@ GlassLab.OrderFulfillment = function(game)
         label.anchor.set(0.5, 0);
         this.answerInputRoot.addChild(label);
 
-        var sprite = game.make.sprite(0, rowY + 20, "apple");
+        var sprite = game.make.sprite(10, rowY + 20, "apple");
         sprite.anchor.setTo(.5, .5);
         sprite.scale.setTo(foodScale, foodScale);
         if (i == 0) { // creature

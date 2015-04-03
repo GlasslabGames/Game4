@@ -157,6 +157,13 @@ GlassLab.UIManager.prototype.zoomOut = function() {
     this.zoomTo(this.zoomLevel / GlassLab.UIManager.zoomAmount);
 };
 
+
+GlassLab.UIManager.prototype.resetCamera = function() {
+    this.zoomTo(GlassLab.UIManager.startZoom);
+    GLOBAL.game.camera.x = -GLOBAL.game.camera.width/2;
+    GLOBAL.game.camera.y = -GLOBAL.game.camera.height/2;
+};
+
 GlassLab.UIManager.prototype.createHud = function() {
     
     // TOP RIGHT.....

@@ -26,6 +26,7 @@ GlassLab.DoChallengeAction.prototype.constructor = GlassLab.DoChallengeAction;
 GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
 {
     GLOBAL.levelManager._destroyCurrentLevel(); // wipe the world in preparation
+    GLOBAL.UIManager.resetCamera(); // scroll back to the middle of the world
 
     GlassLabSDK.endSessionAndFlush(function(data){
         console.log("Session ended: "+data);
@@ -42,7 +43,7 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
     this.tutorial = null;
     if (this.serializedTutorial) {
         this.tutorial = GlassLab.Deserializer.deserializeObj(this.serializedTutorial);
-        this.tutorial.Do();
+        GLOBAL.game.time.events.add(0, this.tutorial.Do, this.tutorial); // wait a frame so this happens after we cancel the prev tutorial
     }
 
     // we should be in a quest, and we want to remember what review section to go to if we do poorly on this challenge

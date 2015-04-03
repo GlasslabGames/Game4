@@ -152,4 +152,5 @@ GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
         GLOBAL.foodLayer.getChildAt(i).visible = true;
     }
+    GLOBAL.UIManager.resetCamera();
 };

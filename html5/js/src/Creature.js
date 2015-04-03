@@ -114,6 +114,11 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.draggableComponent.events.onEndDrag.add(this._endDrag, this);
     this.draggableComponent.dontMoveWhileDragging = true; // we're just using it to get the start and end drag events
 
+    // This is very hacky, but since the draggable component is blocking other input events, we need to check it for mouseover too
+    // Refactor plz
+    this.draggableComponent.events.onInputOver.add(this._onOver, this);
+    this.draggableComponent.events.onInputOut.add(this._onOver, this);
+
     // FINALLY, start the desired state
     if (startInPen) {
         this.pen = startInPen;
@@ -301,21 +306,6 @@ GlassLab.Creature.prototype.standFacing = function (dir) {
     if (dir == "left" || dir == "up") this.PlayAnim("idle_back");
     else this.PlayAnim("idle");
     this.sprite.scale.x = Math.abs(this.sprite.scale.x) * ((dir == "left" || dir == "right") ? -1 : 1);
-};
-
-GlassLab.Creature.prototype._onUp = function (sprite, pointer) {
-    if (this.draggable && GLOBAL.stickyMode && !GLOBAL.dragTarget && !GLOBAL.justDropped) {
-        this._startDrag();
-    } else if (!GLOBAL.stickyMode && GLOBAL.dragTarget == this) {
-        this._endDrag();
-    }
-    if (GLOBAL.dragTarget != this && !this.getIsEmpty()) this.hungerBar.show(true, 1); // if we're not currently dragging, show the hunger bar for 1 sec
-};
-
-GlassLab.Creature.prototype._onDown = function (sprite, pointer) {
-    if (!GLOBAL.stickyMode && this.draggable && !GLOBAL.dragTarget) {
-        this._startDrag();
-    }
 };
 
 GlassLab.Creature.prototype.PathToTileCoordinate = function(col, row)
@@ -767,6 +757,16 @@ GlassLab.Creature.prototype._clearPath = function()
     this.currentPath = [];
     this.targetPosition.x = Number.NaN;
     this.StopAnim();
+};
+
+GlassLab.Creature.prototype._onOver = function()
+{
+    //if (!this.getIsEmpty())
+    this.hungerBar.show(true, 1);
+};
+
+GlassLab.Creature.prototype._onOut = function()
+{
 };
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
