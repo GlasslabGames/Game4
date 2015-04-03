@@ -48,6 +48,7 @@ GlassLab.State.Init.prototype.preload = function()
     var basicFoodSpriteNames = ["apple", "broccoli", "corn", "donut", "meat", "mushroom", "pizza", "strawberry", "taco", "tincan"];
     for (var i = 0; i < basicFoodSpriteNames.length; i++) {
         game.load.image(basicFoodSpriteNames[i], 'assets/images/food/food_standard/food_standard_'+basicFoodSpriteNames[i]+'.png');
+        game.load.image(basicFoodSpriteNames[i]+'_sticker', 'assets/images/food/food_stickers/food_sticker_'+basicFoodSpriteNames[i]+'.png');
     }
 
     var animFoodSpriteNames = ["apple", "strawberry", "tincan", "broccoli"];
