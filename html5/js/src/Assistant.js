@@ -88,13 +88,15 @@ GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
     this.state = GlassLab.Assistant.STATES.ORDER_INTRO;
     this.showButtons(false);
     var orderSegment;
-    if (order.numCreatures) {
-        orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.creatureType, (order.numCreatures > 1)) + "*";
+    if (order.totalNumFood && !order.noFoodEntries) {
+        orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " and the correct amount of each food.* What";
+    } else if (!order.totalNumFood && order.numCreatures) {
+        orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.creatureType, (order.numCreatures > 1)) + ".* What";
     } else {
-        orderSegment = "*enough creatures to eat this food*";
+        orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " to eat this food.* How many";
     }
 
-    this._setText("I see, an order from "+order.client+" for "+orderSegment+". What shall I load the crate with?");
+    this._setText("I see, an order from "+order.client+" for "+orderSegment+" should I load into the crate?");
 };
 
 GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, lastChance) {
