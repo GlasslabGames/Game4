@@ -522,6 +522,7 @@ GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
         }
     }
     //this.button.visible = ok;
+    if (!this.canFeed && ok) GlassLab.SignalManager.penReady.dispatch(this);
     this.canFeed = ok;
     if (this.gateLight && !dontChangeLight) {
         if (ok && this.allowFeedButton) {
