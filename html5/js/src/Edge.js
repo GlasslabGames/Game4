@@ -123,7 +123,7 @@ GlassLab.Edge.prototype.placeArrow = function(col, row) {
 };
 
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
-    if (!this.dragging && !GLOBAL.dragTarget) this._startDrag(pointer);
+    if (this.draggable && !this.dragging && !GLOBAL.dragTarget) this._startDrag(pointer);
 };
 
 GlassLab.Edge.prototype._onUp = function( target, pointer ) {
