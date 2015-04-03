@@ -700,7 +700,7 @@ either expressed or implied, of the FreeBSD Project.
             if( GlassLabSDK._displayLogs ) {
                 console.log(">>>",name,":",data);
             }
-          console.log( "[GlassLabSDK] telemetry success: " + GlassLabSDK._activeGameSessionId + ", " + name + ":" + data );
+          console.log( "[GlassLabSDK] telemetry success: " + GlassLabSDK._activeGameSessionId + ", " + name + ":", data );
           defaultSuccessCallback( success, responseData );
 
           // Send the next item in the message queue

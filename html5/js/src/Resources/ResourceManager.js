@@ -12,6 +12,8 @@ GlassLab.ResourceManager = function (game)
     this.game = game;
 
     this.resourceCache = {};
+
+    GlassLab.SignalManager.levelStarted.add(this.purgeCache, this);
 };
 
 /**
@@ -37,5 +39,13 @@ GlassLab.ResourceManager.prototype.releaseResource = function(resourceKey)
     {
         this.resourceCache[resourceKey].destroy(true);
         delete this.resourceCache[resourceKey];
+    }
+};
+
+GlassLab.ResourceManager.prototype.purgeCache = function()
+{
+    for (var resourceKey in this.resourceCache)
+    {
+        this.releaseResource(resourceKey);
     }
 };
