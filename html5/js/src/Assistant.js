@@ -64,7 +64,9 @@ GlassLab.Assistant.prototype.show = function(text, showButton) {
 GlassLab.Assistant.prototype.hide = function() {
     if (!this.order) {
         var anim = this.portrait.play("out");
-        anim.onComplete.add(function() { this.sprite.visible = false; }, this);
+        anim.onComplete.add(function() {
+            if (!this.order && !this.inTutorial) this.sprite.visible = false;
+        }, this);
     }
     this.advanceTutorialButton.visible = false;
     this.inTutorial = false;
