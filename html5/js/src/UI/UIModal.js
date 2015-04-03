@@ -24,7 +24,7 @@ GlassLab.UIModal = function(game, text, buttons)
         this.table.addManagedChild(buttons[i], i == len-1); // refresh on the last one
     }
 
-    this.label = game.make.text(0, this.borderPadding, text, {font: "20px EnzoBlack"});
+    this.label = game.make.text(0, this.borderPadding, text, {font: "bold 20px Arial"});
     this.label.anchor.setTo(.5, 0);
 
     this.bg = game.make.graphics();
