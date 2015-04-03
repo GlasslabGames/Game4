@@ -173,6 +173,9 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
     for (var row = 0; row < this.height; row++) {
         if ((maxCount || maxCount === 0) && count >= maxCount) break;
         list.push([]);
+        var emptyCols = 0;
+        if (fromRight) emptyCols = Math.max(0, (endCol - startCol) - (maxCount - count)); // the empty spots that would be in the middle if we don't adjust positions
+
         for (var col = startCol; col < endCol; col ++) {
             if ((maxCount || maxCount === 0) && count >= maxCount) break;
             var obj  = unusedObjects.pop();
@@ -183,7 +186,7 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
             }
             obj.setType(targetType);
             obj.sprite.visible = true;
-            obj.sprite.isoX = (fromRight? endCol - col - 1 : col) * GLOBAL.tileSize;
+            obj.sprite.isoX = (col + emptyCols) * GLOBAL.tileSize;
             obj.sprite.isoY = row * GLOBAL.tileSize;
             obj.sprite.parent.setChildIndex(obj.sprite, obj.sprite.parent.children.length - 1); // move it to the back of the children so far
             obj.pen = this;
@@ -279,7 +282,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             // For each creature, assign it the appropriate amount of food (more if it's lucky or less if it's unlucky.)
             var foodCol = sharedCols - 1;
             for (var col = 0; col < creatureRow.length; col++) {
-                var n = (col < luckyCreatures? bigN : littleN); // figure out how big a section of food this creature gets
+                var n = ((creatureRow.length - col) <= luckyCreatures? bigN : littleN); // creatures with higher cols are lucky
                 for (var j = 0; j < n; j++) { // assign each food in this group to the current creature
                     if (foodCol ++ < foodRow.length) {
                         if (!creatureRow[col] || !foodRow[foodCol]) {
@@ -287,7 +290,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                             return;
                         }
                         creatureRow[col].addTargetFood(foodRow[foodCol]);
-                        //console.log("Whole food",foodCol,"to creature",col);
+                        //console.log("Whole food",foodCol,"to creature",col,"isLucky?",col<luckyCreatures,"numLucky:",luckyCreatures);
                     }
                 }
             }
@@ -519,6 +522,7 @@ GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
         }
     }
     //this.button.visible = ok;
+    if (!this.canFeed && ok) GlassLab.SignalManager.penReady.dispatch(this);
     this.canFeed = ok;
     if (this.gateLight && !dontChangeLight) {
         if (ok && this.allowFeedButton) {
