@@ -92,11 +92,11 @@ GlassLab.FillBar.prototype.showError = function() {
 };
 
 GlassLab.FillBar.prototype.show = function(show, hideAfter) {
-    this.sprite.visible = show;
-
-    if (hideAfter) {
+    if (!this.sprite.visible && hideAfter) {
         this.game.time.events.add(Phaser.Timer.SECOND * hideAfter, function(){ this.show(false); }, this);
     }
+
+    this.sprite.visible = show;
 };
 
 GlassLab.FillBar.prototype.reset = function() {
