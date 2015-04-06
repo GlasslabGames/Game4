@@ -123,7 +123,7 @@
         "challengeData": {
           "client": "Archibold Huxley III",
           "creatureType": "baby_bird",
-          "numFood": 44,
+          "numFoodA": 44,
           "description": "Dear Friend! I have 44 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
           "reward": 200,
           "creatureWidth": 3
@@ -153,11 +153,11 @@
             "challengeId": "3.01a",
             "problemType": "2BR1MC",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "leftDraggable": true,
               "creatureType": "baby_bird",
               "numCreatures": 12,
-              "description": "Dear Friend! I have 12 BABY FLOCKINS. Please send me enough food for all of them!",
-              "reward": 200,
               "creatureWidth": 3
             }
           },
@@ -166,11 +166,11 @@
             "challengeId": "3.01c",
             "problemType": "2BR1MC",
             "challengeData": {
-              "client": "Archibold Huxley III",
               "creatureType": "baby_bird",
               "numCreatures": 27,
-              "description": "Dear Friend! I have 27 BABY FLOCKINS. Please send me enough food for all of them!",
-              "reward": 200,
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "leftDraggable": true,
               "creatureWidth": 3
             }
           }

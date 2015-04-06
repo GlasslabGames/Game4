@@ -105,6 +105,7 @@ GlassLab.FillBar.prototype.reset = function() {
         this.sections[key].targetAmount = -1;
         this.sections[key].dAmount = 0;
     }
+    this._redraw();
 };
 
 GlassLab.FillBar.prototype._onFinishAnim = function() {
