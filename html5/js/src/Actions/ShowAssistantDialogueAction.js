@@ -13,7 +13,7 @@ GlassLab.ShowAssistantDialogueAction.prototype.constructor = GlassLab.ShowAssist
 
 GlassLab.ShowAssistantDialogueAction.prototype.Do = function()
 {
-    GLOBAL.assistant.show(this.text, this.showButton);
+    GLOBAL.assistant.showTutorial(this.text, this.showButton);
     this._complete();
 };
 
@@ -28,6 +28,6 @@ GlassLab.HideAssistantDialogueAction.prototype.constructor = GlassLab.HideAssist
 
 GlassLab.HideAssistantDialogueAction.prototype.Do = function()
 {
-    GLOBAL.assistant.hide();
+    GLOBAL.assistant.hideTutorial();
     this._complete();
 };

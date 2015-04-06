@@ -88,7 +88,7 @@ GlassLab.DoChallengeAction.prototype._onDestroy = function() {
 
 GlassLab.DoChallengeAction.prototype._cancelTutorial = function() {
     GLOBAL.UIManager.hideArrow();
-    GLOBAL.assistant.hide();
+    GLOBAL.assistant.hideTutorial();
     this.tutorial.Destroy();
 };
 
