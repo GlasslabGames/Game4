@@ -103,13 +103,10 @@ GlassLab.LevelManager = function(game)
         },
         objective: "Testing!"
     };
-
-    // 10
-    this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {
-        bird: 1,
-        baby_bird: 1
-    }};
     */
+    // 10
+    this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {}};
+
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
