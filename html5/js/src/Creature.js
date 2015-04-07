@@ -104,20 +104,13 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.foodDroppedHandler = GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
 
     // We want the creatures drag/drop vs stickydrag behavior to match UIDraggable, so add one as a component here
-    this.draggableComponent = new GlassLab.UIDraggable(this.game);
-    this.sprite.addChild(this.draggableComponent);
-    var hitArea = new Phaser.Circle(0, -110, 250);
-    this.draggableComponent.hitArea = hitArea;
-    // uncomment the next line to check the position of the hit area
-    //this.draggableComponent.addChild(this.game.make.graphics().beginFill("0xffffff", 0.5).drawCircle(hitArea.x, hitArea.y, hitArea.diameter));
+    this.draggableComponent = new GlassLab.DraggableComponent(this.game, this.sprite);
     this.draggableComponent.events.onStartDrag.add(this._startDrag, this);
     this.draggableComponent.events.onEndDrag.add(this._endDrag, this);
-    this.draggableComponent.dontMoveWhileDragging = true; // we're just using it to get the start and end drag events
+    this.draggableComponent.clickLeeway = GLOBAL.tileSize / 2; // this must be large to account for our y-offset while dragging (fix this)
 
-    // This is very hacky, but since the draggable component is blocking other input events, we need to check it for mouseover too
-    // Refactor plz
-    this.draggableComponent.events.onInputOver.add(this._onOver, this);
-    this.draggableComponent.events.onInputOut.add(this._onOver, this);
+    this.sprite.events.onInputOver.add(this._onOver, this);
+    this.sprite.events.onInputOut.add(this._onOver, this);
 
     // FINALLY, start the desired state
     if (startInPen) {

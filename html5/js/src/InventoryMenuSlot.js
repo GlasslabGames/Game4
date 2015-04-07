@@ -334,8 +334,6 @@ GlassLab.InventoryMenuItem.prototype._onStartDrag = function()
 
 GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
 {
-    GLOBAL.audioManager.playSound("clickSound"); // generic interaction sound
-
     if (target) { // we dropped it on an acceptable uiDragTarget
         this._jumpToStart(); // move the sprite back
         return;
