@@ -201,6 +201,10 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('speech_bubble_dots', 'assets/images/assistant/assistant_speech_min_dots.png');
     game.load.atlasJSONHash('assistantAnim', 'assets/images/assistant/assistant_animations.png', 'assets/images/assistant/assistant_animations.json');
 
+    // drop target
+    game.load.image('dropTargetRing', 'assets/images/drop_target_outer_ring.png');
+    game.load.image('dropTargetX', 'assets/images/drop_target_inner_x.png');
+
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 
@@ -277,7 +281,9 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
-    // Create pen
+    GLOBAL.baseWorldLayer = game.make.group();
+    GLOBAL.WorldLayer.add(GLOBAL.baseWorldLayer);
+
     GLOBAL.penLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.penLayer);
 
@@ -347,6 +353,9 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
 
     GLOBAL.resourceManager = new GlassLab.ResourceManager(GLOBAL.game);
+
+    GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
+    GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);
 
     //GLOBAL.debugText = game.make.text(-300,0,"test");
     //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);

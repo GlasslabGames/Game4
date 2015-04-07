@@ -10,11 +10,10 @@ GlassLab.WorldObject = function (game) {
     Phaser.Sprite.prototype.constructor.call(this, game);
     this.game = game;
 
-    this.sprite = game.make.sprite(0, 0); //taco");
+    this.sprite = game.make.sprite(0, 0, "taco");
     this.addChild(this.sprite);
 
-    //this.draggableComponent = new GlassLab.DraggableComponent(this);
-
+    this.draggableComponent = new GlassLab.DraggableComponent(this);
 };
 
 // Extends Sprite
