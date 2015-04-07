@@ -24,6 +24,9 @@ GlassLab.WorldDropTarget = function (game) {
     x.anchor.setTo(0.5, 0.5);
     container.addChild(x);
 
+    this.active = false;
+    this.scale.setTo(0, 0);
+
     GlassLab.SignalManager.update.add(this._onUpdate, this);
 };
 
@@ -32,11 +35,21 @@ GlassLab.WorldDropTarget.prototype = Object.create(Phaser.Sprite.prototype);
 GlassLab.WorldDropTarget.prototype.constructor = GlassLab.WorldDropTarget;
 
 GlassLab.WorldDropTarget.prototype._onUpdate = function() {
-  if (this.visible) {
+    var target = (GLOBAL.dragTarget);// && GLOBAL.dragTarget instanceof GlassLab.WorldObject);
+    if (target && !this.active) {
+        this.active = true;
+        this.scale.setTo(0,0);
+        this.game.add.tween(this.scale).to({x: 1, y: 1}, 100, Phaser.Easing.Quadratic.InOut, true);
+    } else if (!target && this.active) {
+        this.active = false;
+        this.game.add.tween(this.scale).to({x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true);
+    }
+
+    if (this.active) {
       this.ring.angle += 1.5;
       var cursorPos = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
       Phaser.Point.divide(cursorPos, GLOBAL.WorldLayer.scale, cursorPos);
       this.x = cursorPos.x;
       this.y = cursorPos.y;
-  }
+    }
 };

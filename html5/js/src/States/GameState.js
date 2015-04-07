@@ -30,6 +30,9 @@ GlassLab.State.Game.prototype.create = function()
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
+
+    var worldObject = new GlassLab.WorldObject(game);
+    GLOBAL.creatureLayer.add(worldObject);
 };
 
 GlassLab.State.Game.prototype.update = function()

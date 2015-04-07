@@ -25,7 +25,7 @@ GlassLab.DraggableComponent = function(game, sprite) {
 
     this.snap = false; // if true, we center over the mouse instead of keeping an offset
     this.dynamicParents = false; // if true, we recalculate the scale & position of all the parents every update. Should be false mostly. (I don't think this works as intended at the moment, but it's not being used at the moment)
-    this.clickLeeway = 5; // how much we allow them to move the mouse within a click before it's counted as a drag
+    this.clickLeeway = 10; // how much we allow them to move the mouse within a click before it's counted as a drag
 };
 
 GlassLab.DraggableComponent.prototype.remove = function() {
