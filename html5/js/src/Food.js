@@ -173,7 +173,7 @@ GlassLab.Food.prototype._setImage = function() {
     if (this.hasAnimations) this.image.animations.add('anim');
     this.image.scale.x = this.image.scale.y = (this.hasAnimations)? 0.4 : 1.25;
     if (this.hasAnimations) this.image.anchor.setTo(0.4, 1);
-    else this.image.anchor.setTo(0.4, 0.7); // this anchor is specific to the carrot, so generify later
+    else this.image.anchor.setTo(0.5, 0.7); // this anchor is specific to the carrot, so generify later
 
     this.shadow.loadTexture(this.info.spriteName+"_shadow");
     this.baseOffsetWhileDragging = -this.info.spriteOffsetWhileDragging || 0;
@@ -194,10 +194,17 @@ GlassLab.Food.prototype._onStartDrag = function () {
 
 GlassLab.Food.prototype._onEndDrag = function () {
     GlassLab.WorldObject.prototype._onEndDrag.call(this);
-    GLOBAL.foodInWorld.push(this);
-    GLOBAL.foodLayer.add(this);
-    GlassLab.SignalManager.foodDropped.dispatch(this);
-    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+
+    var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);
+    if (tile && tile.inPen && tile.inPen.tryDropFood(this.type, tile)) {
+        console.log("Dropped food in pen");
+        this.destroy();
+    } else {
+        GLOBAL.foodInWorld.push(this);
+        GLOBAL.foodLayer.add(this);
+        GlassLab.SignalManager.foodDropped.dispatch(this);
+        GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+    }
 };
 
 // static function

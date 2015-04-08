@@ -104,6 +104,7 @@ GlassLab.WorldObject.prototype._canDropAt = function (pos) {
         var section = tile.inPen._getSection(tile);
         if (section == 0 && this.canDropInWaitingArea) return true;
         else if (section > 0 && this.canDropInPen) return true;
+        else return false;
     }
     return tile.getIsWalkable();
 };
@@ -113,4 +114,9 @@ GlassLab.WorldObject.prototype.snapToMouse = function () {
     this.game.iso.unproject(mousePos, mousePos);
     this.isoX = mousePos.x;
     this.isoY = mousePos.y;
+};
+
+GlassLab.WorldObject.prototype.placeOnTile = function (col, row) {
+    this.isoX = (col - 0.25) * GLOBAL.tileSize;
+    this.isoY = (row - 0.25) * GLOBAL.tileSize;
 };

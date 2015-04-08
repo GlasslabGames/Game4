@@ -42,10 +42,12 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.sprite.addChild(this.leftEdge.sprite);
 
     // Add a root for all objects that will be added
-    this.objectRoot = this.game.make.isoSprite();
-    this.sprite.addChild(this.objectRoot).name = "objectRoot";
+    this.backObjectRoot = this.game.make.isoSprite();
+    this.sprite.addChild(this.backObjectRoot).name = "backObjectRoot";
 
     this.sprite.addChild(this.centerEdge.sprite);
+
+    this.sprite.addChild(this.topEdge.sprite);
 
     var rightmostEdge;
     for (var i = 0; i < this.widths.length-1; i++) {
@@ -59,10 +61,11 @@ GlassLab.Pen = function(game, layer, height, widths)
         }
     }
 
-    this.sprite.addChild(this.topEdge.sprite);
-
     this.gateFront = this.game.make.isoSprite();
     this.sprite.addChild(this.gateFront).name = "gateFront";
+
+    this.frontObjectRoot = this.game.make.isoSprite();
+    this.sprite.addChild(this.frontObjectRoot).name = "frontObjectRoot";
 
     if (rightmostEdge) this.sprite.addChild(rightmostEdge.sprite);
 
