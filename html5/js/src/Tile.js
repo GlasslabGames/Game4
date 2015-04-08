@@ -10,11 +10,13 @@ GlassLab.Tile = function(game, col, row, type) {
     Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-GLOBAL.tileManager.tilemap.width/2)*GLOBAL.tileSize, (row-GLOBAL.tileManager.tilemap.height/2)*GLOBAL.tileSize, 0, "tiles", imageName);
     this.type = type;
     //this.tint = Phaser.Color.getColor(Math.random() * 255, Math.random() * 255, Math.random() * 255); // for testing with clearly distinguished tiles (change type to placeholderTile)
-    this.anchor.setTo(0.5, 0.5);
+    this.anchor.setTo(0.5, 0.45);
     this.col = col;
     this.row = row;
     this.inPen = null;
     this.food = null;
+
+    //this.addChild(game.make.graphics().beginFill(0xffffff,1).drawCircle(0, 0, 20)); // for debugging where the tile anchor is
 };
 
 // Extends Isosprite

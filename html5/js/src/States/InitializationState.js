@@ -93,32 +93,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('happyEmote', 'assets/images/emotes/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
-/*
-     game.load.image('autumn_ground1.png', 'assets/images/tiles/autumn_ground1.png');
-     game.load.image('autumn_ground2.png', 'assets/images/tiles/autumn_ground2.png');
-     game.load.image('autumn_ground3.png', 'assets/images/tiles/autumn_ground3.png');
-     game.load.image('autumn_ground4.png', 'assets/images/tiles/autumn_ground4.png');
-     game.load.image('autumn_water.png', 'assets/images/tiles/autumn_water.png');
-     game.load.image('autumn_fenceBottomCorner.png', 'assets/images/tiles/autumn_fenceBottomCorner.png');
-     game.load.image('autumn_fenceSideCorner.png', 'assets/images/tiles/autumn_fenceSideCorner.png');
-     game.load.image('autumn_fenceStraight.png', 'assets/images/tiles/autumn_fenceStraight.png');
-     game.load.image('autumn_fenceTopCorner.png', 'assets/images/tiles/autumn_fenceTopCorner.png');
-
-    game.load.image('grassy_water.png', 'assets/images/tiles/grassy_water.png');
-    game.load.image('grassy_1.png', 'assets/images/tiles/grassy_1.png');
-    game.load.image('grassy_2.png', 'assets/images/tiles/grassy_2.png');
-    game.load.image('grassy_3.png', 'assets/images/tiles/grassy_3.png');
-    game.load.image('grassy_4.png', 'assets/images/tiles/grassy_4.png');
-    game.load.image('grassy_fence_bottomCorner.png', 'assets/images/tiles/grassy_fence_bottomCorner.png');
-     game.load.image('grassy_fence_length.png', 'assets/images/tiles/grassy_fence_length.png');
-     game.load.image('grassy_fence_sideCorner.png', 'assets/images/tiles/grassy_fence_sideCorner.png');
-     game.load.image('grassy_fence_topCorner.png', 'assets/images/tiles/grassy_fence_topCorner.png');
-    game.load.image('dirtTile1.png', 'assets/images/tiles/dirtTile1.png');
-    game.load.image('penTile_placeholder.png', 'assets/images/tiles/penTile_placeholder.png');
-    game.load.image('penTile_placeholder2.png', 'assets/images/tiles/penTile_placeholder2.png');
-    */
     game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
-    
+
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
     game.load.image('penTooltipWidth', 'assets/images/pen/pen_tooltip_width.png');
 
