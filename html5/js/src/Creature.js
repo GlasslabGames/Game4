@@ -87,7 +87,7 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.spriteHeight = this.animSprites.idle.height; // for future reference
 
-    this.hungerBar.sprite.y = -(this.spriteHeight * this.sprite.scale.y / 2);
+    this.hungerBar.sprite.y = -(this.spriteHeight * this.sprite.scale.y / 2) - 20;
 
     //game.physics.isoArcade.enable(this.sprite);
     this.events.onDestroy.add(this._onDestroy, this);
@@ -488,7 +488,7 @@ GlassLab.Creature.prototype.FinishEating = function (result, food) {
     if (result == "dislike") {
         this.thoughtBubble.show("redX", food, 2000);
     } else if (result == "satisfied") {
-        this.Emote(true);
+        this.showEmote(true);
     } else if (result == "hungry") {
         this.thoughtBubble.show(null, this.getDesiredFood());
         if (this.pen)
@@ -542,7 +542,7 @@ GlassLab.Creature.prototype.resetTargetFood = function() {
     this.targetFood = [];
 };
 
-GlassLab.Creature.prototype.Emote = function (happy, callback) {
+GlassLab.Creature.prototype.showEmote = function (happy, callback) {
     if (happy)
     {
         var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.type);
@@ -551,12 +551,12 @@ GlassLab.Creature.prototype.Emote = function (happy, callback) {
     var spriteName = (happy) ? "happyEmote" : "angryEmote";
     if (this.emote) this._afterEmote();
     this.emote = this.game.make.sprite(0, 0, spriteName);
-    this.emote.scale.setTo(.5, .5);
-    this.emote.y = -this.spriteHeight * this.sprite.scale.y;
+    this.emote.scale.setTo(.2, .2);
+    this.emote.y = -this.spriteHeight * this.sprite.scale.y / 2;
     var size = this.emote.height * 3; // assumes the height and width are the same
     this.emote.height = this.emote.width = 0;
     this.game.add.tween(this.emote).to({
-        y: -2 * this.spriteHeight * this.sprite.scale.y,
+        y: -this.spriteHeight * this.sprite.scale.y / 2 - 30,
         height: size,
         width: size
     }, 100, Phaser.Easing.Linear.Out, true);
@@ -654,7 +654,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
 GlassLab.Creature.prototype.tryReachTarget = function(target) {
     if (target.pen) {
         if (!this.tryEnterPen(target.pen)) { // try to enter the pen, but if we can't (someone else is there):
-            this.Emote(false); // emote sad that we can't enter the pen
+            this.showEmote(false); // emote sad that we can't enter the pen
             // Next frame, make sure they're facing the spot they want to go (we have to wait since finding the destination might still be wrapping up)
             this.game.time.events.add(0, function() {
                 this.standFacingPosition(new Phaser.Point(target.pos.x + GLOBAL.tileSize, target.pos.y)); // add a tile here since we offset the position when we set the target in FeedingPen

@@ -24,7 +24,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
     } else {
         this.StopEating();
     }
-    this.creature.draggableComponent.draggable = false;
+    this.creature.draggableComponent.active = false;
 
     var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
     this.chompFrame = info.fxFrames.eat;
@@ -78,7 +78,7 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
         if (this.creature.getIsSatisfied())
         {
             GlassLab.SignalManager.creatureFed.dispatch(this.creature);
-            this.creature.Emote(true);
+            this.creature.showEmote(true);
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creature.type, 1);
         }
         this.creature.lookForTargets();

@@ -267,9 +267,3 @@ GlassLab.Food.prototype.getTargets = function()
         { food: this, priority: 1, pos: new Phaser.Point(pos.x - GLOBAL.tileSize / 3, pos.y) }
     ];
 };
-
-GlassLab.Food.prototype.placeOnTile = function (col, row) {
-    // offset a little so it looks better in the pen
-    this.isoX = (col - 0.1) * GLOBAL.tileSize;
-    this.isoY = (row - 0.1) * GLOBAL.tileSize;
-};

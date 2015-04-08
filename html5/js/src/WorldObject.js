@@ -23,7 +23,7 @@ GlassLab.WorldObject = function (game) {
     this.sprite.anchor.setTo(0.5, 1);
     this.addChild(this.sprite);
 
-    this.addChild(game.make.graphics().beginFill(0x0000ff,1).drawCircle(0, 0, 20)); // for debugging
+    //this.addChild(game.make.graphics().beginFill(0x0000ff,1).drawCircle(0, 0, 20)); // for debugging
 
     // We want to have these values set here to be sure that we stick to the correct position scale even if we're interrupted in the middle of a tween, etc
     this.spriteY = this.sprite.y;
@@ -118,6 +118,7 @@ GlassLab.WorldObject.prototype.snapToMouse = function () {
 };
 
 GlassLab.WorldObject.prototype.placeOnTile = function (col, row) {
-    this.isoX = col * GLOBAL.tileSize;
-    this.isoY = row * GLOBAL.tileSize;
+    // offset a little so it looks better in the pen
+    this.isoX = (col - 0.1) * GLOBAL.tileSize;
+    this.isoY = (row - 0.1) * GLOBAL.tileSize;
 };

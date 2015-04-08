@@ -77,7 +77,6 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
     if (this.autoFill) {
         this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatureSpots, this.numCreatures,
             0, this.widths[0], true, this.creatureType);
-        this.forEachCreature(function() { this.draggableComponent.draggable = false; });
     } else {
         this._repositionCreatures(); // adjust the creatures if they got moved
     }
@@ -184,6 +183,7 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
                 obj = new boundConstructor();
                 if (parent.addChild) parent.addChild(obj); // if the parent is a sprite
                 else parent.add(obj); // if the parent is a group
+                if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
             }
             obj.setType(targetType);
             obj.visible = true;

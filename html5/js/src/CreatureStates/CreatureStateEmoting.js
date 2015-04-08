@@ -18,7 +18,7 @@ GlassLab.CreatureStateEmoting.constructor = GlassLab.CreatureStateEmoting;
 GlassLab.CreatureStateEmoting.prototype.Enter = function()
 {
   GlassLab.CreatureState.prototype.Enter.call(this);
-  this.creature.Emote(this.happy, this.callback);
+  this.creature.showEmote(this.happy, this.callback);
 };
 
 GlassLab.CreatureStateEmoting.prototype.Exit = function()
