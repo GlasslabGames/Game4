@@ -47,7 +47,7 @@ GlassLab.LevelManager = function(game)
             bird: 4
         }
     };
-
+    */
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Testing",
@@ -103,7 +103,7 @@ GlassLab.LevelManager = function(game)
         },
         objective: "Testing!"
     };
-    */
+
     // 10
     this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {}};
 

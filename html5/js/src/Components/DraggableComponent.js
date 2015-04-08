@@ -8,7 +8,7 @@ GlassLab.DraggableComponent = function(game, sprite) {
 
     // Note that if you use this class with graphics, you have to specify the hitArea for input to work correctly
     this.sprite.inputEnabled = true;
-    this.sprite.events.onInputUp.add(this._onUp, this);
+    //this.sprite.events.onInputUp.add(this._onUp, this);
     this.sprite.events.onInputDown.add(this._onDown, this);
     GlassLab.SignalManager.update.add(this._onUpdate, this);
 
@@ -25,7 +25,19 @@ GlassLab.DraggableComponent = function(game, sprite) {
 
     this.snap = false; // if true, we center over the mouse instead of keeping an offset
     this.dynamicParents = false; // if true, we recalculate the scale & position of all the parents every update. Should be false mostly. (I don't think this works as intended at the moment, but it's not being used at the moment)
-    this.clickLeeway = 10; // how much we allow them to move the mouse within a click before it's counted as a drag
+    this.clickLeeway = 20; // how much we allow them to move the mouse within a click before it's counted as a drag
+    this.showDropTarget = false;
+
+    if (GLOBAL.gameInitialized) {
+        this._onInitGame();
+    } else {
+        GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
+    }
+};
+
+GlassLab.DraggableComponent.prototype._onInitGame = function() {
+    this.game.input.onUp.add(this._onUp, this); // wait until now to add the global input listener. It gets wiped between states.
+    // we use a global input listener because it lets us use auto drag (start dragging something even if we didn't actually mouse down on it)
 };
 
 GlassLab.DraggableComponent.prototype.remove = function() {
@@ -43,24 +55,23 @@ GlassLab.DraggableComponent.prototype._onDown = function(sprite, pointer) {
 
 GlassLab.DraggableComponent.prototype._onUp = function(sprite, pointer) {
     if (this.dragging) {
-        var dist = this.dragStartPoint.distance(this.sprite.position);
-        if (dist >= this.clickLeeway) { // they held the mouse down and moved it, so it's normal drag and drop behavior
-            this._endDrag();
-        } else {
-            this.stickyDrag = true; // we clicked without moving, so start sticky drag
+        if (this.stickyDrag) this._endDrag(); // they finished their 2nd click which ends sticky drag
+        else {
+            var pos = (this.sprite instanceof Phaser.Plugin.Isometric.IsoSprite)? this.sprite.isoPosition : this.sprite.position;
+            var dist = this.dragStartPoint.distance(pos);
+            console.log(dist, dist >= this.clickLeeway);
+            if (dist >= this.clickLeeway) { // they held the mouse down and moved it, so it's normal drag and drop behavior
+                this._endDrag();
+            } else {
+                this.stickyDrag = true; // they clicked without moving, so start sticky drag
+            }
         }
     }
 };
 
 GlassLab.DraggableComponent.prototype._onUpdate = function() {
     if (this.dragging) {
-        var mousePoint = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
-
-        if (this.dynamicParents) this._calculateAdjustments(); // else, continue to use the adjustment we calculated when starting drag
-
-        Phaser.Point.add(mousePoint, this.positionAdjustment, mousePoint); // adjust the position to account for parent positions
-        Phaser.Point.multiply(mousePoint, this.scaleAdjustment, mousePoint); // scale to account for parent scales
-        Phaser.Point.add(mousePoint, this.mouseOffset, mousePoint); // add the initial mouse offset (will be 0 if snap is on)
+        var mousePoint = this.getCurrentMousePos( this.dynamicParents ); // only recalculate adjustments if the parent might have moved
 
         if (this.prevPos) {
             this.events.onDrag.dispatch(mousePoint, Phaser.Point.subtract(mousePoint, this.prevPos));
@@ -69,13 +80,30 @@ GlassLab.DraggableComponent.prototype._onUpdate = function() {
     }
 };
 
+GlassLab.DraggableComponent.prototype.getCurrentMousePos = function(recalculateAdjustments) {
+    var mousePoint = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
+
+    if (recalculateAdjustments) this._calculateAdjustments(); // else, continue to use the adjustment we calculated when starting drag
+
+    Phaser.Point.add(mousePoint, this.positionAdjustment, mousePoint); // adjust the position to account for parent positions
+    Phaser.Point.multiply(mousePoint, this.scaleAdjustment, mousePoint); // scale to account for parent scales
+    Phaser.Point.add(mousePoint, this.mouseOffset, mousePoint); // add the initial mouse offset (will be 0 if snap is on)
+
+    return mousePoint;
+};
+
+GlassLab.DraggableComponent.prototype.tryStartDrag = function() {
+    if (this.active && !GLOBAL.dragTarget && !this.dragging) this._startDrag();
+};
+
 GlassLab.DraggableComponent.prototype._startDrag = function(pointer) {
-    this.dragStartPoint = new Phaser.Point(this.sprite.x, this.sprite.y);
+
+    if (this.sprite instanceof Phaser.Plugin.Isometric.IsoSprite) this.dragStartPoint = new Phaser.Point(this.sprite.isoX, this.sprite.isoY);
+    else this.dragStartPoint = new Phaser.Point(this.sprite.x, this.sprite.y);
     this._calculateAdjustments(); // calculate the parent's position/scale once per drag
     this.dragging = true;
     GLOBAL.dragTarget = this;
     this.stickyDrag = false;
-    this.prevMousePos = null;
     this.events.onStartDrag.dispatch();
 };
 
@@ -84,10 +112,6 @@ GlassLab.DraggableComponent.prototype._endDrag = function() {
     if (GLOBAL.dragTarget == this) GLOBAL.dragTarget = null; // it should be this, but check just in case so we don't screw up something else
 
     this.events.onEndDrag.dispatch();
-};
-
-GlassLab.DraggableComponent.prototype.OnStickyDrop = function () { // called by UIManager
-    this._endDrag();
 };
 
 // When we start dragging, we need to check for position and scale of parents in order to stay attached to the mouse

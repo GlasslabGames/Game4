@@ -146,7 +146,7 @@ GlassLab.Edge.prototype._startDrag = function() {
     GLOBAL.dragTarget = this;
 };
 
-GlassLab.Edge.prototype.OnStickyDrop = function() { // called by (atm) prototype.js
+GlassLab.Edge.prototype.onStickyDrop = function() { // called by (atm) prototype.js
     this._endDrag();
 };
 

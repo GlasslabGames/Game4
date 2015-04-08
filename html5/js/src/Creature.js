@@ -374,7 +374,7 @@ GlassLab.Creature.prototype._endDrag = function () {
     this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
-GlassLab.Creature.prototype.OnStickyDrop = function () { // called by (atm) prototype.js
+GlassLab.Creature.prototype.onStickyDrop = function () { // called by (atm) prototype.js
     this._endDrag();
 };
 

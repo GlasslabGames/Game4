@@ -26,9 +26,9 @@ GlassLab.UIManager = function(game)
 
     this.createHud();
 
-    GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
+    //GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
 };
-
+/*
 GlassLab.UIManager.prototype._onInitGame = function() {
     this.game.input.onUp.add(this._onGlobalUp, this); // wait until now to add the global input listener. It gets wiped between states.
 };
@@ -36,11 +36,9 @@ GlassLab.UIManager.prototype._onInitGame = function() {
 GlassLab.UIManager.prototype._onGlobalUp = function(pointer, DOMevent)
 {
     if (GLOBAL.dragTarget && GLOBAL.dragTarget.stickyDrag) { // if we were dragging something with sticky mode, release it when we click
-        if (GLOBAL.dragTarget.OnStickyDrop) GLOBAL.dragTarget.OnStickyDrop(); // e.g. UIDraggable
-        GLOBAL.dragTarget = null;
-        GLOBAL.justDropped = true;
+        if (GLOBAL.dragTarget.onStickyDrop) GLOBAL.dragTarget.onStickyDrop(); // e.g. UIDraggable
     }
-};
+};*/
 
 GlassLab.UIManager.prototype._createAnchors = function()
 {

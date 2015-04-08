@@ -35,7 +35,7 @@ GlassLab.WorldDropTarget.prototype = Object.create(Phaser.Sprite.prototype);
 GlassLab.WorldDropTarget.prototype.constructor = GlassLab.WorldDropTarget;
 
 GlassLab.WorldDropTarget.prototype._onUpdate = function() {
-    var target = (GLOBAL.dragTarget);// && GLOBAL.dragTarget instanceof GlassLab.WorldObject);
+    var target = (GLOBAL.dragTarget && GLOBAL.dragTarget.showDropTarget);
     if (target && !this.active) {
         this.active = true;
         this.scale.setTo(0,0);

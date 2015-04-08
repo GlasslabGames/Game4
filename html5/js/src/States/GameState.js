@@ -15,6 +15,7 @@ GlassLab.State.Game.prototype.create = function()
 {
     var game = this.game;
 
+    GLOBAL.gameInitialized = true;
     GlassLab.SignalManager.gameInitialized.dispatch(); // triggers managers grabbing stuff from the save blob, etc
 
     GLOBAL.levelManager.LoadFirstLevel(); // Load first level
@@ -31,8 +32,8 @@ GlassLab.State.Game.prototype.create = function()
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
 
-    var worldObject = new GlassLab.WorldObject(game);
-    GLOBAL.creatureLayer.add(worldObject);
+    var worldObject = new GlassLab.Food(game, "tincan");
+    GLOBAL.foodLayer.add(worldObject);
 };
 
 GlassLab.State.Game.prototype.update = function()
@@ -43,8 +44,6 @@ GlassLab.State.Game.prototype.update = function()
     {
         GlassLab.SignalManager.update.dispatch(game.time.elapsedMS);
     }
-
-    GLOBAL.justDropped = false;
 
     var tileSprite;
 

@@ -10,6 +10,7 @@ var GlassLab = GlassLab || {};
 GlassLab.FoodTypes = {
     broccoli: {
         spriteName: "broccoli",
+        spriteOffsetWhileDragging: 15,
         color: 0x8cb149,
         unlocked: true,
         cost: -1,
@@ -21,6 +22,7 @@ GlassLab.FoodTypes = {
     },
     strawberry: {
         spriteName: "strawberry",
+        spriteOffsetWhileDragging: 17,
         color: 0xef5067,
         unlocked: true,
         cost: -1,
@@ -32,6 +34,7 @@ GlassLab.FoodTypes = {
     },
     meat: {
         spriteName: "meat",
+        spriteOffsetWhileDragging: 11,
         color: 0x975f3d, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 50,
@@ -43,6 +46,7 @@ GlassLab.FoodTypes = {
     },
     tincan: {
         spriteName: "tincan",
+        spriteOffsetWhileDragging: 9,
         color: 0x99a2ac,
         unlocked: false,
         cost: 100,
@@ -54,6 +58,7 @@ GlassLab.FoodTypes = {
     },
     apple: {
         spriteName: "apple",
+        spriteOffsetWhileDragging: 25,
         color: 0xc03b30, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 20,
@@ -65,6 +70,7 @@ GlassLab.FoodTypes = {
     },
     taco: {
         spriteName: "taco",
+        spriteOffsetWhileDragging: 10,
         color: 0xf6cf62,
         unlocked: false,
         cost: 200,
@@ -76,6 +82,7 @@ GlassLab.FoodTypes = {
     },
     corn: {
         spriteName: "corn",
+        spriteOffsetWhileDragging: 9,
         color: 0x99a2ac,
         unlocked: false,
         cost: 20,
@@ -87,6 +94,7 @@ GlassLab.FoodTypes = {
     },
     pizza: {
         spriteName: "pizza",
+        spriteOffsetWhileDragging: 6,
         color: 0xe4b76e,
         unlocked: false,
         cost: 200,
@@ -98,6 +106,7 @@ GlassLab.FoodTypes = {
     },
     mushroom: {
         spriteName: "mushroom",
+        spriteOffsetWhileDragging: 18,
         color: 0xca5d5c,
         unlocked: false,
         cost: 100,
@@ -109,6 +118,7 @@ GlassLab.FoodTypes = {
     },
     donut: {
         spriteName: "donut",
+        spriteOffsetWhileDragging: 13,
         color: 0xf696ed,
         unlocked: false,
         cost: 2000,
@@ -121,12 +131,12 @@ GlassLab.FoodTypes = {
 };
 
 /**
- * Food - just a sprite for now
+ * Food
  */
 GlassLab.Food = function(game, type) {
+    GlassLab.WorldObject.prototype.constructor.call(this, game);
+
     this.type = type;
-    this.game = game;
-    this.sprite = game.make.isoSprite(0,0,0);
     this._setImage();
 
     this.health = 1; // food can be partially eaten. health 0 means it's totally eaten.
@@ -145,9 +155,12 @@ GlassLab.Food = function(game, type) {
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 };
 
+GlassLab.Food.prototype = Object.create(GlassLab.WorldObject.prototype);
+GlassLab.Food.prototype.constructor = GlassLab.Food;
+
 GlassLab.Food.prototype._setImage = function() {
     this.info = GlassLab.FoodTypes[this.type];
-    this.hasAnimations = this.game.cache.checkImageKey(this.info.spriteName+"_eaten");
+    this.hasAnimations = false; // this.game.cache.checkImageKey(this.info.spriteName+"_eaten"); // in the future we want to check for anims, but for now we're just using static images since the anims have shadows baked in and other inconsistencies
 
     var key = (this.hasAnimations)? this.info.spriteName+"_eaten" : this.info.spriteName;
     if (!this.image) {
@@ -160,11 +173,29 @@ GlassLab.Food.prototype._setImage = function() {
     this.image.scale.x = this.image.scale.y = (this.hasAnimations)? 0.4 : 1.25;
     if (this.hasAnimations) this.image.anchor.setTo(0.4, 1);
     else this.image.anchor.setTo(0.4, 0.7); // this anchor is specific to the carrot, so generify later
+
+    this.shadow.loadTexture(this.info.spriteName+"_shadow");
+    this.baseOffsetWhileDragging = -this.info.spriteOffsetWhileDragging || 0;
 };
 
 GlassLab.Food.prototype._onDestroy = function() {
     var index = GLOBAL.foodInWorld.indexOf(this);
     if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
+};
+
+GlassLab.Food.prototype._onStartDrag = function () {
+    GlassLab.WorldObject.prototype._onStartDrag.call(this);
+    var index = GLOBAL.foodInWorld.indexOf(this);
+    if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
+    GLOBAL.hoverLayer.add(this);
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+};
+
+GlassLab.Food.prototype._onEndDrag = function () {
+    GlassLab.WorldObject.prototype._onEndDrag.call(this);
+    GLOBAL.foodInWorld.push(this);
+    GLOBAL.foodLayer.add(this);
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
 // static function
@@ -211,19 +242,6 @@ GlassLab.Food.prototype._afterEaten = function(fadeTime) {
     fadeTime = fadeTime || 3000;
   var tween = this.game.add.tween(this.image).to( { alpha: 0 }, 3000, "Linear", true);
   tween.onComplete.add( function() {this.sprite.destroy();}, this);
-};
-
-// These functions should definitely be in a common superclass
-GlassLab.Food.prototype.getTile = function() {
-    var globalPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite, GlassLab.Util.POINT2);
-    return GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPosition.x, globalPosition.y);
-};
-
-GlassLab.Food.prototype.print = function()
-{
-    var row = Math.round(this.sprite.isoY / GLOBAL.tileSize);
-    var col = Math.round(this.sprite.isoX / GLOBAL.tileSize);
-    return "Food("+col+", "+row+")";
 };
 
 GlassLab.Food.prototype.setType = function(type)
