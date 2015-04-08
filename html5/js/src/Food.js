@@ -10,7 +10,7 @@ var GlassLab = GlassLab || {};
 GlassLab.FoodTypes = {
     broccoli: {
         spriteName: "broccoli",
-        spriteOffsetWhileDragging: 15,
+        spriteOffsetWhileDragging: 5,
         color: 0x8cb149,
         unlocked: true,
         cost: -1,
@@ -22,7 +22,7 @@ GlassLab.FoodTypes = {
     },
     strawberry: {
         spriteName: "strawberry",
-        spriteOffsetWhileDragging: 17,
+        spriteOffsetWhileDragging: 7,
         color: 0xef5067,
         unlocked: true,
         cost: -1,
@@ -34,7 +34,7 @@ GlassLab.FoodTypes = {
     },
     meat: {
         spriteName: "meat",
-        spriteOffsetWhileDragging: 11,
+        spriteOffsetWhileDragging: 1,
         color: 0x975f3d, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 50,
@@ -46,7 +46,7 @@ GlassLab.FoodTypes = {
     },
     tincan: {
         spriteName: "tincan",
-        spriteOffsetWhileDragging: 9,
+        spriteOffsetWhileDragging: -1,
         color: 0x99a2ac,
         unlocked: false,
         cost: 100,
@@ -58,7 +58,7 @@ GlassLab.FoodTypes = {
     },
     apple: {
         spriteName: "apple",
-        spriteOffsetWhileDragging: 25,
+        spriteOffsetWhileDragging: 15,
         color: 0xc03b30, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 20,
@@ -70,7 +70,7 @@ GlassLab.FoodTypes = {
     },
     taco: {
         spriteName: "taco",
-        spriteOffsetWhileDragging: 10,
+        spriteOffsetWhileDragging: 0,
         color: 0xf6cf62,
         unlocked: false,
         cost: 200,
@@ -82,7 +82,7 @@ GlassLab.FoodTypes = {
     },
     corn: {
         spriteName: "corn",
-        spriteOffsetWhileDragging: 9,
+        spriteOffsetWhileDragging: -1,
         color: 0x99a2ac,
         unlocked: false,
         cost: 20,
@@ -94,7 +94,7 @@ GlassLab.FoodTypes = {
     },
     pizza: {
         spriteName: "pizza",
-        spriteOffsetWhileDragging: 6,
+        spriteOffsetWhileDragging: -4,
         color: 0xe4b76e,
         unlocked: false,
         cost: 200,
@@ -106,7 +106,7 @@ GlassLab.FoodTypes = {
     },
     mushroom: {
         spriteName: "mushroom",
-        spriteOffsetWhileDragging: 18,
+        spriteOffsetWhileDragging: 7,
         color: 0xca5d5c,
         unlocked: false,
         cost: 100,
@@ -118,7 +118,7 @@ GlassLab.FoodTypes = {
     },
     donut: {
         spriteName: "donut",
-        spriteOffsetWhileDragging: 13,
+        spriteOffsetWhileDragging: 3,
         color: 0xf696ed,
         unlocked: false,
         cost: 2000,
@@ -139,6 +139,8 @@ GlassLab.Food = function(game, type) {
     this.type = type;
     this._setImage();
     this.canDropInPen = true; // setting on WorldObject
+    this.shadowY = this.shadow.y = -10;
+    this.spriteY = this.sprite.y = 5;
 
     this.health = 1; // food can be partially eaten. health 0 means it's totally eaten.
     this.eaten = false; // set to true as soon as the creature starts eating it
@@ -264,4 +266,10 @@ GlassLab.Food.prototype.getTargets = function()
         { food: this, priority: 1, pos: new Phaser.Point(pos.x + GLOBAL.tileSize / 3, pos.y - GLOBAL.tileSize / 2) },
         { food: this, priority: 1, pos: new Phaser.Point(pos.x - GLOBAL.tileSize / 3, pos.y) }
     ];
+};
+
+GlassLab.Food.prototype.placeOnTile = function (col, row) {
+    // offset a little so it looks better in the pen
+    this.isoX = (col - 0.1) * GLOBAL.tileSize;
+    this.isoY = (row - 0.1) * GLOBAL.tileSize;
 };

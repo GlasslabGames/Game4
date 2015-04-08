@@ -8,31 +8,28 @@ var GlassLab = GlassLab || {};
  * Creature
  */
 GlassLab.Creature = function (game, type, startInPen) {
+    GlassLab.WorldObject.prototype.constructor.call(this, game);
+
     this.type = type;
     var info = GLOBAL.creatureManager.creatureDatabase[type];
-    this.sprite = game.make.isoSprite();
 
-    this.game = game;
     this.state = null;
-
     this.isCrying = false;
-
-    this.sprite.inputEnabled = true;
     this.prevIsoPos = new Phaser.Point();
-    this.prevTile = null;
 
-    //this.sprite.events.onInputUp.add(this._onUp, this);
-    //this.sprite.events.onInputDown.add(this._onDown, this);
-
-    this.sprite.scale.setTo(-0.5, 0.5);
+    this.shadow.loadTexture("shadow");
+    this.shadow.scale.setTo(0.25, 0.25);
+    this.shadowY = this.shadow.y = -30;
+    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.5; // make babies smaller
+    this.sprite.scale.setTo(this.spriteScaleY, this.spriteScaleY);
+    this.spriteY = this.sprite.y = 20;
+    this.canDropInWaitingArea = true; // setting on WorldObject
 
     this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
 
     this.moveSpeed = 2.75;
     this.baseAnimSpeed = 36; // 36 per moveSpeed
-
-    this.debugAILine = new Phaser.Line();
 
     this.desiredAmountsOfFood = {};
     this.foodEaten = {};
@@ -48,23 +45,18 @@ GlassLab.Creature = function (game, type, startInPen) {
         var foodInfo = GlassLab.FoodTypes[type];
         hungerBarSections[type] = {percent: this.desiredAmountsOfFood[type] / totalFoodDesired, color: foodInfo.color };
     };
-    this.hungerBar = new GlassLab.FillBar(this.game, 250, 50 / info.desiredFood.length, hungerBarSections);
-    this.sprite.addChild(this.hungerBar.sprite);
+    this.hungerBar = new GlassLab.FillBar(this.game, 100, 20 / info.desiredFood.length, hungerBarSections);
+    this.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
-    this.thoughtBubble.position.setTo(-100, -225);
-    this.thoughtBubble.scale.setTo(0.8/this.sprite.scale.x, 0.8/this.sprite.scale.y);
-    this.sprite.addChild(this.thoughtBubble);
+    this.thoughtBubble.position.setTo(-70, -50);
+    this.thoughtBubble.scale.setTo(0.8, 0.8);
+    this.addChild(this.thoughtBubble);
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
 
     this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen. Each food is like {food: f, eatPartially: true}
-
-    this.shadow = this.game.make.sprite(0, 0, "shadow");
-    this.sprite.addChild(this.shadow);
-    this.shadow.anchor.setTo(0.5, 0.8);
-    this.shadow.scale.setTo(0.5, 0.5);
 
     this.animSprites = {};
     var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit", "cry_start", "cry_loop", "cry_end"];
@@ -95,22 +87,15 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.spriteHeight = this.animSprites.idle.height; // for future reference
 
-    this.hungerBar.sprite.y = -this.spriteHeight * this.sprite.scale.y * this.sprite.anchor.y - 270;
+    this.hungerBar.sprite.y = -(this.spriteHeight * this.sprite.scale.y / 2);
 
     //game.physics.isoArcade.enable(this.sprite);
-    this.sprite.events.onDestroy.add(this._onDestroy, this);
+    this.events.onDestroy.add(this._onDestroy, this);
 
     this.targetsChangedHandler = GlassLab.SignalManager.creatureTargetsChanged.add(this._onTargetsChanged, this);
     this.foodDroppedHandler = GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
 
-    // We want the creatures drag/drop vs stickydrag behavior to match UIDraggable, so add one as a component here
-    this.draggableComponent = new GlassLab.DraggableComponent(this.game, this.sprite);
-    this.draggableComponent.events.onStartDrag.add(this._startDrag, this);
-    this.draggableComponent.events.onEndDrag.add(this._endDrag, this);
-    this.draggableComponent.clickLeeway = GLOBAL.tileSize / 2; // this must be large to account for our y-offset while dragging (fix this)
-
-    this.sprite.events.onInputOver.add(this._onOver, this);
-    this.sprite.events.onInputOut.add(this._onOver, this);
+    this.events.onInputOver.add(this._onOver, this);
 
     // FINALLY, start the desired state
     if (startInPen) {
@@ -129,9 +114,10 @@ GlassLab.Creature = function (game, type, startInPen) {
     GlassLab.SignalManager.tilePenStateChanged.add(this._onTilePenStateChanged, this);
 };
 
+GlassLab.Creature.prototype = Object.create(GlassLab.WorldObject.prototype);
+GlassLab.Creature.prototype.constructor = GlassLab.Creature;
+
 GlassLab.Creature.prototype._onDestroy = function () {
-    if (GLOBAL.dragTarget == this) GLOBAL.dragTarget = null;
-    this.sprite.events.destroy();
     if (this.updateHandler) this.updateHandler.detach();
     if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
     if (this.foodDroppedHandler) this.foodDroppedHandler.detach();
@@ -149,7 +135,7 @@ GlassLab.Creature.prototype._onTilePenStateChanged = function(tile, pen)
         return;
     }
 
-    var globalPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var globalPosition = this.getGlobalPos();
     var currentTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPosition.x, globalPosition.y);
     // If the tile changed is the same as the tile we're in, we need to move out
     if (currentTile == tile && pen != this.pen)
@@ -217,12 +203,6 @@ GlassLab.Creature.prototype._onTilePenStateChanged = function(tile, pen)
     }
 };
 
-GlassLab.Creature.prototype.print = function () {
-    var row = Math.round(this.sprite.isoY / GLOBAL.tileSize);
-    var col = Math.round(this.sprite.isoX / GLOBAL.tileSize);
-    return "Creature(" + col + ", " + row + ")";
-};
-
 GlassLab.Creature.prototype.setType = function (type) {
     if (this.type == type) return;
     this.type = type;
@@ -236,8 +216,8 @@ GlassLab.Creature.prototype.setType = function (type) {
 GlassLab.Creature.prototype.moveToTile = function (col, row) {
     var tile = GLOBAL.tileManager.GetTile(col, row);
 
-    this.sprite.isoX = tile.isoX;
-    this.sprite.isoY = tile.isoY;
+    this.isoX = tile.isoX;
+    this.isoY = tile.isoY;
 
     if (Math.random() > 0.5) // face a random direction too
     {
@@ -248,8 +228,8 @@ GlassLab.Creature.prototype.moveToTile = function (col, row) {
 GlassLab.Creature.prototype.moveToRandomTile = function () {
     var tile = GLOBAL.tileManager.getRandomWalkableTile(15); // start around the center
 
-    this.sprite.isoX = tile.isoX;
-    this.sprite.isoY = tile.isoY;
+    this.isoX = tile.isoX;
+    this.isoY = tile.isoY;
 
     if (Math.random() > 0.5) // face a random direction too
     {
@@ -287,7 +267,7 @@ GlassLab.Creature.prototype.StopAnim = function () {
 };
 
 GlassLab.Creature.prototype.standFacingPosition = function(targetIsoPos) {
-    var pos = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var pos = this.getGlobalPos();
     var dir;
     if (Math.abs(pos.x - targetIsoPos.x) > Math.abs(pos.y - targetIsoPos.y)) {
         dir = (pos.x < targetIsoPos.x)? "right" : "left";
@@ -319,7 +299,7 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 {
     this._clearPath();
 
-    var globalPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var globalPosition = this.getGlobalPos();
     var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(globalPosition.x, globalPosition.y);
     var goal = GLOBAL.tileManager.GetTileIndexAtWorldPosition(x, y);
     var path = GLOBAL.astar.findPath(start, goal, null, this.type);
@@ -362,20 +342,23 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
     this.onPathChanged.dispatch(this);
 };
 
-GlassLab.Creature.prototype._startDrag = function () {
+GlassLab.Creature.prototype._onStartDrag = function () {
+    GlassLab.WorldObject.prototype._onStartDrag.call(this);
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
-    if (this.pen) this.exitPen(this.pen);
+    this.hungerBar.show(false);
+    this.thoughtBubble.hide();
+    if (this.pen) {
+        this.exitPen(this.pen);
+        GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+    }
     this.currentPath = [];
     this.targetPosition.x = Number.NaN;
-    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
-GlassLab.Creature.prototype._endDrag = function () {
+GlassLab.Creature.prototype._onEndDrag = function () {
+    GlassLab.WorldObject.prototype._onEndDrag.call(this);
+    console.log("endDrag");
     this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
-};
-
-GlassLab.Creature.prototype.onStickyDrop = function () { // called by (atm) prototype.js
-    this._endDrag();
 };
 
 
@@ -408,9 +391,9 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
         // Offset position slightly
         //this.targetPosition.x += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
         //this.targetPosition.y += .75*(Math.random() - .5)*GLOBAL.tileManager.tileSize;
-        GlassLab.Util.GetLocalIsoPosition(this.sprite, this.targetPosition, this.targetPosition.x, this.targetPosition.y);
+        GlassLab.Util.GetLocalIsoPosition(this, this.targetPosition, this.targetPosition.x, this.targetPosition.y);
 
-        var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);
+        var delta = Phaser.Point.subtract(this.targetPosition, this.isoPosition);
         var debugPoint = this.game.iso.project(new Phaser.Plugin.Isometric.Point3(delta.x, delta.y, 0));
         if (debugPoint.y < 0)
         {
@@ -444,7 +427,7 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
     }
 
     // Move towards current point
-    var delta = Phaser.Point.subtract(this.targetPosition, this.sprite.isoPosition);
+    var delta = Phaser.Point.subtract(this.targetPosition, this.isoPosition);
     if (delta.getMagnitudeSq() > moveSpeed * moveSpeed) {
         delta.setMagnitude(moveSpeed);
     }
@@ -461,27 +444,26 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
         }
 
         // Physics
-        if (this.sprite.body) {
-            this.sprite.body.velocity.setTo(0, 0);
+        if (this.body) {
+            this.body.velocity.setTo(0, 0);
             return;
         }
     }
 
-    if (this.sprite.body) {
+    if (this.body) {
         // Physics
-        this.sprite.body.velocity.x = delta.x * 100.0;
-        this.sprite.body.velocity.y = delta.y * 100.0;
+        this.body.velocity.x = delta.x * 100.0;
+        this.body.velocity.y = delta.y * 100.0;
     }
     else {
-        Phaser.Point.add(this.sprite.isoPosition, delta, delta);
+        Phaser.Point.add(this.isoPosition, delta, delta);
 
-        this.sprite.isoX = delta.x;
-        this.sprite.isoY = delta.y;
+        this.isoX = delta.x;
+        this.isoY = delta.y;
 
         if (GLOBAL.debug)
         {
-            var globalPos = GlassLab.Util.POINT2;
-            GlassLab.Util.GetGlobalIsoPosition(this.sprite, globalPos);
+            var globalPos = this.getGlobalPos();
             var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPos.x, globalPos.y);
             tile.tint = 0xffffff;
         }
@@ -579,7 +561,7 @@ GlassLab.Creature.prototype.Emote = function (happy, callback) {
         width: size
     }, 100, Phaser.Easing.Linear.Out, true);
     this.emote.anchor.set(0.5, 1);
-    this.sprite.addChild(this.emote);
+    this.addChild(this.emote);
     this.afterEmoteCallback = callback;
     this.game.time.events.add(Phaser.Timer.SECOND * 1, this._afterEmote, this);
 };
@@ -606,7 +588,7 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
 
 GlassLab.Creature.prototype._onFoodDropped = function(food) {
     if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
-        var dist = GlassLab.Util.GetGlobalIsoPosition(this.sprite).distance(food.getGlobalPos());
+        var dist = this.getGlobalPos().distance(food.getGlobalPos());
         if (dist < 3 * GLOBAL.tileSize) {
             this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing
             this.thoughtBubble.show("exclamationPoint", null, 800, this.lookForTargets, this);
@@ -641,7 +623,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
 
     var minDist = null, bestTarget, bestRealDist; // minDist is the best weighted dist so far, but
     for (var i = 0, len = targets.length; i < len; i++) {
-        var distSqr = Math.pow((this.sprite.isoX - targets[i].pos.x), 2) + Math.pow((this.sprite.isoY - targets[i].pos.y), 2);
+        var distSqr = Math.pow((this.isoX - targets[i].pos.x), 2) + Math.pow((this.isoY - targets[i].pos.y), 2);
         // now divide the distance by the priority so that targets with higher priority count as closer
         var weightedDistSqr = distSqr;
         if (!isNaN(targets[i].priority)) weightedDistSqr /= (targets[i].priority * targets[i].priority);
@@ -741,8 +723,8 @@ GlassLab.Creature.prototype.exitPen = function (pen) {
 };
 
 GlassLab.Creature.prototype.setIsoPos = function (x, y) {
-    this.sprite.isoX = x;
-    this.sprite.isoY = y;
+    this.isoX = x;
+    this.isoY = y;
 
     this._clearPath();
 };
@@ -756,12 +738,9 @@ GlassLab.Creature.prototype._clearPath = function()
 
 GlassLab.Creature.prototype._onOver = function()
 {
-    //if (!this.getIsEmpty())
-    this.hungerBar.show(true, 1);
-};
-
-GlassLab.Creature.prototype._onOut = function()
-{
+    if (!(this.state instanceof GlassLab.CreatureStateDragged)) { // && !this.getIsEmpty())
+        this.hungerBar.show(true, 1);
+    }
 };
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
@@ -779,9 +758,4 @@ GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
     if (this.state) {
         this.state.Enter();
     }
-};
-
-GlassLab.Creature.prototype.getTile = function () {
-    var isoPosition = GlassLab.Util.GetGlobalIsoPosition(this.sprite, GlassLab.Util.POINT2);
-    return GLOBAL.tileManager.GetTileAtIsoWorldPosition(isoPosition.x, isoPosition.y);
 };

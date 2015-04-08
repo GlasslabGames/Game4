@@ -59,7 +59,7 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_VFX.png', 'assets/images/food/'+spriteName+'_long_death_VFX.json');
     }
 
-    game.load.image('shadow', 'assets/images/iso_shadow.png');
+    game.load.image('shadow', 'assets/images/iso_shadow2.png');
     game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
     /*

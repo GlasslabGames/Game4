@@ -156,7 +156,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
         for (var type in levelData.looseCreatures) {
             for (var j = 0; j < levelData.looseCreatures[type]; j++) {
                 var creature = new GlassLab.Creature(this.game, type);
-                GLOBAL.creatureLayer.add(creature.sprite);
+                GLOBAL.creatureLayer.add(creature);
                 //creature.moveToRandomTile();
                 creature.lookForTargets();
                 creature.name = "creature"+j; // for debugging

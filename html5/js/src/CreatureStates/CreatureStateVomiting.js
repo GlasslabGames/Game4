@@ -35,7 +35,7 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   vomit.tint = this.creature.lastEatenFoodInfo? this.creature.lastEatenFoodInfo.color : 0xBFDB9A; // default vomit color
   GLOBAL.effectLayer.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
   vomit.scale.setTo(this.creature.sprite.scale.x, this.creature.sprite.scale.y);
-    var globalPos = GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite);
+    var globalPos = this.creature.getGlobalPos();
   vomit.isoX = globalPos.x;
   vomit.isoY = globalPos.y;
     if (this.creature.sprite.scale.x > 0) {

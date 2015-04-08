@@ -10,24 +10,25 @@ GlassLab.WorldObject = function (game) {
     Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game);
     this.game = game;
 
-    // this.addChild(game.make.graphics().beginFill(0xffffff,0.5).drawCircle(0, 0, 200)); // for debugging
-
     this.shadow = game.make.sprite();
     this.shadow.anchor.setTo(0.5, 0.5);
     this.shadow.tint = 0x000000;
     this.shadow.alpha = 0.3;
     this.addChild(this.shadow);
 
-    this.baseOffsetWhileDragging = -25;
+    this.baseOffsetWhileDragging = 0;
     this.floatHeight = -60;
 
     this.sprite = game.make.sprite();
-    this.sprite.y = this.sprite.height / 2;
     this.sprite.anchor.setTo(0.5, 1);
     this.addChild(this.sprite);
 
+    this.addChild(game.make.graphics().beginFill(0x0000ff,1).drawCircle(0, 0, 20)); // for debugging
+
+    // We want to have these values set here to be sure that we stick to the correct position scale even if we're interrupted in the middle of a tween, etc
     this.spriteY = this.sprite.y;
     this.shadowY = this.shadow.y;
+    this.spriteScaleY = 1;
 
     this.canDropInPen = false; // excluding the waiting area - should be set to true for food
     this.canDropInWaitingArea = false; // should be set to true for creatures
@@ -80,7 +81,7 @@ GlassLab.WorldObject.prototype._onEndDrag = function () {
     this.game.add.tween(this.shadow).to({alpha: 0.3}, this.tweenTime, Phaser.Easing.Quadratic.InOut, true);
     this.game.add.tween(this.shadow).to({y: this.shadowY}, this.tweenTime, Phaser.Easing.Quadratic.In, true);
     this.game.add.tween(this.sprite).to({y: this.spriteY}, this.tweenTime, Phaser.Easing.Quadratic.In, true);
-    this.game.add.tween(this.sprite.scale).to({y: 0.8}, this.tweenTime, Phaser.Easing.Quadratic.InOut, true, this.tweenTime * 0.8, 0, true);
+    this.game.add.tween(this.sprite.scale).to({y: this.spriteScaleY * 0.8}, this.tweenTime, Phaser.Easing.Quadratic.InOut, true, this.tweenTime * 0.8, 0, true);
 
     this.isInitialDropAttempt = false;
 };
@@ -117,6 +118,6 @@ GlassLab.WorldObject.prototype.snapToMouse = function () {
 };
 
 GlassLab.WorldObject.prototype.placeOnTile = function (col, row) {
-    this.isoX = (col - 0.25) * GLOBAL.tileSize;
-    this.isoY = (row - 0.25) * GLOBAL.tileSize;
+    this.isoX = col * GLOBAL.tileSize;
+    this.isoY = row * GLOBAL.tileSize;
 };

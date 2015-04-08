@@ -36,8 +36,8 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
     }
 
     if (!this.food.pen) { // eating in the wild
-        // switch direction
-        if (this.food.getGlobalPos() < GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite)) this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x);
+        // switch direction // TODO: fix this
+        if (this.food.getGlobalPos() < this.creature.getGlobalPos()) this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x);
         else this.creature.sprite.scale.x = - Math.abs(this.creature.sprite.scale.x);
     }
 };

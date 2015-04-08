@@ -168,7 +168,7 @@ GlassLab.CreatureManager.prototype.DestroyAllCreatures = function() {
 GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 {
     var creature = new GlassLab.Creature(this.game, type);
-    GLOBAL.creatureLayer.add(creature.sprite);
+    GLOBAL.creatureLayer.add(creature);
     if (centered) {
         creature.moveToTile( GLOBAL.tileManager.tilemap.width/2, GLOBAL.tileManager.tilemap.height/2 );
     } else {
@@ -187,7 +187,7 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
 
 GlassLab.CreatureManager.prototype.hideCreatures = function() {
     for (var i = 0; i < this.creatures.length; i++) {
-        this.creatures[i].sprite.visible = false;
+        this.creatures[i].visible = false;
         if (!this.creatures[i].pen) { // if we're in a pen, we can chill
             this.creatures[i].StateTransitionTo(new GlassLab.CreatureState(this.game, this.creatures[i])); // else, go to a blank state
         }
@@ -196,7 +196,7 @@ GlassLab.CreatureManager.prototype.hideCreatures = function() {
 
 GlassLab.CreatureManager.prototype.showCreatures = function() {
     for (var i = 0; i < this.creatures.length; i++) {
-        this.creatures[i].sprite.visible = true;
+        this.creatures[i].visible = true;
         if (!this.creatures[i].pen) { // if we're in a pen, we can chill
             this.creatures[i].lookForTargets();
         }
