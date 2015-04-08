@@ -606,11 +606,11 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
 
 GlassLab.Creature.prototype._onFoodDropped = function(food) {
     if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
-        var dist = GlassLab.Util.GetGlobalIsoPosition(this.sprite).distance(food.sprite.isoPosition);
+        var dist = GlassLab.Util.GetGlobalIsoPosition(this.sprite).distance(food.getGlobalPos());
         if (dist < 3 * GLOBAL.tileSize) {
             this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing
             this.thoughtBubble.show("exclamationPoint", null, 800, this.lookForTargets, this);
-            this.standFacingPosition(food.sprite.isoPosition);
+            this.standFacingPosition(food.getGlobalPos());
         }
     }
 };
@@ -714,7 +714,7 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
 GlassLab.Creature.prototype.dislikeFood = function (food) {
     this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing while emoting
     this.thoughtBubble.show("redX", GlassLab.FoodTypes[food.type].spriteName, 1000, this.lookForTargets, this);
-    this.standFacingPosition(food.sprite.isoPosition);
+    this.standFacingPosition(food.isoPosition);
 
     food.dislikedBy[this.type] = true;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food was just disliked

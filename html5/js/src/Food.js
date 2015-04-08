@@ -195,6 +195,7 @@ GlassLab.Food.prototype._onEndDrag = function () {
     GlassLab.WorldObject.prototype._onEndDrag.call(this);
     GLOBAL.foodInWorld.push(this);
     GLOBAL.foodLayer.add(this);
+    GlassLab.SignalManager.foodDropped.dispatch(this);
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
 };
 
@@ -202,12 +203,6 @@ GlassLab.Food.prototype._onEndDrag = function () {
 GlassLab.Food.getName = function(type, plural) {
     var key = (plural? "plural" : "singular");
     return GlassLab.FoodTypes[type].displayNames[key];
-};
-
-GlassLab.Food.prototype.placeOnTile = function(tile) {
-  this.sprite.isoX = tile.isoX;
-  this.sprite.isoY = tile.isoY;
-  GLOBAL.foodInWorld.push(this);
 };
 
 GlassLab.Food.prototype.BeEaten = function(amount) {
@@ -225,6 +220,7 @@ GlassLab.Food.prototype.BeEaten = function(amount) {
         } else {
             this._afterEaten(1000);
         }
+        this.draggableComponent.active = false;
     }
     return amount; // return the actual amount that was eaten
 };
@@ -240,8 +236,9 @@ GlassLab.Food.prototype.setAnimStyle = function(style) {
 
 GlassLab.Food.prototype._afterEaten = function(fadeTime) {
     fadeTime = fadeTime || 3000;
-  var tween = this.game.add.tween(this.image).to( { alpha: 0 }, 3000, "Linear", true);
-  tween.onComplete.add( function() {this.sprite.destroy();}, this);
+  var tween = this.game.add.tween(this.image).to( { alpha: 0 }, fadeTime, "Linear", true);
+  var tween = this.game.add.tween(this.shadow).to( { alpha: 0 }, fadeTime, "Linear", true);
+  tween.onComplete.add( function() {this.destroy();}, this);
 };
 
 GlassLab.Food.prototype.setType = function(type)
@@ -254,7 +251,7 @@ GlassLab.Food.prototype.setType = function(type)
 
 GlassLab.Food.prototype.getTargets = function()
 {
-    var pos = GlassLab.Util.GetGlobalIsoPosition(this.sprite);
+    var pos = GlassLab.Util.GetGlobalIsoPosition(this);
     return [
         { food: this, priority: 1, pos: new Phaser.Point(pos.x + GLOBAL.tileSize / 3, pos.y - GLOBAL.tileSize / 2) },
         { food: this, priority: 1, pos: new Phaser.Point(pos.x - GLOBAL.tileSize / 3, pos.y) }

@@ -59,7 +59,7 @@ GlassLab.DraggableComponent.prototype._onUp = function(sprite, pointer) {
         else {
             var pos = (this.sprite instanceof Phaser.Plugin.Isometric.IsoSprite)? this.sprite.isoPosition : this.sprite.position;
             var dist = this.dragStartPoint.distance(pos);
-            console.log(dist, dist >= this.clickLeeway);
+            //console.log(dist, dist >= this.clickLeeway);
             if (dist >= this.clickLeeway) { // they held the mouse down and moved it, so it's normal drag and drop behavior
                 this._endDrag();
             } else {

@@ -22,7 +22,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
     // as long as we don't eat fractional food, run ahead to the first food we want (it's just too confusing with fractional food)
     var run = false;
     if (!GLOBAL.creatureManager.getCreatureWantsFractionalFood(this.creature.type)) {
-        var delta = Phaser.Point.subtract(GlassLab.Util.GetGlobalIsoPosition(this.foodInfo.food.sprite), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
+        var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
         run = (delta.getMagnitudeSq() >= GLOBAL.tileSize * GLOBAL.tileSize * 1.5625); // 1.5625 = 1.25^2, derived from when creatures leave this state and begin to eat food (.25 squares away))
     }
 
@@ -60,7 +60,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
             this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
             this.stopped = false;
         }
-        var delta = Phaser.Point.subtract(GlassLab.Util.GetGlobalIsoPosition(this.foodInfo.food.sprite), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
+        var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite));
         var deltaMagSq = delta.getMagnitudeSq();
         if (deltaMagSq > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're still far from the food
             // check if we're too close to the creature in front. but if that creature is already finished eating, we have to be allowed to walk by them.
