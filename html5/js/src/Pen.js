@@ -390,7 +390,7 @@ GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
     // This functionality could be replaced with _getSection
 };
 
-// Returns the index of the section that this tile is in, or -1 if it's not in the tile
+// Returns the index of the section that this tile is in, or -1 if it's not in the pen
 GlassLab.Pen.prototype._getSection = function(tile) {
     if (!tile) return -1;
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);

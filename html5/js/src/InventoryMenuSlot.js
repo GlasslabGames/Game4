@@ -123,6 +123,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             var food = new GlassLab.Food(this.game, this.foodType);
             GLOBAL.hoverLayer.add(food);
             food.snapToMouse();
+            food.isInitialDropAttempt = true;
             food.draggableComponent.tryStartDrag();
             //GLOBAL.UILayer.add(food); // there might be a way to make the food start above the inventory, but it adds complications (like where it should be placed.)
 

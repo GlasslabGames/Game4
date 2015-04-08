@@ -138,6 +138,7 @@ GlassLab.Food = function(game, type) {
 
     this.type = type;
     this._setImage();
+    this.canDropInPen = true; // setting on WorldObject
 
     this.health = 1; // food can be partially eaten. health 0 means it's totally eaten.
     this.eaten = false; // set to true as soon as the creature starts eating it
