@@ -9,7 +9,7 @@ GlassLab.Poop = function(game, type) {
     this.draggableComponent.active = false; // you can't drag poop
 
     this.sprite.loadTexture("poopAnim");
-    this.sprite.animations.add("idle", Phaser.Animation.generateFrameNames("poo_idle_",24,71,".png",3), 48, false);
+    this.sprite.animations.add("idle", Phaser.Animation.generateFrameNames("poo_idle_",24,71,".png",3), 48, true);
     this.sprite.animations.add("explode", Phaser.Animation.generateFrameNames("poo_splode_",0,24,".png",3), 48, false);
     this.sprite.play("idle");
 
