@@ -357,7 +357,6 @@ GlassLab.Creature.prototype._onStartDrag = function () {
 
 GlassLab.Creature.prototype._onEndDrag = function () {
     GlassLab.WorldObject.prototype._onEndDrag.call(this);
-    console.log("endDrag");
     this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
@@ -502,7 +501,6 @@ GlassLab.Creature.prototype.FinishEating = function (result, food) {
 };
 
 GlassLab.Creature.prototype.resetFoodEaten = function (animate) {
-    console.log("Reseting food");
     for (var key in this.foodEaten) this.foodEaten[key] = 0;
     if (animate) {
         for (var key in this.desiredAmountsOfFood) {
@@ -530,7 +528,6 @@ GlassLab.Creature.prototype.startPoopTimer = function () {
         } else {
             this.wantToPoop = true; // we'll poop next time we're idle
         }
-        console.log("Poop timer! Want to poop:",this.wantToPoop);
     }, this);
 };
 
@@ -632,8 +629,6 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
 };
 
 GlassLab.Creature.prototype.lookForTargets = function () {
-    console.log("Look for targets! Want to poop:",this.wantToPoop);
-
     if (this.wantToPoop) { // we're trying to decide what to do next, so poop now
         this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this));
         return;
