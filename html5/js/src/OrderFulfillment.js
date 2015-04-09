@@ -238,10 +238,10 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     this.crateLoaded = false;
     GLOBAL.assistant.startOrder(data);
 
-    GLOBAL.inventoryMenu.Show(true);
-
     this._sendTelemetry("start_order");
     GlassLab.SignalManager.orderStarted.dispatch(this.data);
+
+    GLOBAL.inventoryMenu.Show(true); // show this after sending the event so that we don't have to refresh the inventory again
 };
 
 GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)

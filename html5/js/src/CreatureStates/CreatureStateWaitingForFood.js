@@ -17,7 +17,7 @@ GlassLab.CreatureStateWaitingForFood.constructor = GlassLab.CreatureStateWaiting
 GlassLab.CreatureStateWaitingForFood.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.creature.standFacing("right");
-    this.creature.draggableComponent.draggable = !this.afterEating && (!this.creature.pen || this.creature.pen.penStyle != GlassLab.Pen.STYLES.crate); // you can drag them out of the pen before you start feeding them, but not after they're done
+    this.creature.draggableComponent.active = !this.afterEating && (!this.creature.pen || this.creature.pen.penStyle != GlassLab.Pen.STYLES.crate); // you can drag them out of the pen before you start feeding them, but not after they're done
     this.foodTypesChangedHandler = GlassLab.SignalManager.penFoodTypeSet.add(this._onFoodTypeChanged, this);
 };
 

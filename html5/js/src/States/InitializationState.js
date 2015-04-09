@@ -49,6 +49,7 @@ GlassLab.State.Init.prototype.preload = function()
     for (var i = 0; i < basicFoodSpriteNames.length; i++) {
         game.load.image(basicFoodSpriteNames[i], 'assets/images/food/food_standard/food_standard_'+basicFoodSpriteNames[i]+'.png');
         game.load.image(basicFoodSpriteNames[i]+'_sticker', 'assets/images/food/food_stickers/food_sticker_'+basicFoodSpriteNames[i]+'.png');
+        game.load.image(basicFoodSpriteNames[i]+'_shadow', 'assets/images/food/food_shadows/food_shadow_'+basicFoodSpriteNames[i]+'.png');
     }
 
     var animFoodSpriteNames = ["apple", "strawberry", "tincan", "broccoli"];
@@ -58,7 +59,7 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_VFX.png', 'assets/images/food/'+spriteName+'_long_death_VFX.json');
     }
 
-    game.load.image('shadow', 'assets/images/iso_shadow.png');
+    game.load.image('shadow', 'assets/images/iso_shadow2.png');
     game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
     /*
@@ -92,32 +93,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('happyEmote', 'assets/images/emotes/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
-/*
-     game.load.image('autumn_ground1.png', 'assets/images/tiles/autumn_ground1.png');
-     game.load.image('autumn_ground2.png', 'assets/images/tiles/autumn_ground2.png');
-     game.load.image('autumn_ground3.png', 'assets/images/tiles/autumn_ground3.png');
-     game.load.image('autumn_ground4.png', 'assets/images/tiles/autumn_ground4.png');
-     game.load.image('autumn_water.png', 'assets/images/tiles/autumn_water.png');
-     game.load.image('autumn_fenceBottomCorner.png', 'assets/images/tiles/autumn_fenceBottomCorner.png');
-     game.load.image('autumn_fenceSideCorner.png', 'assets/images/tiles/autumn_fenceSideCorner.png');
-     game.load.image('autumn_fenceStraight.png', 'assets/images/tiles/autumn_fenceStraight.png');
-     game.load.image('autumn_fenceTopCorner.png', 'assets/images/tiles/autumn_fenceTopCorner.png');
-
-    game.load.image('grassy_water.png', 'assets/images/tiles/grassy_water.png');
-    game.load.image('grassy_1.png', 'assets/images/tiles/grassy_1.png');
-    game.load.image('grassy_2.png', 'assets/images/tiles/grassy_2.png');
-    game.load.image('grassy_3.png', 'assets/images/tiles/grassy_3.png');
-    game.load.image('grassy_4.png', 'assets/images/tiles/grassy_4.png');
-    game.load.image('grassy_fence_bottomCorner.png', 'assets/images/tiles/grassy_fence_bottomCorner.png');
-     game.load.image('grassy_fence_length.png', 'assets/images/tiles/grassy_fence_length.png');
-     game.load.image('grassy_fence_sideCorner.png', 'assets/images/tiles/grassy_fence_sideCorner.png');
-     game.load.image('grassy_fence_topCorner.png', 'assets/images/tiles/grassy_fence_topCorner.png');
-    game.load.image('dirtTile1.png', 'assets/images/tiles/dirtTile1.png');
-    game.load.image('penTile_placeholder.png', 'assets/images/tiles/penTile_placeholder.png');
-    game.load.image('penTile_placeholder2.png', 'assets/images/tiles/penTile_placeholder2.png');
-    */
     game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
-    
+
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
     game.load.image('penTooltipWidth', 'assets/images/pen/pen_tooltip_width.png');
 
@@ -201,6 +178,13 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('speech_bubble_dots', 'assets/images/assistant/assistant_speech_min_dots.png');
     game.load.atlasJSONHash('assistantAnim', 'assets/images/assistant/assistant_animations.png', 'assets/images/assistant/assistant_animations.json');
 
+    // drop target
+    game.load.image('dropTargetRing', 'assets/images/drop_target_outer_ring.png');
+    game.load.image('dropTargetX', 'assets/images/drop_target_inner_x.png');
+
+    // poop
+    game.load.atlasJSONHash('poopAnim', 'assets/images/poo/poo.png', 'assets/images/poo/poo.json');
+
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 
@@ -277,7 +261,9 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
-    // Create pen
+    GLOBAL.baseWorldLayer = game.make.group();
+    GLOBAL.WorldLayer.add(GLOBAL.baseWorldLayer);
+
     GLOBAL.penLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.penLayer);
 
@@ -289,6 +275,9 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
+
+    GLOBAL.hoverLayer = game.make.group();
+    GLOBAL.WorldLayer.add(GLOBAL.hoverLayer);
 
     GLOBAL.paused = false;
 
@@ -347,6 +336,9 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
 
     GLOBAL.resourceManager = new GlassLab.ResourceManager(GLOBAL.game);
+
+    GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
+    GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);
 
     //GLOBAL.debugText = game.make.text(-300,0,"test");
     //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);

@@ -19,7 +19,7 @@ GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   if (this.anim) this.anim.onComplete.addOnce(this._onFinishVomiting, this);
     else this._onFinishVomiting();
   this.spewed = false;
-  this.creature.draggableComponent.draggable = false;
+  this.creature.draggableComponent.active = false;
 
     this.spewFrame = GLOBAL.creatureManager.creatureDatabase[this.creature.type].fxFrames.vomit;
 };
@@ -29,13 +29,14 @@ GlassLab.CreatureStateVomiting.prototype.Update = function() {
 };
 
 GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
+    this.creature.resetFoodEaten(true);
   this.spewed = true;
   var vomit = this.game.make.isoSprite(0,0,0, "vomit");
   vomit.anchor.set(1,0);
   vomit.tint = this.creature.lastEatenFoodInfo? this.creature.lastEatenFoodInfo.color : 0xBFDB9A; // default vomit color
   GLOBAL.effectLayer.addChild(vomit); // NOTE: remember to clean this up if we do something except remove the parent
   vomit.scale.setTo(this.creature.sprite.scale.x, this.creature.sprite.scale.y);
-    var globalPos = GlassLab.Util.GetGlobalIsoPosition(this.creature.sprite);
+    var globalPos = this.creature.getGlobalPos();
   vomit.isoX = globalPos.x;
   vomit.isoY = globalPos.y;
     if (this.creature.sprite.scale.x > 0) {
@@ -65,11 +66,11 @@ GlassLab.CreatureStateVomiting.prototype.Exit = function() {
 };
 
 GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
+    this.creature.resetFoodEaten();
     if (this.creature.pen) {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, Number.MAX_VALUE));
         this.creature.FinishEating("sick");
     } else {
-        this.creature.resetFoodEaten();
         if (this.food) { // only start crying if we had food, which means we're not just purging before entering a pen
             this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 3000));
         } else { // else we were probably about to enter a pen, so look for it again

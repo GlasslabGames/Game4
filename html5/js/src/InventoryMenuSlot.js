@@ -33,8 +33,17 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.addChild(this.bgSprite);
 
     // slot image:
-    this.foodSprite = new GlassLab.InventoryMenuItem(this.game, this.foodType);
+    this.foodSprite = game.make.sprite(0, 0, GlassLab.FoodTypes[this.foodType].spriteName); //new GlassLab.InventoryMenuItem(this.game, this.foodType);
+    this.foodSprite.anchor.setTo(0.5, 0.5);
+    this.foodSprite.scale.setTo(0.75, 0.75);
     this.addChild(this.foodSprite);
+
+    // draggable food item:
+    this.draggableItem = new GlassLab.InventoryMenuItem(this.game, this.foodType);
+    this.addChild(this.draggableItem);
+
+    // Note that the draggable food item will be available if they're doing an order. Otherwise, the basic food sprite will be visible
+    //  and a new world food object will be created when they start to drag.
 
     // locked slot image (coin):
     this.coinSprite = this.game.make.sprite(0, 0, "inventoryCoin");
@@ -107,7 +116,20 @@ GlassLab.InventoryMenuSlot.prototype.constructor = GlassLab.InventoryMenuSlot;
 
 GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
 {
-    if (!this.data.unlocked && this.data.cost > 0) {
+    if (this.data.unlocked) {
+        if (this.draggableItem.visible) { // the draggable sticker if visible, so start dragging it
+            this.draggableItem.draggableComponent.tryStartDrag();
+        } else { // if we're not in shipping mode, spawn a food and start dragging it
+            var food = new GlassLab.Food(this.game, this.foodType);
+            GLOBAL.hoverLayer.add(food);
+            food.snapToMouse();
+            food.isInitialDropAttempt = true;
+            food.draggableComponent.tryStartDrag();
+            //GLOBAL.UILayer.add(food); // there might be a way to make the food start above the inventory, but it adds complications (like where it should be placed.)
+
+            // TODO GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row}); // Incorrect name
+        }
+    } else if (!this.data.unlocked && this.data.cost > 0) {
         if (!this.modal) {
             var yesButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
             var noButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseCanceled, this, 150, 60, 0xffffff, "No");
@@ -124,7 +146,6 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
 {
     if (GLOBAL.inventoryManager.TrySpendMoney(this.data.cost)) {
         GLOBAL.inventoryManager.unlock(this.foodType); // if we don't actually call unlock(), the unlock won't be saved
-        GLOBAL.saveManager.Save(); // save when we unlock food
         this.Refresh();
         this.modal.Hide();
     }
@@ -189,7 +210,10 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
 {
     if (this.data.unlocked) {
         this.bgSprite.alpha = 0.5;
-        this.foodSprite.visible = true;
+        // If we're currently filling an order, use the draggableItem (which can be dragged to the order form.)
+        // Else, use the basic food sprite (and the player can drag a food object into the world.)
+        this.foodSprite.visible = !GLOBAL.mailManager.currentOrder;
+        this.draggableItem.visible = GLOBAL.mailManager.currentOrder;
         this.coinSprite.visible = false;
         this.label.visible = false;
 
@@ -224,6 +248,7 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
             this.label.visible = false;
         }
         this.foodSprite.visible = false;
+        this.draggableItem.visible = false;
     }
 
     this._signalChange();
@@ -284,13 +309,14 @@ GlassLab.InventoryMenuSlot.prototype._onOut = function()
 
 
 
-// This is the piece that actually gets dragged out
+// This was the piece of food that gets dragged out into the world, but we now create the food itself immediately.
+// So this class currently isn't used, but leaving it here for reference (e.g. the UI functionality)
 GlassLab.InventoryMenuItem = function(game, foodType)
 {
     this.foodType = foodType;
     this.data = GlassLab.FoodTypes[foodType];
     GlassLab.UIDraggable.prototype.constructor.call(this, game, 0, 0);
-    //this.is_dragging = false;
+    this.draggableComponent.snap = true;
 
     var hitArea = new Phaser.Rectangle(-40, -45, 80, 90);
     this.hitArea = hitArea;
@@ -301,9 +327,8 @@ GlassLab.InventoryMenuItem = function(game, foodType)
     this.events.onInputOut.add(this._onOut, this);
     this.events.onStartDrag.add(this._onStartDrag, this);
 
-    this.loadTexture( this.data.spriteName );
+    this.loadTexture( this.data.spriteName+"_sticker" );
     this.anchor.setTo(0.5, 0.5);
-    this.scale.setTo(0.8, 0.8);
 };
 
 GlassLab.InventoryMenuItem.prototype = Object.create(GlassLab.UIDraggable.prototype);
@@ -334,34 +359,10 @@ GlassLab.InventoryMenuItem.prototype._onStartDrag = function()
 
 GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
 {
-    GLOBAL.audioManager.playSound("clickSound"); // generic interaction sound
-
+    console.log("Stop dragging inventoryMenuItem. Target:",target);
     if (target) { // we dropped it on an acceptable uiDragTarget
         this._jumpToStart(); // move the sprite back
-        return;
-    }
-
-    // Dropped on world
-    if (!GLOBAL.orderFulfillment.sprite.visible)
-    {
-        var pointer = this.game.input.activePointer;
-        var tile = GLOBAL.tileManager.TryGetTileAtWorldPosition(pointer.worldX, pointer.worldY);
-        if (tile && tile.canDropFood()) { // valid tile
-            var food = new GlassLab.Food(this.game, this.foodType);
-            GLOBAL.foodLayer.add(food.sprite);
-            food.placeOnTile(tile);
-
-            GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
-            GlassLab.SignalManager.foodDropped.dispatch(food); // we should have this before targetsChanged
-            GlassLab.SignalManager.creatureTargetsChanged.dispatch();
-
-            this._jumpToStart();
-        }
-        else  if (tile && tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.foodType, tile)) {
-            this._jumpToStart();
-        }
-        // else, it will fly back thanks to uiDraggable
-    }
+    } // else it will fly back thanks to uiDraggable
 
     this.parent.parent.dropped_item = true; // this.parent.parent = InventoryMenu
     this.parent.parent.dragging_item = false;
@@ -369,5 +370,5 @@ GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
 
 GlassLab.InventoryMenuItem.prototype._jumpToStart = function()
 {
-    this.position.setTo(this.dragStartPoint.x, this.dragStartPoint.y); // jump back into the inventory
+    this.position.setTo(this.draggableComponent.dragStartPoint.x, this.draggableComponent.dragStartPoint.y); // jump back into the inventory
 };

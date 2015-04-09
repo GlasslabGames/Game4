@@ -47,7 +47,7 @@ GlassLab.LevelManager = function(game)
             bird: 4
         }
     };
-
+    */
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Testing",
@@ -55,7 +55,7 @@ GlassLab.LevelManager = function(game)
             {
                 "client": "Archibold Huxley III",
                 "company": "Rupture Farms",
-                "numFoodA": 6,
+                "numFoodA": 8,
                 "type": "baby_bird",
                 "description": "blah",
                 "reward": 200
@@ -105,11 +105,8 @@ GlassLab.LevelManager = function(game)
     };
 
     // 10
-    this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {
-        bird: 1,
-        baby_bird: 1
-    }};
-    */
+    this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {unifox: 1}};
+
 };
 
 GlassLab.LevelManager.prototype._addLevelData = function(levelData)
@@ -159,7 +156,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
         for (var type in levelData.looseCreatures) {
             for (var j = 0; j < levelData.looseCreatures[type]; j++) {
                 var creature = new GlassLab.Creature(this.game, type);
-                GLOBAL.creatureLayer.add(creature.sprite);
+                GLOBAL.creatureLayer.add(creature);
                 //creature.moveToRandomTile();
                 creature.lookForTargets();
                 creature.name = "creature"+j; // for debugging

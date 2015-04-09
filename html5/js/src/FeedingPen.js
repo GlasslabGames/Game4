@@ -23,10 +23,10 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     // Instead of adding everything to objectRoot, make parents for the food and creatures so we can order them
     this.foodRoot = this.game.make.isoSprite();
-    this.objectRoot.addChild(this.foodRoot);
+    this.frontObjectRoot.addChild(this.foodRoot);
 
     this.creatureRoot = this.game.make.group(); // the reason this is a group and not a sprite is so we can use iso.simpleSort
-    this.objectRoot.addChild(this.creatureRoot);
+    this.backObjectRoot.addChild(this.creatureRoot);
 
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
@@ -77,7 +77,6 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
     if (this.autoFill) {
         this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatureSpots, this.numCreatures,
             0, this.widths[0], true, this.creatureType);
-        this.forEachCreature(function() { this.draggableComponent.draggable = false; });
     } else {
         this._repositionCreatures(); // adjust the creatures if they got moved
     }
@@ -148,7 +147,8 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
 
     this.penStyle = GlassLab.Pen.STYLES.crate;
     // move the creatures to be in front of the topEdge
-    this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
+    this.frontObjectRoot.addChild(this.creatureRoot);
+    //this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
 
     this.widths[0] = Math.min(this.presetCreatureWidth, numCreatures); // keep our original creature width as set in order fulfillment, unless we have fewer creatures than that
     this.height = Math.ceil(numCreatures / this.widths[0]);
@@ -162,7 +162,7 @@ GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures,
     this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
     this.sprite.isoX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
 
-    this.Resize();
+    this.show(); // make sure the pen is visible, and also call Resize
 };
 
 GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
@@ -181,14 +181,14 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
             var obj  = unusedObjects.pop();
             if (!obj) { // we ran out of existing tiles, so make a new one
                 obj = new boundConstructor();
-                if (parent.addChild) parent.addChild(obj.sprite); // if the parent is a sprite
-                else parent.add(obj.sprite); // if the parent is a group
+                if (parent.addChild) parent.addChild(obj); // if the parent is a sprite
+                else parent.add(obj); // if the parent is a group
+                if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
             }
             obj.setType(targetType);
-            obj.sprite.visible = true;
-            obj.sprite.isoX = (col + emptyCols) * GLOBAL.tileSize;
-            obj.sprite.isoY = row * GLOBAL.tileSize;
-            obj.sprite.parent.setChildIndex(obj.sprite, obj.sprite.parent.children.length - 1); // move it to the back of the children so far
+            obj.visible = true;
+            obj.placeOnTile(col + emptyCols, row);
+            obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
             obj.pen = this;
             list[row].push(obj);
             count++;
@@ -196,7 +196,7 @@ GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, 
     }
 
     for (var i = unusedObjects.length-1; i >= 0; i--) {
-        if (unusedObjects[i]) unusedObjects[i].sprite.visible = false;
+        if (unusedObjects[i]) unusedObjects[i].visible = false;
         else unusedObjects.splice(i, 1);
     }
 };
@@ -221,7 +221,8 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 
     // if there's a gate, move the creatures to be in front of the centerEdge
     if (this.penStyle == GlassLab.Pen.STYLES.gate) {
-        this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
+        this.frontObjectRoot.addChild(this.creatureRoot);
+        //this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
     }
 
     // close the items
@@ -440,7 +441,7 @@ GlassLab.FeedingPen.prototype.tryAddCreature = function(creature, tile) {
         return false;
     }
     this.creatureSpots[row][col] = creature;
-    this.creatureRoot.add(creature.sprite);
+    this.creatureRoot.add(creature);
     creature.pen = this;
     this._repositionCreatures();
     this._onCreatureContentsChanged();
@@ -474,12 +475,12 @@ GlassLab.FeedingPen.prototype.tryRemoveCreature = function(creature) {
 // removes a creature, assuming that its spot in the pen is already unassigned
 GlassLab.FeedingPen.prototype._removeCreature = function(creature, offset) {
     if (offset && !offset.isZero()) {
-        creature.sprite.isoX = creature.sprite.isoX - offset.x;
-        creature.sprite.isoY = creature.sprite.isoY - offset.y;
+        creature.isoX = creature.isoX - offset.x;
+        creature.isoY = creature.isoY - offset.y;
     }
     var tile = creature.getTile();
     //console.log("removing creature at",tile.col, tile.row);
-    GLOBAL.creatureLayer.addChild(creature.sprite);
+    GLOBAL.creatureLayer.addChild(creature);
     creature.setIsoPos(tile.isoX, tile.isoY); // set the position so it stays on the tile it was over while in the pen
     creature.pen = null;
     if (!(creature.state instanceof GlassLab.CreatureStateDragged)) creature.lookForTargets();
@@ -495,7 +496,7 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
   for (var row = 0; row < this.creatureSpots.length; row++) {
       for (var col = 0; col < this.creatureSpots[row].length; col++) {
           if (this.creatureSpots[row][col]) {
-              this.creatureSpots[row][col].setIsoPos(col * GLOBAL.tileSize, row * GLOBAL.tileSize);
+              this.creatureSpots[row][col].placeOnTile(col, row);
           }
       }
   }

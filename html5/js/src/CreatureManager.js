@@ -24,7 +24,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "babyram",
-            fxFrames: {eat: 14, vomit: 21 },
+            fxFrames: {eat: 14, vomit: 21, poop: 40 },
             desiredFood: [{type: "broccoli", amount: 3}]
         },
         rammus: {
@@ -39,7 +39,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "ram",
-            fxFrames: {eat: 16, vomit: 60 },
+            fxFrames: {eat: 16, vomit: 60, poop: 40 },
             desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}]
         },
         baby_unifox: {
@@ -55,7 +55,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "babyunifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
-            fxFrames: {eat: 22, vomit: 36 },
+            fxFrames: {eat: 22, vomit: 36, poop: 70 },
             desiredFood: [{type: "strawberry", amount: 4}]
         },
         unifox: {
@@ -71,7 +71,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "unifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
-            fxFrames: {eat: 1, vomit: 40 },
+            fxFrames: {eat: 1, vomit: 40, poop: 70 },
             desiredFood: [{type: "strawberry", amount: 4}, {type: "pizza", amount: 5}]
         },
         baby_bird: {
@@ -86,7 +86,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false,
             spriteName: "babybird",
-            fxFrames: {eat: 16, vomit: 60 },
+            fxFrames: {eat: 16, vomit: 60, poop: 70 },
             desiredFood: [{type: "meat", amount: (4/3)}] // 3 birds eat 4 food
         },
         bird: {
@@ -101,7 +101,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false,
             spriteName: "bird",
-            fxFrames: {eat: 16, vomit: 60 },
+            fxFrames: {eat: 16, vomit: 60, poop: 70 },
             desiredFood: [{type: "meat", amount: (10/4)}, {type: "taco", amount: (5/4)}]
         }
     };
@@ -168,7 +168,7 @@ GlassLab.CreatureManager.prototype.DestroyAllCreatures = function() {
 GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 {
     var creature = new GlassLab.Creature(this.game, type);
-    GLOBAL.creatureLayer.add(creature.sprite);
+    GLOBAL.creatureLayer.add(creature);
     if (centered) {
         creature.moveToTile( GLOBAL.tileManager.tilemap.width/2, GLOBAL.tileManager.tilemap.height/2 );
     } else {
@@ -187,7 +187,7 @@ GlassLab.CreatureManager.prototype.CreateCreatures = function(type, number, cent
 
 GlassLab.CreatureManager.prototype.hideCreatures = function() {
     for (var i = 0; i < this.creatures.length; i++) {
-        this.creatures[i].sprite.visible = false;
+        this.creatures[i].visible = false;
         if (!this.creatures[i].pen) { // if we're in a pen, we can chill
             this.creatures[i].StateTransitionTo(new GlassLab.CreatureState(this.game, this.creatures[i])); // else, go to a blank state
         }
@@ -196,7 +196,7 @@ GlassLab.CreatureManager.prototype.hideCreatures = function() {
 
 GlassLab.CreatureManager.prototype.showCreatures = function() {
     for (var i = 0; i < this.creatures.length; i++) {
-        this.creatures[i].sprite.visible = true;
+        this.creatures[i].visible = true;
         if (!this.creatures[i].pen) { // if we're in a pen, we can chill
             this.creatures[i].lookForTargets();
         }

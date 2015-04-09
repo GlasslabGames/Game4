@@ -90,6 +90,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
             if (tileType == -1) continue;
 
             var image = new GlassLab.Tile(this.game, i, j, tileType);
+            //image.tint = Math.random() * 16777215;
             parentGroup.add(image);
 
             if (!this.map[i]) this.map[i] = [];

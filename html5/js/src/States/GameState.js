@@ -15,6 +15,7 @@ GlassLab.State.Game.prototype.create = function()
 {
     var game = this.game;
 
+    GLOBAL.gameInitialized = true;
     GlassLab.SignalManager.gameInitialized.dispatch(); // triggers managers grabbing stuff from the save blob, etc
 
     GLOBAL.levelManager.LoadFirstLevel(); // Load first level
@@ -40,8 +41,6 @@ GlassLab.State.Game.prototype.update = function()
     {
         GlassLab.SignalManager.update.dispatch(game.time.elapsedMS);
     }
-
-    GLOBAL.justDropped = false;
 
     var tileSprite;
 
