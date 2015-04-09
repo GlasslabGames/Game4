@@ -50,7 +50,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.hungerBar.sprite.visible = false;
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
-    this.thoughtBubble.position.setTo(-70, -50);
+    this.thoughtBubble.position.setTo(-70, -60);
     this.thoughtBubble.scale.setTo(0.8, 0.8);
     this.addChild(this.thoughtBubble);
 
@@ -59,7 +59,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen. Each food is like {food: f, eatPartially: true}
 
     this.animSprites = {};
-    var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit", "cry_start", "cry_loop", "cry_end"];
+    var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit", "cry_start", "cry_loop", "cry_end", "poop"];
     for (var i = 0; i < animNames.length; i++) {
         var animName = animNames[i];
         var spriteName = info.spriteName + "_" + animName;
@@ -501,9 +501,37 @@ GlassLab.Creature.prototype.FinishEating = function (result, food) {
     this.finishedEating = true; // checked by other creatures
 };
 
-GlassLab.Creature.prototype.resetFoodEaten = function () {
+GlassLab.Creature.prototype.resetFoodEaten = function (animate) {
+    console.log("Reseting food");
     for (var key in this.foodEaten) this.foodEaten[key] = 0;
-    this.hungerBar.reset();
+    if (animate) {
+        for (var key in this.desiredAmountsOfFood) {
+            this.hungerBar.setAmount(key, 0, true, 2);
+        }
+    } else {
+        this.hungerBar.reset();
+    }
+
+    // If we reset the food we've eaten, we definitely don't need to poop
+    this.cancelPoop();
+};
+
+GlassLab.Creature.prototype.cancelPoop = function () {
+    if (this.poopTimer) this.game.time.events.remove(this.poopTimer);
+    this.wantToPoop = false;
+};
+
+GlassLab.Creature.prototype.startPoopTimer = function () {
+    this.cancelPoop();
+    var poopDelay = 0.1 * Phaser.Timer.MINUTE;
+    this.poopTimer = this.game.time.events.add(poopDelay, function() {
+        if (this.state instanceof GlassLab.CreatureStateIdle) { // we weren't doing anything else, so why not poop?
+            this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this));
+        } else {
+            this.wantToPoop = true; // we'll poop next time we're idle
+        }
+        console.log("Poop timer! Want to poop:",this.wantToPoop);
+    }, this);
 };
 
 GlassLab.Creature.prototype.getIsSatisfied = function () {
@@ -604,6 +632,13 @@ GlassLab.Creature.prototype._onTargetsChanged = function() {
 };
 
 GlassLab.Creature.prototype.lookForTargets = function () {
+    console.log("Look for targets! Want to poop:",this.wantToPoop);
+
+    if (this.wantToPoop) { // we're trying to decide what to do next, so poop now
+        this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this));
+        return;
+    }
+
     var targets = []; // a list of targets like { pos: world position, pen: pen} or { pos: world position, food: food }
     // Look for pen spots we could enter
     for (var i = 0; i < GLOBAL.penManager.pens.length; i++) {
@@ -640,8 +675,8 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     var targetIsSameTile = bestRealDist <= GLOBAL.tileSize / 2;
 
     if (bestTarget && targetIsNoticeable) {
-        if (bestTarget.pen && !bestTarget.full && !this.getIsEmpty()) { // if the creature wants to enter a pen, it vomits first ...
-            this.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this)); // this will look for a target again when it's done
+        if (bestTarget.pen && !bestTarget.full && !this.getIsEmpty()) { // if the creature wants to enter a pen, it poops first ...
+            this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this)); // it will look for a target again when it's done
         } else if (!targetIsSameTile || !this.tryReachTarget(bestTarget)) { // if we're too far, or we fail to enter the target right now
             this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget)); // travel to the target
         } // else we must be close enough and have reached the target

@@ -93,7 +93,8 @@ GlassLab.FillBar.prototype.showError = function() {
 
 GlassLab.FillBar.prototype.show = function(show, hideAfter) {
     if (show && !this.sprite.visible && hideAfter) {
-        this.game.time.events.add(Phaser.Timer.SECOND * hideAfter, function(){ this.show(false); }, this);
+        if (this.timer) this.game.time.events.remove(this.timer); // don't allow multiple hide timers at once
+        this.timer = this.game.time.events.add(Phaser.Timer.SECOND * hideAfter, function(){ this.show(false); }, this);
     }
 
     this.sprite.visible = show;
@@ -110,7 +111,8 @@ GlassLab.FillBar.prototype.reset = function() {
 
 GlassLab.FillBar.prototype._onFinishAnim = function() {
     if (this.hideAfter) {
-        this.game.time.events.add(Phaser.Timer.SECOND * this.hideAfter, function(){ this.show(false); }, this);
+        if (this.timer) this.game.time.events.remove(this.timer); // don't allow multiple hide timers at once
+        this.timer = this.game.time.events.add(Phaser.Timer.SECOND * this.hideAfter, function(){ this.show(false); }, this);
     } else if (this.hideAfter === 0) {
         this.show(false);
     }

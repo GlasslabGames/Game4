@@ -81,6 +81,7 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
             this.creature.showEmote(true);
             GLOBAL.creatureManager.LogNumCreaturesFed(this.creature.type, 1);
         }
+        this.creature.startPoopTimer(); // we want to poop a little while after we eat
         this.creature.lookForTargets();
     }
 };

@@ -249,8 +249,7 @@ GlassLab.Food.prototype.setAnimStyle = function(style) {
 
 GlassLab.Food.prototype._afterEaten = function(fadeTime) {
     fadeTime = fadeTime || 3000;
-  var tween = this.game.add.tween(this.image).to( { alpha: 0 }, fadeTime, "Linear", true);
-  var tween = this.game.add.tween(this.shadow).to( { alpha: 0 }, fadeTime, "Linear", true);
+  var tween = this.game.add.tween(this).to( { alpha: 0 }, fadeTime, "Linear", true);
   tween.onComplete.add( function() {this.destroy();}, this);
 };
 

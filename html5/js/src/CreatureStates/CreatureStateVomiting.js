@@ -29,6 +29,7 @@ GlassLab.CreatureStateVomiting.prototype.Update = function() {
 };
 
 GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
+    this.creature.resetFoodEaten(true);
   this.spewed = true;
   var vomit = this.game.make.isoSprite(0,0,0, "vomit");
   vomit.anchor.set(1,0);
@@ -65,11 +66,11 @@ GlassLab.CreatureStateVomiting.prototype.Exit = function() {
 };
 
 GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
+    this.creature.resetFoodEaten();
     if (this.creature.pen) {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, Number.MAX_VALUE));
         this.creature.FinishEating("sick");
     } else {
-        this.creature.resetFoodEaten();
         if (this.food) { // only start crying if we had food, which means we're not just purging before entering a pen
             this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 3000));
         } else { // else we were probably about to enter a pen, so look for it again
