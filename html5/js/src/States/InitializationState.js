@@ -182,6 +182,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('dropTargetRing', 'assets/images/drop_target_outer_ring.png');
     game.load.image('dropTargetX', 'assets/images/drop_target_inner_x.png');
 
+    // poo
+    game.load.atlasJSONHash('pooAnim', 'assets/images/poo/poo.png', 'assets/images/poo/poo.json');
+
     // Tilemap
     game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
 
