@@ -139,6 +139,8 @@ GlassLab.Food = function(game, type) {
     this.type = type;
     this._setImage();
     this.canDropInPen = true; // setting on WorldObject
+    this.destroyIfOutOfBounds = true; // allow the food to be destroyed if it's dropped somewhere invalid
+
     this.shadowY = this.shadow.y = -10;
     this.spriteY = this.sprite.y = 5;
 
@@ -196,6 +198,7 @@ GlassLab.Food.prototype._onStartDrag = function () {
 
 GlassLab.Food.prototype._onEndDrag = function () {
     GlassLab.WorldObject.prototype._onEndDrag.call(this);
+    if (this.destroyed) return; // the world object might have destroyed itself if it was out of bounds
 
     var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);
     if (tile && tile.inPen && tile.inPen.tryDropFood(this.type, tile)) {

@@ -105,7 +105,7 @@ GlassLab.LevelManager = function(game)
     };
 
     // 10
-    this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {}};
+    this._addLevelData(new GlassLab.Level()).data = {looseCreatures: {unifox: 1}};
 
 };
 

@@ -35,9 +35,12 @@ GlassLab.WorldDropTarget.prototype = Object.create(Phaser.Sprite.prototype);
 GlassLab.WorldDropTarget.prototype.constructor = GlassLab.WorldDropTarget;
 
 GlassLab.WorldDropTarget.prototype._onUpdate = function() {
-    var target = (GLOBAL.dragTarget && GLOBAL.dragTarget.showDropTarget);
+    var target = GLOBAL.dragTarget;
+    if (target && !target.showDropTarget) target = null; // ignore targets where we don't want to show this
+
     if (target && !this.active) {
         this.active = true;
+        this.lastValidPoint = null;
         this.scale.setTo(0,0);
         this.game.add.tween(this.scale).to({x: 1, y: 1}, 100, Phaser.Easing.Quadratic.InOut, true);
     } else if (!target && this.active) {
@@ -46,10 +49,16 @@ GlassLab.WorldDropTarget.prototype._onUpdate = function() {
     }
 
     if (this.active) {
-      this.ring.angle += 1.5;
-      var cursorPos = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
-      Phaser.Point.divide(cursorPos, GLOBAL.WorldLayer.scale, cursorPos);
-      this.x = cursorPos.x;
-      this.y = cursorPos.y;
+        this.ring.angle += 1.5;
+        var cursorPos = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
+        var tile = GLOBAL.tileManager.GetTileAtWorldPosition(cursorPos.x, cursorPos.y);
+        if (!target.sprite || !target.sprite.canDropOn || target.sprite.canDropOn(tile)) { // check WorldObject.canDropOn
+            this.lastValidPoint = cursorPos.clone(); // remember this as a valid point to drag over
+        } else if (this.lastValidPoint) {
+            cursorPos.copyFrom(this.lastValidPoint); // revert to the last valid point
+        }
+        Phaser.Point.divide(cursorPos, GLOBAL.WorldLayer.scale, cursorPos);
+        this.x = cursorPos.x;
+        this.y = cursorPos.y;
     }
 };

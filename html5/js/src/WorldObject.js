@@ -32,7 +32,7 @@ GlassLab.WorldObject = function (game) {
 
     this.canDropInPen = false; // excluding the waiting area - should be set to true for food
     this.canDropInWaitingArea = false; // should be set to true for creatures
-    this.isInitialDropAttempt = false; // this is true if this is the first time we're trying to drag it and we want to destroy it if we don't put it down somewhere good
+    this.destroyIfOutOfBounds = false; // if we're willing to destroy the object if it gets dragged out of bounds (false for creatures, true for food)
     this.tweenTime = 100;
 
     this.draggableComponent = new GlassLab.DraggableComponent(game, this);
@@ -62,44 +62,43 @@ GlassLab.WorldObject.prototype._onStartDrag = function () {
     this.game.add.tween(this.sprite).to({y: this.spriteY+this.baseOffsetWhileDragging+this.floatHeight}, this.tweenTime, Phaser.Easing.Quadratic.InOut, true);
     this.game.add.tween(this.shadow).to({alpha: 0.15}, this.tweenTime, Phaser.Easing.Quadratic.InOut, true);
 
-    this.lastValidTarget = null;
+    this.target = null;
 };
 
 GlassLab.WorldObject.prototype._onEndDrag = function () {
-    if (this.lastValidTarget) {
-        this.isoX = this.lastValidTarget.x;
-        this.isoY = this.lastValidTarget.y;
-    } else if (this.isInitialDropAttempt) {
-        this.destroy(); // give up on dropping this somewhere valid
-        return;
-    } else { // revert to the original position
-        this.isoX = this.draggableComponent.dragStartPoint.x;
-        this.isoY = this.draggableComponent.dragStartPoint.y;
+    if (this.target) {
+        this.isoX = this.target.x;
+        this.isoY = this.target.y;
     }
-    // TODO: fix this, probably by involving the WorldDragTarget.
+    if (!this.canDropOn(this.getTile())) { // tried to drop in an invalid place
+        if (this.destroyIfOutOfBounds) {
+            this.destroyed = true; // we need to check this in later functions
+            this.destroy();
+            return;
+        } else { // revert to the previous position and hope for the best
+            this.isoX = this.draggableComponent.dragStartPoint.x;
+            this.isoY = this.draggableComponent.dragStartPoint.y;
+        }
+    }
 
     this.game.add.tween(this.shadow).to({alpha: 0.3}, this.tweenTime, Phaser.Easing.Quadratic.InOut, true);
     this.game.add.tween(this.shadow).to({y: this.shadowY}, this.tweenTime, Phaser.Easing.Quadratic.In, true);
     this.game.add.tween(this.sprite).to({y: this.spriteY}, this.tweenTime, Phaser.Easing.Quadratic.In, true);
     this.game.add.tween(this.sprite.scale).to({y: this.spriteScaleY * 0.8}, this.tweenTime, Phaser.Easing.Quadratic.InOut, true, this.tweenTime * 0.8, 0, true);
-
-    this.isInitialDropAttempt = false;
 };
 
 GlassLab.WorldObject.prototype._onDrag = function (mousePos, diff) {
     var inertia = 0.75; // setting this to a higher number will make the object follow the mouse with more of a delay
-    var target = this.game.iso.unproject(mousePos);
-    if (this._canDropAt(target)) {
-        this.lastValidTarget = target;
-    } else if (this.lastValidTarget) {
-        target = this.lastValidTarget;
-    }
-    this.isoX = this.isoX * inertia + target.x * (1 - inertia);
-    this.isoY = this.isoY * inertia + target.y * (1 - inertia);
+
+    // the drop target does some calculations to avoid going out of bounds, so we should follow it if possible
+    if (GLOBAL.dropTarget.active) mousePos = GLOBAL.dropTarget.position;
+
+    this.target = this.game.iso.unproject(mousePos);
+    this.isoX = this.isoX * inertia + this.target.x * (1 - inertia);
+    this.isoY = this.isoY * inertia + this.target.y * (1 - inertia);
 };
 
-GlassLab.WorldObject.prototype._canDropAt = function (pos) {
-    var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(pos.x, pos.y);
+GlassLab.WorldObject.prototype.canDropOn = function (tile) {
     if (!tile) return false;
     else if (tile.inPen) {  // check which section of the pen we're in. Even if a tile wouldn't be walkable, we might allow it if it's in the correct part of the pen.
         var section = tile.inPen._getSection(tile);
