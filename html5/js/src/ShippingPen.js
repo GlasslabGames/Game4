@@ -24,8 +24,6 @@ GlassLab.ShippingPen = function(game) {
     this.SetDraggableOnly(); // no dragging
 
     this.onResolved = new Phaser.Signal();
-
-    this.sprite.events.onDestroy.add(this.Destroy, this);
 };
 
 GlassLab.ShippingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -33,15 +31,21 @@ GlassLab.ShippingPen.constructor = GlassLab.ShippingPen;
 
 // Adds the specified number of creatures and food
 GlassLab.ShippingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow) {
+    console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow);
     // use the target creature width as set in order fulfillment, unless we have fewer creatures than that
     if (targetCreatureWidth) this.widths[0] = Math.min(this.presetCreatureWidth, numCreatures);
     else this.widths[0] = numCreatures;
 
     this.height = Math.ceil(numCreatures / this.widths[0]);
-    for (var j = 0; j < numFoods.length; j++) {
+    var j = 0;
+    for (; j < numFoods.length; j++) {
         this.widths[j+1] = (singleFoodRow)? numFoods[j] : (Math.ceil(numFoods[j] / this.height));
         if (j < numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
     }
+    while (j < this.widths) {
+        this.widths.pop();
+    }
+
     if (hideCreatures) numCreatures = 0; // keep the same widths and height, but don't add any creatures
     this.centerEdge.sprite.visible = false;
 

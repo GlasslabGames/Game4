@@ -182,6 +182,7 @@ GlassLab.Pen.prototype.Resize = function() {
     // if we look like a crate, we need to show a special corner sprite
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
         this.cornerSprite.visible = true;
+        console.log(this.cornerSprite, this.cornerSprite.key);
         if (this.cornerSprite.spriteName != "crate" || this.cornerSprite.frameName != "crate_back_corner.png") this.cornerSprite.loadTexture("crate", "crate_back_corner.png"); // TODO: FIX IF CHECK
         this.cornerSprite.anchor.setTo(0.075, 0.04);
         this.cornerSprite.isoPosition.setTo(GLOBAL.tileSize * -2, GLOBAL.tileSize * -1);

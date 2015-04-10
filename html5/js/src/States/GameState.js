@@ -31,6 +31,8 @@ GlassLab.State.Game.prototype.create = function()
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
+
+    var crate = new GlassLab.ShippingPen(this.game);
 };
 
 GlassLab.State.Game.prototype.update = function()
@@ -63,7 +65,8 @@ GlassLab.State.Game.prototype.update = function()
     if (tileSprite != GLOBAL.highlightedTile)
     {
         // Entered tile in pen
-        if (tileSprite && tileSprite.inPen && (!GLOBAL.highlightedTile || (GLOBAL.highlightedTile.inPen != tileSprite.inPen)))
+        if (tileSprite && tileSprite.inPen && (!GLOBAL.highlightedTile || (GLOBAL.highlightedTile.inPen != tileSprite.inPen)) &&
+            tileSprite.inPen instanceof GlassLab.FeedingPen)
         {
             GLOBAL.UIManager.penTooltip.Show(tileSprite.inPen);
         }
