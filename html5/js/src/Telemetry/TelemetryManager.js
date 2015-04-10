@@ -43,7 +43,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
 
     GlassLabSDK.setOptions( {
         gameId: "PRIMA",
-        gameVersion: "0.2.2",
+        gameVersion: "0.2.2a",
         gameLevel: ""
     } );
 
