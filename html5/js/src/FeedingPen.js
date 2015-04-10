@@ -30,8 +30,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
-    this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
-
     this.onResolved = new Phaser.Signal();
 
     this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 1.25, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
@@ -40,8 +38,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.sprite.addChild(this.button);
     this.button.visible = false;
     this._onCreatureContentsChanged(); // refresh the button visibility
-
-    this.sprite.events.onDestroy.add(this.Destroy, this);
 
     this.id = GLOBAL.penManager.pens.length;
     GLOBAL.penManager.AddPen(this);
@@ -74,12 +70,7 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
             startCol, startCol += this.widths[i+1], false, this.foodTypes[i]);
     }
 
-    if (this.autoFill) {
-        this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatureSpots, this.numCreatures,
-            0, this.widths[0], true, this.creatureType);
-    } else {
-        this._repositionCreatures(); // adjust the creatures if they got moved
-    }
+    this._repositionCreatures(); // adjust the creatures if they got moved
 };
 
 GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
@@ -132,76 +123,6 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
             if (creature) this._removeCreature(creature);
         }
     }
-};
-
-// Resizes the pen to contain the specified number of creatures and food
-GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, hideCreatures, singleFoodRow) {
-    this.SetDraggableOnly(); // don't allow them to adjust the pen
-
-    this.creatureType = creatureType;
-    this.foodTypes = foodTypes || [];
-
-    this.numCreatures = numCreatures || 0;
-    this.numFoods = numFoods || []; // should be an array
-    this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
-
-    this.penStyle = GlassLab.Pen.STYLES.crate;
-    // move the creatures to be in front of the topEdge
-    this.frontObjectRoot.addChild(this.creatureRoot);
-    //this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
-
-    this.widths[0] = Math.min(this.presetCreatureWidth, numCreatures); // keep our original creature width as set in order fulfillment, unless we have fewer creatures than that
-    this.height = Math.ceil(numCreatures / this.widths[0]);
-    for (var j = 0; j < this.numFoods.length; j++) {
-        this.widths[j+1] = (singleFoodRow)? this.numFoods[j] : (Math.ceil(this.numFoods[j] / this.height));
-        if (j < this.numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
-    }
-    if (hideCreatures) this.numCreatures = 0; // keep the same widths and height, but don't add any creatures
-    this.centerEdge.sprite.visible = false;
-
-    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
-    this.sprite.isoX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
-
-    this.show(); // make sure the pen is visible, and also call Resize
-};
-
-GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
-    var unusedObjects = Array.prototype.concat.apply([], list); // flatten the 2D list into a new array
-    var count = 0;
-    list.length = 0; // empty the list. Setting it to [] would break the passed-in reference.
-
-    for (var row = 0; row < this.height; row++) {
-        if ((maxCount || maxCount === 0) && count >= maxCount) break;
-        list.push([]);
-        var emptyCols = 0;
-        if (fromRight) emptyCols = Math.max(0, (endCol - startCol) - (maxCount - count)); // the empty spots that would be in the middle if we don't adjust positions
-
-        for (var col = startCol; col < endCol; col ++) {
-            if ((maxCount || maxCount === 0) && count >= maxCount) break;
-            var obj  = unusedObjects.pop();
-            if (!obj) { // we ran out of existing tiles, so make a new one
-                obj = new boundConstructor();
-                if (parent.addChild) parent.addChild(obj); // if the parent is a sprite
-                else parent.add(obj); // if the parent is a group
-                if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
-            }
-            obj.setType(targetType);
-            obj.visible = true;
-            obj.placeOnTile(col + emptyCols, row);
-            obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
-            obj.pen = this;
-            list[row].push(obj);
-            count++;
-        }
-    }
-
-    for (var i = unusedObjects.length-1; i >= 0; i--) {
-        if (unusedObjects[i]) unusedObjects[i].visible = false;
-        else unusedObjects.splice(i, 1);
-    }
-};
-
-GlassLab.FeedingPen.prototype._onUpdate = function() {
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
@@ -315,18 +236,9 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     GlassLab.SignalManager.penFeedingStarted.dispatch(this);
 };
 
-GlassLab.FeedingPen.prototype.Destroy = function()
+GlassLab.FeedingPen.prototype._onDestroy = function()
 {
-    for (var col = 0; col < this.getFullWidth(); col++) {
-        for (var row = 0; row < this.height; row++) {
-            var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
-            if (tile)
-            {
-                tile.setInPen(false);
-                tile.unswapType();
-            }
-        }
-    }
+    GlassLab.Pen.prototype._onDestroy.call(this);
 
     GLOBAL.penManager.RemovePen(this);
 

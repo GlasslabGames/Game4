@@ -73,10 +73,16 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     this.penStyle = GlassLab.Pen.STYLES.gate; // change this to toggle the pen's appearance
 
+    this.sprite.events.onDestroy.add(this._onDestroy, this);
+
     this.Resize();
 };
 
 GlassLab.Pen.STYLES = {crate: "crate", gate: "gate"};
+
+GlassLab.Pen.prototype._onDestroy = function() {
+    GLOBAL.tileManager.clearPenTiles();
+};
 
 GlassLab.Pen.prototype.getDimensionEncoding = function() {
     return GlassLab.Pen.encodeDimensions(this.height || 0, this.widths[0] || 0, this.widths[1] || 0, this.widths[2] || 0);
@@ -478,4 +484,40 @@ GlassLab.Pen.prototype.GetValidEdgePos = function(edge, edgeIndex, targetPos) {
     }
 
     return targetPos;
+};
+
+GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
+    var unusedObjects = Array.prototype.concat.apply([], list); // flatten the 2D list into a new array
+    var count = 0;
+    list.length = 0; // empty the list. Setting it to [] would break the passed-in reference.
+
+    for (var row = 0; row < this.height; row++) {
+        if ((maxCount || maxCount === 0) && count >= maxCount) break;
+        list.push([]);
+        var emptyCols = 0;
+        if (fromRight) emptyCols = Math.max(0, (endCol - startCol) - (maxCount - count)); // the empty spots that would be in the middle if we don't adjust positions
+
+        for (var col = startCol; col < endCol; col ++) {
+            if ((maxCount || maxCount === 0) && count >= maxCount) break;
+            var obj  = unusedObjects.pop();
+            if (!obj) { // we ran out of existing tiles, so make a new one
+                obj = new boundConstructor();
+                if (parent.addChild) parent.addChild(obj); // if the parent is a sprite
+                else parent.add(obj); // if the parent is a group
+                if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
+            }
+            obj.setType(targetType);
+            obj.visible = true;
+            obj.placeOnTile(col + emptyCols, row);
+            obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
+            obj.pen = this;
+            list[row].push(obj);
+            count++;
+        }
+    }
+
+    for (var i = unusedObjects.length-1; i >= 0; i--) {
+        if (unusedObjects[i]) unusedObjects[i].visible = false;
+        else unusedObjects.splice(i, 1);
+    }
 };
