@@ -132,15 +132,11 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     // else, show the pen with the correct dimensions of food
     if (response) {
         var numCreatures = response.shift();
-        //this._createPen(response.length);
         var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
-        this.crate.SetContents(this.data.creatureType, numCreatures, this.foodTypes, response, creatureWidth);
+        this.crate.setContents(this.data.creatureType, numCreatures, this.foodTypes, response, creatureWidth);
 
         this._focusCamera();
     } else if (this.data.hint) { // for a hint, show one row of food
-        var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-        //this._createPen(desiredFood.length);
-
         var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
         var creatureMult; // determines how much food to show.
         if (this.data.numCreatures) { // when the number of creatures is provided, give them a hint of a single row of food
@@ -149,13 +145,14 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
             creatureMult = this._calculateTargetNumCreatures(); // otherwise, give them enough food for all the creatures.
         }
 
+        var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
         var foodCounts = [desiredFood[0].amount * creatureMult];
         var foodTypes = [desiredFood[0].type];
         if (desiredFood[1]) {
             foodCounts[1] = desiredFood[1].amount * creatureMult;
             foodTypes[1] = desiredFood[1].type;
         }
-        this.crate.SetContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
+        this.crate.setContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
             creatureWidth, !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
 
         this._focusCamera();

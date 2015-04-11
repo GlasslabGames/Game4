@@ -182,7 +182,6 @@ GlassLab.Pen.prototype.Resize = function() {
     // if we look like a crate, we need to show a special corner sprite
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
         this.cornerSprite.visible = true;
-        console.log(this.cornerSprite, this.cornerSprite.key);
         if (this.cornerSprite.spriteName != "crate" || this.cornerSprite.frameName != "crate_back_corner.png") this.cornerSprite.loadTexture("crate", "crate_back_corner.png"); // TODO: FIX IF CHECK
         this.cornerSprite.anchor.setTo(0.075, 0.04);
         this.cornerSprite.isoPosition.setTo(GLOBAL.tileSize * -2, GLOBAL.tileSize * -1);
@@ -211,10 +210,21 @@ GlassLab.Pen.prototype.Resize = function() {
     this._drawVerticalEdge(this.leftEdge, col, (this.cornerSprite.visible? 1 : 0), this.height);
     col += this.widths[0]; // offset by 1 since the bottom edge is anchored so that it appears at the bottom of a tile
     this._drawVerticalEdge(this.centerEdge, col, 0, this.height);
-    for (var i = 1, len = this.widths.length; i < len; i++) {
-        col += this.widths[i];
-        if (this.rightEdges[i-1].sprite.visible) this._drawVerticalEdge(this.rightEdges[i-1], col, 0, this.height);
+
+    // make sure we have the right number of edges
+    while (this.rightEdges.length < this.widths.length) {
+        this.addRightEdge();
     }
+    for (var i = 0, len = this.rightEdges.length; i < len; i++) {
+        if (i < this.widths.length-1) {
+            col += this.widths[i+1];
+            this.rightEdges[i].visible = true;
+            this.rightEdges[i].sideIndex = i;
+            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height);
+        } else {
+            this.rightEdges[i].visible = false;
+        }
+    };
 
     if (this.penStyle == GlassLab.Pen.STYLES.gate) {
         // this._drawHorizontalEdge(this.topEdge, 0, this.widths[0] - 1, 0, "dottedLineLeft"); // right now this doesn't work... this part needs to be behind the creatures but the fence needs to be in front
@@ -227,6 +237,13 @@ GlassLab.Pen.prototype.Resize = function() {
     }
 
     this._placeArrows();
+};
+
+GlassLab.Pen.prototype.addRightEdge = function() {
+    var edge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, 0);
+    this.rightEdges.unshift(edge);
+    this.edges.unshift(edge);
+    this.sprite.addChildAt(edge.sprite, this.sprite.getChildIndex(this.topEdge.sprite)+1);
 };
 
 GlassLab.Pen.prototype._resetEdges = function() {

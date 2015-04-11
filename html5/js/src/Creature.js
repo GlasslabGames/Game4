@@ -768,7 +768,7 @@ GlassLab.Creature.prototype._clearPath = function()
 
 GlassLab.Creature.prototype._onOver = function()
 {
-    if (!(this.state instanceof GlassLab.CreatureStateDragged)) { // && !this.getIsEmpty())
+    if (!(this.state instanceof GlassLab.CreatureStateDragged) && !this.pen) { // && !this.getIsEmpty())
         this.hungerBar.show(true, 1);
     }
 };

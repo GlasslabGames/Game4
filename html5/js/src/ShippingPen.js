@@ -30,17 +30,19 @@ GlassLab.ShippingPen.prototype = Object.create(GlassLab.Pen.prototype);
 GlassLab.ShippingPen.constructor = GlassLab.ShippingPen;
 
 // Adds the specified number of creatures and food
-GlassLab.ShippingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow) {
+GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow) {
     console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow);
     // use the target creature width as set in order fulfillment, unless we have fewer creatures than that
-    if (targetCreatureWidth) this.widths[0] = Math.min(this.presetCreatureWidth, numCreatures);
+    if (targetCreatureWidth) this.widths[0] = Math.min(targetCreatureWidth, numCreatures);
     else this.widths[0] = numCreatures;
 
+    console.log(this.widths);
+
     this.height = Math.ceil(numCreatures / this.widths[0]);
-    var j = 0;
-    for (; j < numFoods.length; j++) {
+
+    for (var j = 0; j < numFoods.length; j++) {
         this.widths[j+1] = (singleFoodRow)? numFoods[j] : (Math.ceil(numFoods[j] / this.height));
-        if (j < numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
+        //if (j < numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
     }
     while (j < this.widths) {
         this.widths.pop();
@@ -54,6 +56,12 @@ GlassLab.ShippingPen.prototype.SetContents = function(creatureType, numCreatures
 
     this.show(); // make sure the pen is visible, and also call Resize
 
+    // Hide all the internal edges except for the rightmose edge
+    /*
+    for (var i = 0; i < this.rightEdges.length; i++) {
+        this.rightEdges[i].visible = (i == this.rightEdges.length - 1);
+    }*/
+
     // Fill in the creatures in the pen
     this.FillIn(GlassLab.Creature.bind(null, this.game, creatureType, this), this.frontObjectRoot, this.creatureSpots, numCreatures,
         0, this.widths[0], true, creatureType);
@@ -66,4 +74,6 @@ GlassLab.ShippingPen.prototype.SetContents = function(creatureType, numCreatures
         this.FillIn(GlassLab.Food.bind(null, this.game, foodTypes[i]), this.frontObjectRoot, this.foodLists[i], maxFood,
             startCol, startCol += this.widths[i+1], false, foodTypes[i]);
     }
+
+    console.log(this);
 };

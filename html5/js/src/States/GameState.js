@@ -32,7 +32,10 @@ GlassLab.State.Game.prototype.create = function()
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
 
-    var crate = new GlassLab.ShippingPen(this.game);
+    /*var crate = new GlassLab.ShippingPen(this.game);
+    crate.setContents("baby_unifox", 2, ["strawberry"], [8], 2, false, false);
+    GLOBAL.crate = crate;*/
+    //SetContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow)
 };
 
 GlassLab.State.Game.prototype.update = function()
