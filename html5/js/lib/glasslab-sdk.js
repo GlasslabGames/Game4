@@ -53,7 +53,7 @@ either expressed or implied, of the FreeBSD Project.
     // Queue for non-on-demand messages
     this._dispatchQueue = [];
     this._dispatchQueueReady = [];
-    //setInterval( _dispatchNextRequest, this._options.dispatchQueueUpdateInterval );
+    //setInterval( _flushDispatchQueue, this._options.dispatchQueueUpdateInterval );
 
     // The following variables will undergo change as functions are performed with the SDK
     this._activeGameSessionId = "";
@@ -109,7 +109,7 @@ either expressed or implied, of the FreeBSD Project.
 
       if( options.hasOwnProperty( 'dispatchQueueUpdateInterval' ) ) {
         //this._options.dispatchQueueUpdateInterval = options.dispatchQueueUpdateInterval;
-        //setInterval( _dispatchNextRequest, this._options.dispatchQueueUpdateInterval );
+        //setInterval( _flushDispatchQueue, this._options.dispatchQueueUpdateInterval );
       }
 
       if( options.hasOwnProperty( 'sendTotalTimePlayedInterval' ) ) {
@@ -223,7 +223,11 @@ either expressed or implied, of the FreeBSD Project.
 
   function _flushDispatchQueue() {
     // Splice the contents of the dispatch queue to the ready queue, then dispatch the next request
-    GlassLabSDK._dispatchQueueReady.push( GlassLabSDK._dispatchQueue.splice( 0 ) );
+    while( GlassLabSDK._dispatchQueue.length > 0 ) {
+      GlassLabSDK._dispatchQueueReady.push( GlassLabSDK._dispatchQueue.shift() );
+    }
+
+    // Begin the dispatch
     _dispatchNextRequest();
   }
 
