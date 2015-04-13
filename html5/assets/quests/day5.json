@@ -8,8 +8,6 @@
      "challengeData": {
         "creatureType": "baby_bird",
         "numCreatures": 3,
-        "bottomDraggable": true,
-        "topDraggable": true,
         "leftDraggable": true
       }
     },
