@@ -57,10 +57,9 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     this.show(); // make sure the pen is visible, and also call Resize
 
     // Hide all the internal edges except for the rightmose edge
-    /*
     for (var i = 0; i < this.rightEdges.length; i++) {
-        this.rightEdges[i].visible = (i == this.rightEdges.length - 1);
-    }*/
+        this.rightEdges[i].sprite.visible = (i == this.rightEdges.length - 1);
+    }
 
     // Fill in the creatures in the pen
     this.FillIn(GlassLab.Creature.bind(null, this.game, creatureType, this), this.frontObjectRoot, this.creatureSpots, numCreatures,

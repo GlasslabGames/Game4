@@ -386,10 +386,10 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spri
     if (!tile) { // we ran out of existing tiles, so make a new one
         tile = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
         tile.anchor.setTo(0.075, 0.04);
-        parent.addChild(tile);
         this.tiles.push(tile);
     }
     tile.visible = true;
+    parent.addChild(tile);
     if (tile.spriteName != spriteName) tile.loadTexture(atlasName, spriteName);
     tile.isoX = xPos;
     tile.isoY = yPos;
