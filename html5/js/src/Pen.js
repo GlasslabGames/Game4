@@ -32,6 +32,11 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     // Now start adding all the edges and other pieces in a certain order. Don't change the order or things will layer incorrectly.
 
+    // The shadow is only used for the crate atm
+    this.shadow = this.game.make.isoSprite(GLOBAL.tileSize + 20, GLOBAL.tileSize);
+    this.sprite.addChild(this.shadow);
+    this.shadow.alpha = 0.4;
+
     // Add a root for all tiles now so that tiles will appear under the edges
     this.tileRoot = this.game.make.isoSprite();
     this.sprite.addChild(this.tileRoot).name = "tileRoot";
@@ -218,11 +223,11 @@ GlassLab.Pen.prototype.Resize = function() {
     for (var i = 0, len = this.rightEdges.length; i < len; i++) {
         if (i < this.widths.length-1) {
             col += this.widths[i+1];
-            this.rightEdges[i].visible = true;
+            this.rightEdges[i].sprite.visible = true;
             this.rightEdges[i].sideIndex = i;
             this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height);
         } else {
-            this.rightEdges[i].visible = false;
+            this.rightEdges[i].sprite.visible = false;
         }
     };
 
@@ -339,7 +344,8 @@ GlassLab.Pen.prototype._drawBg = function() {
             if (tile) {
                 tile.setInPen(this);
                 if (this.penStyle == GlassLab.Pen.STYLES.crate) {
-                    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), "crate", "crate_floor.png");
+                    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.tileRoot, "crate", "crate_floor.png");
+                    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.shadow, "crate_shadow", "", 0x000000);
                 }
                 else if (col >= this.widths[0]) tile.swapType(GlassLab.Tile.TYPES.dirt);
             }
@@ -374,19 +380,20 @@ GlassLab.Pen.prototype._placeArrows = function() {
     this.bottomEdge.placeArrow( midCol, this.height );
 };
 
-GlassLab.Pen.prototype._placeTile = function(xPos, yPos, atlasName, spriteName) {
+GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint) {
 
     var tile = this.unusedTiles.pop();
     if (!tile) { // we ran out of existing tiles, so make a new one
         tile = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
         tile.anchor.setTo(0.075, 0.04);
-        this.tileRoot.addChild(tile);
+        parent.addChild(tile);
         this.tiles.push(tile);
     }
     tile.visible = true;
     if (tile.spriteName != spriteName) tile.loadTexture(atlasName, spriteName);
     tile.isoX = xPos;
     tile.isoY = yPos;
+    tile.tint = (typeof tint != 'undefined')? tint : 0xffffff;
     tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far
 };
 

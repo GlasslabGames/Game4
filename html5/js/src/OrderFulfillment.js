@@ -190,23 +190,6 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
     else return response;
 };
 
-GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
-    if (numFoodTypes && this.pen && this.pen.widths.length != numFoodTypes+1) {
-        this.pen.sprite.destroy();
-        this.pen = null;
-    }
-    if (!this.pen || !this.pen.sprite.game) { // TODO check for game is a hack since sprite may have been destroyed by level loading
-        // Make a pen with the correct number of sections for the number of food types we have
-        var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
-        var widths = [creatureWidth];
-        for (var j = 0; j < numFoodTypes; j++) widths.push(0);
-        this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
-        this.pen.allowFeedButton = false;
-        this.pen.forShipment = true;
-    }
-    this._focusCamera();
-};
-
 GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct, numCreatures)
 {
     if (pen == this.pen)
@@ -364,7 +347,7 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
         var response = this._getResponse(true);
 
         if (response) {
-            this.pen.FeedCreatures();
+            this.crate.FeedCreatures();
             this.Hide();
 
             this._sendTelemetry("submit_order_answer", true);

@@ -72,6 +72,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('crateFloor', 'assets/images/crate/crate_floor.png');
     */
     game.load.atlasJSONHash('crate', 'assets/images/crate/crate.png', 'assets/images/crate/crate.json');
+    game.load.image('crate_shadow', 'assets/images/crate/crate_shadow.png');
 
     game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
     game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');
