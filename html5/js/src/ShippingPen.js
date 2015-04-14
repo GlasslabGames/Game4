@@ -16,9 +16,26 @@ GlassLab.ShippingPen = function(game) {
 
     this.frontBottomEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.bottom);
     this.frontRightEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right);
-    this.edges.push(this.frontBottomEdge, this.frontRightEdge);
+
+    this.lidTopEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.top);
+    this.lidLeftEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.left);
+    this.lidRightEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right);
+    this.lidBottomEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.bottom);
+
+    this.edges.push(this.frontBottomEdge, this.frontRightEdge, this.lidTopEdge, this.lidLeftEdge, this.lidRightEdge, this.lidBottomEdge);
+
     this.sprite.addChild(this.frontBottomEdge.sprite);
     this.sprite.addChild(this.frontRightEdge.sprite);
+
+    this.lid = this.sprite.addChild( this.game.make.isoSprite() );
+
+    this.lidCornerSprite = this.sprite.addChild( this.game.make.isoSprite(0,0,0,"crate_lidCorner") );
+    this.lidCornerSprite.anchor.setTo(0.075, 0.04);
+
+    this.sprite.addChild(this.lidTopEdge.sprite);
+    this.sprite.addChild(this.lidLeftEdge.sprite);
+    this.sprite.addChild(this.lidRightEdge.sprite);
+    this.sprite.addChild(this.lidBottomEdge.sprite);
 
     this.SetDraggableOnly(); // no dragging
 
@@ -81,4 +98,11 @@ GlassLab.ShippingPen.prototype.Resize = function() {
     GlassLab.Pen.prototype.Resize.call(this);
     if (this.frontRightEdge) this._drawVerticalEdge(this.frontRightEdge, this.getFullWidth(), 0, this.height, null, "crate_frontRight");
     if (this.frontBottomEdge) this._drawHorizontalEdge(this.frontBottomEdge, 0, this.getFullWidth(), this.height, null, "crate_frontBottom", true);
+
+    if (this.lidTopEdge) this._drawHorizontalEdge(this.lidTopEdge, 1, this.getFullWidth(), 0, null, "crate_lidTop");
+    if (this.lidLeftEdge) this._drawVerticalEdge(this.lidLeftEdge, 0, 1, this.height, null, "crate_lidLeft");
+    if (this.lidRightEdge) this._drawVerticalEdge(this.lidRightEdge, this.getFullWidth(), 0, this.height, null, "crate_lidRight");
+    if (this.lidBottomEdge) this._drawHorizontalEdge(this.lidBottomEdge, 0, this.getFullWidth(), this.height, null, "crate_lidBottom");
+
+    if (this.lidCornerSprite) this.lidCornerSprite.isoPosition.setTo(GLOBAL.tileSize * -2, GLOBAL.tileSize * -1);
 };

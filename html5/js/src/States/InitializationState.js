@@ -76,6 +76,11 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('crate_frontBottom', 'assets/images/crate/crate_wall_front_left_solid2.png');
     game.load.image('crate_frontBottom_window', 'assets/images/crate/crate_wall_front_left_window2.png');
     game.load.image('crate_frontRight', 'assets/images/crate/crate_wall_front_right_solid2.png');
+    game.load.image('crate_lidCorner', 'assets/images/crate/crate_lid_back_corner.png');
+    game.load.image('crate_lidTop', 'assets/images/crate/crate_lid_back_right.png');
+    game.load.image('crate_lidBottom', 'assets/images/crate/crate_lid_front_left.png');
+    game.load.image('crate_lidLeft', 'assets/images/crate/crate_lid_back_left.png');
+    game.load.image('crate_lidRight', 'assets/images/crate/crate_lid_front_right.png');
 
     game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
     game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');

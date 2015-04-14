@@ -331,10 +331,11 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
         anchor = new Phaser.Point(0.1, 0.15);
     }
 
+    // This is so messy. TODO: instead of "allowWindows", just pass in the alternate spriteName (and pass in the anchor too)
     for (var col = startCol; col < endCol; col++) {
         var atlasName2 = atlasName, spriteName2 = spriteName;
         var windowFreq = 3; // the frequency of windows.
-        if (this.penStyle == GlassLab.Pen.STYLES.crate && allowWindows && ((col - startCol) % windowFreq == 0)) {
+        if (this.penStyle == GlassLab.Pen.STYLES.crate && allowWindows && (col % windowFreq == 0)) {
             spriteName2 = (spriteName2.indexOf(".png") > -1) ? spriteName2.replace(".png", "_window.png") : spriteName2 + "_window";
         }
         if (!atlasName2) {
