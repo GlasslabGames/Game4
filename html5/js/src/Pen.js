@@ -237,7 +237,7 @@ GlassLab.Pen.prototype.Resize = function() {
         //this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0] - 1, this.height, "dottedLineLeft"); // width - 1 so it doesn't interfere with the gate :?
         this._drawHorizontalEdge(this.bottomEdge, this.widths[0], fullWidth, this.height, "penFenceRight");
     } else {
-        this._drawHorizontalEdge(this.topEdge, (this.cornerSprite.visible? 1 : 0), fullWidth, 0);
+        this._drawHorizontalEdge(this.topEdge, (this.cornerSprite.visible? 1 : 0), fullWidth, 0, null, null, true);
         this._drawHorizontalEdge(this.bottomEdge, 0, fullWidth, this.height);
     }
 
@@ -280,14 +280,14 @@ GlassLab.Pen.prototype.show = function() {
 };
 
 // The following functions can be overwritten to show different pens (e.g. the crate for shipping)
-GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow) {
+GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, atlasName, spriteName) {
     var spriteName, anchor, atlasName;
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
-        atlasName = "crate";
+        if (!atlasName && !spriteName) atlasName = "crate";
         if (targetEdge.side == GlassLab.Edge.SIDES.left) {
-            spriteName = "crate_back_left.png";
+            if (!spriteName) spriteName = "crate_back_left.png";
         } else {
-            spriteName = "crate_front_right.png";
+            if (!spriteName) spriteName = "crate_front_right.png";
             col --;
         }
         startRow --;
@@ -296,31 +296,33 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     } else {
         if (targetEdge.side == GlassLab.Edge.SIDES.left ||
             (targetEdge.side == GlassLab.Edge.SIDES.right && targetEdge.sideIndex < this.widths.length - 2)) {
-            atlasName = "dottedLineRight";
+            if (!spriteName) spriteName = "dottedLineRight";
             anchor = new Phaser.Point(0.1, 0.15);
         } else if (targetEdge.side == GlassLab.Edge.SIDES.center) {
-            atlasName = "gateDown";
+            if (!spriteName) spriteName = "gateDown";
             anchor = new Phaser.Point(0.15, 0.28);
         } else {
-            atlasName = "penFenceLeft";
+            if (!spriteName) spriteName = "penFenceLeft";
             anchor = new Phaser.Point(0.1, 0.15);
         }
     }
 
     for (var row = startRow; row < endRow; row++) {
-        targetEdge.PlacePiece(col - 2, row, atlasName, spriteName, anchor);
+        if (!atlasName) targetEdge.PlacePiece(col - 2, row, spriteName, "", anchor);
+        else  targetEdge.PlacePiece(col - 2, row, atlasName, spriteName, anchor);
     }
 };
 
-GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, atlasName, spriteName) {
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, atlasName, spriteName, allowWindows) {
     var anchor;
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
-        atlasName = "crate";
+        if (!atlasName && !spriteName) atlasName = "crate"; // set this default only if we haven't passed in another spriteName
         if (targetEdge.side == GlassLab.Edge.SIDES.bottom) {
-            spriteName = "crate_front_left.png";
+            if (!spriteName) spriteName = "crate_front_left.png";
             row --;
+        } else if (targetEdge.side == GlassLab.Edge.SIDES.top) {
+            if (!spriteName) spriteName = "crate_back_right.png";
         }
-        var windowFreq = 3; // the frequency of windows. Only used for the top side
         startCol --;
         endCol --;
         anchor = new Phaser.Point(0.075, 0.04);
@@ -330,10 +332,16 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
     }
 
     for (var col = startCol; col < endCol; col++) {
-        if (this.penStyle == GlassLab.Pen.STYLES.crate && targetEdge.side == GlassLab.Edge.SIDES.top) {
-            spriteName = ((col - startCol) % windowFreq == 0)? "crate_back_right_window.png" : "crate_back_right.png";
+        var atlasName2 = atlasName, spriteName2 = spriteName;
+        var windowFreq = 3; // the frequency of windows.
+        if (this.penStyle == GlassLab.Pen.STYLES.crate && allowWindows && ((col - startCol) % windowFreq == 0)) {
+            spriteName2 = (spriteName2.indexOf(".png") > -1) ? spriteName2.replace(".png", "_window.png") : spriteName2 + "_window";
         }
-        targetEdge.PlacePiece(col - 1, row - 1, atlasName, spriteName, anchor);
+        if (!atlasName2) {
+            atlasName2 = spriteName2;
+            spriteName2 = "";
+        }
+        targetEdge.PlacePiece(col - 1, row - 1, atlasName2, spriteName2, anchor);
     }
 };
 

@@ -14,12 +14,11 @@ GlassLab.ShippingPen = function(game) {
     GlassLab.Pen.call(this, game, GLOBAL.penLayer);
     this.penStyle = GlassLab.Pen.STYLES.crate;
 
-    /*this.foodRoot = this.game.make.isoSprite();
-    this.frontObjectRoot.addChild(this.foodRoot);
-
-    this.creatureRoot = this.game.make.group();
-    this.frontObjectRoot.addChild(this.creatureRoot);*/
-    // we can just use frontObjectRoot
+    this.frontBottomEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.bottom);
+    this.frontRightEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right);
+    this.edges.push(this.frontBottomEdge, this.frontRightEdge);
+    this.sprite.addChild(this.frontBottomEdge.sprite);
+    this.sprite.addChild(this.frontRightEdge.sprite);
 
     this.SetDraggableOnly(); // no dragging
 
@@ -42,7 +41,7 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
 
     for (var j = 0; j < numFoods.length; j++) {
         this.widths[j+1] = (singleFoodRow)? numFoods[j] : (Math.ceil(numFoods[j] / this.height));
-        //if (j < numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
+        if (j < numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
     }
     while (j < this.widths) {
         this.widths.pop();
@@ -68,6 +67,7 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     // Fill in the food to each section
     var startCol = this.widths[0];
     for (var i = 0, len = foodTypes.length; i < len; i++) {
+        if (!foodTypes[i]) continue;
         while (this.foodLists.length <= i) this.foodLists.push([]);
         var maxFood = (numFoods)? numFoods[i] : null;
         this.FillIn(GlassLab.Food.bind(null, this.game, foodTypes[i]), this.frontObjectRoot, this.foodLists[i], maxFood,
@@ -75,4 +75,10 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     }
 
     console.log(this);
+};
+
+GlassLab.ShippingPen.prototype.Resize = function() {
+    GlassLab.Pen.prototype.Resize.call(this);
+    if (this.frontRightEdge) this._drawVerticalEdge(this.frontRightEdge, this.getFullWidth(), 0, this.height, null, "crate_frontRight");
+    if (this.frontBottomEdge) this._drawHorizontalEdge(this.frontBottomEdge, 0, this.getFullWidth(), this.height, null, "crate_frontBottom", true);
 };
