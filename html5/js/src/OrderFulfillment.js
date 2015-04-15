@@ -124,6 +124,7 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     if (!this.crate) {
         this.crate = new GlassLab.ShippingPen(this.game);
     }
+    this.crate.reset();
 
     if (!response) response = this._getResponse();
 
@@ -347,9 +348,7 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
         var response = this._getResponse(true);
 
         if (response) {
-            this.crate.FeedCreatures();
-            this.Hide();
-
+            this.crate.ship();
             this._sendTelemetry("submit_order_answer", true);
 
         }

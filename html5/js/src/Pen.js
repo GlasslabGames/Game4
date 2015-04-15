@@ -41,9 +41,6 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.tileRoot = this.game.make.isoSprite();
     this.sprite.addChild(this.tileRoot).name = "tileRoot";
 
-    this.cornerSprite = this.game.make.isoSprite();
-    this.sprite.addChild(this.cornerSprite).name = "cornerSprite";
-
     this.sprite.addChild(this.leftEdge.sprite);
 
     // Add a root for all objects that will be added
@@ -79,8 +76,6 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.penStyle = GlassLab.Pen.STYLES.gate; // change this to toggle the pen's appearance
 
     this.sprite.events.onDestroy.add(this._onDestroy, this);
-
-    this.Resize();
 };
 
 GlassLab.Pen.STYLES = {crate: "crate", gate: "gate"};
@@ -184,6 +179,25 @@ GlassLab.Pen.prototype.Resize = function() {
     this._resetTiles();
     var fullWidth = this.getFullWidth();
 
+    // make sure we have the right number of right edges
+    while (this.rightEdges.length < this.widths.length) {
+        this.addRightEdge();
+    }
+    for (var i = 0, len = this.rightEdges.length; i < len; i++) {
+        if (i < this.widths.length-1) {
+            this.rightEdges[i].sprite.visible = true;
+            this.rightEdges[i].sideIndex = i;
+        } else {
+            this.rightEdges[i].sprite.visible = false;
+        }
+    };
+
+    this._drawEdges();
+    this._drawBg();
+    this._placeArrows();
+
+    return;
+
     // if we look like a crate, we need to show a special corner sprite
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
         this.cornerSprite.visible = true;
@@ -212,9 +226,9 @@ GlassLab.Pen.prototype.Resize = function() {
     this._drawBg();
 
     var col = 0;
-    this._drawVerticalEdge(this.leftEdge, col, (this.cornerSprite.visible? 1 : 0), this.height);
-    col += this.widths[0]; // offset by 1 since the bottom edge is anchored so that it appears at the bottom of a tile
-    this._drawVerticalEdge(this.centerEdge, col, 0, this.height);
+    this._drawVerticalEdge(this.leftEdge, col, (this.cornerSprite.visible? 1 : 0), this.height,  "crate", "crate_back_left.png", new Phaser.Point(0.075, 0.04), 0, -1);
+    col += this.widths[0];
+    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "crate", "crate_front_right.png", new Phaser.Point(0.075, 0.04), -1, -1);
 
     // make sure we have the right number of edges
     while (this.rightEdges.length < this.widths.length) {
@@ -225,7 +239,7 @@ GlassLab.Pen.prototype.Resize = function() {
             col += this.widths[i+1];
             this.rightEdges[i].sprite.visible = true;
             this.rightEdges[i].sideIndex = i;
-            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height);
+            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "crate", "crate_front_right.png", new Phaser.Point(0.075, 0.04), -1, -1);
         } else {
             this.rightEdges[i].sprite.visible = false;
         }
@@ -242,6 +256,10 @@ GlassLab.Pen.prototype.Resize = function() {
     }
 
     this._placeArrows();
+};
+
+GlassLab.Pen.prototype._drawEdges = function() {
+
 };
 
 GlassLab.Pen.prototype.addRightEdge = function() {
@@ -280,69 +298,52 @@ GlassLab.Pen.prototype.show = function() {
 };
 
 // The following functions can be overwritten to show different pens (e.g. the crate for shipping)
-GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, atlasName, spriteName) {
-    var spriteName, anchor, atlasName;
+GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, spriteName, frameName, anchor, colOffset, rowOffset) {
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
-        if (!atlasName && !spriteName) atlasName = "crate";
-        if (targetEdge.side == GlassLab.Edge.SIDES.left) {
-            if (!spriteName) spriteName = "crate_back_left.png";
-        } else {
-            if (!spriteName) spriteName = "crate_front_right.png";
-            col --;
-        }
-        startRow --;
-        endRow --;
-        anchor = new Phaser.Point(0.075, 0.04);
     } else {
         if (targetEdge.side == GlassLab.Edge.SIDES.left ||
             (targetEdge.side == GlassLab.Edge.SIDES.right && targetEdge.sideIndex < this.widths.length - 2)) {
             if (!spriteName) spriteName = "dottedLineRight";
-            anchor = new Phaser.Point(0.1, 0.15);
+            if (!anchor) anchor = new Phaser.Point(0.1, 0.15);
         } else if (targetEdge.side == GlassLab.Edge.SIDES.center) {
             if (!spriteName) spriteName = "gateDown";
-            anchor = new Phaser.Point(0.15, 0.28);
+            if (!anchor) anchor = new Phaser.Point(0.15, 0.28);
         } else {
             if (!spriteName) spriteName = "penFenceLeft";
-            anchor = new Phaser.Point(0.1, 0.15);
+            if (!anchor) anchor = new Phaser.Point(0.1, 0.15);
         }
     }
 
+    col += colOffset;
+    startRow += rowOffset;
+    endRow += rowOffset;
+
     for (var row = startRow; row < endRow; row++) {
-        if (!atlasName) targetEdge.PlacePiece(col - 2, row, spriteName, "", anchor);
-        else  targetEdge.PlacePiece(col - 2, row, atlasName, spriteName, anchor);
+        targetEdge.PlacePiece(col - 2, row, spriteName, frameName, anchor);
     }
 };
 
-GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, atlasName, spriteName, allowWindows) {
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName, frameName, anchor, colOffset, rowOffset, allowWindows) {
     var anchor;
     if (this.penStyle == GlassLab.Pen.STYLES.crate) {
-        if (!atlasName && !spriteName) atlasName = "crate"; // set this default only if we haven't passed in another spriteName
-        if (targetEdge.side == GlassLab.Edge.SIDES.bottom) {
-            if (!spriteName) spriteName = "crate_front_left.png";
-            row --;
-        } else if (targetEdge.side == GlassLab.Edge.SIDES.top) {
-            if (!spriteName) spriteName = "crate_back_right.png";
-        }
-        startCol --;
-        endCol --;
-        anchor = new Phaser.Point(0.075, 0.04);
+
     } else {
         // spriteName = "penFenceRight"; // just use the passed-in spritename
         anchor = new Phaser.Point(0.1, 0.15);
     }
 
-    // This is so messy. TODO: instead of "allowWindows", just pass in the alternate spriteName (and pass in the anchor too)
+    startCol += colOffset;
+    endCol += colOffset;
+    row += rowOffset;
+
     for (var col = startCol; col < endCol; col++) {
-        var atlasName2 = atlasName, spriteName2 = spriteName;
+        var spriteName2 = spriteName, frameName2 = frameName;
         var windowFreq = 3; // the frequency of windows.
-        if (this.penStyle == GlassLab.Pen.STYLES.crate && allowWindows && (col % windowFreq == 0)) {
-            spriteName2 = (spriteName2.indexOf(".png") > -1) ? spriteName2.replace(".png", "_window.png") : spriteName2 + "_window";
+        if (allowWindows && (col % windowFreq == 0)) {
+            if (frameName2) frameName2 = (frameName2.indexOf(".") > -1) ? frameName2.replace(".", "_window.") : frameName2 + "_window";
+            else spriteName2 += "_window";
         }
-        if (!atlasName2) {
-            atlasName2 = spriteName2;
-            spriteName2 = "";
-        }
-        targetEdge.PlacePiece(col - 1, row - 1, atlasName2, spriteName2, anchor);
+        targetEdge.PlacePiece(col - 1, row - 1, spriteName2, frameName2, anchor);
     }
 };
 
@@ -352,14 +353,14 @@ GlassLab.Pen.prototype._drawBg = function() {
             var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
             if (tile) {
                 tile.setInPen(this);
-                if (this.penStyle == GlassLab.Pen.STYLES.crate) {
-                    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.tileRoot, "crate", "crate_floor.png");
-                    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.shadow, "crate_shadow", "", 0x000000);
-                }
-                else if (col >= this.widths[0]) tile.swapType(GlassLab.Tile.TYPES.dirt);
+                this._drawBgAtTile(col, row, tile);
             }
         }
     }
+};
+
+GlassLab.Pen.prototype._drawBgAtTile = function(col, row, tile) {
+    if (col >= this.widths[0]) tile.swapType(GlassLab.Tile.TYPES.dirt);
 };
 
 GlassLab.Pen.prototype._placeArrows = function() {

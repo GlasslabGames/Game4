@@ -62,15 +62,6 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('shadow', 'assets/images/iso_shadow2.png');
     game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
-    /*
-    game.load.image('crateBackCorner', 'assets/images/crate/crate_back_corner.png');
-    game.load.image('crateBackLeft', 'assets/images/crate/crate_back_left.png');
-    game.load.image('crateBackRight', 'assets/images/crate/crate_back_right.png');
-    game.load.image('crateBackRightWindow', 'assets/images/crate/crate_back_right_window.png');
-    game.load.image('crateFrontLeft', 'assets/images/crate/crate_front_left.png');
-    game.load.image('crateFrontRight', 'assets/images/crate/crate_front_right.png');
-    game.load.image('crateFloor', 'assets/images/crate/crate_floor.png');
-    */
     game.load.atlasJSONHash('crate', 'assets/images/crate/crate.png', 'assets/images/crate/crate.json');
     game.load.image('crate_shadow', 'assets/images/crate/crate_shadow.png');
     game.load.image('crate_frontBottom', 'assets/images/crate/crate_wall_front_left_solid2.png');
@@ -81,6 +72,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('crate_lidBottom', 'assets/images/crate/crate_lid_front_left.png');
     game.load.image('crate_lidLeft', 'assets/images/crate/crate_lid_back_left.png');
     game.load.image('crate_lidRight', 'assets/images/crate/crate_lid_front_right.png');
+    game.load.atlasJSONHash('propellerAnim', 'assets/images/crate/propeller_animations.png', 'assets/images/crate/propeller_animations.json');
 
     game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
     game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');
