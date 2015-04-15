@@ -102,9 +102,8 @@ GlassLab.PenManager.prototype.showPens = function() {
 
 GlassLab.PenManager.prototype.DestroyAllPens = function()
 {
-    // For now just destroy all sprites on the pen and creature layers.
-    for (var i = GLOBAL.penLayer.children.length-1; i>=0; i--) {
-        GLOBAL.penLayer.getChildAt(i).destroy();
+    for (var i = 0; i < this.pens.length; i++) {
+        this.pens[i].destroy();
     }
 
     this.pens = [];

@@ -111,7 +111,7 @@ GlassLab.MailManager.prototype.completeOrder = function(order, result)
     else this.availableOrders.splice(orderIndex, 1);
 
     if (order.id) { // this is a background order
-        if (result == "success") { // when they beat a background order, record that they completed it
+        if (result == "satisfied") { // when they beat a background order, record that they completed it
             this.ordersCompleted.push(order.id);
             GLOBAL.saveManager.SaveData("ordersCompleted", this.ordersCompleted);
         } else {

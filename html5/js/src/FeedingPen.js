@@ -298,9 +298,16 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
     }
 
     if (!spots.length) { // there were no open spots, so add occupied spots as a target to go be sad by. Add spots outside the waiting area
-        var col = -1;
-        for (var row = 0; row < this.creatureSpots.length; row++) {
-            var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * col, this.sprite.isoY + GLOBAL.tileSize * row );
+        var avoidMiddle = this.leftEdge.draggable; // if the arrows there for dragging, don't let creatures stand on it
+        var middle = (this.creatureSpots.length - 1) / 2; // find the middle (where the arrow will be)
+        var startRow = 0, endRow = this.height;
+        if (avoidMiddle && this.height < 3) { // there's no space so allow the creatures to stand farther out
+            startRow --;
+            endRow ++;
+        }
+        for (var row = startRow; row < endRow; row++) {
+            if (avoidMiddle && Math.abs(row - middle) < 1) continue; // the middle row(s) are not allowed
+            var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * -1, this.sprite.isoY + GLOBAL.tileSize * row );
             spots.push({ pen: this, pos: pos, priority: 0.1, full: true }); // full is used to check specifically if the creature should vomit/poop before entering
         }
     }
@@ -503,7 +510,7 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
 GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
     if (this.autoFill || this.feeding) return false;
 
-    var section = this._getSection(tile);
+    var section = this.getSection(tile);
     if (section < 1) return false;
 
     var prevFoodType = this.foodTypes[section - 1];

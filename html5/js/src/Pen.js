@@ -323,27 +323,13 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spri
  * @private
  */
 GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
-    // If no tile, return false
-    if (!tile)
-    {
-        return false;
-    }
-
-    var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
-
-    // All cases outside
-    if (!originTile || tile.col < originTile.col || tile.row < originTile.row || tile.row > originTile.row + this.height)
-    {
-        return false;
-    }
-
-    var rightSide = originTile.col + (leftOnly? this.widths[0] : this.getFullWidth());
-    return tile.col < rightSide;
-    // This functionality could be replaced with _getSection
+    var section = this.getSection(tile);
+    if (leftOnly) return section == 0;
+    else return section > -1;
 };
 
 // Returns the index of the section that this tile is in, or -1 if it's not in the pen
-GlassLab.Pen.prototype._getSection = function(tile) {
+GlassLab.Pen.prototype.getSection = function(tile) {
     if (!tile) return -1;
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
     if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return -1;

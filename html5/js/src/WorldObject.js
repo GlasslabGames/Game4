@@ -101,7 +101,7 @@ GlassLab.WorldObject.prototype._onDrag = function (mousePos, diff) {
 GlassLab.WorldObject.prototype.canDropOn = function (tile) {
     if (!tile) return false;
     else if (tile.inPen) {  // check which section of the pen we're in. Even if a tile wouldn't be walkable, we might allow it if it's in the correct part of the pen.
-        var section = tile.inPen._getSection(tile);
+        var section = tile.inPen.getSection(tile);
         if (section == 0 && this.canDropInWaitingArea) return true;
         else if (section > 0 && this.canDropInPen) return true;
         else return false;
