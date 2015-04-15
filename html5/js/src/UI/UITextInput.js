@@ -102,6 +102,7 @@ GlassLab.UITextInput.prototype._onFocusChanged = function()
 
 GlassLab.UITextInput.prototype._onKeyDown = function(e)
 {
+    console.log(e.keyCode);
     if (this.hasFocus)
     {
         if (e.keyCode == 8) // backspace
@@ -124,7 +125,6 @@ GlassLab.UITextInput.prototype._onKeyDown = function(e)
             }
             else if (e.keyCode >= 96 && e.keyCode <= 105) // 0-9 (keypad)
             {
-                e.keyCode -= 48;
                 this._addCharFromKeyboardEvent(e);
             }
         }
@@ -134,7 +134,12 @@ GlassLab.UITextInput.prototype._onKeyDown = function(e)
 
 GlassLab.UITextInput.prototype._addCharFromKeyboardEvent = function(e)
 {
-    var char = e.shiftKey ? String.fromCharCode(e.keyCode) : String.fromCharCode(e.keyCode).toLowerCase(); // TODO: Don't need lower/upper case, but need special symbols
+    var keyCode = e.keyCode;
+    if (e.keyCode >= 96 && e.keyCode <= 105) // 0-9 (keypad)
+    {
+        keyCode -= 48;
+    }
+    var char = e.shiftKey ? String.fromCharCode(keyCode) : String.fromCharCode(keyCode).toLowerCase(); // TODO: Don't need lower/upper case, but need special symbols
     if (this.textLabel.text == ' ')
     {
         this.textLabel.setText(char);
