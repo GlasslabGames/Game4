@@ -389,7 +389,6 @@ GlassLab.Pen.prototype.GetValidEdgePos = function(edge, edgeIndex, targetPos) {
 
 GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
     var unusedObjects = Array.prototype.concat.apply([], list); // flatten the 2D list into a new array
-    console.log(targetType, "before:", unusedObjects);
     var count = 0;
     list.length = 0; // empty the list. Setting it to [] would break the passed-in reference.
 
@@ -423,4 +422,3 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
         else unusedObjects.splice(i, 1);
     }
 };
-

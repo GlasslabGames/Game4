@@ -96,7 +96,8 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
 
     // Fill in the creatures in the pen
     this.FillIn(GlassLab.Creature.bind(null, this.game, creatureType, this), this.frontObjectRoot, this.creatureSpots, numCreatures,
-        0, this.widths[0], true, creatureType);
+            0, this.widths[0], true, creatureType);
+    this.game.time.events.add(0, this._refreshCreatures, this); // hack to make sure creatures are visible. I don't know why they sometimes don't show up
 
     // Fill in the food to each section
     var startCol = this.widths[0];
@@ -113,6 +114,34 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
         for (var i = unusedObjects.length-1; i >= 0; i--) {
             if (unusedObjects[i]) unusedObjects[i].visible = false;
             else unusedObjects.splice(i, 1);
+        }
+    }
+
+    // we have all the information, so we can calculate the result right now
+    this.missingFood = ""; // reset this since they might not be missing food
+    if (numCreatures == 0) this.result = "invalid";
+    else {
+        this.result = "satisfied"; // unless we discover a problem with one of the food types
+        var info = GLOBAL.creatureManager.GetCreatureData(creatureType);
+        for (var i = 0; i < info.desiredFood.length; i++) {
+            var index = foodTypes.indexOf(info.desiredFood[i].type);
+            if (index == -1) {
+                this.result = "wrongFoodType";
+                this.missingFood = info.desiredFood[i].type;
+                break;
+            } else {
+                var targetAmount = info.desiredFood[i].amount * numCreatures;
+                var currentAmount = (numFoods && numFoods[index]) || 0;
+                if (currentAmount < targetAmount + 0.01) { // add a little wiggle room
+                    this.result = "hungry";
+                    this.missingFood = info.desiredFood[i].type;
+                    break;
+                } else if (currentAmount + 0.01 > targetAmount) {
+                    this.result = "sick";
+                    break;
+                }
+                // else they're satisfied with this food at least
+            }
         }
     }
 };
@@ -176,10 +205,12 @@ GlassLab.ShippingPen.prototype._flyAway = function() {
     this.game.add.tween(this.sprite).to({isoX: spriteTarget.x, isoY: spriteTarget.y}, time, Phaser.Easing.Quadratic.In, true, delay);
     this.game.add.tween(this.shadow).to({isoX: shadowTarget.x, isoY: shadowTarget.y}, time, Phaser.Easing.Quadratic.In, true, delay);
     this.game.add.tween(this.shadow).to({alpha: 0}, time * 0.75, Phaser.Easing.Quadratic.In, true, delay);
-    this.game.add.tween(this.sprite).to({alpha: 0}, 100, Phaser.Easing.Quadratic.In, true, time+delay-100); // fade out at the end in case we're not on screen
+    var tween = this.game.add.tween(this.sprite).to({alpha: 0}, 100, Phaser.Easing.Quadratic.In, true, time+delay-100); // fade out at the end in case we're not on screen
+    tween.onComplete.addOnce(this._finishShipping, this);
 };
 
 GlassLab.ShippingPen.prototype._finishShipping = function() {
+    console.log("Finished shipping!");
     this.onShipped.dispatch();
 };
 
@@ -264,4 +295,14 @@ GlassLab.ShippingPen.prototype._addPropeller = function(col, row) {
     anim.frame = 0;
     anim.paused = true;
     this.propellerRoot.addChild(propeller);
+};
+
+// This is a total hack to fix an issue where creatures don't show up when the pen is first loaded (usually because the order has a hint)
+// Maybe something is hiding them again, though I don't know what. Anyway this fixes it.
+GlassLab.ShippingPen.prototype._refreshCreatures = function(col, row) {
+    for (var i = 0; i < this.creatureSpots.length; i++) {
+        for (var j = 0; j < this.creatureSpots[i].length; j++) {
+            if (this.creatureSpots[i][j]) this.creatureSpots[i][j].visible = true;
+        }
+    }
 };

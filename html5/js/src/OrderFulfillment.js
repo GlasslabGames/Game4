@@ -107,8 +107,6 @@ GlassLab.OrderFulfillment = function(game)
     this.sprite.addChild(this.cancelButton);
 
     this.sprite.visible = false;
-
-    GlassLab.SignalManager.feedingPenResolved.add(this._onPenResolved, this);
 };
 
 // When text is UITextInput is changed
@@ -145,6 +143,7 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
         } else {
             creatureMult = this._calculateTargetNumCreatures(); // otherwise, give them enough food for all the creatures.
         }
+        console.log(creatureWidth, creatureMult);
 
         var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
         var foodCounts = [desiredFood[0].amount * creatureMult];
@@ -189,22 +188,6 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
     }
     if (!valid) return false;
     else return response;
-};
-
-GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct, numCreatures)
-{
-    if (pen == this.pen)
-    {
-        var outcome = correct? "success" : "failure";
-        if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
-            if (this._calculateTargetNumCreatures() != numCreatures) outcome = "wrongNumCreatures";
-        }
-        this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
-
-        GLOBAL.mailManager.completeOrder(this.data, outcome);
-        this.game.time.events.add(1000, function() { this.Hide(true); }, this); // hide the pen after a short delay
-        // TODO: Instead of just hiding the pen, we should be switching contexts
-    }
 };
 
 GlassLab.OrderFulfillment.prototype.Show = function(data)
@@ -331,7 +314,7 @@ GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
 GlassLab.OrderFulfillment.prototype._onSubmit = function()
 {
     if (!this.crateLoaded) { // need to load the crate for the first time
-        var response = this._getResponse(true);
+        var response = this._getResponse();
         if (response) {
             this._refreshPen(response);
             this.submitButton.label.text = "Ship Crate!";
@@ -345,16 +328,32 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
             this._sendTelemetry("pack_order", true);
         }
     } else { // actually ship the crate
-        var response = this._getResponse(true);
+        var response = this._getResponse();
 
         if (response) {
             this.crate.ship();
+            this.crate.onShipped.addOnce(this._crateShipped, this);
             this._sendTelemetry("submit_order_answer", true);
 
         }
     }
 
 };
+
+GlassLab.OrderFulfillment.prototype._crateShipped = function() {
+    var outcome = this.crate.result;
+    if (outcome == "success" && this.data.totalNumFood) { // we need to check that the number of creatures is correct
+        var numCreatures = this._getResponse()[0];
+        if (this._calculateTargetNumCreatures() != numCreatures) outcome = "wrongNumCreatures";
+    }
+    this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
+    console.log("Crate shipped! Outcome:",outcome, "Wrong food:",this.crate.missingFood);
+
+    GLOBAL.mailManager.completeOrder(this.data, outcome);
+    this.Hide(true);
+    // TODO: Instead of just hiding the pen, we should be switching contexts
+};
+
 
 // From the assistant's dialogue
 GlassLab.OrderFulfillment.prototype.restartLoading = function(numAttempts)
