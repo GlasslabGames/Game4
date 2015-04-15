@@ -34,6 +34,7 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
         game.load.image(spriteName+'_sticker', 'assets/images/creatures/stickers/creature_sticker_'+spriteName+'.png');
+        game.load.image(spriteName+'_photo', 'assets/images/journal/hud_journal_photo_'+spriteName+'.png');
 
         game.load.audio(spriteName+'_sfx_footstep0', 'assets/audio/sfx/'+spriteName+'_footsteps_1.mp3');
         game.load.audio(spriteName+'_sfx_footstep1', 'assets/audio/sfx/'+spriteName+'_footsteps_2.mp3');
@@ -104,11 +105,12 @@ GlassLab.State.Init.prototype.preload = function()
     // UI
     game.load.image('closeIcon', 'assets/images/Close-button.png');
     game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
-    game.load.image('journalBg', 'assets/images/journal_bg2.png');
+    game.load.image('journalBg', 'assets/images/journal/hud_journal.png');
+    game.load.image('journalUnknown', 'assets/images/journal/hud_journal_photo_unknown.png');
     game.load.image('cancelButton', 'assets/images/cancel_button.png');
     game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
     game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
-    game.load.image('sideArrow', 'assets/images/sideArrow.png');
+    game.load.image('sideArrow', 'assets/images/journal/hud_journal_paging_arrow.png');
     game.load.image('inventoryLock', 'assets/images/HUD_items_lock.png');
         game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
     game.load.image('inventoryClose', 'assets/images/HUD_close.png');

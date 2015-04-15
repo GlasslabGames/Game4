@@ -7,9 +7,9 @@ var GlassLab = GlassLab || {};
 
 GlassLab.Journal = function(game) {
     this.game = game;
-    this.sprite = game.make.sprite(0, -80);
+    this.sprite = game.make.sprite(25, -50);
 
-    this.bg = game.make.sprite(-10,0, "journalBg");
+    this.bg = game.make.sprite(-25,30, "journalBg");
     this.bg.anchor.set(0.5, 0.5);
     this.sprite.addChild(this.bg);
 
@@ -17,16 +17,16 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.alerts);
 
     // Creature Picture
-    this.creatureSilhouette = game.make.sprite(0, 20);
+    this.creatureSilhouette = game.make.sprite(0, 50);
     this.creatureSilhouette.anchor.setTo(.5, 1);
     this.sprite.addChild(this.creatureSilhouette);
 
-    this.creatureArt = game.make.sprite(0, 20);
+    this.creatureArt = game.make.sprite(0, 50);
     this.creatureArt.anchor.setTo(.5, 1);
     this.sprite.addChild(this.creatureArt);
 
     // Creature info
-    this.nameLabel = game.make.text(0, 30, "Species Unknown", {font: "bold 14pt Arial"});
+    this.nameLabel = game.make.text(0, 50, "Species Unknown", {font: "18pt Architects", fill: "#808080"});
     this.nameLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.nameLabel);
 
@@ -40,31 +40,34 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.temperamentLabel);
     */
 
-    var dietTitleLabel = game.make.text(0, 60, "Daily Diet:", {font: "bold 14pt Arial"});
+    var dietTitleLabel = game.make.text(0, 100, "Daily Diet:", {font: "14pt Architects", fill: "#808080"});
     dietTitleLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(dietTitleLabel);
 
-    this.dailyDiet = game.make.sprite(20, 80);
+    this.dailyDiet = game.make.sprite(20, 120);
     this.sprite.addChild(this.dailyDiet);
 
-    this.unknownDietLabel = game.make.text(0, 110, "???", {font: "bold 14pt Arial"});
+    this.unknownDietLabel = game.make.text(0, 140, "???", {font: "14pt Architects", fill: "#808080"});
     this.unknownDietLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.unknownDietLabel);
 
-    this.closeButton = new GlassLab.UIButton(this.game, 145, -175, "closeIcon" , this._onClosePressed, this);
-    this.closeButton.anchor.setTo(0.5, 0.5);
-    this.closeButton.scale.setTo(.15, .15);
-    this.sprite.addChild(this.closeButton);
-
     // Page buttons
-    this.nextPageButton = new GlassLab.UIButton(this.game, 190, 0, "sideArrow" , this._onNextPagePressed, this);
+    this.nextPageButton = new GlassLab.HUDButton(this.game, 250, 30, "", "sideArrow" , false, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
-    this.sprite.addChild(this.nextPageButton);
+    this.bg.addChild(this.nextPageButton);
+    this.nextPageButtonLabel = game.make.text(-20, 0, "Next\nPage", {font: "bold 10pt Arial", fill: "#ffffff", align: "center"});
+    this.nextPageButtonLabel.anchor.setTo(0, 0.5);
+    this.nextPageButton.addChild(this.nextPageButtonLabel);
 
-    this.prevPageButton = new GlassLab.UIButton(this.game, -210, 0, "sideArrow" , this._onPrevPagePressed, this);
+    this.prevPageButton = new GlassLab.HUDButton(this.game, -250, 30, "", "sideArrow" , false, this._onPrevPagePressed, this);
     this.prevPageButton.scale.x *= -1;
     this.prevPageButton.anchor.setTo(0, 0.5);
-    this.sprite.addChild(this.prevPageButton);
+    this.bg.addChild(this.prevPageButton);
+    this.prevPageButtonLabel = game.make.text(10, 0, "Prev\nPage", {font: "bold 10pt Arial", fill: "#ffffff", align: "center"});
+    this.prevPageButtonLabel.anchor.setTo(0, 0.5);
+    this.prevPageButtonLabel.scale.x = -1;
+    this.prevPageButton.addChild(this.prevPageButtonLabel);
+
 
     GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
 
@@ -107,16 +110,23 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     //this.temperamentLabel.setText(creatureData.unlocked? creatureData.journalInfo.temperament : "Unknown");
 
     if (creatureData.unlocked) {
-        this.creatureArt.loadTexture(creatureData.spriteName+"_art");
+        this.creatureArt.loadTexture(creatureData.spriteName+"_photo");
         this.creatureArt.tint = creatureData.spriteTint || 0xffffff;
     }
     if (!creatureData.unlocked || creatureData.unlocked == "new") {
-        this.creatureSilhouette.loadTexture(creatureData.spriteName+"_art_white");
-        this.creatureSilhouette.tint = 0x000000;
+        this.creatureSilhouette.loadTexture("journalUnknown");
     }
     this.creatureArt.visible = creatureData.unlocked;
+    // Ensure alpha is 1 since it might've gotten hidden by tweens
+    if (this.creatureArt.visible)
+    {
+        this.creatureArt.alpha = 1;
+    }
     this.creatureSilhouette.visible = (!creatureData.unlocked || creatureData.unlocked == "new");
-
+    if (this.creatureSilhouette.visible)
+    {
+        this.creatureSilhouette.alpha = 1;
+    }
 
 
     // Fill in the Daily Diet if we know it
@@ -183,7 +193,10 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
 
 
 GlassLab.Journal.prototype._revealCreatureInfo = function() {
-    this.game.add.tween(this.creatureArt).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true );
+    this.creatureArt.alpha = 0;
+    this.game.add.tween(this.creatureArt).to( {alpha: 1}, 1000, Phaser.Easing.Linear.InOut, true );
+    this.creatureSilhouette.alpha = 1;
+    this.game.add.tween(this.creatureSilhouette).to( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true );
     this.game.add.tween(this.nameLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1000 );
     //this.game.add.tween(this.temperamentLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
     this.game.add.tween(this.dailyDiet).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
