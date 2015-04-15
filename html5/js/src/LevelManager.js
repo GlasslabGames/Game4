@@ -55,7 +55,8 @@ GlassLab.LevelManager = function(game)
             {
                 "client": "Archibold Huxley III",
                 "company": "Rupture Farms",
-                "numFoodA": 8,
+                "numFoodA": 12,
+                "numCreatures": 9,
                 "type": "baby_bird",
                 "description": "blah",
                 "reward": 200
@@ -72,7 +73,7 @@ GlassLab.LevelManager = function(game)
             {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
-                totalNumFood: 9,
+                totalNumFood: 8,
                 type: "rammus",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
@@ -82,7 +83,7 @@ GlassLab.LevelManager = function(game)
             {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
-                totalNumFood: 9,
+                totalNumFood: 15,
                 noFoodEntries: true,
                 type: "bird",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",

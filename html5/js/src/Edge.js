@@ -34,6 +34,7 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.dragging = false;
     this.moved = false;
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
+    this.unusedSprites = [];
 
     this.cursors = this.game.input.keyboard.createCursorKeys(); // for testing
 };

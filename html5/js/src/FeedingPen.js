@@ -19,6 +19,13 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
+    this.gateFront = this.game.make.isoSprite();
+    this.sprite.addChildAt(this.gateFront, this.sprite.getChildIndex(this.frontObjectRoot));
+
+    this._makeGatePieces();
+    this.gateBack.visible = true;
+    this.gateFront.visible = true;
+
     this.presetCreatureWidth = this.widths[0]; // this is used when filling orders. It's not relevant for normal pens.
 
     // Instead of adding everything to objectRoot, make parents for the food and creatures so we can order them
@@ -30,8 +37,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
-    this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
-
     this.onResolved = new Phaser.Signal();
 
     this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 1.25, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
@@ -40,8 +45,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.sprite.addChild(this.button);
     this.button.visible = false;
     this._onCreatureContentsChanged(); // refresh the button visibility
-
-    this.sprite.events.onDestroy.add(this.Destroy, this);
 
     this.id = GLOBAL.penManager.pens.length;
     GLOBAL.penManager.AddPen(this);
@@ -52,6 +55,8 @@ GlassLab.FeedingPen.constructor = GlassLab.FeedingPen;
 
 GlassLab.FeedingPen.prototype.Resize = function() {
     GlassLab.Pen.prototype.Resize.call(this);
+
+    this._placeArrows();
 
     this._updateCreatureSpotsAfterResize();
 
@@ -74,12 +79,7 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
             startCol, startCol += this.widths[i+1], false, this.foodTypes[i]);
     }
 
-    if (this.autoFill) {
-        this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatureSpots, this.numCreatures,
-            0, this.widths[0], true, this.creatureType);
-    } else {
-        this._repositionCreatures(); // adjust the creatures if they got moved
-    }
+    this._repositionCreatures(); // adjust the creatures if they got moved
 };
 
 GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
@@ -134,76 +134,6 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
     }
 };
 
-// Resizes the pen to contain the specified number of creatures and food
-GlassLab.FeedingPen.prototype.SetContents = function(creatureType, numCreatures, foodTypes, numFoods, hideCreatures, singleFoodRow) {
-    this.SetDraggableOnly(); // don't allow them to adjust the pen
-
-    this.creatureType = creatureType;
-    this.foodTypes = foodTypes || [];
-
-    this.numCreatures = numCreatures || 0;
-    this.numFoods = numFoods || []; // should be an array
-    this.autoFill = true; // if we're setting the number of creatures like this (ie for an order), assume we want to autofill
-
-    this.penStyle = GlassLab.Pen.STYLES.crate;
-    // move the creatures to be in front of the topEdge
-    this.frontObjectRoot.addChild(this.creatureRoot);
-    //this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
-
-    this.widths[0] = Math.min(this.presetCreatureWidth, numCreatures); // keep our original creature width as set in order fulfillment, unless we have fewer creatures than that
-    this.height = Math.ceil(numCreatures / this.widths[0]);
-    for (var j = 0; j < this.numFoods.length; j++) {
-        this.widths[j+1] = (singleFoodRow)? this.numFoods[j] : (Math.ceil(this.numFoods[j] / this.height));
-        if (j < this.numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
-    }
-    if (hideCreatures) this.numCreatures = 0; // keep the same widths and height, but don't add any creatures
-    this.centerEdge.sprite.visible = false;
-
-    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
-    this.sprite.isoX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
-
-    this.show(); // make sure the pen is visible, and also call Resize
-};
-
-GlassLab.FeedingPen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
-    var unusedObjects = Array.prototype.concat.apply([], list); // flatten the 2D list into a new array
-    var count = 0;
-    list.length = 0; // empty the list. Setting it to [] would break the passed-in reference.
-
-    for (var row = 0; row < this.height; row++) {
-        if ((maxCount || maxCount === 0) && count >= maxCount) break;
-        list.push([]);
-        var emptyCols = 0;
-        if (fromRight) emptyCols = Math.max(0, (endCol - startCol) - (maxCount - count)); // the empty spots that would be in the middle if we don't adjust positions
-
-        for (var col = startCol; col < endCol; col ++) {
-            if ((maxCount || maxCount === 0) && count >= maxCount) break;
-            var obj  = unusedObjects.pop();
-            if (!obj) { // we ran out of existing tiles, so make a new one
-                obj = new boundConstructor();
-                if (parent.addChild) parent.addChild(obj); // if the parent is a sprite
-                else parent.add(obj); // if the parent is a group
-                if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
-            }
-            obj.setType(targetType);
-            obj.visible = true;
-            obj.placeOnTile(col + emptyCols, row);
-            obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
-            obj.pen = this;
-            list[row].push(obj);
-            count++;
-        }
-    }
-
-    for (var i = unusedObjects.length-1; i >= 0; i--) {
-        if (unusedObjects[i]) unusedObjects[i].visible = false;
-        else unusedObjects.splice(i, 1);
-    }
-};
-
-GlassLab.FeedingPen.prototype._onUpdate = function() {
-};
-
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     this._refreshFeedButton(true);
     if (!this.autoFill && !this.canFeed) {
@@ -215,15 +145,12 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     this.result = "satisfied"; // this is the default result unless something worse happens
     this.feeding = true;
     this.SetDraggableOnly(); // make all edges undraggable
-    for (var i = 0; i < this.rightEdges.length - 1; i++) {
+    for (var i = 0; i < this.rightEdges.length; i++) {
         this.rightEdges[i].sprite.visible = false; // hide the middle fences
     }
 
     // if there's a gate, move the creatures to be in front of the centerEdge
-    if (this.penStyle == GlassLab.Pen.STYLES.gate) {
-        this.frontObjectRoot.addChild(this.creatureRoot);
-        //this.objectRoot.parent.setChildIndex(this.objectRoot, this.objectRoot.parent.getChildIndex(this.topEdge.sprite));
-    }
+    this.frontObjectRoot.addChild(this.creatureRoot);
 
     // close the items
     GLOBAL.inventoryMenu.Hide(true);
@@ -315,18 +242,9 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     GlassLab.SignalManager.penFeedingStarted.dispatch(this);
 };
 
-GlassLab.FeedingPen.prototype.Destroy = function()
+GlassLab.FeedingPen.prototype._onDestroy = function()
 {
-    for (var col = 0; col < this.getFullWidth(); col++) {
-        for (var row = 0; row < this.height; row++) {
-            var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
-            if (tile)
-            {
-                tile.setInPen(false);
-                tile.unswapType();
-            }
-        }
-    }
+    GlassLab.Pen.prototype._onDestroy.call(this);
 
     GLOBAL.penManager.RemovePen(this);
 
@@ -676,4 +594,70 @@ GlassLab.FeedingPen.prototype.forEachCreature = function(foo, argArray) {
             if (this.creatureSpots[i][j]) foo.apply(this.creatureSpots[i][j], argArray);
         }
     }
+};
+
+GlassLab.FeedingPen.prototype._drawEdges = function() {
+    this.gateBack.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), 0);
+    this.gateFront.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), GLOBAL.tileSize * (this.height - 1));
+
+    var col = 0;
+    this._drawVerticalEdge(this.leftEdge, col, 0, this.height, "dottedLineRight", null, new Phaser.Point(0.1, 0.15));
+    col += this.widths[0];
+    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateDown", null, new Phaser.Point(0.15, 0.28));
+
+    for (var i = 0, len = this.rightEdges.length; i < len; i++) {
+        col += this.widths[i+1];
+        if (this.rightEdges[i].sprite.visible) {
+            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineRight", null, new Phaser.Point(0.1, 0.15));
+        }
+    };
+    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "penFenceLeft", null, new Phaser.Point(0.1, 0.15));
+
+    // this._drawHorizontalEdge(this.topEdge, 0, this.widths[0] - 1, 0, "dottedLineLeft"); // right now this doesn't work... this part needs to be behind the creatures but the fence needs to be in front
+    this._drawHorizontalEdge(this.topEdge, this.widths[0], this.getFullWidth(), 0, "penFenceRight", null, new Phaser.Point(0.1, 0.15));
+    //this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0] - 1, this.height, "dottedLineLeft"); // width - 1 so it doesn't interfere with the gate :?
+    this._drawHorizontalEdge(this.bottomEdge, this.widths[0], this.getFullWidth(), this.height, "penFenceRight", null, new Phaser.Point(0.1, 0.15));
+};
+
+GlassLab.FeedingPen.prototype._drawBgAtTile = function(col, row, tile) {
+    if (col >= this.widths[0]) tile.swapType(GlassLab.Tile.TYPES.dirt);
+};
+
+GlassLab.FeedingPen.prototype._makeGatePieces = function() {
+    var anchorX = 0.15, anchorY = 0.28; // should match the anchor given for the gate in "drawVerticalEdge"
+    this.gateBack = this.game.make.isoSprite(0, 0, 0, "gateCapFar");
+    this.gateBack.anchor.setTo(anchorX, anchorY);
+    this.centerEdge.sprite.addChildAt(this.gateBack, 0);
+
+    this.gateFront.addChild(this.game.make.sprite(0, 0, "gateCapNear")).anchor.setTo(anchorX, anchorY);
+
+    this.gateHoverEffect = this.game.make.sprite(0,0, "gateHover");
+    this.gateFront.addChild(this.gateHoverEffect).anchor.setTo(anchorX, anchorY);
+    this.gateHoverEffect.alpha = 0;
+
+    this.gateFront.addChild(this.game.make.sprite(0, 0, "gateSwitchBack")).anchor.setTo(anchorX, anchorY);
+
+    this.gateLever = this.game.make.sprite(0, 0, "gateSwitchFail");
+    this.gateLever.inputEnabled = true;
+    this.gateLever.events.onInputDown.add(this._onLeverPulled, this);
+    this.gateLever.events.onInputOver.add(this._onOverLever, this);
+    this.gateLever.events.onInputOut.add(this._onOffLever, this);
+    this.gateLever.input.priorityID = 10; // above other game objects, though below the UI
+    /*var graphics = this.game.make.graphics();
+     graphics.beginFill(0x0000ff, 0.5).drawCircle(45, 75, 140);
+     this.gateLever.addChild(graphics);*/
+    this.gateLever.hitArea = new Phaser.Circle(45, 75, 140);
+    this.gateFront.addChild(this.gateLever).anchor.setTo(anchorX, anchorY);
+
+    this.gateLight = this.game.make.sprite(0, 0, "gateLightRed");
+    this.gateFront.addChild(this.gateLight).anchor.setTo(anchorX, anchorY);
+};
+
+GlassLab.FeedingPen.prototype._onOverLever = function() {
+    this.game.add.tween(this.gateHoverEffect).to({alpha: 0.5}, 150, Phaser.Easing.Linear.InOut, true);
+};
+
+
+GlassLab.FeedingPen.prototype._onOffLever = function() {
+    this.game.add.tween(this.gateHoverEffect).to({alpha: 0}, 150, Phaser.Easing.Linear.InOut, true);
 };

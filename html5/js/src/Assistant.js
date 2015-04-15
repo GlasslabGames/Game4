@@ -86,7 +86,6 @@ GlassLab.Assistant.prototype._startOpening = function() {
     this.sprite.visible = true;
     this.visibilityState == "opening";
     var anim = this.portrait.play("in");
-    console.log(anim, anim == true);
     if (anim) anim.onComplete.addOnce(this._startOpen, this);
     else this._startOpen();
     this.dialogue.alpha = 0;

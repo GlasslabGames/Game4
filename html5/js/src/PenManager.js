@@ -81,7 +81,7 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
         pen_id: pen.id,
         top_moveable: pen.topEdge.draggable,
         left_moveable: pen.leftEdge.draggable,
-        right_moveable: pen.rightEdges[0].draggable, // even if there are multiple right edges, we can just check one
+        right_moveable: pen.rightmostEdge.draggable, // even if there are multiple right edges, we can just check one
         bottom_moveable: pen.bottomEdge.draggable
     });
 

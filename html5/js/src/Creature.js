@@ -20,7 +20,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.shadow.loadTexture("shadow");
     this.shadow.scale.setTo(0.25, 0.25);
     this.shadowY = this.shadow.y = -30;
-    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.5; // make babies smaller
+    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.6; // make babies smaller
     this.sprite.scale.setTo(this.spriteScaleY, this.spriteScaleY);
     this.spriteY = this.sprite.y = 20;
     this.canDropInWaitingArea = true; // setting on WorldObject
@@ -210,7 +210,8 @@ GlassLab.Creature.prototype.setType = function (type) {
     for (var key in this.animSprites) {
         this.animSprites[key].loadTexture(info.spriteName + "_" + key);
     }
-    // This hasn't been tested yet!
+    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.6; // make babies smaller
+    this.sprite.scale.setTo(this.spriteScaleY * Math.sign(this.sprite.scale.x), this.spriteScaleY);
 };
 
 GlassLab.Creature.prototype.moveToTile = function (col, row) {
@@ -768,10 +769,11 @@ GlassLab.Creature.prototype._clearPath = function()
 
 GlassLab.Creature.prototype._onOver = function()
 {
-    if (!(this.state instanceof GlassLab.CreatureStateDragged)) { // && !this.getIsEmpty())
+    if (!(this.state instanceof GlassLab.CreatureStateDragged) && !this.pen) { // && !this.getIsEmpty())
         this.hungerBar.show(true, 1);
     }
 };
+
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
     if (targetState == this.state) {

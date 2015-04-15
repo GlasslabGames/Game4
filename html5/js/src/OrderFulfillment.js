@@ -107,8 +107,6 @@ GlassLab.OrderFulfillment = function(game)
     this.sprite.addChild(this.cancelButton);
 
     this.sprite.visible = false;
-
-    GlassLab.SignalManager.feedingPenResolved.add(this._onPenResolved, this);
 };
 
 // When text is UITextInput is changed
@@ -121,6 +119,11 @@ GlassLab.OrderFulfillment.prototype._onTextChange = function(text)
 };
 
 GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
+    if (!this.crate) {
+        this.crate = new GlassLab.ShippingPen(this.game);
+    }
+    this.crate.reset();
+
     if (!response) response = this._getResponse();
 
     // if hint is true, we have two options
@@ -128,34 +131,33 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     // else, show the pen with the correct dimensions of food
     if (response) {
         var numCreatures = response.shift();
-        this._createPen(response.length);
-        this.pen.SetContents(this.data.creatureType, numCreatures, this.foodTypes, response);
+        var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
+        this.crate.setContents(this.data.creatureType, numCreatures, this.foodTypes, response, creatureWidth);
 
         this._focusCamera();
     } else if (this.data.hint) { // for a hint, show one row of food
-        var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-        this._createPen(desiredFood.length);
-
-        var creatureMult = 0; // determines how much food to show.
+        var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
+        var creatureMult; // determines how much food to show.
         if (this.data.numCreatures) { // when the number of creatures is provided, give them a hint of a single row of food
-            creatureMult = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
+            creatureMult = creatureWidth;
         } else {
             creatureMult = this._calculateTargetNumCreatures(); // otherwise, give them enough food for all the creatures.
         }
+        console.log(creatureWidth, creatureMult);
 
+        var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
         var foodCounts = [desiredFood[0].amount * creatureMult];
         var foodTypes = [desiredFood[0].type];
         if (desiredFood[1]) {
             foodCounts[1] = desiredFood[1].amount * creatureMult;
             foodTypes[1] = desiredFood[1].type;
         }
-        this.pen.SetContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
-            !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
+        this.crate.setContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
+            creatureWidth, !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
 
         this._focusCamera();
-    } else if (this.pen) { // we have a pen with no purpose, so remove it
-        this.pen.sprite.destroy();
-        this.pen = null;
+    } else if (this.crate) { // we have a pen with no purpose, so remove it
+        this.crate.hide();
     }
 };
 
@@ -164,7 +166,7 @@ GlassLab.OrderFulfillment.prototype._focusCamera = function() {
     // The pen is already set to be centered, so we can center the camera (with some offset for the UI)
     this.game.camera.x = -this.game.camera.width * 0.5 - 75;
     this.game.camera.y = -this.game.camera.height * 0.5 + 100;
-    var maxDimension = Math.max(this.pen.getFullWidth(), this.pen.height);
+    var maxDimension = Math.max(this.crate.getFullWidth(), this.crate.height);
     GLOBAL.UIManager.zoomTo(2.5 / maxDimension);
 };
 
@@ -186,39 +188,6 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
     }
     if (!valid) return false;
     else return response;
-};
-
-GlassLab.OrderFulfillment.prototype._createPen = function(numFoodTypes) {
-    if (numFoodTypes && this.pen && this.pen.widths.length != numFoodTypes+1) {
-        this.pen.sprite.destroy();
-        this.pen = null;
-    }
-    if (!this.pen || !this.pen.sprite.game) { // TODO check for game is a hack since sprite may have been destroyed by level loading
-        // Make a pen with the correct number of sections for the number of food types we have
-        var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
-        var widths = [creatureWidth];
-        for (var j = 0; j < numFoodTypes; j++) widths.push(0);
-        this.pen = new GlassLab.FeedingPen(this.game, GLOBAL.penLayer, null, 1, widths);
-        this.pen.allowFeedButton = false;
-        this.pen.forShipment = true;
-    }
-    this._focusCamera();
-};
-
-GlassLab.OrderFulfillment.prototype._onPenResolved = function(pen, correct, numCreatures)
-{
-    if (pen == this.pen)
-    {
-        var outcome = correct? "success" : "failure";
-        if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
-            if (this._calculateTargetNumCreatures() != numCreatures) outcome = "wrongNumCreatures";
-        }
-        this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
-
-        GLOBAL.mailManager.completeOrder(this.data, outcome);
-        this.game.time.events.add(1000, function() { this.Hide(true); }, this); // hide the pen after a short delay
-        // TODO: Instead of just hiding the pen, we should be switching contexts
-    }
 };
 
 GlassLab.OrderFulfillment.prototype.Show = function(data)
@@ -251,10 +220,11 @@ GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
     }
     this.sprite.visible = false;
 
-    if (destroyPen && this.pen)
+    if (destroyPen && this.crate)
     {
-        this.pen.sprite.destroy();
-        this.pen = null;
+        //this.pen.sprite.destroy();
+        //this.pen = null;
+        this.crate.hide();
     }
 
     GLOBAL.assistant.endOrder();
@@ -344,7 +314,7 @@ GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
 GlassLab.OrderFulfillment.prototype._onSubmit = function()
 {
     if (!this.crateLoaded) { // need to load the crate for the first time
-        var response = this._getResponse(true);
+        var response = this._getResponse();
         if (response) {
             this._refreshPen(response);
             this.submitButton.label.text = "Ship Crate!";
@@ -358,18 +328,32 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
             this._sendTelemetry("pack_order", true);
         }
     } else { // actually ship the crate
-        var response = this._getResponse(true);
+        var response = this._getResponse();
 
         if (response) {
-            this.pen.FeedCreatures();
-            this.Hide();
-
+            this.crate.ship();
+            this.crate.onShipped.addOnce(this._crateShipped, this);
             this._sendTelemetry("submit_order_answer", true);
 
         }
     }
 
 };
+
+GlassLab.OrderFulfillment.prototype._crateShipped = function() {
+    var outcome = this.crate.result;
+    if (outcome == "success" && this.data.totalNumFood) { // we need to check that the number of creatures is correct
+        var numCreatures = this._getResponse()[0];
+        if (this._calculateTargetNumCreatures() != numCreatures) outcome = "wrongNumCreatures";
+    }
+    this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
+    console.log("Crate shipped! Outcome:",outcome, "Wrong food:",this.crate.missingFood);
+
+    GLOBAL.mailManager.completeOrder(this.data, outcome);
+    this.Hide(true);
+    // TODO: Instead of just hiding the pen, we should be switching contexts
+};
+
 
 // From the assistant's dialogue
 GlassLab.OrderFulfillment.prototype.restartLoading = function(numAttempts)
