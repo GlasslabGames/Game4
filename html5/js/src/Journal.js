@@ -55,24 +55,34 @@ GlassLab.Journal = function(game) {
     this.nextPageButton = new GlassLab.HUDButton(this.game, 250, 30, "", "sideArrow" , false, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.bg.addChild(this.nextPageButton);
-    this.nextPageButtonLabel = game.make.text(-20, 0, "Next\nPage", {font: "bold 10pt Arial", fill: "#ffffff", align: "center"});
+    this.nextPageButtonLabel = game.make.text(-25, 0, "Next\nPage", {font: "bold 10pt Arial", fill: "#FFFFFF", align: "center"});
     this.nextPageButtonLabel.anchor.setTo(0, 0.5);
+    this.nextPageButtonLabel.alpha = .75;
     this.nextPageButton.addChild(this.nextPageButtonLabel);
 
     this.prevPageButton = new GlassLab.HUDButton(this.game, -250, 30, "", "sideArrow" , false, this._onPrevPagePressed, this);
     this.prevPageButton.scale.x *= -1;
     this.prevPageButton.anchor.setTo(0, 0.5);
     this.bg.addChild(this.prevPageButton);
-    this.prevPageButtonLabel = game.make.text(10, 0, "Prev\nPage", {font: "bold 10pt Arial", fill: "#ffffff", align: "center"});
+    this.prevPageButtonLabel = game.make.text(8, 0, "Prev\nPage", {font: "bold 10pt Arial", fill: "#FFFFFF", align: "center"});
     this.prevPageButtonLabel.anchor.setTo(0, 0.5);
     this.prevPageButtonLabel.scale.x = -1;
+    this.prevPageButtonLabel.alpha = .75;
     this.prevPageButton.addChild(this.prevPageButtonLabel);
 
+
+    this.dailyDietTable = new GlassLab.UITable(this.game, 8, 5);
+    this.dailyDietTable.y = 120;
+    this.sprite.addChild(this.dailyDietTable);
 
     GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
 
     this.sprite.visible = false;
 };
+
+GlassLab.Journal.FEED_NUM_COLUMNS = 7; // how many foods to display in a single row
+GlassLab.Journal.MAX_ROW_LENGTH = 0;
+GlassLab.Journal.UNIT_SIZE = 40;
 
 GlassLab.Journal.prototype._onLevelLoaded = function(level)
 {
@@ -99,6 +109,8 @@ GlassLab.Journal.prototype.Show = function(auto, creatureType)
 
     this.wantToShow = false; // only show it once per "wantToShow"
 
+    GLOBAL.dayManager.dayMeter.visible = false;
+
     GlassLab.SignalManager.journalOpened.dispatch(auto, creatureType);
 };
 
@@ -114,69 +126,31 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
         this.creatureArt.tint = creatureData.spriteTint || 0xffffff;
     }
     if (!creatureData.unlocked || creatureData.unlocked == "new") {
-        this.creatureSilhouette.loadTexture("journalUnknown");
+        this.creatureSilhouette.loadTexture(creatureData.spriteName+"_mystery_photo");
     }
-    this.creatureArt.visible = creatureData.unlocked;
+
     // Ensure alpha is 1 since it might've gotten hidden by tweens
+    this.creatureArt.visible = creatureData.unlocked;
     if (this.creatureArt.visible)
     {
         this.creatureArt.alpha = 1;
     }
-    this.creatureSilhouette.visible = (!creatureData.unlocked || creatureData.unlocked == "new");
-    if (this.creatureSilhouette.visible)
-    {
-        this.creatureSilhouette.alpha = 1;
-    }
-
 
     // Fill in the Daily Diet if we know it
-    this.dailyDiet.visible = creatureData.unlocked;
+    this.dailyDiet.visible = this.dailyDietTable.visible = creatureData.unlocked;
     this.unknownDietLabel.visible = !creatureData.unlocked;
-    var numCols = 7; // how many foods to display in a single row
-    var maxRowLength = 0;
-    var unitSize = 40;
 
     if (creatureData.unlocked) {
-        var unusedChildren = this.dailyDiet.children.slice();
-        var n = 0;
-
-        var addDietChild = function(spriteName, scale)
+        if (creatureData.spriteName.indexOf("baby") != -1)
         {
-            var child = unusedChildren.pop();
-            if (!child)
-            {
-                child = this.game.make.sprite();
-                this.dailyDiet.addChild(child);
-                child.anchor.setTo(0.5, 0);
-            }
-            child.scale.setTo(scale, scale);
-            child.visible = true;
-            child.x = (n % numCols) * unitSize;
-            if (n % numCols > maxRowLength) maxRowLength = n % numCols;
-            child.y = Math.floor(n / numCols) * unitSize;
-            n++;
-            child.loadTexture(spriteName);
-        }.bind(this);
-
-        // Setup creatures
-        for (var i = 0, len = creatureData.journalInfo.numCreatures; i < len; i++)
+            // Baby
+            this._setupImageFeedLayout(creatureData);
+        }
+        else
         {
-            var spriteName = creatureData.spriteName + "_sticker";
-            addDietChild(spriteName, .32);
+            // Adult
+            this._setupNumericalFeedLayout(creatureData);
         }
-
-        // Setup food
-        for (var i = 0, len = creatureData.desiredFood.length; i < len; i++) {
-            var spriteName = GlassLab.FoodTypes[creatureData.desiredFood[i].type].spriteName + "_sticker";
-            for (var j = 0, len2 = creatureData.desiredFood[i].amount * creatureData.journalInfo.numCreatures; j < len2; j++) {
-                addDietChild(spriteName, .7);
-            }
-        }
-        for (var k = 0; k < unusedChildren.length; k++) {
-            unusedChildren[k].visible = false;
-        }
-
-        this.dailyDiet.x = -(maxRowLength * unitSize / 2)
     }
 
     if (creatureData.unlocked == "new") {
@@ -187,16 +161,100 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     // Show the next and prev buttons if applicable
     this.currentPage = GLOBAL.creatureManager.creatureList.indexOf(creatureType);
     // remember the current page for when we change pages
-    this.prevPageButton.visible = this.currentPage > 0;
-    this.nextPageButton.visible = this.currentPage < GLOBAL.creatureManager.creatureList.length - 1;
+    this.prevPageButton.setEnabled(this.currentPage > 0);
+    this.nextPageButton.setEnabled(this.currentPage < GLOBAL.creatureManager.creatureList.length - 1);
 };
 
+GlassLab.Journal.prototype._setupImageFeedLayout = function(creatureData)
+{
+    this.dailyDiet.visible = true;
+    this.dailyDietTable.visible = false;
+
+    var unusedChildren = this.dailyDiet.children.slice();
+    var n = 0;
+
+    // TODO: Use UITable?
+    var addDietChild = function(spriteName, scale)
+    {
+        var child = unusedChildren.pop();
+        if (!child)
+        {
+            child = this.game.make.sprite();
+            this.dailyDiet.addChild(child);
+            child.anchor.setTo(0.5, 0);
+        }
+        child.scale.setTo(scale, scale);
+        child.visible = true;
+        child.x = (n % GlassLab.Journal.FEED_NUM_COLUMNS) * GlassLab.Journal.UNIT_SIZE;
+        if (n % GlassLab.Journal.FEED_NUM_COLUMNS > GlassLab.Journal.MAX_ROW_LENGTH) GlassLab.Journal.MAX_ROW_LENGTH = n % GlassLab.Journal.FEED_NUM_COLUMNS;
+        child.y = Math.floor(n / GlassLab.Journal.FEED_NUM_COLUMNS) * GlassLab.Journal.UNIT_SIZE;
+        n++;
+        child.loadTexture(spriteName);
+    }.bind(this);
+
+    // Setup creatures
+    for (var i = 0, len = creatureData.journalInfo.numCreatures; i < len; i++)
+    {
+        var spriteName = creatureData.spriteName + "_sticker";
+        addDietChild(spriteName, .32);
+    }
+
+    // Setup food
+    for (var i = 0, len = creatureData.desiredFood.length; i < len; i++) {
+        var spriteName = GlassLab.FoodTypes[creatureData.desiredFood[i].type].spriteName + "_sticker";
+        for (var j = 0, len2 = creatureData.desiredFood[i].amount * creatureData.journalInfo.numCreatures; j < len2; j++) {
+            addDietChild(spriteName, .7);
+        }
+    }
+    for (var k = 0; k < unusedChildren.length; k++) {
+        unusedChildren[k].visible = false;
+    }
+
+    this.dailyDiet.x = -(GlassLab.Journal.MAX_ROW_LENGTH * GlassLab.Journal.UNIT_SIZE / 2);
+
+};
+GlassLab.Journal.prototype._setupNumericalFeedLayout = function(creatureData)
+{
+    this.dailyDiet.visible = false;
+    this.dailyDietTable.visible = true;
+
+    // Restart from scratch
+    this.dailyDietTable.clear();
+
+    // Setup creature
+    // TODO LABEL
+    var creatureNumberLabel = this.game.make.text(0,0, creatureData.journalInfo.numCreatures, {font: "24pt Architects", fill: "#808080"});
+    this.dailyDietTable.addManagedChild(creatureNumberLabel);
+
+    var spriteName = creatureData.spriteName + "_sticker";
+    var creatureSticker = this.game.make.sprite(0,0,spriteName);
+    creatureSticker.scale.setTo(.32, .32);
+    this.dailyDietTable.addManagedChild(creatureSticker);
+
+
+    // Setup food
+    for (var i = 0, len = creatureData.desiredFood.length; i < len; i++) {
+        var colonLabel = this.game.make.text(0,0, ":", {font: "24pt Architects", fill: "#808080"});
+        this.dailyDietTable.addManagedChild(colonLabel);
+
+        // TODO LABEL
+        var creatureNumberLabel = this.game.make.text(0,0, creatureData.desiredFood[i].amount * creatureData.journalInfo.numCreatures, {font: "24pt Architects", fill: "#808080"});
+        this.dailyDietTable.addManagedChild(creatureNumberLabel);
+
+        spriteName = GlassLab.FoodTypes[creatureData.desiredFood[i].type].spriteName + "_sticker";
+        var foodSticker = this.game.make.sprite(0,0,spriteName);
+        foodSticker.scale.setTo(.7, .7);
+        this.dailyDietTable.addManagedChild(foodSticker);
+    }
+
+    this.dailyDietTable._refresh();
+
+    this.dailyDietTable.x = -this.dailyDietTable.getWidth()/2;
+};
 
 GlassLab.Journal.prototype._revealCreatureInfo = function() {
     this.creatureArt.alpha = 0;
     this.game.add.tween(this.creatureArt).to( {alpha: 1}, 1000, Phaser.Easing.Linear.InOut, true );
-    this.creatureSilhouette.alpha = 1;
-    this.game.add.tween(this.creatureSilhouette).to( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true );
     this.game.add.tween(this.nameLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1000 );
     //this.game.add.tween(this.temperamentLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
     this.game.add.tween(this.dailyDiet).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
@@ -205,6 +263,8 @@ GlassLab.Journal.prototype._revealCreatureInfo = function() {
 GlassLab.Journal.prototype.Hide = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_journal", {});
+
+    GLOBAL.dayManager.dayMeter.visible = true;
 
     this.sprite.visible = false;
     this._onLeavePage();
