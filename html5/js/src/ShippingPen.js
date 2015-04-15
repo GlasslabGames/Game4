@@ -12,9 +12,12 @@ GlassLab.ShippingPen = function(game) {
     this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
 
     GlassLab.Pen.call(this, game, GLOBAL.penLayer);
-    this.penStyle = GlassLab.Pen.STYLES.crate;
     this.edgeAnchor = new Phaser.Point(0.075, 0.04);
     this.lidAnchor = new Phaser.Point(0.075, 0.25);
+
+    this.shadow = this.game.make.isoSprite(GLOBAL.tileSize + 20, GLOBAL.tileSize);
+    this.sprite.addChildAt(this.shadow, 0);
+    this.shadow.alpha = 0.4;
 
     this.cornerSprite = this.game.make.isoSprite(GLOBAL.tileSize * -2, GLOBAL.tileSize * -1);
     this.sprite.addChildAt(this.cornerSprite, this.sprite.getChildIndex(this.tileRoot));
@@ -71,20 +74,16 @@ GlassLab.ShippingPen.prototype.reset = function() {
 GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow) {
     console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow);
 
+    this.widths = [];
+
     // use the target creature width as set in order fulfillment, unless we have fewer creatures than that
     if (targetCreatureWidth) this.widths[0] = Math.min(targetCreatureWidth, numCreatures);
     else this.widths[0] = numCreatures;
-
-    console.log(this.widths);
 
     this.height = Math.ceil(numCreatures / this.widths[0]);
 
     for (var j = 0; j < numFoods.length; j++) {
         this.widths[j+1] = (singleFoodRow)? numFoods[j] : (Math.ceil(numFoods[j] / this.height));
-        if (j < numFoods.length - 1) this.rightEdges[j].sprite.visible = false;
-    }
-    while (j < this.widths) {
-        this.widths.pop();
     }
 
     if (hideCreatures) numCreatures = 0; // keep the same widths and height, but don't add any creatures
@@ -94,11 +93,6 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     this.sprite.isoX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
 
     this.show(); // make sure the pen is visible, and also call Resize
-
-    // Hide all the internal edges except for the rightmose edge
-    for (var i = 0; i < this.rightEdges.length; i++) {
-        this.rightEdges[i].sprite.visible = (i == this.rightEdges.length - 1);
-    }
 
     // Fill in the creatures in the pen
     this.FillIn(GlassLab.Creature.bind(null, this.game, creatureType, this), this.frontObjectRoot, this.creatureSpots, numCreatures,
@@ -112,6 +106,14 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
         var maxFood = (numFoods)? numFoods[i] : null;
         this.FillIn(GlassLab.Food.bind(null, this.game, foodTypes[i]), this.frontObjectRoot, this.foodLists[i], maxFood,
             startCol, startCol += this.widths[i+1], false, foodTypes[i]);
+    }
+    // hide any food in other sections that we're not using
+    for (var j = foodTypes.length, len = this.foodLists.length; j < len; j++) {
+        var unusedObjects = Array.prototype.concat.apply([], this.foodLists[j]);
+        for (var i = unusedObjects.length-1; i >= 0; i--) {
+            if (unusedObjects[i]) unusedObjects[i].visible = false;
+            else unusedObjects.splice(i, 1);
+        }
     }
 };
 
@@ -144,14 +146,15 @@ GlassLab.ShippingPen.prototype._dropLid = function() {
 
 GlassLab.ShippingPen.prototype._openPropellers = function() {
     var closedPropellers = [].concat(this.propellerRoot.children);
-    var totalTime = closedPropellers.length * 100;
+    var delay = 500, betweenPropellers = 100;
+    var totalTime = delay + closedPropellers.length * betweenPropellers;
     while (closedPropellers.length) {
         // randomly pick a propeller
         var index = Math.floor(Math.random() * closedPropellers.length);
         var prop = closedPropellers.splice(index, 1)[0]; // splice returns an array
-        this.game.time.events.add(closedPropellers.length * 100, this._openPropeller, this, prop);
+        this.game.time.events.add(delay + closedPropellers.length * betweenPropellers, this._openPropeller, this, prop);
     }
-    this.game.time.events.add(totalTime + 1000, this._flyAway, this);
+    this.game.time.events.add(totalTime + 1500, this._flyAway, this);
 };
 
 GlassLab.ShippingPen.prototype._openPropeller = function(prop) {
@@ -186,20 +189,18 @@ GlassLab.ShippingPen.prototype.Resize = function() {
     if (this.lid.visible) {
         this._drawPropellers();
     }
+
+    // hide all arrows
+    for (var i = 0; i < this.edges.length; i++) {
+        this.edges[i].showArrow(false);
+    }
 };
 
 GlassLab.ShippingPen.prototype._drawEdges = function() {
-    var col = 0;
-    this._drawVerticalEdge(this.leftEdge, col, 1, this.height,  "crate", "crate_back_left.png", this.edgeAnchor, 0, -1);
-    col += this.widths[0];
-    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -1, -1);
+    this._drawVerticalEdge(this.leftEdge, 0, 1, this.height,  "crate", "crate_back_left.png", this.edgeAnchor, 0, -1);
+    this._drawVerticalEdge(this.centerEdge, this.widths[0], 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -1, -1);
 
-    for (var i = 0, len = this.rightEdges.length; i < len; i++) {
-        if (this.rightEdges[i].sprite.visible) {
-            col += this.widths[i+1];
-            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -1, -1);
-        }
-    };
+    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -1, -1);
 
     this._drawHorizontalEdge(this.topEdge, 1, this.getFullWidth(), 0, "crate", "crate_back_right.png", this.edgeAnchor, -1, 0, true);
     this._drawHorizontalEdge(this.bottomEdge, 0, this.getFullWidth(), this.height, "crate", "crate_front_left.png", this.edgeAnchor, -1, -1);
@@ -219,7 +220,7 @@ GlassLab.ShippingPen.prototype._drawEdges = function() {
 
 GlassLab.ShippingPen.prototype._drawBgAtTile = function(col, row, tile) {
     this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.tileRoot, "crate", "crate_floor.png");
-    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.shadow, "crate_shadow", "", 0x000000);
+    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.shadow, "crate_shadow", "", 0x000000, 0.995);
     if (this.lid.visible) this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.lidTileRoot, "crate", "crate_floor.png");
 };
 

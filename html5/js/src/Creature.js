@@ -210,7 +210,8 @@ GlassLab.Creature.prototype.setType = function (type) {
     for (var key in this.animSprites) {
         this.animSprites[key].loadTexture(info.spriteName + "_" + key);
     }
-    // This hasn't been tested yet!
+    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.6; // make babies smaller
+    this.sprite.scale.setTo(this.spriteScaleY * Math.sign(this.sprite.scale.x), this.spriteScaleY);
 };
 
 GlassLab.Creature.prototype.moveToTile = function (col, row) {
@@ -772,6 +773,7 @@ GlassLab.Creature.prototype._onOver = function()
         this.hungerBar.show(true, 1);
     }
 };
+
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
     if (targetState == this.state) {
