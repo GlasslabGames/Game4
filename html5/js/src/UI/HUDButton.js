@@ -56,14 +56,36 @@ GlassLab.HUDButton = function(game, x, y, imageSprite, bgSprite, isIcon, callbac
     this.addChild(this.image);
     this.image.tint = (this.isIcon? this.imageColor : 0xffffff);
 
-    this.events.onInputDown.add(this._onDown, this); // onUp is added by UIButton
-    this.events.onInputOver.add(this._onOver, this);
-    this.events.onInputOut.add(this._onOut, this);
+    this.inputHandlers = [
+        this.events.onInputDown.add(this._onDown, this), // onUp is added by UIButton
+        this.events.onInputOver.add(this._onOver, this),
+        this.events.onInputOut.add(this._onOut, this)
+    ];
 };
 
 GlassLab.HUDButton.prototype = Object.create(GlassLab.UIButton.prototype);
 GlassLab.HUDButton.prototype.constructor = GlassLab.HUDButton;
 
+GlassLab.HUDButton.prototype.setEnabled = function(enabled) {
+    GlassLab.UIButton.prototype.setEnabled.apply(this, arguments);
+
+    for (var i=this.inputHandlers.length-1; i>=0; i--)
+    {
+        this.inputHandlers[i].active = enabled;
+    }
+
+    if (!enabled)
+    {
+        this.pressed = false;
+
+        if (this.mousedOver)
+        {
+            this._onOut();
+        }
+    }
+
+    this._refreshColors();
+};
 
 GlassLab.HUDButton.prototype._onDown = function() {
     this.pressed = true;

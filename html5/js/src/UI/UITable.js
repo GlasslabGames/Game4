@@ -56,7 +56,7 @@ GlassLab.UITable.prototype.removeManagedChild = function(child, refresh)
         this.removeChild(child);
         this.managedChildren.splice(childIndex, 1);
 
-        if (refresh) this.refresh();
+        if (refresh) this._refresh();
     }
     else
     {
@@ -79,6 +79,18 @@ GlassLab.UITable.prototype.getChildIndex = function(child)
         return c;
     else
         return null;
+};
+
+GlassLab.UITable.prototype.clear = function()
+{
+    for (var i= this.managedChildren.length-1; i >= 0; i--)
+    {
+        var child = this.managedChildren[i];
+        this.removeManagedChild(child);
+        child.destroy();
+    }
+
+    this.managedChildren.length = 0;
 };
 
 GlassLab.UITable.prototype._refresh = function()
