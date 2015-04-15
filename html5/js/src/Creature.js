@@ -20,7 +20,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.shadow.loadTexture("shadow");
     this.shadow.scale.setTo(0.25, 0.25);
     this.shadowY = this.shadow.y = -30;
-    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.5; // make babies smaller
+    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.6; // make babies smaller
     this.sprite.scale.setTo(this.spriteScaleY, this.spriteScaleY);
     this.spriteY = this.sprite.y = 20;
     this.canDropInWaitingArea = true; // setting on WorldObject
