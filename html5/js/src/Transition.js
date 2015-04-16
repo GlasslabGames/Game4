@@ -40,7 +40,7 @@ GlassLab.Transition.prototype.in = function (thenOut) {
 
 GlassLab.Transition.prototype._transition = function (start, end, easing) {
     var tweenCounter = { percent: start };
-    var tween = this.game.add.tween(tweenCounter).to( { percent: end }, 1000, easing, true);
+    var tween = this.game.add.tween(tweenCounter).to( { percent: end }, 800, easing, true);
     tween.onUpdateCallback(function() {
         this._refresh(tweenCounter.percent);
     }, this);
@@ -77,14 +77,7 @@ GlassLab.Transition.prototype._refresh = function (percent) {
 };
 
 GlassLab.Transition.prototype._resize = function () {
-    console.log("Resize. Current percent:",this.currentPercent);
-    this.bitmapData.width = this.game.width;
-    this.bitmapData.height = this.game.height;
-    this.bitmapData.canvas.width = this.game.width;
-    this.bitmapData.canvas.height = this.game.height;
-
-    // TODO: this doesn't work
-
+    this.bitmapData.resize(this.game.width, this.game.height);
     this.maxDiameter = Math.sqrt(this.bitmapData.width * this.bitmapData.width + this.bitmapData.height * this.bitmapData.height); // diagonal of the canvas
     this._refresh(this.currentPercent);
 };
