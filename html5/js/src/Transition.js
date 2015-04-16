@@ -34,13 +34,13 @@ GlassLab.Transition.prototype.do = function () {
 GlassLab.Transition.prototype.in = function (thenOut) {
     this.visible = true;
     this._refresh(1);
-    var tween = this._transition(1, 0);
+    var tween = this._transition(1, 0, Phaser.Easing.Quartic.In);
     tween.onComplete.addOnce(function() { this._midTransition(thenOut); }, this);
 };
 
-GlassLab.Transition.prototype._transition = function (start, end) {
+GlassLab.Transition.prototype._transition = function (start, end, easing) {
     var tweenCounter = { percent: start };
-    var tween = this.game.add.tween(tweenCounter).to( { percent: end }, 500, Phaser.Easing.Quadratic.In, true);
+    var tween = this.game.add.tween(tweenCounter).to( { percent: end }, 1000, easing, true);
     tween.onUpdateCallback(function() {
         this._refresh(tweenCounter.percent);
     }, this);
@@ -56,14 +56,14 @@ GlassLab.Transition.prototype._midTransition = function (thenOut) {
 GlassLab.Transition.prototype.out = function () {
     this.visible = true;
     this._refresh(0);
-    var tween = this._transition(0, 1);
+    var tween = this._transition(0, 1, Phaser.Easing.Quartic.Out);
     tween.onComplete.addOnce(this._endTransition, this);
 };
 
 GlassLab.Transition.prototype._endTransition = function () {
     this.onComplete.dispatch();
     this.visible = false;
-    // this.game.time.events.add(1000, this.do, this); // if you uncomment this it loops (for testing)
+    //this.game.time.events.add(1000, this.do, this); // if you uncomment this it loops (for testing)
 };
 
 GlassLab.Transition.prototype._refresh = function (percent) {

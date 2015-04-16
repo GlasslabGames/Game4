@@ -170,7 +170,7 @@ GlassLab.ShippingPen.prototype.ship = function() {
 
 GlassLab.ShippingPen.prototype._dropLid = function() {
     this.game.add.tween(this.lid).to({alpha: 1}, 50, Phaser.Easing.Linear.InOut, true, 0); // quickly fade in the lid (if we failed to get it totally offscreen)
-    var tween = this.game.add.tween(this.lid).to({y: 0}, 500, Phaser.Easing.Linear.In, true, 0);
+    var tween = this.game.add.tween(this.lid).to({y: 0}, 500, Phaser.Easing.Cubic.In, true, 0);
     tween.onComplete.addOnce(this._openPropellers, this);
 };
 
@@ -201,12 +201,12 @@ GlassLab.ShippingPen.prototype._flyAway = function() {
     var shadowTarget = Phaser.Point.subtract(this.shadow.isoPosition, isoDist);
     shadowTarget.x += this.offscreenY / 2;
 
-    var time = 3000;
+    var time = 6000;
     var delay = 500;
-    this.game.add.tween(this.sprite).to({isoX: spriteTarget.x, isoY: spriteTarget.y}, time, Phaser.Easing.Quadratic.In, true, delay);
-    this.game.add.tween(this.shadow).to({isoX: shadowTarget.x, isoY: shadowTarget.y}, time, Phaser.Easing.Quadratic.In, true, delay);
-    this.game.add.tween(this.shadow).to({alpha: 0}, time * 0.75, Phaser.Easing.Quadratic.In, true, delay);
-    var tween = this.game.add.tween(this.sprite).to({alpha: 0}, 100, Phaser.Easing.Quadratic.In, true, time+delay-100); // fade out at the end in case we're not on screen
+    this.game.add.tween(this.sprite).to({isoX: spriteTarget.x, isoY: spriteTarget.y}, time, Phaser.Easing.Quintic.In, true, delay);
+    this.game.add.tween(this.shadow).to({isoX: shadowTarget.x, isoY: shadowTarget.y}, time, Phaser.Easing.Quintic.In, true, delay);
+    this.game.add.tween(this.shadow).to({alpha: 0}, time * 0.75, Phaser.Easing.Quintic.In, true, delay);
+    var tween = this.game.add.tween(this.sprite).to({alpha: 0}, 100, Phaser.Easing.Quadratic.InOut, true, time+delay-100); // fade out at the end in case we're not on screen
     tween.onComplete.addOnce(this._finishShipping, this);
 };
 
@@ -288,8 +288,8 @@ GlassLab.ShippingPen.prototype._addPropeller = function(col, row) {
     if (!propeller) {
         var propeller = this.game.make.isoSprite(col * GLOBAL.tileSize, row * GLOBAL.tileSize, 0, "propellerAnim");
         propeller.anchor.setTo(0.5, 0.92);
-        propeller.animations.add("extend", Phaser.Animation.generateFrameNames("propeller_extender_",060,123,".png",3), 48, false);
-        propeller.animations.add("spin", Phaser.Animation.generateFrameNames("propeller_spin_",0,1,".png",3), 48, true);
+        propeller.animations.add("extend", Phaser.Animation.generateFrameNames("propeller_extender_",060,123,".png",3), 24, false);
+        propeller.animations.add("spin", Phaser.Animation.generateFrameNames("propeller_spin_",0,1,".png",3), 24, true);
     }
     propeller.visible = true;
     var anim = propeller.play("extend");
