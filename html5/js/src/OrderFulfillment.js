@@ -143,7 +143,6 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
         } else {
             creatureMult = this._calculateTargetNumCreatures(); // otherwise, give them enough food for all the creatures.
         }
-        console.log(creatureWidth, creatureMult);
 
         var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
         var foodCounts = [desiredFood[0].amount * creatureMult];
@@ -222,8 +221,6 @@ GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
 
     if (destroyPen && this.crate)
     {
-        //this.pen.sprite.destroy();
-        //this.pen = null;
         this.crate.hide();
     }
 
