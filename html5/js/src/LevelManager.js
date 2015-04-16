@@ -77,7 +77,6 @@ GlassLab.LevelManager = function(game)
                 type: "rammus",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
-                hint: true,
                 reward: 200
             },
             {

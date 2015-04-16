@@ -99,14 +99,14 @@ GlassLab.OrderFulfillment = function(game)
     this.submitButton.setEnabled(false);
 
     this.cancelButton = game.make.button(-140, -440, "cancelButton", function(){
-        this.Hide(true);
-        GlassLabSDK.saveTelemEvent("cancel_order", {});
-        GlassLab.SignalManager.orderCanceled.dispatch(this.data);
+        GLOBAL.mailManager.cancelOrder();
     }, this);
     this.cancelButton.scale.setTo(0.5, 0.5);
     this.sprite.addChild(this.cancelButton);
 
     this.sprite.visible = false;
+
+    game.scale.onSizeChange.add(this._onScreenSizeChange, this);
 };
 
 // When text is UITextInput is changed
@@ -134,7 +134,7 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
         var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
         this.crate.setContents(this.data.creatureType, numCreatures, this.foodTypes, response, creatureWidth);
 
-        this._focusCamera();
+        this.focusCamera();
     } else if (this.data.hint) { // for a hint, show one row of food
         var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
         var creatureMult; // determines how much food to show.
@@ -154,19 +154,28 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
         this.crate.setContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
             creatureWidth, !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
 
-        this._focusCamera();
     } else if (this.crate) { // we have a pen with no purpose, so remove it
         this.crate.hide();
     }
+
+    this.focusCamera();
 };
 
-GlassLab.OrderFulfillment.prototype._focusCamera = function() {
+GlassLab.OrderFulfillment.prototype.focusCamera = function() {
 
     // The pen is already set to be centered, so we can center the camera (with some offset for the UI)
-    this.game.camera.x = -this.game.camera.width * 0.5 - 75;
-    this.game.camera.y = -this.game.camera.height * 0.5 + 100;
-    var maxDimension = Math.max(this.crate.getFullWidth(), this.crate.height);
-    GLOBAL.UIManager.zoomTo(2.5 / maxDimension);
+    var xOffset = -75;
+    var yOffset = 100;
+    this.game.camera.x = -this.game.camera.width * 0.5 + xOffset;
+    this.game.camera.y = -this.game.camera.height * 0.5 + yOffset;
+    if (this.crate && this.crate.sprite.visible) {
+        var maxDimension = Math.max(this.crate.getFullWidth(), this.crate.height);
+        GLOBAL.UIManager.zoomTo(2.5 / maxDimension);
+    }
+
+    GLOBAL.tiledBg.width = this.game.width / GLOBAL.UIManager.zoomLevel * 1.25; // padding to cover a weird edge when full screen;
+    GLOBAL.tiledBg.height = this.game.height / GLOBAL.UIManager.zoomLevel;
+    GLOBAL.tiledBg.position.setTo(xOffset / GLOBAL.UIManager.zoomLevel, yOffset / GLOBAL.UIManager.zoomLevel);
 };
 
 GlassLab.OrderFulfillment.prototype._getResponse = function() {
@@ -189,7 +198,7 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
     else return response;
 };
 
-GlassLab.OrderFulfillment.prototype.Show = function(data)
+GlassLab.OrderFulfillment.prototype.show = function(data)
 {
     this.sprite.visible = true;
     for (var i = 0; i < this.answerInputs.length; i++) {
@@ -212,7 +221,7 @@ GlassLab.OrderFulfillment.prototype.Show = function(data)
     GLOBAL.inventoryMenu.Show(true); // show this after sending the event so that we don't have to refresh the inventory again
 };
 
-GlassLab.OrderFulfillment.prototype.Hide = function(destroyPen)
+GlassLab.OrderFulfillment.prototype.hide = function(destroyPen)
 {
     for (var i = 0; i < this.answerInputs.length; i++) {
         this.answerInputs[i].input.SetFocus(false);
@@ -334,7 +343,6 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
 
         }
     }
-
 };
 
 GlassLab.OrderFulfillment.prototype._crateShipped = function() {
@@ -347,8 +355,6 @@ GlassLab.OrderFulfillment.prototype._crateShipped = function() {
     console.log("Crate shipped! Outcome:",outcome, "Wrong food:",this.crate.missingFood);
 
     GLOBAL.mailManager.completeOrder(this.data, outcome);
-    this.Hide(true);
-    // TODO: Instead of just hiding the pen, we should be switching contexts
 };
 
 
@@ -420,4 +426,8 @@ GlassLab.OrderFulfillment.prototype._calculateTargetNumCreatures = function() {
         return this.data.totalNumFood / (creatureInfo.desiredFood[0].amount + creatureInfo.desiredFood[1].amount);
     }
     return -1;
+};
+
+GlassLab.OrderFulfillment.prototype._onScreenSizeChange = function() {
+    if (this.sprite.visible) this.focusCamera();
 };

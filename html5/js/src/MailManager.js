@@ -24,10 +24,6 @@ GlassLab.MailManager = function(game)
     this.rewards = [];
 
     GlassLab.SignalManager.penFeedingStarted.add(this.HideMail, this); // hide when we start feeding in the pen
-
-    GlassLab.SignalManager.orderStarted.add(this._onOrderStarted, this);
-    GlassLab.SignalManager.orderCanceled.add(this._onOrderCanceled, this);
-    GlassLab.SignalManager.orderResolved.add(this._onOrderResolved, this);
 };
 
 GlassLab.MailManager.prototype.ShowMail = function(auto)
@@ -87,20 +83,30 @@ GlassLab.MailManager.prototype.ClearOrders = function()
     this.availableOrders = [];
 };
 
-GlassLab.MailManager.prototype._onOrderStarted = function(order) {
+GlassLab.MailManager.prototype.startOrder = function(order) {
     this.currentOrder = order;
-    GlassLab.SignalManager.ordersChanged.dispatch(order);
-    this.enterOrderFulfillment();
+    GLOBAL.transition.do();
+    GLOBAL.transition.onMiddle.addOnce(function() {
+        GlassLab.SignalManager.ordersChanged.dispatch(order);
+        this.enterOrderFulfillment();
+    }, this);
 };
 
-GlassLab.MailManager.prototype._onOrderCanceled = function(order) {
+GlassLab.MailManager.prototype.stopOrder = function() {
     this.currentOrder = null;
-    GlassLab.SignalManager.ordersChanged.dispatch(order);
-    this.exitOrderFulfillment();
+    GLOBAL.transition.do();
+    GLOBAL.transition.onMiddle.addOnce(function() {
+        GlassLab.SignalManager.ordersChanged.dispatch();
+        this.exitOrderFulfillment();
+    }, this);
 };
 
-GlassLab.MailManager.prototype._onOrderResolved = function(order) {
-    this.exitOrderFulfillment();
+GlassLab.MailManager.prototype.cancelOrder = function() {
+    this.stopOrder();
+    GLOBAL.transition.onMiddle.addOnce(function() {
+        GlassLabSDK.saveTelemEvent("cancel_order", {});
+        GlassLab.SignalManager.orderCanceled.dispatch(this.data);
+    });
 };
 
 GlassLab.MailManager.prototype.completeOrder = function(order, result)
@@ -119,16 +125,17 @@ GlassLab.MailManager.prototype.completeOrder = function(order, result)
         }
     }
 
-    GlassLab.SignalManager.orderShipped.dispatch(order, result);
 
-    this.currentOrder = null;
+    this.stopOrder();
+    GLOBAL.transition.onMiddle.addOnce(function() {
+        this.rewards.push(order); // the reward popup will send OrderResolved when it's closed
 
-    this.rewards.push(order); // the reward popup will send OrderResolved when it's closed
+        GLOBAL.audioManager.playSound("mailNoticeSound");
 
-    GLOBAL.audioManager.playSound("mailNoticeSound");
-
-    GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
-    GlassLab.SignalManager.rewardAdded.dispatch(order);
+        GlassLab.SignalManager.orderShipped.dispatch(order, result);
+        GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
+        GlassLab.SignalManager.rewardAdded.dispatch(order);
+    }, this);
 };
 
 GlassLab.MailManager.prototype.isOrderComplete = function(orderId) {
@@ -144,13 +151,17 @@ GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
         GLOBAL.foodLayer.getChildAt(i).visible = false;
     }
+    GLOBAL.orderFulfillment.show(this.currentOrder);
+    GLOBAL.tiledBg.visible = true;
 };
 
 GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
     GLOBAL.penManager.showPens();
     GLOBAL.creatureManager.showCreatures();
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
-        GLOBAL.foodLayer.getChildAt(i).visible = true;
+        GLOBAL.foodLayer.getChildAt(i).vissible = true;
     }
+    GLOBAL.orderFulfillment.hide(true);
+    GLOBAL.tiledBg.visible = false;
     GLOBAL.UIManager.resetCamera();
 };

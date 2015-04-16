@@ -184,7 +184,7 @@ GlassLab.ShippingPen.prototype._openPropellers = function() {
         var prop = closedPropellers.splice(index, 1)[0]; // splice returns an array
         this.game.time.events.add(delay + closedPropellers.length * betweenPropellers, this._openPropeller, this, prop);
     }
-    this.game.time.events.add(totalTime + 1500, this._flyAway, this);
+    this.game.time.events.add(totalTime + 1000, this._flyAway, this);
 };
 
 GlassLab.ShippingPen.prototype._openPropeller = function(prop) {
@@ -205,7 +205,7 @@ GlassLab.ShippingPen.prototype._flyAway = function() {
     var delay = 500;
     this.game.add.tween(this.sprite).to({isoX: spriteTarget.x, isoY: spriteTarget.y}, time, Phaser.Easing.Quintic.In, true, delay);
     this.game.add.tween(this.shadow).to({isoX: shadowTarget.x, isoY: shadowTarget.y}, time, Phaser.Easing.Quintic.In, true, delay);
-    this.game.add.tween(this.shadow).to({alpha: 0}, time * 0.75, Phaser.Easing.Quintic.In, true, delay);
+    this.game.add.tween(this.shadow).to({alpha: 0}, time * 0.8, Phaser.Easing.Quintic.In, true, delay);
     var tween = this.game.add.tween(this.sprite).to({alpha: 0}, 100, Phaser.Easing.Quadratic.InOut, true, time+delay-100); // fade out at the end in case we're not on screen
     tween.onComplete.addOnce(this._finishShipping, this);
 };

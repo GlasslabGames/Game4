@@ -53,7 +53,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
 
     this.selectButton = new GlassLab.UIButton(this.game, this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
         this.Hide(true);
-        GLOBAL.orderFulfillment.Show(this.data);
+        GLOBAL.mailManager.startOrder(this.data);
     }, this);
     this.selectButton.scale.setTo(.65,.65);
     this.selectButton.anchor.setTo(.5, .5);
