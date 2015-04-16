@@ -36,6 +36,8 @@ GlassLab.State.Game.prototype.create = function()
     crate.setContents("baby_unifox", 2, ["strawberry"], [8], 2, false, false);
     GLOBAL.crate = crate;*/
     //SetContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow)
+
+    GLOBAL.transition.out();
 };
 
 GlassLab.State.Game.prototype.update = function()

@@ -72,6 +72,10 @@ GlassLab.UIManager.prototype._createAnchors = function()
     // Center - above the rest for convenient use with modals, etc
     this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
     GLOBAL.UILayer.add(this.centerAnchor);
+
+    // Another anchor in the center, but make sure it's above everything
+    this.transitionAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
+    GLOBAL.UILayer.add(this.transitionAnchor);
 };
 
 GlassLab.UIManager.prototype.showAnchoredArrow = function(direction, anchorName, x, y) {

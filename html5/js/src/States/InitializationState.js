@@ -343,6 +343,9 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
     GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);
 
+    GLOBAL.transition = new GlassLab.Transition(game);
+    GLOBAL.UIManager.transitionAnchor.addChild(GLOBAL.transition);
+
     //GLOBAL.debugText = game.make.text(-300,0,"test");
     //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);
 
