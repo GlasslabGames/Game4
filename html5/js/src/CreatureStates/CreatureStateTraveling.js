@@ -48,6 +48,9 @@ GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creat
 {
     //console.log("Destination reached! target:",this.target);
     this.creature.StopAnim();
+
+    if (this.footstepSound) this.footstepSound.stop();
+
     if (this.target.pos) this.creature.setIsoPos(this.target.pos.x, this.target.pos.y); // TODO: make the creature actually stop at the target point instead of on a tile.
     if (!this.creature.tryReachTarget(this.target)) { // we weren't able to enter our target for some reason, so look for a new one
         this.creature.lookForTargets();
