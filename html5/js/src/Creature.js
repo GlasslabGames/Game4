@@ -671,7 +671,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     var targetIsSameTile = bestRealDist <= GLOBAL.tileSize / 2;
 
     if (bestTarget && targetIsNoticeable) {
-        if (bestTarget.pen && !bestTarget.full && !this.getIsEmpty()) { // if the creature wants to enter a pen, it poops first ...
+        if (bestTarget.pen && !bestTarget.outsidePen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it poops first ...
             this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this)); // it will look for a target again when it's done
         } else if (!targetIsSameTile || !this.tryReachTarget(bestTarget)) { // if we're too far, or we fail to enter the target right now
             this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget)); // travel to the target
@@ -690,8 +690,9 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
             this.game.time.events.add(0, function() {
                 this.standFacingPosition(new Phaser.Point(target.pos.x + GLOBAL.tileSize, target.pos.y)); // add a tile here since we offset the position when we set the target in FeedingPen
             }, this);
+            if (!target.outsidePen) return false; // we thought we'd be able to enter, so if we can't, it's time to look for a new target
         }
-        return true; // either way, we reached the target
+        return true; // else, we reached the target
     } else if (target.food) { // we're on top of some food
         if (target.food.type in this.desiredAmountsOfFood) {
             this.eatFreeFood(target.food);
