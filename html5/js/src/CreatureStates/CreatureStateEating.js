@@ -17,6 +17,11 @@ GlassLab.CreatureStateEating.constructor = GlassLab.CreatureStateEating;
 GlassLab.CreatureStateEating.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
+
+    if (!this.food.pen) { // eating in the wild
+        this.creature.standFacingPosition(this.food.getGlobalPos());
+    }
+
     this.anim = this.creature.PlayAnim("eat", false, this.creature.baseAnimSpeed, true); // restart if we were playing an eat anim
     this.chomped = false;
     if (this.anim) {
@@ -33,12 +38,6 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
     this.amountToEat = 1;
     if (this.eatPartially) {
         this.amountToEat = this.creature.desiredAmountsOfFood[this.food.type] % 1;
-    }
-
-    if (!this.food.pen) { // eating in the wild
-        // switch direction // TODO: fix this
-        if (this.food.getGlobalPos() < this.creature.getGlobalPos()) this.creature.sprite.scale.x = Math.abs(this.creature.sprite.scale.x);
-        else this.creature.sprite.scale.x = - Math.abs(this.creature.sprite.scale.x);
     }
 };
 

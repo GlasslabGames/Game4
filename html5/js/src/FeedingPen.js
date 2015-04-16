@@ -308,6 +308,8 @@ GlassLab.FeedingPen.prototype.getAvailableSpots = function(creatureType) {
         for (var row = startRow; row < endRow; row++) {
             if (avoidMiddle && Math.abs(row - middle) < 1) continue; // the middle row(s) are not allowed
             var pos = new Phaser.Point( this.sprite.isoX + GLOBAL.tileSize * -1, this.sprite.isoY + GLOBAL.tileSize * row );
+            pos.x += (Math.random() - 0.5) * GLOBAL.tileSize * 0.5; // offset by a up to half a tile
+            pos.y += (Math.random() - 0.5) * GLOBAL.tileSize * 0.5;
             spots.push({ pen: this, pos: pos, priority: 0.1, full: true }); // full is used to check specifically if the creature should vomit/poop before entering
         }
     }

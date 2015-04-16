@@ -103,7 +103,7 @@ GlassLab.PenManager.prototype.showPens = function() {
 GlassLab.PenManager.prototype.DestroyAllPens = function()
 {
     for (var i = 0; i < this.pens.length; i++) {
-        this.pens[i].destroy();
+        if (this.pens[i]) this.pens[i].sprite.destroy();
     }
 
     this.pens = [];
