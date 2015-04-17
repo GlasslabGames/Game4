@@ -37,16 +37,11 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.rewardAmountLabel = game.make.text(infoX + coin.width + 5, coin.y, "$500", fontStyle);
     this.sprite.addChild(this.rewardAmountLabel);
 
-
-
     this.descriptionLabel = game.make.text(-165, -45, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.",
         {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.sprite.addChild(this.descriptionLabel);
 
-    this.selectButton = new GlassLab.HUDButton(this.game, 0, 168, null, "orderButtonBg", "Fill Order!", {font: "16pt EnzoBlack"}, true, function(){
-        this.Hide(true);
-        GLOBAL.mailManager.startOrder(this.data);
-    }, this);
+    this.selectButton = new GlassLab.HUDButton(this.game, 0, 168, null, "letterButtonBg", "Fill Order!", {font: "16pt EnzoBlack"}, true, this._onSelectPressed, this);
     this.sprite.addChild(this.selectButton);
     this.selectButton.imageColor = 0xffffff;
     this.selectButton.imageDownColor = 0xffffff;
@@ -54,8 +49,9 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.selectButton.bgOverAlpha = 1;
     // further button color settings depend on whether it's an urgent order (see Refresh)
 
-    this.paymentLabel = game.make.text(195, 210, "$200");
-    this.paymentLabel.fontSize = 22;
+    this.stamp = game.make.sprite(0, 170, "approvedStamp");
+    this.stamp.anchor.setTo(0.5, 0.5);
+    this.sprite.addChild(this.stamp);
 
     this.data = null;
     this.currentPage = 0;
@@ -107,6 +103,9 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.selectButton.bgAlpha = (this.data.key)? 1 : 0.5;
     this.selectButton.whenUp();
 
+    this.selectButton.alpha = 1;
+    this.stamp.visible = false;
+
     this.prevPageButton.visible = this.currentPage > 0;
     this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1;
 };
@@ -140,7 +139,22 @@ GlassLab.OrdersMenu.prototype.Hide = function(auto)
     GlassLab.SignalManager.mailClosed.dispatch();
 };
 
-GlassLab.OrdersMenu.prototype._onClosePressed = function()
-{
-    this.Hide();
+GlassLab.OrdersMenu.prototype._onSelectPressed = function() {
+    this.selectButton.setEnabled(false);
+    this.game.add.tween(this.selectButton).to( { alpha: 0 }, 150, Phaser.Easing.Quadratic.In, true);
+
+    this.stamp.visible = true;
+    this.stamp.alpha = 0;
+    this.stamp.scale.setTo(1.64, 1.64);
+    this.stamp.angle = -20;
+    this.game.add.tween(this.stamp).to( { alpha: 1, angle: 0 }, 250, Phaser.Easing.Quintic.In, true);
+    var tween = this.game.add.tween(this.stamp.scale).to( { x: 1, y: 1 }, 250, Phaser.Easing.Quintic.In, true);
+    tween.onComplete.addOnce(this._onStamped, this);
+};
+
+GlassLab.OrdersMenu.prototype._onStamped = function() {
+    var startY = this.sprite.y;
+    this.sprite.y += 5;
+    var tween = this.game.add.tween(this.sprite).to( { y: startY }, 100, Phaser.Easing.Quadratic.InOut, true);
+    tween.onComplete.addOnce( function() { GLOBAL.mailManager.startOrder(this.data); }, this );
 };

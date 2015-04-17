@@ -155,6 +155,7 @@ GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
     }
     GLOBAL.orderFulfillment.show(this.currentOrder);
     GLOBAL.tiledBg.visible = true;
+    this.ordersMenu.Hide(true);
 
     GLOBAL.UIManager.toggleCancelHUDButton(true);
     GLOBAL.UIManager.toggleZoomHUDButtons(false);

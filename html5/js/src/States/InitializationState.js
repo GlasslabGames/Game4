@@ -152,7 +152,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
     game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');
     game.load.image('urgentStamp', 'assets/images/order/urgent_stamp.png');
-    game.load.image('orderButtonBg', 'assets/images/order/order_fill_button_bg.png');
+    game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
+    game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
 
     game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
     game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');
