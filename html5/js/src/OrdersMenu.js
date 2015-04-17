@@ -20,7 +20,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     var infoX = 5;
     this.titleLabel = game.make.text(infoX, -220, "Shipment request", fontStyle);
     this.titleLabel.anchor.setTo(0, 0);
-    //this.sprite.addChild(this.titleLabel);
+    this.sprite.addChild(this.titleLabel);
 
     this.urgentStamp = game.make.sprite(infoX, -225, "urgentStamp");
     this.sprite.addChild(this.urgentStamp);
@@ -49,8 +49,10 @@ GlassLab.OrdersMenu = function(game, x, y) {
     }, this);
     this.sprite.addChild(this.selectButton);
     this.selectButton.imageColor = 0xffffff;
+    this.selectButton.imageDownColor = 0xffffff;
+    this.selectButton.bgDownColor = 0x000000;
     this.selectButton.bgOverAlpha = 1;
-    this.selectButton.whenUp();
+    // further button color settings depend on whether it's an urgent order (see Refresh)
 
     this.paymentLabel = game.make.text(195, 210, "$200");
     this.paymentLabel.fontSize = 22;
@@ -60,18 +62,18 @@ GlassLab.OrdersMenu = function(game, x, y) {
 
     // Page buttons
     var pageButtonX = this.bg.width / 2 + 20;
-    this.nextPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
+    this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
-    this.nextPageButton.bg.scale.x *= -1;
-    this.nextPageButton.label.x += 5;
+    this.nextPageButton.label.x -= 5;
     this.sprite.addChild(this.nextPageButton);
 
-    this.prevPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
+    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
     this.prevPageButton.anchor.setTo(0, 0.5);
-    this.prevPageButton.label.x -= 5;
+    this.prevPageButton.bg.scale.x *= -1;
+    this.prevPageButton.label.x += 5;
     this.sprite.addChild(this.prevPageButton);
 
-    this.sprite.visible = true;
+    this.sprite.visible = false;
 };
 
 GlassLab.OrdersMenu.prototype._onNextPagePressed = function()
@@ -89,63 +91,31 @@ GlassLab.OrdersMenu.prototype.IsShowing = function()
     return this.sprite.visible;
 };
 
-function getProcessedString(string)
-{
-    var returnString = string;
-    var replaceString = string.replace(/\[[^\]]+\]/i, "");
-    while(returnString != replaceString)
-    {
-        returnString = replaceString;
-        replaceString = replaceString.replace(/\[[^\]]+\]/i, "");
-    }
-    return returnString;
-}
-
-function getStringColorInfo(string)
-{
-    // TODO: This doesn't work at all right now.
-    var colors = [];
-    var searchString = string;
-    var colorInfo = searchString.match(/\[[^\]]+\]/i);
-    var colorData = {};
-    while (colorInfo)
-    {
-        colorData.color = colorInfo;
-        searchString;
-        colors.add()
-    }
-
-    return colors;
-}
-
 GlassLab.OrdersMenu.prototype.Refresh = function()
 {
-    this.descriptionLabel.clearColors();
-    this.descriptionLabel.setText(getProcessedString(this.data.description));
+    GlassLab.Util.SetColoredText(this.descriptionLabel, this.data.description, "#807c7b", "#994c4e");
 
     this.clientNameLabel.setText(this.data.client);
-    this.urgentLabel.setText(this.data.key? "Urgent!" : "");
     this.rewardAmountLabel.setText("$"+this.data.reward);
 
-    //var maxOrders = 3; // In the future, if we want to limit the number of orders shown, do something like Math.min(GLOBAL.mailManager.availableOrders.length - 1, maxOrders).
-    this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.mailManager.availableOrders.length);
+    // For an urgent order, show the urgent stamp. Else show the title label.
+    this.urgentStamp.visible = this.data.key;
+    this.titleLabel.visible = !this.data.key;
 
-    var colors = getStringColorInfo(this.data.description);
-    for (var i=colors.length-1; i >= 0; i++)
-    {
-        var color = colors[i];
-        this.descriptionLabel.addColor(color.color, color.position);
-    }
+    this.selectButton.bgColor = (this.data.key)? 0x9a3c3f : 0x000000;
+    this.selectButton.imageOverColor = (this.data.key)? 0x9a3c3f : 0x000000;
+    this.selectButton.bgAlpha = (this.data.key)? 1 : 0.5;
+    this.selectButton.whenUp();
 
     this.prevPageButton.visible = this.currentPage > 0;
-    this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1; // only show 3 orders at once
+    this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1;
 };
 
 GlassLab.OrdersMenu.prototype.SetInfo = function(data)
 {
     this.data = data;
     this.Refresh();
-}
+};
 
 GlassLab.OrdersMenu.prototype.Show = function(orderNum)
 {

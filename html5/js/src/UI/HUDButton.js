@@ -12,10 +12,13 @@ GlassLab.HUDButton = function(game, x, y, imageSprite, bgSprite, text, fontStyle
     GlassLab.UIButton.prototype.constructor.call(this, game, x, y, null, callback, callbackContext);
     this.isIcon = isIcon;
 
+    // overwrite these for custom color buttons
     this.bgColor = 0x000000;
     this.bgOverColor = 0xffffff;
+    this.bgDownColor = 0x000000;
     this.imageColor = 0xcccccc;
     this.imageOverColor = 0x4c4c4c;
+    this.imageDownColor = 0xcccccc;
     this.bgAlpha = 0.5;
     this.bgOverAlpha = 0.5;
 
@@ -102,10 +105,10 @@ GlassLab.HUDButton.prototype.whenUp = function() {
 };
 
 GlassLab.HUDButton.prototype.whenDown = function() {
-    this.bg.tint = this.bgColor;
+    this.bg.tint = this.bgDownColor;
     this.bg.alpha = 1;
-    if (this.image && this.isIcon) this.image.tint = this.imageColor;
-    if (this.label && this.isIcon) this._setLabelColor(this.imageColor);
+    if (this.image && this.isIcon) this.image.tint = this.imageDownColor;
+    if (this.label && this.isIcon) this._setLabelColor(this.imageDownColor);
 };
 
 GlassLab.HUDButton.prototype.whenOver = function() {

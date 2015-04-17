@@ -58,7 +58,7 @@ GlassLab.LevelManager = function(game)
                 "numFoodA": 12,
                 "numCreatures": 9,
                 "type": "baby_bird",
-                "description": "blah",
+                "description": "blah *blah* blah",
                 "reward": 200
             },
             {
