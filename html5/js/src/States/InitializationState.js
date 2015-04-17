@@ -132,6 +132,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('fullscreenIcon', 'assets/images/hud/hud_icon_enter_fullscreen.png');
     game.load.image('fullscreenOffIcon', 'assets/images/hud/hud_icon_exit_fullscreen.png');
     game.load.image('pauseIcon', 'assets/images/hud/hud_icon_pause.png');
+    game.load.image('cancelIcon', 'assets/images/order/shipping_ui_hud_cancel.png');
     game.load.image('hudBg', 'assets/images/hud/hud_button_panel.png');
 
     game.load.image('notesIcon', 'assets/images/hud/hud_notes/notes_static.png');

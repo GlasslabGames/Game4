@@ -170,6 +170,7 @@ GlassLab.UIManager.prototype.createHud = function() {
     
     // TOP RIGHT.....
     var table = new GlassLab.UITable(this.game, 1, 2);
+    this.hudTable = table;
     this.topRightAnchor.addChild(table);
 
     // pause:
@@ -188,8 +189,19 @@ GlassLab.UIManager.prototype.createHud = function() {
     button = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, this.zoomOut, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight += button.getHeight();
+    this.zoomButtons = zoomGroup;
 
     table.addManagedChild(zoomGroup);
+
+    button = new GlassLab.HUDButton(this.game, 0, 2, "cancelIcon", "hudSettingsBg", true, function() {
+        GLOBAL.mailManager.cancelOrder();
+    }, this);
+    var container = new GlassLab.UIElement(this.game); // the reason we have to make a container is to work with the weird y-2 hack
+    container.actualHeight = button.getHeight();
+    container.addChild(button);
+    container.visible = false
+    table.addManagedChild(container);
+    this.cancelButton = container;
 
     // fullscreen:
     var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
@@ -296,4 +308,16 @@ GlassLab.UIManager.prototype._onItemsButton = function() {
         GLOBAL.inventoryMenu.Hide();
     }
     this.itemsButton.toggleActive(false); // no need to stay active after it's been clicked
+};
+
+GlassLab.UIManager.prototype.toggleZoomHUDButtons = function(show) {
+    if (typeof show == 'undefined') show = !this.zoomButtons.visible;
+    this.zoomButtons.visible = show;
+    this.hudTable._refresh(true);
+};
+
+GlassLab.UIManager.prototype.toggleCancelHUDButton = function(show) {
+    if (typeof show == 'undefined') show = !this.cancelButton.visible;
+    this.cancelButton.visible = show;
+    this.hudTable._refresh(true);
 };

@@ -98,12 +98,6 @@ GlassLab.OrderFulfillment = function(game)
     this.sprite.addChild(this.submitButton);
     this.submitButton.setEnabled(false);
 
-    this.cancelButton = game.make.button(-140, -440, "cancelButton", function(){
-        GLOBAL.mailManager.cancelOrder();
-    }, this);
-    this.cancelButton.scale.setTo(0.5, 0.5);
-    this.sprite.addChild(this.cancelButton);
-
     this.sprite.visible = false;
 
     game.scale.onSizeChange.add(this._onScreenSizeChange, this);

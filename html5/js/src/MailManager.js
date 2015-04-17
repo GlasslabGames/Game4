@@ -102,6 +102,8 @@ GlassLab.MailManager.prototype.stopOrder = function() {
 };
 
 GlassLab.MailManager.prototype.cancelOrder = function() {
+    if (!this.currentOrder) return; // no order to cancel
+
     this.stopOrder();
     GLOBAL.transition.onMiddle.addOnce(function() {
         GlassLabSDK.saveTelemEvent("cancel_order", {});
@@ -153,6 +155,9 @@ GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
     }
     GLOBAL.orderFulfillment.show(this.currentOrder);
     GLOBAL.tiledBg.visible = true;
+
+    GLOBAL.UIManager.toggleCancelHUDButton(true);
+    GLOBAL.UIManager.toggleZoomHUDButtons(false);
 };
 
 GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
@@ -164,4 +169,6 @@ GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
     GLOBAL.orderFulfillment.hide(true);
     GLOBAL.tiledBg.visible = false;
     GLOBAL.UIManager.resetCamera();
+    GLOBAL.UIManager.toggleCancelHUDButton(false);
+    GLOBAL.UIManager.toggleZoomHUDButtons(true);
 };

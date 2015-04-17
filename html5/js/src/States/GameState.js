@@ -54,7 +54,7 @@ GlassLab.State.Game.prototype.update = function()
     // Re-sort creatures because they probably moved
     game.iso.simpleSort(GLOBAL.creatureLayer);
 
-    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject)
+    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject && !GLOBAL.mailManager.currentOrder)
     {
         game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
         game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;

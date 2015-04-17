@@ -93,20 +93,23 @@ GlassLab.UITable.prototype.clear = function()
     this.managedChildren.length = 0;
 };
 
-GlassLab.UITable.prototype._refresh = function()
+GlassLab.UITable.prototype._refresh = function(debug)
 {
     // TODO: Possible to optimize the loops to not calculate row/column every iteration
     // First refresh column and row sizes
     var numChildren = this.managedChildren.length;
     this._rowHeights = [];
     this._columnLengths = [];
+    var visibleChildren = 0;
     for (var i=0; i < numChildren; i++)
     {
         var child = this.managedChildren[i];
-        if (child)
+        if (child && child.visible)
         {
-            var row = parseInt(i / this._columns);
-            var column = i % this._columns;
+            var row = parseInt(visibleChildren / this._columns);
+            var column = visibleChildren % this._columns;
+            visibleChildren++;
+
             // If we have our own height and width calculations (e.g. in UIButton) use those instead
             var height = Math.abs( child.getHeight? child.getHeight() : child.height );
             var width = Math.abs( child.getWidth? child.getWidth() : child.width );
@@ -133,13 +136,15 @@ GlassLab.UITable.prototype._refresh = function()
     }
 
     // Then lay out objects
+    visibleChildren = 0;
     for (var i=0; i < numChildren; i++)
     {
         var child = this.managedChildren[i];
-        if (child)
+        if (child && child.visible)
         {
-            var row = parseInt(i / this._columns);
-            var column = i % this._columns;
+            var row = parseInt(visibleChildren / this._columns);
+            var column = visibleChildren % this._columns;
+            visibleChildren ++;
             var rowIterator = row - 1;
             var lengthIterator = column - 1;
             var x = column * this.padding;
