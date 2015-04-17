@@ -6,49 +6,40 @@ var GlassLab = GlassLab || {};
 
 GlassLab.OrdersMenu = function(game, x, y) {
     this.game = game;
-    this.sprite = game.make.sprite();
-    this.sprite.x = x;
-    this.sprite.y = y;
+    this.sprite = game.make.sprite(x, y);
 
-    this.bg = game.make.graphics();
+    this.bg = game.make.sprite(0, 0, "letterBg");
+    this.bg.anchor.setTo(0.5, 0.5);
     this.sprite.addChild(this.bg);
-    this.bg.beginFill(0xffffff).lineStyle(3, 0x000000, 1).drawRect(0, 0, 280, 30).drawRect(0,30,280,320);
 
-    this.menuLabel = game.make.text(this.bg.width/2, 2, "Order 1/3", {font: 'bold 16pt Arial'});
-    this.menuLabel.anchor.setTo(.5, 0);
-    this.sprite.addChild(this.menuLabel);
-
-    this.data = null;
-
-    this.portraitFrame = game.make.graphics();
-    this.portraitFrame.beginFill(0xffffff).lineStyle(2, 0x000000).drawRect(0, 0, 80, 100);
-    var portraitAlert = game.make.sprite(0,0,"alertIcon");
-    portraitAlert.anchor.setTo(.5,.5);
-    portraitAlert.scale.setTo(.5,.5);
-    this.portraitFrame.addChild(portraitAlert);
-    this.portraitFrame.x = 18;
-    this.portraitFrame.y = 48;
-    this.sprite.addChild(this.portraitFrame);
-
-    this.portrait = game.make.sprite(this.portraitFrame.width/2, this.portraitFrame.height/2, "assistantIcon");
+    this.portrait = game.make.sprite(-95, -150, "bossmanPhoto");
     this.portrait.anchor.setTo(.5, .5);
-    this.portrait.scale.setTo(.5, .5);
-    this.portraitFrame.addChild(this.portrait);
+    this.sprite.addChild(this.portrait);
 
-    this.clientLabel = game.make.text(120,40, "Client:", {font: 'bold 10pt Arial'});
+    var fontStyle = {font: '11pt AmericanTypewriter', fill: "#807c7b"};
+    var infoX = 5;
+    this.titleLabel = game.make.text(infoX, -220, "Shipment request", fontStyle);
+    this.titleLabel.anchor.setTo(0, 0);
+    this.sprite.addChild(this.titleLabel);
+
+    this.clientLabel = game.make.text(infoX, this.titleLabel.y + 35, "Client:", fontStyle);
     this.sprite.addChild(this.clientLabel);
-    this.clientNameLabel = game.make.text(this.clientLabel.x+5,this.clientLabel.y + this.clientLabel.height, "{clientName}", {font: '10pt Arial'});
+    this.clientNameLabel = game.make.text(infoX, this.clientLabel.y + 20, "Archibold Huxley III", fontStyle);
     this.sprite.addChild(this.clientNameLabel);
 
-    this.urgentLabel = game.make.text(120,78, "Urgent!", {font: 'bold 10pt Arial', fill: '#ff0000'});
-    this.sprite.addChild(this.urgentLabel);
-
-    this.rewardLabel = game.make.text(120,115, "Payment:", {font: 'bold 10pt Arial'});
+    this.rewardLabel = game.make.text(infoX, this.clientNameLabel.y + 35, "Payment:", fontStyle);
     this.sprite.addChild(this.rewardLabel);
-    this.rewardAmountLabel = game.make.text(this.rewardLabel.x+5, this.rewardLabel.y + this.rewardLabel.height, "{rewardAmount}", {font: '10pt Arial'});
+    var coin = game.make.sprite(infoX, this.rewardLabel.y + 20, "inventoryCoinIcon");
+    this.sprite.addChild(coin);
+    this.rewardAmountLabel = game.make.text(infoX + coin.width + 5, coin.y, "$500", fontStyle);
     this.sprite.addChild(this.rewardAmountLabel);
 
-    this.descriptionLabel = game.make.text(15, 160, "", {wordWrap: true, wordWrapWidth: 250, font:"bold 10pt Arial"});
+    //this.urgentLabel = game.make.text(120,78, "Urgent!", {font: 'bold 10pt Arial', fill: '#ff0000'});
+    //this.sprite.addChild(this.urgentLabel);
+
+
+    this.descriptionLabel = game.make.text(-165, -45, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.",
+        {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.sprite.addChild(this.descriptionLabel);
 
     this.selectButton = new GlassLab.UIButton(this.game, this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
@@ -62,6 +53,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.paymentLabel = game.make.text(195, 210, "$200");
     this.paymentLabel.fontSize = 22;
 
+    this.data = null;
     this.currentPage = 0;
     //this.sprite.addChild(this.paymentLabel);
 
@@ -82,7 +74,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.prevPageButton.scale.x *= -1;
     this.sprite.addChild(this.prevPageButton);
 
-    this.sprite.visible = false;
+    this.sprite.visible = true;
 };
 
 GlassLab.OrdersMenu.prototype._onNextPagePressed = function()

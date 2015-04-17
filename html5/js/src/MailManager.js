@@ -12,7 +12,7 @@ GlassLab.MailManager = function(game)
 {
     this.game = game;
 
-    this.ordersMenu = new GlassLab.OrdersMenu(game, -250, -210);
+    this.ordersMenu = new GlassLab.OrdersMenu(game);
     GLOBAL.UIManager.centerAnchor.addChild(this.ordersMenu.sprite);
 
     this.rewardsPopup = new GlassLab.RewardPopup(game, -120, 20);

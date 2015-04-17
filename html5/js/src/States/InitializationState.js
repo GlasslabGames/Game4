@@ -149,6 +149,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('orderDragTarget', 'assets/images/order/shipping_ui_drag_food_here.png');
     game.load.image('orderEntryField', 'assets/images/order/shipping_ui_number_field.png');
 
+    game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
+    game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');
+
     game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
     game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');
     game.load.atlasJSONHash('questBarSun', 'assets/images/hud/hud_sun/hud_mission_sun.png', 'assets/images/hud/hud_sun/hud_mission_sun.json');
