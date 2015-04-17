@@ -39,16 +39,16 @@ either expressed or implied, of the FreeBSD Project.
     this._httpRequest = null;
 
     // SDK options
-    this._options = this._getDefaultOptions();
+    this._options = {};
 
     // Simple logging
-    this._displayLogs = this._getDisplayLogsStore();
+    this._displayLogs = null;
 
     // Output file and text for local telemetry logging
     this._outputFile = null;
     // Output html for live logging via separate window
     this._telemetryOutputTab = null;
-    this._outputText = this._getTelemetryOutputStore();
+    this._outputText = null;
 
     // Queue for non-on-demand messages
     this._dispatchQueue = [];
@@ -66,11 +66,15 @@ either expressed or implied, of the FreeBSD Project.
     // Is only activated when getPlayerInfo is successful
     // Deactivated on logout
     this._isAuthenticated = false;
-    setInterval( _sendTotalTimePlayed, this._options.sendTotalTimePlayedInterval );
+    //setInterval( _sendTotalTimePlayed, this._options.sendTotalTimePlayedInterval );
 
     // Update function for polling matches at certain intervals
     this._matches = {};
-    setInterval( _pollMatches, this._options.pollMatchesInterval );
+    //setInterval( _pollMatches, this._options.pollMatchesInterval );
+
+      this._isLocalStorageEnabled = false;
+      // SDK options
+      this.setOptions(this._getDefaultOptions());
   }
 
   _GlassLabSDK.prototype.getOptions = function() {
@@ -140,13 +144,39 @@ either expressed or implied, of the FreeBSD Project.
 
       if( options.hasOwnProperty( 'localLogging' ) ) {
         this._options.localLogging = options.localLogging;
+
+          if (this._options.localLogging)
+          {
+              try
+              {
+                this._isLocalStorageEnabled = true;
+
+                  if (!this._displayLogs)
+                  {
+                      // Simple logging
+                      this._displayLogs = this._getDisplayLogsStore();
+                  }
+
+                  if (!this._outputText)
+                  {
+                      this._outputText = this._getTelemetryOutputStore();
+                  }
+              }
+              catch (e)
+              {
+                  console.error("Could not enable local logging: ", e.stack);
+
+                  this._isLocalStorageEnabled = false;
+              }
+          }
+
       }
     }
   };
 
   _GlassLabSDK.prototype._getDefaultOptions = function() {
     return {
-      sdkVersion:   "0.3.3", 
+      sdkVersion:   "0.3.3",
 
       uri:          window.location.protocol + "//" + window.location.host,
       gameId:       "TEST",
@@ -518,7 +548,7 @@ either expressed or implied, of the FreeBSD Project.
         data: { courseCode: courseCode },
         success: function( responseData ) {
           // TODO
-          
+
           defaultSuccessCallback( success, responseData );
         },
         error: function( responseData ) {
@@ -537,7 +567,7 @@ either expressed or implied, of the FreeBSD Project.
         data: { courseId: courseId },
         success: function( responseData ) {
           // TODO
-          
+
           defaultSuccessCallback( success, responseData );
         },
         error: function( responseData ) {
@@ -1071,14 +1101,14 @@ either expressed or implied, of the FreeBSD Project.
   };
 
   _GlassLabSDK.prototype._updateDisplayLogsStore = function() {
-    if( typeof( Storage ) !== "undefined" ) {
+    if( this._isLocalStorageEnabled && typeof( Storage ) !== "undefined" ) {
       localStorage.setItem( "glsdk_displayLogs", this._displayLogs ? 1 : 0 );
     }
   };
 
   _GlassLabSDK.prototype._getDisplayLogsStore = function() {
     var display = false;
-    if( typeof( Storage ) !== "undefined" ) {
+    if( this._isLocalStorageEnabled && typeof( Storage ) !== "undefined" ) {
       if( localStorage.getItem( "glsdk_displayLogs" ) ) {
         display = parseInt( localStorage.getItem( "glsdk_displayLogs" ) );
         if( isNaN( display ) ) {
@@ -1090,7 +1120,7 @@ either expressed or implied, of the FreeBSD Project.
   };
 
   _GlassLabSDK.prototype._updateTelemetryOutputStore = function() {
-    if( typeof( Storage ) !== "undefined" ) {
+    if( this._isLocalStorageEnabled && typeof( Storage ) !== "undefined" ) {
       localStorage.setItem( "glsdk_telemetry", this._outputText );
     }
   };
@@ -1098,7 +1128,7 @@ either expressed or implied, of the FreeBSD Project.
   _GlassLabSDK.prototype._getTelemetryOutputStore = function() {
     var telemetry = "";
     if( typeof( Storage ) !== "undefined" ) {
-      if( localStorage.getItem( "glsdk_telemetry" ) ) {
+      if( this._isLocalStorageEnabled && localStorage.getItem( "glsdk_telemetry" ) ) {
         telemetry = localStorage.getItem( "glsdk_telemetry" );
       }
     }
