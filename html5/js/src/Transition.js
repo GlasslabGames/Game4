@@ -40,7 +40,7 @@ GlassLab.Transition.prototype.in = function (thenOut) {
 
 GlassLab.Transition.prototype._transition = function (start, end, easing) {
     var tweenCounter = { percent: start };
-    var tween = this.game.add.tween(tweenCounter).to( { percent: end }, 800, easing, true);
+    var tween = this.game.add.tween(tweenCounter).to( { percent: end }, 1000, easing, true);
     tween.onUpdateCallback(function() {
         this._refresh(tweenCounter.percent);
     }, this);
@@ -50,7 +50,7 @@ GlassLab.Transition.prototype._transition = function (start, end, easing) {
 GlassLab.Transition.prototype._midTransition = function (thenOut) {
     this.onMiddle.dispatch();
     this._refresh(0);
-    if (thenOut) this.game.time.events.add(800, this.out, this);
+    if (thenOut) this.game.time.events.add(500, this.out, this);
 };
 
 GlassLab.Transition.prototype.out = function () {

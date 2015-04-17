@@ -52,7 +52,7 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.unknownDietLabel);
 
     // Page buttons
-    this.nextPageButton = new GlassLab.HUDButton(this.game, 250, 30, "", "sideArrow" , false, this._onNextPagePressed, this);
+    this.nextPageButton = new GlassLab.HUDButton(this.game, 250, 30, "", "sideArrow", false, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.bg.addChild(this.nextPageButton);
     this.nextPageButtonLabel = game.make.text(-25, 0, "Next\nPage", {font: "bold 10pt Arial", fill: "#FFFFFF", align: "center"});

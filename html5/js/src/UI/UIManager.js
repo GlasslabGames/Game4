@@ -174,7 +174,7 @@ GlassLab.UIManager.prototype.createHud = function() {
     this.topRightAnchor.addChild(table);
 
     // pause:
-    var button = new GlassLab.HUDButton(this.game, 0, 0, "pauseIcon", "hudSettingsBgRounded", true, function() {
+    var button = new GlassLab.HUDButton(this.game, 0, 0, "pauseIcon", "hudSettingsBgRounded", null, null, true, function() {
         GLOBAL.pauseMenu.toggle();
     }, this);
     table.addManagedChild(button);
@@ -183,17 +183,17 @@ GlassLab.UIManager.prototype.createHud = function() {
     // for some reason the position in the table is a little off unless we set the y to 2 here
     var zoomGroup = new GlassLab.UIElement(this.game);
 
-    button = new GlassLab.HUDButton(this.game, 0, 2, "zoomInIcon", "hudSettingsBg", true, this.zoomIn, this);
+    button = new GlassLab.HUDButton(this.game, 0, 2, "zoomInIcon", "hudSettingsBg", null, null, true, this.zoomIn, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight = button.getHeight();
-    button = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, this.zoomOut, this);
+    button = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", null, null, true, this.zoomOut, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight += button.getHeight();
     this.zoomButtons = zoomGroup;
 
     table.addManagedChild(zoomGroup);
 
-    button = new GlassLab.HUDButton(this.game, 0, 2, "cancelIcon", "hudSettingsBg", true, function() {
+    button = new GlassLab.HUDButton(this.game, 0, 2, "cancelIcon", "hudSettingsBg", null, null, true, function() {
         GLOBAL.mailManager.cancelOrder();
     }, this);
     var container = new GlassLab.UIElement(this.game); // the reason we have to make a container is to work with the weird y-2 hack
@@ -204,7 +204,7 @@ GlassLab.UIManager.prototype.createHud = function() {
     this.cancelButton = container;
 
     // fullscreen:
-    var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
+    var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", null, null, true, function() {
         if (this.game.scale.isFullScreen) {
             this.game.scale.stopFullScreen();
             fullscreenButton.image.loadTexture("fullscreenIcon");
