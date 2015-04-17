@@ -97,6 +97,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
     game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
+    game.load.image('squareGrassTile', 'assets/images/tiles/square_grass.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
     game.load.image('penTooltipWidth', 'assets/images/pen/pen_tooltip_width.png');
@@ -131,6 +132,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('fullscreenIcon', 'assets/images/hud/hud_icon_enter_fullscreen.png');
     game.load.image('fullscreenOffIcon', 'assets/images/hud/hud_icon_exit_fullscreen.png');
     game.load.image('pauseIcon', 'assets/images/hud/hud_icon_pause.png');
+    game.load.image('cancelIcon', 'assets/images/order/shipping_ui_hud_cancel.png');
     game.load.image('hudBg', 'assets/images/hud/hud_button_panel.png');
 
     game.load.image('notesIcon', 'assets/images/hud/hud_notes/notes_static.png');
@@ -264,6 +266,11 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
+    GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
+    GLOBAL.tiledBg.anchor.setTo(0.5, 0.5);
+    GLOBAL.tiledBg.visible = false;
+    GLOBAL.WorldLayer.add(GLOBAL.tiledBg);
+
     GLOBAL.baseWorldLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.baseWorldLayer);
 
@@ -342,6 +349,9 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
     GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);
+
+    GLOBAL.transition = new GlassLab.Transition(game);
+    GLOBAL.UIManager.transitionAnchor.addChild(GLOBAL.transition);
 
     //GLOBAL.debugText = game.make.text(-300,0,"test");
     //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);

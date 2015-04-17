@@ -332,6 +332,7 @@ GlassLab.Pen.prototype._containsTile = function(tile, leftOnly) {
 GlassLab.Pen.prototype.getSection = function(tile) {
     if (!tile) return -1;
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
+    if (!originTile) return -1;
     if (tile.col < originTile.col || tile.row < originTile.row || tile.row >= originTile.row + this.height) return -1;
     var targetCol = originTile.col;
     for (var i = 0; i < this.widths.length; i++) {

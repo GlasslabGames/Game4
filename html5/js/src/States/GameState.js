@@ -36,6 +36,8 @@ GlassLab.State.Game.prototype.create = function()
     crate.setContents("baby_unifox", 2, ["strawberry"], [8], 2, false, false);
     GLOBAL.crate = crate;*/
     //SetContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow)
+
+    GLOBAL.transition.out();
 };
 
 GlassLab.State.Game.prototype.update = function()
@@ -52,7 +54,7 @@ GlassLab.State.Game.prototype.update = function()
     // Re-sort creatures because they probably moved
     game.iso.simpleSort(GLOBAL.creatureLayer);
 
-    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject)
+    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject && !GLOBAL.mailManager.currentOrder)
     {
         game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
         game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
