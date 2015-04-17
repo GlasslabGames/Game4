@@ -118,6 +118,9 @@ GlassLab.Creature.prototype = Object.create(GlassLab.WorldObject.prototype);
 GlassLab.Creature.prototype.constructor = GlassLab.Creature;
 
 GlassLab.Creature.prototype._onDestroy = function () {
+
+    this.cancelPoop(); // poopTimer needs removing from this.game.time.events before creature is destroyed
+
     if (this.updateHandler) this.updateHandler.detach();
     if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
     if (this.foodDroppedHandler) this.foodDroppedHandler.detach();
