@@ -20,7 +20,10 @@ GlassLab.OrdersMenu = function(game, x, y) {
     var infoX = 5;
     this.titleLabel = game.make.text(infoX, -220, "Shipment request", fontStyle);
     this.titleLabel.anchor.setTo(0, 0);
-    this.sprite.addChild(this.titleLabel);
+    //this.sprite.addChild(this.titleLabel);
+
+    this.urgentStamp = game.make.sprite(infoX, -225, "urgentStamp");
+    this.sprite.addChild(this.urgentStamp);
 
     this.clientLabel = game.make.text(infoX, this.titleLabel.y + 35, "Client:", fontStyle);
     this.sprite.addChild(this.clientLabel);
@@ -34,44 +37,38 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.rewardAmountLabel = game.make.text(infoX + coin.width + 5, coin.y, "$500", fontStyle);
     this.sprite.addChild(this.rewardAmountLabel);
 
-    //this.urgentLabel = game.make.text(120,78, "Urgent!", {font: 'bold 10pt Arial', fill: '#ff0000'});
-    //this.sprite.addChild(this.urgentLabel);
 
 
     this.descriptionLabel = game.make.text(-165, -45, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.",
         {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.sprite.addChild(this.descriptionLabel);
 
-    this.selectButton = new GlassLab.UIButton(this.game, this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
+    this.selectButton = new GlassLab.HUDButton(this.game, 0, 168, null, "orderButtonBg", "Fill Order!", {font: "16pt EnzoBlack"}, true, function(){
         this.Hide(true);
         GLOBAL.mailManager.startOrder(this.data);
     }, this);
-    this.selectButton.scale.setTo(.65,.65);
-    this.selectButton.anchor.setTo(.5, .5);
     this.sprite.addChild(this.selectButton);
+    this.selectButton.imageColor = 0xffffff;
+    this.selectButton.bgOverAlpha = 1;
+    this.selectButton.whenUp();
 
     this.paymentLabel = game.make.text(195, 210, "$200");
     this.paymentLabel.fontSize = 22;
 
     this.data = null;
     this.currentPage = 0;
-    //this.sprite.addChild(this.paymentLabel);
-
-    this.closeButton = new GlassLab.UIButton(this.game, this.bg.width-17, 15, "closeIcon" , this._onClosePressed, this);
-    this.closeButton.anchor.setTo(.5, .5);
-    this.closeButton.scale.setTo(.1, .1);
-    this.sprite.addChild(this.closeButton);
 
     // Page buttons
-    this.nextPageButton = new GlassLab.UIButton(this.game, this.bg.width + 10, 200, "sideArrow" , this._onNextPagePressed, this);
+    var pageButtonX = this.bg.width / 2 + 20;
+    this.nextPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
-    this.nextPageButton.scale.setTo(0.7, 0.7);
+    this.nextPageButton.bg.scale.x *= -1;
+    this.nextPageButton.label.x += 5;
     this.sprite.addChild(this.nextPageButton);
 
-    this.prevPageButton = new GlassLab.UIButton(this.game, -10, 200, "sideArrow" , this._onPrevPagePressed, this);
+    this.prevPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
     this.prevPageButton.anchor.setTo(0, 0.5);
-    this.prevPageButton.scale.setTo(0.7, 0.7);
-    this.prevPageButton.scale.x *= -1;
+    this.prevPageButton.label.x -= 5;
     this.sprite.addChild(this.prevPageButton);
 
     this.sprite.visible = true;
