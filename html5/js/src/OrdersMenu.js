@@ -38,7 +38,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.rewardAmountLabel = game.make.text(infoX + coin.width + 5, coin.y, "$500", fontStyle);
     this.sprite.addChild(this.rewardAmountLabel);
 
-    this.descriptionLabel = game.make.text(-165, -45, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.",
+    this.descriptionLabel = game.make.text(-165, -40, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.",
         {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.sprite.addChild(this.descriptionLabel);
 

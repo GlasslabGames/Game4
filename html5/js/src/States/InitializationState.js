@@ -45,6 +45,9 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.audio(spriteName+'_sfx_throwup', 'assets/audio/sfx/'+spriteName+'_throwup.mp3');
         game.load.audio(spriteName+'_sfx_happy', 'assets/audio/sfx/'+spriteName+'_happy.mp3');
         game.load.audio(spriteName+'_sfx_eat', 'assets/audio/sfx/'+spriteName+'_eat.mp3');
+
+        game.load.image(spriteName+'_orderPhoto_fail', 'assets/images/order/response_photos/order_fail_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_satisfied', 'assets/images/order/response_photos/order_success_'+spriteName+'.png');
     }
 
     var basicFoodSpriteNames = ["apple", "broccoli", "corn", "donut", "meat", "mushroom", "pizza", "strawberry", "taco", "tincan"];
@@ -154,6 +157,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('urgentStamp', 'assets/images/order/urgent_stamp.png');
     game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
     game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
+    game.load.image('bigCoin', 'assets/images/order/order_response_big_coin.png');
 
     game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
     game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');

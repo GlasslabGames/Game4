@@ -15,9 +15,8 @@ GlassLab.MailManager = function(game)
     this.ordersMenu = new GlassLab.OrdersMenu(game);
     GLOBAL.UIManager.centerAnchor.addChild(this.ordersMenu);
 
-    this.rewardsPopup = new GlassLab.RewardPopup(game, -120, 20);
+    this.rewardsPopup = new GlassLab.RewardPopup(game);
     GLOBAL.UIManager.centerAnchor.addChild(this.rewardsPopup);
-    this.rewardsPopup.hide();
 
     this.availableOrders = [];
     this.ordersCompleted = []; // list of completed background orders by ID so we don't add them again
@@ -57,11 +56,12 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
 GlassLab.MailManager.prototype.HideMail = function(auto)
 {
     this.ordersMenu.hide();
+    this.rewardsPopup.hide();
 };
 
 GlassLab.MailManager.prototype.IsMailShowing = function()
 {
-    return this.ordersMenu.open;
+    return this.ordersMenu.open || this.rewardsPopup.open;
 };
 
 /**
@@ -129,14 +129,13 @@ GlassLab.MailManager.prototype.completeOrder = function(order, result)
 
 
     this.stopOrder();
+
     GLOBAL.transition.onMiddle.addOnce(function() {
-        this.rewards.push(order); // the reward popup will send OrderResolved when it's closed
+        GlassLab.SignalManager.orderShipped.dispatch(order, result); // it's weird to have this here, but right now the mailbutton appears when we send it, which we don't want to do earlier.
+    }, this);
 
-        GLOBAL.audioManager.playSound("mailNoticeSound");
-
-        GlassLab.SignalManager.orderShipped.dispatch(order, result);
-        GlassLab.SignalManager.ordersChanged.dispatch(order); // dispatch this so that the alert shows up on the mail
-        GlassLab.SignalManager.rewardAdded.dispatch(order);
+    GLOBAL.transition.onComplete.addOnce(function() {
+        this.rewardsPopup.show(order);
     }, this);
 };
 
@@ -165,7 +164,7 @@ GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
     GLOBAL.penManager.showPens();
     GLOBAL.creatureManager.showCreatures();
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
-        GLOBAL.foodLayer.getChildAt(i).vissible = true;
+        GLOBAL.foodLayer.getChildAt(i).visible = true;
     }
     GLOBAL.orderFulfillment.hide(true);
     GLOBAL.tiledBg.visible = false;

@@ -7,73 +7,55 @@ var GlassLab = GlassLab || {};
 /**
  * RewardPopup
  */
-/* Example order info:
- {
- client: "Archibold Huxley III",
- company: "Rupture Farms",
- numCreatures: 7,
- type: "rammus",
- description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
- fulfilled: false,
- reward: 200
- }
- */
-
-GlassLab.RewardPopup = function(game, x, y)
+GlassLab.RewardPopup = function(game)
 {
-    GlassLab.UIElement.prototype.constructor.call(this, game, x, y);
+    GlassLab.UIWindow.prototype.constructor.call(this, game);
 
-    var photo = this.game.make.graphics(230, -70);
-    photo.beginFill(0xffffff).lineStyle(3, 0x000000).drawRect(-90, -100, 180, 200);
-    photo.angle = 10;
-    this.addChild(photo);
+    // Note that a lot of this is the same as OrdersMenu.js . I don't think it was worth making a subclass, but maybe I should
+    this.bg = game.make.sprite(0, 0, "letterBg");
+    this.bg.anchor.setTo(0.5, 0.5);
+    this.addChild(this.bg);
 
-    this.creature = this.game.make.sprite(0, 30, "unifox_idle");
-    this.creature.scale.setTo(-0.25, 0.25);
-    this.creature.anchor.setTo(0.5, 0.5);
-    photo.addChild(this.creature);
+    this.portrait = game.make.sprite(-95, -150, "bossmanPhoto");
+    this.portrait.anchor.setTo(.5, .5);
+    this.addChild(this.portrait);
 
-    this.emote = this.game.make.sprite(0, -70, "happyEmote");
-    this.emote.scale.setTo(-0.5, 0.5);
-    this.emote.anchor.setTo(0.5, 0.5);
-    photo.addChild(this.emote);
+    var fontStyle = {font: '11pt AmericanTypewriter', fill: "#807c7b"};
+    var infoX = 5;
 
-    this.button = new GlassLab.UIRectButton(this.game, 0, 0, this.finish, this, 250, 50, 0xffffff, "Collect Payment!");//, fontsize);
-    this.modal = new GlassLab.UIModal(this.game, "", this.button);
-    this.modal.label.style.font = "bold 14pt Arial";
-    this.addChild(this.modal);
-    this.modal.maxLabelWidth = 300;
+    this.clientLabel = game.make.text(infoX, -220, "From the desk of", fontStyle);
+    this.addChild(this.clientLabel);
+    this.clientNameLabel = game.make.text(infoX, this.clientLabel.y + 20, "Archibold Huxley I", fontStyle);
+    this.addChild(this.clientNameLabel);
 
-    this.headerBg = this.game.make.graphics();
-    this.addChild(this.headerBg);
+    var coin = game.make.sprite(infoX, this.clientNameLabel.y + 75, "bigCoin");
+    coin.anchor.setTo(0, 0.5);
+    this.addChild(coin);
+    this.rewardAmountLabel = game.make.text(infoX + coin.width + 5, coin.y, "$500", {font: '16pt AmericanTypewriter', fill: "#807c7b"});
+    this.rewardAmountLabel.anchor.setTo(0, 0.5);
+    this.addChild(this.rewardAmountLabel);
 
-    this.headerLabel = this.game.make.text(0, 0, "Order Failed!", {font: "bold 14pt Arial"});
-    this.headerLabel.anchor.setTo(0.5, 0.5);
-    this.headerBg.addChild(this.headerLabel);
-
-    this.closeButton = this.game.make.sprite(0, 0, "bigX");
-    this.closeButton.tint = 0x000000;
-    this.closeButton.anchor.setTo(0.5, 0.5);
-    this.closeButton.scale.setTo(0.12, 0.12);
-    this.headerBg.addChild(this.closeButton);
-    this.closeButton.inputEnabled = true;
-    this.closeButton.events.onInputUp.add(this.finish, this);
+    this.descriptionLabel = game.make.text(-165, -40, "Dear Rancher,\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.\n\nKindest Regards, Archie H.",
+        {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
+    this.addChild(this.descriptionLabel);
 };
 
-GlassLab.RewardPopup.prototype = Object.create(GlassLab.UIElement.prototype);
+GlassLab.RewardPopup.prototype = Object.create(GlassLab.UIWindow.prototype);
 GlassLab.RewardPopup.prototype.constructor = GlassLab.RewardPopup;
 
 GlassLab.RewardPopup.prototype.show = function(data)
 {
+    GlassLab.UIWindow.prototype.show.call(this);
+
     this.data = data;
     this.visible = true;
     this.reward = (data.outcome == "satisfied")? data.reward : 0;
-    this.modal.show();
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
 
-    this.button.label.text = (data.outcome == "satisfied")? "Collect Payment!" : "I'll do better next time!";
+    this.clientNameLabel.text = data.client;
+    this.rewardAmountLabel.text = "$"+this.reward;
 
-    var string = "From the desk of:\n" + data.client + "\n\n";
+    var string = "Dear Rancher," + "\n\n";
     var name = creatureInfo.displayNames.plural;
 
     if (data.outcome == "satisfied") {
@@ -83,21 +65,12 @@ GlassLab.RewardPopup.prototype.show = function(data)
     } else {
         string += "The "+ name + " you sent weren't fed correctly, and now they're all angry! I won't be paying you for this unacceptable situation. Next time, please make sure the amount of food is appropriate for the number of creatures you send."
     }
-    string += "\n\nPayment received:\n$" + this.reward;
+    string += "\n\nSincerely,\n" + data.client;
 
-    this.modal.setText( string, true );
+    GlassLab.Util.SetColoredText(this.descriptionLabel, string, "#807c7b", "#994c4e");
 
-    this.headerBg.y = -this.modal.getHeight() / 2 - 20;
-    this.headerBg.clear();
-    this.headerBg.beginFill(0xffffff).lineStyle(3, 0x000000).drawRect(-0.5 * this.modal.getWidth(),-20,this.modal.getWidth(), 40);
-
-    this.closeButton.x = 0.5 * this.modal.getWidth() - 30;
-
-    this.headerLabel.text = (data.outcome == "satisfied")? "Order Fulfilled!" : "Order Failed!";
-
-    if (this.creature.spriteName != creatureInfo.spriteName + "_idle") this.creature.loadTexture(creatureInfo.spriteName + "_idle");
-    var emoteSpriteName = (data.outcome == "satisfied")? "happyEmote" : "angryEmote";
-    if (this.emote.spriteName != emoteSpriteName) this.emote.loadTexture(emoteSpriteName);
+    var photo = creatureInfo.spriteName + "_orderPhoto_" + ((data.outcome == "satisfied")? "satisfied" : "fail");
+    this.portrait.loadTexture(photo);
 
     if (data.outcome == "satisfied") {
         GLOBAL.audioManager.playSound("successSound");
@@ -105,14 +78,15 @@ GlassLab.RewardPopup.prototype.show = function(data)
         GLOBAL.audioManager.playSound("failSound");
     }
 
+    GLOBAL.inventoryManager.AddMoney(this.reward); // todo: only add this after an animation plays
+
     GlassLab.SignalManager.mailOpened.dispatch(); // eh, not sure we should be using this event :?
 
 };
 
 GlassLab.RewardPopup.prototype.hide = function()
 {
-    this.visible = false;
-    this.modal.hide();
+    GlassLab.UIWindow.prototype.hide.call(this);
 
     if (this.data) {
         // Since the reward popup shows the results of an order, closing it is the final step in resolving an order
@@ -123,6 +97,5 @@ GlassLab.RewardPopup.prototype.hide = function()
 };
 
 GlassLab.RewardPopup.prototype.finish = function() {
-    GLOBAL.inventoryManager.AddMoney(this.reward);
     this.hide();
 };
