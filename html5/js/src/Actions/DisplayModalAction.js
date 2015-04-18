@@ -18,7 +18,7 @@ GlassLab.DisplayModalAction.prototype.Do = function()
 {
     this.button = new GlassLab.UIRectButton(this.game, 0, 0, this._onButtonPressed, this, 150, 60, 0xffffff, "Ok");
     this.modal = new GlassLab.UIModal(this.game, this.text, [this.button]);
-    this.modal.Show();
+    this.modal.show();
     GLOBAL.UIManager.centerAnchor.addChild(this.modal);
 };
 

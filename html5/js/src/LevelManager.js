@@ -57,7 +57,7 @@ GlassLab.LevelManager = function(game)
                 "company": "Rupture Farms",
                 "numFoodA": 12,
                 "numCreatures": 9,
-                "type": "baby_bird",
+                "creatureType": "baby_bird",
                 "description": "blah *blah* blah",
                 "reward": 200
             },
@@ -65,7 +65,7 @@ GlassLab.LevelManager = function(game)
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
                 numCreatures: 6,
-                type: "unifox",
+                creatureType: "unifox",
                 description: "Dear Friend! I want 5 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
                 reward: 200,
                 hint: true
@@ -74,7 +74,7 @@ GlassLab.LevelManager = function(game)
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
                 totalNumFood: 8,
-                type: "rammus",
+                creatureType: "rammus",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
                 reward: 200
@@ -84,7 +84,7 @@ GlassLab.LevelManager = function(game)
                 company: "Rupture Farms",
                 totalNumFood: 15,
                 noFoodEntries: true,
-                type: "bird",
+                creatureType: "bird",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
                 hint: true,
@@ -203,7 +203,7 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
 
     GLOBAL.orderFulfillment.pen = null; // clear the reference to the pen
 
-    GLOBAL.inventoryMenu.Hide(true);
+    GLOBAL.inventoryMenu.hide(true);
 };
 
 GlassLab.LevelManager.prototype.LoadNextLevel = function()

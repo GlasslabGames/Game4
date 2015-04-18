@@ -44,12 +44,12 @@ GlassLab.UIModal = function(game, text, buttons)
 GlassLab.UIModal.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIModal.prototype.constructor = Phaser.UIModal;
 
-GlassLab.UIModal.prototype.Show = function() {
+GlassLab.UIModal.prototype.show = function() {
     GLOBAL.audioManager.playSound("popUpSound");
     this.visible = true;
 };
 
-GlassLab.UIModal.prototype.Hide = function() {
+GlassLab.UIModal.prototype.hide = function() {
     this.visible = false;
 };
 

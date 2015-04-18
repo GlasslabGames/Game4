@@ -121,7 +121,6 @@ GlassLab.Util.SetColoredText = function(label, text, normalColor, highlightedCol
             index ++;
         }
     }
-    console.log(colorIndices);
     label.text = text;
     for (var j = 0; j < colorIndices.length; j++) {
         var color = (j % 2)? normalColor : highlightedColor;

@@ -16,6 +16,8 @@ GlassLab.SignalManager = {
     gameLoaded: new Phaser.Signal(), // (obj) => save blob - load any data from the save blob
 
     // UI Events
+    uiWindowOpened: new Phaser.Signal(),
+    uiWindowClosed: new Phaser.Signal(),
     journalOpened: new Phaser.Signal(),
     journalClosed: new Phaser.Signal(),
     inventoryOpened: new Phaser.Signal(),
