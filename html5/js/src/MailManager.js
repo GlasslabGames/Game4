@@ -43,7 +43,7 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
             }, this, 150, 60, 0xffffff, "Ok");
             modal = new GlassLab.UIModal(this.game, "You don't have any mail!", button);
             GLOBAL.UIManager.centerAnchor.addChild(modal);
-            modal.Show();
+            modal.show();
         }
     }
     else

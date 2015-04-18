@@ -57,7 +57,7 @@ GlassLab.DoPenChallengeAction.prototype._showResult = function() {
         this.modal.setText(text + " Try again?", true); // wrap text
     }
     GLOBAL.UIManager.centerAnchor.addChild(this.modal);
-    this.modal.Show();
+    this.modal.show();
 };
 
 GlassLab.DoPenChallengeAction.prototype.completeChallenge = function() {

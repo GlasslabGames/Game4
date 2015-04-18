@@ -176,6 +176,10 @@ GlassLab.UIManager.prototype._onUIClosed = function(window) {
         }
 
         GLOBAL.dayManager.dayMeter.visible = true;
+
+        // pop the inventory menu back up if it was closed before. This may have to be refined to only start after everything is done closing (showInsteadOfOtherWindows), but it's fine for now.
+        if (this.inventoryWasOpen) GLOBAL.inventoryMenu.show();
+        this.inventoryWasOpen = false;
     }
 
     if (!this._wantToHideDayMeter()) {
@@ -204,7 +208,10 @@ GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
     }
 
     // hide the inventory if it's open (even though we don't add it as an openWindow, we still want to hide it in this case
-    if (GLOBAL.inventoryMenu.visible) GLOBAL.inventoryMenu.hide();
+    if (GLOBAL.inventoryMenu.visible) {
+        this.inventoryWasOpen = true;
+        GLOBAL.inventoryMenu.hide();
+    }
 };
 
 GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withoutAddingToList) {

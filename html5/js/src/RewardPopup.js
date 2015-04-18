@@ -68,7 +68,7 @@ GlassLab.RewardPopup.prototype.show = function(data)
     this.data = data;
     this.visible = true;
     this.reward = (data.outcome == "satisfied")? data.reward : 0;
-    this.modal.Show();
+    this.modal.show();
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
 
     this.button.label.text = (data.outcome == "satisfied")? "Collect Payment!" : "I'll do better next time!";

@@ -138,7 +138,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             GLOBAL.UIManager.centerAnchor.addChild(this.modal);
         }
 
-        this.modal.Show();
+        this.modal.show();
     }
 };
 
