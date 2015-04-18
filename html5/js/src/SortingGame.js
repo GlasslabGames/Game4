@@ -7,8 +7,8 @@
  */
 
 GlassLab.SortingGame = function(game) {
-    Phaser.Sprite.prototype.constructor.call(this, game);
-    this.game = game;
+    GlassLab.UIWindow.prototype.constructor.call(this, game);
+    this.autoCloseable = false; // can't be closed until you finish it
 
     this.actualWidth = 750;
     this.actualHeight = 550;
@@ -58,7 +58,7 @@ GlassLab.SortingGame = function(game) {
     this.visible = false; // start invisible until we want to begin the sorting game
 };
 
-GlassLab.SortingGame.prototype = Object.create(Phaser.Sprite.prototype);
+GlassLab.SortingGame.prototype = Object.create(GlassLab.UIWindow.prototype);
 GlassLab.SortingGame.prototype.constructor = GlassLab.SortingGame;
 
 GlassLab.SortingGame.COMPARISON_VALUES = {tooLittle: "TOO\nLITTLE", justRight: "JUST\nRIGHT", tooMuch: "TOO\nMUCH"};
@@ -132,7 +132,7 @@ GlassLab.SortingGame.prototype.start = function(data) {
         return;
     }
 
-    this.visible = true;
+    this.show();
 
     // Remove all the cards and make new ones. (Yes, we should reset cards instead, but that's more complicated.)
     while (this.cards.length) {
@@ -176,7 +176,7 @@ GlassLab.SortingGame.prototype.finish = function() {
 
     GlassLabSDK.saveTelemEvent("bonus_game_end", {proportion_correct: this.cardsCorrect / this.cardsAnswered});
 
-    this.visible = false;
+    this.hide();
     GLOBAL.audioManager.revertMusic();
     GlassLab.SignalManager.bonusGameComplete.dispatch();
 };

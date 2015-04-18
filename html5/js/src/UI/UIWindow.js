@@ -12,6 +12,8 @@ GlassLab.UIWindow = function(game)
     this.open = false;
     this.visible = false;
 
+    this.autoCloseable = true; // whether we can close this window by clicking elsewhere
+
     this.onFinishedShowing = new Phaser.Signal();
     this.onFinishedHiding = new Phaser.Signal();
 };

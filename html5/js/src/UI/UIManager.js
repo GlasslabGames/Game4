@@ -202,7 +202,7 @@ GlassLab.UIManager.prototype._wantToHideDayMeter = function() {
 
 GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
     for (var i = 0; i < this.openWindows.length; i++) {
-        if (this.openWindows[i] != exception) {
+        if (this.openWindows[i] != exception && this.openWindows[i].autoCloseable) {
             this.openWindows[i].hide();
         }
     }
@@ -222,7 +222,7 @@ GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withou
     // add an event listener to one of the windows we're about to hide
     for (var i = 0; i < this.openWindows.length; i++) {
         if (this.openWindows[i] == window) continue;
-        if (this.openWindows[i].onFinishedHiding) {
+        if (this.openWindows[i].onFinishedHiding && this.openWindows[i].autoCloseable) {
             this.openWindows[i].onFinishedHiding.addOnce(window.show, window);
             addedListener = true;
             break;
