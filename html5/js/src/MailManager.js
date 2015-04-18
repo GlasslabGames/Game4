@@ -13,11 +13,11 @@ GlassLab.MailManager = function(game)
     this.game = game;
 
     this.ordersMenu = new GlassLab.OrdersMenu(game);
-    GLOBAL.UIManager.centerAnchor.addChild(this.ordersMenu.sprite);
+    GLOBAL.UIManager.centerAnchor.addChild(this.ordersMenu);
 
     this.rewardsPopup = new GlassLab.RewardPopup(game, -120, 20);
     GLOBAL.UIManager.centerAnchor.addChild(this.rewardsPopup);
-    this.rewardsPopup.Hide();
+    this.rewardsPopup.hide();
 
     this.availableOrders = [];
     this.ordersCompleted = []; // list of completed background orders by ID so we don't add them again
@@ -32,7 +32,7 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
     {
         if (this.availableOrders.length != 0)
         {
-            this.ordersMenu.Show();
+            this.ordersMenu.show();
         }
         else
         {
@@ -49,20 +49,20 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
     else
     {
         var rewardOrder = this.rewards.shift();
-        this.rewardsPopup.Show(rewardOrder);
+        this.rewardsPopup.show(rewardOrder);
         GlassLab.SignalManager.ordersChanged.dispatch();
     }
 };
 
 GlassLab.MailManager.prototype.HideMail = function(auto)
 {
-    this.ordersMenu.Hide();
+    this.ordersMenu.hide();
 };
 
 GlassLab.MailManager.prototype.IsMailShowing = function()
 {
-    return this.ordersMenu.IsShowing();
-}
+    return this.ordersMenu.open;
+};
 
 /**
  * @param args Takes in any number of order blob arguments
@@ -155,7 +155,7 @@ GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
     }
     GLOBAL.orderFulfillment.show(this.currentOrder);
     GLOBAL.tiledBg.visible = true;
-    this.ordersMenu.Hide(true);
+    this.ordersMenu.hide(true);
 
     GLOBAL.UIManager.toggleCancelHUDButton(true);
     GLOBAL.UIManager.toggleZoomHUDButtons(false);

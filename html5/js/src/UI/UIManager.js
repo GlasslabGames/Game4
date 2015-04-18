@@ -151,9 +151,14 @@ GlassLab.UIManager.prototype._onUIOpened = function(window) {
     //console.log("Opened:", this.openWindows);
     if (!this.shade.visible) {
         this.shade.visible = true;
-        this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 200, Phaser.Easing.Quadratic.InOut, true);
+        this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
     } else {
         this.shade.alpha = 0.4;
+    }
+
+    if (GLOBAL.dayManager.dayMeter.visible && this._wantToHideDayMeter()) {
+        var tween = this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 0}, GLOBAL.dayManager.dayMeter.alpha * 150, Phaser.Easing.Quadratic.InOut, true);
+        tween.onComplete.addOnce(function() { if (this._wantToHideDayMeter()) GLOBAL.dayManager.dayMeter.visible = false; }, this);
     }
 };
 
@@ -163,12 +168,31 @@ GlassLab.UIManager.prototype._onUIClosed = function(window) {
     //console.log("Closed:",this.openWindows);
     if (this.openWindows.length == 0) {
         if (this.shade.visible) {
-            var shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 200, Phaser.Easing.Quadratic.InOut, true);
+            var shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true);
             shadeTween.onComplete.addOnce(function() { if (this.openWindows.length == 0) this.shade.visible = false; }, this);
         } else {
             this.shade.alpha = 0;
         }
+
+        GLOBAL.dayManager.dayMeter.visible = true;
     }
+
+    if (!this._wantToHideDayMeter()) {
+        if (!GLOBAL.dayManager.dayMeter.visible) {
+            GLOBAL.dayManager.dayMeter = true;
+            this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 1}, (1 - GLOBAL.dayManager.dayMeter) * 150, Phaser.Easing.Quadratic.InOut, true);
+        } else {
+            GLOBAL.dayManager.dayMeter.alpha = 1;
+        }
+    }
+};
+
+// for now, we hide the day meter if a UIWindow is open. Could be changed later.
+GlassLab.UIManager.prototype._wantToHideDayMeter = function() {
+    for (var i = 0; i < this.openWindows.length; i++) {
+        if (this.openWindows[i] instanceof GlassLab.UIWindow) return true;
+    }
+    return false;
 };
 
 GlassLab.UIManager.zoomAmount = 1.5;
@@ -293,11 +317,7 @@ GlassLab.UIManager.prototype.createHud = function() {
 };
 
 GlassLab.UIManager.prototype._onJournalButton = function() {
-    if (!GLOBAL.Journal.IsShowing()) {
-        GLOBAL.Journal.Show();
-    } else {
-        GLOBAL.Journal.Hide();
-    }
+    GLOBAL.Journal.toggle();
     this.journalButton.toggleActive(false); // no need to stay active after it's been clicked
 };
 

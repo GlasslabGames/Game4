@@ -5,8 +5,9 @@
 var GlassLab = GlassLab || {};
 
 GlassLab.OrdersMenu = function(game, x, y) {
-    this.game = game;
+    GlassLab.UIWindow.prototype.constructor.call(this, game);
     this.sprite = game.make.sprite(x, y);
+    this.addChild(this.sprite);
 
     this.bg = game.make.sprite(0, 0, "letterBg");
     this.bg.anchor.setTo(0.5, 0.5);
@@ -68,18 +69,19 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.prevPageButton.bg.scale.x *= -1;
     this.prevPageButton.label.x += 5;
     this.sprite.addChild(this.prevPageButton);
-
-    this.sprite.visible = false;
 };
+
+GlassLab.OrdersMenu.prototype = Object.create(GlassLab.UIWindow.prototype);
+GlassLab.OrdersMenu.prototype.constructor = GlassLab.OrdersMenu;
 
 GlassLab.OrdersMenu.prototype._onNextPagePressed = function()
 {
-    this.Show(this.currentPage+1);
+    this.show(this.currentPage+1);
 };
 
 GlassLab.OrdersMenu.prototype._onPrevPagePressed = function()
 {
-    this.Show(this.currentPage-1);
+    this.show(this.currentPage-1);
 };
 
 GlassLab.OrdersMenu.prototype.IsShowing = function()
@@ -116,28 +118,25 @@ GlassLab.OrdersMenu.prototype.SetInfo = function(data)
     this.Refresh();
 };
 
-GlassLab.OrdersMenu.prototype.Show = function(orderNum)
+GlassLab.OrdersMenu.prototype.show = function(orderNum)
 {
+    GlassLab.UIWindow.prototype.show.call(this);
     if (!this.sprite.visible) GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
 
     if (typeof orderNum == 'undefined') orderNum = 0;
 
-    this.sprite.visible = true;
     this.currentPage = orderNum;
 
     this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
 
-    GlassLab.SignalManager.uiWindowOpened.dispatch(this);
     GlassLab.SignalManager.mailOpened.dispatch(orderNum);
 };
 
-GlassLab.OrdersMenu.prototype.Hide = function(auto)
+GlassLab.OrdersMenu.prototype.hide = function(auto)
 {
+    GlassLab.UIWindow.prototype.hide.call(this);
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_orders", {});
 
-    this.sprite.visible = false;
-
-    GlassLab.SignalManager.uiWindowClosed.dispatch(this);
     GlassLab.SignalManager.mailClosed.dispatch();
 };
 

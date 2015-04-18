@@ -312,8 +312,7 @@ GlassLab.State.Init.prototype.create = function()
     //game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
     var journal = new GlassLab.Journal(game);
-    journal.sprite.scale.setTo(1,1);
-    GLOBAL.UIManager.centerAnchor.addChild(journal.sprite);
+    GLOBAL.UIManager.centerAnchor.addChild(journal);
     GLOBAL.Journal = journal;
 
     GLOBAL.mailManager = new GlassLab.MailManager(game);

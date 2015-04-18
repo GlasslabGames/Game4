@@ -63,7 +63,7 @@ GlassLab.RewardPopup = function(game, x, y)
 GlassLab.RewardPopup.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.RewardPopup.prototype.constructor = GlassLab.RewardPopup;
 
-GlassLab.RewardPopup.prototype.Show = function(data)
+GlassLab.RewardPopup.prototype.show = function(data)
 {
     this.data = data;
     this.visible = true;
@@ -109,7 +109,7 @@ GlassLab.RewardPopup.prototype.Show = function(data)
 
 };
 
-GlassLab.RewardPopup.prototype.Hide = function()
+GlassLab.RewardPopup.prototype.hide = function()
 {
     this.visible = false;
     this.modal.Hide();
@@ -124,5 +124,5 @@ GlassLab.RewardPopup.prototype.Hide = function()
 
 GlassLab.RewardPopup.prototype.finish = function() {
     GLOBAL.inventoryManager.AddMoney(this.reward);
-    this.Hide();
+    this.hide();
 };

@@ -47,7 +47,6 @@ GlassLab.PauseMenu.prototype.show = function()
 
 GlassLab.PauseMenu.prototype.hide = function()
 {
-    console.log("Hide Pause Menu");
     this.modal.Hide();
     this.visible = false;
     GlassLab.SignalManager.uiWindowClosed.dispatch(this);
