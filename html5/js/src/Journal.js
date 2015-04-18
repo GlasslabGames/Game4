@@ -111,6 +111,7 @@ GlassLab.Journal.prototype.Show = function(auto, creatureType)
 
     GLOBAL.dayManager.dayMeter.visible = false;
 
+    GlassLab.SignalManager.uiWindowOpened.dispatch(this);
     GlassLab.SignalManager.journalOpened.dispatch(auto, creatureType);
 };
 
@@ -268,6 +269,7 @@ GlassLab.Journal.prototype.Hide = function(auto)
 
     this.sprite.visible = false;
     this._onLeavePage();
+    GlassLab.SignalManager.uiWindowClosed.dispatch(this);
     GlassLab.SignalManager.journalClosed.dispatch();
 };
 

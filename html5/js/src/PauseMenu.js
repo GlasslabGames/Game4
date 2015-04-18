@@ -42,12 +42,15 @@ GlassLab.PauseMenu.prototype.show = function()
     this.visible = true;
     this.modal.Show();
     this._refreshButtons();
+    GlassLab.SignalManager.uiWindowOpened.dispatch(this);
 };
 
 GlassLab.PauseMenu.prototype.hide = function()
 {
+    console.log("Hide Pause Menu");
     this.modal.Hide();
     this.visible = false;
+    GlassLab.SignalManager.uiWindowClosed.dispatch(this);
 };
 
 GlassLab.PauseMenu.prototype._onSoundButton = function()

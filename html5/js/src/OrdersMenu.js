@@ -127,6 +127,7 @@ GlassLab.OrdersMenu.prototype.Show = function(orderNum)
 
     this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
 
+    GlassLab.SignalManager.uiWindowOpened.dispatch(this);
     GlassLab.SignalManager.mailOpened.dispatch(orderNum);
 };
 
@@ -136,6 +137,7 @@ GlassLab.OrdersMenu.prototype.Hide = function(auto)
 
     this.sprite.visible = false;
 
+    GlassLab.SignalManager.uiWindowClosed.dispatch(this);
     GlassLab.SignalManager.mailClosed.dispatch();
 };
 

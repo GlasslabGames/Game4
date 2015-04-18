@@ -12,6 +12,13 @@ GlassLab.UIManager = function(game)
 
     this._createAnchors();
 
+    this.shade = game.make.graphics().beginFill(0x000000).drawRect(-this.game.width / 2, -this.game.height / 2, this.game.width, this.game.height);
+    this.shade.inputEnabled = true; // block interaction with the world
+    this.shade.input.priorityID = GLOBAL.UIpriorityID - 1; // below the rest of the UI
+    this.shade.alpha = 0.4;
+    this.shade.visible = false;
+    this.underCenterAnchor.addChild(this.shade);
+
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
     this.bonusModal = new GlassLab.UIModal(this.game, "Great job! Now it's time for\nBONUS GAME!", nextButton);
@@ -26,22 +33,18 @@ GlassLab.UIManager = function(game)
 
     this.createHud();
 
-    //GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
-};
-/*
-GlassLab.UIManager.prototype._onInitGame = function() {
-    this.game.input.onUp.add(this._onGlobalUp, this); // wait until now to add the global input listener. It gets wiped between states.
+    this.openWindows = [];
+    GlassLab.SignalManager.uiWindowOpened.add(this._onUIOpened, this);
+    GlassLab.SignalManager.uiWindowClosed.add(this._onUIClosed, this);
 };
 
-GlassLab.UIManager.prototype._onGlobalUp = function(pointer, DOMevent)
-{
-    if (GLOBAL.dragTarget && GLOBAL.dragTarget.stickyDrag) { // if we were dragging something with sticky mode, release it when we click
-        if (GLOBAL.dragTarget.onStickyDrop) GLOBAL.dragTarget.onStickyDrop(); // e.g. UIDraggable
-    }
-};*/
 
 GlassLab.UIManager.prototype._createAnchors = function()
 {
+    // another center anchor, but lower than the rest of them
+    this.underCenterAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
+    GLOBAL.UILayer.add(this.underCenterAnchor);
+
     // Top left
     this.topLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 0);
     GLOBAL.UILayer.add(this.topLeftAnchor);
@@ -124,6 +127,7 @@ GlassLab.UIManager.prototype.getDragTarget = function(draggedObj) {
 
 // Static function that figures out where to put line breaks in order to wrap a segment of text.
 // It sets the text in the provided label but also return the string
+// By the way this functionality is already built in to Phaser.Text... HAHA
 GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
 
     // Try adding the words one by one
@@ -139,6 +143,32 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
     }
 
     return label.text; // returns the text with newlines inserted
+};
+
+
+GlassLab.UIManager.prototype._onUIOpened = function(window) {
+    if (this.openWindows.indexOf(window) == -1) this.openWindows.push(window);
+    //console.log("Opened:", this.openWindows);
+    if (!this.shade.visible) {
+        this.shade.visible = true;
+        this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 200, Phaser.Easing.Quadratic.InOut, true);
+    } else {
+        this.shade.alpha = 0.4;
+    }
+};
+
+GlassLab.UIManager.prototype._onUIClosed = function(window) {
+    var index = this.openWindows.indexOf(window);
+    if (index > -1) this.openWindows.splice(index, 1);
+    //console.log("Closed:",this.openWindows);
+    if (this.openWindows.length == 0) {
+        if (this.shade.visible) {
+            var shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 200, Phaser.Easing.Quadratic.InOut, true);
+            shadeTween.onComplete.addOnce(function() { if (this.openWindows.length == 0) this.shade.visible = false; }, this);
+        } else {
+            this.shade.alpha = 0;
+        }
+    }
 };
 
 GlassLab.UIManager.zoomAmount = 1.5;
