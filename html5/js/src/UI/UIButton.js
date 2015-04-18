@@ -32,7 +32,7 @@ GlassLab.UIButton.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIButton.prototype.constructor = GlassLab.UIButton;
 
 GlassLab.UIButton.prototype.setEnabled = function(enabled) {
-    for (var i = 0; i < this.inputHandlers; i++) {
+    for (var i = 0; i < this.inputHandlers.length; i++) {
         this.inputHandlers[i].active = enabled;
     }
 

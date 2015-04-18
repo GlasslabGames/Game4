@@ -78,6 +78,11 @@ GlassLab.HUDButton = function(game, x, y, imageSprite, bgSprite, text, fontStyle
 GlassLab.HUDButton.prototype = Object.create(GlassLab.UIButton.prototype);
 GlassLab.HUDButton.prototype.constructor = GlassLab.HUDButton;
 
+GlassLab.HUDButton.prototype.setEnabled = function(enabled) {
+    GlassLab.UIButton.prototype.setEnabled.apply(this, arguments);
+    this.alpha = enabled? 1 : 0.25;
+};
+
 GlassLab.HUDButton.prototype._onOver = function() {
     if (!this.over) { // no need to tween get this event unnecessarily after releasing the mouse
         this.game.add.tween(this.bg).to( { alpha: this.bgOverAlpha }, 150, Phaser.Easing.Quadratic.InOut, true);

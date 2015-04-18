@@ -51,24 +51,18 @@ GlassLab.Journal = function(game) {
     this.unknownDietLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.unknownDietLabel);
 
-    // Page buttons
-    this.nextPageButton = new GlassLab.HUDButton(this.game, 250, 30, "", "sideArrow", false, this._onNextPagePressed, this);
+    // Page buttons (almost the same as OrdersMenu)
+    var pageButtonX = this.bg.width / 2 + 40;
+    this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next\nPage", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
+    this.nextPageButton.label.x -= 8;
     this.bg.addChild(this.nextPageButton);
-    this.nextPageButtonLabel = game.make.text(-25, 0, "Next\nPage", {font: "bold 10pt Arial", fill: "#FFFFFF", align: "center"});
-    this.nextPageButtonLabel.anchor.setTo(0, 0.5);
-    this.nextPageButtonLabel.alpha = .75;
-    this.nextPageButton.addChild(this.nextPageButtonLabel);
 
-    this.prevPageButton = new GlassLab.HUDButton(this.game, -250, 30, "", "sideArrow" , false, this._onPrevPagePressed, this);
-    this.prevPageButton.scale.x *= -1;
+    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev\nPage", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
     this.prevPageButton.anchor.setTo(0, 0.5);
+    this.prevPageButton.bg.scale.x *= -1;
+    this.prevPageButton.label.x += 8;
     this.bg.addChild(this.prevPageButton);
-    this.prevPageButtonLabel = game.make.text(8, 0, "Prev\nPage", {font: "bold 10pt Arial", fill: "#FFFFFF", align: "center"});
-    this.prevPageButtonLabel.anchor.setTo(0, 0.5);
-    this.prevPageButtonLabel.scale.x = -1;
-    this.prevPageButtonLabel.alpha = .75;
-    this.prevPageButton.addChild(this.prevPageButtonLabel);
 
 
     this.dailyDietTable = new GlassLab.UITable(this.game, 8, 5);

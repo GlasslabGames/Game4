@@ -106,8 +106,8 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.selectButton.alpha = 1;
     this.stamp.visible = false;
 
-    this.prevPageButton.visible = this.currentPage > 0;
-    this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1;
+    this.prevPageButton.setEnabled(this.currentPage > 0);
+    this.nextPageButton.setEnabled(this.currentPage < GLOBAL.mailManager.availableOrders.length - 1);
 };
 
 GlassLab.OrdersMenu.prototype.SetInfo = function(data)
