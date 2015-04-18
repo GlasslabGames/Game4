@@ -32,7 +32,7 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
     {
         if (this.availableOrders.length != 0)
         {
-            this.ordersMenu.show();
+            GLOBAL.UIManager.showInsteadOfOtherWindows(this.ordersMenu);
         }
         else
         {

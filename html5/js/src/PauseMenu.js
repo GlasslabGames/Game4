@@ -40,14 +40,14 @@ GlassLab.PauseMenu.prototype.toggle = function()
 GlassLab.PauseMenu.prototype.show = function()
 {
     this.visible = true;
-    this.modal.Show();
+    this.modal.show();
     this._refreshButtons();
     GlassLab.SignalManager.uiWindowOpened.dispatch(this);
 };
 
 GlassLab.PauseMenu.prototype.hide = function()
 {
-    this.modal.Hide();
+    this.modal.hide();
     this.visible = false;
     GlassLab.SignalManager.uiWindowClosed.dispatch(this);
 };

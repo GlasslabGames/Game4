@@ -212,7 +212,7 @@ GlassLab.OrderFulfillment.prototype.show = function(data)
     this._sendTelemetry("start_order");
     GlassLab.SignalManager.orderStarted.dispatch(this.data);
 
-    GLOBAL.inventoryMenu.Show(true); // show this after sending the event so that we don't have to refresh the inventory again
+    GLOBAL.inventoryMenu.show(true); // show this after sending the event so that we don't have to refresh the inventory again
 };
 
 GlassLab.OrderFulfillment.prototype.hide = function(destroyPen)
@@ -228,7 +228,7 @@ GlassLab.OrderFulfillment.prototype.hide = function(destroyPen)
     }
 
     GLOBAL.assistant.endOrder();
-    GLOBAL.inventoryMenu.Hide(true);
+    GLOBAL.inventoryMenu.hide(true);
 };
 
 GlassLab.OrderFulfillment.prototype.Refresh = function()

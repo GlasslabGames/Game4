@@ -153,7 +153,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     this.frontObjectRoot.addChild(this.creatureRoot);
 
     // close the items
-    GLOBAL.inventoryMenu.Hide(true);
+    GLOBAL.inventoryMenu.hide(true);
 
     // Reset creature foods in case anything weird happened before
     this.forEachCreature(GlassLab.Creature.prototype.resetTargetFood);

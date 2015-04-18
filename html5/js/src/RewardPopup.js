@@ -112,7 +112,7 @@ GlassLab.RewardPopup.prototype.show = function(data)
 GlassLab.RewardPopup.prototype.hide = function()
 {
     this.visible = false;
-    this.modal.Hide();
+    this.modal.hide();
 
     if (this.data) {
         // Since the reward popup shows the results of an order, closing it is the final step in resolving an order

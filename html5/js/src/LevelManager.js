@@ -203,7 +203,7 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
 
     GLOBAL.orderFulfillment.pen = null; // clear the reference to the pen
 
-    GLOBAL.inventoryMenu.Hide(true);
+    GLOBAL.inventoryMenu.hide(true);
 };
 
 GlassLab.LevelManager.prototype.LoadNextLevel = function()

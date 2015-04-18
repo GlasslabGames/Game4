@@ -14,6 +14,7 @@ GlassLab.UIManager = function(game)
 
     this.shade = game.make.graphics().beginFill(0x000000).drawRect(-this.game.width / 2, -this.game.height / 2, this.game.width, this.game.height);
     this.shade.inputEnabled = true; // block interaction with the world
+    this.shade.events.onInputUp.add(this.hideAllWindows, this);
     this.shade.input.priorityID = GLOBAL.UIpriorityID - 1; // below the rest of the UI
     this.shade.alpha = 0.4;
     this.shade.visible = false;
@@ -109,7 +110,7 @@ GlassLab.UIManager.prototype.hideArrow = function() {
 
 GlassLab.UIManager.prototype._onBonusPressed = function()
 {
-    this.bonusModal.Hide();
+    this.bonusModal.hide();
     GLOBAL.sortingGame.start();
 };
 
@@ -193,6 +194,35 @@ GlassLab.UIManager.prototype._wantToHideDayMeter = function() {
         if (this.openWindows[i] instanceof GlassLab.UIWindow) return true;
     }
     return false;
+};
+
+GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
+    for (var i = 0; i < this.openWindows.length; i++) {
+        if (this.openWindows[i] != exception) {
+            this.openWindows[i].hide();
+        }
+    }
+
+    // hide the inventory if it's open (even though we don't add it as an openWindow, we still want to hide it in this case
+    if (GLOBAL.inventoryMenu.visible) GLOBAL.inventoryMenu.hide();
+};
+
+GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withoutAddingToList) {
+    var addedListener = false;
+
+    if (!withoutAddingToList && this.openWindows.indexOf(window) == -1) this.openWindows.push(window); // so we don't unfade the background, etc
+
+    // add an event listener to one of the windows we're about to hide
+    for (var i = 0; i < this.openWindows.length; i++) {
+        if (this.openWindows[i] == window) continue;
+        if (this.openWindows[i].onFinishedHiding) {
+            this.openWindows[i].onFinishedHiding.addOnce(window.show, window);
+            addedListener = true;
+            break;
+        }
+    }
+    this.hideAllWindows(window); // hide everything but the one we want to show
+    if (!addedListener) window.show(); // if we failed to add a listener, just show the target
 };
 
 GlassLab.UIManager.zoomAmount = 1.5;
@@ -317,7 +347,11 @@ GlassLab.UIManager.prototype.createHud = function() {
 };
 
 GlassLab.UIManager.prototype._onJournalButton = function() {
-    GLOBAL.Journal.toggle();
+    if (GLOBAL.Journal.open) {
+        GLOBAL.Journal.hide();
+    } else {
+        this.showInsteadOfOtherWindows(GLOBAL.Journal);
+    }
     this.journalButton.toggleActive(false); // no need to stay active after it's been clicked
 };
 
@@ -353,9 +387,9 @@ GlassLab.UIManager.prototype._onMailButton = function() {
 
 GlassLab.UIManager.prototype._onItemsButton = function() {
     if (!GLOBAL.inventoryMenu.visible) {
-        GLOBAL.inventoryMenu.Show();
+        this.showInsteadOfOtherWindows(GLOBAL.inventoryMenu, true); // closes everything else and opens the inventory, but doesn't actually count it as an open window
     } else {
-        GLOBAL.inventoryMenu.Hide();
+        GLOBAL.inventoryMenu.hide();
     }
     this.itemsButton.toggleActive(false); // no need to stay active after it's been clicked
 };

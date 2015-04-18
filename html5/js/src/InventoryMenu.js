@@ -98,7 +98,7 @@ GlassLab.InventoryMenu.prototype._onScreenSizeChange = function()
 };
 */
 
-GlassLab.InventoryMenu.prototype.Show = function(auto)
+GlassLab.InventoryMenu.prototype.show = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("open_inventory", {});
 
@@ -107,9 +107,11 @@ GlassLab.InventoryMenu.prototype.Show = function(auto)
     this.Refresh();
 
     this.visible = true;
+
+    // Note, if we end up adding an animated open, please work out its interaction with UIManager.showInsteadOfOtherWindows()
 };
 
-GlassLab.InventoryMenu.prototype.Hide = function(auto)
+GlassLab.InventoryMenu.prototype.hide = function(auto)
 {
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_inventory", {});
 

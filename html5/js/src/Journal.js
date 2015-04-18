@@ -91,7 +91,7 @@ GlassLab.Journal.prototype.show = function(auto, creatureType)
 
     GlassLabSDK.saveTelemEvent((auto? "journal_shown" : "open_journal"), {});
 
-    GLOBAL.inventoryMenu.Hide(true);
+    GLOBAL.inventoryMenu.hide(true);
 
     GLOBAL.audioManager.playSound("popUpSound");
 

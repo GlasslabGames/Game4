@@ -219,6 +219,7 @@ GlassLab.HUDAnimButton.prototype._refreshImage = function() {
         }
 
         this.isIcon = false;
+        this.image.tint = 0xffffff;
     }
 
     this._refreshColors();
