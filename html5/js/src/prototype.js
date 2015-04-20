@@ -11,6 +11,11 @@ function getParameterByName(name) {
 }
 
 window.onload = function() {
+    GLOBAL.fullScreenAllowed = document.fullscreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.mozFullScreenEnabled ||
+        document.msFullscreenEnabled;
+
     GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer');
