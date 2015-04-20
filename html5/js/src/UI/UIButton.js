@@ -17,21 +17,75 @@ GlassLab.UIButton = function(game, x, y, spriteName, callback, callbackContext)
 
     this.callback = callback;
     this.callbackContext = callbackContext;
-    this.inputHandler = this.events.onInputUp.add(this._onUp, this);
+    this.inputHandlers = [
+        this.events.onInputDown.add(this._onDown, this),
+        this.events.onInputUp.add(this._onUp, this),
+        this.events.onInputOver.add(this._onOver, this),
+        this.events.onInputOut.add(this._onOut, this)
+        ];
+
+    this.over = false;
+    this.pressed = false;
 };
 
 GlassLab.UIButton.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIButton.prototype.constructor = GlassLab.UIButton;
 
 GlassLab.UIButton.prototype.setEnabled = function(enabled) {
-    this.alpha = (enabled)? 1 : 0.5;
-    this.inputHandler.active = enabled;
+    for (var i = 0; i < this.inputHandlers.length; i++) {
+        this.inputHandlers[i].active = enabled;
+    }
+
+    if (!enabled)
+    {
+        this.pressed = false;
+        if (this.over) this._onOut();
+    }
 };
 
 GlassLab.UIButton.prototype._onUp = function() {
     GLOBAL.audioManager.playSound("clickSound");
     if (this.callback) this.callback.apply(this.callbackContext, arguments);
+
+    this.pressed = false;
+    if (this.over) this.whenOver();
+    else this.whenUp();
 };
+
+GlassLab.UIButton.prototype._onDown = function() {
+    this.pressed = true;
+    this.whenDown();
+};
+
+GlassLab.UIButton.prototype._onOver = function() {
+    this.over = true;
+    if (!this.pressed) this.whenOver();
+};
+
+GlassLab.UIButton.prototype._onOut = function() {
+    this.over = false;
+    if (!this.pressed) this.whenUp();
+};
+
+
+// Override these to set the different highlight states of the button
+GlassLab.UIButton.prototype.whenUp = function() {};
+GlassLab.UIButton.prototype.whenDown = function() {};
+GlassLab.UIButton.prototype.whenOver = function() {};
+
+/**
+ * UITextButton - like UIButton but with text
+ */
+
+GlassLab.UITextButton = function(game, x, y, spriteName, text, fontStyle, callback, callbackContext) {
+    GlassLab.UIButton.prototype.constructor.call(this, game, x, y, spriteName);
+    this.label = game.make.text(0, 0, text, fontStyle);
+    this.label.anchor.setTo(0.5, 0.5);
+    this.addChild(this.label);
+};
+
+GlassLab.UITextButton.prototype = Object.create(GlassLab.UIButton.prototype);
+GlassLab.UITextButton.prototype.constructor = GlassLab.UITextButton;
 
 /**
  * UIRectButton - a button that uses graphics to draw a square
@@ -57,7 +111,7 @@ GlassLab.UIRectButton.prototype = Object.create(GlassLab.UIButton.prototype);
 GlassLab.UIRectButton.prototype.constructor = GlassLab.UIRectButton;
 
 GlassLab.UIRectButton.prototype.setEnabled = function(enabled) {
+    GlassLab.UIButton.prototype.setEnabled.call(this, enabled);
     this.label.setStyle({ fill:(enabled? "#000000" : "#bbbbbb") });
     this.graphic.beginFill(this.color).lineStyle(3, (enabled? 0x000000 : 0xbbbbbb)).drawRect(0,0,this.actualWidth,this.actualHeight);
-    this.inputHandler.active = enabled;
 };

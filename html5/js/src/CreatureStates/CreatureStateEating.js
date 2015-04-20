@@ -3,12 +3,17 @@
  */
 /**
  * CreatureStateEating - chewing on some food
+ * @param foodInfo may optionally contain foodInfo.reaction, in which case, the food consumption is handled differently than desiredFood
  */
 GlassLab.CreatureStateEating = function(game, owner, foodInfo)
 {
     GlassLab.CreatureState.call(this, game, owner);
     this.eatPartially = foodInfo.eatPartially;
     this.food = foodInfo.food;
+    if (typeof(foodInfo.reaction) != "undefined")
+        this.altReactionToFood = foodInfo.reaction;
+    else
+        this.altReactionToFood = null;
 };
 
 GlassLab.CreatureStateEating.prototype = Object.create(GlassLab.CreatureState.prototype);
@@ -53,11 +58,16 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
     this.chomped = true;
     this.amountEaten = this.food.BeEaten(this.amountToEat);
     this.creature.lastEatenFoodInfo = this.food.info;
-    var hideBarAfter = (this.creature.pen? null : 2); // if we're in the pen, keep the hunger bar up. Else show it briefly.
-    this.creature.ShowHungerBar(this.amountEaten, this.food.type, hideBarAfter);
+
+    // show hunger bar if food is desirable:
+    if (this.altReactionToFood == null) {
+        var hideBarAfter = (this.creature.pen? null : 2); // if we're in the pen, keep the hunger bar up. Else show it briefly.
+        this.creature.ShowHungerBar(this.amountEaten, this.food.type, hideBarAfter);
+    }
+
+    // audio:
     // if (this is on screen) // TODO
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
-
     GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
 };
 
@@ -66,12 +76,30 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
 
     this.creature.foodEaten[this.food.type] += this.amountEaten;
 
-    GlassLab.SignalManager.creatureEats.dispatch(this.creature);
+    // Perform various actions based on food eaten:
+    if (this.altReactionToFood == null) {
+        // normal desiredFood consumption:
+        GlassLab.SignalManager.creatureEats.dispatch(this.creature);
 
-    // Choose which state to go to based on the situation...
-    if (this.creature.getIsSick()) {
-        this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
-    } else if (this.creature.pen) { // continue to the next part of the pen
+        // just check if ate too much:
+        if (this.creature.getIsSick()) {
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
+            return; // do no more after vomiting
+        }
+    } else {
+        // ate "other" food: do specific things based on this.altReactionToFood
+        if (this.altReactionToFood.result == "sick") {
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateVomiting(this.game, this.creature, this.food));
+            return; // do no more after vomiting
+        }
+        else if (this.altReactionToFood.result == "hyper") {
+            // update creature's moveSpeed and continue....
+            this.creature.moveSpeed = this.altReactionToFood.details.speedMultiplier * this.creature.normalMoveSpeed; 
+        }
+    }
+
+    // Choose what to do based on location (in or out of pen):
+    if (this.creature.pen) { // continue to the next part of the pen
         this.creature.tryWalkToNextFood();
     } else { // eating outside of pen, so just continue to the next target or go to idle
         if (this.creature.getIsSatisfied())

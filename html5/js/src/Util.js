@@ -105,3 +105,57 @@ GlassLab.Util.HasCookieData = function(key)
 
     return false;
 };
+
+GlassLab.Util.SetColoredText = function(label, text, normalColor, highlightedColor) {
+    label.clearColors();
+    var colorIndices = [];
+    var index = 0; // this index is offset when we see a newline
+    for (var k = 0; k < text.length; k++) {
+        var char = text.charAt(k);
+        if (char == "*") {
+            colorIndices.push(index);
+            text = text.substring(0, k) + text.substring(k + 1); // remove the *
+            k --;
+            // Also don't increment the index since we just removed a string
+        } else {
+            index ++;
+        }
+    }
+    label.text = text;
+    for (var j = 0; j < colorIndices.length; j++) {
+        var color = (j % 2)? normalColor : highlightedColor;
+        label.addColor(color, colorIndices[j]);
+    }
+    return label;
+};
+
+/* These are old string procressing functions that allow you to set the color using tags like in NGUI. But we're just using * to start and end highlighted sections instead.
+ function getProcessedString(string)
+ {
+ var returnString = string;
+ var replaceString = string.replace(/\[[^\]]+\]/i, "");
+ while(returnString != replaceString)
+ {
+ returnString = replaceString;
+ replaceString = replaceString.replace(/\[[^\]]+\]/i, "");
+ }
+ return returnString;
+ }
+
+ function getStringColorInfo(string)
+ {
+ // TODO: This doesn't work at all right now.
+ var colors = [];
+ var searchString = string;
+ var colorInfo = searchString.match(/\[[^\]]+\]/i);
+ var colorData = {};
+ while (colorInfo)
+ {
+ colorData.color = colorInfo;
+ searchString;
+ colors.add()
+ }
+
+ return colors;
+ }
+    */

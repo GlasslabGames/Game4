@@ -73,11 +73,11 @@ GlassLab.State.Game.prototype.update = function()
         if (tileSprite && tileSprite.inPen && (!GLOBAL.highlightedTile || (GLOBAL.highlightedTile.inPen != tileSprite.inPen)) &&
             tileSprite.inPen instanceof GlassLab.FeedingPen)
         {
-            GLOBAL.UIManager.penTooltip.Show(tileSprite.inPen);
+            GLOBAL.UIManager.penTooltip.show(tileSprite.inPen);
         }
         else if (GLOBAL.highlightedTile && GLOBAL.highlightedTile.inPen && (!tileSprite || !tileSprite.inPen)) // exited tile in pen
         {
-            GLOBAL.UIManager.penTooltip.Hide();
+            GLOBAL.UIManager.penTooltip.hide();
         }
 
         /*

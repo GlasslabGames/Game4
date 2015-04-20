@@ -45,6 +45,9 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.audio(spriteName+'_sfx_throwup', 'assets/audio/sfx/'+spriteName+'_throwup.mp3');
         game.load.audio(spriteName+'_sfx_happy', 'assets/audio/sfx/'+spriteName+'_happy.mp3');
         game.load.audio(spriteName+'_sfx_eat', 'assets/audio/sfx/'+spriteName+'_eat.mp3');
+
+        game.load.image(spriteName+'_orderPhoto_fail', 'assets/images/order/response_photos/order_fail_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_satisfied', 'assets/images/order/response_photos/order_success_'+spriteName+'.png');
     }
 
     var basicFoodSpriteNames = ["apple", "broccoli", "corn", "donut", "meat", "mushroom", "pizza", "strawberry", "taco", "tincan"];
@@ -149,6 +152,13 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('orderBg2', 'assets/images/order/shipping_ui_packing_slip_tall_bg.png');
     game.load.image('orderDragTarget', 'assets/images/order/shipping_ui_drag_food_here.png');
     game.load.image('orderEntryField', 'assets/images/order/shipping_ui_number_field.png');
+
+    game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
+    game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');
+    game.load.image('urgentStamp', 'assets/images/order/urgent_stamp.png');
+    game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
+    game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
+    game.load.image('bigCoin', 'assets/images/order/order_response_big_coin.png');
 
     game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
     game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');
@@ -307,8 +317,7 @@ GlassLab.State.Init.prototype.create = function()
     //game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
     var journal = new GlassLab.Journal(game);
-    journal.sprite.scale.setTo(1,1);
-    GLOBAL.UIManager.centerAnchor.addChild(journal.sprite);
+    GLOBAL.UIManager.centerAnchor.addChild(journal);
     GLOBAL.Journal = journal;
 
     GLOBAL.mailManager = new GlassLab.MailManager(game);

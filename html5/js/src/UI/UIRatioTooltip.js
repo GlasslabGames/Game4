@@ -88,7 +88,7 @@ GlassLab.UIRatioTooltip = function(game, padding)
 GlassLab.UIRatioTooltip.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UIRatioTooltip.prototype.constructor = GlassLab.UIRatioTooltip;
 
-GlassLab.UIRatioTooltip.prototype.Show = function(targetPen)
+GlassLab.UIRatioTooltip.prototype.show = function(targetPen)
 {
     this.pen = targetPen;
 
@@ -177,20 +177,20 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
     {
         if (!tileSprite.inPen)
         {
-            this.Hide();
+            this.hide();
         }
         else
         {
-            this.Show(tileSprite.inPen);
+            this.show(tileSprite.inPen);
         }
     }
     else
     {
-        this.Hide();
+        this.hide();
     }
 };
 
-GlassLab.UIRatioTooltip.prototype.Hide = function()
+GlassLab.UIRatioTooltip.prototype.hide = function()
 {
     this.pen = null;
 

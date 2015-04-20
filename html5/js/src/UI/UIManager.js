@@ -12,6 +12,14 @@ GlassLab.UIManager = function(game)
 
     this._createAnchors();
 
+    this.shade = game.make.graphics().beginFill(0x000000).drawRect(-this.game.width / 2, -this.game.height / 2, this.game.width, this.game.height);
+    this.shade.inputEnabled = true; // block interaction with the world
+    this.shade.events.onInputUp.add(this.hideAllWindows, this);
+    this.shade.input.priorityID = GLOBAL.UIpriorityID - 1; // below the rest of the UI
+    this.shade.alpha = 0.4;
+    this.shade.visible = false;
+    this.underCenterAnchor.addChild(this.shade);
+
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
     this.bonusModal = new GlassLab.UIModal(this.game, "Great job! Now it's time for\nBONUS GAME!", nextButton);
@@ -26,22 +34,18 @@ GlassLab.UIManager = function(game)
 
     this.createHud();
 
-    //GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
-};
-/*
-GlassLab.UIManager.prototype._onInitGame = function() {
-    this.game.input.onUp.add(this._onGlobalUp, this); // wait until now to add the global input listener. It gets wiped between states.
+    this.openWindows = [];
+    GlassLab.SignalManager.uiWindowOpened.add(this._onUIOpened, this);
+    GlassLab.SignalManager.uiWindowClosed.add(this._onUIClosed, this);
 };
 
-GlassLab.UIManager.prototype._onGlobalUp = function(pointer, DOMevent)
-{
-    if (GLOBAL.dragTarget && GLOBAL.dragTarget.stickyDrag) { // if we were dragging something with sticky mode, release it when we click
-        if (GLOBAL.dragTarget.onStickyDrop) GLOBAL.dragTarget.onStickyDrop(); // e.g. UIDraggable
-    }
-};*/
 
 GlassLab.UIManager.prototype._createAnchors = function()
 {
+    // another center anchor, but lower than the rest of them
+    this.underCenterAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
+    GLOBAL.UILayer.add(this.underCenterAnchor);
+
     // Top left
     this.topLeftAnchor = new GlassLab.UIAnchor(this.game, 0, 0);
     GLOBAL.UILayer.add(this.topLeftAnchor);
@@ -106,7 +110,7 @@ GlassLab.UIManager.prototype.hideArrow = function() {
 
 GlassLab.UIManager.prototype._onBonusPressed = function()
 {
-    this.bonusModal.Hide();
+    this.bonusModal.hide();
     GLOBAL.sortingGame.start();
 };
 
@@ -124,6 +128,7 @@ GlassLab.UIManager.prototype.getDragTarget = function(draggedObj) {
 
 // Static function that figures out where to put line breaks in order to wrap a segment of text.
 // It sets the text in the provided label but also return the string
+// By the way this functionality is already built in to Phaser.Text... HAHA
 GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
 
     // Try adding the words one by one
@@ -139,6 +144,92 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
     }
 
     return label.text; // returns the text with newlines inserted
+};
+
+
+GlassLab.UIManager.prototype._onUIOpened = function(window) {
+    if (this.openWindows.indexOf(window) == -1) this.openWindows.push(window);
+    //console.log("Opened:", this.openWindows);
+    if (!this.shade.visible) {
+        this.shade.visible = true;
+        this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
+    } else {
+        this.shade.alpha = 0.4;
+    }
+
+    if (GLOBAL.dayManager.dayMeter.visible && this._wantToHideDayMeter()) {
+        var tween = this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 0}, GLOBAL.dayManager.dayMeter.alpha * 150, Phaser.Easing.Quadratic.InOut, true);
+        tween.onComplete.addOnce(function() { if (this._wantToHideDayMeter()) GLOBAL.dayManager.dayMeter.visible = false; }, this);
+    }
+};
+
+GlassLab.UIManager.prototype._onUIClosed = function(window) {
+    var index = this.openWindows.indexOf(window);
+    if (index > -1) this.openWindows.splice(index, 1);
+    //console.log("Closed:",this.openWindows);
+    if (this.openWindows.length == 0) {
+        if (this.shade.visible) {
+            var shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true);
+            shadeTween.onComplete.addOnce(function() { if (this.openWindows.length == 0) this.shade.visible = false; }, this);
+        } else {
+            this.shade.alpha = 0;
+        }
+
+        GLOBAL.dayManager.dayMeter.visible = true;
+
+        // pop the inventory menu back up if it was closed before. This may have to be refined to only start after everything is done closing (showInsteadOfOtherWindows), but it's fine for now.
+        if (this.inventoryWasOpen) GLOBAL.inventoryMenu.show();
+        this.inventoryWasOpen = false;
+    }
+
+    if (!this._wantToHideDayMeter()) {
+        if (!GLOBAL.dayManager.dayMeter.visible) {
+            GLOBAL.dayManager.dayMeter = true;
+            this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 1}, (1 - GLOBAL.dayManager.dayMeter) * 150, Phaser.Easing.Quadratic.InOut, true);
+        } else {
+            GLOBAL.dayManager.dayMeter.alpha = 1;
+        }
+    }
+};
+
+// for now, we hide the day meter if a UIWindow is open. Could be changed later.
+GlassLab.UIManager.prototype._wantToHideDayMeter = function() {
+    for (var i = 0; i < this.openWindows.length; i++) {
+        if (this.openWindows[i] instanceof GlassLab.UIWindow) return true;
+    }
+    return false;
+};
+
+GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
+    for (var i = 0; i < this.openWindows.length; i++) {
+        if (this.openWindows[i] != exception) {
+            this.openWindows[i].hide();
+        }
+    }
+
+    // hide the inventory if it's open (even though we don't add it as an openWindow, we still want to hide it in this case
+    if (GLOBAL.inventoryMenu.visible) {
+        this.inventoryWasOpen = true;
+        GLOBAL.inventoryMenu.hide();
+    }
+};
+
+GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withoutAddingToList) {
+    var addedListener = false;
+
+    if (!withoutAddingToList && this.openWindows.indexOf(window) == -1) this.openWindows.push(window); // so we don't unfade the background, etc
+
+    // add an event listener to one of the windows we're about to hide
+    for (var i = 0; i < this.openWindows.length; i++) {
+        if (this.openWindows[i] == window) continue;
+        if (this.openWindows[i].onFinishedHiding) {
+            this.openWindows[i].onFinishedHiding.addOnce(window.show, window);
+            addedListener = true;
+            break;
+        }
+    }
+    this.hideAllWindows(window); // hide everything but the one we want to show
+    if (!addedListener) window.show(); // if we failed to add a listener, just show the target
 };
 
 GlassLab.UIManager.zoomAmount = 1.5;
@@ -174,7 +265,7 @@ GlassLab.UIManager.prototype.createHud = function() {
     this.topRightAnchor.addChild(table);
 
     // pause:
-    var button = new GlassLab.HUDButton(this.game, 0, 0, "pauseIcon", "hudSettingsBgRounded", true, function() {
+    var button = new GlassLab.HUDButton(this.game, 0, 0, "pauseIcon", "hudSettingsBgRounded", null, null, true, function() {
         GLOBAL.pauseMenu.toggle();
     }, this);
     table.addManagedChild(button);
@@ -183,17 +274,17 @@ GlassLab.UIManager.prototype.createHud = function() {
     // for some reason the position in the table is a little off unless we set the y to 2 here
     var zoomGroup = new GlassLab.UIElement(this.game);
 
-    button = new GlassLab.HUDButton(this.game, 0, 2, "zoomInIcon", "hudSettingsBg", true, this.zoomIn, this);
+    button = new GlassLab.HUDButton(this.game, 0, 2, "zoomInIcon", "hudSettingsBg", null, null, true, this.zoomIn, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight = button.getHeight();
-    button = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", true, this.zoomOut, this);
+    button = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", null, null, true, this.zoomOut, this);
     zoomGroup.addChild(button);
     zoomGroup.actualHeight += button.getHeight();
     this.zoomButtons = zoomGroup;
 
     table.addManagedChild(zoomGroup);
 
-    button = new GlassLab.HUDButton(this.game, 0, 2, "cancelIcon", "hudSettingsBg", true, function() {
+    button = new GlassLab.HUDButton(this.game, 0, 2, "cancelIcon", "hudSettingsBg", null, null, true, function() {
         GLOBAL.mailManager.cancelOrder();
     }, this);
     var container = new GlassLab.UIElement(this.game); // the reason we have to make a container is to work with the weird y-2 hack
@@ -204,7 +295,7 @@ GlassLab.UIManager.prototype.createHud = function() {
     this.cancelButton = container;
 
     // fullscreen:
-    var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", true, function() {
+    var fullscreenButton = new GlassLab.HUDButton(this.game, 0, 0, "fullscreenIcon", "hudSettingsBgRounded", null, null, true, function() {
         if (this.game.scale.isFullScreen) {
             this.game.scale.stopFullScreen();
             fullscreenButton.image.loadTexture("fullscreenIcon");
@@ -264,10 +355,10 @@ GlassLab.UIManager.prototype.createHud = function() {
 };
 
 GlassLab.UIManager.prototype._onJournalButton = function() {
-    if (!GLOBAL.Journal.IsShowing()) {
-        GLOBAL.Journal.Show();
+    if (GLOBAL.Journal.open) {
+        GLOBAL.Journal.hide();
     } else {
-        GLOBAL.Journal.Hide();
+        this.showInsteadOfOtherWindows(GLOBAL.Journal);
     }
     this.journalButton.toggleActive(false); // no need to stay active after it's been clicked
 };
@@ -304,9 +395,9 @@ GlassLab.UIManager.prototype._onMailButton = function() {
 
 GlassLab.UIManager.prototype._onItemsButton = function() {
     if (!GLOBAL.inventoryMenu.visible) {
-        GLOBAL.inventoryMenu.Show();
+        this.showInsteadOfOtherWindows(GLOBAL.inventoryMenu, true); // closes everything else and opens the inventory, but doesn't actually count it as an open window
     } else {
-        GLOBAL.inventoryMenu.Hide();
+        GLOBAL.inventoryMenu.hide();
     }
     this.itemsButton.toggleActive(false); // no need to stay active after it's been clicked
 };

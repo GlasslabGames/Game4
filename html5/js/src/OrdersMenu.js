@@ -5,94 +5,83 @@
 var GlassLab = GlassLab || {};
 
 GlassLab.OrdersMenu = function(game, x, y) {
-    this.game = game;
-    this.sprite = game.make.sprite();
-    this.sprite.x = x;
-    this.sprite.y = y;
+    GlassLab.UIWindow.prototype.constructor.call(this, game);
+    this.sprite = game.make.sprite(x, y);
+    this.addChild(this.sprite);
 
-    this.bg = game.make.graphics();
+    this.bg = game.make.sprite(0, 0, "letterBg");
+    this.bg.anchor.setTo(0.5, 0.5);
     this.sprite.addChild(this.bg);
-    this.bg.beginFill(0xffffff).lineStyle(3, 0x000000, 1).drawRect(0, 0, 280, 30).drawRect(0,30,280,320);
 
-    this.menuLabel = game.make.text(this.bg.width/2, 2, "Order 1/3", {font: 'bold 16pt Arial'});
-    this.menuLabel.anchor.setTo(.5, 0);
-    this.sprite.addChild(this.menuLabel);
-
-    this.data = null;
-
-    this.portraitFrame = game.make.graphics();
-    this.portraitFrame.beginFill(0xffffff).lineStyle(2, 0x000000).drawRect(0, 0, 80, 100);
-    var portraitAlert = game.make.sprite(0,0,"alertIcon");
-    portraitAlert.anchor.setTo(.5,.5);
-    portraitAlert.scale.setTo(.5,.5);
-    this.portraitFrame.addChild(portraitAlert);
-    this.portraitFrame.x = 18;
-    this.portraitFrame.y = 48;
-    this.sprite.addChild(this.portraitFrame);
-
-    this.portrait = game.make.sprite(this.portraitFrame.width/2, this.portraitFrame.height/2, "assistantIcon");
+    this.portrait = game.make.sprite(-95, -150, "bossmanPhoto");
     this.portrait.anchor.setTo(.5, .5);
-    this.portrait.scale.setTo(.5, .5);
-    this.portraitFrame.addChild(this.portrait);
+    this.sprite.addChild(this.portrait);
 
-    this.clientLabel = game.make.text(120,40, "Client:", {font: 'bold 10pt Arial'});
+    var fontStyle = {font: '11pt AmericanTypewriter', fill: "#807c7b"};
+    var infoX = 5;
+    this.titleLabel = game.make.text(infoX, -220, "Shipment request", fontStyle);
+    this.titleLabel.anchor.setTo(0, 0);
+    this.sprite.addChild(this.titleLabel);
+
+    this.urgentStamp = game.make.sprite(infoX, -225, "urgentStamp");
+    this.sprite.addChild(this.urgentStamp);
+
+    this.clientLabel = game.make.text(infoX, this.titleLabel.y + 35, "Client:", fontStyle);
     this.sprite.addChild(this.clientLabel);
-    this.clientNameLabel = game.make.text(this.clientLabel.x+5,this.clientLabel.y + this.clientLabel.height, "{clientName}", {font: '10pt Arial'});
+    this.clientNameLabel = game.make.text(infoX, this.clientLabel.y + 20, "Archibold Huxley III", fontStyle);
     this.sprite.addChild(this.clientNameLabel);
 
-    this.urgentLabel = game.make.text(120,78, "Urgent!", {font: 'bold 10pt Arial', fill: '#ff0000'});
-    this.sprite.addChild(this.urgentLabel);
-
-    this.rewardLabel = game.make.text(120,115, "Payment:", {font: 'bold 10pt Arial'});
+    this.rewardLabel = game.make.text(infoX, this.clientNameLabel.y + 35, "Payment:", fontStyle);
     this.sprite.addChild(this.rewardLabel);
-    this.rewardAmountLabel = game.make.text(this.rewardLabel.x+5, this.rewardLabel.y + this.rewardLabel.height, "{rewardAmount}", {font: '10pt Arial'});
+    var coin = game.make.sprite(infoX, this.rewardLabel.y + 20, "inventoryCoinIcon");
+    this.sprite.addChild(coin);
+    this.rewardAmountLabel = game.make.text(infoX + coin.width + 5, coin.y, "$500", fontStyle);
     this.sprite.addChild(this.rewardAmountLabel);
 
-    this.descriptionLabel = game.make.text(15, 160, "", {wordWrap: true, wordWrapWidth: 250, font:"bold 10pt Arial"});
+    this.descriptionLabel = game.make.text(-165, -40, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.",
+        {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.sprite.addChild(this.descriptionLabel);
 
-    this.selectButton = new GlassLab.UIButton(this.game, this.bg.width/2, this.bg.height - 50, "selectOrderButton", function(){
-        this.Hide(true);
-        GLOBAL.mailManager.startOrder(this.data);
-    }, this);
-    this.selectButton.scale.setTo(.65,.65);
-    this.selectButton.anchor.setTo(.5, .5);
+    this.selectButton = new GlassLab.HUDButton(this.game, 0, 168, null, "letterButtonBg", "Fill Order!", {font: "16pt EnzoBlack"}, true, this._onSelectPressed, this);
     this.sprite.addChild(this.selectButton);
+    this.selectButton.imageColor = 0xffffff;
+    this.selectButton.imageDownColor = 0xffffff;
+    this.selectButton.bgDownColor = 0x000000;
+    this.selectButton.bgOverAlpha = 1;
+    // further button color settings depend on whether it's an urgent order (see Refresh)
 
-    this.paymentLabel = game.make.text(195, 210, "$200");
-    this.paymentLabel.fontSize = 22;
+    this.stamp = game.make.sprite(0, 170, "approvedStamp");
+    this.stamp.anchor.setTo(0.5, 0.5);
+    this.sprite.addChild(this.stamp);
 
+    this.data = null;
     this.currentPage = 0;
-    //this.sprite.addChild(this.paymentLabel);
-
-    this.closeButton = new GlassLab.UIButton(this.game, this.bg.width-17, 15, "closeIcon" , this._onClosePressed, this);
-    this.closeButton.anchor.setTo(.5, .5);
-    this.closeButton.scale.setTo(.1, .1);
-    this.sprite.addChild(this.closeButton);
 
     // Page buttons
-    this.nextPageButton = new GlassLab.UIButton(this.game, this.bg.width + 10, 200, "sideArrow" , this._onNextPagePressed, this);
+    var pageButtonX = this.bg.width / 2 + 20;
+    this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
-    this.nextPageButton.scale.setTo(0.7, 0.7);
+    this.nextPageButton.label.x -= 5;
     this.sprite.addChild(this.nextPageButton);
 
-    this.prevPageButton = new GlassLab.UIButton(this.game, -10, 200, "sideArrow" , this._onPrevPagePressed, this);
+    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
     this.prevPageButton.anchor.setTo(0, 0.5);
-    this.prevPageButton.scale.setTo(0.7, 0.7);
-    this.prevPageButton.scale.x *= -1;
+    this.prevPageButton.bg.scale.x *= -1;
+    this.prevPageButton.label.x += 5;
     this.sprite.addChild(this.prevPageButton);
-
-    this.sprite.visible = false;
 };
+
+GlassLab.OrdersMenu.prototype = Object.create(GlassLab.UIWindow.prototype);
+GlassLab.OrdersMenu.prototype.constructor = GlassLab.OrdersMenu;
 
 GlassLab.OrdersMenu.prototype._onNextPagePressed = function()
 {
-    this.Show(this.currentPage+1);
+    this.show(this.currentPage+1);
 };
 
 GlassLab.OrdersMenu.prototype._onPrevPagePressed = function()
 {
-    this.Show(this.currentPage-1);
+    this.show(this.currentPage-1);
 };
 
 GlassLab.OrdersMenu.prototype.IsShowing = function()
@@ -100,71 +89,42 @@ GlassLab.OrdersMenu.prototype.IsShowing = function()
     return this.sprite.visible;
 };
 
-function getProcessedString(string)
-{
-    var returnString = string;
-    var replaceString = string.replace(/\[[^\]]+\]/i, "");
-    while(returnString != replaceString)
-    {
-        returnString = replaceString;
-        replaceString = replaceString.replace(/\[[^\]]+\]/i, "");
-    }
-    return returnString;
-}
-
-function getStringColorInfo(string)
-{
-    // TODO: This doesn't work at all right now.
-    var colors = [];
-    var searchString = string;
-    var colorInfo = searchString.match(/\[[^\]]+\]/i);
-    var colorData = {};
-    while (colorInfo)
-    {
-        colorData.color = colorInfo;
-        searchString;
-        colors.add()
-    }
-
-    return colors;
-}
-
 GlassLab.OrdersMenu.prototype.Refresh = function()
 {
-    this.descriptionLabel.clearColors();
-    this.descriptionLabel.setText(getProcessedString(this.data.description));
+    GlassLab.Util.SetColoredText(this.descriptionLabel, this.data.description, "#807c7b", "#994c4e");
 
     this.clientNameLabel.setText(this.data.client);
-    this.urgentLabel.setText(this.data.key? "Urgent!" : "");
     this.rewardAmountLabel.setText("$"+this.data.reward);
 
-    //var maxOrders = 3; // In the future, if we want to limit the number of orders shown, do something like Math.min(GLOBAL.mailManager.availableOrders.length - 1, maxOrders).
-    this.menuLabel.setText("Mail Messages "+ (this.currentPage+1) + "/" + GLOBAL.mailManager.availableOrders.length);
+    // For an urgent order, show the urgent stamp. Else show the title label.
+    this.urgentStamp.visible = this.data.key;
+    this.titleLabel.visible = !this.data.key;
 
-    var colors = getStringColorInfo(this.data.description);
-    for (var i=colors.length-1; i >= 0; i++)
-    {
-        var color = colors[i];
-        this.descriptionLabel.addColor(color.color, color.position);
-    }
+    this.selectButton.bgColor = (this.data.key)? 0x9a3c3f : 0x000000;
+    this.selectButton.imageOverColor = (this.data.key)? 0x9a3c3f : 0x000000;
+    this.selectButton.bgAlpha = (this.data.key)? 1 : 0.5;
+    this.selectButton.whenUp();
 
-    this.prevPageButton.visible = this.currentPage > 0;
-    this.nextPageButton.visible = this.currentPage < GLOBAL.mailManager.availableOrders.length - 1; // only show 3 orders at once
+    this.selectButton.alpha = 1;
+    this.stamp.visible = false;
+
+    this.prevPageButton.setEnabled(this.currentPage > 0);
+    this.nextPageButton.setEnabled(this.currentPage < GLOBAL.mailManager.availableOrders.length - 1);
 };
 
 GlassLab.OrdersMenu.prototype.SetInfo = function(data)
 {
     this.data = data;
     this.Refresh();
-}
+};
 
-GlassLab.OrdersMenu.prototype.Show = function(orderNum)
+GlassLab.OrdersMenu.prototype.show = function(orderNum)
 {
+    GlassLab.UIWindow.prototype.show.call(this);
     if (!this.sprite.visible) GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
 
     if (typeof orderNum == 'undefined') orderNum = 0;
 
-    this.sprite.visible = true;
     this.currentPage = orderNum;
 
     this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
@@ -172,16 +132,30 @@ GlassLab.OrdersMenu.prototype.Show = function(orderNum)
     GlassLab.SignalManager.mailOpened.dispatch(orderNum);
 };
 
-GlassLab.OrdersMenu.prototype.Hide = function(auto)
+GlassLab.OrdersMenu.prototype.hide = function(auto)
 {
+    GlassLab.UIWindow.prototype.hide.call(this);
     if (auto !== true) GlassLabSDK.saveTelemEvent("close_orders", {});
-
-    this.sprite.visible = false;
 
     GlassLab.SignalManager.mailClosed.dispatch();
 };
 
-GlassLab.OrdersMenu.prototype._onClosePressed = function()
-{
-    this.Hide();
+GlassLab.OrdersMenu.prototype._onSelectPressed = function() {
+    this.selectButton.setEnabled(false);
+    this.game.add.tween(this.selectButton).to( { alpha: 0 }, 150, Phaser.Easing.Quadratic.In, true);
+
+    this.stamp.visible = true;
+    this.stamp.alpha = 0;
+    this.stamp.scale.setTo(1.64, 1.64);
+    this.stamp.angle = -20;
+    this.game.add.tween(this.stamp).to( { alpha: 1, angle: 0 }, 250, Phaser.Easing.Quintic.In, true);
+    var tween = this.game.add.tween(this.stamp.scale).to( { x: 1, y: 1 }, 250, Phaser.Easing.Quintic.In, true);
+    tween.onComplete.addOnce(this._onStamped, this);
+};
+
+GlassLab.OrdersMenu.prototype._onStamped = function() {
+    var startY = this.sprite.y;
+    this.sprite.y += 5;
+    var tween = this.game.add.tween(this.sprite).to( { y: startY }, 100, Phaser.Easing.Quadratic.InOut, true);
+    tween.onComplete.addOnce( function() { GLOBAL.mailManager.startOrder(this.data); }, this );
 };
