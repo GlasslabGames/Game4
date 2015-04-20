@@ -27,7 +27,7 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.creatureArt);
 
     // Creature info
-    this.nameLabel = game.make.text(0, 50, "Species Unknown", {font: "18pt Architects", fill: "#808080"});
+    this.nameLabel = game.make.text(0, 50, "Species Unknown", {font: "14pt ArchitectsDaughter", fill: "#808080"});
     this.nameLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.nameLabel);
 
@@ -41,14 +41,15 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.temperamentLabel);
     */
 
-    var dietTitleLabel = game.make.text(0, 100, "Daily Diet:", {font: "14pt Architects", fill: "#808080"});
-    dietTitleLabel.anchor.setTo(0.5, 0);
+    var dietTitleLabel = game.make.text(0, 100, "Daily Diet:", {font: "14pt ArchitectsDaughter", fill: "#808080"});
+    //dietTitleLabel.anchor.setTo(0.5, 0);
+    dietTitleLabel.x = -dietTitleLabel.width/2;
     this.sprite.addChild(dietTitleLabel);
 
-    this.dailyDiet = game.make.sprite(20, 120);
+    this.dailyDiet = game.make.sprite(20, 130);
     this.sprite.addChild(this.dailyDiet);
 
-    this.unknownDietLabel = game.make.text(0, 140, "???", {font: "14pt Architects", fill: "#808080"});
+    this.unknownDietLabel = game.make.text(0, 140, "???", {font: "12pt ArchitectsDaughter", fill: "#808080"});
     this.unknownDietLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.unknownDietLabel);
 
@@ -67,7 +68,7 @@ GlassLab.Journal = function(game) {
 
 
     this.dailyDietTable = new GlassLab.UITable(this.game, 8, 5);
-    this.dailyDietTable.y = 120;
+    this.dailyDietTable.y = 130;
     this.sprite.addChild(this.dailyDietTable);
 
     GlassLab.SignalManager.levelStarted.add(this._onLevelLoaded, this);
@@ -213,7 +214,7 @@ GlassLab.Journal.prototype._setupNumericalFeedLayout = function(creatureData)
 
     // Setup creature
     // TODO LABEL
-    var creatureNumberLabel = this.game.make.text(0,0, creatureData.journalInfo.numCreatures, {font: "24pt Architects", fill: "#808080"});
+    var creatureNumberLabel = this.game.make.text(0,0, creatureData.journalInfo.numCreatures, {font: "18pt ArchitectsDaughter", fill: "#808080"});
     this.dailyDietTable.addManagedChild(creatureNumberLabel);
 
     var spriteName = creatureData.spriteName + "_sticker";
@@ -224,11 +225,11 @@ GlassLab.Journal.prototype._setupNumericalFeedLayout = function(creatureData)
 
     // Setup food
     for (var i = 0, len = creatureData.desiredFood.length; i < len; i++) {
-        var colonLabel = this.game.make.text(0,0, ":", {font: "24pt Architects", fill: "#808080"});
+        var colonLabel = this.game.make.text(0,0, ":", {font: "18pt ArchitectsDaughter", fill: "#808080"});
         this.dailyDietTable.addManagedChild(colonLabel);
 
         // TODO LABEL
-        var creatureNumberLabel = this.game.make.text(0,0, creatureData.desiredFood[i].amount * creatureData.journalInfo.numCreatures, {font: "24pt Architects", fill: "#808080"});
+        var creatureNumberLabel = this.game.make.text(0,0, creatureData.desiredFood[i].amount * creatureData.journalInfo.numCreatures, {font: "18pt ArchitectsDaughter", fill: "#808080"});
         this.dailyDietTable.addManagedChild(creatureNumberLabel);
 
         spriteName = GlassLab.FoodTypes[creatureData.desiredFood[i].type].spriteName + "_sticker";

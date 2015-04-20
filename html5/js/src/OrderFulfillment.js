@@ -320,7 +320,12 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
             this.submitButton.label.text = "Ship Crate!";
             this.submitButton.setEnabled(false);
             for (var i = 0; i < this.answerInputs.length; i++) {
-                this.answerInputs[i].input.setEnabled(false);
+                var answerInput = this.answerInputs[i];
+                answerInput.input.setEnabled(false);
+                if (answerInput.dragTarget)
+                {
+                    answerInput.dragTarget.setEnabled(false);
+                }
             }
             GLOBAL.assistant.onPenLoaded();
             this.crateLoaded = true;
@@ -358,9 +363,15 @@ GlassLab.OrderFulfillment.prototype.restartLoading = function(numAttempts)
     this.submitButton.label.text = "Load Crate";
     this.crateLoaded = false;
     for (var i = 0; i < this.answerInputs.length; i++) {
-        this.answerInputs[i].input.SetText("");
-        this.answerInputs[i].input.setEnabled(true);
+        var answerInput = this.answerInputs[i];
+        answerInput.input.SetText("");
+        answerInput.input.setEnabled(true);
+        if (answerInput.dragTarget)
+        {
+            answerInput.dragTarget.setEnabled(true);
+        }
     }
+    
     this._refreshPen();
     GlassLabSDK.saveTelemEvent("retry_order", {retry_count: numAttempts});
 };
