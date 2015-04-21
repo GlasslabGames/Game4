@@ -8,7 +8,7 @@ var GlassLab = GlassLab || {};
  */
 GlassLab.UIWindow = function(game)
 {
-    GlassLab.UIElement.prototype.constructor.call(this, game);
+    GlassLab.UIElement.prototype.constructor.call(this, game, 20);
     this.open = false;
     this.visible = false;
 

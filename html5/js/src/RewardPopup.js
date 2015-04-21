@@ -28,16 +28,21 @@ GlassLab.RewardPopup = function(game)
     this.clientNameLabel = game.make.text(infoX, this.clientLabel.y + 20, "Archibold Huxley I", fontStyle);
     this.addChild(this.clientNameLabel);
 
-    var coin = game.make.sprite(infoX, this.clientNameLabel.y + 75, "bigCoin");
+    var coin = game.make.sprite(infoX, this.clientNameLabel.y + 70, "bigCoin");
     coin.anchor.setTo(0, 0.5);
     this.addChild(coin);
-    this.rewardAmountLabel = game.make.text(infoX + coin.width + 5, coin.y, "$500", {font: '16pt AmericanTypewriter', fill: "#807c7b"});
+    this.rewardAmountLabel = game.make.text(coin.x + coin.width + 10, coin.y, "$500", {font: '16pt AmericanTypewriter', fill: "#807c7b"});
     this.rewardAmountLabel.anchor.setTo(0, 0.5);
     this.addChild(this.rewardAmountLabel);
 
     this.descriptionLabel = game.make.text(-165, -40, "Dear Rancher,\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.\n\nKindest Regards, Archie H.",
         {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.addChild(this.descriptionLabel);
+
+    this.coinSparkle = this.addChild(game.make.sprite(coin.x + 20, coin.y, "coinAnim"));
+    this.coinSparkle.anchor.setTo(0.5, 0.5);
+    this.coinSparkle.animations.add("sparkle", Phaser.Animation.generateFrameNames("get_money_sparkle_on_letter_",0,20,".png",3), 24, true);
+    this.coinSparkle.play("sparkle");
 };
 
 GlassLab.RewardPopup.prototype = Object.create(GlassLab.UIWindow.prototype);

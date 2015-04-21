@@ -32,6 +32,14 @@ GlassLab.UIManager = function(game)
     this.tutorialArrowTween.pause();
     this.tutorialArrow.visible = false;
 
+    this.coinsFlight = this.transitionAnchor.addChild(game.make.sprite());
+    for (var i = 1; i <= 4; i++) {
+        var coin = this.coinsFlight.addChild(game.make.sprite(0, 0, "coinAnim"));
+        coin.animations.add("fly", Phaser.Animation.generateFrameNames("get_money_coin_fly_"+i+"_",0,32,".png",3), 24, true);
+        coin.anchor.setTo(0.5, 0.5);
+        //coin.play("fly");
+    }
+
     this.createHud();
 
     this.openWindows = [];

@@ -22,22 +22,6 @@ GlassLab.InventoryMenu = function(game)
     this._onScreenSizeChange(); // sets the BG to span the whole width of the screen
     */
 
-    // money bg:
-    this.inventoryMoneyBg = game.make.image(-80, -132, "inventoryMoneyBg");
-    this.inventoryMoneyBg.tint = 0x000000;
-    this.inventoryMoneyBg.alpha = 0.5;
-    this.addChild(this.inventoryMoneyBg);
-
-    // money coin:
-    this.inventoryCoinIcon = game.make.image(-65, -117, "inventoryCoinIcon");
-    this.inventoryCoinIcon.anchor.set(0.5);
-    this.addChild(this.inventoryCoinIcon);
-
-    // money text label:
-    this.moneyLabel = game.make.text(-29, -115, "", {font: "16px EnzoBlack", fill: "#ffffff"});
-    this.moneyLabel.anchor.set(0.5);
-    this.addChild(this.moneyLabel);
-
     // foodBar:
     this.foodBarBg = game.make.image(2, -100, "foodBarBg");
     this.foodBarBg.alpha = 0.5;
@@ -64,8 +48,6 @@ GlassLab.InventoryMenu = function(game)
     this.itemTable._refresh();
 
 
-    GlassLab.SignalManager.moneyChanged.add(this._refreshCurrency, this);
-
     //game.scale.onSizeChange.add(this._onScreenSizeChange, this);
 };
 
@@ -75,20 +57,10 @@ GlassLab.InventoryMenu.prototype.constructor = GlassLab.InventoryMenu;
 
 GlassLab.InventoryMenu.prototype.Refresh = function()
 {
-    this._refreshCurrency();
+    if (GLOBAL.InventoryMoneyTab) GLOBAL.InventoryMoneyTab.refresh();
     for (var i = 0; i < this.inventorySlots.length; i++) {
         this.inventorySlots[i].Refresh();
     }
-};
-
-GlassLab.InventoryMenu.prototype._refreshCurrency = function()
-{
-    var money_str = GLOBAL.inventoryManager.money;
-    money_str = "$" + money_str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // i.e. makes $1,234 or $123 etc
-    this.moneyLabel.setText(money_str);
-    this.moneyLabel.anchor.x = Math.round(this.moneyLabel.width * 0.5) / this.moneyLabel.width; // round to avoid subpixel blur
-    this.moneyLabel.anchor.y = Math.round(this.moneyLabel.height * 0.5) / this.moneyLabel.height; // round to avoid subpixel blur
-
 };
 
 /*
@@ -118,4 +90,47 @@ GlassLab.InventoryMenu.prototype.hide = function(auto)
     GlassLab.SignalManager.inventoryClosed.dispatch(auto === true);
 
     this.visible = false;
+};
+
+// Shows the current amount of money, with an effect when the player gets more money
+GlassLab.InventoryMoneyTab = function(game, x, y) {
+    GlassLab.UIElement.prototype.constructor.call(this, game, x, y);
+    this.anchor.setTo(0, 1);
+
+    // money bg:
+    this.bg = game.make.image(-40, -132, "inventoryMoneyBg");
+    this.bg.tint = 0x000000;
+    this.bg.alpha = 0.5;
+    this.addChild(this.bg);
+
+    // money coin:
+    var coinIcon = game.make.image(-25, -117, "inventoryCoinIcon");
+    coinIcon.anchor.set(0.5);
+    this.addChild(coinIcon);
+
+    // money text label:
+    this.moneyLabel = game.make.text(11, -115, "", {font: "14px EnzoBlack", fill: "#ffffff"});
+    this.moneyLabel.anchor.set(0.5);
+    this.addChild(this.moneyLabel);
+
+    // money added popup:
+    this.moneyAddedPopup = this.addChild(game.make.sprite());
+    // TODO
+
+    GlassLab.SignalManager.moneyChanged.add(this.refresh, this);
+};
+
+// Extends Sprite
+GlassLab.InventoryMoneyTab.prototype = Object.create(GlassLab.UIElement.prototype);
+GlassLab.InventoryMoneyTab.prototype.constructor = GlassLab.InventoryMoneyTab;
+
+
+GlassLab.InventoryMoneyTab.prototype.refresh = function()
+{
+    var money_str = GLOBAL.inventoryManager.money;
+    money_str = "$" + money_str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // i.e. makes $1,234 or $123 etc
+    this.moneyLabel.setText(money_str);
+    this.moneyLabel.anchor.x = Math.round(this.moneyLabel.width * 0.5) / this.moneyLabel.width; // round to avoid subpixel blur
+    this.moneyLabel.anchor.y = Math.round(this.moneyLabel.height * 0.5) / this.moneyLabel.height; // round to avoid subpixel blur
+
 };

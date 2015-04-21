@@ -158,6 +158,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
     game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
     game.load.image('bigCoin', 'assets/images/order/order_response_big_coin.png');
+    game.load.atlasJSONHash('coinAnim', 'assets/images/order/get_money.png', 'assets/images/order/get_money.json');
 
     game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
     game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');
@@ -330,6 +331,9 @@ GlassLab.State.Init.prototype.create = function()
     var inventoryMenu = new GlassLab.InventoryMenu(game);
     GLOBAL.UIManager.bottomLeftAnchor.addChild(inventoryMenu);
     GLOBAL.inventoryMenu = inventoryMenu;
+
+    GLOBAL.inventoryMoneyTab = new GlassLab.InventoryMoneyTab(game, GLOBAL.itemsButton.x, -5);
+    GLOBAL.UIManager.bottomLeftAnchor.addChild(GLOBAL.inventoryMoneyTab);
 
     var assistant = new GlassLab.Assistant(game);
     GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
