@@ -41,8 +41,9 @@ GlassLab.RewardPopup = function(game)
 
     this.coinSparkle = this.addChild(game.make.sprite(coin.x + 20, coin.y, "coinAnim"));
     this.coinSparkle.anchor.setTo(0.5, 0.5);
-    this.coinSparkle.animations.add("sparkle", Phaser.Animation.generateFrameNames("get_money_sparkle_on_letter_",0,20,".png",3), 24, true);
-    this.coinSparkle.play("sparkle");
+    this.coinSparkle.animations.add("sparkle", Phaser.Animation.generateFrameNames("get_money_sparkle_on_letter_",0,20,".png",3), 24);
+
+    this.onFinishedShowing.add(this.addReward, this); // add the reward as soon as the letter fully pops up
 };
 
 GlassLab.RewardPopup.prototype = Object.create(GlassLab.UIWindow.prototype);
@@ -50,11 +51,12 @@ GlassLab.RewardPopup.prototype.constructor = GlassLab.RewardPopup;
 
 GlassLab.RewardPopup.prototype.show = function(data)
 {
+    this.data = data;
+    this.reward = (data.outcome == "satisfied")? data.reward : 0;
+    // Note, we want to set this.reward before calling UIWindow.show since it might trigger this.addRewards immediately (if for some reason we're showing this popup already.)
+
     GlassLab.UIWindow.prototype.show.call(this);
 
-    this.data = data;
-    this.visible = true;
-    this.reward = (data.outcome == "satisfied")? data.reward : 0;
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
 
     this.clientNameLabel.text = data.client;
@@ -83,10 +85,22 @@ GlassLab.RewardPopup.prototype.show = function(data)
         GLOBAL.audioManager.playSound("failSound");
     }
 
-    GLOBAL.inventoryManager.AddMoney(this.reward); // todo: only add this after an animation plays
-
     GlassLab.SignalManager.mailOpened.dispatch(); // eh, not sure we should be using this event :?
 
+};
+
+GlassLab.RewardPopup.prototype.addReward = function() {
+    if (!this.reward) return;
+
+    // If the screen is right size, we can use the flying coin animation - it fits an 800x600 screen only
+    if (this.game.width == 800 && this.game.height == 600) {
+        this.coinSparkle.play("sparkle");
+        GLOBAL.UIManager.startFlyingCoins(function() {
+            GLOBAL.inventoryManager.AddMoney(this.reward); // only add the money when the flying coins reach the bank
+        }, this);
+    } else { // no flying coins, just add the money
+        GLOBAL.inventoryManager.AddMoney(this.reward); // only add the money when the flying coins reach the bank
+    }
 };
 
 GlassLab.RewardPopup.prototype.hide = function()

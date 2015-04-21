@@ -114,10 +114,24 @@ GlassLab.InventoryMoneyTab = function(game, x, y) {
     this.addChild(this.moneyLabel);
 
     // money added popup:
-    this.moneyAddedPopup = this.addChild(game.make.sprite());
-    // TODO
+    this.moneyAddedPopup = this.addChild(game.make.sprite(0, -100));
+    this.moneyAddedPopup.alpha = 0; // hide it until we want to pop it up
 
-    GlassLab.SignalManager.moneyChanged.add(this.refresh, this);
+    var coinIcon2 = game.make.image(-25, -117, "inventoryCoinIcon");
+    coinIcon2.anchor.set(0.5);
+    this.moneyAddedPopup.addChild(coinIcon2);
+
+    this.moneyAddedLabel = game.make.text(11, -115, "", {font: "14px EnzoBlack", fill: "#ffffff"});
+    this.moneyAddedLabel.anchor.set(0.5);
+    this.moneyAddedPopup.addChild(this.moneyAddedLabel);
+
+    // effects
+    this.effects = this.addChild(game.make.sprite(coinIcon2.x + 2, coinIcon2.y + 35, "coinAnim"));
+    this.effects.anchor.setTo(0.5, 1); // bottom center anchor point works for both animations
+    this.effects.animations.add("hop", Phaser.Animation.generateFrameNames("get_money_coin_hop_",0,37,".png",3), 24, false);
+    this.effects.animations.add("sparkle", Phaser.Animation.generateFrameNames("get_money_sparkle_on_bank_",0,12,".png",3), 24, false);
+
+    GlassLab.SignalManager.moneyChanged.add(this._onMoneyChanged, this);
 };
 
 // Extends Sprite
@@ -127,10 +141,27 @@ GlassLab.InventoryMoneyTab.prototype.constructor = GlassLab.InventoryMoneyTab;
 
 GlassLab.InventoryMoneyTab.prototype.refresh = function()
 {
-    var money_str = GLOBAL.inventoryManager.money;
-    money_str = "$" + money_str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // i.e. makes $1,234 or $123 etc
-    this.moneyLabel.setText(money_str);
-    this.moneyLabel.anchor.x = Math.round(this.moneyLabel.width * 0.5) / this.moneyLabel.width; // round to avoid subpixel blur
-    this.moneyLabel.anchor.y = Math.round(this.moneyLabel.height * 0.5) / this.moneyLabel.height; // round to avoid subpixel blur
+    var money_str = this._formatMoney(GLOBAL.inventoryManager.money);
+    GlassLab.Util.SetCenteredText(this.moneyLabel, money_str);
+};
 
+GlassLab.InventoryMoneyTab.prototype._onMoneyChanged = function(amount) {
+    this.refresh();
+    if (amount > 0) { // add money
+        // We want to play a different animation if there are flying coins coming in right now.
+        if (GLOBAL.UIManager.coinsFlying) this.effects.play("sparkle");
+        else this.effects.play("hop");
+
+        // Start the popup showing how much money we got
+        GlassLab.Util.SetCenteredText(this.moneyAddedLabel, "+"+this._formatMoney(amount));
+        this.moneyAddedPopup.y = 0;
+        var d = 1500;
+        this.game.add.tween(this.moneyAddedPopup).to({alpha: 1}, 1000, Phaser.Easing.Cubic.Out, false, 0).
+            to({alpha: 0}, 200, Phaser.Easing.Cubic.In, false, d - 1200).start();
+        this.game.add.tween(this.moneyAddedPopup).to({y: -50}, d, Phaser.Easing.Quartic.Out, true);
+    }
+};
+
+GlassLab.InventoryMoneyTab.prototype._formatMoney = function(money) {
+    return "$" + money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // i.e. makes $1,234 or $123 etc
 };
