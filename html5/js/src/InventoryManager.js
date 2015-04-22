@@ -14,7 +14,6 @@ GlassLab.InventoryManager = function(game)
 
 GlassLab.InventoryManager.prototype._onInitGame = function() {
     if (GLOBAL.saveManager.HasData("money")) this.money = GLOBAL.saveManager.LoadData("money");
-    GlassLab.SignalManager.moneyChanged.dispatch();
 
     this._loadUnlockedFood();
 };

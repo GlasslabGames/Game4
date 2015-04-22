@@ -334,7 +334,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UIManager.bottomLeftAnchor.addChild(inventoryMenu);
     GLOBAL.inventoryMenu = inventoryMenu;
 
-    GLOBAL.inventoryMoneyTab = new GlassLab.InventoryMoneyTab(game, GLOBAL.itemsButton.x, -5);
+    GLOBAL.inventoryMoneyTab = new GlassLab.InventoryMoneyTab(game, GLOBAL.itemsButton.x, -105);
     GLOBAL.UIManager.bottomLeftAnchor.addChild(GLOBAL.inventoryMoneyTab);
 
     var assistant = new GlassLab.Assistant(game);

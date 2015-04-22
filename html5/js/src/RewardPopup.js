@@ -119,6 +119,8 @@ GlassLab.RewardPopup.prototype.show = function(data)
 GlassLab.RewardPopup.prototype.addReward = function() {
     if (!this.reward) return;
 
+    GLOBAL.inventoryMoneyTab.show("moneyChange"); // indicate that the money should be shown as until we're done adding money
+
     // If the screen is right size, we can use the flying coin animation - it fits an 800x600 screen only
     if (this.game.width == 800 && this.game.height == 600) {
         this.coinSparkle.play("sparkle");
