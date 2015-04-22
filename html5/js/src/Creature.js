@@ -476,10 +476,10 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
 GlassLab.Creature.prototype.tryWalkToNextFood = function () {
     var foodInfo = this.targetFood.shift();
     if (!foodInfo || !foodInfo.food) {
-        if (this.getIsSatisfied()) this.FinishEating("satisfied");
-        else this.FinishEating("hungry");
+        if (this.getIsSatisfied()) this.FinishEating(GlassLab.results.satisfied);
+        else this.FinishEating(GlassLab.results.hungry);
     } else if (!this.desiredAmountsOfFood[foodInfo.food.type]) { // we don't want this food
-        this.FinishEating("dislike", foodInfo.food.type);
+        this.FinishEating(GlassLab.results.dislike, foodInfo.food.type);
     } else {
         this.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this, foodInfo));
     }
@@ -488,11 +488,11 @@ GlassLab.Creature.prototype.tryWalkToNextFood = function () {
 // NOTE: This function assumes creature is in a pen
 GlassLab.Creature.prototype.FinishEating = function (result, food) {
     this.hungerBar.show(false);
-    if (result == "dislike") {
+    if (result == GlassLab.results.dislike) {
         this.thoughtBubble.show("redX", food, 2000);
-    } else if (result == "satisfied") {
+    } else if (result == GlassLab.results.satisfied) {
         this.showEmote(true);
-    } else if (result == "hungry") {
+    } else if (result == GlassLab.results.hungry) {
         this.thoughtBubble.show(null, this.getDesiredFood());
         if (this.pen)
         {
@@ -709,11 +709,11 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
 
 // call this to eat some food outside of a pen
 GlassLab.Creature.prototype.eatFreeFood = function (food) {
-    var result = "hungry";
+    var result = GlassLab.results.hungry;
     // check what the result will be when we add 1 whole food
     this.foodEaten[food.type] += 1;
-    if (this.getIsSick()) result = "sick";
-    else if (this.getIsSatisfied()) result = "satisfied";
+    if (this.getIsSick()) result = GlassLab.results.sick;
+    else if (this.getIsSatisfied()) result = GlassLab.results.satisfied;
     this.foodEaten[food.type] -= 1; // revert, since we haven't actually eaten the food yet
 
     GlassLabSDK.saveTelemEvent("creature_eats", {

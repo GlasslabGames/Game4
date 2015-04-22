@@ -340,15 +340,23 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
 };
 
 GlassLab.OrderFulfillment.prototype._crateShipped = function() {
-    var outcome = this.crate.result;
-    if (outcome == "success" && this.data.totalNumFood) { // we need to check that the number of creatures is correct
-        var numCreatures = this._getResponse()[0];
-        if (this._calculateTargetNumCreatures() != numCreatures) outcome = "wrongNumCreatures";
-    }
-    this.data.outcome = outcome; // we stick this on here so the reward popup can check it later
-    console.log("Crate shipped! Outcome:",outcome, "Wrong food:",this.crate.missingFood);
+    this.data.outcome = this.crate.result;
+    this.data.outcomeDetail = this.crate.problemFood;
 
-    GLOBAL.mailManager.completeOrder(this.data, outcome);
+    if (this.crate.result == GlassLab.results.satisfied && this.data.totalNumFood) { // we need to check that the number of creatures is correct
+        var numCreatures = this._getResponse()[0];
+        var targetNumCreatures = this._calculateTargetNumCreatures();
+        if (numCreatures < targetNumCreatures) {
+            this.data.outcome = GlassLab.results.wrongCreatureNumber;
+            this.data.outcomeDetail = "few"; // they sent too few creatures
+        } else if (numCreatures > targetNumCreatures) {
+            this.data.outcome = GlassLab.results.wrongCreatureNumber;
+            this.data.outcomeDetail = "many"; // they sent too many creatures
+        }
+    }
+    console.log("Crate shipped! Outcome:",this.data.outcome, "Problem:",this.data.outcomeDetail);
+
+    GLOBAL.mailManager.completeOrder(this.data, this.data.outcome);
 };
 
 

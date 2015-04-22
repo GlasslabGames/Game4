@@ -118,27 +118,28 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     }
 
     // we have all the information, so we can calculate the result right now
-    this.missingFood = ""; // reset this since they might not be missing food
-    if (numCreatures == 0) this.result = "invalid";
+    this.problemFood = ""; // reset this since they might not have an issue
+    if (numCreatures == 0) this.result = GlassLab.results.invalid;
     else {
-        this.result = "satisfied"; // unless we discover a problem with one of the food types
+        this.result = GlassLab.results.satisfied; // unless we discover a problem with one of the food types
         var info = GLOBAL.creatureManager.GetCreatureData(creatureType);
         for (var i = 0; i < info.desiredFood.length; i++) {
             var index = foodTypes.indexOf(info.desiredFood[i].type);
             if (index == -1) {
-                this.result = "wrongFoodType";
-                this.missingFood = info.desiredFood[i].type;
+                this.result = GlassLab.results.dislike;
+                this.problemFood = info.desiredFood[i].type;
                 break;
             } else {
                 var targetAmount = info.desiredFood[i].amount * numCreatures;
                 var currentAmount = (numFoods && numFoods[index]) || 0;
-                console.log(info.desiredFood[i].type, "target:",targetAmount,"current:",currentAmount,"for creatures:",numCreatures);
+                //console.log(info.desiredFood[i].type, "target:",targetAmount,"current:",currentAmount,"for creatures:",numCreatures);
                 if (currentAmount + 0.01 < targetAmount) { // add a little wiggle room
-                    this.result = "hungry";
-                    this.missingFood = info.desiredFood[i].type;
+                    this.result = GlassLab.results.hungry;
+                    this.problemFood = info.desiredFood[i].type;
                     break;
                 } else if (currentAmount > targetAmount + 0.01) {
-                    this.result = "sick";
+                    this.result = GlassLab.results.sick;
+                    this.problemFood = info.desiredFood[i].type;
                     break;
                 }
                 // else they're satisfied with this food at least

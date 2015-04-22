@@ -46,8 +46,10 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.audio(spriteName+'_sfx_happy', 'assets/audio/sfx/'+spriteName+'_happy.mp3');
         game.load.audio(spriteName+'_sfx_eat', 'assets/audio/sfx/'+spriteName+'_eat.mp3');
 
-        game.load.image(spriteName+'_orderPhoto_fail', 'assets/images/order/response_photos/order_fail_'+spriteName+'.png');
-        game.load.image(spriteName+'_orderPhoto_satisfied', 'assets/images/order/response_photos/order_success_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_cry', 'assets/images/order/response_photos/order_fail_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_happy', 'assets/images/order/response_photos/order_success_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_vomit', 'assets/images/order/response_photos/order_response_photos_vomit_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_wrongFood', 'assets/images/order/response_photos/order_response_photos_wrong_food_'+spriteName+'.png');
     }
 
     var basicFoodSpriteNames = ["apple", "broccoli", "corn", "donut", "meat", "mushroom", "pizza", "strawberry", "taco", "tincan"];

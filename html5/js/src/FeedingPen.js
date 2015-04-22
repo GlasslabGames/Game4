@@ -142,7 +142,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     }
 
     this.unfedCreatures = this.getNumCreatures();
-    this.result = "satisfied"; // this is the default result unless something worse happens
+    this.result = GlassLab.results.satisfied; // this is the default result unless something worse happens
     this.feeding = true;
     this.SetDraggableOnly(); // make all edges undraggable
     for (var i = 0; i < this.rightEdges.length; i++) {
@@ -465,7 +465,7 @@ GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
 
 GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(result) {
     this.unfedCreatures --;
-    if (result != "satisfied") this.result = result; // even if one creature is satisfied, don't let it overwrite the result of other creatures
+    if (result != GlassLab.results.satisfied) this.result = result; // even if one creature is satisfied, don't let it overwrite the result of other creatures
     if (this.unfedCreatures <= 0) {
         this.FinishFeeding(this.result);
     }
@@ -483,8 +483,8 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
         // this is used for telemetry, but the actual check is in DoPenChallengeAction
         var creatureType = this._getCurrentCreatureType();
         var telemResult = result;
-        if (this.creatureType != creatureType) telemResult = "wrongCreatureType";
-        else if (this.targetNumCreatures && numCreatures < this.targetNumCreatures) telemResult = "wrongCreatureNumber";
+        if (this.creatureType != creatureType) telemResult = GlassLab.results.wrongCreatureType;
+        else if (this.targetNumCreatures && numCreatures < this.targetNumCreatures) telemResult = GlassLab.results.wrongCreatureNumber;
 
         var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
         GlassLabSDK.saveTelemEvent("submit_pen_answer", {
@@ -498,13 +498,13 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
             creature_type: creatureType,
             target_creature_type: this.creatureType,
             result: telemResult,
-            success: (telemResult == "satisfied")
+            success: (telemResult == GlassLab.results.satisfied)
         });
     }
 
-    if (result == "satisfied") GLOBAL.creatureManager.LogNumCreaturesFed(this._getCurrentCreatureType(), this.creatures.length);
+    if (result == GlassLab.results.satisfied) GLOBAL.creatureManager.LogNumCreaturesFed(this._getCurrentCreatureType(), this.creatures.length);
 
-    GlassLab.SignalManager.feedingPenResolved.dispatch(this, (result == "satisfied"), numCreatures); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
+    GlassLab.SignalManager.feedingPenResolved.dispatch(this, (result == GlassLab.results.satisfied), numCreatures); // currently used in TelemetryManager, FeedAnimalCondition, and OrderFulfillment
 
     this.onResolved.dispatch(result, this._getCurrentCreatureType(), numCreatures); // used in DoPenChallengeAction
 };

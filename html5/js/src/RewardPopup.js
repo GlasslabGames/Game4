@@ -52,34 +52,61 @@ GlassLab.RewardPopup.prototype.constructor = GlassLab.RewardPopup;
 GlassLab.RewardPopup.prototype.show = function(data)
 {
     this.data = data;
-    this.reward = (data.outcome == "satisfied")? data.reward : 0;
+    var success = data.outcome == GlassLab.results.satisfied;
+    this.reward = (success)? data.reward : 0;
     // Note, we want to set this.reward before calling UIWindow.show since it might trigger this.addRewards immediately (if for some reason we're showing this popup already.)
 
     GlassLab.UIWindow.prototype.show.call(this);
 
-    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
-
     this.clientNameLabel.text = data.client;
     this.rewardAmountLabel.text = "$"+this.reward;
 
-    var string = "Dear Rancher," + "\n\n";
-    var name = creatureInfo.displayNames.plural;
+    var creatureAsk = !("numCreatures" in this.data); // the player had to fill in the amount of creatures
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
+    var creatures = creatureInfo.displayNames.plural;
+    var detail = data.outcomeDetail;
+    var foodNames = (GlassLab.FoodTypes[detail] && GlassLab.FoodTypes[detail].displayNames) || {singular: "food", plural: "food"};
+    var uncountable = (foodNames.plural == foodNames.singular); // e.g. "meat" is uncountable, "apples" is not
 
-    if (data.outcome == "satisfied") {
-        string += "All my "+ name + " arrived safe and sound! Your full payment is enclosed. It was a pleasure doing business with you."
-    } else if (data.outcome == "wrongNumCreatures") {
-        string += "You didn't send me the amount of food and creatures that I asked for! I won't be paying you for this unacceptable situation. Next time, please make sure the amount of food and creatures align to my request."
-    } else {
-        string += "The "+ name + " you sent weren't fed correctly, and now they're all angry! I won't be paying you for this unacceptable situation. Next time, please make sure the amount of food is appropriate for the number of creatures you send."
+    var string = "Dear Rancher," + "\n\n";
+    var photo = creatureInfo.spriteName + "_orderPhoto_";
+    // TODO: set the food name
+
+    switch (data.outcome) {
+        case GlassLab.results.satisfied:
+            string += "All the "+ creatures + " you sent arrived safe and sound! Your full payment is enclosed. It was a pleasure doing business with you.";
+            photo += "happy";
+            break;
+        case GlassLab.results.sick:
+            if (creatureAsk) string += "You sent too few " + creatures + " to eat all "+(uncountable? "this ":"these ")+foodNames.plural.toLowerCase()+",";
+            else string += "You sent too "+(uncountable? "much ":"many ")+foodNames.plural.toLowerCase()+" for these " + creatures + " to eat,";
+            string += " so they got sick! I’m afraid I can’t pay you for this unacceptable situation.";
+            photo += "vomit";
+            break;
+        case GlassLab.results.hungry:
+            if (creatureAsk) string += "You sent too many " + creatures + " and there "+(uncountable? "wasn't" : "weren't")+" enough "+foodNames.plural.toLowerCase()+" for all of them,";
+            else string += "You didn't send enough "+foodNames.plural.toLowerCase()+" for all of these "+ creatures + ",";
+            string += " so they're still hungry! I’m afraid I can’t pay you for this unacceptable situation.";
+            photo += "cry";
+            break;
+        case GlassLab.results.dislike:
+            string += "You didn't send the correct food types for these "+ creatures + "! I’m afraid I can’t pay you for this unacceptable situation.";
+            photo += "wrongFood";
+            break;
+        case GlassLab.results.wrongCreatureNumber:
+            var numTotalFood = this.data.totalNumFood || "some";
+            string += "I asked you to send the correct number of "+ creatures + " to eat "+ numTotalFood +" total food, but you sent too "+data.outcomeDetail+" "+ creatures + "!";
+            string += " I’m afraid I can’t pay you for this unacceptable situation.";
+            photo += "cry";
+            break;
     }
     string += "\n\nSincerely,\n" + data.client;
 
     GlassLab.Util.SetColoredText(this.descriptionLabel, string, "#807c7b", "#994c4e");
 
-    var photo = creatureInfo.spriteName + "_orderPhoto_" + ((data.outcome == "satisfied")? "satisfied" : "fail");
     this.portrait.loadTexture(photo);
 
-    if (data.outcome == "satisfied") {
+    if (success) {
         GLOBAL.audioManager.playSound("successSound");
     } else {
         GLOBAL.audioManager.playSound("failSound");
@@ -109,7 +136,7 @@ GlassLab.RewardPopup.prototype.hide = function()
 
     if (this.data) {
         // Since the reward popup shows the results of an order, closing it is the final step in resolving an order
-        GlassLab.SignalManager.orderResolved.dispatch(this.data, (this.data.outcome == "satisfied"));
+        GlassLab.SignalManager.orderResolved.dispatch(this.data, (this.data.outcome == GlassLab.results.satisfied));
     }
 
     GlassLab.SignalManager.mailClosed.dispatch();
