@@ -12,13 +12,18 @@ GlassLab.UIManager = function(game)
 
     this._createAnchors();
 
+    // Create a dark shade that covers the game when a UIWindow is up
     this.shade = game.make.graphics().beginFill(0x000000).drawRect(-this.game.width / 2, -this.game.height / 2, this.game.width, this.game.height);
     this.shade.inputEnabled = true; // block interaction with the world
-    this.shade.events.onInputUp.add(this.hideAllWindows, this);
+    this.shade.events.onInputUp.add(this.hideAllWindows, this); // close the window if they click anywhere
     this.shade.input.priorityID = GLOBAL.UIpriorityID - 1; // below the rest of the UI
     this.shade.alpha = 0.4;
     this.shade.visible = false;
     this.underCenterAnchor.addChild(this.shade);
+
+    this.game.scale.onSizeChange.add(function() { // redraw the shade if they resize the window
+        this.shade.clear().beginFill(0x000000).drawRect(-this.game.width / 2, -this.game.height / 2, this.game.width, this.game.height);
+    }, this);
 
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
@@ -31,6 +36,13 @@ GlassLab.UIManager = function(game)
     this.tutorialArrowTween = game.add.tween(this.tutorialArrow.scale).to( { x: 0.55 }, 300, Phaser.Easing.Linear.InOut, true, 0, 150, true);
     this.tutorialArrowTween.pause();
     this.tutorialArrow.visible = false;
+
+    this.flyingCoins = this.transitionAnchor.addChild(game.make.sprite());
+    for (var i = 1; i <= 4; i++) {
+        var coin = this.flyingCoins.addChild(game.make.sprite(0, 0, "coinAnim"));
+        coin.animations.add("fly", Phaser.Animation.generateFrameNames("get_money_coin_fly_"+i+"_",0,32,".png",3), 24);
+        coin.anchor.setTo(0.5, 0.5);
+    }
 
     this.createHud();
 
@@ -113,6 +125,25 @@ GlassLab.UIManager.prototype._onBonusPressed = function()
     this.bonusModal.hide();
     GLOBAL.sortingGame.start();
 };
+
+GlassLab.UIManager.prototype.startFlyingCoins = function(callback, callbackContext)
+{
+    // Do the callback as soon as the first coins hits its destination
+    if (callback) this.flyingCoins.getChildAt(0).events.onAnimationComplete.addOnce(callback, callbackContext);
+
+    // Remember that coins are flying until the final coin hits its destination
+    this.coinsFlying = true;
+    this.flyingCoins.getChildAt(this.flyingCoins.children.length-1).events.onAnimationComplete.addOnce(function() {
+        this.coinsFlying = false;
+    }, this);
+
+    // Start each coin 1/10s of a second apart
+    for (var i = 0; i < this.flyingCoins.children.length; i++) {
+        var coin = this.flyingCoins.getChildAt(i);
+        this.game.time.events.add(100*i, function() { this.play("fly"); }, coin);
+    }
+};
+
 
 // General function to check if something was dropped onto a drag target that wants it
 GlassLab.UIManager.prototype.getDragTarget = function(draggedObj) {
@@ -202,7 +233,7 @@ GlassLab.UIManager.prototype._wantToHideDayMeter = function() {
 
 GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
     for (var i = 0; i < this.openWindows.length; i++) {
-        if (this.openWindows[i] != exception) {
+        if (this.openWindows[i] != exception && this.openWindows[i].autoCloseable) {
             this.openWindows[i].hide();
         }
     }
@@ -222,7 +253,7 @@ GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withou
     // add an event listener to one of the windows we're about to hide
     for (var i = 0; i < this.openWindows.length; i++) {
         if (this.openWindows[i] == window) continue;
-        if (this.openWindows[i].onFinishedHiding) {
+        if (this.openWindows[i].onFinishedHiding && this.openWindows[i].autoCloseable) {
             this.openWindows[i].onFinishedHiding.addOnce(window.show, window);
             addedListener = true;
             break;

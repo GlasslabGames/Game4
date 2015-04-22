@@ -69,7 +69,7 @@ GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
     this.creature.resetFoodEaten();
     if (this.creature.pen) {
         this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, Number.MAX_VALUE));
-        this.creature.FinishEating("sick");
+        this.creature.FinishEating(GlassLab.results.sick);
     } else {
         if (this.food) { // only start crying if we had food, which means we're not just purging before entering a pen
             this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 3000));

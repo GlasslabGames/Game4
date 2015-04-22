@@ -8,9 +8,11 @@ var GlassLab = GlassLab || {};
  */
 GlassLab.UIWindow = function(game)
 {
-    GlassLab.UIElement.prototype.constructor.call(this, game);
+    GlassLab.UIElement.prototype.constructor.call(this, game, 20);
     this.open = false;
     this.visible = false;
+
+    this.autoCloseable = true; // whether we can close this window by clicking elsewhere
 
     this.onFinishedShowing = new Phaser.Signal();
     this.onFinishedHiding = new Phaser.Signal();

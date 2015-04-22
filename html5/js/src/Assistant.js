@@ -9,8 +9,8 @@ GlassLab.Assistant = function(game) {
     this.sprite = game.make.sprite();
 
     this.portrait = game.make.sprite(0,0, "assistantAnim");
-    this.portrait.animations.add("in", Phaser.Animation.generateFrameNames("assistant_in_",0,14,".png",3), 48, false);
-    this.portrait.animations.add("out", Phaser.Animation.generateFrameNames("assistant_out_",0,10,".png",3), 48, false);
+    this.portrait.animations.add("in", Phaser.Animation.generateFrameNames("assistant_in_",0,14,".png",3), 24, false);
+    this.portrait.animations.add("out", Phaser.Animation.generateFrameNames("assistant_out_",0,10,".png",3), 24, false);
     this.portrait.anchor.set(1, 1);
     this.sprite.addChild(this.portrait);
 

@@ -106,6 +106,18 @@ GlassLab.Util.HasCookieData = function(key)
     return false;
 };
 
+// Set the text centered without allowing it to become blurred. Thanks to Owen for the fix.
+GlassLab.Util.SetCenteredText = function(label, text, anchorX, anchorY) {
+    if (typeof anchorX == 'undefined') anchorX = 0.5;
+    if (typeof anchorY == 'undefined') anchorY = 0.5;
+
+    label.text = text;
+    label.anchor.x = Math.round(label.width * anchorX) / label.width; // round to avoid subpixel blur
+    label.anchor.y = Math.round(label.height * anchorY) / label.height; // round to avoid subpixel blur
+
+    return label;
+};
+
 GlassLab.Util.SetColoredText = function(label, text, normalColor, highlightedColor) {
     label.clearColors();
     var colorIndices = [];
