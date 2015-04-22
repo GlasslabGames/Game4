@@ -13,7 +13,7 @@ GlassLab.SortingGame = function(game) {
     this.actualWidth = 750;
     this.actualHeight = 550;
 
-    this.root = game.make.sprite(this.actualWidth * -0.5, this.actualHeight * -0.5); // make a sprite to offset all the children
+    this.root = game.make.sprite(this.actualWidth * -0.5 - 20, this.actualHeight * -0.5); // make a sprite to offset all the children
     this.addChild(this.root);
 
     this.cards = []; // list the SortingGameCards
@@ -385,6 +385,7 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
 GlassLab.SortingGameToken = function(sortingGame, value) {
     GlassLab.UIDraggable.prototype.constructor.call(this, sortingGame.game);
 
+    this.input.priorityID = GLOBAL.UIpriorityID;
     this.sortingGame = sortingGame;
     this.value = value;
 
