@@ -291,7 +291,10 @@ GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
 
         // check if the drag target should be visible
         input.dragTarget.visible = !foodType && visibleDragTargets < 1 && i <= maxFoods;
-        if (input.dragTarget.visible) visibleDragTargets ++; // never show more than one drag target
+        if (input.dragTarget.visible) {
+            visibleDragTargets++; // never show more than one drag target
+            input.dragTarget.setEnabled(true);
+        }
 
         // then, if the food type is set, we can show the sprite and the entry field or the preset amount
         if (foodType) {
