@@ -28,9 +28,11 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
 
-    this.moveSpeed = 2.75;
+    this.normalMoveSpeed = 2.75;
+    this.moveSpeed = this.normalMoveSpeed; // moveSpeed may be altered later, i.e. after eating donuts
     this.baseAnimSpeed = 36; // 36 per moveSpeed
 
+    // desired food:
     this.desiredAmountsOfFood = {};
     this.foodEaten = {};
     var totalFoodDesired = 0; // count so that we know what percentage of the hunger bar should go to this food
@@ -48,6 +50,13 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.hungerBar = new GlassLab.FillBar(this.game, 100, 20 / info.desiredFood.length, hungerBarSections);
     this.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
+
+    // other food: (i.e. mushrooms, donuts)
+    this.otherFoodReactions = {};
+    for (var f = 0; f < info.otherFood.length; f++) {
+        var otherFood = info.otherFood[f];
+        this.otherFoodReactions[otherFood.type] = otherFood.reaction; // otherFood.reaction is an object
+    }
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
     this.thoughtBubble.position.setTo(-70, -60);
@@ -699,6 +708,8 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
     } else if (target.food) { // we're on top of some food
         if (target.food.type in this.desiredAmountsOfFood) {
             this.eatFreeFood(target.food);
+        } else if (target.food.type in this.otherFoodReactions) {
+            this.eatOtherFood(target.food);
         } else {
             this.dislikeFood(target.food);
         }
@@ -716,6 +727,7 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
     else if (this.getIsSatisfied()) result = GlassLab.results.satisfied;
     this.foodEaten[food.type] -= 1; // revert, since we haven't actually eaten the food yet
 
+    // telem:
     GlassLabSDK.saveTelemEvent("creature_eats", {
         creature_id: this.id,
         creature_type: this.type,
@@ -723,6 +735,23 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
         result: result
     });
     this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food}));
+
+    food.eaten = true;
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone
+};
+
+// call this to eat some "other" food outside of a pen (mushrooms, donuts)
+GlassLab.Creature.prototype.eatOtherFood = function (food) {
+    var reaction = this.otherFoodReactions[food.type];
+
+    // telem:
+    GlassLabSDK.saveTelemEvent("creature_eats", {
+        creature_id: this.id,
+        creature_type: this.type,
+        food_type: food.type,
+        result: reaction.result
+    });
+    this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food, reaction: reaction})); // add reaction
 
     food.eaten = true;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone

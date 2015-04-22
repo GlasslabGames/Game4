@@ -105,6 +105,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('squareGrassTile', 'assets/images/tiles/square_grass.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
+    game.load.image('penTooltipCapTall', 'assets/images/pen/pen_tooltip_cap_tall.png');
     game.load.image('penTooltipWidth', 'assets/images/pen/pen_tooltip_width.png');
 
     // Cloud shadow

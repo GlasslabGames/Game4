@@ -52,11 +52,11 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     //var hasServer = true; // Baked for stage builds
     GlassLabSDK.setOptions( { localLogging: !hasServer, dispatchQueueUpdateInterval: 500 } );
 
-    // Turn on console logging
-    GlassLabSDK.hideLogs(); //displayLogs();
-
     if (GlassLabSDK.getOptions().localLogging)
     {
+        // Turn on console logging
+        GlassLabSDK.hideLogs(); //displayLogs();
+
         this.initialized = true;
     }
     else

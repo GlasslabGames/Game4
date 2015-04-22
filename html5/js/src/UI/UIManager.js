@@ -337,6 +337,7 @@ GlassLab.UIManager.prototype.createHud = function() {
         }
     }, this);
     fullscreenButton.bg.scale.y *= -1;
+    fullscreenButton.setEnabled(GLOBAL.fullScreenAllowed);
     table.addManagedChild(fullscreenButton);
     table._refresh();
     table.position.setTo( (table.getWidth() / -2) - 20, (button.getHeight() / 2) + 20 );
