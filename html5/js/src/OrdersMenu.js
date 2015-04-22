@@ -104,6 +104,7 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     this.selectButton.imageOverColor = (this.data.key)? 0x9a3c3f : 0x000000;
     this.selectButton.bgAlpha = (this.data.key)? 1 : 0.5;
     this.selectButton.alpha = 1;
+    this.selectButton.whenUp(); // refresh
     this.selectButton.setEnabled(true);
 
     this.stamp.visible = false;

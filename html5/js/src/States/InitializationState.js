@@ -339,7 +339,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UIManager.bottomLeftAnchor.addChild(GLOBAL.inventoryMoneyTab);
 
     var assistant = new GlassLab.Assistant(game);
-    GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
+    GLOBAL.UIManager.tutorialAnchor.addChild(assistant.sprite);
     GLOBAL.assistant = assistant;
 
     var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
