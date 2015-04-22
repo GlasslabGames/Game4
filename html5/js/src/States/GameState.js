@@ -31,6 +31,13 @@ GlassLab.State.Game.prototype.create = function()
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
+
+    /*var crate = new GlassLab.ShippingPen(this.game);
+    crate.setContents("baby_unifox", 2, ["strawberry"], [8], 2, false, false);
+    GLOBAL.crate = crate;*/
+    //SetContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow)
+
+    GLOBAL.transition.out();
 };
 
 GlassLab.State.Game.prototype.update = function()
@@ -47,7 +54,7 @@ GlassLab.State.Game.prototype.update = function()
     // Re-sort creatures because they probably moved
     game.iso.simpleSort(GLOBAL.creatureLayer);
 
-    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject)
+    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject && !GLOBAL.mailManager.currentOrder)
     {
         game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
         game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
@@ -63,13 +70,14 @@ GlassLab.State.Game.prototype.update = function()
     if (tileSprite != GLOBAL.highlightedTile)
     {
         // Entered tile in pen
-        if (tileSprite && tileSprite.inPen && (!GLOBAL.highlightedTile || (GLOBAL.highlightedTile.inPen != tileSprite.inPen)))
+        if (tileSprite && tileSprite.inPen && (!GLOBAL.highlightedTile || (GLOBAL.highlightedTile.inPen != tileSprite.inPen)) &&
+            tileSprite.inPen instanceof GlassLab.FeedingPen)
         {
-            GLOBAL.UIManager.penTooltip.Show(tileSprite.inPen);
+            GLOBAL.UIManager.penTooltip.show(tileSprite.inPen);
         }
         else if (GLOBAL.highlightedTile && GLOBAL.highlightedTile.inPen && (!tileSprite || !tileSprite.inPen)) // exited tile in pen
         {
-            GLOBAL.UIManager.penTooltip.Hide();
+            GLOBAL.UIManager.penTooltip.hide();
         }
 
         /*

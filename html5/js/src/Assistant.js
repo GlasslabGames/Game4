@@ -9,8 +9,8 @@ GlassLab.Assistant = function(game) {
     this.sprite = game.make.sprite();
 
     this.portrait = game.make.sprite(0,0, "assistantAnim");
-    this.portrait.animations.add("in", Phaser.Animation.generateFrameNames("assistant_in_",0,14,".png",3), 48, false);
-    this.portrait.animations.add("out", Phaser.Animation.generateFrameNames("assistant_out_",0,10,".png",3), 48, false);
+    this.portrait.animations.add("in", Phaser.Animation.generateFrameNames("assistant_in_",0,14,".png",3), 24, false);
+    this.portrait.animations.add("out", Phaser.Animation.generateFrameNames("assistant_out_",0,10,".png",3), 24, false);
     this.portrait.anchor.set(1, 1);
     this.sprite.addChild(this.portrait);
 
@@ -23,12 +23,11 @@ GlassLab.Assistant = function(game) {
     this.speechBubble.anchor.set(1, 0.5);
     this.dialogue.addChild(this.speechBubble);
 
-    var style = { font: "16px Arial", fill: GlassLab.Assistant.TEXT_COLOR, align: "left" };
+    var style = { font: "16px Arial", fill: GlassLab.Assistant.TEXT_COLOR, align: "left", wordWrap: true, wordWrapWidth: 320 };
     this.label = game.make.text(-515, -125, "Lorem ipsum dolor sit amet\nLorem ipsum dolor sit amet",style);
     this.label.align = "left";
     this.label.anchor.set(0, 0);
     this.dialogue.addChild(this.label);
-    this.labelWidth = 320;
 
     this.cancelButton = new GlassLab.UIRectButton(this.game, -535, -40, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
     this.continueButton = new GlassLab.UIRectButton(this.game, -345, -40, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
@@ -61,6 +60,7 @@ GlassLab.Assistant.prototype.showTutorial = function(text, showButton) {
     this.showButtons(false);
     this.advanceTutorialButton.visible = showButton;
     this._setText(text);
+
     this.inTutorial = true;
 };
 
@@ -86,7 +86,6 @@ GlassLab.Assistant.prototype._startOpening = function() {
     this.sprite.visible = true;
     this.visibilityState == "opening";
     var anim = this.portrait.play("in");
-    console.log(anim, anim == true);
     if (anim) anim.onComplete.addOnce(this._startOpen, this);
     else this._startOpen();
     this.dialogue.alpha = 0;
@@ -142,11 +141,12 @@ GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
     this.state = GlassLab.Assistant.STATES.ORDER_INTRO;
     this.showButtons(false);
     var orderSegment;
-    var foodAsk = (order.numFoodA || order.numFoodB);
-    if (order.noFoodEntries || !foodAsk) { // no food, only creature
-        orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " to eat this food.* How many";
-    } else if (order.totalNumFood || (order.numCreatures && foodAsk)) { // both food and creatures
+    var numFood = (order.numFoodA || order.numFoodB);
+
+    if ((order.totalNumFood && !order.noFoodEntries) || (order.numCreatures && numFood)) { // both food and creatures
         orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " and the correct amount of food.* What";
+    } else if ((order.totalNumFood && order.noFoodEntries) || order.numCreatures) { // only creatures are asked for
+        orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " to eat this food.* How many";
     } else { // only food
         orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.creatureType, (order.numCreatures > 1)) + ".* What";
     }
@@ -206,52 +206,7 @@ GlassLab.Assistant.prototype._enterStateOrderCrateReady = function(lastChance) {
 };
 
 GlassLab.Assistant.prototype._setText = function(text) {
-    this.label.clearColors();
-    if (!text) {
-        this.label.text = "";
-        return;
-    }
-
-    //text = "Assistant:\n" + text; // add the assistant label (for now)
-
-    // Split the text into lines by making sure it doesn't get too wide
-    var words = text.split(" ");
-
-    var testWord;
-    var splitText = words[0]; // a string containing the text we want with the * in it
-    for (var i = 1; i < words.length; i++) {
-        this.label.text = splitText.replace(/\*/g, ""); // the label should have the text with *s
-        testWord = words[i].replace("*", ""); // consider the next word (without *s)
-        this.label.text += " "+ testWord; // test what happens if we append the word
-        if (this.label.width > this.labelWidth) { // if that makes the label too wide
-            splitText += "\n" + words[i]; // make a new line instead
-        } else {
-            splitText += " " + words[i]; // apply it with a space (but not using the testWord)
-        }
-    }
-
-    // Then find all the places where we put a * to indicate a color change. These indices have to be offset a little when we see a newline.
-    text = splitText;
-    var colorIndices = [];
-    var index = 0; // this index is offset when we see a newline
-    for (var k = 0; k < text.length; k++) {
-        var char = text.charAt(k);
-        if (char == "*") {
-            colorIndices.push(index);
-            text = text.substring(0, k) + text.substring(k + 1); // remove the *
-            k --;
-            // Also don't increment the index since we just removed a string
-        } else if (char == "\n") {
-            // Don't increment the index this time (since the indexing is offset by 1 for each newline)
-        } else {
-            index ++;
-        }
-    }
-    this.label.text = text;
-    for (var j = 0; j < colorIndices.length; j++) {
-        var color = (j % 2)? GlassLab.Assistant.TEXT_COLOR : GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR;
-        this.label.addColor(color, colorIndices[j]);
-    }
+    GlassLab.Util.SetColoredText(this.label, text, GlassLab.Assistant.TEXT_COLOR, GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR);
 };
 
 GlassLab.Assistant.prototype._onCancelPressed = function() {

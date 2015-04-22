@@ -8,14 +8,12 @@
      "challengeData": {
         "creatureType": "baby_bird",
         "numCreatures": 3,
-        "bottomDraggable": true,
-        "topDraggable": true,
         "leftDraggable": true
       }
     },
     {
      "__type": "DoPenChallengeAction",
-     "challengeId": "3.02b",
+     "challengeId": "3.01b",
      "problemType": "2BR1MC",
      "reviewKey": "start",
      "challengeData": {

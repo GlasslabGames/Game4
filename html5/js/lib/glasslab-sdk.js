@@ -39,20 +39,21 @@ either expressed or implied, of the FreeBSD Project.
     this._httpRequest = null;
 
     // SDK options
-    this._options = this._getDefaultOptions();
+    this._options = {};
 
     // Simple logging
-    this._displayLogs = this._getDisplayLogsStore();
+    this._displayLogs = null;
 
     // Output file and text for local telemetry logging
     this._outputFile = null;
     // Output html for live logging via separate window
     this._telemetryOutputTab = null;
-    this._outputText = this._getTelemetryOutputStore();
+    this._outputText = null;
 
     // Queue for non-on-demand messages
     this._dispatchQueue = [];
-    //setInterval( _dispatchNextRequest, this._options.dispatchQueueUpdateInterval );
+    this._dispatchQueueReady = [];
+    //setInterval( _flushDispatchQueue, this._options.dispatchQueueUpdateInterval );
 
     // The following variables will undergo change as functions are performed with the SDK
     this._activeGameSessionId = "";
@@ -65,11 +66,15 @@ either expressed or implied, of the FreeBSD Project.
     // Is only activated when getPlayerInfo is successful
     // Deactivated on logout
     this._isAuthenticated = false;
-    setInterval( _sendTotalTimePlayed, this._options.sendTotalTimePlayedInterval );
+    //setInterval( _sendTotalTimePlayed, this._options.sendTotalTimePlayedInterval );
 
     // Update function for polling matches at certain intervals
     this._matches = {};
-    setInterval( _pollMatches, this._options.pollMatchesInterval );
+    //setInterval( _pollMatches, this._options.pollMatchesInterval );
+
+      this._isLocalStorageEnabled = false;
+      // SDK options
+      this.setOptions(this._getDefaultOptions());
   }
 
   _GlassLabSDK.prototype.getOptions = function() {
@@ -108,7 +113,7 @@ either expressed or implied, of the FreeBSD Project.
 
       if( options.hasOwnProperty( 'dispatchQueueUpdateInterval' ) ) {
         //this._options.dispatchQueueUpdateInterval = options.dispatchQueueUpdateInterval;
-        //setInterval( _dispatchNextRequest, this._options.dispatchQueueUpdateInterval );
+        //setInterval( _flushDispatchQueue, this._options.dispatchQueueUpdateInterval );
       }
 
       if( options.hasOwnProperty( 'sendTotalTimePlayedInterval' ) ) {
@@ -139,13 +144,39 @@ either expressed or implied, of the FreeBSD Project.
 
       if( options.hasOwnProperty( 'localLogging' ) ) {
         this._options.localLogging = options.localLogging;
+
+          if (this._options.localLogging)
+          {
+              try
+              {
+                this._isLocalStorageEnabled = true;
+
+                  if (!this._displayLogs)
+                  {
+                      // Simple logging
+                      this._displayLogs = this._getDisplayLogsStore();
+                  }
+
+                  if (!this._outputText)
+                  {
+                      this._outputText = this._getTelemetryOutputStore();
+                  }
+              }
+              catch (e)
+              {
+                  console.error("Could not enable local logging: ", e.stack);
+
+                  this._isLocalStorageEnabled = false;
+              }
+          }
+
       }
     }
   };
 
   _GlassLabSDK.prototype._getDefaultOptions = function() {
     return {
-      sdkVersion:   "0.3.3", 
+      sdkVersion:   "0.3.3",
 
       uri:          window.location.protocol + "//" + window.location.host,
       gameId:       "TEST",
@@ -179,22 +210,22 @@ either expressed or implied, of the FreeBSD Project.
 
   function _dispatchNextRequest( status ) {
     // If the queue is empty, ignore
-    if( GlassLabSDK._dispatchQueue.length == 0 ) {
+    if( GlassLabSDK._dispatchQueueReady.length == 0 ) {
       return;
     }
 
     /*// If the current request is pending, ignore
-    if( GlassLabSDK._dispatchQueue[ 0 ].status == "pending" ) {
+    if( GlassLabSDK._dispatchQueueReady[ 0 ].status == "pending" ) {
       return;
     }
 
     // If the current request is successful, remove it
     if( status && status == "success" ) {
-      GlassLabSDK._dispatchQueue.shift();
+      GlassLabSDK._dispatchQueueReady.shift();
     }*/
 
     // Get the next dispatch
-    var dispatch = GlassLabSDK._dispatchQueue[ 0 ];//.dispatch;
+    var dispatch = GlassLabSDK._dispatchQueueReady[ 0 ];//.dispatch;
 
     // Need to operate on gameSessionId for endSession and saveTelemEvent APIs
     if( !GlassLabSDK._options.localLogging ) {
@@ -203,7 +234,7 @@ either expressed or implied, of the FreeBSD Project.
         // We'll come back to the queue another time when the value exists
         if( GlassLabSDK._activeGameSessionId == "" ) {
             console.warn("_activeGameSessionId not set. Skipping event: ",dispatch);
-            GlassLabSDK._dispatchQueue.shift();
+            GlassLabSDK._dispatchQueueReady.shift();
             _dispatchNextRequest();
           return;
         }
@@ -217,7 +248,17 @@ either expressed or implied, of the FreeBSD Project.
     }
 
     // Perform the request
-    GlassLabSDK.request( GlassLabSDK._dispatchQueue.shift() );
+    GlassLabSDK.request( GlassLabSDK._dispatchQueueReady.shift() );
+  }
+
+  function _flushDispatchQueue() {
+    // Splice the contents of the dispatch queue to the ready queue, then dispatch the next request
+    while( GlassLabSDK._dispatchQueue.length > 0 ) {
+      GlassLabSDK._dispatchQueueReady.push( GlassLabSDK._dispatchQueue.shift() );
+    }
+
+    // Begin the dispatch
+    _dispatchNextRequest();
   }
 
   function _sendTotalTimePlayed() {
@@ -434,6 +475,12 @@ either expressed or implied, of the FreeBSD Project.
         api: "/api/v2/auth/user/profile",
         contentType: "application/x-www-form-urlencoded",
         success: function( responseData ) {
+            // Retrieve the total time played for this user
+            var userId = JSON.parse( responseData ).id;
+
+            // Set the device Id
+            GlassLabSDK.setOptions( { deviceId: generateDeviceId( userId ) } );
+
           // Call the user's success callback
           defaultSuccessCallback( success, responseData );
         },
@@ -501,7 +548,7 @@ either expressed or implied, of the FreeBSD Project.
         data: { courseCode: courseCode },
         success: function( responseData ) {
           // TODO
-          
+
           defaultSuccessCallback( success, responseData );
         },
         error: function( responseData ) {
@@ -520,7 +567,7 @@ either expressed or implied, of the FreeBSD Project.
         data: { courseId: courseId },
         success: function( responseData ) {
           // TODO
-          
+
           defaultSuccessCallback( success, responseData );
         },
         error: function( responseData ) {
@@ -669,7 +716,7 @@ either expressed or implied, of the FreeBSD Project.
       });
 
     // Flush the queue
-    _dispatchNextRequest();
+    _flushDispatchQueue();
   };
 
   _GlassLabSDK.prototype.saveTelemEvent = function( name, data, success, error ) {
@@ -1054,14 +1101,14 @@ either expressed or implied, of the FreeBSD Project.
   };
 
   _GlassLabSDK.prototype._updateDisplayLogsStore = function() {
-    if( typeof( Storage ) !== "undefined" ) {
+    if( this._isLocalStorageEnabled && typeof( Storage ) !== "undefined" ) {
       localStorage.setItem( "glsdk_displayLogs", this._displayLogs ? 1 : 0 );
     }
   };
 
   _GlassLabSDK.prototype._getDisplayLogsStore = function() {
     var display = false;
-    if( typeof( Storage ) !== "undefined" ) {
+    if( this._isLocalStorageEnabled && typeof( Storage ) !== "undefined" ) {
       if( localStorage.getItem( "glsdk_displayLogs" ) ) {
         display = parseInt( localStorage.getItem( "glsdk_displayLogs" ) );
         if( isNaN( display ) ) {
@@ -1073,7 +1120,7 @@ either expressed or implied, of the FreeBSD Project.
   };
 
   _GlassLabSDK.prototype._updateTelemetryOutputStore = function() {
-    if( typeof( Storage ) !== "undefined" ) {
+    if( this._isLocalStorageEnabled && typeof( Storage ) !== "undefined" ) {
       localStorage.setItem( "glsdk_telemetry", this._outputText );
     }
   };
@@ -1081,7 +1128,7 @@ either expressed or implied, of the FreeBSD Project.
   _GlassLabSDK.prototype._getTelemetryOutputStore = function() {
     var telemetry = "";
     if( typeof( Storage ) !== "undefined" ) {
-      if( localStorage.getItem( "glsdk_telemetry" ) ) {
+      if( this._isLocalStorageEnabled && localStorage.getItem( "glsdk_telemetry" ) ) {
         telemetry = localStorage.getItem( "glsdk_telemetry" );
       }
     }

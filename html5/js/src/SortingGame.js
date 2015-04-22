@@ -7,24 +7,27 @@
  */
 
 GlassLab.SortingGame = function(game) {
-    Phaser.Sprite.prototype.constructor.call(this, game);
-    this.game = game;
+    GlassLab.UIWindow.prototype.constructor.call(this, game);
+    this.autoCloseable = false; // can't be closed until you finish it
 
-    this.actualWidth = 750;
-    this.actualHeight = 550;
-
-    this.root = game.make.sprite(this.actualWidth * -0.5, this.actualHeight * -0.5); // make a sprite to offset all the children
-    this.addChild(this.root);
+    this.actualWidth = 800;
+    this.actualHeight = 600;
 
     this.cards = []; // list the SortingGameCards
     this.tokens = {}; // dictionary of lists of SortingGameTokens, by value (too little, etc)
 
-    var bg = game.make.graphics();
-    bg.beginFill(0xFFFFFF).lineStyle(3, 0x000000, 1).drawRect(0, 0, this.actualWidth, this.actualHeight);
-    this.root.addChild(bg);
+    this.root = game.make.sprite(this.actualWidth * -0.5 - 20, this.actualHeight * -0.5); // make a sprite to offset all the children
+    this.addChild(this.root);
 
-    var label = game.make.text(15, 15, "Match tokens to cards by predicting how much food each set of creatures will have!", {font: "bold 13pt arial"});
-    this.root.addChild(label);
+    // dim world behind bonus game - there may be a more generalized method for doing this:
+    var bg_color = game.make.graphics();
+    bg_color.beginFill(0x000000).drawRect(0, 0, this.actualWidth, this.actualHeight);
+    bg_color.alpha = 0.25;
+    this.root.addChild(bg_color);
+
+    // bonus game bg:
+    var bg = game.make.image(0, 0, "bonusBoardBg");
+    this.root.addChild(bg);
 
     /* tests
     this.addCard( "rammus", 2, 4, GlassLab.SortingGameCard.DISPLAY_STYLES.spritesOnly);
@@ -47,28 +50,25 @@ GlassLab.SortingGame = function(game) {
     }
 
     this.bonusAmount = 0;
-    this.bonusAmountLabel = game.make.text(600, 480, "$0", {font: "bold 40pt arial"});
+    this.bonusAmountLabel = game.make.text(625, 517, "x 0", {font: "36px EnzoBlack", fill: "#fff"});
     this.bonusAmountLabel.anchor.setTo(0, 0.5);
+    this.bonusAmountLabel.anchor.y = Math.round(this.bonusAmountLabel.height * 0.5) / this.bonusAmountLabel.height; // round to avoid blur
     this.root.addChild(this.bonusAmountLabel);
-
-    var bonusLabel = game.make.text(610, 440, "BONUS:", {font: "bold 13pt arial"});
-    bonusLabel.anchor.setTo(0, 0.5);
-    this.root.addChild(bonusLabel);
 
     this.visible = false; // start invisible until we want to begin the sorting game
 };
 
-GlassLab.SortingGame.prototype = Object.create(Phaser.Sprite.prototype);
+GlassLab.SortingGame.prototype = Object.create(GlassLab.UIWindow.prototype);
 GlassLab.SortingGame.prototype.constructor = GlassLab.SortingGame;
 
-GlassLab.SortingGame.COMPARISON_VALUES = {tooLittle: "TOO\nLITTLE", justRight: "JUST\nRIGHT", tooMuch: "TOO\nMUCH"};
+GlassLab.SortingGame.COMPARISON_VALUES = {NotEnough: "Not Enough", justRight: "Just Right", tooMuch: "Too Much"};
 GlassLab.SortingGame.REWARD_PER_CARD = 10;
 
 GlassLab.SortingGame.prototype.addCard = function(creatureType, numCreatures, numFood, displayMode, challengeType) {
     var card = new GlassLab.SortingGameCard(this, creatureType, numCreatures, numFood, displayMode, challengeType);
     this.root.addChild(card);
-    card.x = 15 + this.cards.length * 245;
-    card.y = 50;
+    card.x = 50 + this.cards.length * 240;
+    card.y = 45;
     this.cards.push(card);
     card.events.onCardAnswered.add(this._onCardAnswered, this);
     return card;
@@ -77,8 +77,8 @@ GlassLab.SortingGame.prototype.addCard = function(creatureType, numCreatures, nu
 GlassLab.SortingGame.prototype.addToken = function(value, pileCol) {
     var token = new GlassLab.SortingGameToken(this, value);
     this.tokenParent.addChild(token);
-    token.x = 170 + pileCol * 130;
-    token.y = 480 - this.tokens[value].length * 10;
+    token.x = 135 + (pileCol * 125) + (this.tokens[value].length * 10);
+    token.y = 500 - (this.tokens[value].length * 10);
     this.tokens[value].push(token);
     return token;
 };
@@ -87,6 +87,7 @@ GlassLab.SortingGame.prototype.addToken = function(value, pileCol) {
 GlassLab.SortingGame.prototype.refreshTokenStack = function(stack) {
     for (var i = 0; i < stack.length; i++) {
         stack[i].inputEnabled = (i == stack.length - 1);
+        if (stack[i].inputEnabled) stack[i].input.priorityID = GLOBAL.UIpriorityID; // this gets reset when we disable the input
     }
 };
 
@@ -103,11 +104,11 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
         this.cardsCorrect ++;
         this.bonusAmount += GlassLab.SortingGame.REWARD_PER_CARD;
 
-        this.bonusAmountLabel.text = "$" + this.bonusAmount;
+        this.bonusAmountLabel.text = "x " + this.bonusAmount;
 
-        if (this.cardsCorrect == this.cards.length) { // if they got them all right
-            this.bonusAmountLabel.style.fill = "#39b54a";
-        }
+        //if (this.cardsCorrect == this.cards.length) { // color text green if they got them all right
+        //    this.bonusAmountLabel.style.fill = "#39b54a";
+        //}
 
         // Animate the bonusAmountLabel
         var tween = this.game.add.tween(this.bonusAmountLabel.scale).to({
@@ -132,7 +133,7 @@ GlassLab.SortingGame.prototype.start = function(data) {
         return;
     }
 
-    this.visible = true;
+    this.show();
 
     // Remove all the cards and make new ones. (Yes, we should reset cards instead, but that's more complicated.)
     while (this.cards.length) {
@@ -161,10 +162,10 @@ GlassLab.SortingGame.prototype.start = function(data) {
     this.tokenParent.parent.setChildIndex(this.tokenParent, this.tokenParent.parent.children.length - 1);
 
     this.bonusAmount = 0;
-    this.bonusAmountLabel.text = "$0";
+    this.bonusAmountLabel.text = "x 0";
     this.cardsAnswered = 0;
     this.cardsCorrect = 0;
-    this.bonusAmountLabel.style.fill = "#000000";
+    this.bonusAmountLabel.style.fill = "#fff";
 
     GLOBAL.audioManager.switchMusic("bonus");
 
@@ -176,7 +177,7 @@ GlassLab.SortingGame.prototype.finish = function() {
 
     GlassLabSDK.saveTelemEvent("bonus_game_end", {proportion_correct: this.cardsCorrect / this.cardsAnswered});
 
-    this.visible = false;
+    this.hide();
     GLOBAL.audioManager.revertMusic();
     GlassLab.SignalManager.bonusGameComplete.dispatch();
 };
@@ -186,7 +187,7 @@ GlassLab.SortingGame.prototype.finish = function() {
  */
 
 GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, numFood, displayMode, problemType) {
-    GlassLab.UIDragTarget.prototype.constructor.call(this, sortingGame.game, 230, 350, null, "", true);
+    GlassLab.UIDragTarget.prototype.constructor.call(this, sortingGame.game, 220, 350, null, "", true);
 
     this.sortingGame = sortingGame;
     this.creatureType = creatureType;
@@ -205,7 +206,7 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
         totalFoodShown += this.numFood[i] || 0;
     }
 
-    if (totalFoodShown < totalFoodDesired) this.targetValue = GlassLab.SortingGame.COMPARISON_VALUES.tooLittle;
+    if (totalFoodShown < totalFoodDesired) this.targetValue = GlassLab.SortingGame.COMPARISON_VALUES.NotEnough;
     else if (totalFoodShown > totalFoodDesired) this.targetValue = GlassLab.SortingGame.COMPARISON_VALUES.tooMuch;
     else this.targetValue = GlassLab.SortingGame.COMPARISON_VALUES.justRight;
 
@@ -216,26 +217,32 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
         this._addNumberDisplay();
     }
 
-    this.target = this.game.make.sprite(this.actualWidth / 2, this.actualHeight - 70, "dashedCircle");
+    // dashed circle img:
+    this.target = this.game.make.sprite(this.actualWidth / 2, this.actualHeight - 70, "bonusStickerDropzone");
     this.target.anchor.set(0.5, 0.5);
-    this.target.tint = 0xdddddd;
     this.addChild(this.target);
 
-    var mark =  this.game.make.text(this.actualWidth / 2, this.actualHeight - 70, "?", {font: "bold 50pt arial", fill: "#ffffff"});
-    mark.anchor.setTo(0.5, 0.5);
+    // text "place sticker here!"
+    var mark =  this.game.make.text(this.actualWidth / 2, this.actualHeight - 67, "Place\nSticker\nHere!",
+        {font: "14px EnzoBlack", align: "center", fill: "#a0a9b2"});
+    mark.anchor.x = Math.round(mark.width * 0.5) / mark.width; // round to avoid subpixel blur
+    mark.anchor.y = Math.round(mark.height * 0.5) / mark.height; // round to avoid subpixel blur
+    mark.lineSpacing = -5;
     this.addChild(mark);
 
-    for (var spriteName in {bigX: 0, bigO: 0}) {
+    // large X and checkmark:
+    for (var spriteName in {bonusXmark: 0, bonusCheckmark: 0}) {
+        // images used to be 200x200, now 150x150
         var sprite = this.game.make.sprite(this.actualWidth / 2, 110, spriteName);
         sprite.anchor.setTo(0.5, 0.5);
         sprite.visible = false;
         this.addChild(sprite);
-        this[spriteName] = sprite; // now we have the properties this.bigO and this.bigX
+        this[spriteName] = sprite; // now we have the properties this.bonusCheckmark and this.bonusXmark
     }
 
     this.replace = false; // only allow them to drop 1 token
     this.objectValidator = function(obj) { return (obj instanceof GlassLab.SortingGameToken); };
-    this.childObjectOffset.setTo(this.actualWidth / 2, 280);
+    this.childObjectOffset.setTo(this.actualWidth / 2, this.actualHeight - 70);
 
     this.events.onCardAnswered = new Phaser.Signal();
     this.events.onObjectDropped.add(this._onObjectDropped, this);
@@ -247,6 +254,10 @@ GlassLab.SortingGameCard.prototype.constructor = GlassLab.SortingGameCard;
 
 // Enum all the possible display styles for the cards. Add more as needed.
 GlassLab.SortingGameCard.DISPLAY_STYLES = {spritesOnly: "spritesOnly", numbersOnly: "numbersOnly"};
+
+GlassLab.SortingGameCard.prototype._redraw = function() {
+    return; // don't draw the UIDragTarget in this version
+};
 
 GlassLab.SortingGameCard.prototype._onDestroy = function() {
     GlassLab.UIDragTarget.prototype._onDestroy.call(this);
@@ -275,7 +286,7 @@ GlassLab.SortingGameCard.prototype._onObjectDropped = function(obj) {
 };
 
 GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
-    var indicator = (this.correct)? this.bigO : this.bigX;
+    var indicator = (this.correct)? this.bonusCheckmark : this.bonusXmark;
     var targetColor = (this.correct)? 0x39b54a : 0xc1272d;
     var time = 300;
 
@@ -296,6 +307,21 @@ GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
         // flip the coin by tweening the scale and changing the contents in the middle
         var flipTween1 = this.game.add.tween(this.token.scale).to( { x: 0 }, 300, Phaser.Easing.Quadratic.In);
         flipTween1.onComplete.add(function() {
+            // hide this.token.imgFront
+            this.token.imgFront.alpha = 0;
+
+            // create new imgBack with correct img:
+            this.token.imgBack;
+            if (this.targetValue == "Just Right")
+                this.token.imgBack = this.game.make.sprite(0, 0, "bonusCorrectionJustRight");
+            else if (this.targetValue == "Too Much")
+                this.token.imgBack = this.game.make.sprite(0, 0, "bonusCorrectionTooMuch");
+            else // Not Enough
+                this.token.imgBack = this.game.make.sprite(0, 0, "bonusCorrectionNotEnough");
+            this.token.imgBack.anchor.setTo(0.5, 0.5);
+            this.token.addChild(this.token.imgBack);
+
+            // update label/tooltip to show right answer:
             this.token.label.text = this.targetValue; // show the right answer
             this.token.label.style.fill = "#"+targetColor.toString(16); // turn the text red
         }, this);
@@ -313,7 +339,7 @@ GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
 
     var colWidth = 45, rowHeight = 35;
     var maxCols = 5;
-    this.displaySprite = this.game.make.sprite(colWidth / 2, rowHeight / 2 + 15);
+    this.displaySprite = this.game.make.sprite(colWidth / 2, rowHeight / 2 + 25);
     this.addChild(this.displaySprite);
 
     var foodLeft = {}; // track the total number of food left to split among all creatures
@@ -385,18 +411,28 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
 GlassLab.SortingGameToken = function(sortingGame, value) {
     GlassLab.UIDraggable.prototype.constructor.call(this, sortingGame.game);
 
+    this.input.priorityID = GLOBAL.UIpriorityID; // are the tokens under the top token supposed to be draggable?
     this.sortingGame = sortingGame;
     this.value = value;
 
     this.actualWidth = this.actualHeight = 100;
     this.hitArea = new Phaser.Circle(0, 0, this.actualWidth); // very important!
 
-    var bg = this.game.make.graphics();
-    bg.beginFill(0xFFFFFF).lineStyle(3, 0x000000, 1).drawCircle(0, 0, this.actualWidth);
-    this.addChild(bg);
+    // token image:
+    this.imgFront;
+    if (value == "Just Right")
+        this.imgFront = this.game.make.sprite(0, 0, "bonusJustRight");
+    else if (value == "Too Much")
+        this.imgFront = this.game.make.sprite(0, 0, "bonusTooMuch");
+    else // Not Enough
+        this.imgFront = this.game.make.sprite(0, 0, "bonusNotEnough");
+    this.imgFront.anchor.setTo(0.5, 0.5);
+    this.addChild(this.imgFront);
 
-    this.label = this.game.make.text(0, 0, value, {font: "bold 18pt arial", align: "center"});
+    // token label - TODO: make this a tooltip style label
+    this.label = this.game.make.text(0, 0, value, {font: "bold 18pt arial", align: "center", fill: "#fff"});
     this.label.anchor.setTo(0.5, 0.5);
+    this.label.alpha = 0; // hiding for now
     this.addChild(this.label);
 
     this.dropValidator = function(target) { return (target instanceof GlassLab.SortingGameCard); };

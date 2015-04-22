@@ -11,11 +11,16 @@ function getParameterByName(name) {
 }
 
 window.onload = function() {
+    GLOBAL.fullScreenAllowed = document.fullscreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.mozFullScreenEnabled ||
+        document.msFullscreenEnabled;
+
     GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer');
     GLOBAL.game = game;
-    GLOBAL.version = "0.2.2";
+    GLOBAL.version = "0.3.0";
     GLOBAL.debug = (getParameterByName("debug") == "true");
     GLOBAL.stickyMode = (getParameterByName("sticky") == "true"); // If true, click to grab something or put it down. If false, drag things around.
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements

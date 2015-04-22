@@ -20,7 +20,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.shadow.loadTexture("shadow");
     this.shadow.scale.setTo(0.25, 0.25);
     this.shadowY = this.shadow.y = -30;
-    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.5; // make babies smaller
+    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.6; // make babies smaller
     this.sprite.scale.setTo(this.spriteScaleY, this.spriteScaleY);
     this.spriteY = this.sprite.y = 20;
     this.canDropInWaitingArea = true; // setting on WorldObject
@@ -28,9 +28,11 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
 
-    this.moveSpeed = 2.75;
+    this.normalMoveSpeed = 2.75;
+    this.moveSpeed = this.normalMoveSpeed; // moveSpeed may be altered later, i.e. after eating donuts
     this.baseAnimSpeed = 36; // 36 per moveSpeed
 
+    // desired food:
     this.desiredAmountsOfFood = {};
     this.foodEaten = {};
     var totalFoodDesired = 0; // count so that we know what percentage of the hunger bar should go to this food
@@ -48,6 +50,13 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.hungerBar = new GlassLab.FillBar(this.game, 100, 20 / info.desiredFood.length, hungerBarSections);
     this.addChild(this.hungerBar.sprite);
     this.hungerBar.sprite.visible = false;
+
+    // other food: (i.e. mushrooms, donuts)
+    this.otherFoodReactions = {};
+    for (var f = 0; f < info.otherFood.length; f++) {
+        var otherFood = info.otherFood[f];
+        this.otherFoodReactions[otherFood.type] = otherFood.reaction; // otherFood.reaction is an object
+    }
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
     this.thoughtBubble.position.setTo(-70, -60);
@@ -118,6 +127,9 @@ GlassLab.Creature.prototype = Object.create(GlassLab.WorldObject.prototype);
 GlassLab.Creature.prototype.constructor = GlassLab.Creature;
 
 GlassLab.Creature.prototype._onDestroy = function () {
+
+    this.cancelPoop(); // poopTimer needs removing from this.game.time.events before creature is destroyed
+
     if (this.updateHandler) this.updateHandler.detach();
     if (this.targetsChangedHandler) this.targetsChangedHandler.detach();
     if (this.foodDroppedHandler) this.foodDroppedHandler.detach();
@@ -210,7 +222,8 @@ GlassLab.Creature.prototype.setType = function (type) {
     for (var key in this.animSprites) {
         this.animSprites[key].loadTexture(info.spriteName + "_" + key);
     }
-    // This hasn't been tested yet!
+    this.spriteScaleY = (this.type.indexOf("baby") > -1)? 0.45 : 0.6; // make babies smaller
+    this.sprite.scale.setTo(this.spriteScaleY * Math.sign(this.sprite.scale.x), this.spriteScaleY);
 };
 
 GlassLab.Creature.prototype.moveToTile = function (col, row) {
@@ -472,10 +485,10 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
 GlassLab.Creature.prototype.tryWalkToNextFood = function () {
     var foodInfo = this.targetFood.shift();
     if (!foodInfo || !foodInfo.food) {
-        if (this.getIsSatisfied()) this.FinishEating("satisfied");
-        else this.FinishEating("hungry");
+        if (this.getIsSatisfied()) this.FinishEating(GlassLab.results.satisfied);
+        else this.FinishEating(GlassLab.results.hungry);
     } else if (!this.desiredAmountsOfFood[foodInfo.food.type]) { // we don't want this food
-        this.FinishEating("dislike", foodInfo.food.type);
+        this.FinishEating(GlassLab.results.dislike, foodInfo.food.type);
     } else {
         this.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this, foodInfo));
     }
@@ -484,11 +497,11 @@ GlassLab.Creature.prototype.tryWalkToNextFood = function () {
 // NOTE: This function assumes creature is in a pen
 GlassLab.Creature.prototype.FinishEating = function (result, food) {
     this.hungerBar.show(false);
-    if (result == "dislike") {
+    if (result == GlassLab.results.dislike) {
         this.thoughtBubble.show("redX", food, 2000);
-    } else if (result == "satisfied") {
+    } else if (result == GlassLab.results.satisfied) {
         this.showEmote(true);
-    } else if (result == "hungry") {
+    } else if (result == GlassLab.results.hungry) {
         this.thoughtBubble.show(null, this.getDesiredFood());
         if (this.pen)
         {
@@ -670,7 +683,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     var targetIsSameTile = bestRealDist <= GLOBAL.tileSize / 2;
 
     if (bestTarget && targetIsNoticeable) {
-        if (bestTarget.pen && !bestTarget.full && !this.getIsEmpty()) { // if the creature wants to enter a pen, it poops first ...
+        if (bestTarget.pen && !bestTarget.outsidePen && !this.getIsEmpty()) { // if the creature wants to enter a pen, it poops first ...
             this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this)); // it will look for a target again when it's done
         } else if (!targetIsSameTile || !this.tryReachTarget(bestTarget)) { // if we're too far, or we fail to enter the target right now
             this.StateTransitionTo(new GlassLab.CreatureStateTraveling(this.game, this, bestTarget)); // travel to the target
@@ -689,11 +702,14 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
             this.game.time.events.add(0, function() {
                 this.standFacingPosition(new Phaser.Point(target.pos.x + GLOBAL.tileSize, target.pos.y)); // add a tile here since we offset the position when we set the target in FeedingPen
             }, this);
+            if (!target.outsidePen) return false; // we thought we'd be able to enter, so if we can't, it's time to look for a new target
         }
-        return true; // either way, we reached the target
+        return true; // else, we reached the target
     } else if (target.food) { // we're on top of some food
         if (target.food.type in this.desiredAmountsOfFood) {
             this.eatFreeFood(target.food);
+        } else if (target.food.type in this.otherFoodReactions) {
+            this.eatOtherFood(target.food);
         } else {
             this.dislikeFood(target.food);
         }
@@ -704,13 +720,14 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
 
 // call this to eat some food outside of a pen
 GlassLab.Creature.prototype.eatFreeFood = function (food) {
-    var result = "hungry";
+    var result = GlassLab.results.hungry;
     // check what the result will be when we add 1 whole food
     this.foodEaten[food.type] += 1;
-    if (this.getIsSick()) result = "sick";
-    else if (this.getIsSatisfied()) result = "satisfied";
+    if (this.getIsSick()) result = GlassLab.results.sick;
+    else if (this.getIsSatisfied()) result = GlassLab.results.satisfied;
     this.foodEaten[food.type] -= 1; // revert, since we haven't actually eaten the food yet
 
+    // telem:
     GlassLabSDK.saveTelemEvent("creature_eats", {
         creature_id: this.id,
         creature_type: this.type,
@@ -718,6 +735,23 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
         result: result
     });
     this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food}));
+
+    food.eaten = true;
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone
+};
+
+// call this to eat some "other" food outside of a pen (mushrooms, donuts)
+GlassLab.Creature.prototype.eatOtherFood = function (food) {
+    var reaction = this.otherFoodReactions[food.type];
+
+    // telem:
+    GlassLabSDK.saveTelemEvent("creature_eats", {
+        creature_id: this.id,
+        creature_type: this.type,
+        food_type: food.type,
+        result: reaction.result
+    });
+    this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food, reaction: reaction})); // add reaction
 
     food.eaten = true;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone
@@ -768,10 +802,11 @@ GlassLab.Creature.prototype._clearPath = function()
 
 GlassLab.Creature.prototype._onOver = function()
 {
-    if (!(this.state instanceof GlassLab.CreatureStateDragged)) { // && !this.getIsEmpty())
+    if (!(this.state instanceof GlassLab.CreatureStateDragged) && !this.pen) { // && !this.getIsEmpty())
         this.hungerBar.show(true, 1);
     }
 };
+
 
 GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
     if (targetState == this.state) {

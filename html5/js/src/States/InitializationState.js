@@ -34,6 +34,8 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
         game.load.image(spriteName+'_sticker', 'assets/images/creatures/stickers/creature_sticker_'+spriteName+'.png');
+        game.load.image(spriteName+'_photo', 'assets/images/journal/journal_photo_'+spriteName+'.png');
+        game.load.image(spriteName+'_mystery_photo', 'assets/images/journal/mystery_photo_'+spriteName+'.png');
 
         game.load.audio(spriteName+'_sfx_footstep0', 'assets/audio/sfx/'+spriteName+'_footsteps_1.mp3');
         game.load.audio(spriteName+'_sfx_footstep1', 'assets/audio/sfx/'+spriteName+'_footsteps_2.mp3');
@@ -43,6 +45,11 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.audio(spriteName+'_sfx_throwup', 'assets/audio/sfx/'+spriteName+'_throwup.mp3');
         game.load.audio(spriteName+'_sfx_happy', 'assets/audio/sfx/'+spriteName+'_happy.mp3');
         game.load.audio(spriteName+'_sfx_eat', 'assets/audio/sfx/'+spriteName+'_eat.mp3');
+
+        game.load.image(spriteName+'_orderPhoto_cry', 'assets/images/order/response_photos/order_fail_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_happy', 'assets/images/order/response_photos/order_success_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_vomit', 'assets/images/order/response_photos/order_response_photos_vomit_'+spriteName+'.png');
+        game.load.image(spriteName+'_orderPhoto_wrongFood', 'assets/images/order/response_photos/order_response_photos_wrong_food_'+spriteName+'.png');
     }
 
     var basicFoodSpriteNames = ["apple", "broccoli", "corn", "donut", "meat", "mushroom", "pizza", "strawberry", "taco", "tincan"];
@@ -62,16 +69,17 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('shadow', 'assets/images/iso_shadow2.png');
     game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
-    /*
-    game.load.image('crateBackCorner', 'assets/images/crate/crate_back_corner.png');
-    game.load.image('crateBackLeft', 'assets/images/crate/crate_back_left.png');
-    game.load.image('crateBackRight', 'assets/images/crate/crate_back_right.png');
-    game.load.image('crateBackRightWindow', 'assets/images/crate/crate_back_right_window.png');
-    game.load.image('crateFrontLeft', 'assets/images/crate/crate_front_left.png');
-    game.load.image('crateFrontRight', 'assets/images/crate/crate_front_right.png');
-    game.load.image('crateFloor', 'assets/images/crate/crate_floor.png');
-    */
     game.load.atlasJSONHash('crate', 'assets/images/crate/crate.png', 'assets/images/crate/crate.json');
+    game.load.image('crate_shadow', 'assets/images/crate/crate_shadow.png');
+    game.load.image('crate_frontBottom', 'assets/images/crate/crate_wall_front_left_solid2.png');
+    game.load.image('crate_frontBottom_window', 'assets/images/crate/crate_wall_front_left_window2.png');
+    game.load.image('crate_frontRight', 'assets/images/crate/crate_wall_front_right_solid2.png');
+    game.load.image('crate_lidCorner', 'assets/images/crate/crate_lid_back_corner.png');
+    game.load.image('crate_lidTop', 'assets/images/crate/crate_lid_back_right.png');
+    game.load.image('crate_lidBottom', 'assets/images/crate/crate_lid_front_left.png');
+    game.load.image('crate_lidLeft', 'assets/images/crate/crate_lid_back_left.png');
+    game.load.image('crate_lidRight', 'assets/images/crate/crate_lid_front_right.png');
+    game.load.atlasJSONHash('propellerAnim', 'assets/images/crate/propeller_animations.png', 'assets/images/crate/propeller_animations.json');
 
     game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
     game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');
@@ -94,8 +102,10 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
     game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
+    game.load.image('squareGrassTile', 'assets/images/tiles/square_grass.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
+    game.load.image('penTooltipCapTall', 'assets/images/pen/pen_tooltip_cap_tall.png');
     game.load.image('penTooltipWidth', 'assets/images/pen/pen_tooltip_width.png');
 
     // Cloud shadow
@@ -104,11 +114,11 @@ GlassLab.State.Init.prototype.preload = function()
     // UI
     game.load.image('closeIcon', 'assets/images/Close-button.png');
     game.load.image('alertIcon', 'assets/images/prima_HUD_alertBadge.png');
-    game.load.image('journalBg', 'assets/images/journal_bg2.png');
+    game.load.image('journalBg', 'assets/images/journal/hud_journal.png');
     game.load.image('cancelButton', 'assets/images/cancel_button.png');
     game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
     game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
-    game.load.image('sideArrow', 'assets/images/sideArrow.png');
+    game.load.image('sideArrow', 'assets/images/journal/hud_journal_paging_arrow.png');
     game.load.image('inventoryLock', 'assets/images/HUD_items_lock.png');
         game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
     game.load.image('inventoryClose', 'assets/images/HUD_close.png');
@@ -128,6 +138,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('fullscreenIcon', 'assets/images/hud/hud_icon_enter_fullscreen.png');
     game.load.image('fullscreenOffIcon', 'assets/images/hud/hud_icon_exit_fullscreen.png');
     game.load.image('pauseIcon', 'assets/images/hud/hud_icon_pause.png');
+    game.load.image('cancelIcon', 'assets/images/order/shipping_ui_hud_cancel.png');
     game.load.image('hudBg', 'assets/images/hud/hud_button_panel.png');
 
     game.load.image('notesIcon', 'assets/images/hud/hud_notes/notes_static.png');
@@ -143,6 +154,14 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('orderBg2', 'assets/images/order/shipping_ui_packing_slip_tall_bg.png');
     game.load.image('orderDragTarget', 'assets/images/order/shipping_ui_drag_food_here.png');
     game.load.image('orderEntryField', 'assets/images/order/shipping_ui_number_field.png');
+
+    game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
+    game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');
+    game.load.image('urgentStamp', 'assets/images/order/urgent_stamp.png');
+    game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
+    game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
+    game.load.image('bigCoin', 'assets/images/order/order_response_big_coin.png');
+    game.load.atlasJSONHash('coinAnim', 'assets/images/order/get_money.png', 'assets/images/order/get_money.json');
 
     game.load.image('questBarDotLarge', 'assets/images/hud/hud_questbar_large_dot.png');
     game.load.image('questBarDotSmall', 'assets/images/hud/hud_questbar_small_dot.png');
@@ -163,6 +182,23 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('foodItemBg', 'assets/images/hud/hud_food/hud_food_item_bg.png');
     game.load.image('foodLabelBg', 'assets/images/hud/hud_food/hud_food_label_bg_width.png');
     game.load.image('foodLabelBgEndcap', 'assets/images/hud/hud_food/hud_food_label_bg_endcap.png');
+
+    // bonus game
+    game.load.image('bonusBoardBg', 'assets/images/bonus_game/bonus_board_bg.png');
+    game.load.image('bonusCheckmark', 'assets/images/bonus_game/bonus_checkmark.png');
+    game.load.image('bonusXmark', 'assets/images/bonus_game/bonus_xmark.png');
+    game.load.image('bonusNotEnough', 'assets/images/bonus_game/bonus_not_enough.png');
+    game.load.image('bonusJustRight', 'assets/images/bonus_game/bonus_just_right.png');
+    game.load.image('bonusTooMuch', 'assets/images/bonus_game/bonus_too_much.png');
+    game.load.image('bonusCorrectionNotEnough', 'assets/images/bonus_game/bonus_correction_not_enough.png');
+    game.load.image('bonusCorrectionJustRight', 'assets/images/bonus_game/bonus_correction_just_right.png');
+    game.load.image('bonusCorrectionTooMuch', 'assets/images/bonus_game/bonus_correction_too_much.png');
+    game.load.image('bonusStickerDropzone', 'assets/images/bonus_game/bonus_sticker_dropzone.png');
+    game.load.image('bonusStickerDropzoneShader', 'assets/images/bonus_game/bonus_sticker_dropzone_shader.png');
+    game.load.image('bonusStickerOverlay', 'assets/images/bonus_game/bonus_sticker_overlay.png');
+    game.load.atlasJSONHash('bonusAnims', 'assets/images/bonus_game/bonus_anims.png', 'assets/images/bonus_game/bonus_anims.json');
+        game.load.image('bigO', 'assets/images/matchingGame_o.png');
+        game.load.image('bigX', 'assets/images/matchingGame_x.png');
 
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
@@ -261,6 +297,11 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
+    GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
+    GLOBAL.tiledBg.anchor.setTo(0.5, 0.5);
+    GLOBAL.tiledBg.visible = false;
+    GLOBAL.WorldLayer.add(GLOBAL.tiledBg);
+
     GLOBAL.baseWorldLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.baseWorldLayer);
 
@@ -296,8 +337,7 @@ GlassLab.State.Init.prototype.create = function()
     //game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
     var journal = new GlassLab.Journal(game);
-    journal.sprite.scale.setTo(1,1);
-    GLOBAL.UIManager.centerAnchor.addChild(journal.sprite);
+    GLOBAL.UIManager.centerAnchor.addChild(journal);
     GLOBAL.Journal = journal;
 
     GLOBAL.mailManager = new GlassLab.MailManager(game);
@@ -312,8 +352,11 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UIManager.bottomLeftAnchor.addChild(inventoryMenu);
     GLOBAL.inventoryMenu = inventoryMenu;
 
+    GLOBAL.inventoryMoneyTab = new GlassLab.InventoryMoneyTab(game, GLOBAL.itemsButton.x, -105);
+    GLOBAL.UIManager.bottomLeftAnchor.addChild(GLOBAL.inventoryMoneyTab);
+
     var assistant = new GlassLab.Assistant(game);
-    GLOBAL.UIManager.bottomRightAnchor.addChild(assistant.sprite);
+    GLOBAL.UIManager.tutorialAnchor.addChild(assistant.sprite);
     GLOBAL.assistant = assistant;
 
     var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
@@ -339,6 +382,9 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
     GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);
+
+    GLOBAL.transition = new GlassLab.Transition(game);
+    GLOBAL.UIManager.transitionAnchor.addChild(GLOBAL.transition);
 
     //GLOBAL.debugText = game.make.text(-300,0,"test");
     //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);
