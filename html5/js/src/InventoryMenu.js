@@ -153,7 +153,6 @@ GlassLab.InventoryMoneyTab.prototype.refresh = function()
 
 GlassLab.InventoryMoneyTab.prototype.show = function(reason)
 {
-    console.log("Show for",reason);
     this.refresh();
     if (!this.open) {
         this.game.add.tween(this.scale).to({y: 1}, 100, Phaser.Easing.Cubic.Out, true);
@@ -167,8 +166,6 @@ GlassLab.InventoryMoneyTab.prototype.show = function(reason)
 
 // Stop showing for one reason (e.g. because we're getting money) but maybe keep showing for another reason (e.g. because the inventory is open)
 GlassLab.InventoryMoneyTab.prototype.stopShowing = function(reason) {
-    console.log("Stop showing for",reason);
-
     if (this.openReasons.indexOf(reason) != -1) this.openReasons.splice(this.openReasons.indexOf(reason), 1);
     if (!this.openReasons.length) this.hide(); // hide when we're out of reasons to stay open
 };
