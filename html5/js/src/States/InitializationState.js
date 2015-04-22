@@ -183,6 +183,23 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('foodLabelBg', 'assets/images/hud/hud_food/hud_food_label_bg_width.png');
     game.load.image('foodLabelBgEndcap', 'assets/images/hud/hud_food/hud_food_label_bg_endcap.png');
 
+    // bonus game
+    game.load.image('bonusBoardBg', 'assets/images/bonus_game/bonus_board_bg.png');
+    game.load.image('bonusCheckmark', 'assets/images/bonus_game/bonus_checkmark.png');
+    game.load.image('bonusXmark', 'assets/images/bonus_game/bonus_xmark.png');
+    game.load.image('bonusNotEnough', 'assets/images/bonus_game/bonus_not_enough.png');
+    game.load.image('bonusJustRight', 'assets/images/bonus_game/bonus_just_right.png');
+    game.load.image('bonusTooMuch', 'assets/images/bonus_game/bonus_too_much.png');
+    game.load.image('bonusCorrectionNotEnough', 'assets/images/bonus_game/bonus_correction_not_enough.png');
+    game.load.image('bonusCorrectionJustRight', 'assets/images/bonus_game/bonus_correction_just_right.png');
+    game.load.image('bonusCorrectionTooMuch', 'assets/images/bonus_game/bonus_correction_too_much.png');
+    game.load.image('bonusStickerDropzone', 'assets/images/bonus_game/bonus_sticker_dropzone.png');
+    game.load.image('bonusStickerDropzoneShader', 'assets/images/bonus_game/bonus_sticker_dropzone_shader.png');
+    game.load.image('bonusStickerOverlay', 'assets/images/bonus_game/bonus_sticker_overlay.png');
+    game.load.atlasJSONHash('bonusAnims', 'assets/images/bonus_game/bonus_anims.png', 'assets/images/bonus_game/bonus_anims.json');
+        game.load.image('bigO', 'assets/images/matchingGame_o.png');
+        game.load.image('bigX', 'assets/images/matchingGame_x.png');
+
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
     game.load.image('questionMark', 'assets/images/thought_bubble/thought_bubble_question_mark.png');
