@@ -89,6 +89,10 @@ GlassLab.UIManager.prototype._createAnchors = function()
     this.centerAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
     GLOBAL.UILayer.add(this.centerAnchor);
 
+    // Another anchor in the bottom right, used for the assistant
+    this.tutorialAnchor = new GlassLab.UIAnchor(this.game, 1, 1);
+    GLOBAL.UILayer.add(this.tutorialAnchor);
+
     // Another anchor in the center, but make sure it's above everything
     this.transitionAnchor = new GlassLab.UIAnchor(this.game, .5, .5);
     GLOBAL.UILayer.add(this.transitionAnchor);

@@ -131,7 +131,7 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
                 break;
             } else {
                 var targetAmount = info.desiredFood[i].amount * numCreatures;
-                var currentAmount = (numFoods && numFoods[index]) || 0;
+                var currentAmount = (numFoods && parseInt(numFoods[index])) || 0;
                 //console.log(info.desiredFood[i].type, "target:",targetAmount,"current:",currentAmount,"for creatures:",numCreatures);
                 if (currentAmount + 0.01 < targetAmount) { // add a little wiggle room
                     this.result = GlassLab.results.hungry;

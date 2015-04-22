@@ -87,6 +87,7 @@ GlassLab.SortingGame.prototype.addToken = function(value, pileCol) {
 GlassLab.SortingGame.prototype.refreshTokenStack = function(stack) {
     for (var i = 0; i < stack.length; i++) {
         stack[i].inputEnabled = (i == stack.length - 1);
+        if (stack[i].inputEnabled) stack[i].input.priorityID = GLOBAL.UIpriorityID; // this gets reset when we disable the input
     }
 };
 
