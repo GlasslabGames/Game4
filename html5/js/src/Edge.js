@@ -37,6 +37,17 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.unusedSprites = [];
 
     this.cursors = this.game.input.keyboard.createCursorKeys(); // for testing
+
+    // TODO: we can extend DraggableComponent instead of duplicating all the code
+    if (GLOBAL.gameInitialized) {
+        this._onInitGame();
+    } else {
+        GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
+    }
+};
+
+GlassLab.Edge.prototype._onInitGame = function() {
+    this.game.input.onUp.add(this._onUp, this); // wait until now to add the global input listener. It gets wiped between states.
 };
 
 GlassLab.Edge.prototype.Reset = function() {
@@ -89,7 +100,6 @@ GlassLab.Edge.prototype._setInputHandlers = function(sprite) {
     sprite.inputEnabled = true;
     sprite.input.pixelPerfectOver = true;
     sprite.input.pixelPerfectClick = true;
-    sprite.events.onInputUp.add(this._onUp, this);
     sprite.events.onInputDown.add(this._onDown, this);
     sprite.events.onInputOver.add(this._onOver, this);
     sprite.events.onInputOut.add(this._onOut, this);
