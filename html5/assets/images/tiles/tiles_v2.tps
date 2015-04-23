@@ -4,9 +4,9 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.6.0</string>
+        <string>3.7.1</string>
         <key>fileName</key>
-        <string>C:/Users/Jerry Fu/Documents/Game4/html5/assets/images/tiles/tiles.tps</string>
+        <string>C:/Users/Jerry Fu/Documents/Game4/html5/assets/images/tiles/tiles_v2.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -38,7 +38,7 @@
         <key>dataFormat</key>
         <string>phaser-json-hash</string>
         <key>textureFileName</key>
-        <filename>tiles.png</filename>
+        <filename></filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -70,7 +70,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>1</uint>
+        <uint>2</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -82,13 +82,13 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>1</uint>
+        <uint>2</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>2048</int>
+            <int>4096</int>
             <key>height</key>
-            <int>2048</int>
+            <int>4096</int>
         </QSize>
         <key>fixedTextureSize</key>
         <QSize>
@@ -145,7 +145,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>tiles.json</filename>
+                <filename>tiles_v2.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -188,28 +188,36 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>dirtTile1_top.png</filename>
-            <filename>grassy_1.png</filename>
-            <filename>grassy_2.png</filename>
-            <filename>grassy_3.png</filename>
-            <filename>grassy_4.png</filename>
-            <filename>grassy_fence_bottomCorner.png</filename>
-            <filename>grassy_fence_length.png</filename>
-            <filename>grassy_fence_sideCorner.png</filename>
-            <filename>grassy_fence_topCorner.png</filename>
-            <filename>grassy_water.png</filename>
-            <filename>penTile_placeholder.png</filename>
-            <filename>penTile_placeholder2.png</filename>
-            <filename>autumn_fenceBottomCorner.png</filename>
-            <filename>autumn_fenceSideCorner.png</filename>
-            <filename>autumn_fenceStraight.png</filename>
-            <filename>autumn_fenceTopCorner.png</filename>
-            <filename>autumn_ground1.png</filename>
-            <filename>autumn_ground2.png</filename>
-            <filename>autumn_ground3.png</filename>
-            <filename>autumn_ground4.png</filename>
-            <filename>autumn_water.png</filename>
+            <filename>world_art_v2/grass_clover_1.png</filename>
+            <filename>world_art_v2/grass_clover_2.png</filename>
+            <filename>world_art_v2/grass_clover_3.png</filename>
+            <filename>world_art_v2/pond_edge_back_corner.png</filename>
+            <filename>world_art_v2/pond_edge_back_left.png</filename>
+            <filename>world_art_v2/pond_edge_back_point.png</filename>
+            <filename>world_art_v2/pond_edge_back_right.png</filename>
+            <filename>world_art_v2/pond_edge_cliff_left.png</filename>
+            <filename>world_art_v2/pond_edge_cliff_right.png</filename>
+            <filename>world_art_v2/pond_edge_front_corner.png</filename>
+            <filename>world_art_v2/pond_edge_front_left.png</filename>
+            <filename>world_art_v2/pond_edge_front_right.png</filename>
+            <filename>world_art_v2/pond_water_1.png</filename>
+            <filename>world_art_v2/pond_water_2.png</filename>
+            <filename>world_art_v2/decoration_tree_1.png</filename>
+            <filename>world_art_v2/decoration_tree_2.png</filename>
+            <filename>world_art_v2/decoration_tree_3.png</filename>
+            <filename>world_art_v2/forest_edge_inside_corner.png</filename>
+            <filename>world_art_v2/forest_edge_left_1.png</filename>
+            <filename>world_art_v2/forest_edge_left_2.png</filename>
+            <filename>world_art_v2/forest_edge_left_3.png</filename>
+            <filename>world_art_v2/forest_edge_outside_corner.png</filename>
+            <filename>world_art_v2/forest_edge_right_1.png</filename>
+            <filename>world_art_v2/forest_edge_right_2.png</filename>
+            <filename>world_art_v2/forest_edge_right_3.png</filename>
+            <filename>world_art_v2/forest_floor_1.png</filename>
+            <filename>world_art_v2/forest_floor_2.png</filename>
+            <filename>world_art_v2/grass_blank_1.png</filename>
             <filename>dirtTile1.png</filename>
+            <filename>dirtTile1_top.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
@@ -221,5 +229,15 @@
         <uint>1</uint>
         <key>commonDivisorY</key>
         <uint>1</uint>
+        <key>packNormalMaps</key>
+        <false/>
+        <key>autodetectNormalMaps</key>
+        <true/>
+        <key>normalMapFilter</key>
+        <string></string>
+        <key>normalMapSuffix</key>
+        <string></string>
+        <key>normalMapSheetFileName</key>
+        <filename></filename>
     </struct>
 </data>

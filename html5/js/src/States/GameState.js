@@ -80,11 +80,11 @@ GlassLab.State.Game.prototype.update = function()
             GLOBAL.UIManager.penTooltip.hide();
         }
 
-        /*
+
         // Highlight tile
         if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
         if (tileSprite) tileSprite.tint = 0xBFE2F2; //previous color was 0x86bfda (good for night) but I lightened it
-        */
+
 
         GLOBAL.highlightedTile = tileSprite;
     }

@@ -101,8 +101,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('happyEmote', 'assets/images/emotes/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
-    game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
-    game.load.image('squareGrassTile', 'assets/images/tiles/square_grass.png');
+    game.load.atlasJSONHash('tiles_v2', 'assets/images/tiles/tiles_v2.png', 'assets/images/tiles/tiles_v2.json');
+    game.load.image('squareGrassTile', 'assets/images/tiles/grass_blank_1.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
     game.load.image('penTooltipCapTall', 'assets/images/pen/pen_tooltip_cap_tall.png');
@@ -222,7 +222,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.atlasJSONHash('poopAnim', 'assets/images/poo/poo.png', 'assets/images/poo/poo.json');
 
     // Tilemap
-    game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('worldTileMap', 'assets/tilemaps/prima_world.json', null, Phaser.Tilemap.TILED_JSON);
 
     game.load.audio('backgroundMusic', 'assets/audio/bgm/cc_in-game_music_loop.mp3');
     game.load.audio('menuMusic', 'assets/audio/bgm/cc_menu_music_loop.mp3');
@@ -274,7 +274,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UILayer = game.add.group();
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = false;
 
-    GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
+    GLOBAL.tileSize = 115; // Art tile size is about 139 (guessed with trial and error)
 
     GLOBAL.foodInWorld = [];
 
@@ -291,7 +291,7 @@ GlassLab.State.Init.prototype.create = function()
     // Create TileManager and map
     GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
 
-    var mapData = GLOBAL.tileManager.GenerateRandomMapData(20, 20);
+    var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
     GLOBAL.grassGroup = game.make.group();
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
