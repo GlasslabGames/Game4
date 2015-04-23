@@ -49,8 +49,14 @@ GlassLab.SortingGame = function(game) {
         this.refreshTokenStack(this.tokens[value]);
     }
 
+    // add bonusAnims spritesheet and add get_coins anim:
+    this.largeCoin = game.make.sprite(575, 498, "bonusAnims");
+    this.largeCoin.animations.add("get_coins", Phaser.Animation.generateFrameNames("bonus_get_coins_",277,310,".png",3), 24, false);
+    this.largeCoin.anchor.set(0.5, 0.5);
+    this.root.addChild(this.largeCoin);
+
     this.bonusAmount = 0;
-    this.bonusAmountLabel = game.make.text(625, 517, "x 0", {font: "36px EnzoBlack", fill: "#fff"});
+    this.bonusAmountLabel = game.make.text(630, 517, "x 0", {font: "36px EnzoBlack", fill: "#fff"});
     this.bonusAmountLabel.anchor.setTo(0, 0.5);
     this.bonusAmountLabel.anchor.y = Math.round(this.bonusAmountLabel.height * 0.5) / this.bonusAmountLabel.height; // round to avoid blur
     this.root.addChild(this.bonusAmountLabel);
@@ -109,6 +115,10 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
         //if (this.cardsCorrect == this.cards.length) { // color text green if they got them all right
         //    this.bonusAmountLabel.style.fill = "#39b54a";
         //}
+
+        // animate the coin:
+        var anim = this.largeCoin.play("get_coins");
+
 
         // Animate the bonusAmountLabel
         var tween = this.game.add.tween(this.bonusAmountLabel.scale).to({
@@ -217,7 +227,7 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
         this._addNumberDisplay();
     }
 
-    // dashed circle img:
+    // dashed circle sprite:
     this.target = this.game.make.sprite(this.actualWidth / 2, this.actualHeight - 70, "bonusStickerDropzone");
     this.target.anchor.set(0.5, 0.5);
     this.addChild(this.target);
@@ -232,7 +242,6 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
 
     // large X and checkmark:
     for (var spriteName in {bonusXmark: 0, bonusCheckmark: 0}) {
-        // images used to be 200x200, now 150x150
         var sprite = this.game.make.sprite(this.actualWidth / 2, 110, spriteName);
         sprite.anchor.setTo(0.5, 0.5);
         sprite.visible = false;
@@ -304,11 +313,43 @@ GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
     });
 
     if (!this.correct) {
+        // do sticker splode, then puff:
+        // TODO: this needs refinement!
+        this.token.imgFront.alpha = 0; // hide static asset
+        this.token.stickerAnim.alpha = 1; // reveal anim sprite
+        var anim = this.token.stickerAnim.play("sticker_splode");
+        if (anim) {
+            anim.onComplete.addOnce(function() {
+                // create new imgBack with correct img:
+                this.token.imgBack;
+                if (this.targetValue == "Just Right")
+                    this.token.imgBack = this.game.make.sprite(0, 0, "bonusCorrectionJustRight");
+                else if (this.targetValue == "Too Much")
+                    this.token.imgBack = this.game.make.sprite(0, 0, "bonusCorrectionTooMuch");
+                else // Not Enough
+                    this.token.imgBack = this.game.make.sprite(0, 0, "bonusCorrectionNotEnough");
+                this.token.imgBack.anchor.setTo(0.5, 0.5);
+                this.token.imgBack.alpha = 0; // init it hidden
+                this.token.addChild(this.token.imgBack);
+
+                // animate the puff and bring to front:
+                var anim_puff = this.token.stickerAnim.play("smoke_puff");
+                this.token.stickerAnim.anchor.set(0.5, 0.75);
+                this.token.addChild(this.token.stickerAnim);
+                if (anim_puff) {
+                    anim_puff.onComplete.addOnce(function() {
+                        // reveal imgBack
+                        this.token.imgBack.alpha = 1;
+                    }, this);
+                }
+            }, this);
+        }
+
         // flip the coin by tweening the scale and changing the contents in the middle
+        // OLD:
+        /*
         var flipTween1 = this.game.add.tween(this.token.scale).to( { x: 0 }, 300, Phaser.Easing.Quadratic.In);
         flipTween1.onComplete.add(function() {
-            // hide this.token.imgFront
-            this.token.imgFront.alpha = 0;
 
             // create new imgBack with correct img:
             this.token.imgBack;
@@ -327,8 +368,13 @@ GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
         }, this);
         var flipTween2 = this.game.add.tween(this.token.scale).to( { x: 1 }, 300, Phaser.Easing.Quadratic.Out);
         colorTween.chain(flipTween1, flipTween2);
+        */
+    }
+    else {
+        // do "correct" anim
     }
 
+    // animate the coin, etc:
     colorTween.onComplete.add(function() {
         this.events.onCardAnswered.dispatch(this, this.correct);
     }, this);
@@ -418,16 +464,35 @@ GlassLab.SortingGameToken = function(sortingGame, value) {
     this.actualWidth = this.actualHeight = 100;
     this.hitArea = new Phaser.Circle(0, 0, this.actualWidth); // very important!
 
-    // token image:
+    // token image and sticker anims
     this.imgFront;
-    if (value == "Just Right")
+    this.stickerAnim = this.game.make.sprite(0, 0, "bonusAnims");
+    if (value == "Just Right") {
         this.imgFront = this.game.make.sprite(0, 0, "bonusJustRight");
-    else if (value == "Too Much")
+        this.stickerAnim.animations.add("sticker_splode",
+            Phaser.Animation.generateFrameNames("bonus_sticker_splode_just_right_",267,285,".png",3), 24, false);
+    }
+    else if (value == "Too Much") {
         this.imgFront = this.game.make.sprite(0, 0, "bonusTooMuch");
-    else // Not Enough
+        this.stickerAnim.animations.add("sticker_splode",
+            Phaser.Animation.generateFrameNames("bonus_sticker_splode_too_much_",267,285,".png",3), 24, false);
+    }
+    else { // Not Enough
         this.imgFront = this.game.make.sprite(0, 0, "bonusNotEnough");
+        this.stickerAnim.animations.add("sticker_splode",
+            Phaser.Animation.generateFrameNames("bonus_sticker_splode_not_enough_",267,285,".png",3), 24, false);
+    }
+
+    // add smoke puff:
+    this.stickerAnim.animations.add("smoke_puff",
+        Phaser.Animation.generateFrameNames("smoke_puff_bonus_game_",282,312,".png",3), 24, false);
+
     this.imgFront.anchor.setTo(0.5, 0.5);
     this.addChild(this.imgFront);
+    this.stickerAnim.anchor.set(0.5, 0.5);
+    this.stickerAnim.alpha = 0;
+    this.addChild(this.stickerAnim);
+
 
     // token label - TODO: make this a tooltip style label
     this.label = this.game.make.text(0, 0, value, {font: "bold 18pt arial", align: "center", fill: "#fff"});
