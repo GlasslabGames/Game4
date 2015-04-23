@@ -7,10 +7,10 @@
  */
 GlassLab.Tile = function(game, col, row, type) {
     var imageName = this._getImageFromType(type);
-    Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-GLOBAL.tileManager.tilemap.width/2)*GLOBAL.tileSize, (row-GLOBAL.tileManager.tilemap.height/2)*GLOBAL.tileSize, 0, "tiles", imageName);
+    Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-GLOBAL.tileManager.tilemap.width/2)*GLOBAL.tileSize, (row-GLOBAL.tileManager.tilemap.height/2)*GLOBAL.tileSize, 0, "tiles_v2", imageName);
     this.type = type;
     //this.tint = Phaser.Color.getColor(Math.random() * 255, Math.random() * 255, Math.random() * 255); // for testing with clearly distinguished tiles (change type to placeholderTile)
-    this.anchor.setTo(0.5, 0.45);
+    this.anchor.setTo(0.5, 1);
     this.col = col;
     this.row = row;
     this.inPen = null;
@@ -42,7 +42,7 @@ GlassLab.Tile.TYPES = {
     mushroom0 : 13,
     mushroom1 : 11,
     mushroom2 : 12,
-    dirt : 9
+    dirt : 28
 };
 
 GlassLab.Tile.prototype.GetTileData = function()
@@ -54,14 +54,14 @@ GlassLab.Tile.prototype.swapType = function(newType) {
     if (this.type == newType) return;
     this.prevType = this.type;
     this.type = newType;
-    this.loadTexture( "tiles", this._getImageFromType(this.type) );
+    this.loadTexture( "tiles_v2", this._getImageFromType(this.type) );
 };
 
 GlassLab.Tile.prototype.unswapType = function() {
     if (!this.prevType) return;
     this.type = this.prevType;
     this.prevType = null;
-    this.loadTexture( "tiles", this._getImageFromType(this.type) );
+    this.loadTexture( "tiles_v2", this._getImageFromType(this.type) );
 };
 
 GlassLab.Tile.prototype.isTarget = function(creature) {

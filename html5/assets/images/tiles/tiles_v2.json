@@ -1,0 +1,252 @@
+{"frames": {
+
+"decoration_tree_1.png":
+{
+	"frame": {"x":128,"y":305,"w":124,"h":158},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":101,"y":1,"w":124,"h":158},
+	"sourceSize": {"w":320,"h":210}
+},
+"decoration_tree_2.png":
+{
+	"frame": {"x":1327,"y":236,"w":164,"h":205},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":3,"w":164,"h":205},
+	"sourceSize": {"w":320,"h":230}
+},
+"decoration_tree_3.png":
+{
+	"frame": {"x":2,"y":305,"w":124,"h":171},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":66,"y":4,"w":124,"h":171},
+	"sourceSize": {"w":320,"h":200}
+},
+"dirtTile1.png":
+{
+	"frame": {"x":254,"y":287,"w":240,"h":216},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":32,"w":240,"h":216},
+	"sourceSize": {"w":240,"h":248}
+},
+"dirtTile1_top.png":
+{
+	"frame": {"x":1376,"y":2,"w":240,"h":146},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":32,"w":240,"h":146},
+	"sourceSize": {"w":240,"h":248}
+},
+"forest_edge_inside_corner.png":
+{
+	"frame": {"x":667,"y":2,"w":270,"h":258},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":9,"w":270,"h":258},
+	"sourceSize": {"w":320,"h":270}
+},
+"forest_edge_left_1.png":
+{
+	"frame": {"x":2,"y":2,"w":211,"h":301},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":6,"w":211,"h":301},
+	"sourceSize": {"w":320,"h":310}
+},
+"forest_edge_left_2.png":
+{
+	"frame": {"x":1125,"y":253,"w":200,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":3,"w":200,"h":234},
+	"sourceSize": {"w":320,"h":240}
+},
+"forest_edge_left_3.png":
+{
+	"frame": {"x":939,"y":2,"w":233,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":46,"y":8,"w":233,"h":249},
+	"sourceSize": {"w":320,"h":260}
+},
+"forest_edge_outside_corner.png":
+{
+	"frame": {"x":440,"y":2,"w":225,"h":275},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":2,"w":225,"h":275},
+	"sourceSize": {"w":320,"h":280}
+},
+"forest_edge_right_1.png":
+{
+	"frame": {"x":698,"y":262,"w":217,"h":236},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":44,"y":4,"w":217,"h":236},
+	"sourceSize": {"w":320,"h":240}
+},
+"forest_edge_right_2.png":
+{
+	"frame": {"x":917,"y":262,"w":206,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":3,"w":206,"h":234},
+	"sourceSize": {"w":320,"h":240}
+},
+"forest_edge_right_3.png":
+{
+	"frame": {"x":1174,"y":2,"w":200,"h":232},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":5,"w":200,"h":232},
+	"sourceSize": {"w":320,"h":240}
+},
+"forest_floor_1.png":
+{
+	"frame": {"x":215,"y":2,"w":223,"h":283},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":47,"y":4,"w":223,"h":283},
+	"sourceSize": {"w":320,"h":290}
+},
+"forest_floor_2.png":
+{
+	"frame": {"x":496,"y":279,"w":200,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":9,"w":200,"h":218},
+	"sourceSize": {"w":320,"h":230}
+},
+"grass_blank_1.png":
+{
+	"frame": {"x":1493,"y":213,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"grass_clover_1.png":
+{
+	"frame": {"x":1618,"y":2,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":59,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"grass_clover_2.png":
+{
+	"frame": {"x":1493,"y":331,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":59,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"grass_clover_3.png":
+{
+	"frame": {"x":1696,"y":183,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":59,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_edge_back_corner.png":
+{
+	"frame": {"x":1821,"y":2,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_edge_back_left.png":
+{
+	"frame": {"x":2102,"y":120,"w":200,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":200,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_edge_back_point.png":
+{
+	"frame": {"x":1899,"y":238,"w":200,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":200,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_edge_back_right.png":
+{
+	"frame": {"x":2024,"y":2,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_edge_cliff_left.png":
+{
+	"frame": {"x":2101,"y":238,"w":200,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":200,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_edge_cliff_right.png":
+{
+	"frame": {"x":1899,"y":356,"w":200,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":200,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_edge_front_corner.png":
+{
+	"frame": {"x":1376,"y":150,"w":200,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":9,"w":200,"h":61},
+	"sourceSize": {"w":320,"h":70}
+},
+"pond_edge_front_left.png":
+{
+	"frame": {"x":1578,"y":150,"w":105,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":9,"w":105,"h":61},
+	"sourceSize": {"w":320,"h":70}
+},
+"pond_edge_front_right.png":
+{
+	"frame": {"x":1685,"y":120,"w":105,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":155,"y":9,"w":105,"h":61},
+	"sourceSize": {"w":320,"h":70}
+},
+"pond_water_1.png":
+{
+	"frame": {"x":1696,"y":301,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+},
+"pond_water_2.png":
+{
+	"frame": {"x":1899,"y":120,"w":201,"h":116},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":4,"w":201,"h":116},
+	"sourceSize": {"w":320,"h":120}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "tiles_v2.png",
+	"format": "RGBA8888",
+	"size": {"w":2304,"h":505},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:adb2cf4f255880089ddadc3769714b59:61df38285e74a97aa7ee4082d075a918:0563e9dfffe45ad1396480e03ce994c4$"
+}
+}
