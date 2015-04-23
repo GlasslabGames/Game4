@@ -95,6 +95,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
 
     this.SetCenter(this.tilemap.width/2, this.tilemap.height/2);
 
+    var tilesetProperties = this.tilemap.tilesets[0].tileproperties;
     for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
     {
         var layer = this.tilemap.layers[layerIndex];
@@ -112,7 +113,12 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
                 layerGroup.add(image);
 
                 if (!this.map[i]) this.map[i] = [];
-                this.map[i][j] = image;
+
+                var tileProperties = tilesetProperties[tileType];
+                if (!tileProperties.hasOwnProperty("interactable") || tileProperties.interactable !== "false")
+                {
+                    this.map[i][j] = image;
+                }
 
                 if (GLOBAL.debug)
                 {
