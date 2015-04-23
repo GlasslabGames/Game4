@@ -41,6 +41,9 @@ GlassLab.UIButton.prototype.setEnabled = function(enabled) {
         this.pressed = false;
         if (this.over) this._onOut();
     }
+
+    this.enabled = enabled;
+    this.refresh();
 };
 
 GlassLab.UIButton.prototype._onUp = function() {
@@ -67,11 +70,18 @@ GlassLab.UIButton.prototype._onOut = function() {
     if (!this.pressed) this.whenUp();
 };
 
+GlassLab.UIButton.prototype.refresh = function() {
+    if (!this.enabled) this.whenDisabled();
+    else if (this.pressed) this.whenDown();
+    else if (this.over) this.whenOver();
+    else this.whenUp();
+};
 
 // Override these to set the different highlight states of the button
 GlassLab.UIButton.prototype.whenUp = function() {};
 GlassLab.UIButton.prototype.whenDown = function() {};
 GlassLab.UIButton.prototype.whenOver = function() {};
+GlassLab.UIButton.prototype.whenDisabled = function() {};
 
 /**
  * UITextButton - like UIButton but with text

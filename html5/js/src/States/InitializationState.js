@@ -150,10 +150,18 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('mailIcon_full', 'assets/images/hud/hud_mail/mailbox_static_full.png');
     game.load.atlasJSONHash('mailIcon_anim', 'assets/images/hud/hud_mail/mailbox_full.png', 'assets/images/hud/hud_mail/mailbox_full.json');
 
+    game.load.image('noMailPopup', 'assets/images/hud/hud_mail/order_empty_mail_message.png');
+
+    // Order
     game.load.image('orderBg', 'assets/images/order/shipping_ui_packing_slip_bg.png');
     game.load.image('orderBg2', 'assets/images/order/shipping_ui_packing_slip_tall_bg.png');
     game.load.image('orderDragTarget', 'assets/images/order/shipping_ui_drag_food_here.png');
     game.load.image('orderEntryField', 'assets/images/order/shipping_ui_number_field.png');
+    game.load.image('orderButton', 'assets/images/order/shipping_ui_pak_or_ship_button.png');
+    game.load.atlasJSONHash('orderButtonAnim', 'assets/images/order/shipping_button_animations.png', 'assets/images/order/shipping_button_animations.json');
+    game.load.image('paperClip', 'assets/images/order/shipping_ui_paper_clip.png');
+    game.load.image('orderX', 'assets/images/order/shipping_ui_remove_item_x.png');
+    game.load.image('orderHighlight', 'assets/images/order/shipping_ui_list_item_highlight.png');
 
     game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
     game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');

@@ -20,7 +20,7 @@ GlassLab.Transition = function (game) {
 
     this.game.scale.onSizeChange.add(this._resize, this);
 
-    this._refresh(0.5);
+    this._refresh(1);
 };
 
 // Extends sprite

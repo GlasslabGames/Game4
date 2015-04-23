@@ -4,7 +4,7 @@
 
 var GlassLab = GlassLab || {};
 
-GlassLab.UITextInput = function(game, inputType, spriteName)
+GlassLab.UITextInput = function(game, inputType, spriteName, font, yOffset)
 {
     GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0, spriteName);
     this.game = game;
@@ -24,17 +24,18 @@ GlassLab.UITextInput = function(game, inputType, spriteName)
         this.addChild(this.bg);
     }
 
-    this.textLabel = game.make.text(30,this.getLocalBounds().height/2,"");
+    this.textLabel = game.make.text(30,this.getLocalBounds().height/2,"", font);
     this.textLabel.anchor.setTo(0.5, 0.5);
+    if (yOffset) this.textLabel.y += yOffset; // this handles fonts that are weirdly offset
     this.addChild(this.textLabel);
 
-    this.textCursor = game.make.text(0,0,"|");
+    this.textCursor = game.make.text(0,0,"|", font);
     this.textCursor.visible = false;
     this.textCursor.anchor.setTo(0, 1);
     this.textCursorUpdateTimer = null;
     this.addChild(this.textCursor);
 
-    this.clickHereLabel = game.make.text(0,0,"?");
+    this.clickHereLabel = game.make.text(0,0,"?", font);
     this.clickHereLabel.anchor.setTo(.5, .5);
     this.clickHereLabel.alpha = .5;
     this.textLabel.addChild(this.clickHereLabel);

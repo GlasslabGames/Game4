@@ -18,7 +18,7 @@ GlassLab.OrderFulfillment = function(game)
     this.bg.anchor.setTo(1,1);
     this.sprite.addChild(this.bg);
 
-    var foodScale = 0.75;
+    var foodScale = 1;
 
     // The total food label is special and above the other answer inputs
     this.totalFoodRoot = game.make.sprite(-180, -315);
@@ -49,54 +49,63 @@ GlassLab.OrderFulfillment = function(game)
 
     this.foodTypes = [];
     this.answerInputs = []; // array of answer inputs (for each kind of food)
-    this.answerInputRoot = game.make.sprite(-180, -275);
+    this.answerInputRoot = game.make.sprite(-205, -270);
     this.sprite.addChild(this.answerInputRoot);
 
     for (var i = 0; i < 3; i++) { // 3 inputs = the creature, foodA, and foodB
-        var rowY = 65 * i;
-        var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC, "orderEntryField");
-        answerInput.x = 50;
+        var rowY = 60 * i;
+
+        var highlight = game.make.sprite(0, rowY - 5, "orderHighlight");
+        this.answerInputRoot.addChild(highlight);
+
+        var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC, "orderEntryField", {font: "20px ArchitectsDaughter", fill: "#807c7b"}, 5);
+        answerInput.x = 70;
         answerInput.y = rowY;
         answerInput.SetInputLimit(3);
         this.answerInputRoot.addChild(answerInput);
 
-        var inputErrorGraphic = this.game.make.graphics();
-        answerInput.events.onTextChange.add(this._onTextChange, this);
-        var answerInputBounds = answerInput.getLocalBounds();
-        inputErrorGraphic.drawRect(-20,-20,answerInputBounds.width+60, answerInputBounds.height+40); // was .beginFill(0xFF4444)
-        inputErrorGraphic.alpha = 0;
-        answerInput.addChild(inputErrorGraphic);
-
-        var label = game.make.text(75, rowY, "100", {font: "bold 40px Helvetica"});
+        var label = game.make.text(100, rowY + 10, "100", {font: "20px ArchitectsDaughter", fill: "#4d4b4a"});
         label.anchor.set(0.5, 0);
         this.answerInputRoot.addChild(label);
 
-        var sprite = game.make.sprite(10, rowY + 20, "apple");
+        var sprite = game.make.sprite(30, rowY + 20, "apple");
         sprite.anchor.setTo(.5, .5);
         sprite.scale.setTo(foodScale, foodScale);
         if (i == 0) { // creature
-            sprite.scale.setTo(-0.25, 0.25);
+            sprite.scale.setTo(0.5, 0.5);
+            sprite.y -= 3;
         }
         this.answerInputRoot.addChild(sprite);
 
         if (i > 0) { // the first input is for creatures, so we don't have to drag anything onto it
             var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "orderDragTarget");
-            dragTarget.x = -20;
-            dragTarget.y = rowY - 5;
+            dragTarget.x = 5;
+            dragTarget.y = rowY;
             dragTarget.objectValidator = function(obj) { return obj.foodType; };
             dragTarget.addObjectAsChild = false;
             dragTarget.events.onObjectDropped.add(this.onFoodSet, this);
             this.answerInputRoot.addChild(dragTarget).name = "foodSlot"+i;
+
+            var clearButton = new GlassLab.UIButton(game, 140, rowY + 10, "orderX");
+            clearButton.whenUp = function() { this.tint = 0x994c4e; };
+            clearButton.whenOver = function() { this.tint = 0xd96b6f; };
+            clearButton.whenDown = function() { this.tint = 0x592c2d; };
+            clearButton.whenUp();
+            this.answerInputRoot.addChild(clearButton);
         }
 
-        this.answerInputs.push({ input: answerInput, errorGraphic: inputErrorGraphic,
-            sprite: sprite, label: label, dragTarget: dragTarget});
+        this.answerInputs.push({ input: answerInput, highlight: highlight,
+            sprite: sprite, label: label, dragTarget: dragTarget, clearButton: clearButton});
     }
 
     this.crateLoaded = false;
-    this.submitButton = new GlassLab.UIRectButton(game, -200, -80, this._onSubmit, this, 180, 60, 0xffffff, "Load Crate");
+    this.submitButton = new GlassLab.OrderFulfillmentButton(game, 0, 0, this._onSubmit, this);
+    this.submitButton.anchor.setTo(1, 1);
     this.sprite.addChild(this.submitButton);
     this.submitButton.setEnabled(false);
+
+    var paperClip = this.sprite.addChild(this.game.make.sprite(0, 0, "paperClip"));
+    paperClip.anchor.setTo(1,1);
 
     this.sprite.visible = false;
 
@@ -279,7 +288,7 @@ GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
     creatureInput.label.visible = this.data.numCreatures;
     creatureInput.label.text = this.data.numCreatures || 0;
     creatureInput.input.visible = !this.data.numCreatures;
-    var spriteName = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).spriteName + "_art";
+    var spriteName = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).spriteName + "_sticker";
     if (creatureInput.sprite.spriteName != spriteName) creatureInput.sprite.loadTexture( spriteName );
 
     // Then the two food inputs
@@ -303,7 +312,7 @@ GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
             input.label.text = presetAmount || 0;
             input.input.visible = !presetAmount && !this.data.noFoodEntries; // if the amount isn't preset, show the entry field
 
-            var spriteName = GlassLab.FoodTypes[foodType].spriteName;
+            var spriteName = GlassLab.FoodTypes[foodType].spriteName + "_sticker";
             input.sprite.visible = !this.data.noFoodEntries;
             if (input.sprite.spriteName != spriteName) input.sprite.loadTexture( spriteName );
         } else {
@@ -446,4 +455,60 @@ GlassLab.OrderFulfillment.prototype._calculateTargetNumCreatures = function() {
 
 GlassLab.OrderFulfillment.prototype._onScreenSizeChange = function() {
     if (this.sprite.visible) this.focusCamera();
+};
+
+
+// Order form button - it has specific mouse over behavior and changes between Load Crate and Ship Crate
+GlassLab.OrderFulfillmentButton = function(game, x, y, callback, callbackContext) {
+    GlassLab.UITextButton.prototype.constructor.call(this, game, x, y, "orderButton", "", {font: "11pt AmericanTypewriter", fill: "#fff"});
+
+    this.label.position.setTo(-103, -50);
+
+    this.anim = this.addChild(this.game.make.sprite(-173, -60, "orderButtonAnim"));
+    this.anim.anchor.setTo(0.5, 0.5);
+    this.anim.animations.add("load", Phaser.Animation.generateFrameNames("load_button_animation_",0,15,".png",3), 24, true);
+    this.anim.animations.add("ship", Phaser.Animation.generateFrameNames("ship_button_animation_",90,137,".png",3), 24, true);
+
+    this.setReadyToShip(false);
+};
+
+GlassLab.OrderFulfillmentButton.prototype = Object.create(GlassLab.UITextButton.prototype);
+GlassLab.OrderFulfillmentButton.prototype.constructor = GlassLab.OrderFulfillmentButton;
+
+GlassLab.OrderFulfillmentButton.prototype.setReadyToShip = function(ship) {
+    GlassLab.Util.SetCenteredText(this.label, (ship)? "Ship Crate" : "Load Crate" );
+    this.anim.play((ship)? "ship" : "load");
+    this.readyToShip = ship;
+
+    this.refresh();
+};
+
+GlassLab.OrderFulfillmentButton.prototype.whenUp = function() {
+    this.whenEnabled();
+    this.tint = (this.readyToShip)? 0x3b6a9a : 0x994c4e;
+};
+
+GlassLab.OrderFulfillmentButton.prototype.whenOver = function() {
+    this.whenEnabled();
+    this.tint = (this.readyToShip)? 0x5395d9 : 0xd96b6f;
+};
+
+GlassLab.OrderFulfillmentButton.prototype.whenDown = function() {
+    this.whenEnabled();
+    this.tint = (this.readyToShip)? 0x223d59 : 0x592c2d;
+};
+
+GlassLab.OrderFulfillmentButton.prototype.whenDisabled = function() {
+    this.tint = (this.readyToShip)? 0x3b6a9a : 0x994c4e;
+    this.label.alpha = 0.25;
+    this.anim.alpha = 0.25;
+    this.anim.animations.paused = true;
+    this.anim.frame = (this.readyToShip)? 52 : 14;
+};
+
+// useful function that undoes the stuff set by disabled
+GlassLab.OrderFulfillmentButton.prototype.whenEnabled = function() {
+    this.label.alpha = 1;
+    this.anim.alpha = 1;
+    this.anim.animations.paused = false;
 };
