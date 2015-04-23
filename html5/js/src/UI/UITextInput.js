@@ -29,7 +29,7 @@ GlassLab.UITextInput = function(game, inputType, spriteName, font, yOffset)
     if (yOffset) this.textLabel.y += yOffset; // this handles fonts that are weirdly offset
     this.addChild(this.textLabel);
 
-    this.textCursor = game.make.text(0,0,"|", font);
+    this.textCursor = game.make.text(0,0,"|");
     this.textCursor.visible = false;
     this.textCursor.anchor.setTo(0, 1);
     this.textCursorUpdateTimer = null;

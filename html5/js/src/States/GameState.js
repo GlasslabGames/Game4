@@ -34,16 +34,16 @@ GlassLab.State.Game.prototype.create = function()
 
     //GLOBAL.transition.out();
 
-    GLOBAL.mailManager.currentOrder = {
+/*    GLOBAL.mailManager.currentOrder = {
         "client": "Archibold Huxley III",
         "company": "Rupture Farms",
         //"numCreatures": 9,
         //"numFoodA": 12,
-        "creatureType": "bird",
+        "creatureType": "baby_bird",
         "description": "blah *blah* blah",
         "reward": 200
     };
-    GLOBAL.mailManager.enterOrderFulfillment();
+    GLOBAL.mailManager.enterOrderFulfillment();*/
 };
 
 GlassLab.State.Game.prototype.update = function()

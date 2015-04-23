@@ -48,11 +48,12 @@ GlassLab.UIButton.prototype.setEnabled = function(enabled) {
 
 GlassLab.UIButton.prototype._onUp = function() {
     GLOBAL.audioManager.playSound("clickSound");
-    if (this.callback) this.callback.apply(this.callbackContext, arguments);
 
     this.pressed = false;
     if (this.over) this.whenOver();
     else this.whenUp();
+
+    if (this.callback) this.callback.apply(this.callbackContext, arguments);
 };
 
 GlassLab.UIButton.prototype._onDown = function() {
@@ -88,7 +89,7 @@ GlassLab.UIButton.prototype.whenDisabled = function() {};
  */
 
 GlassLab.UITextButton = function(game, x, y, spriteName, text, fontStyle, callback, callbackContext) {
-    GlassLab.UIButton.prototype.constructor.call(this, game, x, y, spriteName);
+    GlassLab.UIButton.prototype.constructor.call(this, game, x, y, spriteName, callback, callbackContext);
     this.label = game.make.text(0, 0, text, fontStyle);
     this.label.anchor.setTo(0.5, 0.5);
     this.addChild(this.label);
