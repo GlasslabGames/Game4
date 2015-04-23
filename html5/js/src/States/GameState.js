@@ -37,8 +37,8 @@ GlassLab.State.Game.prototype.create = function()
     GLOBAL.mailManager.currentOrder = {
         "client": "Archibold Huxley III",
         "company": "Rupture Farms",
-        "numCreatures": 9,
-        "numFoodA": 12,
+        //"numCreatures": 9,
+        //"numFoodA": 12,
         "creatureType": "bird",
         "description": "blah *blah* blah",
         "reward": 200

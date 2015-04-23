@@ -53,49 +53,7 @@ GlassLab.OrderFulfillment = function(game)
     this.sprite.addChild(this.answerInputRoot);
 
     for (var i = 0; i < 3; i++) { // 3 inputs = the creature, foodA, and foodB
-        var rowY = 60 * i;
-
-        var highlight = game.make.sprite(0, rowY - 5, "orderHighlight");
-        this.answerInputRoot.addChild(highlight);
-
-        var answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC, "orderEntryField", {font: "20px ArchitectsDaughter", fill: "#807c7b"}, 5);
-        answerInput.x = 70;
-        answerInput.y = rowY;
-        answerInput.SetInputLimit(3);
-        this.answerInputRoot.addChild(answerInput);
-
-        var label = game.make.text(100, rowY + 10, "100", {font: "20px ArchitectsDaughter", fill: "#4d4b4a"});
-        label.anchor.set(0.5, 0);
-        this.answerInputRoot.addChild(label);
-
-        var sprite = game.make.sprite(30, rowY + 20, "apple");
-        sprite.anchor.setTo(.5, .5);
-        sprite.scale.setTo(foodScale, foodScale);
-        if (i == 0) { // creature
-            sprite.scale.setTo(0.5, 0.5);
-            sprite.y -= 3;
-        }
-        this.answerInputRoot.addChild(sprite);
-
-        if (i > 0) { // the first input is for creatures, so we don't have to drag anything onto it
-            var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "orderDragTarget");
-            dragTarget.x = 5;
-            dragTarget.y = rowY;
-            dragTarget.objectValidator = function(obj) { return obj.foodType; };
-            dragTarget.addObjectAsChild = false;
-            dragTarget.events.onObjectDropped.add(this.onFoodSet, this);
-            this.answerInputRoot.addChild(dragTarget).name = "foodSlot"+i;
-
-            var clearButton = new GlassLab.UIButton(game, 140, rowY + 10, "orderX");
-            clearButton.whenUp = function() { this.tint = 0x994c4e; };
-            clearButton.whenOver = function() { this.tint = 0xd96b6f; };
-            clearButton.whenDown = function() { this.tint = 0x592c2d; };
-            clearButton.whenUp();
-            this.answerInputRoot.addChild(clearButton);
-        }
-
-        this.answerInputs.push({ input: answerInput, highlight: highlight,
-            sprite: sprite, label: label, dragTarget: dragTarget, clearButton: clearButton});
+        this.answerInputs.push(this.answerInputRoot.addChild(new GlassLab.OrderFulfillmentSlot(game, 0, 60 * i, i, (i == 0))));
     }
 
     this.crateLoaded = false;
@@ -183,33 +141,22 @@ GlassLab.OrderFulfillment.prototype.focusCamera = function() {
 
 GlassLab.OrderFulfillment.prototype._getResponse = function() {
     var response = [];
-    var valid = true;
     for (var i = 0; i < this.answerInputs.length; i++) {
-        if (this.answerInputs[i].input.visible) { // look at what they entered in the text field
-            var amount = parseInt( this.answerInputs[i].input.GetText());
-            if (!amount || amount <= 0) {
-                valid = false;
-            }
-            response.push(amount);
-        } else if (this.answerInputs[i].label.visible || this.data.totalNumFood) { // use whatever amount was preset
-            response.push( this.answerInputs[i].label.text );
-        } else if (this.answerInputs[i].dragTarget.visible) { // they haven't dragged any food here yet
-            valid = false;
-        }
+        var answer = this.answerInputs[i].getValue();
+        if (!answer) return false;
+        else response.push(answer);
     }
-    if (!valid) return false;
-    else return response;
+    return response;
 };
 
 GlassLab.OrderFulfillment.prototype.show = function(data)
 {
     this.sprite.visible = true;
     for (var i = 0; i < this.answerInputs.length; i++) {
-        this.answerInputs[i].input.SetText("");
-        this.answerInputs[i].input.setEnabled(true);
+        this.answerInputs[i].reset();
     }
 
-    this.submitButton.label.text = "Load Crate";
+    this.submitButton.setReadyToShip(false);
 
     this.data = data;
     if (!this.data.creatureType) this.data.creatureType = this.data.type; // fixing some inconsistency
@@ -248,9 +195,18 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
         return;
     }
 
+    console.log("Refresh order fulfillment");
+    this.answerInputs[0].currentType = this.data.creatureType;
+    this.answerInputs[0].trySetValue(this.data.numCreatures);
+
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-    this.foodTypes[0] = (this.data.numFoodA || this.data.noFoodEntries)? desiredFood[0].type : null;
-    this.foodTypes[1] = (this.data.numFoodB || this.data.noFoodEntries)? desiredFood[1].type : null;
+    this.answerInputs[1].currentType = (this.data.numFoodA || this.data.noFoodEntries)? desiredFood[0].type : null;
+    this.answerInputs[1].trySetValue(this.data.numFoodA);
+
+    this.answerInputs[2].currentType = (this.data.numFoodB || this.data.noFoodEntries)? desiredFood[1].type : null;
+    this.answerInputs[2].trySetValue(this.data.numFoodB);
+
+    this._refreshAnswerInputs();
 
     var offsetY = false;
     if (this.data.totalNumFood) {
@@ -275,7 +231,6 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
     this.totalFoodRoot.y = (offsetY)? -250 : -315;
     this.answerInputRoot.y = (offsetY)? -210 : -275;
 
-    this._refreshAnswerInputs();
     this._refreshPen();
 
     // refresh the submit button
@@ -283,43 +238,16 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
 };
 
 GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
-    // First, the creature
-    var creatureInput = this.answerInputs[0];
-    creatureInput.label.visible = this.data.numCreatures;
-    creatureInput.label.text = this.data.numCreatures || 0;
-    creatureInput.input.visible = !this.data.numCreatures;
-    var spriteName = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).spriteName + "_sticker";
-    if (creatureInput.sprite.spriteName != spriteName) creatureInput.sprite.loadTexture( spriteName );
+    // Set the current stats
 
-    // Then the two food inputs
+
+    // Then refresh all the inputs, while being sure not to show more than one drag target at once
     var visibleDragTargets = 0;
     var maxFoods = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood.length;
-    for (var i = 1; i < this.answerInputs.length; i++) {
+    for (var i = 0; i < this.answerInputs.length; i++) {
         var input = this.answerInputs[i];
-        var foodType = this.foodTypes[i - 1];
-
-        // check if the drag target should be visible
-        input.dragTarget.visible = !foodType && visibleDragTargets < 1 && i <= maxFoods;
-        if (input.dragTarget.visible) {
-            visibleDragTargets++; // never show more than one drag target
-            input.dragTarget.setEnabled(true);
-        }
-
-        // then, if the food type is set, we can show the sprite and the entry field or the preset amount
-        if (foodType) {
-            var presetAmount = (i == 1)? this.data.numFoodA : this.data.numFoodB;
-            input.label.visible = presetAmount && !this.data.noFoodEntries;
-            input.label.text = presetAmount || 0;
-            input.input.visible = !presetAmount && !this.data.noFoodEntries; // if the amount isn't preset, show the entry field
-
-            var spriteName = GlassLab.FoodTypes[foodType].spriteName + "_sticker";
-            input.sprite.visible = !this.data.noFoodEntries;
-            if (input.sprite.spriteName != spriteName) input.sprite.loadTexture( spriteName );
-        } else {
-            input.sprite.visible = false;
-            input.label.visible = false;
-            input.input.visible = false;
-        }
+        var canShowDragTarget = visibleDragTargets < 1 && i <= maxFoods;
+        if (input.refresh(!canShowDragTarget)) visibleDragTargets ++;
     }
 };
 
@@ -458,7 +386,160 @@ GlassLab.OrderFulfillment.prototype._onScreenSizeChange = function() {
 };
 
 
-// Order form button - it has specific mouse over behavior and changes between Load Crate and Ship Crate
+/**
+ * OrderFulfillmentSlot - an entry where the player can set / clear a food type and then enter the number
+ */
+GlassLab.OrderFulfillmentSlot = function(game, x, y, i, isCreatureSlot) {
+    GlassLab.UIButton.prototype.constructor.call(this, game, x, y);
+    this.index = i;
+
+    this.highlight = game.make.sprite(0, -5, "orderHighlight");
+    this.addChild(this.highlight);
+    this.highlight.alpha = 0;
+    // Make sure that our hit area stays as big as the whole highlight area even when the highlight isn't visible
+    this.hitArea = new Phaser.Rectangle(this.highlight.x, this.highlight.y, this.highlight.width, this.highlight.height);
+
+    this.answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC, "orderEntryField", {font: "20px ArchitectsDaughter", fill: "#807c7b"}, 5);
+    this.answerInput.x = 70;
+    this.answerInput.SetInputLimit(3);
+    this.addChild(this.answerInput);
+
+    this.label = game.make.text(100, 10, "100", {font: "20px ArchitectsDaughter", fill: "#4d4b4a"});
+    this.label.anchor.set(0.5, 0);
+    this.addChild(this.label);
+
+    this.sprite = game.make.sprite(30, 20, "apple");
+    this.sprite.anchor.setTo(.5, .5);
+    if (isCreatureSlot) {
+        this.sprite.scale.setTo(0.5, 0.5);
+        this.sprite.y -= 3;
+    }
+    this.addChild(this.sprite);
+
+    if (!isCreatureSlot) { // the first input is for creatures, so we don't have to drag anything onto it
+        var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "orderDragTarget");
+        dragTarget.x = 5;
+        dragTarget.y = 0;
+        dragTarget.objectValidator = function(obj) { return obj.foodType; };
+        dragTarget.addObjectAsChild = false;
+        dragTarget.events.onObjectDropped.add(this.onFoodDropped, this);
+        this.addChild(dragTarget).name = "foodSlot"+i;
+        this.dragTarget = dragTarget;
+
+        var clearButton = new GlassLab.UIButton(game, 140, 15, "orderX", this.clearType, this);
+        clearButton.input.priorityID ++; // bump it above the slot's ID
+        clearButton.whenUp = function() { this.tint = 0x994c4e; };
+        clearButton.whenOver = function() { this.tint = 0xd96b6f; };
+        clearButton.whenDown = function() { this.tint = 0x592c2d; };
+        clearButton.whenUp();
+        this.highlight.addChild(clearButton);
+        this.clearButton = clearButton;
+    }
+
+    this.presetValue = 0;
+    this.currentType = null;
+
+    this.canEnterValue = true;
+    this.canSetType = (!isCreatureSlot);
+
+    this.onFoodSet = new Phaser.Signal();
+
+    this.whenUp();
+
+    GlassLab.SignalManager.update.add(this._update, this);
+};
+
+GlassLab.OrderFulfillmentSlot.prototype = Object.create(GlassLab.UIButton.prototype);
+GlassLab.OrderFulfillmentSlot.prototype.constructor = GlassLab.OrderFulfillmentSlot;
+
+GlassLab.OrderFulfillmentSlot.prototype._update = function() {
+    // we need to check if they're mousing over the clearButton too, since mousing over it will trigger "onOut"
+    var isOver = this.over || (this.clearButton && this.clearButton.visible && this.clearButton.over);
+    var wantToHighlight = isOver && (this.currentType || this.dragTarget.visible);
+    if (wantToHighlight && !this.highlighted) {
+        this.highlighted = true;
+        if (this.currentTween) this.currentTween.stop();
+        this.currentTween = this.game.add.tween(this.highlight).to({alpha: 1}, 200, Phaser.Easing.Quadratic.InOut, true);
+    } else if (!wantToHighlight && this.highlighted) {
+        this.highlighted = false;
+        if (this.currentTween) this.currentTween.stop();
+        this.currentTween = this.game.add.tween(this.highlight).to({alpha: 0}, 200, Phaser.Easing.Quadratic.InOut, true);
+    }
+};
+
+GlassLab.OrderFulfillmentSlot.prototype.trySetValue = function(value) { // if no value is set, become editable instead
+    this.canEnterValue = (typeof value == 'undefined');
+    this.presetValue = value;
+    this.refresh();
+};
+
+// return either the preset value or the value they've entered
+GlassLab.OrderFulfillmentSlot.prototype.getValue = function() {
+    if (!this.currentType) return false; // they haven't set a type yet
+    else if (this.canEnterValue) return parseInt( this.answerInput.GetText());
+    else return this.presetValue;
+};
+
+GlassLab.OrderFulfillmentSlot.prototype.reset = function() {
+    this.answerInput.SetText("");
+    this.currentType = null;
+};
+
+GlassLab.OrderFulfillmentSlot.prototype.refresh = function(dontShowDragTarget) {
+    // check if we should show the drag target (and return true if we do)
+    if (this.canEnterValue && this.canSetType && !this.currentType) { // we want to show a drag target or nothing
+        this.label.visible = false;
+        this.sprite.visible = false;
+        this.answerInput.visible = false;
+        this.clearButton.visible = false;
+        this.dragTarget.visible = !dontShowDragTarget;
+        if (this.dragTarget.visible) this.dragTarget.setEnabled(true);
+        return !dontShowDragTarget; // return true if we can and did show a drag target
+    }
+
+    // else the drag target isn't visible
+    if (this.dragTarget) this.dragTarget.visible = false;
+    if (this.clearButton) this.clearButton.visible = true;
+
+    // otherwise show the sprite
+    this.sprite.visible = true;
+    var spriteName;
+    if (this.currentType in GlassLab.FoodTypes) {
+        spriteName = GlassLab.FoodTypes[this.currentType].spriteName + "_sticker";
+    } else {
+        spriteName = GLOBAL.creatureManager.GetCreatureData(this.currentType).spriteName + "_sticker";
+    }
+    if (this.sprite.spriteName != spriteName) this.sprite.loadTexture( spriteName );
+
+    // and show either an entry field or a label, depending on whether the player can enter their own value
+    this.answerInput.visible = this.canEnterValue;
+    if (this.answerInput.visible) this.answerInput.setEnabled(true);
+
+    this.label.visible = !this.canEnterValue;
+    this.label.text = this.presetValue || ""; // if we have no value, the label will be invisible anyway, so w/e
+
+    return false; // no, we aren't showing a drag target
+};
+
+GlassLab.OrderFulfillmentSlot.prototype.onFoodDropped = function(dragObject, dragTarget) {
+    if (dragObject.foodType) {
+        this.currentType = dragObject.foodType;
+        this.onFoodSet.dispatch(this.index, this.currentType);
+    }
+    this.refresh();
+};
+
+GlassLab.OrderFulfillmentSlot.prototype.clearType = function() {
+    console.log("Clear foodtype");
+    this.currentType = null;
+    this.onFoodSet.dispatch(this.index, this.currentType);
+    this.refresh();
+};
+
+
+/**
+ * OrderFulfillmentButton - it has specific mouse over behavior and changes between Load Crate and Ship Crate
+ */
 GlassLab.OrderFulfillmentButton = function(game, x, y, callback, callbackContext) {
     GlassLab.UITextButton.prototype.constructor.call(this, game, x, y, "orderButton", "", {font: "11pt AmericanTypewriter", fill: "#fff"});
 
