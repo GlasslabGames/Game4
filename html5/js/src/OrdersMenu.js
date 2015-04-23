@@ -91,7 +91,32 @@ GlassLab.OrdersMenu.prototype.IsShowing = function()
 
 GlassLab.OrdersMenu.prototype.Refresh = function()
 {
-    GlassLab.Util.SetColoredText(this.descriptionLabel, this.data.description, "#807c7b", "#994c4e");
+    var text = this.data.description;
+
+    // replace any sections like [numCreatures] or [creatureType] with the data.
+    var pattern = /\[([^\[]+)\]/;
+    var m = pattern.exec(text);
+
+    while (m) {
+        var match = m[0], key = m[1];
+        var entry = "ERROR";
+        // we might have to look up the entry if it's a food type
+        if (key.indexOf("foodType") > -1) {
+            var food = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
+            var foodType = (key.indexOf("B") > -1)? food[1].type : food[0].type;
+            entry = GlassLab.FoodTypes[foodType].displayNames.plural.toLowerCase();
+        } else if (key in this.data && key != "description") {
+            entry = this.data[key]; // else check in the data for anything else
+
+            if (entry in GLOBAL.creatureManager.creatureDatabase) {
+                entry = GLOBAL.creatureManager.GetCreatureName(entry, true);
+            }
+        }
+        text = text.slice(0, m.index) + entry + text.slice(m.index + match.length);
+        m = pattern.exec(text);
+    }
+
+    GlassLab.Util.SetColoredText(this.descriptionLabel, text, "#807c7b", "#994c4e");
 
     this.clientNameLabel.setText(this.data.client);
     this.rewardAmountLabel.setText("$"+this.data.reward);
