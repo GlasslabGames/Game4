@@ -48,8 +48,8 @@ GlassLab.Transition.prototype._transition = function (start, end, easing) {
 };
 
 GlassLab.Transition.prototype._midTransition = function (thenOut) {
-    this.onMiddle.dispatch();
     this._refresh(0);
+    this.onMiddle.dispatch();
     if (thenOut) this.game.time.events.add(500, this.out, this);
 };
 

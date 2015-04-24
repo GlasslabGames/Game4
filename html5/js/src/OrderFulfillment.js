@@ -33,16 +33,16 @@ GlassLab.OrderFulfillment = function(game)
     this.totalFoodRoot.addChild(totalFoodSprite2);
     this.totalFoodSprites = [totalFoodSprite1, totalFoodSprite2];
 
-    var plusLabel = game.make.text(30, 0, "+",  {font: "bold 20px Helvetica"});
-    plusLabel.anchor.setTo(.5, .5);
+    var font = {font: "20px ArchitectsDaughter", fill: "#4d4b4a"};
+    var plusLabel = game.make.text(35, 0, "+", font);
+    GlassLab.Util.SetCenteredText(plusLabel, "+");
     this.totalFoodRoot.addChild(plusLabel);
 
-    var equalsLabel = game.make.text(95, 0, "=", {font: "bold 20px Helvetica"});
-    equalsLabel.anchor.setTo(.5, .5);
+    var equalsLabel = game.make.text(90, 0, "=", font);
+    GlassLab.Util.SetCenteredText(equalsLabel, "=");
     this.totalFoodRoot.addChild(equalsLabel);
 
-    this.totalFoodLabel = game.make.text(120, 0, "100", {font: "bold 20px Helvetica"});
-    this.totalFoodLabel.anchor.setTo(.5, .5);
+    this.totalFoodLabel = game.make.text(125, 0, "100", font);
     this.totalFoodRoot.addChild(this.totalFoodLabel);
 
     this.sprite.addChild(this.totalFoodRoot);
@@ -87,7 +87,7 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     }
     this.crate.reset();
 
-    if (!response) response = this._getResponse();
+    //if (!response) response = this._getResponse();
 
     // if hint is true, we have two options
     // if numCreatures is provided, add one row of food.
@@ -201,20 +201,7 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
         return;
     }
 
-    console.log("Refresh order fulfillment");
-    this.answerInputs[0].currentType = this.data.creatureType;
-    this.answerInputs[0].trySetValue(this.data.numCreatures);
-
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-    this.answerInputs[1].currentType = (this.data.numFoodA || this.data.noFoodEntries)? desiredFood[0].type : null;
-    this.answerInputs[1].trySetValue(this.data.numFoodA);
-    this.answerInputs[1].trySetValue(this.data.numFoodA);
-
-    this.answerInputs[2].currentType = (this.data.numFoodB || this.data.noFoodEntries)? desiredFood[1].type : null;
-    this.answerInputs[2].trySetValue(this.data.numFoodB);
-
-    this._refreshAnswerInputs();
-
     var offsetY = false;
     if (this.data.totalNumFood) {
         if (this.data.noFoodEntries) {  // we can use the shorter bg and move things down
@@ -228,15 +215,28 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
             if (this.bg.key != "orderBg2") this.bg.loadTexture("orderBg2");
         }
         this.totalFoodRoot.visible = true;
-        this.totalFoodSprites[0].loadTexture(GlassLab.FoodTypes[desiredFood[0].type].spriteName);
-        this.totalFoodSprites[1].loadTexture(GlassLab.FoodTypes[desiredFood[1].type].spriteName);
-        this.totalFoodLabel.text = this.data.totalNumFood;
+        this.totalFoodSprites[0].loadTexture(GlassLab.FoodTypes[desiredFood[0].type].spriteName+"_sticker");
+        this.totalFoodSprites[1].loadTexture(GlassLab.FoodTypes[desiredFood[1].type].spriteName+"_sticker");
+        GlassLab.Util.SetCenteredText(this.totalFoodLabel, this.data.totalNumFood);
+
     } else {
         if (this.bg.key != "orderBg") this.bg.loadTexture("orderBg");
         this.totalFoodRoot.visible = false;
     }
     this.totalFoodRoot.y = (offsetY)? -250 : -315;
     this.answerInputRoot.y = (offsetY)? -210 : -275;
+
+    // Set the values on the answer inputs. (If the values are unknown, it will be open for the player to enter.)
+    this.answerInputs[0].currentType = this.data.creatureType;
+    this.answerInputs[0].trySetValue(this.data.numCreatures);
+
+    this.answerInputs[1].currentType = (this.data.numFoodA || this.data.noFoodEntries)? desiredFood[0].type : null;
+    this.answerInputs[1].trySetValue(this.data.numFoodA);
+
+    this.answerInputs[2].currentType = (this.data.numFoodB || this.data.noFoodEntries)? desiredFood[1].type : null;
+    this.answerInputs[2].trySetValue(this.data.numFoodB);
+
+    this._refreshAnswerInputs();
 
     this._refreshPen();
 
@@ -246,13 +246,11 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
 
 GlassLab.OrderFulfillment.prototype._refreshAnswerInputs = function() {
 
-    var visibleDragTargets = 0;
     var maxFoods = (this.data.noFoodEntries)? 0 : GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood.length;
     for (var i = 0; i < this.answerInputs.length; i++) {
         var input = this.answerInputs[i];
-        var canShowDragTarget = visibleDragTargets < 1 && i <= maxFoods;
-        var addedTarget = input.refresh(!canShowDragTarget);
-        //if (addedTarget) visibleDragTargets ++; // JK, I think it's ok to show more than one drag target at once
+        var hidden = i > maxFoods; // we can't go above maxFoods
+        input.refresh(hidden);
     }
 };
 
@@ -381,167 +379,6 @@ GlassLab.OrderFulfillment.prototype._calculateTargetNumCreatures = function() {
 
 GlassLab.OrderFulfillment.prototype._onScreenSizeChange = function() {
     if (this.sprite.visible) this.focusCamera();
-};
-
-
-/**
- * OrderFulfillmentSlot - an entry where the player can set / clear a food type and then enter the number
- */
-GlassLab.OrderFulfillmentSlot = function(game, x, y, i, isCreatureSlot) {
-    GlassLab.UIButton.prototype.constructor.call(this, game, x, y);
-    this.index = i;
-    this.enabled = true;
-
-    this.highlight = game.make.sprite(0, -5, "orderHighlight");
-    this.addChild(this.highlight);
-    this.highlight.alpha = 0;
-    // Make sure that our hit area stays as big as the whole highlight area even when the highlight isn't visible
-    this.hitArea = new Phaser.Rectangle(this.highlight.x, this.highlight.y, this.highlight.width, this.highlight.height);
-
-    this.answerInput = new GlassLab.UITextInput(game, GlassLab.UITextInput.InputType.NUMERIC, "orderEntryField", {font: "20px ArchitectsDaughter", fill: "#4d4b4a"}, 5);
-    this.answerInput.x = 70;
-    this.answerInput.SetInputLimit(3);
-    this.answerInput.input.priorityID = GLOBAL.UIpriorityID += 5; // high priority
-    this.addChild(this.answerInput);
-
-    this.label = game.make.text(100, 10, "100", {font: "20px ArchitectsDaughter", fill: "#4d4b4a"});
-    this.label.anchor.set(0.5, 0);
-    this.addChild(this.label);
-
-    this.sprite = game.make.sprite(30, 20, "apple");
-    this.sprite.anchor.setTo(.5, .5);
-    if (isCreatureSlot) {
-        this.sprite.scale.setTo(0.5, 0.5);
-        this.sprite.y -= 3;
-    }
-    this.addChild(this.sprite);
-
-    if (!isCreatureSlot) { // the first input is for creatures, so we don't have to drag anything onto it
-        var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "orderDragTarget");
-        dragTarget.x = 5;
-        dragTarget.y = 0;
-        dragTarget.objectValidator = function(obj) { return obj.foodType; };
-        dragTarget.addObjectAsChild = false;
-        dragTarget.events.onObjectDropped.add(this.onFoodDropped, this);
-        this.addChild(dragTarget).name = "foodSlot"+i;
-        this.dragTarget = dragTarget;
-
-        var clearButton = new GlassLab.UIButton(game, 140, 15, "orderX", this.clearType, this);
-        clearButton.input.priorityID ++; // bump it above the slot's ID
-        clearButton.whenUp = function() { this.tint = 0x994c4e; };
-        clearButton.whenOver = function() { this.tint = 0xd96b6f; };
-        clearButton.whenDown = function() { this.tint = 0x592c2d; };
-        clearButton.whenUp();
-        this.highlight.addChild(clearButton);
-        this.clearButton = clearButton;
-    }
-
-    this.presetValue = 0;
-    this.currentType = null;
-
-    this.canEnterValue = true;
-    this.canSetType = (!isCreatureSlot);
-
-    this.onFoodSet = new Phaser.Signal();
-
-    this.whenUp();
-
-    GlassLab.SignalManager.update.add(this._update, this);
-};
-
-GlassLab.OrderFulfillmentSlot.prototype = Object.create(GlassLab.UIButton.prototype);
-GlassLab.OrderFulfillmentSlot.prototype.constructor = GlassLab.OrderFulfillmentSlot;
-
-GlassLab.OrderFulfillmentSlot.prototype._update = function() {
-    // we need to check if they're mousing over the clearButton too, since mousing over it will trigger "onOut"
-    var isOver = this.over || (this.answerInput && this.answerInput.visible && this.answerInput.over) || (this.clearButton && this.clearButton.visible && this.clearButton.over);
-    var wantToHighlight = isOver && this.enabled && (this.currentType || this.dragTarget.visible);
-    if (wantToHighlight && !this.highlighted) {
-        this.highlighted = true;
-        if (this.currentTween) this.currentTween.stop();
-        this.currentTween = this.game.add.tween(this.highlight).to({alpha: 1}, 100, Phaser.Easing.Quadratic.InOut, true);
-    } else if (!wantToHighlight && this.highlighted) {
-        this.highlighted = false;
-        if (this.currentTween) this.currentTween.stop();
-        this.currentTween = this.game.add.tween(this.highlight).to({alpha: 0}, 100, Phaser.Easing.Quadratic.InOut, true);
-    }
-};
-
-GlassLab.OrderFulfillmentSlot.prototype.trySetValue = function(value) { // if no value is set, become editable instead
-    this.canEnterValue = (typeof value == 'undefined');
-    this.presetValue = value;
-    this.refresh();
-};
-
-// return either the preset value or the value they've entered
-GlassLab.OrderFulfillmentSlot.prototype.getValue = function() {
-    if (!this.currentType) return false; // they haven't set a type yet
-    else if (this.canEnterValue) return parseInt( this.answerInput.GetText());
-    else return this.presetValue;
-};
-
-GlassLab.OrderFulfillmentSlot.prototype.reset = function() {
-    this.answerInput.SetText("");
-    this.currentType = null;
-};
-
-GlassLab.OrderFulfillmentSlot.prototype.setEnabled = function(enabled) {
-    this.enabled = enabled;
-    this.answerInput.setEnabled(enabled);
-    if (this.dragTarget) this.dragTarget.setEnabled(enabled);
-    if (this.clearButton) this.clearButton.visible = enabled;
-};
-
-GlassLab.OrderFulfillmentSlot.prototype.refresh = function(dontShowDragTarget) {
-    // check if we should show the drag target (and return true if we do)
-    if (this.canEnterValue && this.canSetType && !this.currentType) { // we want to show a drag target or nothing
-        this.label.visible = false;
-        this.sprite.visible = false;
-        this.answerInput.visible = false;
-        this.clearButton.visible = false;
-        this.dragTarget.visible = !dontShowDragTarget;
-        if (this.dragTarget.visible) this.dragTarget.setEnabled(true);
-        return !dontShowDragTarget; // return true if we can and did show a drag target
-    }
-
-    // else the drag target isn't visible
-    if (this.dragTarget) this.dragTarget.visible = false;
-    if (this.clearButton) this.clearButton.visible = true;
-
-    // otherwise show the sprite
-    this.sprite.visible = true;
-    var spriteName;
-    if (this.currentType in GlassLab.FoodTypes) {
-        spriteName = GlassLab.FoodTypes[this.currentType].spriteName + "_sticker";
-    } else {
-        spriteName = GLOBAL.creatureManager.GetCreatureData(this.currentType).spriteName + "_sticker";
-    }
-    if (this.sprite.spriteName != spriteName) this.sprite.loadTexture( spriteName );
-
-    // and show either an entry field or a label, depending on whether the player can enter their own value
-    this.answerInput.visible = this.canEnterValue;
-    if (this.answerInput.visible) this.answerInput.setEnabled(true);
-
-    this.label.visible = !this.canEnterValue;
-    this.label.text = this.presetValue || ""; // if we have no value, the label will be invisible anyway, so w/e
-
-    return false; // no, we aren't showing a drag target
-};
-
-GlassLab.OrderFulfillmentSlot.prototype.onFoodDropped = function(dragObject, dragTarget) {
-    if (dragObject.foodType) {
-        this.currentType = dragObject.foodType;
-        this.onFoodSet.dispatch(this.index, this.currentType);
-    }
-    this.refresh();
-};
-
-GlassLab.OrderFulfillmentSlot.prototype.clearType = function() {
-    console.log("Clear foodtype");
-    this.currentType = null;
-    this.answerInput.SetText(""); // clear the entered value as well
-    this.onFoodSet.dispatch(this.index, this.currentType);
-    this.refresh();
 };
 
 
