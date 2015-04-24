@@ -11,20 +11,22 @@ GlassLab.RenderManager = function(game)
 
 };
 
-// Sorts an object in GLOBAL.creatureLayer, but can easily be changed to sort any layer.
+// Sorts an object in a LAYER. Any other parent container is undefined!
 // This function sorts by y value and ASSUMES EVERYTHING IS SORTED EXCEPT THE PASSED IN OBJECT
-GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj)
+GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj, layer)
 {
-    var childIndex = GLOBAL.creatureLayer.getIndex(obj);
+    layer = layer || obj.parent;
+
+    var childIndex = layer.getIndex(obj);
     if (childIndex == -1)
     {
-        console.error("Tried to sort an object that isn't in the creature layer.")
+        console.error("Tried to sort an object that isn't in the passed in parent layer.")
         return;
     }
 
     // Figure out whether or not we're sorting the object upward in array (1) or downward (-1)
     var sortDirection = 0;
-    var numChildren = GLOBAL.creatureLayer.length;
+    var numChildren = layer.length;
     if (childIndex == 0)
     {
         sortDirection = 1;
@@ -35,7 +37,7 @@ GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj)
     }
     else
     {
-        var neighbor = GLOBAL.creatureLayer.getAt(childIndex + 1);
+        var neighbor = layer.getAt(childIndex + 1);
         if (obj.y > neighbor.y)
         {
             sortDirection = 1;
@@ -50,7 +52,7 @@ GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj)
     var targetIndex = childIndex;
     while (targetIndex >= 0 && targetIndex < numChildren)
     {
-        var neighbor = GLOBAL.creatureLayer.getAt(targetIndex + sortDirection);
+        var neighbor = layer.getAt(targetIndex + sortDirection);
         if (-Math.sign(neighbor.y - obj.y) == sortDirection)
         {
             targetIndex += sortDirection;
@@ -64,6 +66,6 @@ GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj)
     // Change indices if the indices actually need to be changed
     if (targetIndex != childIndex)
     {
-        GLOBAL.creatureLayer.setChildIndex(obj, targetIndex);
+        layer.setChildIndex(obj, targetIndex);
     }
 };

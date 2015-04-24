@@ -26,6 +26,8 @@ GlassLab.State.Game.prototype.create = function()
     game.camera.x = -game.camera.width/2;
     game.camera.y = -game.camera.height/2;
 
+    GlassLab.SignalManager.cameraMoved.dispatch();
+
     // start with the sound effects off during development.
     GLOBAL.audioManager.toggleMusic(GlassLab.Util.HasCookieData("musicOn") ? GlassLab.Util.GetCookieData("musicOn") == 'true' : true);
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
@@ -74,6 +76,7 @@ GlassLab.State.Game.prototype.update = function()
         tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
     }
 
+    /*
     if (tileSprite != GLOBAL.highlightedTile)
     {
         // Entered tile in pen
@@ -95,10 +98,20 @@ GlassLab.State.Game.prototype.update = function()
 
         GLOBAL.highlightedTile = tileSprite;
     }
+    */
 
     GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
 };
 
 GlassLab.State.Game.prototype.render = function(game)
 {
-}
+    for (var i = GLOBAL.grassGroup.children.length-1; i >= 0; i--)
+    {
+        var renderLayer = GLOBAL.grassGroup.children[i];
+        if (renderLayer.cacheAsBitmap && renderLayer.GLASSLAB_BITMAP_DIRTY)
+        {
+            renderLayer.updateCache();
+            renderLayer.GLASSLAB_BITMAP_DIRTY = false;
+        }
+    }
+};

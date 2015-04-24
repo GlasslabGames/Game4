@@ -16,6 +16,7 @@ GlassLab.Tile = function(game, col, row, type) {
     this.inPen = null;
     this.food = null;
 
+    this._preOptimizedParent = null;
     GlassLab.SignalManager.cameraMoved.add(function(){
         var camera = this.game.camera;
         if (
@@ -25,18 +26,23 @@ GlassLab.Tile = function(game, col, row, type) {
             this.y > (camera.y + camera.height + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y
         )
         {
-            if (this.parent && this.parent === GLOBAL.creatureLayer)
+            if (this.parent)
             {
+                this._preOptimizedParent = this.parent;
                 this.parent.removeChild(this);
             }
         }
-        else
+        else if (!this.parent)
         {
-            if (!this.parent)
-            {
-                GLOBAL.creatureLayer.add(this);
-                GLOBAL.renderManager.UpdateIsoObjectSort(this);
-            }
+            this._preOptimizedParent.add(this);
+        }
+    }, this);
+
+    this.events.onAddedToGroup.add(function() {
+        GLOBAL.renderManager.UpdateIsoObjectSort(this, this.parent);
+        if (this.parent.cacheAsBitmap)
+        {
+            this.parent.GLASSLAB_BITMAP_DIRTY = true;
         }
     }, this);
 

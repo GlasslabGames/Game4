@@ -408,6 +408,7 @@ GlassLab.FeedingPen.prototype._removeCreature = function(creature, offset) {
     var tile = creature.getTile();
     //console.log("removing creature at",tile.col, tile.row);
     GLOBAL.creatureLayer.addChild(creature);
+    GLOBAL.renderManager.UpdateIsoObjectSort(creature);
     creature.setIsoPos(tile.isoX, tile.isoY); // set the position so it stays on the tile it was over while in the pen
     creature.pen = null;
     if (!(creature.state instanceof GlassLab.CreatureStateDragged)) creature.lookForTargets();
