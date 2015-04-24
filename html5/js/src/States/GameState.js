@@ -28,6 +28,8 @@ GlassLab.State.Game.prototype.create = function()
 
     GlassLab.SignalManager.cameraMoved.dispatch();
 
+    GlassLab.SignalManager.initializationComplete.dispatch();
+
     // start with the sound effects off during development.
     GLOBAL.audioManager.toggleMusic(GlassLab.Util.HasCookieData("musicOn") ? GlassLab.Util.GetCookieData("musicOn") == 'true' : true);
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
@@ -99,17 +101,10 @@ GlassLab.State.Game.prototype.update = function()
         GLOBAL.highlightedTile = tileSprite;
     }
     */
-    for (var i = GLOBAL.grassGroup.children.length-1; i >= 0; i--)
-    {
-        var renderLayer = GLOBAL.grassGroup.children[i];
-        if (renderLayer.cacheAsBitmap && renderLayer.GLASSLAB_BITMAP_DIRTY)
-        {
-            renderLayer.updateCache();
-            renderLayer.GLASSLAB_BITMAP_DIRTY = false;
-        }
-    }
 
     GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
+
+    GlassLab.SignalManager.postUpdate.dispatch();
 };
 
 // NOTE: Happens BEFORE update

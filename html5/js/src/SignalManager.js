@@ -10,6 +10,8 @@ GlassLab.SignalManager = {
 
     // Update
     update: new Phaser.Signal(), // (float) => time since last update - update loop
+    initializationComplete: new Phaser.Signal(), //
+    postUpdate: new Phaser.Signal(), //
 
     // Save/Load
     saveRequested: new Phaser.Signal(), // (obj) => save blob - attach any save info to the blob
