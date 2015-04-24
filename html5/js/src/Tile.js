@@ -16,8 +16,34 @@ GlassLab.Tile = function(game, col, row, type) {
     this.inPen = null;
     this.food = null;
 
+    GlassLab.SignalManager.cameraMoved.add(function(){
+        var camera = this.game.camera;
+        if (
+            this.x < (camera.x - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x ||
+            this.y < (camera.y - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y ||
+            this.x > (camera.x + camera.width + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x ||
+            this.y > (camera.y + camera.height + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y
+        )
+        {
+            if (this.parent && this.parent === GLOBAL.creatureLayer)
+            {
+                this.parent.removeChild(this);
+            }
+        }
+        else
+        {
+            if (!this.parent)
+            {
+                GLOBAL.creatureLayer.add(this);
+                GLOBAL.renderManager.UpdateIsoObjectSort(this);
+            }
+        }
+    }, this);
+
     //this.addChild(game.make.graphics().beginFill(0xffffff,1).drawCircle(0, 0, 20)); // for debugging where the tile anchor is
 };
+
+GlassLab.Tile.Update = new Phaser.Signal();
 
 // Extends Isosprite
 GlassLab.Tile.prototype = Object.create(Phaser.Plugin.Isometric.IsoSprite.prototype);

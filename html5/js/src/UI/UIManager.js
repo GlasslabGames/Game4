@@ -275,6 +275,8 @@ GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.z
 GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
     this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
     GLOBAL.WorldLayer.scale.x = GLOBAL.WorldLayer.scale.y = this.zoomLevel;
+
+    GlassLab.SignalManager.cameraMoved.dispatch();
 };
 
 GlassLab.UIManager.prototype.zoomIn = function() {
@@ -290,6 +292,8 @@ GlassLab.UIManager.prototype.resetCamera = function() {
     this.zoomTo(GlassLab.UIManager.startZoom);
     GLOBAL.game.camera.x = -GLOBAL.game.camera.width/2;
     GLOBAL.game.camera.y = -GLOBAL.game.camera.height/2;
+
+    GlassLab.SignalManager.cameraMoved.dispatch();
 };
 
 GlassLab.UIManager.prototype.createHud = function() {

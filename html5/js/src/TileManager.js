@@ -100,6 +100,10 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
     {
         var layer = this.tilemap.layers[layerIndex];
         var layerGroup = this.game.make.group();
+        if (layer.name == "border")//.properties.creatureLayer)
+        {
+            GLOBAL.creatureLayer = layerGroup;
+        }
         parentGroup.add(layerGroup);
         for (var i=this.tilemap.width-1; i>=0; i--)
         {
@@ -133,7 +137,10 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
             }
         }
 
-        this.game.iso.simpleSort(layerGroup);
+        if (layer.name != "border")
+        {
+            this.game.iso.simpleSort(layerGroup);
+        }
     }
 
     // Sort tile render order
