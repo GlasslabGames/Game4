@@ -291,6 +291,8 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.grassGroup = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
+    GLOBAL.renderManager = new GlassLab.RenderManager(GLOBAL.game);
+
     GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
     GLOBAL.tiledBg.anchor.setTo(0.5, 0.5);
     GLOBAL.tiledBg.visible = false;
@@ -385,8 +387,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
 
     GLOBAL.resourceManager = new GlassLab.ResourceManager(GLOBAL.game);
-
-    GLOBAL.renderManager = new GlassLab.RenderManager(GLOBAL.game);
 
     GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
     GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);

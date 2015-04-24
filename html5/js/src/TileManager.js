@@ -104,6 +104,11 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
         {
             GLOBAL.creatureLayer = layerGroup;
         }
+        else
+        {
+            layerGroup.cacheAsBitmap = true;
+            layerGroup.GLASSLAB_BITMAP_DIRTY = true;
+        }
         parentGroup.add(layerGroup);
         for (var i=this.tilemap.width-1; i>=0; i--)
         {
@@ -135,11 +140,6 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
                     }
                 }
             }
-        }
-
-        if (layer.name != "border")
-        {
-            this.game.iso.simpleSort(layerGroup);
         }
     }
 

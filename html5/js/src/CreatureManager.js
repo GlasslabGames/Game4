@@ -199,6 +199,8 @@ GlassLab.CreatureManager.prototype.CreateCreature = function(type, centered)
 {
     var creature = new GlassLab.Creature(this.game, type);
     GLOBAL.creatureLayer.add(creature);
+    GLOBAL.renderManager.UpdateIsoObjectSort(creature);
+
     if (centered) {
         creature.moveToTile( GLOBAL.tileManager.tilemap.width/2, GLOBAL.tileManager.tilemap.height/2 );
     } else {
