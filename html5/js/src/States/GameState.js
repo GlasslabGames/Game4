@@ -99,12 +99,6 @@ GlassLab.State.Game.prototype.update = function()
         GLOBAL.highlightedTile = tileSprite;
     }
     */
-
-    GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
-};
-
-GlassLab.State.Game.prototype.render = function(game)
-{
     for (var i = GLOBAL.grassGroup.children.length-1; i >= 0; i--)
     {
         var renderLayer = GLOBAL.grassGroup.children[i];
@@ -114,4 +108,11 @@ GlassLab.State.Game.prototype.render = function(game)
             renderLayer.GLASSLAB_BITMAP_DIRTY = false;
         }
     }
+
+    GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
+};
+
+// NOTE: Happens BEFORE update
+GlassLab.State.Game.prototype.render = function(game)
+{
 };
