@@ -188,8 +188,8 @@ GlassLab.CreatureManager.prototype.GetCreatureName = function (type, plural) {
 };
 
 GlassLab.CreatureManager.prototype.DestroyAllCreatures = function() {
-    for (var i = GLOBAL.creatureLayer.children.length-1; i>=0; i--) {
-        GLOBAL.creatureLayer.getChildAt(i).destroy();
+    for (var i = this.creatures.length-1; i>=0; i--) {
+        this.creatures[i].destroy();
     }
 
     this.creatures = [];

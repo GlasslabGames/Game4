@@ -264,7 +264,7 @@ GlassLab.State.Init.prototype.create = function()
 {
     var game = this.game;
     // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)
-    game.world.setBounds(-1000,-1000,2000, 2000);
+    game.world.setBounds(-2000,-2000,4000, 4000);
 
     // Setup world
     game.iso.anchor.setTo(0,0);
@@ -288,13 +288,7 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
-    // Create TileManager and map
-    GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
-
-    var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
-    GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
     GLOBAL.grassGroup = game.make.group();
-    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
 
     GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
@@ -311,8 +305,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.foodLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.foodLayer);
 
-    GLOBAL.creatureLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.creatureLayer);
+    GLOBAL.creatureLayer = null; // Created by TileManager now
 
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
@@ -321,6 +314,13 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.WorldLayer.add(GLOBAL.hoverLayer);
 
     GLOBAL.paused = false;
+
+    // Create TileManager and map
+    GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
+
+    var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
+    GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
+    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
 
     // Add clouds
     GLOBAL.cloudManager = new GlassLab.CloudManager(game);
@@ -361,6 +361,12 @@ GlassLab.State.Init.prototype.create = function()
 
     var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
     versionLabel.fixedToCamera = true;
+    GLOBAL._averageFrameTime = 33;
+    GlassLab.SignalManager.update.add(function(dt)
+    {
+        GLOBAL._averageFrameTime = (GLOBAL._averageFrameTime * 49 + dt) / 50;
+        this.setText("v"+GLOBAL.version + " - " + Math.round(1000.0/GLOBAL._averageFrameTime) + "fps")
+    }, versionLabel);
     GLOBAL.UILayer.add(versionLabel);
 
     GLOBAL.sortingGame = new GlassLab.SortingGame(game);
@@ -379,6 +385,8 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
 
     GLOBAL.resourceManager = new GlassLab.ResourceManager(GLOBAL.game);
+
+    GLOBAL.renderManager = new GlassLab.RenderManager(GLOBAL.game);
 
     GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
     GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);

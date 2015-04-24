@@ -480,6 +480,8 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
             tile.tint = 0xffffff;
         }
     }
+
+    GLOBAL.renderManager.UpdateIsoObjectSort(this);
 };
 
 GlassLab.Creature.prototype.tryWalkToNextFood = function () {
