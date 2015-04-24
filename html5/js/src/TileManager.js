@@ -23,10 +23,11 @@ GlassLab.TileManager.prototype.TryGetTileData = function(x, y)
     return this.GetTileData(x, y);
 };
 
-GlassLab.TileManager.prototype.GetTileData = function(x, y)
+GlassLab.TileManager.prototype.GetTileData = function(x, y, layer)
 {
-    var tileData = this.tilemap.getTile(x, y, "default");
-    return tileData ? this.tilemap.getTile(x, y, "default").index-1  : -1;
+    layer = layer || "ground";
+    var tileData = this.tilemap.getTile(x, y, layer);
+    return tileData ? tileData.index-1  : -1;
 };
 
 GlassLab.TileManager.prototype.GetTile = function(x, y)
@@ -49,22 +50,34 @@ GlassLab.TileManager.prototype.IsTileTypeWalkable = function(type)
     return type && type != GlassLab.Tile.TYPES.water; // maybe move this to Tile? or give the tile types some properties?
 };
 
-GlassLab.TileManager.prototype.GenerateRandomMapData = function(width, height)
+GlassLab.TileManager.prototype.GenerateMapData = function(mapAssetName)
 {
-    var tilemapData = this.game.cache.getTilemapData("testTileMap");
+    var tilemapData = this.game.cache.getTilemapData(mapAssetName);
+    var tilemapRaw = tilemapData.data;
     var tilemap = new Phaser.Tilemap(this.game);
-    tilemap.create("default", tilemapData.data.width, tilemapData.data.height, 1,1);
+    tilemap.removeAllLayers(); // tilemaps are instantiated with an empty layer
 
-    for (var j = 0; j < tilemapData.data.height; j++)
+    for (var layerIndex = 0, totalLayers = tilemapRaw.layers.length; layerIndex < totalLayers; layerIndex++)
     {
-        for (var i=0; i < tilemapData.data.width; i++)
+        var rawLayer = tilemapRaw.layers[layerIndex];
+        tilemap.createBlankLayer(rawLayer.name, tilemapRaw.width, tilemapRaw.height, 1,1);
+
+        for (var j = 0; j < tilemapRaw.height; j++)
         {
-            tilemap.putTile(tilemapData.data.layers[0].data[i + j*tilemapData.data.width], i, j);
+            for (var i=0; i < tilemapRaw.width; i++)
+            {
+                tilemap.putTile(rawLayer.data[i + j*tilemapRaw.width], i, j);
+            }
         }
     }
-    tilemap.tilesets = tilemapData.data.tilesets;
 
-    GLOBAL.astar.setAStarMap(tilemap, "default", "Tiles");
+    tilemap.setLayer("ground");
+    tilemap.width = tilemapRaw.width;
+    tilemap.height = tilemapRaw.height;
+
+    tilemap.tilesets = tilemapRaw.tilesets;
+
+    GLOBAL.astar.setAStarMap(tilemap, "ground", "map_art_v2");
 
     return tilemap;
 };
@@ -81,29 +94,50 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
     this.tilemap = tilemap;
 
     this.SetCenter(this.tilemap.width/2, this.tilemap.height/2);
-    function isFence(num) { return num >= 5 && num <= 8; }
-    for (var i=this.tilemap.width-1; i>=0; i--)
+
+    var tilesetProperties = this.tilemap.tilesets[0].tileproperties;
+    for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
     {
-        for (var j=this.tilemap.height-1; j>=0; j--)
+        var layer = this.tilemap.layers[layerIndex];
+        var layerGroup = this.game.make.group();
+        if (layer.name == "border")//.properties.creatureLayer)
         {
-            var tileType = this.GetTileData(i, j);
-            if (tileType == -1) continue;
-
-            var image = new GlassLab.Tile(this.game, i, j, tileType);
-            //image.tint = Math.random() * 16777215;
-            parentGroup.add(image);
-
-            if (!this.map[i]) this.map[i] = [];
-            this.map[i][j] = image;
-
-            if (GLOBAL.debug)
+            GLOBAL.creatureLayer = layerGroup;
+        }
+        else
+        {
+            layerGroup.cacheAsBitmap = true;
+            layerGroup.GLASSLAB_BITMAP_DIRTY = true;
+        }
+        parentGroup.add(layerGroup);
+        for (var i=this.tilemap.width-1; i>=0; i--)
+        {
+            for (var j=this.tilemap.height-1; j>=0; j--)
             {
-                var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
-                text.anchor.set(0.5, 0.5);
-                image.addChild(text);
-                if (image.scale.x < 0)
+                var tileType = this.GetTileData(i, j, layer.name);
+                if (tileType == -1) continue;
+
+                var image = new GlassLab.Tile(this.game, i, j, tileType);
+                //image.tint = Math.random() * 16777215;
+                layerGroup.add(image);
+
+                if (!this.map[i]) this.map[i] = [];
+
+                var tileProperties = tilesetProperties[tileType];
+                if (!tileProperties.hasOwnProperty("interactable") || tileProperties.interactable !== "false")
                 {
-                    text.scale.x = -text.scale.x;
+                    this.map[i][j] = image;
+                }
+
+                if (GLOBAL.debug)
+                {
+                    var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
+                    text.anchor.set(0.5, 0.5);
+                    image.addChild(text);
+                    if (image.scale.x < 0)
+                    {
+                        text.scale.x = -text.scale.x;
+                    }
                 }
             }
         }
@@ -126,8 +160,8 @@ GlassLab.TileManager.prototype.SetTileSize = function(size)
 
 GlassLab.TileManager.prototype.GetTileWorldPosition = function(indexX, indexY, out)
 {
-    var worldX = (indexX - this.centerTile.x) * this.tileSize;
-    var worldY = (indexY - this.centerTile.y) * this.tileSize;
+    var worldX = (indexX - this.centerTile.x) * this.tileSize - this.tileSize/2.0;
+    var worldY = (indexY - this.centerTile.y) * this.tileSize - this.tileSize/2.0;
 
     if (out)
     {
@@ -141,8 +175,8 @@ GlassLab.TileManager.prototype.GetTileWorldPosition = function(indexX, indexY, o
 
 GlassLab.TileManager.prototype.GetTileIndexAtWorldPosition = function(x, y, out)
 {
-    var tileX = parseInt(Math.round(x / this.tileSize)) + this.centerTile.x;
-    var tileY = parseInt(Math.round(y / this.tileSize)) + this.centerTile.y;
+    var tileX = parseInt(Math.round(x / this.tileSize + this.centerTile.x + .5));
+    var tileY = parseInt(Math.round(y / this.tileSize + this.centerTile.y + .5));
 
     if (out && out.setTo)
     {

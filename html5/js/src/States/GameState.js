@@ -26,6 +26,8 @@ GlassLab.State.Game.prototype.create = function()
     game.camera.x = -game.camera.width/2;
     game.camera.y = -game.camera.height/2;
 
+    GlassLab.SignalManager.cameraMoved.dispatch();
+
     // start with the sound effects off during development.
     GLOBAL.audioManager.toggleMusic(GlassLab.Util.HasCookieData("musicOn") ? GlassLab.Util.GetCookieData("musicOn") == 'true' : true);
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
@@ -58,12 +60,19 @@ GlassLab.State.Game.prototype.update = function()
     var tileSprite;
 
     // Re-sort creatures because they probably moved
-    game.iso.simpleSort(GLOBAL.creatureLayer);
+    //game.iso.simpleSort(GLOBAL.creatureLayer);
 
     if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject && !GLOBAL.mailManager.currentOrder)
     {
-        game.camera.x -= game.input.activePointer.x - GLOBAL.lastMousePosition.x;
-        game.camera.y -= game.input.activePointer.y - GLOBAL.lastMousePosition.y;
+        var dx = game.input.activePointer.x - GLOBAL.lastMousePosition.x;
+        var dy = game.input.activePointer.y - GLOBAL.lastMousePosition.y;
+        if (dx != 0 || dy != 0)
+        {
+            game.camera.x -= dx;
+            game.camera.y -= dy;
+
+            GlassLab.SignalManager.cameraMoved.dispatch();
+        }
     }
     else //if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
     {
@@ -73,6 +82,7 @@ GlassLab.State.Game.prototype.update = function()
         tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
     }
 
+    /*
     if (tileSprite != GLOBAL.highlightedTile)
     {
         // Entered tile in pen
@@ -86,18 +96,29 @@ GlassLab.State.Game.prototype.update = function()
             GLOBAL.UIManager.penTooltip.hide();
         }
 
-        /*
+
         // Highlight tile
         if (GLOBAL.highlightedTile) GLOBAL.highlightedTile.tint = 0xFFFFFF;
         if (tileSprite) tileSprite.tint = 0xBFE2F2; //previous color was 0x86bfda (good for night) but I lightened it
-        */
+
 
         GLOBAL.highlightedTile = tileSprite;
+    }
+    */
+    for (var i = GLOBAL.grassGroup.children.length-1; i >= 0; i--)
+    {
+        var renderLayer = GLOBAL.grassGroup.children[i];
+        if (renderLayer.cacheAsBitmap && renderLayer.GLASSLAB_BITMAP_DIRTY)
+        {
+            renderLayer.updateCache();
+            renderLayer.GLASSLAB_BITMAP_DIRTY = false;
+        }
     }
 
     GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
 };
 
+// NOTE: Happens BEFORE update
 GlassLab.State.Game.prototype.render = function(game)
 {
-}
+};

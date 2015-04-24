@@ -229,8 +229,8 @@ GlassLab.Creature.prototype.setType = function (type) {
 GlassLab.Creature.prototype.moveToTile = function (col, row) {
     var tile = GLOBAL.tileManager.GetTile(col, row);
 
-    this.isoX = tile.isoX;
-    this.isoY = tile.isoY;
+    this.isoX = tile.isoBounds.centerX;
+    this.isoY = tile.isoBounds.centerY;
 
     if (Math.random() > 0.5) // face a random direction too
     {
@@ -241,8 +241,8 @@ GlassLab.Creature.prototype.moveToTile = function (col, row) {
 GlassLab.Creature.prototype.moveToRandomTile = function () {
     var tile = GLOBAL.tileManager.getRandomWalkableTile(15); // start around the center
 
-    this.isoX = tile.isoX;
-    this.isoY = tile.isoY;
+    this.isoX = tile.isoBounds.centerX;
+    this.isoY = tile.isoBounds.centerY;
 
     if (Math.random() > 0.5) // face a random direction too
     {
@@ -480,6 +480,8 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
             tile.tint = 0xffffff;
         }
     }
+
+    GLOBAL.renderManager.UpdateIsoObjectSort(this);
 };
 
 GlassLab.Creature.prototype.tryWalkToNextFood = function () {

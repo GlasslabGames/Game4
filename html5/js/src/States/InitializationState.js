@@ -101,8 +101,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('happyEmote', 'assets/images/emotes/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
-    game.load.atlasJSONHash('tiles', 'assets/images/tiles/tiles.png', 'assets/images/tiles/tiles.json');
-    game.load.image('squareGrassTile', 'assets/images/tiles/square_grass.png');
+    game.load.atlasJSONHash('tiles_v2', 'assets/images/tiles/tiles_v2.png', 'assets/images/tiles/tiles_v2.json');
+    game.load.image('squareGrassTile', 'assets/images/tiles/grass_blank_1.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
     game.load.image('penTooltipCapTall', 'assets/images/pen/pen_tooltip_cap_tall.png');
@@ -191,6 +191,23 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('foodLabelBg', 'assets/images/hud/hud_food/hud_food_label_bg_width.png');
     game.load.image('foodLabelBgEndcap', 'assets/images/hud/hud_food/hud_food_label_bg_endcap.png');
 
+    // bonus game
+    game.load.image('bonusBoardBg', 'assets/images/bonus_game/bonus_board_bg.png');
+    game.load.image('bonusCheckmark', 'assets/images/bonus_game/bonus_checkmark.png');
+    game.load.image('bonusXmark', 'assets/images/bonus_game/bonus_xmark.png');
+    game.load.image('bonusNotEnough', 'assets/images/bonus_game/bonus_not_enough.png');
+    game.load.image('bonusJustRight', 'assets/images/bonus_game/bonus_just_right.png');
+    game.load.image('bonusTooMuch', 'assets/images/bonus_game/bonus_too_much.png');
+    game.load.image('bonusCorrectionNotEnough', 'assets/images/bonus_game/bonus_correction_not_enough.png');
+    game.load.image('bonusCorrectionJustRight', 'assets/images/bonus_game/bonus_correction_just_right.png');
+    game.load.image('bonusCorrectionTooMuch', 'assets/images/bonus_game/bonus_correction_too_much.png');
+    game.load.image('bonusStickerDropzone', 'assets/images/bonus_game/bonus_sticker_dropzone.png');
+    game.load.image('bonusStickerDropzoneShader', 'assets/images/bonus_game/bonus_sticker_dropzone_shader.png');
+    game.load.image('bonusStickerOverlay', 'assets/images/bonus_game/bonus_sticker_overlay.png');
+    game.load.atlasJSONHash('bonusAnims', 'assets/images/bonus_game/bonus_anims.png', 'assets/images/bonus_game/bonus_anims.json');
+        game.load.image('bigO', 'assets/images/matchingGame_o.png');
+        game.load.image('bigX', 'assets/images/matchingGame_x.png');
+
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
     game.load.image('questionMark', 'assets/images/thought_bubble/thought_bubble_question_mark.png');
@@ -213,7 +230,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.atlasJSONHash('poopAnim', 'assets/images/poo/poo.png', 'assets/images/poo/poo.json');
 
     // Tilemap
-    game.load.tilemap('testTileMap', 'assets/tilemaps/test.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('worldTileMap', 'assets/tilemaps/prima_world.json', null, Phaser.Tilemap.TILED_JSON);
 
     game.load.audio('backgroundMusic', 'assets/audio/bgm/cc_in-game_music_loop.mp3');
     game.load.audio('menuMusic', 'assets/audio/bgm/cc_menu_music_loop.mp3');
@@ -255,7 +272,7 @@ GlassLab.State.Init.prototype.create = function()
 {
     var game = this.game;
     // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)
-    game.world.setBounds(-1000,-1000,2000, 2000);
+    game.world.setBounds(-2000,-2000,4000, 4000);
 
     // Setup world
     game.iso.anchor.setTo(0,0);
@@ -265,7 +282,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UILayer = game.add.group();
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = false;
 
-    GLOBAL.tileSize = 138; // Art tile size is about 139 (guessed with trial and error)
+    GLOBAL.tileSize = 115; // Art tile size is about 139 (guessed with trial and error)
 
     GLOBAL.foodInWorld = [];
 
@@ -279,14 +296,10 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
-    // Create TileManager and map
-    GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
-
-    var mapData = GLOBAL.tileManager.GenerateRandomMapData(20, 20);
-    GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
     GLOBAL.grassGroup = game.make.group();
-    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
     GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
+
+    GLOBAL.renderManager = new GlassLab.RenderManager(GLOBAL.game);
 
     GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
     GLOBAL.tiledBg.anchor.setTo(0.5, 0.5);
@@ -302,8 +315,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.foodLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.foodLayer);
 
-    GLOBAL.creatureLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.creatureLayer);
+    GLOBAL.creatureLayer = null; // Created by TileManager now
 
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
@@ -312,6 +324,13 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.WorldLayer.add(GLOBAL.hoverLayer);
 
     GLOBAL.paused = false;
+
+    // Create TileManager and map
+    GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
+
+    var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
+    GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
+    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
 
     // Add clouds
     GLOBAL.cloudManager = new GlassLab.CloudManager(game);
@@ -352,6 +371,12 @@ GlassLab.State.Init.prototype.create = function()
 
     var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
     versionLabel.fixedToCamera = true;
+    GLOBAL._averageFrameTime = 33;
+    GlassLab.SignalManager.update.add(function(dt)
+    {
+        GLOBAL._averageFrameTime = (GLOBAL._averageFrameTime * 49 + dt) / 50;
+        this.setText("v"+GLOBAL.version + " - " + Math.round(1000.0/GLOBAL._averageFrameTime) + "fps")
+    }, versionLabel);
     GLOBAL.UILayer.add(versionLabel);
 
     GLOBAL.sortingGame = new GlassLab.SortingGame(game);
