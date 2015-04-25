@@ -224,7 +224,7 @@ GlassLab.Pen.prototype.show = function() {
 };
 
 // The following functions can be overwritten to show different pens (e.g. the crate for shipping)
-GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, spriteName, frameName, anchor, colOffset, rowOffset) {
+GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, spriteName, frameName, anchor, colOffset, rowOffset, flip) {
     if (colOffset) col += colOffset;
     if (rowOffset) {
         startRow += rowOffset;
@@ -232,7 +232,7 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     }
 
     for (var row = startRow; row < endRow; row++) {
-        targetEdge.PlacePiece(col - 2, row, spriteName, frameName, anchor);
+        targetEdge.PlacePiece(col - 2, row, spriteName, frameName, anchor, flip);
     }
 };
 
@@ -297,12 +297,11 @@ GlassLab.Pen.prototype._placeArrows = function() {
     this.bottomEdge.placeArrow( midCol, this.height );
 };
 
-GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale) {
+GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale, anchor) {
 
     var tile = this.unusedTiles.pop();
     if (!tile) { // we ran out of existing tiles, so make a new one
         tile = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
-        tile.anchor.setTo(0.075, 0.04);
         this.tiles.push(tile);
     }
     tile.visible = true;
@@ -311,6 +310,8 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spri
     tile.isoX = xPos;
     tile.isoY = yPos;
     tile.tint = (typeof tint != 'undefined')? tint : 0xffffff;
+    if (anchor) tile.anchor.setTo(anchor.x, anchor.y);
+    else tile.anchor.setTo(0.075, 0.04);
     tile.scale.setTo(scale || 1, scale || 1);
     tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far
 };

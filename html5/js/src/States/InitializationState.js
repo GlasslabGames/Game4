@@ -81,7 +81,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('crate_lidRight', 'assets/images/crate/crate_lid_front_right.png');
     game.load.atlasJSONHash('propellerAnim', 'assets/images/crate/propeller_animations.png', 'assets/images/crate/propeller_animations.json');
 
-    game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
+    // OLD
+/*    game.load.image('penFenceLeft', 'assets/images/pen/feeding_fence_down_left.png');
     game.load.image('penFenceRight', 'assets/images/pen/feeding_fence_down_right.png');
     game.load.image('dottedLineLeft', 'assets/images/pen/dotted_line_left.png');
     game.load.image('dottedLineRight', 'assets/images/pen/dotted_line_right.png');
@@ -95,9 +96,25 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.atlasJSONHash('gateSwitchFlip', 'assets/images/pen/switch_flip.png', 'assets/images/pen/switch_flip.json');
     game.load.atlasJSONHash('gateSwitchFail', 'assets/images/pen/switch_fail.png', 'assets/images/pen/switch_fail.json');
     game.load.atlasJSONHash('gateLightGreen', 'assets/images/pen/switch_light_green.png', 'assets/images/pen/switch_light_green.json');
-    game.load.atlasJSONHash('gateLightRed', 'assets/images/pen/switch_light_red.png', 'assets/images/pen/switch_light_red.json');
+    game.load.atlasJSONHash('gateLightRed', 'assets/images/pen/switch_light_red.png', 'assets/images/pen/switch_light_red.json');*/
 
-    game.load.spritesheet('button', 'assets/images/feedButton.png', 188, 71);
+    game.load.atlasJSONHash('penAnims', 'assets/images/pen/pen_anims.png', 'assets/images/pen/pen_anims.json');
+    game.load.image('dottedLine', 'assets/images/pen/pen_dotted_line.png');
+    game.load.image('dottedLineShadow', 'assets/images/pen/pen_dotted_line_food_divider.png');
+    game.load.image('fenceTop', 'assets/images/pen/pen_fence_back_right.png');
+    game.load.image('fenceTopCorner', 'assets/images/pen/pen_fence_back_right_first_segment.png');
+    game.load.image('fenceBottom', 'assets/images/pen/pen_fence_front_left.png');
+    game.load.image('fenceBottomCorner', 'assets/images/pen/pen_fence_front_left_first_segment.png');
+    game.load.image('fenceRight', 'assets/images/pen/pen_fence_front_right.png');
+    game.load.image('gateBase', 'assets/images/pen/pen_gate_base.png');
+    game.load.image('gateHighlight', 'assets/images/pen/pen_gate_highlight.png');
+    game.load.image('gateBottom', 'assets/images/pen/pen_gate_post_left.png');
+    game.load.image('gateTop', 'assets/images/pen/pen_gate_post_right.png');
+    game.load.image('penFloor', 'assets/images/pen/pen_straw_bed.png');
+    game.load.image('penCreatureSlot', 'assets/images/pen/pen_empty_creature_slot_circle.png');
+
+
+
     game.load.image('happyEmote', 'assets/images/emotes/happyEmote.png');
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 

@@ -66,14 +66,14 @@ GlassLab.Edge.prototype.Reset = function() {
 GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "right", center: "center" }; // enum
 
 // add a new piece or recycle one
-GlassLab.Edge.prototype.PlacePiece = function(col, row, atlasName, spriteName, anchor) {
-    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, atlasName, spriteName, anchor);
+GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName, frameName, anchor, flip) {
+    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName, frameName, anchor, flip);
 };
 
-GlassLab.Edge.prototype.PlacePieceAt = function(x, y, atlasName, spriteName, anchor) {
+GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anchor, flip) {
     var sprite = this.unusedSprites.pop();
     if (!sprite) {
-        sprite = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
+        sprite = this.game.make.isoSprite(0, 0, 0, spriteName, frameName);
         this._setInputHandlers(sprite);
         switch (this.side) {
             case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
@@ -84,7 +84,9 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, atlasName, spriteName, anc
         this.pieces.addChild(sprite);
     }
     sprite.visible = true;
-    if (sprite.spriteName != spriteName) sprite.loadTexture(atlasName, spriteName);
+    sprite.scale.setTo((flip)? -1 : 1, 1);
+    if (sprite.key != spriteName) sprite.loadTexture(spriteName, frameName);
+    sprite.frame = frameName || 0;
     if (anchor) sprite.anchor.set(anchor.x, anchor.y);
     sprite.isoX = x;
     sprite.isoY = y;

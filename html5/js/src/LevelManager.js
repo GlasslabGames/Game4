@@ -20,19 +20,19 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day7" });
 
     // TESTING LEVELS:
-    /*/ 6
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
-        {type: "baby_bird",
-            creatureWidth: 3, foodAWidth: 4,
+        {type: "baby_unifox",
+            creatureWidth: 2, foodAWidth: 2, height: 2, foodBWidth: 2,
             bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],
       looseCreatures: {
-          baby_bird: 3
+          //baby_unifox: 3
       },
         objective: "This is a test!"
     };
-
+    /*
     // 7
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "This is a test!",
@@ -157,7 +157,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
                 var creature = new GlassLab.Creature(this.game, type);
                 GLOBAL.creatureLayer.add(creature);
                 GLOBAL.renderManager.UpdateIsoObjectSort(creature);
-                //creature.moveToRandomTile();
+                creature.moveToRandomTile();
                 creature.lookForTargets();
                 creature.name = "creature"+j; // for debugging
             }

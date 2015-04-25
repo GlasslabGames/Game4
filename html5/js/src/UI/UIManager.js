@@ -51,7 +51,6 @@ GlassLab.UIManager = function(game)
     GlassLab.SignalManager.uiWindowClosed.add(this._onUIClosed, this);
 };
 
-
 GlassLab.UIManager.prototype._createAnchors = function()
 {
     // another center anchor, but lower than the rest of them
@@ -269,7 +268,7 @@ GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withou
 
 GlassLab.UIManager.zoomAmount = 1.5;
 GlassLab.UIManager.startZoom = 0.4;
-GlassLab.UIManager.maxZoom = GlassLab.UIManager.startZoom * GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.maxZoom = GlassLab.UIManager.startZoom * GlassLab.UIManager.zoomAmount * GlassLab.UIManager.zoomAmount;
 GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
 
 GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
