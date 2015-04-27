@@ -315,10 +315,7 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
         this.zoomTween = null;
     }, this);
 
-    this.zoomTween.onUpdateCallback(function()
-    {
-        this.enforceCameraBounds();
-    }, this);
+    this.zoomTween.onUpdateCallback(this.enforceCameraBounds, this);
     this.zoomTween.start();
 
     GlassLab.SignalManager.cameraMoved.dispatch();
