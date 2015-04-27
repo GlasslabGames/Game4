@@ -49,6 +49,8 @@ GlassLab.UIManager = function(game)
     this.openWindows = [];
     GlassLab.SignalManager.uiWindowOpened.add(this._onUIOpened, this);
     GlassLab.SignalManager.uiWindowClosed.add(this._onUIClosed, this);
+
+    this.zoomTween = null;
 };
 
 
@@ -272,9 +274,49 @@ GlassLab.UIManager.startZoom = 0.4;
 GlassLab.UIManager.maxZoom = GlassLab.UIManager.startZoom * GlassLab.UIManager.zoomAmount;
 GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
 
+GlassLab.UIManager.prototype.enforceCameraBounds = function()
+{
+    var xLimit = 3500 * GLOBAL.WorldLayer.scale.x;
+    var camX = this.game.camera.x + this.game.camera.width/2;
+    var camY = this.game.camera.y + this.game.camera.height/2;
+    if (camX > xLimit) // xLimit found by testing in game
+    {
+        this.game.camera.x = xLimit - this.game.camera.width/2;
+        camX = this.game.camera.x + this.game.camera.width/2;
+    }
+    else if (camX < -xLimit)
+    {
+        this.game.camera.x = -xLimit - this.game.camera.width/2;
+        camX = this.game.camera.x + this.game.camera.width/2;
+    }
+
+    var yLimit = 1750 * GLOBAL.WorldLayer.scale.y * (1-Math.abs(camX/ xLimit));
+    if (camY > yLimit)
+    {
+        this.game.camera.y = yLimit - this.game.camera.height/2;
+    }
+    else if (camY < -yLimit)
+    {
+        this.game.camera.y = -yLimit - this.game.camera.height/2;
+    }
+};
+
 GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
     this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
-    GLOBAL.WorldLayer.scale.x = GLOBAL.WorldLayer.scale.y = this.zoomLevel;
+
+    if (this.zoomTween)
+    {
+        this.zoomTween.stop();
+    }
+
+    this.zoomTween = this.game.add.tween(GLOBAL.WorldLayer.scale).to ( {x: this.zoomLevel, y: this.zoomLevel}, 300, Phaser.Easing.Quadratic.InOut);
+    this.zoomTween.onComplete.add(function()
+    {
+        this.zoomTween = null;
+    }, this);
+
+    this.zoomTween.onUpdateCallback(this.enforceCameraBounds, this);
+    this.zoomTween.start();
 
     GlassLab.SignalManager.cameraMoved.dispatch();
 };

@@ -64,10 +64,18 @@ GlassLab.State.Game.prototype.update = function()
         var dy = game.input.activePointer.y - GLOBAL.lastMousePosition.y;
         if (dx != 0 || dy != 0)
         {
+            var prevCamX = game.camera.x;
+            var prevCamY = game.camera.y;
+
             game.camera.x -= dx;
             game.camera.y -= dy;
 
-            GlassLab.SignalManager.cameraMoved.dispatch();
+            GLOBAL.UIManager.enforceCameraBounds();
+
+            if (prevCamX != game.camera.x || prevCamY != game.camera.y)
+            {
+                GlassLab.SignalManager.cameraMoved.dispatch();
+            }
         }
     }
     else //if (!game.input.activePointer.targetObject || game.input.activePointer.targetObject.sprite == GLOBAL.dragTarget)
