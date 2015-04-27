@@ -24,7 +24,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.sprite.addChildAt(this.bottomEdge.addLayer(), 0); // for the dotted line
 
     // For the gate pieces and their highlights
-    var centerIndex = this.sprite.getChildIndex(this.centerEdge.sprite);
+    var centerIndex = this.sprite.getChildIndex(this.backObjectRoot);
     this.gateHighlightSprite = this.sprite.addChildAt(this.centerEdge.addLayer(), centerIndex + 1);
     this.gateHighlightSprite.visible = false;
     this.gateAnimSprite = this.sprite.addChildAt(this.centerEdge.addLayer(), centerIndex + 2);

@@ -39,11 +39,11 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     this.sprite.addChild(this.leftEdge.sprite);
 
+    this.sprite.addChild(this.centerEdge.sprite);
+
     // Add a root for all objects that should be behind most of the edges
     this.backObjectRoot = this.game.make.isoSprite();
     this.sprite.addChild(this.backObjectRoot).name = "backObjectRoot";
-
-    this.sprite.addChild(this.centerEdge.sprite);
 
     this.sprite.addChild(this.topEdge.sprite);
 
@@ -293,8 +293,8 @@ GlassLab.Pen.prototype._placeArrows = function() {
         this.rightEdges[i - 1].placeArrow( col, midRow );
     }
     this.rightmostEdge.placeArrow(this.getFullWidth() - 0.5, midRow);
-    this.topEdge.placeArrow( midCol, -0.25);
-    this.bottomEdge.placeArrow( midCol, this.height - 0.25 );
+    this.topEdge.placeArrow( midCol, -0.5);
+    this.bottomEdge.placeArrow( midCol, this.height - 0.5 );
 };
 
 GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale, anchor) {
