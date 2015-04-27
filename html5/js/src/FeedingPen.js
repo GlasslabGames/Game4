@@ -19,11 +19,17 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
+    this.sprite.addChildAt(this.topEdge.backSprite, 0);
+    this.sprite.addChildAt(this.bottomEdge.backSprite, 0);
+
     this.gateFront = this.game.make.isoSprite(0, 0, 0, "gateBottom");
-    this.sprite.addChildAt(this.gateFront, this.sprite.getChildIndex(this.frontObjectRoot));
+    //this.sprite.addChildAt(this.gateFront, this.sprite.getChildIndex(this.frontObjectRoot));
+    this.bottomEdge.sprite.addChild(this.gateFront);
+    this.gateFront.anchor.setTo(0.02, -0.18);
 
     this.gateBack = this.game.make.isoSprite(0, 0, 0, "gateTop");
-    this.centerEdge.sprite.addChildAt(this.gateBack, 0);
+    this.topEdge.sprite.addChildAt(this.gateBack, 0);
+    this.gateBack.anchor.setTo(0.01, 0.39);
 
     this.sprite.setChildIndex(this.tileRoot, this.sprite.getChildIndex(this.centerEdge.sprite));
 
@@ -52,7 +58,7 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     // Testing
     this.cursors = game.input.keyboard.createCursorKeys();
-    GlassLab.SignalManager.update.add(this._update, this);
+    //GlassLab.SignalManager.update.add(this._update, this);
 };
 
 GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -627,11 +633,9 @@ GlassLab.FeedingPen.prototype._update = function() {
 GlassLab.FeedingPen.prototype._drawEdges = function() {
     this.gateBack.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), GLOBAL.tileSize * -1);
     this.gateFront.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 3), GLOBAL.tileSize * (this.height - 1));
-    this.gateBack.anchor.setTo(0.01, 0.39);
-    this.gateFront.anchor.setTo(0.02, -0.18);
 
     var col = 0;
-    this._drawVerticalEdge(this.leftEdge, col, 0, this.height, "dottedLine", null, new Phaser.Point(0.96, 0.23), 0, 0, true);
+    this._drawVerticalEdge(this.leftEdge, col, 0, this.height, "dottedLine", null, new Phaser.Point(0.03, 0.24), 1, -1, true);
     col += this.widths[0];
     this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateBase", null, new Phaser.Point(0.01, 0.32));
 
@@ -641,12 +645,15 @@ GlassLab.FeedingPen.prototype._drawEdges = function() {
             this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineShadow", null, new Phaser.Point(0.04, 0.20));
         }
     };
-    //this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "fenceRight", null, new Phaser.Point(0.05, 0.35));
+    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "fenceRight", null, new Phaser.Point(0.02, 0.29));
 
-    //this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLine", null, new Phaser.Point(0.03, 0.23)); // right now this doesn't work... this part needs to be behind the creatures but the fence needs to be in front
-    //this._drawHorizontalEdge(this.topEdge, this.widths[0], this.getFullWidth(), 0, "fenceTop", null, new Phaser.Point(0.51, 0.24));
-    //this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0], this.height, "dottedLine", null, new Phaser.Point(0.03, 0.23));
-    //this._drawHorizontalEdge(this.bottomEdge, this.widths[0], this.getFullWidth(), this.height, "fenceBottom", null, new Phaser.Point(0.05, 0.35));
+    // dotted lines
+    this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, true); // right now this doesn't work... this part needs to be behind the creatures but the fence needs to be in front
+    this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0], this.height, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, true);
+
+
+    this._drawHorizontalEdge(this.topEdge, this.widths[0], this.getFullWidth(), 0, "fenceTop", null, new Phaser.Point(0.48, 0.19));
+    this._drawHorizontalEdge(this.bottomEdge, this.widths[0], this.getFullWidth(), this.height, "fenceBottom", null, new Phaser.Point(0.02, 0.29));
 };
 
 GlassLab.FeedingPen.prototype._drawBgAtTile = function(col, row, tile) {

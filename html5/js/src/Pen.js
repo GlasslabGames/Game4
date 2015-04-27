@@ -236,7 +236,7 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     }
 };
 
-GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName, frameName, anchor, colOffset, rowOffset, allowWindows) {
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName, frameName, anchor, colOffset, rowOffset, allowWindows, inBack) {
     var anchor;
 
     if (colOffset) {
@@ -251,7 +251,7 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
             if (frameName2) frameName2 = (frameName2.indexOf(".") > -1) ? frameName2.replace(".", "_window.") : frameName2 + "_window";
             else spriteName2 += "_window";
         }
-        targetEdge.PlacePiece(col - 1, row - 1, spriteName2, frameName2, anchor);
+        targetEdge.PlacePiece(col - 1, row - 1, spriteName2, frameName2, anchor, false, inBack);
     }
 };
 
@@ -283,18 +283,18 @@ GlassLab.Pen.prototype._placeArrows = function() {
         this.edges[i].showArrow(draggable);
     }
 
-    var midCol = this.getFullWidth() / 2 - 1.25;
-    var midRow = this.height / 2 - 1.25;
-    this.leftEdge.placeArrow(0, midRow);
-    this.centerEdge.placeArrow(this.widths[0], midRow);
-    var col = this.widths[0];
+    var midCol = this.getFullWidth() / 2 - 1.5;
+    var midRow = this.height / 2 - 1.5;
+    this.leftEdge.placeArrow(-0.5, midRow);
+    var col = this.widths[0] - 0.5;
+    this.centerEdge.placeArrow(col, midRow);
     for (var i = 1, len = this.widths.length - 1; i < len; i++) {
         col += this.widths[i];
         this.rightEdges[i - 1].placeArrow( col, midRow );
     }
-    this.rightmostEdge.placeArrow(this.getFullWidth(), midRow);
-    this.topEdge.placeArrow( midCol, 0);
-    this.bottomEdge.placeArrow( midCol, this.height );
+    this.rightmostEdge.placeArrow(this.getFullWidth() - 0.5, midRow);
+    this.topEdge.placeArrow( midCol, -0.25);
+    this.bottomEdge.placeArrow( midCol, this.height - 0.25 );
 };
 
 GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale, anchor) {

@@ -12,10 +12,16 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.side = side;
     this.sideIndex = sideIndex; // all the right pieces have an index to identify their positions
     this.pen = pen;
+
     this.sprite = this.game.make.isoSprite();
     this.sprite.name = side + "Edge";
     this.pieces = this.game.make.sprite();
     this.sprite.addChild(this.pieces);
+
+    // Add a sprite in the back (used for the pen which has part dotted lines which must be on another layer)
+    this.backSprite = this.game.make.isoSprite();
+    this.backPieces = this.game.make.sprite();
+    this.backSprite.addChild(this.backPieces);
 
     if (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) {
         this.horizontal = true;
@@ -56,21 +62,25 @@ GlassLab.Edge.prototype.Reset = function() {
         this.unusedSprites.push(this.pieces.children[i]);
         this.pieces.children[i].visible = false;
     }
+    for (var i = 0; i < this.backPieces.children.length; i++) {
+        this.unusedSprites.push(this.backPieces.children[i]);
+        this.backPieces.children[i].visible = false;
+    }
     if (this.horizontal) {
-        this.sprite.isoY = 0;
+        this.sprite.isoY = this.backSprite.isoY = 0;
     } else {
-        this.sprite.isoX = 0;
+        this.sprite.isoX = this.backSprite.isoY = 0;
     }
 };
 
 GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "right", center: "center" }; // enum
 
 // add a new piece or recycle one
-GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName, frameName, anchor, flip) {
-    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName, frameName, anchor, flip);
+GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName, frameName, anchor, flip, inBack) {
+    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName, frameName, anchor, flip, inBack);
 };
 
-GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anchor, flip) {
+GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anchor, flip, inBack) {
     var sprite = this.unusedSprites.pop();
     if (!sprite) {
         sprite = this.game.make.isoSprite(0, 0, 0, spriteName, frameName);
@@ -81,8 +91,9 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
             case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 4; break;
             default: sprite.input.priorityID = 3; break;
         } // Note: We might have to revisit and/or add priorityIDs to other things.
-        this.pieces.addChild(sprite);
     }
+    if (!inBack) this.pieces.addChild(sprite);
+    else this.backPieces.addChild(sprite);
     sprite.visible = true;
     sprite.scale.setTo((flip)? -1 : 1, 1);
     if (sprite.key != spriteName) sprite.loadTexture(spriteName, frameName);
@@ -110,8 +121,8 @@ GlassLab.Edge.prototype._setInputHandlers = function(sprite) {
 GlassLab.Edge.prototype.showArrow = function(visible) {
     this.arrow.visible = visible;
 
-    if (visible) this.arrowTween.resume();
-    else this.arrowTween.pause();
+    /*if (visible) this.arrowTween.resume();
+    else this.arrowTween.pause();*/
 };
 
 GlassLab.Edge.prototype.placeArrow = function(col, row) {
@@ -186,6 +197,9 @@ GlassLab.Edge.prototype._highlight = function(on) {
     for (var i = 0; i < this.pieces.children.length; i++) {
         this.pieces.children[i].tint = (on)? 0xeebbff : 0xffffff;
     }
+    for (var i = 0; i < this.backPieces.children.length; i++) {
+        this.backPieces.children[i].tint = (on)? 0xeebbff : 0xffffff;
+    }
 };
 
 GlassLab.Edge.prototype._onUpdate = function() {
@@ -249,6 +263,7 @@ GlassLab.Edge.prototype._onUpdate = function() {
             if (this.horizontal) this.sprite.isoY = targetPos.y;
             else this.sprite.isoX = targetPos.x;
         }
+        this.backSprite.isoPosition.setTo(this.sprite.isoX, this.sprite.isoY);
 
         // TODO: it would be nice to redraw the contents before the edge is dropped, but it's causing issues
     }
