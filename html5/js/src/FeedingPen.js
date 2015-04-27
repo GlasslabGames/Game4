@@ -19,17 +19,27 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
-    this.sprite.addChildAt(this.topEdge.backSprite, 0);
-    this.sprite.addChildAt(this.bottomEdge.backSprite, 0);
+    // Some edges need new layers in different places in the heirarchy
+    var topBackSprite = this.sprite.addChildAt(this.topEdge.addLayer(), 0); // for the dotted line
+    this.sprite.addChildAt(this.bottomEdge.addLayer(), 0); // for the dotted line
+    // For the gate pieces and their highlights
+    var centerIndex = this.sprite.getChildIndex(this.centerEdge.sprite);
+    this.gateHighlightSprite = this.sprite.addChildAt(this.centerEdge.addLayer(), centerIndex + 1);
+    this.gateAnimSprite = this.sprite.addChildAt(this.centerEdge.addLayer(), centerIndex + 2);
 
     this.gateFront = this.game.make.isoSprite(0, 0, 0, "gateBottom");
-    //this.sprite.addChildAt(this.gateFront, this.sprite.getChildIndex(this.frontObjectRoot));
-    this.bottomEdge.sprite.addChild(this.gateFront);
     this.gateFront.anchor.setTo(0.02, -0.18);
+    this.bottomEdge.sprite.addChild(this.gateFront);
+    this.bottomEdge.onHighlight.add(function(on) {
+        this.gateFront.tint = (on)? 0xeebbff : 0xffffff; // see Edge.js
+    }, this);
 
     this.gateBack = this.game.make.isoSprite(0, 0, 0, "gateTop");
-    this.topEdge.sprite.addChildAt(this.gateBack, 0);
+    topBackSprite.addChild(this.gateBack);
     this.gateBack.anchor.setTo(0.01, 0.39);
+    this.topEdge.onHighlight.add(function(on) {
+        this.gateBack.tint = (on)? 0xeebbff : 0xffffff; // see Edge.js
+    }, this);
 
     this.sprite.setChildIndex(this.tileRoot, this.sprite.getChildIndex(this.centerEdge.sprite));
 
@@ -45,13 +55,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.SetDraggableOnly(GlassLab.Edge.SIDES.right);
 
     this.onResolved = new Phaser.Signal();
-
-    this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 1.25, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
-        'button', this.FeedCreatures, this, 1, 0, 1);
-    this.button.anchor.set(0.5, 1);
-    this.sprite.addChild(this.button);
-    this.button.visible = false;
-    this._onCreatureContentsChanged(); // refresh the button visibility
 
     this.id = GLOBAL.penManager.pens.length;
     GLOBAL.penManager.AddPen(this);
@@ -639,6 +642,11 @@ GlassLab.FeedingPen.prototype._drawEdges = function() {
     col += this.widths[0];
     this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateBase", null, new Phaser.Point(0.01, 0.32));
 
+    for (var row = 0; row < this.height; row++) {
+        this.centerEdge.PlacePiece(col - 2, row, "gateHighlight", null, new Phaser.Point(0.01, 0.53), false, 1);
+        this.centerEdge.PlacePiece(col - 3, row - 1, "penAnims", "gate_drop_000.png", new Phaser.Point(0.01, 0.12), false, 2);
+    }
+
     for (var i = 0, len = this.rightEdges.length; i < len; i++) {
         col += this.widths[i+1];
         if (this.rightEdges[i].sprite.visible) {
@@ -648,12 +656,17 @@ GlassLab.FeedingPen.prototype._drawEdges = function() {
     this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "fenceRight", null, new Phaser.Point(0.02, 0.29));
 
     // dotted lines
-    this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, true); // right now this doesn't work... this part needs to be behind the creatures but the fence needs to be in front
-    this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0], this.height, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, true);
+    this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, 1);
+    this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0], this.height, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, 1);
 
 
-    this._drawHorizontalEdge(this.topEdge, this.widths[0], this.getFullWidth(), 0, "fenceTop", null, new Phaser.Point(0.48, 0.19));
-    this._drawHorizontalEdge(this.bottomEdge, this.widths[0], this.getFullWidth(), this.height, "fenceBottom", null, new Phaser.Point(0.02, 0.29));
+    // top and bottom fences
+    this._drawHorizontalEdge(this.topEdge, this.widths[0]+1, this.getFullWidth(), 0, "fenceTop", null, new Phaser.Point(0.48, 0.19));
+    this._drawHorizontalEdge(this.bottomEdge, this.widths[0]+1, this.getFullWidth(), this.height, "fenceBottom", null, new Phaser.Point(0.02, 0.29));
+
+    // end of the top and bottom fence
+    this.topEdge.PlacePiece(this.widths[0]-1, -1, "fenceTopCorner", null, new Phaser.Point(0.48, 0.19));
+    this.bottomEdge.PlacePiece(this.widths[0]-1, this.height-1, "fenceBottomCorner", null, new Phaser.Point(0.02, 0.29));
 };
 
 GlassLab.FeedingPen.prototype._drawBgAtTile = function(col, row, tile) {

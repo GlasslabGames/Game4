@@ -224,7 +224,7 @@ GlassLab.Pen.prototype.show = function() {
 };
 
 // The following functions can be overwritten to show different pens (e.g. the crate for shipping)
-GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, spriteName, frameName, anchor, colOffset, rowOffset, flip) {
+GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, spriteName, frameName, anchor, colOffset, rowOffset, flip, layerIndex) {
     if (colOffset) col += colOffset;
     if (rowOffset) {
         startRow += rowOffset;
@@ -232,11 +232,11 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     }
 
     for (var row = startRow; row < endRow; row++) {
-        targetEdge.PlacePiece(col - 2, row, spriteName, frameName, anchor, flip);
+        targetEdge.PlacePiece(col - 2, row, spriteName, frameName, anchor, flip, layerIndex);
     }
 };
 
-GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName, frameName, anchor, colOffset, rowOffset, allowWindows, inBack) {
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName, frameName, anchor, colOffset, rowOffset, allowWindows, layerIndex) {
     var anchor;
 
     if (colOffset) {
@@ -251,7 +251,7 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
             if (frameName2) frameName2 = (frameName2.indexOf(".") > -1) ? frameName2.replace(".", "_window.") : frameName2 + "_window";
             else spriteName2 += "_window";
         }
-        targetEdge.PlacePiece(col - 1, row - 1, spriteName2, frameName2, anchor, false, inBack);
+        targetEdge.PlacePiece(col - 1, row - 1, spriteName2, frameName2, anchor, false, layerIndex);
     }
 };
 

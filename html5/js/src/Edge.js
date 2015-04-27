@@ -13,15 +13,14 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.sideIndex = sideIndex; // all the right pieces have an index to identify their positions
     this.pen = pen;
 
-    this.sprite = this.game.make.isoSprite();
+    /*this.sprite = this.game.make.isoSprite();
     this.sprite.name = side + "Edge";
     this.pieces = this.game.make.sprite();
-    this.sprite.addChild(this.pieces);
+    this.sprite.addChild(this.pieces);*/
 
-    // Add a sprite in the back (used for the pen which has part dotted lines which must be on another layer)
-    this.backSprite = this.game.make.isoSprite();
-    this.backPieces = this.game.make.sprite();
-    this.backSprite.addChild(this.backPieces);
+    // Each edge can have multiple parts that we want to add to the parent Pen in different places
+    this.layers = []; // list of sprites that can be added to the parent in a certain order
+    this.sprite = this.addLayer(); // default sprite
 
     if (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) {
         this.horizontal = true;
@@ -50,37 +49,49 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     } else {
         GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
     }
+
+    this.onHighlight = new Phaser.Signal();
+    this.sprite.events.onDestroy.add(function() {
+        if (this.onHighlight) this.onHighlight.dispose();
+    }, this);
 };
 
 GlassLab.Edge.prototype._onInitGame = function() {
     this.game.input.onUp.add(this._onUp, this); // wait until now to add the global input listener. It gets wiped between states.
 };
 
+GlassLab.Edge.prototype.addLayer = function() {
+    var sprite = this.game.make.isoSprite();
+    this.layers.push(sprite);
+    sprite.pieces = sprite.addChild(this.game.make.sprite());
+    return sprite;
+};
+
 GlassLab.Edge.prototype.Reset = function() {
     this.unusedSprites = [];
-    for (var i = 0; i < this.pieces.children.length; i++) {
-        this.unusedSprites.push(this.pieces.children[i]);
-        this.pieces.children[i].visible = false;
-    }
-    for (var i = 0; i < this.backPieces.children.length; i++) {
-        this.unusedSprites.push(this.backPieces.children[i]);
-        this.backPieces.children[i].visible = false;
-    }
-    if (this.horizontal) {
-        this.sprite.isoY = this.backSprite.isoY = 0;
-    } else {
-        this.sprite.isoX = this.backSprite.isoY = 0;
+    for (var j = 0; j < this.layers.length; j++) {
+        var sprite = this.layers[j];
+        for (var i = 0; i < sprite.pieces.children.length; i++) {
+            this.unusedSprites.push(sprite.pieces.children[i]);
+            sprite.pieces.children[i].visible = false;
+        }
+
+        if (this.horizontal) {
+            sprite.isoY = 0;
+        } else {
+            sprite.isoX = 0;
+        }
     }
 };
 
 GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "right", center: "center" }; // enum
 
 // add a new piece or recycle one
-GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName, frameName, anchor, flip, inBack) {
-    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName, frameName, anchor, flip, inBack);
+GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName, frameName, anchor, flip, layerIndex) {
+    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName, frameName, anchor, flip, layerIndex);
 };
 
-GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anchor, flip, inBack) {
+GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anchor, flip, layerIndex) {
     var sprite = this.unusedSprites.pop();
     if (!sprite) {
         sprite = this.game.make.isoSprite(0, 0, 0, spriteName, frameName);
@@ -92,8 +103,11 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
             default: sprite.input.priorityID = 3; break;
         } // Note: We might have to revisit and/or add priorityIDs to other things.
     }
-    if (!inBack) this.pieces.addChild(sprite);
-    else this.backPieces.addChild(sprite);
+
+    if (!layerIndex) layerIndex = 0;
+    if (layerIndex < this.layers.length) this.layers[layerIndex].pieces.addChild(sprite);
+    else this.sprite.pieces.addChild(sprite);
+
     sprite.visible = true;
     sprite.scale.setTo((flip)? -1 : 1, 1);
     if (sprite.key != spriteName) sprite.loadTexture(spriteName, frameName);
@@ -101,8 +115,6 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
     if (anchor) sprite.anchor.set(anchor.x, anchor.y);
     sprite.isoX = x;
     sprite.isoY = y;
-
-
 
     sprite.parent.setChildIndex(sprite, sprite.parent.children.length - 1); // move it to the back of the children so far
 
@@ -194,12 +206,13 @@ GlassLab.Edge.prototype._onOut = function( target, pointer ) {
 };
 
 GlassLab.Edge.prototype._highlight = function(on) {
-    for (var i = 0; i < this.pieces.children.length; i++) {
-        this.pieces.children[i].tint = (on)? 0xeebbff : 0xffffff;
+    for (var j = 0; j < this.layers.length; j++) {
+        var pieces = this.layers[j].pieces;
+        for (var i = 0; i < pieces.children.length; i++) {
+            pieces.children[i].tint = (on)? 0xeebbff : 0xffffff;
+        }
     }
-    for (var i = 0; i < this.backPieces.children.length; i++) {
-        this.backPieces.children[i].tint = (on)? 0xeebbff : 0xffffff;
-    }
+    this.onHighlight.dispatch(on);
 };
 
 GlassLab.Edge.prototype._onUpdate = function() {
@@ -263,7 +276,10 @@ GlassLab.Edge.prototype._onUpdate = function() {
             if (this.horizontal) this.sprite.isoY = targetPos.y;
             else this.sprite.isoX = targetPos.x;
         }
-        this.backSprite.isoPosition.setTo(this.sprite.isoX, this.sprite.isoY);
+
+        for (var i = 0; i < this.layers.length; i++) {
+            this.layers[i].isoPosition.setTo(this.sprite.isoX, this.sprite.isoY);
+        }
 
         // TODO: it would be nice to redraw the contents before the edge is dropped, but it's causing issues
     }
