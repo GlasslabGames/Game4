@@ -55,6 +55,10 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.sparkleRoot = this.game.make.isoSprite();
     this.frontObjectRoot.addChild(this.sparkleRoot);
 
+    this.dots = [];
+    this.dotRoot = this.game.make.isoSprite();
+    this.sprite.addChildAt(this.dotRoot, 0);
+
     this.creatureRoot = this.game.make.group(); // the reason this is a group and not a sprite is so we can use iso.simpleSort
     this.backObjectRoot.addChild(this.creatureRoot);
 
@@ -101,6 +105,9 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
 
     this._repositionCreatures(); // adjust the creatures if they got moved
 
+    this.FillIn(Phaser.Plugin.Isometric.IsoSprite.bind(null, this.game, 0, 0, 0, "penCreatureSlot"), this.dotRoot, this.dots, null, 0, this.widths[0]);
+    this._updateDots();
+
     this.FillIn(Phaser.Plugin.Isometric.IsoSprite.bind(null, this.game, 0, 0, 0, "penAnims"), this.sparkleRoot, this.sparkles, null, this.widths[0], this.getFullWidth());
     for (var i = 0; i < this.sparkles.length; i++) {
         for (var j = 0; j < this.sparkles[i].length; j++) {
@@ -108,6 +115,30 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
             if (this.canFeed) this.sparkles[i][j].play("sparkle");
             this.sparkles[i][j].visible = this.canFeed;
             this.sparkles[i][j].anchor.setTo(0.5, 0.94);
+        }
+    }
+};
+
+GlassLab.FeedingPen.prototype._updateDots = function() {
+    // check if the creature type (we just use the value that was set in the telemetry) wants to enter this pen
+    var wantToEnter = this._getCreatureTypeCanEnter(this.creatureType);
+    for (var i = 0; i < this.dots.length; i++) {
+        for (var j = 0; j < this.dots[i].length; j++) {
+            var dot = this.dots[i][j];
+            // the dot is only visible when there's not a creature in this spot
+            console.log(i, j, this.creatureSpots[i]);
+            dot.visible = !(this.creatureSpots[i] && this.creatureSpots[i][j]);
+            if (!dot.visible) continue;
+            else if (wantToEnter) {
+                dot.alpha = 0.1;
+                if (!dot.tween) {
+                    dot.tween = this.game.make.tween(dot).to({alpha: 0.3}, 500, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+                } else dot.tween.resume();
+            } else {
+                if (dot.tween) dot.tween.pause();
+                dot.alpha = 0.15;
+            }
+            dot.anchor.setTo(0.5, 1);
         }
     }
 };
@@ -464,6 +495,7 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
     GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+    this._updateDots();
     this.checkPenStatus();
 };
 
