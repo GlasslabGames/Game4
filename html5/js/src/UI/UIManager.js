@@ -270,9 +270,9 @@ GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withou
 };
 
 GlassLab.UIManager.zoomAmount = 1.5;
-GlassLab.UIManager.startZoom = 0.4;
-GlassLab.UIManager.maxZoom = GlassLab.UIManager.startZoom * GlassLab.UIManager.zoomAmount;
-GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.maxZoom = 1.0;
+GlassLab.UIManager.startZoom = GlassLab.UIManager.maxZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
 
 GlassLab.UIManager.prototype.enforceCameraBounds = function()
 {

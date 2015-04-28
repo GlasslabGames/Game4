@@ -264,7 +264,7 @@ GlassLab.State.Init.prototype.create = function()
 {
     var game = this.game;
     // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)
-    game.world.setBounds(-2000,-2000,4000, 4000);
+    game.world.setBounds(-Number.MAX_VALUE/2, -Number.MAX_VALUE/2, Number.MAX_VALUE, Number.MAX_VALUE);
 
     // Setup world
     game.iso.anchor.setTo(0,0);
