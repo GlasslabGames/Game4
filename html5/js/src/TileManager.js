@@ -99,19 +99,20 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
     for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
     {
         var layer = this.tilemap.layers[layerIndex];
-        var layerGroup = this.game.make.group();
+        var layerGroup;
         if (layer.name == "border")//.properties.creatureLayer)
         {
-            GLOBAL.creatureLayer = layerGroup;
+            layerGroup = GLOBAL.creatureLayer;
         }
-        /* Turned off bitmap caching because too demanding to memory. Minor performance loss.
         else
         {
+            layerGroup = this.game.make.group();
+            /* Turned off bitmap caching because too demanding to memory. Minor performance loss.
             layerGroup.cacheAsBitmap = true;
             layerGroup.GLASSLAB_BITMAP_DIRTY = true;
+             */
+            parentGroup.add(layerGroup);
         }
-        */
-        parentGroup.add(layerGroup);
         for (var i=this.tilemap.width-1; i>=0; i--)
         {
             for (var j=this.tilemap.height-1; j>=0; j--)

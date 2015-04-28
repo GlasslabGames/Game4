@@ -307,7 +307,8 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.foodLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.foodLayer);
 
-    GLOBAL.creatureLayer = null; // Created by TileManager now
+    GLOBAL.creatureLayer = game.make.group();
+    GLOBAL.WorldLayer.add(GLOBAL.creatureLayer);
 
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
@@ -335,8 +336,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.lastMousePosition = new Phaser.Point();
 
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;
-    //game.scale.enterFullScreen.add(onEnterFullScreen, this);
-    //game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
     var journal = new GlassLab.Journal(game);
     GLOBAL.UIManager.centerAnchor.addChild(journal);
