@@ -118,6 +118,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('cancelButton', 'assets/images/cancel_button.png');
     game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
     game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
+    game.load.image('sideArrowHighlight', 'assets/images/journal/arrow_outline.png');
     game.load.image('sideArrow', 'assets/images/journal/hud_journal_paging_arrow.png');
     game.load.image('inventoryLock', 'assets/images/HUD_items_lock.png');
         game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
@@ -307,8 +308,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.foodLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.foodLayer);
 
-    GLOBAL.creatureLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.creatureLayer);
+    GLOBAL.creatureLayer = null; // Created by TileManager now
 
     GLOBAL.effectLayer = game.make.group();
     GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
