@@ -377,7 +377,7 @@ GlassLab.Pen.prototype.GetValidEdgePos = function(edge, edgeIndex, targetPos) {
     return targetPos;
 };
 
-GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
+GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType, animate, alpha) {
     var unusedObjects = Array.prototype.concat.apply([], list); // flatten the 2D list into a new array
     var count = 0;
     list.length = 0; // empty the list. Setting it to [] would break the passed-in reference.
@@ -398,13 +398,14 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
                 if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
             }
             obj.visible = true;
-            if (targetType && obj.setType) obj.setType(targetType);
+            if (targetType && obj.setType) obj.setType(targetType, animate);
             if (obj.placeOnTile) obj.placeOnTile(col + emptyCols, row);
             else {
                 obj.isoX = (col + emptyCols) * GLOBAL.tileSize;
                 obj.isoY = row * GLOBAL.tileSize;
             }
 
+            obj.alpha = (typeof alpha != 'undefined')? alpha : 1;
             obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
             obj.pen = this;
             list[row].push(obj);

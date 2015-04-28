@@ -246,6 +246,9 @@ GlassLab.State.Init.prototype.preload = function()
     // poop
     game.load.atlasJSONHash('poopAnim', 'assets/images/poo/poo.png', 'assets/images/poo/poo.json');
 
+    // smoke
+    game.load.atlasJSONHash('smokeAnim', 'assets/images/smoke_puffs.png', 'assets/images/smoke_puffs.json');
+
     // Tilemap
     game.load.tilemap('worldTileMap', 'assets/tilemaps/prima_world.json', null, Phaser.Tilemap.TILED_JSON);
 

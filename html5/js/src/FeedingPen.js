@@ -13,6 +13,10 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.creatureType = creatureType; // note that this is the target creature type (used for telemetry etc), not necessarily the current creature type
     this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
+    this.newFood = []; // set an index to true to indicate that the food is new and should be animated with a smoke puff
+
+    this.hoveredFoodType = null; // track a single kind of food that's currently hovering over the pen
+    this.hoveredFoodSection = -1; // track what section it's hovering over
 
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
     this.allowFeedButton = true;
@@ -92,15 +96,15 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 GlassLab.FeedingPen.prototype.refreshContents = function() {
     // Fill in the food to each section
     var startCol = this.widths[0];
-    for (var i = 0, len = this.foodTypes.length; i < len; i++) {
-        if (!this.foodTypes[i] || !GlassLab.FoodTypes[this.foodTypes[i]]) {
-            startCol += this.widths[i+1]; // go to the next section
-            continue; // don't fill anything in
-        }
+    for (var i = 0, len = this.widths.length-1; i < len; i++) {
+        var foodType = (this.hoveredFoodSection-1 == i) && this.hoveredFoodType; // get the hovered food type only if the section is right
+        var alpha = (foodType)? 0.5 : 1; // 25% alpha if we're using hovered food
+        if (!foodType) foodType = this.foodTypes[i]; // if there's not a hovered foodType, check our stored food type
+        var maxCount = (foodType && GlassLab.FoodTypes[foodType])? null : 0; // either no max count (fully filled in) or 0 (nothing filled in)
         while (this.foodLists.length <= i) this.foodLists.push([]);
-        var maxFood = (this.numFoods)? this.numFoods[i] : null;
-        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodRoot, this.foodLists[i], maxFood,
-            startCol, startCol += this.widths[i+1], false, this.foodTypes[i]);
+        this.FillIn(GlassLab.Food.bind(null, this.game), this.foodRoot, this.foodLists[i], maxCount,
+                startCol, startCol += this.widths[i + 1], false, foodType, this.newFood[i], alpha);
+        this.newFood[i] = false; // it's no longer new after we've drawn it once
     }
 
     this._repositionCreatures(); // adjust the creatures if they got moved
@@ -126,7 +130,6 @@ GlassLab.FeedingPen.prototype._updateDots = function() {
         for (var j = 0; j < this.dots[i].length; j++) {
             var dot = this.dots[i][j];
             // the dot is only visible when there's not a creature in this spot
-            console.log(i, j, this.creatureSpots[i]);
             dot.visible = !(this.creatureSpots[i] && this.creatureSpots[i][j]);
             if (!dot.visible) continue;
             else if (wantToEnter) {
@@ -573,16 +576,32 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     this.onResolved.dispatch(result, this._getCurrentCreatureType(), numCreatures); // used in DoPenChallengeAction
 };
 
-GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
+
+GlassLab.FeedingPen.prototype.canDropFoodAtTile = function(tile) {
     if (this.autoFill || this.feeding) return false;
 
-    var section = this.getSection(tile);
-    if (section < 1) return false;
+    return this.getSection(tile) > 0;
+};
 
+GlassLab.FeedingPen.prototype.showHoveredFood = function(foodType, tile) {
+    var section = this.getSection(tile);
+    var changed = (this.hoveredFoodType != foodType || this.hoveredFoodSection != section);
+
+    this.hoveredFoodType = foodType;
+    this.hoveredFoodSection = section;
+
+    if (changed) this.refreshContents();
+};
+
+GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
+    if (!this.canDropFoodAtTile(tile)) return false;
+
+    var section = this.getSection(tile);
     var prevFoodType = this.foodTypes[section - 1];
 
     while (this.foodTypes.length < section-1) this.foodTypes.push(null);
     this.foodTypes[section - 1] = foodType;
+    this.newFood[section - 1] = true;
 
     this.refreshContents();
     this.checkPenStatus();
