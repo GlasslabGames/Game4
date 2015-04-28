@@ -114,7 +114,7 @@ GlassLab.FeedingPen.prototype.refreshContents = function() {
             this.sparkles[i][j].animations.add("sparkle", Phaser.Animation.generateFrameNames("pen_sparkler_",0,47,".png",3), 24, true);
             if (this.canFeed) this.sparkles[i][j].play("sparkle");
             this.sparkles[i][j].visible = this.canFeed;
-            this.sparkles[i][j].anchor.setTo(0.5, 0.94);
+            this.sparkles[i][j].anchor.setTo(0.5, 0.25);
         }
     }
 };
@@ -138,7 +138,7 @@ GlassLab.FeedingPen.prototype._updateDots = function() {
                 if (dot.tween) dot.tween.pause();
                 dot.alpha = 0.15;
             }
-            dot.anchor.setTo(0.5, 1);
+            dot.anchor.setTo(0.5, 0);
         }
     }
 };
@@ -641,17 +641,18 @@ GlassLab.FeedingPen.prototype._update = function() {
 
 
 GlassLab.FeedingPen.prototype._drawEdges = function() {
-    this.gateBack.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), GLOBAL.tileSize * -1);
-    this.gateFront.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 3), GLOBAL.tileSize * (this.height - 1));
+    // The positioning of each piece (by row and col) might seem a little random. In some cases it would have made more sense to use a different anchor point to keep a "truer" row/col... but this is how it is now and it's not worth changing.
+    this.gateBack.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 1), 0);
+    this.gateFront.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), GLOBAL.tileSize * this.height);
 
     var col = 0;
-    this._drawVerticalEdge(this.leftEdge, col, 0, this.height, "dottedLine", null, new Phaser.Point(0.03, 0.24), 1, -1, true);
+    this._drawVerticalEdge(this.leftEdge, col, 0, this.height, "dottedLine", null, new Phaser.Point(0.03, 0.24), 1, 0, true);
     col += this.widths[0];
-    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateBase", null, new Phaser.Point(0.01, 0.32));
-    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateHighlight", null, new Phaser.Point(0.01, 0.53), 0, 0, false, 1);
+    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateBase", null, new Phaser.Point(0.01, 0.32), 0, 1);
+    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateHighlight", null, new Phaser.Point(0.01, 0.53), 0, 1, false, 1);
 
     for (var row = 0; row < this.height; row++) {
-        var anim = this.centerEdge.PlacePiece(col - 3, row - 1, "penAnims", "gate_drop_000.png", new Phaser.Point(0.01, 0.12), false, 2);
+        var anim = this.centerEdge.PlacePiece(col - 2, row, "penAnims", "gate_drop_000.png", new Phaser.Point(0.01, 0.12), false, 2);
         anim.animations.add("down", Phaser.Animation.generateFrameNames("gate_drop_",0,14,".png",3), 24, false);
         anim.animations.add("up", Phaser.Animation.generateFrameNames("gate_raise_",0,14,".png",3), 24, false);
     }
@@ -659,10 +660,10 @@ GlassLab.FeedingPen.prototype._drawEdges = function() {
     for (var i = 0, len = this.rightEdges.length; i < len; i++) {
         col += this.widths[i+1];
         if (this.rightEdges[i].sprite.visible) {
-            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineShadow", null, new Phaser.Point(0.04, 0.20));
+            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineShadow", null, new Phaser.Point(0.04, 0.20), 0, 1);
         }
     };
-    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "fenceRight", null, new Phaser.Point(0.02, 0.29));
+    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "fenceRight", null, new Phaser.Point(0.02, 0.29), 0, 1);
 
     // dotted lines
     this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, 1);
@@ -674,12 +675,12 @@ GlassLab.FeedingPen.prototype._drawEdges = function() {
     this._drawHorizontalEdge(this.bottomEdge, this.widths[0]+1, this.getFullWidth(), this.height, "fenceBottom", null, new Phaser.Point(0.02, 0.29));
 
     // end of the top and bottom fence
-    this.topEdge.PlacePiece(this.widths[0]-1, -1, "fenceTopCorner", null, new Phaser.Point(0.48, 0.19));
-    this.bottomEdge.PlacePiece(this.widths[0]-1, this.height-1, "fenceBottomCorner", null, new Phaser.Point(0.02, 0.29));
+    this.topEdge.PlacePiece(this.widths[0], 0, "fenceTopCorner", null, new Phaser.Point(0.48, 0.19));
+    this.bottomEdge.PlacePiece(this.widths[0], this.height, "fenceBottomCorner", null, new Phaser.Point(0.02, 0.29));
 };
 
 GlassLab.FeedingPen.prototype._drawBgAtTile = function(col, row, tile) {
     if (col >= this.widths[0]) {
-        this._placeTile(GLOBAL.tileSize * (col - 2), GLOBAL.tileSize * (row - 1), this.tileRoot, "penFloor", null, 0xffffff, 1, new Phaser.Point(0, -0.46));
+        this._placeTile(GLOBAL.tileSize * (col - 1), GLOBAL.tileSize * row, this.tileRoot, "penFloor", null, 0xffffff, 1, new Phaser.Point(0, -0.46));
     }
 };

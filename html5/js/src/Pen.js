@@ -232,7 +232,7 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     }
 
     for (var row = startRow; row < endRow; row++) {
-        targetEdge.PlacePiece(col - 2, row, spriteName, frameName, anchor, flip, layerIndex);
+        targetEdge.PlacePiece(col - 1, row, spriteName, frameName, anchor, flip, layerIndex);
     }
 };
 
@@ -251,7 +251,7 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
             if (frameName2) frameName2 = (frameName2.indexOf(".") > -1) ? frameName2.replace(".", "_window.") : frameName2 + "_window";
             else spriteName2 += "_window";
         }
-        targetEdge.PlacePiece(col - 1, row - 1, spriteName2, frameName2, anchor, false, layerIndex);
+        targetEdge.PlacePiece(col, row, spriteName2, frameName2, anchor, false, layerIndex);
     }
 };
 
@@ -283,18 +283,20 @@ GlassLab.Pen.prototype._placeArrows = function() {
         this.edges[i].showArrow(draggable);
     }
 
-    var midCol = this.getFullWidth() / 2 - 1.5;
-    var midRow = this.height / 2 - 1.5;
-    this.leftEdge.placeArrow(-0.5, midRow);
-    var col = this.widths[0] - 0.5;
+    var space = 0.75;
+    var midRow = this.height / 2 - 0.5;
+    this.leftEdge.placeArrow(1 - space, midRow);
+    var col = this.widths[0] + space;
     this.centerEdge.placeArrow(col, midRow);
     for (var i = 1, len = this.widths.length - 1; i < len; i++) {
         col += this.widths[i];
         this.rightEdges[i - 1].placeArrow( col, midRow );
     }
-    this.rightmostEdge.placeArrow(this.getFullWidth() - 0.5, midRow);
-    this.topEdge.placeArrow( midCol, -0.5);
-    this.bottomEdge.placeArrow( midCol, this.height - 0.5 );
+    this.rightmostEdge.placeArrow(this.getFullWidth() + space, midRow);
+
+    var midCol = this.getFullWidth() / 2 - 0.5;
+    this.topEdge.placeArrow( midCol, 1.5 - space);
+    this.bottomEdge.placeArrow( midCol, this.height + space );
 };
 
 GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale, anchor) {
