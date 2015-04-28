@@ -8,7 +8,7 @@ GlassLab.UIManager = function(game)
 {
     this.game = game;
     this.dragTargets = [];
-    this.zoomTo(GlassLab.UIManager.startZoom);
+    this.snapZoomTo(GlassLab.UIManager.startZoom);
 
     this._createAnchors();
 
@@ -270,9 +270,9 @@ GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withou
 };
 
 GlassLab.UIManager.zoomAmount = 1.5;
-GlassLab.UIManager.startZoom = 0.4;
-GlassLab.UIManager.maxZoom = GlassLab.UIManager.startZoom * GlassLab.UIManager.zoomAmount;
-GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.maxZoom = 1.0;
+GlassLab.UIManager.startZoom = GlassLab.UIManager.maxZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
 
 GlassLab.UIManager.prototype.enforceCameraBounds = function()
 {
@@ -301,7 +301,24 @@ GlassLab.UIManager.prototype.enforceCameraBounds = function()
     }
 };
 
-GlassLab.UIManager.prototype.zoomTo = function(zoomLevel) {
+GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel)
+{
+    this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+
+    if (this.zoomTween)
+    {
+        this.zoomTween.stop();
+    }
+
+    GLOBAL.WorldLayer.scale.setTo(this.zoomLevel, this.zoomLevel);
+
+    this.enforceCameraBounds();
+
+    GlassLab.SignalManager.cameraMoved.dispatch();
+};
+
+GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
+{
     this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
 
     if (this.zoomTween)

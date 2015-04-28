@@ -104,11 +104,13 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
         {
             GLOBAL.creatureLayer = layerGroup;
         }
+        /* Turned off bitmap caching because too demanding to memory. Minor performance loss.
         else
         {
             layerGroup.cacheAsBitmap = true;
             layerGroup.GLASSLAB_BITMAP_DIRTY = true;
         }
+        */
         parentGroup.add(layerGroup);
         for (var i=this.tilemap.width-1; i>=0; i--)
         {

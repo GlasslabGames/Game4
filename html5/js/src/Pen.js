@@ -397,7 +397,14 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
             obj.setType(targetType);
             obj.visible = true;
             obj.placeOnTile(col + emptyCols, row);
-            obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
+            if (obj.parent)
+            {
+                obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
+            }
+            else
+            {
+                console.error("Object doesn't have parent set!");
+            }
             obj.pen = this;
             list[row].push(obj);
             count++;
