@@ -33,16 +33,15 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
         {
             GLOBAL.UIManager.showInsteadOfOtherWindows(this.ordersMenu);
         }
-        else
+        else if (!this.mailModal)
         {
-            //console.error("No orders to show!");
-            var button, modal;
-            button = new GlassLab.UIRectButton(this.game, 0, 0, function() {
-                modal.destroy(true);
+            var button = new GlassLab.UIRectButton(this.game, 0, 0, function() {
+                this.mailModal.destroy(true);
+                this.mailModal = null;
             }, this, 150, 60, 0xffffff, "Ok");
-            modal = new GlassLab.UIModal(this.game, "You don't have any mail!", button);
-            GLOBAL.UIManager.centerAnchor.addChild(modal);
-            modal.show();
+            this.mailModal = new GlassLab.UIModal(this.game, "You don't have any mail!", button);
+            GLOBAL.UIManager.centerAnchor.addChild(this.mailModal);
+            this.mailModal.show();
         }
     }
     else
