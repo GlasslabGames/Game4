@@ -827,9 +827,3 @@ GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
         this.state.Enter();
     }
 };
-
-GlassLab.Creature.prototype.placeOnTile = function (col, row) {
-    // offset a little so it looks better in the pen
-    this.isoX = (col + 0.5) * GLOBAL.tileSize;
-    this.isoY = (row + 0.5) * GLOBAL.tileSize;
-};

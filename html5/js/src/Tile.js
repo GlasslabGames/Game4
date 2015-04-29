@@ -18,31 +18,16 @@ GlassLab.Tile = function(game, col, row, type) {
 
     this._preOptimizedParent = null;
     GlassLab.SignalManager.cameraMoved.add(function(){
-        var camera = this.game.camera;
-        if (
-            this.x < (camera.x - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x ||
-            this.y < (camera.y - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y ||
-            this.x > (camera.x + camera.width + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x ||
-            this.y > (camera.y + camera.height + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y
-        )
+        if (GlassLab.RenderManager.IsoObjectOffCamera(this))
         {
             if (this.parent)
             {
-                this._preOptimizedParent = this.parent;
-                this.parent.removeChild(this);
+                GLOBAL.renderManager.RemoveFromIsoWorld(this);
             }
         }
         else if (!this.parent)
         {
-            this._preOptimizedParent.add(this);
-        }
-    }, this);
-
-    this.events.onAddedToGroup.add(function() {
-        GLOBAL.renderManager.UpdateIsoObjectSort(this, this.parent);
-        if (this.parent.cacheAsBitmap)
-        {
-            this.parent.GLASSLAB_BITMAP_DIRTY = true;
+            GLOBAL.renderManager.AddToIsoWorld(this);
         }
     }, this);
 

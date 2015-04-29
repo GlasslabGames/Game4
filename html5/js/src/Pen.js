@@ -398,16 +398,21 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
                 if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
             }
             obj.visible = true;
+            obj.alpha = (typeof alpha != 'undefined')? alpha : 1;
+            obj.pen = this;
+
             if (targetType && obj.setType) obj.setType(targetType, animate);
             if (obj.placeOnTile) obj.placeOnTile(col + emptyCols, row);
             else {
                 obj.isoX = (col + emptyCols) * GLOBAL.tileSize;
                 obj.isoY = row * GLOBAL.tileSize;
             }
-
-            obj.alpha = (typeof alpha != 'undefined')? alpha : 1;
-            obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
-            obj.pen = this;
+            if (obj.parent) {
+                obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
+            }
+            else {
+                console.error("Object doesn't have parent set!");
+            }
             list[row].push(obj);
             count++;
         }

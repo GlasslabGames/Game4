@@ -261,7 +261,6 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
         var response = this._getResponse();
         if (response) {
             this._refreshPen(response);
-            this.submitButton.setReadyToShip(true);
             this.submitButton.setEnabled(false);
             for (var i = 0; i < this.answerInputs.length; i++) {
                 var answerInput = this.answerInputs[i];
@@ -272,17 +271,24 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
 
             this._sendTelemetry("pack_order", true);
         }
-    } else { // actually ship the crate
-        var response = this._getResponse();
+    }
+};
 
-        if (response) {
-            this.crate.ship();
-            this.crate.onShipped.addOnce(this._crateShipped, this);
-            this._sendTelemetry("submit_order_answer", true);
+GlassLab.OrderFulfillment.prototype.shipCrate = function() {
+    var response = this._getResponse();
 
-            this.submitButton.setEnabled(false);
-            this.submitButton.anim.animations.paused = false; // in this special case, keep playing the anim even though the rest is disabled
-        }
+    if (response) {
+        this.crate.ship();
+        this.crate.onShipped.addOnce(this._crateShipped, this);
+        this._sendTelemetry("submit_order_answer", true);
+
+        this.submitButton.setReadyToShip(true);
+        this.submitButton.setEnabled(false);
+        this.submitButton.anim.animations.paused = false; // in this special case, keep playing the anim even though the rest is disabled
+    }
+    else
+    {
+        console.error("No response for crate ship");
     }
 };
 
@@ -402,7 +408,7 @@ GlassLab.OrderFulfillmentButton.prototype = Object.create(GlassLab.UITextButton.
 GlassLab.OrderFulfillmentButton.prototype.constructor = GlassLab.OrderFulfillmentButton;
 
 GlassLab.OrderFulfillmentButton.prototype.setReadyToShip = function(ship) {
-    GlassLab.Util.SetCenteredText(this.label, (ship)? "Ship Crate" : "Load Crate" );
+    GlassLab.Util.SetCenteredText(this.label, (ship)? "Shipping..." : "Load Crate" );
     this.anim.play((ship)? "ship" : "load");
     this.readyToShip = ship;
 

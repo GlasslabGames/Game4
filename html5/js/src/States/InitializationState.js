@@ -135,6 +135,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('cancelButton', 'assets/images/cancel_button.png');
     game.load.image('selectOrderButton', 'assets/images/selectOrderButton.png');
     game.load.image('nextLevelButton', 'assets/images/nextLevelButton.png');
+    game.load.image('sideArrowHighlight', 'assets/images/journal/arrow_outline.png');
     game.load.image('sideArrow', 'assets/images/journal/hud_journal_paging_arrow.png');
     game.load.image('inventoryLock', 'assets/images/HUD_items_lock.png');
         game.load.image('inventoryBg', 'assets/images/HUD_items_blank.png');
@@ -292,7 +293,7 @@ GlassLab.State.Init.prototype.create = function()
 {
     var game = this.game;
     // Setup bounds for world (used for camera, can also be used to keep entities inside bounds if you want)
-    game.world.setBounds(-2000,-2000,4000, 4000);
+    game.world.setBounds(-Number.MAX_VALUE/2, -Number.MAX_VALUE/2, Number.MAX_VALUE, Number.MAX_VALUE);
 
     // Setup world
     game.iso.anchor.setTo(0,0);
@@ -363,8 +364,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.lastMousePosition = new Phaser.Point();
 
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;
-    //game.scale.enterFullScreen.add(onEnterFullScreen, this);
-    //game.scale.leaveFullScreen.add(onLeaveFullScreen, this);
 
     var journal = new GlassLab.Journal(game);
     GLOBAL.UIManager.centerAnchor.addChild(journal);
