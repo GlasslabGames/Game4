@@ -697,6 +697,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
 };
 
 GlassLab.Creature.prototype.tryReachTarget = function(target) {
+    console.log("try reach target", target);
     if (target.pen) {
         if (!this.tryEnterPen(target.pen)) { // try to enter the pen, but if we can't (someone else is there):
             this.showEmote(false); // emote sad that we can't enter the pen

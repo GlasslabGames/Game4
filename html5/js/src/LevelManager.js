@@ -20,19 +20,19 @@ GlassLab.LevelManager = function(game)
     this._addLevelData({ quest: "day7" });
 
     // TESTING LEVELS:
-    /*/ 6
+    // 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
-        {type: "baby_bird",
-            creatureWidth: 3, foodAWidth: 4,
+        {type: "baby_unifox",
+            creatureWidth: 2, foodAWidth: 2, height: 2, /*foodBWidth: 2,*/
             bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],
       looseCreatures: {
-          baby_bird: 3
+          baby_unifox: 3
       },
         objective: "This is a test!"
     };
-
+    /*
     // 7
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "This is a test!",
@@ -55,7 +55,6 @@ GlassLab.LevelManager = function(game)
             {
                 "client": "Archibold Huxley III",
                 "company": "Rupture Farms",
-                "numFoodA": 12,
                 "numCreatures": 9,
                 "creatureType": "baby_bird",
                 "description": "blah *blah* blah",
@@ -66,16 +65,16 @@ GlassLab.LevelManager = function(game)
                 company: "Rupture Farms",
                 numCreatures: 6,
                 creatureType: "unifox",
-                description: "Dear Friend! I want 5 UNIFOXES. But I also need ENOUGH FOOD to keep them all satisfied during the journey.",
+                description: "Dear Friend! I want *[numCreatures] [creatureType]*. But I also need *enough food* to keep them all satisfied during the journey.",
                 reward: 200,
                 hint: true
             },
             {
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
-                totalNumFood: 8,
+                numCreatures: 8,
                 creatureType: "rammus",
-                description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
+                description: "Dear Friend! My island has *[numCreatures] [creatureType]*. I have heard you know *how many [foodTypeA]* I need FOR EACH. Send me the correct *number of [foodTypeB]*, would you? I will pay you well!",
                 fulfilled: false,
                 reward: 200
             },
@@ -158,7 +157,7 @@ GlassLab.LevelManager.prototype.LoadLevelFromData = function(levelData)
                 var creature = new GlassLab.Creature(this.game, type);
                 GLOBAL.creatureLayer.add(creature);
                 GLOBAL.renderManager.UpdateIsoObjectSort(creature);
-                //creature.moveToRandomTile();
+                creature.moveToRandomTile();
                 creature.lookForTargets();
                 creature.name = "creature"+j; // for debugging
             }

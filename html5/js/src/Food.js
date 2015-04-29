@@ -141,6 +141,9 @@ GlassLab.Food = function(game, type) {
     this.canDropInPen = true; // setting on WorldObject
     this.destroyIfOutOfBounds = true; // allow the food to be destroyed if it's dropped somewhere invalid
 
+    this.hoveredPen = null; // track which pen this food is being dragged over
+    this.hoveredPenSection = null; // track which section of the pen the food is being dragged over
+
     this.shadowY = this.shadow.y = -10;
     this.spriteY = this.sprite.y = 5;
 
@@ -165,6 +168,7 @@ GlassLab.Food.prototype.constructor = GlassLab.Food;
 
 GlassLab.Food.prototype._setImage = function() {
     this.info = GlassLab.FoodTypes[this.type];
+    if (!this.info) return; // can't set the image if we don't have a valid type
     this.hasAnimations = false; // this.game.cache.checkImageKey(this.info.spriteName+"_eaten"); // in the future we want to check for anims, but for now we're just using static images since the anims have shadows baked in and other inconsistencies
 
     var key = (this.hasAnimations)? this.info.spriteName+"_eaten" : this.info.spriteName;
@@ -201,6 +205,7 @@ GlassLab.Food.prototype._onEndDrag = function () {
     if (this.destroyed) return; // the world object might have destroyed itself if it was out of bounds
 
     var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);
+    if (this.hoveredPen) this.hoveredPen.showHoveredFood(null, tile);
     if (tile && tile.inPen && tile.inPen.tryDropFood(this.type, tile)) {
         console.log("Dropped food in pen");
         this.destroy();
@@ -210,6 +215,27 @@ GlassLab.Food.prototype._onEndDrag = function () {
         GlassLab.SignalManager.foodDropped.dispatch(this);
         GlassLab.SignalManager.creatureTargetsChanged.dispatch();
     }
+};
+
+GlassLab.Food.prototype._onDrag = function (mousePos, diff) {
+    GlassLab.WorldObject.prototype._onDrag.apply(this, arguments);
+
+    var hoveredPen = null;
+    var section = -1;
+    var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);
+    if (tile && tile.inPen && tile.inPen.canDropFoodAtTile(tile)) {
+        hoveredPen = tile.inPen;
+        section = tile.inPen.getSection(tile);
+    }
+
+    if (this.hoveredPen != hoveredPen || this.hoveredPenSection != section) { // check for changes in what pen we're over
+        if (hoveredPen) hoveredPen.showHoveredFood(this.type, tile);
+        else if (this.hoveredPen) this.hoveredPen.showHoveredFood(null, tile); // unhover the pen
+        this.hoveredPen = hoveredPen;
+        this.hoveredPenSection = section;
+    }
+
+    this.draggableComponent.showDropTarget = !this.hoveredPen;
 };
 
 // static function
@@ -253,12 +279,22 @@ GlassLab.Food.prototype._afterEaten = function(fadeTime) {
   tween.onComplete.add( function() {this.destroy();}, this);
 };
 
-GlassLab.Food.prototype.setType = function(type)
+GlassLab.Food.prototype.setType = function(type, showSmoke)
 {
-    if (type == this.type) return;
+    if (type != this.type) {
+        this.type = type;
+        this._setImage();
+    }
 
-    this.type = type;
-    this._setImage();
+    if (showSmoke) {
+        if (!this.smoke) {
+            this.smoke = this.game.make.sprite(0, 0, "smokeAnim");
+            this.addChild(this.smoke);
+            this.smoke.anchor.setTo(0.5, 0.75);
+            this.smoke.animations.add("puff", Phaser.Animation.generateFrameNames("smoke_puff_food_", 156, 182, ".png", 3), 24, false);
+        }
+        this.smoke.play("puff");
+    }
 };
 
 GlassLab.Food.prototype.getTargets = function()

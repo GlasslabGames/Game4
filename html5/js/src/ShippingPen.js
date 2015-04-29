@@ -15,6 +15,8 @@ GlassLab.ShippingPen = function(game) {
     this.edgeAnchor = new Phaser.Point(0.075, 0.04);
     this.lidAnchor = new Phaser.Point(0.075, 0.25);
 
+    this.frontObjectRoot.isoPosition.setTo(GLOBAL.tileSize * -0.25, GLOBAL.tileSize * -0.35);
+
     this.shadow = this.game.make.isoSprite(GLOBAL.tileSize + 20, GLOBAL.tileSize);
     this.sprite.addChildAt(this.shadow, 0);
     this.shadow.alpha = 0.4;
@@ -230,24 +232,24 @@ GlassLab.ShippingPen.prototype.Resize = function() {
 };
 
 GlassLab.ShippingPen.prototype._drawEdges = function() {
-    this._drawVerticalEdge(this.leftEdge, 0, 1, this.height,  "crate", "crate_back_left.png", this.edgeAnchor, 0, -1);
-    this._drawVerticalEdge(this.centerEdge, this.widths[0], 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -1, -1);
+    this._drawVerticalEdge(this.leftEdge, 0, 1, this.height,  "crate", "crate_back_left.png", this.edgeAnchor, -1, -1);
+    //this._drawVerticalEdge(this.centerEdge, this.widths[0], 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -1, -1);
 
-    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -1, -1);
+    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "crate", "crate_front_right.png", this.edgeAnchor, -2, -1);
 
-    this._drawHorizontalEdge(this.topEdge, 1, this.getFullWidth(), 0, "crate", "crate_back_right.png", this.edgeAnchor, -1, 0, true);
-    this._drawHorizontalEdge(this.bottomEdge, 0, this.getFullWidth(), this.height, "crate", "crate_front_left.png", this.edgeAnchor, -1, -1);
+    this._drawHorizontalEdge(this.topEdge, 1, this.getFullWidth(), 0, "crate", "crate_back_right.png", this.edgeAnchor, -2, -1, true);
+    this._drawHorizontalEdge(this.bottomEdge, 0, this.getFullWidth(), this.height, "crate", "crate_front_left.png", this.edgeAnchor, -2, -2);
 
     if (this.frontEdgeRoot.visible) {
-        this._drawVerticalEdge(this.frontRightEdge, this.getFullWidth(), 0, this.height, "crate_frontRight", null, this.edgeAnchor, -1, -1);
-        this._drawHorizontalEdge(this.frontBottomEdge, 0, this.getFullWidth(), this.height, "crate_frontBottom", null, this.edgeAnchor, -1, -1, true);
+        this._drawVerticalEdge(this.frontRightEdge, this.getFullWidth(), 0, this.height, "crate_frontRight", null, this.edgeAnchor, -2, -1);
+        this._drawHorizontalEdge(this.frontBottomEdge, 0, this.getFullWidth(), this.height, "crate_frontBottom", null, this.edgeAnchor, -2, -2, true);
     }
 
     if (this.lid.visible) {
-        this._drawHorizontalEdge(this.lidTopEdge, 1, this.getFullWidth(), 0, "crate_lidTop", null, this.lidAnchor, -1, 0);
-        this._drawVerticalEdge(this.lidLeftEdge, 0, 1, this.height, "crate_lidLeft", null, this.lidAnchor, 0, -1);
-        this._drawVerticalEdge(this.lidRightEdge, this.getFullWidth(), 0, this.height, "crate_lidRight", null, this.lidAnchor, -1, -1);
-        this._drawHorizontalEdge(this.lidBottomEdge, 0, this.getFullWidth(), this.height, "crate_lidBottom", null, this.lidAnchor, -1, -1);
+        this._drawHorizontalEdge(this.lidTopEdge, 1, this.getFullWidth(), 0, "crate_lidTop", null, this.lidAnchor, -2, -1);
+        this._drawVerticalEdge(this.lidLeftEdge, 0, 1, this.height, "crate_lidLeft", null, this.lidAnchor, -1, -1);
+        this._drawVerticalEdge(this.lidRightEdge, this.getFullWidth(), 0, this.height, "crate_lidRight", null, this.lidAnchor, -2, -1);
+        this._drawHorizontalEdge(this.lidBottomEdge, 0, this.getFullWidth(), this.height, "crate_lidBottom", null, this.lidAnchor, -2, -2);
     }
 };
 

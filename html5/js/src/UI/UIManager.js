@@ -53,7 +53,6 @@ GlassLab.UIManager = function(game)
     this.zoomTween = null;
 };
 
-
 GlassLab.UIManager.prototype._createAnchors = function()
 {
     // another center anchor, but lower than the rest of them

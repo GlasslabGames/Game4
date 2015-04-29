@@ -13,24 +13,57 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.creatureType = creatureType; // note that this is the target creature type (used for telemetry etc), not necessarily the current creature type
     this.foodTypes = []; // foodTypes will stay empty until the player adds a kind of food
+    this.newFood = []; // set an index to true to indicate that the food is new and should be animated with a smoke puff
+
+    this.gatePieces = [];
+
+    this.hoveredFoodType = null; // track a single kind of food that's currently hovering over the pen
+    this.hoveredFoodSection = -1; // track what section it's hovering over
 
     this.autoFill = autoFill; // whether creatures to fill the pen are magically created
     this.allowFeedButton = true;
 
     GlassLab.Pen.call(this, game, layer, height, widths);
 
-    this.gateFront = this.game.make.isoSprite();
-    this.sprite.addChildAt(this.gateFront, this.sprite.getChildIndex(this.frontObjectRoot));
+    // Some edges need new layers in different places in the heirarchy
+    var topBackSprite = this.sprite.addChildAt(this.topEdge.addLayer(), 0); // for the dotted line
+    this.sprite.addChildAt(this.bottomEdge.addLayer(), 0); // for the dotted line
 
-    this._makeGatePieces();
-    this.gateBack.visible = true;
-    this.gateFront.visible = true;
+    // For the gate pieces and their highlights
+    var centerIndex = this.sprite.getChildIndex(this.backObjectRoot);
+    this.gateHighlightSprite = this.sprite.addChildAt(this.centerEdge.addLayer(), centerIndex + 1);
+    this.gateHighlightSprite.alpha = 0;
+    this.gateAnimSprite = this.sprite.addChildAt(this.centerEdge.addLayer(), centerIndex + 2);
+
+    this.gateFront = this.game.make.isoSprite(0, 0, 0, "gateBottom");
+    this.gateFront.anchor.setTo(0.02, -0.18);
+    this.bottomEdge.sprite.addChild(this.gateFront);
+    this.bottomEdge.onHighlight.add(function(on) {
+        this.gateFront.tint = (on)? 0xeebbff : 0xffffff; // see Edge.js
+    }, this);
+
+    this.gateBack = this.game.make.isoSprite(0, 0, 0, "gateTop");
+    topBackSprite.addChild(this.gateBack);
+    this.gateBack.anchor.setTo(0.01, 0.39);
+    this.topEdge.onHighlight.add(function(on) {
+        this.gateBack.tint = (on)? 0xeebbff : 0xffffff; // see Edge.js
+    }, this);
+
+    this.sprite.setChildIndex(this.tileRoot, this.sprite.getChildIndex(this.centerEdge.sprite));
 
     this.presetCreatureWidth = this.widths[0]; // this is used when filling orders. It's not relevant for normal pens.
 
     // Instead of adding everything to objectRoot, make parents for the food and creatures so we can order them
     this.foodRoot = this.game.make.isoSprite();
     this.frontObjectRoot.addChild(this.foodRoot);
+
+    this.sparkles = [];
+    this.sparkleRoot = this.game.make.isoSprite();
+    this.frontObjectRoot.addChild(this.sparkleRoot);
+
+    this.dots = [];
+    this.dotRoot = this.game.make.isoSprite();
+    this.sprite.addChildAt(this.dotRoot, 0);
 
     this.creatureRoot = this.game.make.group(); // the reason this is a group and not a sprite is so we can use iso.simpleSort
     this.backObjectRoot.addChild(this.creatureRoot);
@@ -39,15 +72,15 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.onResolved = new Phaser.Signal();
 
-    this.button = game.add.button(this.topEdge.sprite.x + GLOBAL.tileSize * 1.25, this.topEdge.sprite.y - GLOBAL.tileSize * 1.5,
-        'button', this.FeedCreatures, this, 1, 0, 1);
-    this.button.anchor.set(0.5, 1);
-    this.sprite.addChild(this.button);
-    this.button.visible = false;
-    this._onCreatureContentsChanged(); // refresh the button visibility
-
     this.id = GLOBAL.penManager.pens.length;
     GLOBAL.penManager.AddPen(this);
+
+    // Testing
+    this.cursors = game.input.keyboard.createCursorKeys();
+    GlassLab.SignalManager.update.add(this._update, this);
+
+    this.sprite.inputEnabled = true;
+    this.sprite.events.onInputUp.add(this._onMouseUp, this);
 };
 
 GlassLab.FeedingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -68,18 +101,54 @@ GlassLab.FeedingPen.prototype.Resize = function() {
 GlassLab.FeedingPen.prototype.refreshContents = function() {
     // Fill in the food to each section
     var startCol = this.widths[0];
-    for (var i = 0, len = this.foodTypes.length; i < len; i++) {
-        if (!this.foodTypes[i] || !GlassLab.FoodTypes[this.foodTypes[i]]) {
-            startCol += this.widths[i+1]; // go to the next section
-            continue; // don't fill anything in
-        }
+    for (var i = 0, len = this.widths.length-1; i < len; i++) {
+        var foodType = (this.hoveredFoodSection-1 == i) && this.hoveredFoodType; // get the hovered food type only if the section is right
+        var alpha = (foodType)? 0.5 : 1; // 25% alpha if we're using hovered food
+        if (!foodType) foodType = this.foodTypes[i]; // if there's not a hovered foodType, check our stored food type
+        var maxCount = (foodType && GlassLab.FoodTypes[foodType])? null : 0; // either no max count (fully filled in) or 0 (nothing filled in)
         while (this.foodLists.length <= i) this.foodLists.push([]);
-        var maxFood = (this.numFoods)? this.numFoods[i] : null;
-        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodRoot, this.foodLists[i], maxFood,
-            startCol, startCol += this.widths[i+1], false, this.foodTypes[i]);
+        this.FillIn(GlassLab.Food.bind(null, this.game), this.foodRoot, this.foodLists[i], maxCount,
+                startCol, startCol += this.widths[i + 1], false, foodType, this.newFood[i], alpha);
+        this.newFood[i] = false; // it's no longer new after we've drawn it once
     }
 
     this._repositionCreatures(); // adjust the creatures if they got moved
+
+    this.FillIn(Phaser.Plugin.Isometric.IsoSprite.bind(null, this.game, 0, 0, 0, "penCreatureSlot"), this.dotRoot, this.dots, null, 0, this.widths[0]);
+    this._updateDots();
+
+    this.FillIn(Phaser.Plugin.Isometric.IsoSprite.bind(null, this.game, 0, 0, 0, "penAnims"), this.sparkleRoot, this.sparkles, null, this.widths[0], this.getFullWidth());
+    for (var i = 0; i < this.sparkles.length; i++) {
+        for (var j = 0; j < this.sparkles[i].length; j++) {
+            this.sparkles[i][j].animations.add("sparkle", Phaser.Animation.generateFrameNames("pen_sparkler_",0,47,".png",3), 24, true);
+            if (this.canFeed) this.sparkles[i][j].play("sparkle");
+            this.sparkles[i][j].visible = this.canFeed;
+            this.sparkles[i][j].anchor.setTo(0.5, 0.25);
+        }
+    }
+};
+
+GlassLab.FeedingPen.prototype._updateDots = function() {
+    // check if the creature type (we just use the value that was set in the telemetry) wants to enter this pen
+    var wantToEnter = this._getCreatureTypeCanEnter(this.creatureType);
+    for (var i = 0; i < this.dots.length; i++) {
+        for (var j = 0; j < this.dots[i].length; j++) {
+            var dot = this.dots[i][j];
+            // the dot is only visible when there's not a creature in this spot
+            dot.visible = !(this.creatureSpots[i] && this.creatureSpots[i][j]);
+            if (!dot.visible) continue;
+            else if (wantToEnter) {
+                dot.alpha = 0.1;
+                if (!dot.tween) {
+                    dot.tween = this.game.make.tween(dot).to({alpha: 0.3}, 500, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+                } else dot.tween.resume();
+            } else {
+                if (dot.tween) dot.tween.pause();
+                dot.alpha = 0.15;
+            }
+            dot.anchor.setTo(0.5, 0);
+        }
+    }
 };
 
 GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
@@ -135,7 +204,7 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
 };
 
 GlassLab.FeedingPen.prototype.FeedCreatures = function() {
-    this._refreshFeedButton(true);
+    this.checkPenStatus();
     if (!this.autoFill && !this.canFeed) {
         console.error("Tried to feed creatures but ran into discrepancy with number of creatures. Try again.");
         return;
@@ -144,12 +213,13 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     this.unfedCreatures = this.getNumCreatures();
     this.result = GlassLab.results.satisfied; // this is the default result unless something worse happens
     this.feeding = true;
+    this.canFeed = false;
     this.SetDraggableOnly(); // make all edges undraggable
     for (var i = 0; i < this.rightEdges.length; i++) {
         this.rightEdges[i].sprite.visible = false; // hide the middle fences
     }
 
-    // if there's a gate, move the creatures to be in front of the centerEdge
+    // move the creatures to be in front of the gate
     this.frontObjectRoot.addChild(this.creatureRoot);
 
     // close the items
@@ -433,12 +503,13 @@ GlassLab.FeedingPen.prototype._repositionCreatures = function() {
 
 // when the size of the creature section or the number of creatures changes
 GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
-    GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // TODO: Use different signal
-    this._refreshFeedButton();
+    GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+    this._updateDots();
+    this.checkPenStatus();
 };
 
-GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
-    //if (!this.button) return;
+GlassLab.FeedingPen.prototype.checkPenStatus = function() {
+    if (this.feeding) return (this.canFeed = false);
 
     var ok = (this.getNumCreatures() >= this.widths[0] * this.height) &&
         this.foodTypes.length == this.widths.length-1;
@@ -450,17 +521,44 @@ GlassLab.FeedingPen.prototype._refreshFeedButton = function(dontChangeLight) {
             }
         }
     }
-    //this.button.visible = ok;
-    if (!this.canFeed && ok) GlassLab.SignalManager.penReady.dispatch(this);
+
+    if (!this.canFeed && ok) GlassLab.SignalManager.penReady.dispatch(this); // when we become ready
+    if (this.canFeed != ok) this._setReadyToFeedEffects(ok);
     this.canFeed = ok;
-    if (this.gateLight && !dontChangeLight) {
-        if (ok && this.allowFeedButton) {
-            if (this.gateLight.spriteName != "gateLightGreen") this.gateLight.loadTexture("gateLightGreen");
-            this.gateLight.animations.add('anim');
-            this.gateLight.animations.play('anim', 48, true);
-        } else {
-            this.gateLight.animations.stop(true);
+    return ok;
+};
+
+GlassLab.FeedingPen.prototype._setReadyToFeedEffects = function(ready) {
+    for (var i = 0; i < this.sparkles.length; i++) {
+        for (var j = 0; j < this.sparkles[i].length; j++) {
+            this.sparkles[i][j].visible = ready;
+            if (ready) this.sparkles[i][j].play("sparkle");
         }
+    }
+};
+
+GlassLab.FeedingPen.prototype.setGateHighlight = function(on) {
+    if (on && this.gateHighlightSprite.alpha < 1) {
+        this.game.add.tween(this.gateHighlightSprite).to({alpha: 1}, 150, Phaser.Easing.Quadratic.InOut, true);
+    } else if (!on && this.gateHighlightSprite.alpha > 0) {
+        this.game.add.tween(this.gateHighlightSprite).to({alpha: 0}, 150, Phaser.Easing.Quadratic.InOut, true);
+    }
+
+};
+
+GlassLab.FeedingPen.prototype._startFeedEffects = function() {
+    //this.gateHighlightSprite.visible = false;
+    this.setGateHighlight(false);
+
+    for (var i = 0; i < this.sparkles.length; i++) {
+        for (var j = 0; j < this.sparkles[i].length; j++) {
+            this.sparkles[i][j].visible = false;
+        }
+    }
+
+    for (var i = 0; i < this.gatePieces.length; i++) {
+        this.gatePieces[i].play("down");
+        if (i == 0) this.gatePieces[i].events.onAnimationComplete.addOnce(this.FeedCreatures, this);
     }
 };
 
@@ -510,19 +608,35 @@ GlassLab.FeedingPen.prototype.FinishFeeding = function(result) {
     this.onResolved.dispatch(result, this._getCurrentCreatureType(), numCreatures); // used in DoPenChallengeAction
 };
 
-GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
+
+GlassLab.FeedingPen.prototype.canDropFoodAtTile = function(tile) {
     if (this.autoFill || this.feeding) return false;
 
-    var section = this.getSection(tile);
-    if (section < 1) return false;
+    return this.getSection(tile) > 0;
+};
 
+GlassLab.FeedingPen.prototype.showHoveredFood = function(foodType, tile) {
+    var section = this.getSection(tile);
+    var changed = (this.hoveredFoodType != foodType || this.hoveredFoodSection != section);
+
+    this.hoveredFoodType = foodType;
+    this.hoveredFoodSection = section;
+
+    if (changed) this.refreshContents();
+};
+
+GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
+    if (!this.canDropFoodAtTile(tile)) return false;
+
+    var section = this.getSection(tile);
     var prevFoodType = this.foodTypes[section - 1];
 
     while (this.foodTypes.length < section-1) this.foodTypes.push(null);
     this.foodTypes[section - 1] = foodType;
+    this.newFood[section - 1] = true;
 
     this.refreshContents();
-    this._refreshFeedButton();
+    this.checkPenStatus();
 
     GlassLabSDK.saveTelemEvent("set_pen_food", {
         pen_id: this.id,
@@ -542,48 +656,6 @@ GlassLab.FeedingPen.prototype.getTargetDimensionEncoding = function() {
     // We assume a single column of creatures, but currently the encoding uses area so it's not a problem
     return GlassLab.Pen.encodeDimensions(this.targetNumCreatures, 1, creatureInfo.desiredFood[0].amount,
         (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) );
-};
-
-GlassLab.FeedingPen.prototype._onLeverPulled = function() {
-    var leverAnim;
-
-    this._refreshFeedButton();
-    if (!this.canFeed || this.feeding) {
-        if (this.gateLight.spriteName != "gateLightRed") this.gateLight.loadTexture("gateLightRed");
-        this.gateLight.animations.add('anim');
-        this.gateLight.animations.play('anim', 48);
-
-        if (this.gateLever.spriteName != "gateSwitchFail") this.gateLever.loadTexture("gateSwitchFail");
-        this.gateLever.animations.add('anim');
-        leverAnim = this.gateLever.animations.play('anim', 48);
-
-        GLOBAL.audioManager.playSound("clickSound"); // generic interaction sound
-    } else {
-        this.gateLight.animations.stop(true);
-
-        GLOBAL.audioManager.playSound("gateDropSound"); // generic interaction sound
-
-        if (this.gateLever.spriteName != "gateSwitchFlip") this.gateLever.loadTexture("gateSwitchFlip");
-        this.gateLever.animations.add('anim');
-        leverAnim = this.gateLever.animations.play('anim', 48);
-
-        var centerPieces = this.centerEdge.pieces.children;
-        for (var i = 0; i < centerPieces.length; i++) {
-            centerPieces[i].animations.add('anim');
-            var anim = centerPieces[i].animations.play('anim', 48);
-            /*if (i == 0) { // add an event to the first animation to trigger the feeding once the gate is donw
-                anim.onComplete.addOnce(function() {
-                    this.game.time.events.add(0, this.FeedCreatures, this); // if we do it immediately it interrupts the update loop
-                    }, this);
-            }*/
-        }
-        this.game.time.events.add(100, this.FeedCreatures, this); // using t
-    }
-
-    this.gateHoverEffect.visible = false; // can't show this while the animation is playing
-    leverAnim.onComplete.addOnce(function() {
-        this.gateHoverEffect.visible = true; // show it again when the animation completes
-    }, this);
 };
 
 
@@ -606,68 +678,73 @@ GlassLab.FeedingPen.prototype.forEachCreature = function(foo, argArray) {
     }
 };
 
+GlassLab.FeedingPen.prototype._onMouseUp = function() {
+    if (!this.checkPenStatus()) return;
+
+    var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
+    this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+    Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
+    var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
+    var section = this.getSection(tile);
+    if (section > 0) this._startFeedEffects();
+};
+
+// FIXME
+var anchorX = 0;
+var anchorY = 0;
+
+GlassLab.FeedingPen.prototype._update = function() {
+    if (this.cursors.up.isDown) anchorY += 0.002;
+    else if (this.cursors.down.isDown) anchorY -= 0.002;
+    else if (this.cursors.left.isDown) anchorX += 0.002;
+    else if (this.cursors.right.isDown) anchorX -= 0.002;
+    if (this.cursors.up.isDown || this.cursors.down.isDown || this.cursors.left.isDown || this.cursors.right.isDown) this.Resize();
+};
+
+
 GlassLab.FeedingPen.prototype._drawEdges = function() {
-    this.gateBack.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), 0);
-    this.gateFront.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), GLOBAL.tileSize * (this.height - 1));
+    // The positioning of each piece (by row and col) might seem a little random. In some cases it would have made more sense to use a different anchor point to keep a "truer" row/col... but this is how it is now and it's not worth changing.
+    this.gateBack.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 1), 0);
+    this.gateFront.isoPosition.setTo(GLOBAL.tileSize * (this.widths[0] - 2), GLOBAL.tileSize * this.height);
 
     var col = 0;
-    this._drawVerticalEdge(this.leftEdge, col, 0, this.height, "dottedLineRight", null, new Phaser.Point(0.1, 0.15));
+    this._drawVerticalEdge(this.leftEdge, col, 0, this.height, "dottedLine", null, new Phaser.Point(0.03, 0.24), 1, 0, true);
     col += this.widths[0];
-    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateDown", null, new Phaser.Point(0.15, 0.28));
+    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateBase", null, new Phaser.Point(0.01, 0.32), 0, 1);
+    this._drawVerticalEdge(this.centerEdge, col, 0, this.height, "gateHighlight", null, new Phaser.Point(0.01, 0.53), 0, 1, false, 1);
+
+    this.gatePieces = [];
+    for (var row = 0; row < this.height; row++) {
+        var anim = this.centerEdge.PlacePiece(col - 2, row, "penAnims", "gate_drop_000.png", new Phaser.Point(0.01, 0.12), false, 2);
+        anim.animations.add("down", Phaser.Animation.generateFrameNames("gate_drop_",0,14,".png",3), 24, false);
+        anim.animations.add("up", Phaser.Animation.generateFrameNames("gate_raise_",0,14,".png",3), 24, false);
+        this.gatePieces.push(anim);
+    }
 
     for (var i = 0, len = this.rightEdges.length; i < len; i++) {
         col += this.widths[i+1];
         if (this.rightEdges[i].sprite.visible) {
-            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineRight", null, new Phaser.Point(0.1, 0.15));
+            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineShadow", null, new Phaser.Point(0.04, 0.20), 0, 1);
         }
     };
-    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "penFenceLeft", null, new Phaser.Point(0.1, 0.15));
+    this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "fenceRight", null, new Phaser.Point(0.02, 0.29), 0, 1);
 
-    // this._drawHorizontalEdge(this.topEdge, 0, this.widths[0] - 1, 0, "dottedLineLeft"); // right now this doesn't work... this part needs to be behind the creatures but the fence needs to be in front
-    this._drawHorizontalEdge(this.topEdge, this.widths[0], this.getFullWidth(), 0, "penFenceRight", null, new Phaser.Point(0.1, 0.15));
-    //this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0] - 1, this.height, "dottedLineLeft"); // width - 1 so it doesn't interfere with the gate :?
-    this._drawHorizontalEdge(this.bottomEdge, this.widths[0], this.getFullWidth(), this.height, "penFenceRight", null, new Phaser.Point(0.1, 0.15));
+    // dotted lines
+    this._drawHorizontalEdge(this.topEdge, 0, this.widths[0], 0, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, 1);
+    this._drawHorizontalEdge(this.bottomEdge, 0, this.widths[0], this.height, "dottedLine", null, new Phaser.Point(0.03, 0.23), 0, 0, false, 1);
+
+
+    // top and bottom fences
+    this._drawHorizontalEdge(this.topEdge, this.widths[0]+1, this.getFullWidth(), 0, "fenceTop", null, new Phaser.Point(0.48, 0.19));
+    this._drawHorizontalEdge(this.bottomEdge, this.widths[0]+1, this.getFullWidth(), this.height, "fenceBottom", null, new Phaser.Point(0.02, 0.29));
+
+    // end of the top and bottom fence
+    this.topEdge.PlacePiece(this.widths[0], 0, "fenceTopCorner", null, new Phaser.Point(0.48, 0.19));
+    this.bottomEdge.PlacePiece(this.widths[0], this.height, "fenceBottomCorner", null, new Phaser.Point(0.02, 0.29));
 };
 
 GlassLab.FeedingPen.prototype._drawBgAtTile = function(col, row, tile) {
-    if (col >= this.widths[0]) tile.swapType(GlassLab.Tile.TYPES.dirt);
-};
-
-GlassLab.FeedingPen.prototype._makeGatePieces = function() {
-    var anchorX = 0.15, anchorY = 0.28; // should match the anchor given for the gate in "drawVerticalEdge"
-    this.gateBack = this.game.make.isoSprite(0, 0, 0, "gateCapFar");
-    this.gateBack.anchor.setTo(anchorX, anchorY);
-    this.centerEdge.sprite.addChildAt(this.gateBack, 0);
-
-    this.gateFront.addChild(this.game.make.sprite(0, 0, "gateCapNear")).anchor.setTo(anchorX, anchorY);
-
-    this.gateHoverEffect = this.game.make.sprite(0,0, "gateHover");
-    this.gateFront.addChild(this.gateHoverEffect).anchor.setTo(anchorX, anchorY);
-    this.gateHoverEffect.alpha = 0;
-
-    this.gateFront.addChild(this.game.make.sprite(0, 0, "gateSwitchBack")).anchor.setTo(anchorX, anchorY);
-
-    this.gateLever = this.game.make.sprite(0, 0, "gateSwitchFail");
-    this.gateLever.inputEnabled = true;
-    this.gateLever.events.onInputDown.add(this._onLeverPulled, this);
-    this.gateLever.events.onInputOver.add(this._onOverLever, this);
-    this.gateLever.events.onInputOut.add(this._onOffLever, this);
-    this.gateLever.input.priorityID = 10; // above other game objects, though below the UI
-    /*var graphics = this.game.make.graphics();
-     graphics.beginFill(0x0000ff, 0.5).drawCircle(45, 75, 140);
-     this.gateLever.addChild(graphics);*/
-    this.gateLever.hitArea = new Phaser.Circle(45, 75, 140);
-    this.gateFront.addChild(this.gateLever).anchor.setTo(anchorX, anchorY);
-
-    this.gateLight = this.game.make.sprite(0, 0, "gateLightRed");
-    this.gateFront.addChild(this.gateLight).anchor.setTo(anchorX, anchorY);
-};
-
-GlassLab.FeedingPen.prototype._onOverLever = function() {
-    this.game.add.tween(this.gateHoverEffect).to({alpha: 0.5}, 150, Phaser.Easing.Linear.InOut, true);
-};
-
-
-GlassLab.FeedingPen.prototype._onOffLever = function() {
-    this.game.add.tween(this.gateHoverEffect).to({alpha: 0}, 150, Phaser.Easing.Linear.InOut, true);
+    if (col >= this.widths[0]) {
+        this._placeTile(GLOBAL.tileSize * (col - 1), GLOBAL.tileSize * row, this.tileRoot, "penFloor", null, 0xffffff, 1, new Phaser.Point(0, -0.46));
+    }
 };

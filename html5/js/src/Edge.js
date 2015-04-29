@@ -12,10 +12,15 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.side = side;
     this.sideIndex = sideIndex; // all the right pieces have an index to identify their positions
     this.pen = pen;
-    this.sprite = this.game.make.isoSprite();
+
+    /*this.sprite = this.game.make.isoSprite();
     this.sprite.name = side + "Edge";
     this.pieces = this.game.make.sprite();
-    this.sprite.addChild(this.pieces);
+    this.sprite.addChild(this.pieces);*/
+
+    // Each edge can have multiple parts that we want to add to the parent Pen in different places
+    this.layers = []; // list of sprites that can be added to the parent in a certain order
+    this.sprite = this.addLayer(); // default sprite
 
     if (side == GlassLab.Edge.SIDES.top || side == GlassLab.Edge.SIDES.bottom) {
         this.horizontal = true;
@@ -44,72 +49,116 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     } else {
         GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
     }
+
+    this.onHighlight = new Phaser.Signal();
+    this.sprite.events.onDestroy.add(function() {
+        if (this.onHighlight) this.onHighlight.dispose();
+    }, this);
 };
 
 GlassLab.Edge.prototype._onInitGame = function() {
     this.game.input.onUp.add(this._onUp, this); // wait until now to add the global input listener. It gets wiped between states.
 };
 
+GlassLab.Edge.prototype.addLayer = function() {
+    var sprite = this.game.make.isoSprite();
+    this.layers.push(sprite);
+    sprite.pieces = sprite.addChild(this.game.make.sprite());
+    return sprite;
+};
+
+GlassLab.Edge.prototype.getIsInnerEdge = function() {
+    return this.side == GlassLab.Edge.SIDES.center || (this.side == GlassLab.Edge.SIDES.right && this.pen.rightmostEdge != this);
+};
+
 GlassLab.Edge.prototype.Reset = function() {
     this.unusedSprites = [];
-    for (var i = 0; i < this.pieces.children.length; i++) {
-        this.unusedSprites.push(this.pieces.children[i]);
-        this.pieces.children[i].visible = false;
-    }
-    if (this.horizontal) {
-        this.sprite.isoY = 0;
-    } else {
-        this.sprite.isoX = 0;
+    for (var j = 0; j < this.layers.length; j++) {
+        var sprite = this.layers[j];
+        for (var i = 0; i < sprite.pieces.children.length; i++) {
+            this.unusedSprites.push(sprite.pieces.children[i]);
+            sprite.pieces.children[i].visible = false;
+        }
+
+        if (this.horizontal) {
+            sprite.isoY = 0;
+        } else {
+            sprite.isoX = 0;
+        }
     }
 };
 
 GlassLab.Edge.SIDES = { top: "top", bottom: "bottom", left: "left", right: "right", center: "center" }; // enum
 
 // add a new piece or recycle one
-GlassLab.Edge.prototype.PlacePiece = function(col, row, atlasName, spriteName, anchor) {
-    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, atlasName, spriteName, anchor);
+GlassLab.Edge.prototype.PlacePiece = function(col, row, spriteName, frameName, anchor, flip, layerIndex) {
+    return this.PlacePieceAt(col * GLOBAL.tileSize, row * GLOBAL.tileSize, spriteName, frameName, anchor, flip, layerIndex);
 };
 
-GlassLab.Edge.prototype.PlacePieceAt = function(x, y, atlasName, spriteName, anchor) {
+GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anchor, flip, layerIndex) {
     var sprite = this.unusedSprites.pop();
     if (!sprite) {
-        sprite = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
-        this._setInputHandlers(sprite);
-        switch (this.side) {
-            case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
-            case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
-            case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 4; break;
-            default: sprite.input.priorityID = 3; break;
-        } // Note: We might have to revisit and/or add priorityIDs to other things.
-        this.pieces.addChild(sprite);
+        sprite = this.game.make.isoSprite(0, 0, 0, spriteName, frameName);
+        this._setInputHandlers(sprite, true);
     }
+
+    if (!layerIndex) layerIndex = 0;
+    if (layerIndex < this.layers.length) this.layers[layerIndex].pieces.addChild(sprite);
+    else this.sprite.pieces.addChild(sprite);
+
     sprite.visible = true;
-    if (sprite.spriteName != spriteName) sprite.loadTexture(atlasName, spriteName);
+    sprite.scale.setTo((flip)? -1 : 1, 1);
+    if (sprite.key != spriteName) sprite.loadTexture(spriteName, frameName);
+    sprite.frame = frameName || 0;
     if (anchor) sprite.anchor.set(anchor.x, anchor.y);
     sprite.isoX = x;
     sprite.isoY = y;
-
-
 
     sprite.parent.setChildIndex(sprite, sprite.parent.children.length - 1); // move it to the back of the children so far
 
     return sprite;
 };
 
-GlassLab.Edge.prototype._setInputHandlers = function(sprite) {
+GlassLab.Edge.prototype._setInputHandlers = function(sprite, isEdgePiece) {
     sprite.inputEnabled = true;
-    sprite.input.pixelPerfectOver = true;
-    sprite.input.pixelPerfectClick = true;
     sprite.events.onInputDown.add(this._onDown, this);
     sprite.events.onInputOver.add(this._onOver, this);
     sprite.events.onInputOut.add(this._onOut, this);
+
+    if (isEdgePiece) {
+        if (this.horizontal || sprite.key == "dottedLine") { // the dotted line is just flipped for vertical use, so we can set the same hitArea
+            var w = GLOBAL.tileSize, h = 70, slant = 60, startX = 0, startY = -40;
+        } else {
+            var w = GLOBAL.tileSize, h = 70, slant = -60, startX = GLOBAL.tileSize - 15, startY = 10;
+        }
+
+        var polygon = new Phaser.Polygon(
+            {x: startX, y: startY},
+            {x: startX + w, y: startY + slant},
+            {x: startX + w, y: startY + slant + h},
+            {x: startX, y: startY + h}
+        );
+        // sprite.addChild(this.game.make.graphics().beginFill(0x0000ff, 0.75).drawPolygon(polygon.points)); // For debugging
+        sprite.hitArea = polygon;
+    } else {
+        sprite.input.pixelPerfectOver = true;
+        sprite.input.pixelPerfectClick = true;
+    }
+
+
+    switch (this.side) {
+        case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
+        case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
+        case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 4; break;
+        default: sprite.input.priorityID = 3; break;
+    }
 };
 
 GlassLab.Edge.prototype.showArrow = function(visible) {
     this.arrow.visible = visible;
 
-    if (visible) this.arrowTween.resume();
-    else this.arrowTween.pause();
+    /*if (visible) this.arrowTween.resume();
+    else this.arrowTween.pause();*/
 };
 
 GlassLab.Edge.prototype.placeArrow = function(col, row) {
@@ -171,19 +220,25 @@ GlassLab.Edge.prototype._endDrag = function() {
 GlassLab.Edge.prototype._onOver = function( target, pointer ) {
     if (this.draggable) {
         this._highlight(true);
+        GLOBAL.overTarget = this;
     }
 };
 
 GlassLab.Edge.prototype._onOut = function( target, pointer ) {
     if (!this.dragging) { // if we are dragging, stay highlighted
         this._highlight(false);
+        if (GLOBAL.overTarget == this) GLOBAL.overTarget = null;
     }
 };
 
 GlassLab.Edge.prototype._highlight = function(on) {
-    for (var i = 0; i < this.pieces.children.length; i++) {
-        this.pieces.children[i].tint = (on)? 0xeebbff : 0xffffff;
+    for (var j = 0; j < this.layers.length; j++) {
+        var pieces = this.layers[j].pieces;
+        for (var i = 0; i < pieces.children.length; i++) {
+            pieces.children[i].tint = (on)? 0xeebbff : 0xffffff;
+        }
     }
+    this.onHighlight.dispatch(on);
 };
 
 GlassLab.Edge.prototype._onUpdate = function() {
@@ -246,6 +301,10 @@ GlassLab.Edge.prototype._onUpdate = function() {
         } else {
             if (this.horizontal) this.sprite.isoY = targetPos.y;
             else this.sprite.isoX = targetPos.x;
+        }
+
+        for (var i = 0; i < this.layers.length; i++) {
+            this.layers[i].isoPosition.setTo(this.sprite.isoX, this.sprite.isoY);
         }
 
         // TODO: it would be nice to redraw the contents before the edge is dropped, but it's causing issues

@@ -1,0 +1,444 @@
+{"frames": {
+
+"smoke_puff_crate_259.png":
+{
+	"frame": {"x":2,"y":1375,"w":274,"h":324},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":136,"w":274,"h":324},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_260.png":
+{
+	"frame": {"x":285,"y":2,"w":282,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":137,"w":282,"h":338},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_261.png":
+{
+	"frame": {"x":2,"y":2,"w":281,"h":347},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":126,"w":281,"h":347},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_262.png":
+{
+	"frame": {"x":2,"y":351,"w":279,"h":344},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":128,"w":279,"h":344},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_263.png":
+{
+	"frame": {"x":2,"y":697,"w":276,"h":340},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":130,"w":276,"h":340},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_264.png":
+{
+	"frame": {"x":569,"y":2,"w":278,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":130,"w":278,"h":338},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_265.png":
+{
+	"frame": {"x":2,"y":1039,"w":272,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":130,"w":272,"h":334},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_266.png":
+{
+	"frame": {"x":2,"y":1701,"w":266,"h":330},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":130,"w":266,"h":330},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_267.png":
+{
+	"frame": {"x":270,"y":1701,"w":259,"h":326},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":129,"w":259,"h":326},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_268.png":
+{
+	"frame": {"x":276,"y":1039,"w":252,"h":323},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":127,"w":252,"h":323},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_269.png":
+{
+	"frame": {"x":849,"y":2,"w":246,"h":321},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":123,"w":246,"h":321},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_270.png":
+{
+	"frame": {"x":278,"y":1364,"w":239,"h":319},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":118,"w":239,"h":319},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_271.png":
+{
+	"frame": {"x":519,"y":1364,"w":233,"h":318},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":112,"w":233,"h":318},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_272.png":
+{
+	"frame": {"x":531,"y":1684,"w":227,"h":316},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":106,"w":227,"h":316},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_273.png":
+{
+	"frame": {"x":280,"y":697,"w":220,"h":314},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":99,"w":220,"h":314},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_274.png":
+{
+	"frame": {"x":283,"y":351,"w":214,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":92,"w":214,"h":312},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_275.png":
+{
+	"frame": {"x":499,"y":342,"w":208,"h":311},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":83,"w":208,"h":311},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_276.png":
+{
+	"frame": {"x":502,"y":655,"w":202,"h":310},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":74,"w":202,"h":310},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_277.png":
+{
+	"frame": {"x":709,"y":342,"w":196,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":43,"y":65,"w":196,"h":307},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_278.png":
+{
+	"frame": {"x":907,"y":325,"w":190,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":55,"w":190,"h":305},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_279.png":
+{
+	"frame": {"x":530,"y":967,"w":187,"h":304},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":47,"y":44,"w":187,"h":304},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_280.png":
+{
+	"frame": {"x":706,"y":655,"w":183,"h":302},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":49,"y":33,"w":183,"h":302},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_281.png":
+{
+	"frame": {"x":719,"y":959,"w":181,"h":300},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":50,"y":21,"w":181,"h":300},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_282.png":
+{
+	"frame": {"x":754,"y":1261,"w":177,"h":299},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":52,"y":9,"w":177,"h":299},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_283.png":
+{
+	"frame": {"x":760,"y":1562,"w":167,"h":274},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":20,"w":167,"h":274},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_284.png":
+{
+	"frame": {"x":891,"y":651,"w":156,"h":262},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":62,"y":17,"w":156,"h":262},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_crate_285.png":
+{
+	"frame": {"x":902,"y":915,"w":124,"h":226},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":71,"y":38,"w":124,"h":226},
+	"sourceSize": {"w":287,"h":475}
+},
+"smoke_puff_food_156.png":
+{
+	"frame": {"x":530,"y":1273,"w":111,"h":87},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":111,"h":87},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_157.png":
+{
+	"frame": {"x":902,"y":1143,"w":110,"h":87},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":110,"h":87},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_158.png":
+{
+	"frame": {"x":760,"y":1838,"w":111,"h":87},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":111,"h":87},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_159.png":
+{
+	"frame": {"x":760,"y":1927,"w":111,"h":85},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":35,"w":111,"h":85},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_160.png":
+{
+	"frame": {"x":643,"y":1273,"w":108,"h":83},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":35,"w":108,"h":83},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_161.png":
+{
+	"frame": {"x":873,"y":1838,"w":106,"h":81},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":35,"w":106,"h":81},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_162.png":
+{
+	"frame": {"x":873,"y":1921,"w":103,"h":79},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":35,"w":103,"h":79},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_163.png":
+{
+	"frame": {"x":933,"y":1232,"w":100,"h":77},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":35,"w":100,"h":77},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_164.png":
+{
+	"frame": {"x":933,"y":1311,"w":98,"h":75},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":34,"w":98,"h":75},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_165.png":
+{
+	"frame": {"x":933,"y":1388,"w":95,"h":73},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":33,"w":95,"h":73},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_166.png":
+{
+	"frame": {"x":933,"y":1463,"w":93,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":32,"w":93,"h":71},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_167.png":
+{
+	"frame": {"x":933,"y":1536,"w":90,"h":69},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":31,"w":90,"h":69},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_168.png":
+{
+	"frame": {"x":929,"y":1607,"w":87,"h":67},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":30,"w":87,"h":67},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_169.png":
+{
+	"frame": {"x":1014,"y":1143,"w":85,"h":65},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":28,"w":85,"h":65},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_170.png":
+{
+	"frame": {"x":929,"y":1676,"w":84,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":26,"w":84,"h":64},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_171.png":
+{
+	"frame": {"x":929,"y":1742,"w":82,"h":63},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":23,"w":82,"h":63},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_172.png":
+{
+	"frame": {"x":1015,"y":1735,"w":82,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":21,"w":82,"h":62},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_173.png":
+{
+	"frame": {"x":1018,"y":1607,"w":81,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":18,"w":81,"h":62},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_174.png":
+{
+	"frame": {"x":1018,"y":1671,"w":80,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":14,"w":80,"h":62},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_175.png":
+{
+	"frame": {"x":1013,"y":1799,"w":79,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":11,"w":79,"h":61},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_176.png":
+{
+	"frame": {"x":981,"y":1862,"w":78,"h":60},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":8,"w":78,"h":60},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_177.png":
+{
+	"frame": {"x":978,"y":1924,"w":77,"h":59},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":4,"w":77,"h":59},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_178.png":
+{
+	"frame": {"x":978,"y":1985,"w":76,"h":58},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":1,"w":76,"h":58},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_179.png":
+{
+	"frame": {"x":1025,"y":1536,"w":74,"h":53},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":1,"w":74,"h":53},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_180.png":
+{
+	"frame": {"x":531,"y":2002,"w":61,"h":41},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":7,"w":61,"h":41},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_181.png":
+{
+	"frame": {"x":594,"y":2002,"w":44,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":31,"y":3,"w":44,"h":40},
+	"sourceSize": {"w":111,"h":121}
+},
+"smoke_puff_food_182.png":
+{
+	"frame": {"x":978,"y":1921,"w":1,"h":1},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":1,"h":1},
+	"sourceSize": {"w":111,"h":121}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "smoke_puffs.png",
+	"format": "RGBA8888",
+	"size": {"w":1101,"h":2045},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:9daae5d438836f29428fa8229bfe72e9:abb47e46c3d5d548d9aec11249849e7a:96013649e928102d756a94ce671d8e02$"
+}
+}

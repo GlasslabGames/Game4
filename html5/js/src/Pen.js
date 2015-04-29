@@ -39,11 +39,11 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     this.sprite.addChild(this.leftEdge.sprite);
 
+    this.sprite.addChild(this.centerEdge.sprite);
+
     // Add a root for all objects that should be behind most of the edges
     this.backObjectRoot = this.game.make.isoSprite();
     this.sprite.addChild(this.backObjectRoot).name = "backObjectRoot";
-
-    this.sprite.addChild(this.centerEdge.sprite);
 
     this.sprite.addChild(this.topEdge.sprite);
 
@@ -58,7 +58,7 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.frontObjectRoot = this.game.make.isoSprite();
     this.sprite.addChild(this.frontObjectRoot).name = "frontObjectRoot";
 
-    this.rightmostEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, i);
+    this.rightmostEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, this.widths.length-2);
     this.edges.push(this.rightmostEdge);
     this.sprite.addChild(this.rightmostEdge.sprite);
 
@@ -224,7 +224,7 @@ GlassLab.Pen.prototype.show = function() {
 };
 
 // The following functions can be overwritten to show different pens (e.g. the crate for shipping)
-GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, spriteName, frameName, anchor, colOffset, rowOffset) {
+GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, endRow, spriteName, frameName, anchor, colOffset, rowOffset, flip, layerIndex) {
     if (colOffset) col += colOffset;
     if (rowOffset) {
         startRow += rowOffset;
@@ -232,11 +232,11 @@ GlassLab.Pen.prototype._drawVerticalEdge = function(targetEdge, col, startRow, e
     }
 
     for (var row = startRow; row < endRow; row++) {
-        targetEdge.PlacePiece(col - 2, row, spriteName, frameName, anchor);
+        targetEdge.PlacePiece(col - 1, row, spriteName, frameName, anchor, flip, layerIndex);
     }
 };
 
-GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName, frameName, anchor, colOffset, rowOffset, allowWindows) {
+GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endCol, row, spriteName, frameName, anchor, colOffset, rowOffset, allowWindows, layerIndex) {
     var anchor;
 
     if (colOffset) {
@@ -251,7 +251,7 @@ GlassLab.Pen.prototype._drawHorizontalEdge = function(targetEdge, startCol, endC
             if (frameName2) frameName2 = (frameName2.indexOf(".") > -1) ? frameName2.replace(".", "_window.") : frameName2 + "_window";
             else spriteName2 += "_window";
         }
-        targetEdge.PlacePiece(col - 1, row - 1, spriteName2, frameName2, anchor);
+        targetEdge.PlacePiece(col, row, spriteName2, frameName2, anchor, false, layerIndex);
     }
 };
 
@@ -283,26 +283,27 @@ GlassLab.Pen.prototype._placeArrows = function() {
         this.edges[i].showArrow(draggable);
     }
 
-    var midCol = this.getFullWidth() / 2 - 1.25;
-    var midRow = this.height / 2 - 1.25;
-    this.leftEdge.placeArrow(0, midRow);
-    this.centerEdge.placeArrow(this.widths[0], midRow);
-    var col = this.widths[0];
+    var space = 0.75;
+    var midRow = this.height / 2 - 0.5;
+    this.leftEdge.placeArrow(1 - space, midRow);
+    var col = this.widths[0] + space;
+    this.centerEdge.placeArrow(col, midRow);
     for (var i = 1, len = this.widths.length - 1; i < len; i++) {
         col += this.widths[i];
         this.rightEdges[i - 1].placeArrow( col, midRow );
     }
-    this.rightmostEdge.placeArrow(this.getFullWidth(), midRow);
-    this.topEdge.placeArrow( midCol, 0);
-    this.bottomEdge.placeArrow( midCol, this.height );
+    this.rightmostEdge.placeArrow(this.getFullWidth() + space, midRow);
+
+    var midCol = this.getFullWidth() / 2 - 0.5;
+    this.topEdge.placeArrow( midCol, 1.5 - space);
+    this.bottomEdge.placeArrow( midCol, this.height + space );
 };
 
-GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale) {
+GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale, anchor) {
 
     var tile = this.unusedTiles.pop();
     if (!tile) { // we ran out of existing tiles, so make a new one
         tile = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
-        tile.anchor.setTo(0.075, 0.04);
         this.tiles.push(tile);
     }
     tile.visible = true;
@@ -311,6 +312,8 @@ GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spri
     tile.isoX = xPos;
     tile.isoY = yPos;
     tile.tint = (typeof tint != 'undefined')? tint : 0xffffff;
+    if (anchor) tile.anchor.setTo(anchor.x, anchor.y);
+    else tile.anchor.setTo(0.075, 0.04);
     tile.scale.setTo(scale || 1, scale || 1);
     tile.parent.setChildIndex(tile, tile.parent.children.length - 1); // move it to the back of the children so far
 };
@@ -374,7 +377,7 @@ GlassLab.Pen.prototype.GetValidEdgePos = function(edge, edgeIndex, targetPos) {
     return targetPos;
 };
 
-GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType) {
+GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCount, startCol, endCol, fromRight, targetType, animate, alpha) {
     var unusedObjects = Array.prototype.concat.apply([], list); // flatten the 2D list into a new array
     var count = 0;
     list.length = 0; // empty the list. Setting it to [] would break the passed-in reference.
@@ -394,18 +397,22 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
                 else parent.add(obj); // if the parent is a group
                 if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
             }
-            obj.setType(targetType);
             obj.visible = true;
-            obj.placeOnTile(col + emptyCols, row);
-            if (obj.parent)
-            {
+            obj.alpha = (typeof alpha != 'undefined')? alpha : 1;
+            obj.pen = this;
+
+            if (targetType && obj.setType) obj.setType(targetType, animate);
+            if (obj.placeOnTile) obj.placeOnTile(col + emptyCols, row);
+            else {
+                obj.isoX = (col + emptyCols) * GLOBAL.tileSize;
+                obj.isoY = row * GLOBAL.tileSize;
+            }
+            if (obj.parent) {
                 obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
             }
-            else
-            {
+            else {
                 console.error("Object doesn't have parent set!");
             }
-            obj.pen = this;
             list[row].push(obj);
             count++;
         }

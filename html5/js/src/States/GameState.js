@@ -36,12 +36,18 @@ GlassLab.State.Game.prototype.create = function()
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
 
-    /*var crate = new GlassLab.ShippingPen(this.game);
-    crate.setContents("baby_unifox", 2, ["strawberry"], [8], 2, false, false);
-    GLOBAL.crate = crate;*/
-    //SetContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow)
+    //GLOBAL.transition.out();
 
-    GLOBAL.transition.out();
+/*    GLOBAL.mailManager.currentOrder = {
+        "client": "Archibold Huxley III",
+        "company": "Rupture Farms",
+        //"numCreatures": 9,
+        //"numFoodA": 12,
+        "creatureType": "baby_bird",
+        "description": "blah *blah* blah",
+        "reward": 200
+    };
+    GLOBAL.mailManager.enterOrderFulfillment();*/
 };
 
 GlassLab.State.Game.prototype.update = function()
