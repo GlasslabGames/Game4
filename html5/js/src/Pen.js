@@ -47,6 +47,9 @@ GlassLab.Pen = function(game, layer, height, widths)
 
     this.sprite.addChild(this.topEdge.sprite);
 
+    this.frontObjectRoot = this.game.make.isoSprite();
+    this.sprite.addChild(this.frontObjectRoot).name = "frontObjectRoot";
+
     // Add as many middle edges as we need
     for (var i = 0; i < this.widths.length-2; i++) {
         var edge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, i);
@@ -54,9 +57,6 @@ GlassLab.Pen = function(game, layer, height, widths)
         this.edges.push(edge);
         this.sprite.addChild(edge.sprite);
     }
-
-    this.frontObjectRoot = this.game.make.isoSprite();
-    this.sprite.addChild(this.frontObjectRoot).name = "frontObjectRoot";
 
     this.rightmostEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, this.widths.length-2);
     this.edges.push(this.rightmostEdge);
@@ -92,7 +92,7 @@ GlassLab.Pen.prototype.getFullWidth = function() {
 GlassLab.Pen.prototype.SetDraggableOnly = function() {
     // first make all edges undraggable, then make the specific ones listed draggable
     for (var i = 0; i < this.edges.length; i++) {
-        this.edges[i].draggable = false;
+        this.edges[i].setDraggable(false);
     }
     this.SetDraggable.apply(this, arguments);
 };
@@ -102,8 +102,7 @@ GlassLab.Pen.prototype.SetDraggable = function() {
     for (var j=0; j < arguments.length; j++) {
         for (var i = 0; i < this.edges.length; i++) {
             if (this.edges[i] == arguments[j] || this.edges[i].side == arguments[j]) {
-                this.edges[i].draggable = true;
-                //break; // Don't break because there might now be multiple edges with the same side (CENTER)
+                this.edges[i].setDraggable(true);
             }
         }
     }
@@ -112,7 +111,7 @@ GlassLab.Pen.prototype.SetDraggable = function() {
 };
 
 
-GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
+GlassLab.Pen.prototype.SetSizeFromEdge = function(edge) {
     var prevDimensions = this.getDimensionEncoding();
     if (!this.prevIsoPos) this.prevIsoPos = new Phaser.Point();
     this.sprite.isoPosition.copyTo(this.prevIsoPos);
@@ -160,6 +159,37 @@ GlassLab.Pen.prototype.SetSizeFromEdge = function(edge, edgeIndex) {
     });
 };
 
+GlassLab.Pen.prototype.SetTemporarySizeFromEdge = function(edge, edgeX, edgeY, xDir, yDir) {
+    this.currentWidths = [].concat(this.widths);
+    this.currentHeight = this.height;
+
+    // It's not great to duplicate this functionality from SetSizeFromEdge, but it works for now
+    var rows = Math.round(edgeY / GLOBAL.tileSize);
+    var cols = Math.round(edgeX / GLOBAL.tileSize);
+
+    switch (edge.side) {
+        case GlassLab.Edge.SIDES.top:
+            this.currentHeight -= rows;
+            //this.sprite.isoY += rows * GLOBAL.tileSize;
+            break;
+        case GlassLab.Edge.SIDES.bottom:
+            this.currentHeight += rows;
+            break;
+        case GlassLab.Edge.SIDES.left:
+            this.currentWidths[0] -= cols;
+            //this.sprite.isoX += cols * GLOBAL.tileSize;
+            break;
+        case GlassLab.Edge.SIDES.center:
+            this.currentWidths[0] += cols;
+            this.currentWidths[1] -= cols;
+            break;
+        case GlassLab.Edge.SIDES.right:
+            this.currentWidths[edge.sideIndex + 1] += cols;
+            if (this.currentWidths.length > edge.sideIndex + 2) this.currentWidths[edge.sideIndex + 2] -= cols;
+            break;
+    }
+};
+
 GlassLab.Pen.prototype.Resize = function() {
     // Lay out tiles to fill in all the rows and columns in the pen based on our current height and widths
     this._resetEdges();
@@ -182,14 +212,16 @@ GlassLab.Pen.prototype.Resize = function() {
     this._drawEdges();
     this._drawBg();
 
-    return;
+    // Make sure that the currentWidth and height (displayed in the UIRatioTooltip) are up-to-date
+    this.currentWidths = [].concat(this.widths);
+    this.currentHeight = this.height;
 };
 
 GlassLab.Pen.prototype._drawEdges = function() {};
 
 GlassLab.Pen.prototype.addRightEdge = function() {
     var edge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, 0);
-    edge.draggable = this.rightmostEdge.draggable; // same status as the other right edge
+    edge.setDraggable(this.rightmostEdge.draggable); // same status as the other right edge
     this.rightEdges.push(edge);
     this.edges.push(edge);
     this.sprite.addChildAt(edge.sprite, this.sprite.getChildIndex(this.topEdge.sprite)+1);
@@ -400,6 +432,7 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
             obj.visible = true;
             obj.alpha = (typeof alpha != 'undefined')? alpha : 1;
             obj.pen = this;
+            obj.inputEnabled = false;
 
             if (targetType && obj.setType) obj.setType(targetType, animate);
             if (obj.placeOnTile) obj.placeOnTile(col + emptyCols, row);

@@ -28,6 +28,10 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     // Some edges need new layers in different places in the heirarchy
     var topBackSprite = this.sprite.addChildAt(this.topEdge.addLayer(), 0); // for the dotted line
     this.sprite.addChildAt(this.bottomEdge.addLayer(), 0); // for the dotted line
+    for (var i = 0; i < this.rightEdges.length; i++) {
+        this.sprite.addChildAt(this.rightEdges[i].addLayer(), this.sprite.getChildIndex(this.frontObjectRoot));
+    }
+    this.sprite.addChildAt(this.bottomEdge.addLayer(), 0); // for the dotted line
 
     // For the gate pieces and their highlights
     var centerIndex = this.sprite.getChildIndex(this.backObjectRoot);
@@ -724,7 +728,7 @@ GlassLab.FeedingPen.prototype._drawEdges = function() {
     for (var i = 0, len = this.rightEdges.length; i < len; i++) {
         col += this.widths[i+1];
         if (this.rightEdges[i].sprite.visible) {
-            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineShadow", null, new Phaser.Point(0.04, 0.20), 0, 1);
+            this._drawVerticalEdge(this.rightEdges[i], col, 0, this.height, "dottedLineShadow", null, new Phaser.Point(0.04, 0.20), 0, 1, false, 1);
         }
     };
     this._drawVerticalEdge(this.rightmostEdge, this.getFullWidth(), 0, this.height, "fenceRight", null, new Phaser.Point(0.02, 0.29), 0, 1);
