@@ -35,7 +35,7 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.arrowTween = this.game.add.tween(this.arrow).to( { alpha: 0.5 }, 500, Phaser.Easing.Quadratic.InOut, true, 0, 150, true);
     this._setInputHandlers(this.arrow);
 
-    this.draggable = true;
+    this.draggable = false;
     this.dragging = false;
     this.moved = false;
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
@@ -113,6 +113,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
     if (anchor) sprite.anchor.set(anchor.x, anchor.y);
     sprite.isoX = x;
     sprite.isoY = y;
+    sprite.inputEnabled = this.draggable; // reset incase this.draggable has changed
 
     sprite.parent.setChildIndex(sprite, sprite.parent.children.length - 1); // move it to the back of the children so far
 
@@ -147,10 +148,10 @@ GlassLab.Edge.prototype._setInputHandlers = function(sprite, isEdgePiece) {
 
 
     switch (this.side) {
-        case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
-        case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
-        case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 4; break;
-        default: sprite.input.priorityID = 3; break;
+        case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 11; break;
+        case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 12; break;
+        case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 14; break;
+        default: sprite.input.priorityID = 13; break;
     }
 };
 
@@ -180,6 +181,20 @@ GlassLab.Edge.prototype.placeArrow = function(col, row) {
 
     this.arrow.isoX = col * GLOBAL.tileSize;
     this.arrow.isoY = row * GLOBAL.tileSize;
+};
+
+GlassLab.Edge.prototype.setDraggable = function(draggable) {
+    this.draggable = draggable;
+
+    // Set input enabled on all the child pieces
+    for (var j = 0; j < this.layers.length; j++) {
+        var sprite = this.layers[j];
+        for (var i = 0; i < sprite.pieces.children.length; i++) {
+            var piece = sprite.pieces.children[i];
+            if (draggable) this._setInputHandlers(piece, true);
+            else piece.inputEnabled = false;
+        }
+    }
 };
 
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {

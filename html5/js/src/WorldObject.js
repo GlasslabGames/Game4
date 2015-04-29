@@ -39,6 +39,8 @@ GlassLab.WorldObject = function (game) {
     this.draggableComponent.snap = true;
     this.draggableComponent.showDropTarget = true;
 
+    this.input.priorityID = 5; // above the base pen, but below the edges of the pen
+
     this.draggableComponent.events.onDrag.add(this._onDrag, this);
     this.draggableComponent.events.onStartDrag.add(this._onStartDrag, this);
     this.draggableComponent.events.onEndDrag.add(this._onEndDrag, this);

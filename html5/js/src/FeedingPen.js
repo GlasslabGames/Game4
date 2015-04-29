@@ -84,7 +84,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     GlassLab.SignalManager.update.add(this._update, this);
 
     this.sprite.inputEnabled = true;
-    this.sprite.input.priorityID = -1;
     this.sprite.events.onInputUp.add(this._onMouseUp, this);
 };
 

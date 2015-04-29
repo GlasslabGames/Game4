@@ -92,7 +92,7 @@ GlassLab.Pen.prototype.getFullWidth = function() {
 GlassLab.Pen.prototype.SetDraggableOnly = function() {
     // first make all edges undraggable, then make the specific ones listed draggable
     for (var i = 0; i < this.edges.length; i++) {
-        this.edges[i].draggable = false;
+        this.edges[i].setDraggable(false);
     }
     this.SetDraggable.apply(this, arguments);
 };
@@ -102,8 +102,7 @@ GlassLab.Pen.prototype.SetDraggable = function() {
     for (var j=0; j < arguments.length; j++) {
         for (var i = 0; i < this.edges.length; i++) {
             if (this.edges[i] == arguments[j] || this.edges[i].side == arguments[j]) {
-                this.edges[i].draggable = true;
-                //break; // Don't break because there might now be multiple edges with the same side (CENTER)
+                this.edges[i].setDraggable(true);
             }
         }
     }
@@ -222,7 +221,7 @@ GlassLab.Pen.prototype._drawEdges = function() {};
 
 GlassLab.Pen.prototype.addRightEdge = function() {
     var edge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, 0);
-    edge.draggable = this.rightmostEdge.draggable; // same status as the other right edge
+    edge.setDraggable(this.rightmostEdge.draggable); // same status as the other right edge
     this.rightEdges.push(edge);
     this.edges.push(edge);
     this.sprite.addChildAt(edge.sprite, this.sprite.getChildIndex(this.topEdge.sprite)+1);
@@ -433,6 +432,7 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
             obj.visible = true;
             obj.alpha = (typeof alpha != 'undefined')? alpha : 1;
             obj.pen = this;
+            obj.inputEnabled = false;
 
             if (targetType && obj.setType) obj.setType(targetType, animate);
             if (obj.placeOnTile) obj.placeOnTile(col + emptyCols, row);
