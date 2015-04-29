@@ -221,7 +221,7 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
         Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
         var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
-        if (tileSprite && tileSprite.inPen) {
+        if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen) {
             currentPen = tileSprite.inPen;
             if (currentPen.canFeed && currentPen.getSection(tileSprite) > 0) message = "readyPen";
         }
