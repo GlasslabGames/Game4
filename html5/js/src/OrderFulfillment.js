@@ -320,7 +320,6 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
         var response = this._getResponse();
         if (response) {
             this._refreshPen(response);
-            this.submitButton.label.text = "Ship Crate!";
             this.submitButton.setEnabled(false);
             for (var i = 0; i < this.answerInputs.length; i++) {
                 var answerInput = this.answerInputs[i];
@@ -335,15 +334,20 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
 
             this._sendTelemetry("pack_order", true);
         }
-    } else { // actually ship the crate
-        var response = this._getResponse();
+    }
+};
 
-        if (response) {
-            this.crate.ship();
-            this.crate.onShipped.addOnce(this._crateShipped, this);
-            this._sendTelemetry("submit_order_answer", true);
+GlassLab.OrderFulfillment.prototype.shipCrate = function() {
+    var response = this._getResponse();
 
-        }
+    if (response) {
+        this.crate.ship();
+        this.crate.onShipped.addOnce(this._crateShipped, this);
+        this._sendTelemetry("submit_order_answer", true);
+    }
+    else
+    {
+        console.error("No response for crate ship");
     }
 };
 
