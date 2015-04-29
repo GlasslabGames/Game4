@@ -100,12 +100,6 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
     if (!sprite) {
         sprite = this.game.make.isoSprite(0, 0, 0, spriteName, frameName);
         this._setInputHandlers(sprite);
-        switch (this.side) {
-            case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
-            case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
-            case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 4; break;
-            default: sprite.input.priorityID = 3; break;
-        } // Note: We might have to revisit and/or add priorityIDs to other things.
     }
 
     if (!layerIndex) layerIndex = 0;
@@ -132,6 +126,13 @@ GlassLab.Edge.prototype._setInputHandlers = function(sprite) {
     sprite.events.onInputDown.add(this._onDown, this);
     sprite.events.onInputOver.add(this._onOver, this);
     sprite.events.onInputOut.add(this._onOut, this);
+
+    switch (this.side) {
+        case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
+        case GlassLab.Edge.SIDES.left: sprite.input.priorityID = 2; break;
+        case GlassLab.Edge.SIDES.bottom: sprite.input.priorityID = 4; break;
+        default: sprite.input.priorityID = 3; break;
+    }
 };
 
 GlassLab.Edge.prototype.showArrow = function(visible) {

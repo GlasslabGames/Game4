@@ -58,7 +58,7 @@ GlassLab.Pen = function(game, layer, height, widths)
     this.frontObjectRoot = this.game.make.isoSprite();
     this.sprite.addChild(this.frontObjectRoot).name = "frontObjectRoot";
 
-    this.rightmostEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, i);
+    this.rightmostEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right, this.widths.length-2);
     this.edges.push(this.rightmostEdge);
     this.sprite.addChild(this.rightmostEdge.sprite);
 

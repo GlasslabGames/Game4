@@ -114,6 +114,10 @@ GlassLab.UIRatioTooltip.prototype.show = function(targetPen, message)
 
     this.Refresh(message);
 
+    // Now this is pretty hacky but I also don't want to duplicate all the functionality of figuring out what the mouse is over
+    // Since we want to highlight the gate exactly when we want to show the popup with "Click to feed"
+    if (this.pen.setGateHighlight) this.pen.setGateHighlight(message == "readyPen");
+
     this._refreshPosition();
 
     this.root.scale.y = 0;
@@ -234,6 +238,9 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
 
 GlassLab.UIRatioTooltip.prototype.hide = function()
 {
+    // This is somewhat hacky - see previous comment on the subject in show()
+    if (this.pen && this.pen.setGateHighlight) this.pen.setGateHighlight(false);
+
     this.pen = null;
     this.message = null;
 
