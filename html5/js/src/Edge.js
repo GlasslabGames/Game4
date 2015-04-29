@@ -307,6 +307,17 @@ GlassLab.Edge.prototype._onUpdate = function() {
             this.layers[i].isoPosition.setTo(this.sprite.isoX, this.sprite.isoY);
         }
 
+        if ((!this.prevClosestGridPos && this.prevClosestGridPos !== 0) || this.prevClosestGridPos != closestGridPos) {
+            if (this.horizontal) {
+                this.pen.SetTemporarySizeFromEdge(this, 0, closestGridPos * ts, 0, Math.sign(closestGridPos * ts - this.sprite.isoY));
+            } else {
+                this.pen.SetTemporarySizeFromEdge(this, closestGridPos * ts, 0, Math.sign(closestGridPos * ts - this.sprite.isoX), 0);
+            }
+            GlassLab.SignalManager.penEdgeDragged.dispatch(this.pen, this);
+
+            this.prevClosestGridPos = closestGridPos;
+        }
+
         // TODO: it would be nice to redraw the contents before the edge is dropped, but it's causing issues
     }
 };

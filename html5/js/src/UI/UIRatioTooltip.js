@@ -109,7 +109,8 @@ GlassLab.UIRatioTooltip.prototype.show = function(targetPen, message)
 
         GlassLab.SignalManager.penFoodTypeSet.add(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.add(this.Refresh, this);
-        GlassLab.SignalManager.tilePenStateChanged.add(this._onTilePenStateChanged, this);
+        //GlassLab.SignalManager.tilePenStateChanged.add(this._onTilePenStateChanged, this);
+        GlassLab.SignalManager.penEdgeDragged.add(this._onPenEdgeDragged, this);
     }
 
     this.Refresh(message);
@@ -132,21 +133,21 @@ GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
     if (creatureInfo) this.creatureIcon.loadTexture(creatureInfo.spriteName + "_sticker");
     //this.creatureIcon.loadTexture(creatureInfo ? creatureInfo.spriteName + "_sticker" : null);
 
-    this.creatureCount.text = this.pen.widths[0]*this.pen.height; // TODO: Don't access internal unlabeled data directly
+    this.creatureCount.text = this.pen.currentWidths[0]*this.pen.currentHeight; // TODO: Don't access internal unlabeled data directly
 
     // Update food info
     var foodInfo = GlassLab.FoodTypes[this.pen.foodTypes[0]];
     this.foodIcon.visible = foodInfo;
     if (foodInfo) this.foodIcon.loadTexture(foodInfo.spriteName + "_sticker");
-    this.foodCount.text = this.pen.widths[1]*this.pen.height;
+    this.foodCount.text = this.pen.currentWidths[1]*this.pen.currentHeight;
 
     // Update 2nd food info
-    if (this.pen.widths[2])
+    if (this.pen.currentWidths[2])
     {
         var foodInfo = GlassLab.FoodTypes[this.pen.foodTypes[1]];
         this.foodIcon2.visible = foodInfo;
         if (foodInfo) this.foodIcon2.loadTexture(foodInfo.spriteName + "_sticker");
-        this.foodCount2.text = this.pen.widths[2] * this.pen.height;
+        this.foodCount2.text = this.pen.currentWidths[2] * this.pen.currentHeight;
 
         // colon2.visible serves as check for whether 2nd type of food is already showing or not
         if (!this.colon2.visible)
@@ -189,17 +190,14 @@ GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
     this.contentsContainer.x = -this.contentsContainer.getWidth() / 2;
 };
 
-GlassLab.UIRatioTooltip.prototype._onTilePenStateChanged = function(pen, tile)
+GlassLab.UIRatioTooltip.prototype._onPenEdgeDragged = function(pen, edge)
 {
-    this.checkInPenOnUpdate = true;
+    if (pen == this.pen) this.Refresh(this.message);
 };
 
 GlassLab.UIRatioTooltip.prototype._onPenFoodTypeChanged = function(pen, food)
 {
-    if (pen == this.pen)
-    {
-        this.Refresh();
-    }
+    if (pen == this.pen) this.Refresh(this.message);
 };
 
 GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
@@ -250,7 +248,8 @@ GlassLab.UIRatioTooltip.prototype.hide = function()
 
         GlassLab.SignalManager.penFoodTypeSet.remove(this._onPenFoodTypeChanged, this);
         GlassLab.SignalManager.creatureTargetsChanged.remove(this.Refresh, this);
-        GlassLab.SignalManager.tilePenStateChanged.remove(this._onTilePenStateChanged, this);
+        //GlassLab.SignalManager.tilePenStateChanged.remove(this._onTilePenStateChanged, this);
+        GlassLab.SignalManager.penEdgeDragged.remove(this._onPenEdgeDragged, this);
     }
 };
 
