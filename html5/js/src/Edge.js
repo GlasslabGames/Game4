@@ -99,7 +99,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
     var sprite = this.unusedSprites.pop();
     if (!sprite) {
         sprite = this.game.make.isoSprite(0, 0, 0, spriteName, frameName);
-        this._setInputHandlers(sprite);
+        this._setInputHandlers(sprite, true);
     }
 
     if (!layerIndex) layerIndex = 0;
@@ -119,13 +119,32 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
     return sprite;
 };
 
-GlassLab.Edge.prototype._setInputHandlers = function(sprite) {
+GlassLab.Edge.prototype._setInputHandlers = function(sprite, isEdgePiece) {
     sprite.inputEnabled = true;
-    sprite.input.pixelPerfectOver = true;
-    sprite.input.pixelPerfectClick = true;
     sprite.events.onInputDown.add(this._onDown, this);
     sprite.events.onInputOver.add(this._onOver, this);
     sprite.events.onInputOut.add(this._onOut, this);
+
+    if (isEdgePiece) {
+        if (this.horizontal || sprite.key == "dottedLine") { // the dotted line is just flipped for vertical use, so we can set the same hitArea
+            var w = GLOBAL.tileSize, h = 70, slant = 60, startX = 0, startY = -40;
+        } else {
+            var w = GLOBAL.tileSize, h = 70, slant = -60, startX = GLOBAL.tileSize - 15, startY = 10;
+        }
+
+        var polygon = new Phaser.Polygon(
+            {x: startX, y: startY},
+            {x: startX + w, y: startY + slant},
+            {x: startX + w, y: startY + slant + h},
+            {x: startX, y: startY + h}
+        );
+        // sprite.addChild(this.game.make.graphics().beginFill(0x0000ff, 0.75).drawPolygon(polygon.points)); // For debugging
+        sprite.hitArea = polygon;
+    } else {
+        sprite.input.pixelPerfectOver = true;
+        sprite.input.pixelPerfectClick = true;
+    }
+
 
     switch (this.side) {
         case GlassLab.Edge.SIDES.top: sprite.input.priorityID = 1; break;
