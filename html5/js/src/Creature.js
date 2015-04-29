@@ -350,9 +350,12 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
             }
         }
 
+        this.onPathChanged.dispatch(this);
     }
-
-    this.onPathChanged.dispatch(this);
+    else
+    {
+        this.onDestinationReached.dispatch(this);
+    }
 };
 
 GlassLab.Creature.prototype._onStartDrag = function () {

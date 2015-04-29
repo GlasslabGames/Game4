@@ -21,12 +21,13 @@ GlassLab.CreatureStateTraveling.prototype.Enter = function() {
     this.originalSpeed = this.creature.moveSpeed;
     this.creature.moveSpeed += 1.5 + Math.random() * 2;
 
-    this.creature.PathToIsoPosition(this.target.pos.x, this.target.pos.y);
+    this.creature.onDestinationReached.add(this._onDestinationReached, this);
 
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
     this.footstepSound = GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_footstep"+Math.floor(Math.random()*5.0), false, true);
 
-    this.creature.onDestinationReached.add(this._onDestinationReached, this);
+    // This might send the onDestinationReached signal, so must be called after signal handler is called.
+    this.creature.PathToIsoPosition(this.target.pos.x, this.target.pos.y);
 };
 
 GlassLab.CreatureStateTraveling.prototype.Exit = function()
