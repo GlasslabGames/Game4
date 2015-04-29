@@ -32,22 +32,22 @@ GlassLab.LevelManager = function(game)
       },
         objective: "This is a test!"
     };
-    /*
+
     // 7
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "This is a test!",
         pens: [
             {
-                type: "bird", height: 1, foodAWidth: 1, foodBWidth: 1,
+                type: "bird", height: 2, foodAWidth: 10, foodBWidth: 5, creatureWidth: 4,
                 bottomDraggable: true, leftDraggable: true, topDraggable: true,
                 startCol: -9
             }
         ],
         looseCreatures: {
-            bird: 4
+            bird: 8
         }
     };
-    */
+
     // 8
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "Testing",

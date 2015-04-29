@@ -9,6 +9,7 @@ GlassLab.CreatureStateEating = function(game, owner, foodInfo)
 {
     GlassLab.CreatureState.call(this, game, owner);
     this.eatPartially = foodInfo.eatPartially;
+    this.eatBackwards = foodInfo.eatBackwards;
     this.food = foodInfo.food;
     if (typeof(foodInfo.reaction) != "undefined")
         this.altReactionToFood = foodInfo.reaction;
@@ -23,17 +24,25 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
 
-    if (!this.food.pen) { // eating in the wild
+    if (!this.food.pen || this.eatBackwards) { // eating in the wild or we need to face backwards towards the food
         this.creature.standFacingPosition(this.food.getGlobalPos());
     }
 
-    this.anim = this.creature.PlayAnim("eat", false, this.creature.baseAnimSpeed, true); // restart if we were playing an eat anim
     this.chomped = false;
-    if (this.anim) {
-        this.anim.onComplete.addOnce(this.StopEating, this);
+
+    if (this.eatBackwards) {
+        var tween = this.game.make.tween(this.creature.sprite.scale).to({y: this.creature.spriteScaleY * 0.9}, 200, Phaser.Easing.Sinusoidal.InOut, true, 0, 3, true);
+        tween.onLoop.addOnce(this._onChomp, this);
+        tween.onComplete.addOnce(this.StopEating, this);
     } else {
-        this.StopEating();
+        this.anim = this.creature.PlayAnim("eat", false, this.creature.baseAnimSpeed, true); // restart if we were playing an eat anim
+        if (this.anim) {
+            this.anim.onComplete.addOnce(this.StopEating, this);
+        } else {
+            this.StopEating();
+        }
     }
+
     this.creature.draggableComponent.active = false;
 
     var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
@@ -51,7 +60,7 @@ GlassLab.CreatureStateEating.prototype.Exit = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.Update = function() {
-    if (!this.chomped && this.anim.frame >= this.chompFrame) this._onChomp(); // this is the frame index where he chomps
+    if (!this.chomped && this.anim && this.anim.frame >= this.chompFrame) this._onChomp(); // this is the frame index where he chomps
 };
 
 GlassLab.CreatureStateEating.prototype._onChomp = function() {

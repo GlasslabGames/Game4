@@ -280,7 +280,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                                 console.error("Can't access creature in row",row," at col",creatureCol,"while assigning food to group", group);
                                 return;
                             }
-                            creatureRow[creatureCol].addTargetFood(foodRow[foodCol], groupIndex); // indicate this creature's position in the group
+                            creatureRow[creatureCol].addTargetFood(foodRow[foodCol], groupIndex, groupSize); // indicate this creature's position in the group
                             //console.log("Food",foodCol,"to creature",creatureCol,"in group", group, groupIndex);
                         }
                     }

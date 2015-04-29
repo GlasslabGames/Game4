@@ -109,7 +109,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     // FINALLY, start the desired state
     if (startInPen) {
         this.pen = startInPen;
-        this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
+        this.StateTransitionTo(new GlassLab.CreatureStateWaitingInPen(game, this));
     } else {
         this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
     }
@@ -574,8 +574,10 @@ GlassLab.Creature.prototype.getIsEmpty = function () {
     return true;
 };
 
-GlassLab.Creature.prototype.addTargetFood = function(food, groupIndex) {
-    this.targetFood.push({food: food, groupIndex: groupIndex, eatPartially: groupIndex});
+GlassLab.Creature.prototype.addTargetFood = function(food, groupIndex, groupSize) {
+    var foodInfo = {food: food, groupIndex: groupIndex, groupSize: groupSize};
+    foodInfo.eatPartially = groupSize > 1; // temp
+    this.targetFood.push(foodInfo);
 };
 
 GlassLab.Creature.prototype.resetTargetFood = function() {
@@ -774,7 +776,7 @@ GlassLab.Creature.prototype.tryEnterPen = function (pen) {
     var tile = this.getTile();
     if (pen.canAddCreature(this, tile)) { // note that this will parent the creature under the pen
         var returnValue = pen.tryAddCreature(this, tile);
-        this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
+        this.StateTransitionTo(new GlassLab.CreatureStateWaitingInPen(this.game, this));
         return returnValue;
     } else {
         return false;
