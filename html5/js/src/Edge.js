@@ -67,6 +67,10 @@ GlassLab.Edge.prototype.addLayer = function() {
     return sprite;
 };
 
+GlassLab.Edge.prototype.getIsInnerEdge = function() {
+    return this.side == GlassLab.Edge.SIDES.center || (this.side == GlassLab.Edge.SIDES.right && this.pen.rightmostEdge != this);
+};
+
 GlassLab.Edge.prototype.Reset = function() {
     this.unusedSprites = [];
     for (var j = 0; j < this.layers.length; j++) {
@@ -196,12 +200,14 @@ GlassLab.Edge.prototype._endDrag = function() {
 GlassLab.Edge.prototype._onOver = function( target, pointer ) {
     if (this.draggable) {
         this._highlight(true);
+        GLOBAL.overTarget = this;
     }
 };
 
 GlassLab.Edge.prototype._onOut = function( target, pointer ) {
     if (!this.dragging) { // if we are dragging, stay highlighted
         this._highlight(false);
+        if (GLOBAL.overTarget == this) GLOBAL.overTarget = null;
     }
 };
 
