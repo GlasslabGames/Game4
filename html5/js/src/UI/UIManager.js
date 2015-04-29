@@ -331,10 +331,11 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
         this.zoomTween = null;
     }, this);
 
-    this.zoomTween.onUpdateCallback(this.enforceCameraBounds, this);
+    this.zoomTween.onUpdateCallback( function() {
+        this.enforceCameraBounds();
+        GlassLab.SignalManager.cameraMoved.dispatch();
+    }, this);
     this.zoomTween.start();
-
-    GlassLab.SignalManager.cameraMoved.dispatch();
 };
 
 GlassLab.UIManager.prototype.zoomIn = function() {
