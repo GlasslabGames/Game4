@@ -155,6 +155,8 @@ GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
     GLOBAL.tiledBg.visible = true;
     this.ordersMenu.hide(true);
 
+    GLOBAL.dayManager.dayMeter.visible = false;
+
     GLOBAL.UIManager.toggleCancelHUDButton(true);
     GLOBAL.UIManager.toggleZoomHUDButtons(false);
 };
@@ -165,6 +167,9 @@ GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
         GLOBAL.foodLayer.getChildAt(i).visible = true;
     }
+
+    GLOBAL.dayManager.dayMeter.visible = true;
+
     GLOBAL.orderFulfillment.hide(true);
     GLOBAL.tiledBg.visible = false;
     GLOBAL.UIManager.resetCamera();
