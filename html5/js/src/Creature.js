@@ -574,8 +574,8 @@ GlassLab.Creature.prototype.getIsEmpty = function () {
     return true;
 };
 
-GlassLab.Creature.prototype.addTargetFood = function(food, eatPartially) {
-    this.targetFood.push({food: food, eatPartially: eatPartially});
+GlassLab.Creature.prototype.addTargetFood = function(food, groupIndex) {
+    this.targetFood.push({food: food, groupIndex: groupIndex, eatPartially: groupIndex});
 };
 
 GlassLab.Creature.prototype.resetTargetFood = function() {
