@@ -19,7 +19,7 @@ GlassLab.RenderManager = function(game)
         GLOBAL.WorldLayer.add(this.layers[i]);
     }
 
-    GLOBAL.grassGroup = this.layers[0];
+    GLOBAL.groundLayer = this.layers[0];
 
     GLOBAL.baseWorldLayer = this.layers[1];
 
@@ -34,20 +34,9 @@ GlassLab.RenderManager = function(game)
     GLOBAL.hoverLayer = this.layers[6];
 };
 
-GlassLab.RenderManager.prototype.AddToIsoWorld = function(child, layerNum)
+GlassLab.RenderManager.prototype.AddToIsoWorld = function(child, layer)
 {
-    var layer = child._preOptimizedParent || GLOBAL.creatureLayer;
-    if (typeof layerNum == "number")
-    {
-        if (layerNum >= 0 && layerNum < this.layers.length)
-        {
-            layer = this.layers[layerNum];
-        }
-        else
-        {
-            console.error("Could not find layer of index", layerNum);
-        }
-    }
+    layer = layer || child._preOptimizedParent || GLOBAL.creatureLayer;
 
     if (child.parent === layer)
     {
@@ -106,9 +95,9 @@ GlassLab.RenderManager.prototype._onPostUpdate = function()
 
 GlassLab.RenderManager.prototype._updateDirtyLayers = function()
 {
-    for (var i = GLOBAL.grassGroup.children.length-1; i >= 0; i--)
+    for (var i = GLOBAL.groundLayer.children.length-1; i >= 0; i--)
     {
-        var renderLayer = GLOBAL.grassGroup.children[i];
+        var renderLayer = GLOBAL.groundLayer.children[i];
 /*
         // first add children that are pending add
         if (renderLayer.GLASSLAB_PENDING_ADD_CHILDREN) // Property existence should denote at least one child

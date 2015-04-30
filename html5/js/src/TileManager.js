@@ -89,7 +89,7 @@ GlassLab.TileData = function() {
     this.image = "";
 };
 
-GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, parentGroup)
+GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
 {
     this.tilemap = tilemap;
 
@@ -99,19 +99,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
     for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
     {
         var layer = this.tilemap.layers[layerIndex];
-        var layerGroup;
-        if (layer.name == "border")//.properties.creatureLayer)
-        {
-            layerGroup = GLOBAL.creatureLayer;
-        }
-        else
-        {
-            /* Disabled cacheAsBitmap for memory reasons
-            layerGroup.cacheAsBitmap = true;
-            layerGroup.GLASSLAB_BITMAP_DIRTY = true;
-            */
-            layerGroup = parentGroup;
-        }
+        var shouldSortWithCreatures = layer.name == "border";
         for (var i=this.tilemap.width-1; i>=0; i--)
         {
             for (var j=this.tilemap.height-1; j>=0; j--)
@@ -121,7 +109,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
 
                 var image = new GlassLab.Tile(this.game, i, j, tileType);
                 //image.tint = Math.random() * 16777215;
-                GLOBAL.renderManager.AddToIsoWorld(image, layerIndex);
+                GLOBAL.renderManager.AddToIsoWorld(image, shouldSortWithCreatures ? GLOBAL.creatureLayer : GLOBAL.groundLayer);
 
                 if (!this.map[i]) this.map[i] = [];
 
@@ -144,9 +132,6 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
             }
         }
     }
-
-    // Sort tile render order
-    this.game.iso.simpleSort(parentGroup);
 };
 
 GlassLab.TileManager.prototype.SetCenter = function(x, y)
