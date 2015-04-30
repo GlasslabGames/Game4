@@ -106,8 +106,10 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap, pa
         }
         else
         {
+            /* Disabled cacheAsBitmap for memory reasons
             layerGroup.cacheAsBitmap = true;
             layerGroup.GLASSLAB_BITMAP_DIRTY = true;
+            */
         }
         parentGroup.add(layerGroup);
         for (var i=this.tilemap.width-1; i>=0; i--)
