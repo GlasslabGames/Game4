@@ -102,9 +102,9 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
         var entry = "ERROR";
         // we might have to look up the entry if it's a food type
         if (key.indexOf("foodType") > -1) {
-            var food = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-            var foodType = (key.indexOf("B") > -1)? food[1].type : food[0].type;
-            entry = GlassLab.FoodTypes[foodType].displayNames.plural.toLowerCase();
+            var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
+            var food = (key.indexOf("B") > -1)? desiredFood[1] : desiredFood[0];
+            if (food && GlassLab.FoodTypes[food.type]) entry = GlassLab.FoodTypes[food.type].displayNames.plural.toLowerCase();
         } else if (key in this.data && key != "description") {
             entry = this.data[key]; // else check in the data for anything else
 

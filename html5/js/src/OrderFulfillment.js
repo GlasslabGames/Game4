@@ -294,7 +294,7 @@ GlassLab.OrderFulfillment.prototype.shipCrate = function() {
 
 GlassLab.OrderFulfillment.prototype._crateShipped = function() {
     this.data.outcome = this.crate.result;
-    this.data.outcomeDetail = this.crate.problemFood;
+    this.data.outcomeDetail = this.crate.problemFoods;
 
     if (this.crate.result == GlassLab.results.satisfied && this.data.totalNumFood) { // we need to check that the number of creatures is correct
         var numCreatures = this._getResponse()[0];

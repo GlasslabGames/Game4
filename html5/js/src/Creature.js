@@ -70,10 +70,12 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.targetFood = []; // tracks the food we want to eat next while we're eating food in a pen. Each food is like {food: f, eatPartially: true}
 
     this.animSprites = {};
-    var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit", "cry_start", "cry_loop", "cry_end", "poop"];
+    var animNames = ["idle", "idle_back", "walk", "walk_back", "eat", "vomit", "cry_start", "cry_loop", "cry_end", "poop", "eat_back"];
     for (var i = 0; i < animNames.length; i++) {
         var animName = animNames[i];
         var spriteName = info.spriteName + "_" + animName;
+        if (!this.game.cache.checkImageKey(spriteName)) continue; // we don't have this anim (e.g. eat_back is only for birds)
+
         var animSprite = this.game.make.sprite(0, 0, spriteName);
 
         GLOBAL.resourceManager.preloadResource(spriteName);

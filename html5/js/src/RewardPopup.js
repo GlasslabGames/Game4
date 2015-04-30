@@ -65,41 +65,50 @@ GlassLab.RewardPopup.prototype.show = function(data)
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
     var creatures = creatureInfo.displayNames.plural;
     var detail = data.outcomeDetail;
-    var foodNames = (GlassLab.FoodTypes[detail] && GlassLab.FoodTypes[detail].displayNames) || {singular: "food", plural: "food"};
+    var foodNames = (detail && GlassLab.FoodTypes[detail[0]] && GlassLab.FoodTypes[detail[0]].displayNames) || {singular: "food", plural: "food"};
     var uncountable = (foodNames.plural == foodNames.singular); // e.g. "meat" is uncountable, "apples" is not
 
-    var string = "Dear Rancher," + "\n\n";
     var photo = creatureInfo.spriteName + "_orderPhoto_";
-    // TODO: set the food name
+    var string = "Dear Rancher," + "\n\n";
 
     switch (data.outcome) {
         case GlassLab.results.satisfied:
             string += "All the "+ creatures + " you sent arrived safe and sound! Your full payment is enclosed. It was a pleasure doing business with you.";
             photo += "happy";
             break;
+        case GlassLab.results.dislike:
+            string += "You didn't send the correct kind of food for these "+ creatures + "!";
+            photo += "wrongFood";
+            break;
         case GlassLab.results.sick:
-            if (creatureAsk) string += "You sent too few " + creatures + " to eat all "+(uncountable? "this ":"these ")+foodNames.plural.toLowerCase()+",";
+            if (creatureAsk) string += "You sent too few " + creatures + " to eat all this food," //"+(uncountable? "this ":"these ")+foodNames.plural.toLowerCase()+",";
             else string += "You sent too "+(uncountable? "much ":"many ")+foodNames.plural.toLowerCase()+" for these " + creatures + " to eat,";
-            string += " so they got sick! I’m afraid I can’t pay you for this unacceptable situation.";
+            string += " so they got sick!";
             photo += "vomit";
             break;
         case GlassLab.results.hungry:
-            if (creatureAsk) string += "You sent too many " + creatures + " and there "+(uncountable? "wasn't" : "weren't")+" enough "+foodNames.plural.toLowerCase()+" for all of them,";
+            if (creatureAsk) string += "You sent too many " + creatures + " and there wasn't enough food for all of them,"//+(uncountable? "wasn't" : "weren't")+" enough "+foodNames.plural.toLowerCase()+" for all of them,";
             else string += "You didn't send enough "+foodNames.plural.toLowerCase()+" for all of these "+ creatures + ",";
-            string += " so they're still hungry! I’m afraid I can’t pay you for this unacceptable situation.";
+            string += " so they're still hungry!";
             photo += "cry";
-            break;
-        case GlassLab.results.dislike:
-            string += "You didn't send the correct food types for these "+ creatures + "! I’m afraid I can’t pay you for this unacceptable situation.";
-            photo += "wrongFood";
             break;
         case GlassLab.results.wrongCreatureNumber:
             var numTotalFood = this.data.totalNumFood || "some";
             string += "I asked you to send the correct number of "+ creatures + " to eat "+ numTotalFood +" total food, but you sent too "+data.outcomeDetail+" "+ creatures + "!";
-            string += " I’m afraid I can’t pay you for this unacceptable situation.";
             photo += "cry";
             break;
     }
+
+    // Now if the result was sick or hungry, we might need to include info about the second kind of food as well.
+    if ((data.outcome == GlassLab.results.sick || data.outcome == GlassLab.results.hungry) && !creatureAsk &&
+        detail[1] && GlassLab.FoodTypes[detail[1]]) { // add a bit about the 2nd wrong food
+        string += " The amount of "+GlassLab.FoodTypes[detail[1]].displayNames.plural.toLowerCase()+" wasn't right either!";
+    }
+
+    if (data.outcome != GlassLab.results.satisfied) {
+        string += " I’m afraid I can’t pay you for this unacceptable situation.";
+    }
+
     string += "\n\nSincerely,\n" + data.client;
 
     GlassLab.Util.SetColoredText(this.descriptionLabel, string, "#807c7b", "#994c4e");
