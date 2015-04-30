@@ -95,9 +95,9 @@ GlassLab.RenderManager.prototype._onPostUpdate = function()
 
 GlassLab.RenderManager.prototype._updateDirtyLayers = function()
 {
-    for (var i = GLOBAL.groundLayer.children.length-1; i >= 0; i--)
+    for (var i = this.layers.length-1; i >= 0; i--)
     {
-        var renderLayer = GLOBAL.groundLayer.children[i];
+        var renderLayer = this.layers[i];
 /*
         // first add children that are pending add
         if (renderLayer.GLASSLAB_PENDING_ADD_CHILDREN) // Property existence should denote at least one child

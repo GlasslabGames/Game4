@@ -402,9 +402,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.transition = new GlassLab.Transition(game);
     GLOBAL.UIManager.transitionAnchor.addChild(GLOBAL.transition);
 
-    //GLOBAL.debugText = game.make.text(-300,0,"test");
-    //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);
-
     this.initComplete = true;
 };
 
