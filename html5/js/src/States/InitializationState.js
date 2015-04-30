@@ -317,32 +317,12 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.inventoryManager = new GlassLab.InventoryManager(GLOBAL.game);
 
-    GLOBAL.grassGroup = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.grassGroup);
-
     GLOBAL.renderManager = new GlassLab.RenderManager(GLOBAL.game);
 
     GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
     GLOBAL.tiledBg.anchor.setTo(0.5, 0.5);
     GLOBAL.tiledBg.visible = false;
-    GLOBAL.WorldLayer.add(GLOBAL.tiledBg);
-
-    GLOBAL.baseWorldLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.baseWorldLayer);
-
-    GLOBAL.penLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.penLayer);
-
-    GLOBAL.foodLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.foodLayer);
-
-    GLOBAL.creatureLayer = null; // Created by TileManager now
-
-    GLOBAL.effectLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.effectLayer);
-
-    GLOBAL.hoverLayer = game.make.group();
-    GLOBAL.WorldLayer.add(GLOBAL.hoverLayer);
+    GLOBAL.WorldLayer.addAt(GLOBAL.tiledBg, 2);
 
     GLOBAL.paused = false;
 

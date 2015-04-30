@@ -423,6 +423,11 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
         for (var col = startCol; col < endCol; col ++) {
             if ((maxCount || maxCount === 0) && count >= maxCount) break;
             var obj  = unusedObjects.pop();
+            if (obj && !obj.parent)
+            {
+                console.error("Object doesn't have parent set! Was it destroyed? Not reusing");
+                obj = null;
+            }
             if (!obj) { // we ran out of existing tiles, so make a new one
                 obj = new boundConstructor();
                 if (parent.addChild) parent.addChild(obj); // if the parent is a sprite
@@ -440,12 +445,8 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
                 obj.isoX = (col + emptyCols) * GLOBAL.tileSize;
                 obj.isoY = row * GLOBAL.tileSize;
             }
-            if (obj.parent) {
-                obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
-            }
-            else {
-                console.error("Object doesn't have parent set!");
-            }
+
+            obj.parent.setChildIndex(obj, obj.parent.children.length - 1); // move it to the back of the children so far
             list[row].push(obj);
             count++;
         }

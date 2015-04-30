@@ -28,6 +28,8 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.targetPosition = new Phaser.Point(Number.NaN);
     this.currentPath = [];
 
+    this.previousLocalPosition = new Phaser.Point();
+
     this.normalMoveSpeed = 2.75;
     this.moveSpeed = this.normalMoveSpeed; // moveSpeed may be altered later, i.e. after eating donuts
     this.baseAnimSpeed = 36; // 36 per moveSpeed
@@ -381,9 +383,10 @@ GlassLab.Creature.prototype._onEndDrag = function () {
 GlassLab.Creature.prototype._onUpdate = function (dt) {
     if (this.state) this.state.Update(dt);
 
-    if (!this.previousPosition.equals(this.position))
+    if (!this.previousLocalPosition.equals(this.position))
     {
         GLOBAL.renderManager.UpdateIsoObjectSort(this);
+        this.previousLocalPosition.setTo(this.position.x, this.position.y);
     }
 };
 
