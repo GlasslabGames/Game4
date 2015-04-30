@@ -26,7 +26,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "babyram",
             fxFrames: {eat: 14, vomit: 21, poop: 40 },
             desiredFood: [{type: "broccoli", amount: 3}],
-            minPenColumns: 1,
+            eatingGroup: 1,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
@@ -46,7 +46,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "ram",
             fxFrames: {eat: 16, vomit: 60, poop: 40 },
             desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}],
-            minPenColumns: 1,
+            eatingGroup: 1,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
@@ -67,7 +67,7 @@ GlassLab.CreatureManager = function (game) {
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 22, vomit: 36, poop: 70 },
             desiredFood: [{type: "strawberry", amount: 4}],
-            minPenColumns: 1,
+            eatingGroup: 1,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
@@ -88,7 +88,7 @@ GlassLab.CreatureManager = function (game) {
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40, poop: 70 },
             desiredFood: [{type: "strawberry", amount: 4}, {type: "pizza", amount: 5}],
-            minPenColumns: 1,
+            eatingGroup: 1,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
@@ -107,8 +107,8 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "babybird",
             fxFrames: {eat: 16, vomit: 60, poop: 70 },
-            desiredFood: [{type: "meat", amount: (4/3)}], // 3 birds eat 4 food
-            minPenColumns: 3,
+            desiredFood: [{type: "meat", amount: 4/3}], // 3 birds eat 4 food
+            eatingGroup: 3,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
@@ -127,8 +127,8 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "bird",
             fxFrames: {eat: 16, vomit: 60, poop: 70 },
-            desiredFood: [{type: "meat", amount: (5/2)}, {type: "taco", amount: (5/4)}],
-            minPenColumns: 4,
+            desiredFood: [{type: "meat", amount: (10/4)}, {type: "taco", amount: (5/4)}],
+            eatingGroup: 4,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
@@ -237,8 +237,8 @@ GlassLab.CreatureManager.prototype.showCreatures = function() {
 
 GlassLab.CreatureManager.prototype.getCreatureWantsFractionalFood = function(creatureType) {
     var creatureData = this.creatureDatabase[creatureType];
-    if (typeof(creatureData.minPenColumns) != "undefined") {
-        if (creatureData.minPenColumns > 1)
+    if (typeof(creatureData.eatingGroup) != "undefined") {
+        if (creatureData.eatingGroup > 1)
             return true;
         else
             return false;
@@ -253,8 +253,8 @@ GlassLab.CreatureManager.prototype.getCreatureWantsFractionalFood = function(cre
 
 GlassLab.CreatureManager.prototype.getMinCreatureCols = function(creatureType) {
     var creatureData = this.creatureDatabase[creatureType];
-    if (typeof(creatureData.minPenColumns) != "undefined")
-        return creatureData.minPenColumns;
+    if (typeof(creatureData.eatingGroup) != "undefined")
+        return creatureData.eatingGroup;
     else {
         // calculate by iterating through integers, looking for least common multiple that yeilds integer result:
         var desiredFood = creatureData.desiredFood;

@@ -95,7 +95,7 @@
               "serializedActions": [
                 {
                   "__type": "ShowAssistantDialogueAction",
-                  "text": "Very nice. Now *pull the red lever* to feed them."
+                  "text": "Very nice. Now *click on the pen* to feed them."
                 },
                 {
                   "__type": "WaitForCondition",
@@ -170,41 +170,6 @@
           },
           {
             "__type": "HideAssistantDialogueAction"
-          },
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "orderShipped"
-              }
-            ]
-          },
-          {
-            "__type": "ShowAssistantDialogueAction",
-            "text": "Now open your *mail* to see the client's response."
-          },
-          {
-            "__type": "ShowArrowAction",
-            "direction": "up",
-            "anchor": "topLeftAnchor",
-            "xPosition": 60,
-            "yPosition": 200
-          },
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "mailOpened"
-              }
-            ]
-          },
-          {
-            "__type": "HideArrowAction"
-          },
-          {
-            "__type": "HideAssistantDialogueAction"
           }
         ]
       }
@@ -245,41 +210,6 @@
                 "signalName": "orderStarted"
               }
             ]
-          },
-          {
-            "__type": "HideAssistantDialogueAction"
-          },
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "orderShipped"
-              }
-            ]
-          },
-          {
-            "__type": "ShowAssistantDialogueAction",
-            "text": "Now open your *mail* to see their reply."
-          },
-          {
-            "__type": "ShowArrowAction",
-            "direction": "up",
-            "anchor": "topLeftAnchor",
-            "xPosition": 60,
-            "yPosition": 200
-          },
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "mailOpened"
-              }
-            ]
-          },
-          {
-            "__type": "HideArrowAction"
           },
           {
             "__type": "HideAssistantDialogueAction"

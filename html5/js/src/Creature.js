@@ -111,7 +111,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     // FINALLY, start the desired state
     if (startInPen) {
         this.pen = startInPen;
-        this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(game, this));
+        this.StateTransitionTo(new GlassLab.CreatureStateWaitingInPen(game, this));
     } else {
         this.StateTransitionTo(new GlassLab.CreatureStateIdle(game, this));
     }
@@ -290,6 +290,7 @@ GlassLab.Creature.prototype.standFacingPosition = function(targetIsoPos) {
         dir = (pos.y < targetIsoPos.y)? "down" : "up";
     }
     this.standFacing(dir);
+    return dir;
 };
 
 GlassLab.Creature.prototype.standFacing = function (dir) {
@@ -546,7 +547,7 @@ GlassLab.Creature.prototype.cancelPoop = function () {
 
 GlassLab.Creature.prototype.startPoopTimer = function () {
     this.cancelPoop();
-    var poopDelay = 0.1 * Phaser.Timer.MINUTE;
+    var poopDelay = (Math.random() / 2 + 0.1) * Phaser.Timer.MINUTE;
     this.poopTimer = this.game.time.events.add(poopDelay, function() {
         if (this.state instanceof GlassLab.CreatureStateIdle) { // we weren't doing anything else, so why not poop?
             this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this));
@@ -584,8 +585,9 @@ GlassLab.Creature.prototype.getIsEmpty = function () {
     return true;
 };
 
-GlassLab.Creature.prototype.addTargetFood = function(food, eatPartially) {
-    this.targetFood.push({food: food, eatPartially: eatPartially});
+GlassLab.Creature.prototype.addTargetFood = function(food, groupIndex, groupSize) {
+    var foodInfo = {food: food, groupIndex: groupIndex, groupSize: groupSize};
+    this.targetFood.push(foodInfo);
 };
 
 GlassLab.Creature.prototype.resetTargetFood = function() {
@@ -669,7 +671,7 @@ GlassLab.Creature.prototype.lookForTargets = function () {
     // Look for food we could eat
     for (var i = 0; i < GLOBAL.foodInWorld.length; i++) {
         var food = GLOBAL.foodInWorld[i];
-        if (food && food.health && !food.eaten && !food.dislikedBy[this.type]) {
+        if (food && food.getIsAttractiveTo(this)) {
             targets = targets.concat(food.getTargets());
         }
     }
@@ -747,7 +749,7 @@ GlassLab.Creature.prototype.eatFreeFood = function (food) {
         food_type: food.type,
         result: result
     });
-    this.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this, {food: food}));
+    this.StateTransitionTo(new GlassLab.CreatureStateWaitingToEat(this.game, this, {food: food}));
 
     food.eaten = true;
     GlassLab.SignalManager.creatureTargetsChanged.dispatch(); // since this food is gone
@@ -784,7 +786,7 @@ GlassLab.Creature.prototype.tryEnterPen = function (pen) {
     var tile = this.getTile();
     if (pen.canAddCreature(this, tile)) { // note that this will parent the creature under the pen
         var returnValue = pen.tryAddCreature(this, tile);
-        this.StateTransitionTo(new GlassLab.CreatureStateWaitingForFood(this.game, this));
+        this.StateTransitionTo(new GlassLab.CreatureStateWaitingInPen(this.game, this));
         return returnValue;
     } else {
         return false;

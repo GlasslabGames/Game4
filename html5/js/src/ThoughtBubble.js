@@ -44,7 +44,7 @@ GlassLab.ThoughtBubble.prototype._onDestroy = function() {
     if (this.timer) this.game.time.events.remove(this.timer);
 };
 
-GlassLab.ThoughtBubble.prototype.show = function(symbol, food, time, callback, callbackContext) {
+GlassLab.ThoughtBubble.prototype.show = function(symbol, food, time, callback, callbackContext, scale) {
     this.visible = true;
 
     if (typeof time == 'undefined') time = 1000; // default time
@@ -65,7 +65,8 @@ GlassLab.ThoughtBubble.prototype.show = function(symbol, food, time, callback, c
 
     this.game.add.tween(this.tail.scale).to( { x: 0.75, y: 0.75}, 100, "Linear", true, 0 );
     this.game.add.tween(this.bubble.scale).to( { x: 1, y: 1}, 150, "Linear", true, 200 );
-    this.game.add.tween(this.bubbleContents.scale).to( { x: 1, y: 1}, 150, "Linear", true, 250 );
+    var contentScale = scale || 1;
+    this.game.add.tween(this.bubbleContents.scale).to( { x: contentScale, y: contentScale}, 150, "Linear", true, 250 );
 
     if (this.timer) this.hide();
     this.callback = callback;

@@ -233,6 +233,9 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     this.forEachCreature(GlassLab.Creature.prototype.resetTargetFood);
 
     var desiredFood = this.creatureSpots[0][0].desiredAmountsOfFood; // we can't feed if all spots aren't filled in with the same type of creature, so this should work
+    var info = GLOBAL.creatureManager.GetCreatureData(this.creatureSpots[0][0].type);
+    var groupSize = info.eatingGroup || 1;
+    console.log("Feeding creatures",info);
 
     // For each section of food, calculate which foods should go to which creatures
     for (var i = 0; i < this.foodTypes.length; i++) {
@@ -249,50 +252,37 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             if (!foodRow || !creatureRow) continue; // ignore any empty rows
             while (!creatureRow[0]) creatureRow.shift(); // the creatures might be offset b/c they are added from the right instead of the left
 
-            // If the creatures want fractional amounts of food, then some initial pieces of food are shared.
-            var sharedCols = Math.floor(remainder * creatureRow.length + 0.00001); // cols of food that multiple creatures will take a bite of. We add a bit because 0.33333 * 3 was rounding down to 0.
-            if (sharedCols) {
-                var cleanupCreatures = creatureRow.length % sharedCols; // number of creatures that don't fall into the normal flow of sharing food
-                //console.log("remainder:",remainder,"sharedCols:",sharedCols,"cleanupCreatures",cleanupCreatures);
-
-                // To assign the shared cols, we walk through the creatures and try to give them all the right food
-                for (var col = 0; col < creatureRow.length; col++) {
-                    if (col < cleanupCreatures) {
-                        // this creature gets to clean up several uneaten bits of food
-                        for (var i = 0; i < (sharedCols / cleanupCreatures); i++) {
-                            var index = (i * cleanupCreatures) + col;
-                            //console.log("Fractional food",index,"to cleanup creature",col);
-                            creatureRow[col].addTargetFood(foodRow[index]);
-                        }
-                    } else {
-                        // no other creatures eat more than one shared food
-                        var index = (col - cleanupCreatures) % sharedCols;
-                        //console.log("Fractional food",index,"to creature",col);
-                        creatureRow[col].addTargetFood(foodRow[index], true); // true = we only eat some of the food
-                    }
-                }
-            }
+            var numGroups = Math.floor(creatureRow.length / groupSize);
+            var grouplessCreatures = creatureRow.length % groupSize;
+            //console.log("numGroups",numGroups,"groupSize",groupSize,"grouplessCreatures",grouplessCreatures);
 
             // Then we can assign the rest of the food independently from the shared cols.
-            var foodCount = foodRow.length - sharedCols; // how many whole pieces of food are left
+            var foodCount = foodRow.length; // how many whole pieces of food are left
 
             // If the food isn't evenly divisible, some lucky creatures get to eat more than others.
-            var bigN = Math.ceil(foodCount / creatureRow.length); // number of foods per creature for the lucky creatures
-            var littleN = Math.floor(foodCount / creatureRow.length); // number of foods per creature for the unlucky creatures
-            var luckyCreatures = foodCount % creatureRow.length;
+            var bigN = Math.ceil(foodCount / numGroups); // number of foods per creature for the lucky creatures
+            var littleN = Math.floor(foodCount / numGroups); // number of foods per creature for the unlucky creatures
+            var luckyCreatures = foodCount % numGroups;
 
             // For each creature, assign it the appropriate amount of food (more if it's lucky or less if it's unlucky.)
-            var foodCol = sharedCols - 1;
-            for (var col = 0; col < creatureRow.length; col++) {
-                var n = ((creatureRow.length - col) <= luckyCreatures? bigN : littleN); // creatures with higher cols are lucky
-                for (var j = 0; j < n; j++) { // assign each food in this group to the current creature
+            var foodCol = -1;
+            for (var group = 0; group < numGroups; group++) {
+                var foodForGroup = ((numGroups - group) <= luckyCreatures? bigN : littleN); // groups with higher indices are lucky
+                for (var j = 0; j < foodForGroup; j++) { // assign each food in this section to the current creature
                     if (foodCol ++ < foodRow.length) {
-                        if (!creatureRow[col] || !foodRow[foodCol]) {
-                            console.error("Can't access creature or food in row",row,"while assigning food. Creature",col,":",creatureRow[col],"food",foodCol,":",foodRow[foodCol]);
+                        if (!foodRow[foodCol]) {
+                            console.error("Can't access food in row",row," at col",foodCol,"while assigning food to group", group);
                             return;
                         }
-                        creatureRow[col].addTargetFood(foodRow[foodCol]);
-                        //console.log("Whole food",foodCol,"to creature",col,"isLucky?",col<luckyCreatures,"numLucky:",luckyCreatures);
+                        for (var groupIndex = 0; groupIndex < groupSize; groupIndex++) { // for each creature in the group
+                            var creatureCol = grouplessCreatures + (group * groupSize) + groupIndex;
+                            if (!creatureRow[creatureCol]) {
+                                console.error("Can't access creature in row",row," at col",creatureCol,"while assigning food to group", group);
+                                return;
+                            }
+                            creatureRow[creatureCol].addTargetFood(foodRow[foodCol], groupIndex, groupSize); // indicate this creature's position in the group
+                            //console.log("Food",foodCol,"to creature",creatureCol,"in group", group, groupIndex);
+                        }
                     }
                 }
             }
@@ -303,12 +293,17 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     for (var row = 0; row < this.creatureSpots.length; row++) {
         var creatureRow = this.creatureSpots[row];
         if (!creatureRow) continue;
+        while (!creatureRow[0]) creatureRow.shift(); // the creatures might be offset b/c they are added from the right instead of the left
+
+        var numGroups = Math.floor(creatureRow.length / groupSize);
+        var grouplessCreatures = creatureRow.length % groupSize;
 
         for (var col = 0; col < creatureRow.length; col++) {
             var creature = creatureRow[col];
-            if (!creature) continue; // when there's an uneven number of creatures, the creatures might start at 1 instead of 0
-            var time = ((creatureRow.length - col) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
-            if (creatureRow[col+1]) creature.creatureInFront = creatureRow[col+1]; // this is used to stop creatures from walking on top of each other
+            var inGroup = Math.floor((col - grouplessCreatures) / groupSize);
+            console.log(col, inGroup, numGroups - inGroup);
+            var time = ((numGroups - inGroup) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
+            if (groupSize == 1 && creatureRow[col+1]) creature.creatureInFront = creatureRow[col+1]; // this is used to stop creatures from walking on top of each other
             this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
         }
     }

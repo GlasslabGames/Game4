@@ -19,12 +19,12 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.creature.draggableComponent.active = false;
 
-    // as long as we don't eat fractional food, run ahead to the first food we want (it's just too confusing with fractional food)
+    this.creature.sprite.scale.x = - Math.abs(this.creature.sprite.scale.x);
+
+    // run ahead to the first food we want
     var run = false;
-    if (!GLOBAL.creatureManager.getCreatureWantsFractionalFood(this.creature.type)) {
-        var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), this.creature.getGlobalPos());
-        run = (delta.getMagnitudeSq() >= GLOBAL.tileSize * GLOBAL.tileSize * 1.5625); // 1.5625 = 1.25^2, derived from when creatures leave this state and begin to eat food (.25 squares away))
-    }
+    var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), this.creature.getGlobalPos());
+    run = (delta.getMagnitudeSq() >= GLOBAL.tileSize * GLOBAL.tileSize * 1.5625); // 1.5625 = 1.25^2, derived from when creatures leave this state and begin to eat food (.25 squares away))
 
     // When far, run
     if (!run)
@@ -60,9 +60,31 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
             this.creature.PlayAnim("walk", true, this.speed * this.creature.baseAnimSpeed);
             this.stopped = false;
         }
-        var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), this.creature.getGlobalPos());
+
+        var info = this.foodInfo;
+        var foodPos = info.food.getGlobalPos();
+
+        // Adjust the target position depending on our position in the eating group.
+        var eatBackwards = (info.groupSize && info.groupIndex >= info.groupSize / 2);
+        if (eatBackwards) {
+            foodPos.x += GLOBAL.tileSize * 0.25;
+            if (Math.floor(info.groupSize / 2) % 2 == 0) { // even number of creatures eating on this side
+                // checking if the group index is even will cause them to alternate higher and lower positions
+                if (info.groupIndex % 2) foodPos.y += GLOBAL.tileSize * 0.25;
+                else foodPos.y -= GLOBAL.tileSize * 0.25;
+            }
+        } else {
+            foodPos.x -= GLOBAL.tileSize * 0.5;
+            if (Math.ceil(info.groupSize / 2) % 2 == 0) { // even number of creatures eating on this side
+                if (info.groupIndex % 2) foodPos.y += GLOBAL.tileSize * 0.25;
+                else foodPos.y -= GLOBAL.tileSize * 0.25;
+            }
+        }
+        this.foodInfo.eatBackwards = eatBackwards; // remember whether we want to face backwards when it's time to eat
+
+        var delta = Phaser.Point.subtract(foodPos, this.creature.getGlobalPos());
         var deltaMagSq = delta.getMagnitudeSq();
-        if (deltaMagSq > Math.pow(GLOBAL.tileSize * 0.25, 2)) { // we're still far from the food
+        if (deltaMagSq > Math.pow(this.speed, 2)) { // we're still far from the food
             // check if we're too close to the creature in front. but if that creature is already finished eating, we have to be allowed to walk by them.
             if (this.creature.creatureInFront && !this.creature.creatureInFront.finishedEating) {
                 var dist = Phaser.Point.subtract(this.creature.creatureInFront.getGlobalPos(), this.creature.getGlobalPos());
@@ -87,7 +109,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
             this.creature.isoY = delta.y;
         }
         else {
-            this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.foodInfo));
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingToEat(this.game, this.creature, this.foodInfo));
         }
         //this.creature._move(); // If we use pathing
     }
