@@ -145,7 +145,7 @@ GlassLab.Assistant.prototype._enterStateOrderIntro = function(order) {
 
     if ((order.totalNumFood && !order.noFoodEntries) || (order.numCreatures && numFood)) { // both food and creatures
         orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " and the correct amount of food.* What";
-    } else if ((order.totalNumFood && order.noFoodEntries) || order.numCreatures) { // only creatures are asked for
+    } else if (!order.numCreatures) { // creatures are asked for
         orderSegment = "*enough " + GLOBAL.creatureManager.GetCreatureName(order.creatureType, true) + " to eat this food.* How many";
     } else { // only food
         orderSegment = "*enough food to feed "+order.numCreatures+" "+GLOBAL.creatureManager.GetCreatureName(order.creatureType, (order.numCreatures > 1)) + ".* What";
