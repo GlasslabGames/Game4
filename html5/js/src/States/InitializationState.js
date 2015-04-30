@@ -180,6 +180,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('paperClip', 'assets/images/order/shipping_ui_paper_clip.png');
     game.load.image('orderX', 'assets/images/order/shipping_ui_remove_item_x.png');
     game.load.image('orderHighlight', 'assets/images/order/shipping_ui_list_item_highlight.png');
+    game.load.image('keyboardTooltip', 'assets/images/order/keyboard_tooltip.png');
 
     game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
     game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');

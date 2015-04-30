@@ -178,11 +178,13 @@ GlassLab.OrderFulfillmentSlot.prototype.refresh = function(hide) {
 };
 
 GlassLab.OrderFulfillmentSlot.prototype.onFoodDropped = function(dragObject, dragTarget) {
-    if (dragObject.foodType) {
+    if (dragObject.foodType && dragObject.foodType != this.currentType) {
         this.currentType = dragObject.foodType;
         this.onFoodSet.dispatch(this.index, this.currentType);
+
+        this.answerInput.SetFocus(true);
+        this.refresh();
     }
-    this.refresh();
 };
 
 GlassLab.OrderFulfillmentSlot.prototype.clearType = function() {
