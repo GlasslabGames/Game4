@@ -351,9 +351,12 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
             }
         }
 
+        this.onPathChanged.dispatch(this);
     }
-
-    this.onPathChanged.dispatch(this);
+    else
+    {
+        this.onDestinationReached.dispatch(this);
+    }
 };
 
 GlassLab.Creature.prototype._onStartDrag = function () {
@@ -378,6 +381,10 @@ GlassLab.Creature.prototype._onEndDrag = function () {
 GlassLab.Creature.prototype._onUpdate = function (dt) {
     if (this.state) this.state.Update(dt);
 
+    if (!this.previousPosition.equals(this.position))
+    {
+        GLOBAL.renderManager.UpdateIsoObjectSort(this);
+    }
 };
 
 GlassLab.Creature.prototype._setNextTargetPosition = function()
