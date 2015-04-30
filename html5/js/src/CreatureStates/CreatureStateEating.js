@@ -8,7 +8,6 @@
 GlassLab.CreatureStateEating = function(game, owner, foodInfo)
 {
     GlassLab.CreatureState.call(this, game, owner);
-    this.eatPartially = foodInfo.eatPartially;
     this.eatBackwards = foodInfo.eatBackwards;
     this.food = foodInfo.food;
     if (typeof(foodInfo.reaction) != "undefined")
@@ -25,13 +24,14 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
     GlassLab.CreatureState.prototype.Enter.call(this);
 
     if (!this.food.pen || this.eatBackwards) { // eating in the wild or we need to face backwards towards the food
-        this.creature.standFacingPosition(this.food.getGlobalPos());
+        var dir = this.creature.standFacingPosition(this.food.getGlobalPos());
+        if (dir == "up" || dir == "left") this.eatBackwards = true; // catch the case where they need to eat backwards outside the pen
     }
 
     this.chomped = false;
 
     if (this.eatBackwards) {
-        var tween = this.game.make.tween(this.creature.sprite.scale).to({y: this.creature.spriteScaleY * 0.9}, 200, Phaser.Easing.Sinusoidal.InOut, true, 0, 3, true);
+        var tween = this.game.make.tween(this.creature.sprite.scale).to({y: this.creature.spriteScaleY * 0.9}, 200, Phaser.Easing.Sinusoidal.InOut, true, 0, 4, true);
         tween.onLoop.addOnce(this._onChomp, this);
         tween.onComplete.addOnce(this.StopEating, this);
     } else {
@@ -48,11 +48,6 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
     var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
     this.chompFrame = info.fxFrames.eat;
     if (info.eatFxStyle) this.food.setAnimStyle(info.eatFxStyle);
-
-    this.amountToEat = 1;
-    if (this.eatPartially) {
-        this.amountToEat = this.creature.desiredAmountsOfFood[this.food.type] % 1;
-    }
 };
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
@@ -65,7 +60,7 @@ GlassLab.CreatureStateEating.prototype.Update = function() {
 
 GlassLab.CreatureStateEating.prototype._onChomp = function() {
     this.chomped = true;
-    this.amountEaten = this.food.BeEaten(this.amountToEat);
+    this.amountEaten = this.food.BeEaten();
     this.creature.lastEatenFoodInfo = this.food.info;
 
     // show hunger bar if food is desirable:
