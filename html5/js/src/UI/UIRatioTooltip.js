@@ -126,6 +126,12 @@ GlassLab.UIRatioTooltip.prototype.show = function(targetPen, message)
 
 GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
 {
+    if (!this.pen._getCurrentCreatureType)
+    {
+        console.error("Tried to use UIRatioTooltip on pen that didn't know _getCurrentCreatureType");
+        return;
+    }
+
     // Update creature info
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.pen._getCurrentCreatureType());
     this.creatureIcon.visible = creatureInfo;

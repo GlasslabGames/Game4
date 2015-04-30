@@ -332,7 +332,7 @@ GlassLab.State.Init.prototype.create = function()
 
     var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
-    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
+    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData);
 
     // Add clouds
     GLOBAL.cloudManager = new GlassLab.CloudManager(game);
