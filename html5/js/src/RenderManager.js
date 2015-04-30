@@ -12,7 +12,26 @@ GlassLab.RenderManager = function(game)
     GlassLab.SignalManager.postUpdate.add(this._onPostUpdate, this);
     GlassLab.SignalManager.initializationComplete.add(this._onPostUpdate, this);
 
-    this.renderLayer = GLOBAL.grassGroup;
+    this.layers = [];
+    for (var i=0; i < 7; i++)
+    {
+        this.layers.push(this.game.make.group());
+        GLOBAL.WorldLayer.add(this.layers[i]);
+    }
+
+    GLOBAL.grassGroup = this.layers[0];
+
+    GLOBAL.baseWorldLayer = this.layers[1];
+
+    GLOBAL.penLayer = this.layers[2];
+
+    GLOBAL.foodLayer = this.layers[3];
+
+    GLOBAL.creatureLayer = this.layers[4]; // Created by TileManager now
+
+    GLOBAL.effectLayer = this.layers[5];
+
+    GLOBAL.hoverLayer = this.layers[6];
 };
 
 GlassLab.RenderManager.prototype.AddToIsoWorld = function(child, layerNum)
@@ -20,9 +39,9 @@ GlassLab.RenderManager.prototype.AddToIsoWorld = function(child, layerNum)
     var layer = child._preOptimizedParent || GLOBAL.creatureLayer;
     if (typeof layerNum == "number")
     {
-        if (layerNum >= 0 && layerNum < this.renderLayer.length)
+        if (layerNum >= 0 && layerNum < this.layers.length)
         {
-            layer = this.renderLayer.children[layerNum];
+            layer = this.layers[layerNum];
         }
         else
         {
@@ -70,9 +89,9 @@ GlassLab.RenderManager.IsoObjectOffCamera = function(child)
 
 GlassLab.RenderManager.prototype.RemoveFromIsoWorld = function(child)
 {
-    if (!child.parent || child.parent.parent != this.renderLayer)
+    if (!child.parent)
     {
-        console.error("Tried to remove child that isn't currently managed by RenderManager");
+        console.error("RemoveFromIsoWorld called on child with no parent");
         return;
     }
 
@@ -146,6 +165,12 @@ GlassLab.RenderManager.prototype._updateDirtyLayers = function()
 GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj, layer)
 {
     layer = layer || obj.parent;
+
+    if (!layer.getIndex)
+    {
+        console.warn("Tried to sort object that isn't in a render layer");
+        return;
+    }
 
     var childIndex = layer.getIndex(obj);
     if (childIndex == -1)
