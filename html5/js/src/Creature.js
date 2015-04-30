@@ -380,6 +380,10 @@ GlassLab.Creature.prototype._onEndDrag = function () {
 GlassLab.Creature.prototype._onUpdate = function (dt) {
     if (this.state) this.state.Update(dt);
 
+    if (!this.previousPosition.equals(this.position))
+    {
+        GLOBAL.renderManager.UpdateIsoObjectSort(this);
+    }
 };
 
 GlassLab.Creature.prototype._setNextTargetPosition = function()

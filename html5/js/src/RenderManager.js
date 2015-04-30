@@ -43,6 +43,10 @@ GlassLab.RenderManager.prototype.AddToIsoWorld = function(child, layerNum)
     }
     else
     {
+        var childIndex = this.GetIsoObjectTargetIndex(child, layer);
+        layer.addAt(child, childIndex, true);
+        layer.GLASSLAB_BITMAP_DIRTY = true;
+        /*
         if (!layer.GLASSLAB_PENDING_ADD_CHILDREN)
         {
             layer.GLASSLAB_PENDING_ADD_CHILDREN = [child];
@@ -51,15 +55,16 @@ GlassLab.RenderManager.prototype.AddToIsoWorld = function(child, layerNum)
         {
             layer.GLASSLAB_PENDING_ADD_CHILDREN.push(child);
         }
+        */
     }
 };
 
 GlassLab.RenderManager.IsoObjectOffCamera = function(child)
 {
     var camera = GLOBAL.game.camera;
-    return child.x < (camera.x - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x &&
-        child.y < (camera.y - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y &&
-        child.x > (camera.x + camera.width + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x &&
+    return child.x < (camera.x - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x ||
+        child.y < (camera.y - GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y ||
+        child.x > (camera.x + camera.width + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.x ||
         child.y > (camera.y + camera.height + GLOBAL.tileSize) / GLOBAL.WorldLayer.scale.y;
 };
 
@@ -71,7 +76,7 @@ GlassLab.RenderManager.prototype.RemoveFromIsoWorld = function(child)
         return;
     }
 
-    this._preOptimizedParent = child.parent;
+    child._preOptimizedParent = child.parent;
     child.parent.removeChild(this);
 };
 
@@ -85,7 +90,7 @@ GlassLab.RenderManager.prototype._updateDirtyLayers = function()
     for (var i = GLOBAL.grassGroup.children.length-1; i >= 0; i--)
     {
         var renderLayer = GLOBAL.grassGroup.children[i];
-
+/*
         // first add children that are pending add
         if (renderLayer.GLASSLAB_PENDING_ADD_CHILDREN) // Property existence should denote at least one child
         {
@@ -126,7 +131,7 @@ GlassLab.RenderManager.prototype._updateDirtyLayers = function()
             delete renderLayer.GLASSLAB_PENDING_ADD_CHILDREN;
             renderLayer.GLASSLAB_BITMAP_DIRTY = true;
         }
-
+*/
         // Re-render if dirty
         if (renderLayer.cacheAsBitmap && renderLayer.GLASSLAB_BITMAP_DIRTY)
         {
@@ -193,4 +198,27 @@ GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj, layer)
     {
         layer.setChildIndex(obj, targetIndex);
     }
+};
+
+GlassLab.RenderManager.prototype.GetIsoObjectTargetIndex = function(obj, layer)
+{
+    layer = layer || obj.parent;
+
+    // Figure out whether or not we're sorting the object upward in array (1) or downward (-1)
+    var numChildren = layer.length;
+    var targetIndex = 0;
+    while (targetIndex < numChildren)
+    {
+        var neighbor = layer.getAt(targetIndex);
+        if (obj.y - neighbor.y > 0)
+        {
+            targetIndex++;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return targetIndex;
 };
