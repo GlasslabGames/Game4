@@ -30,12 +30,16 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 
     this.chomped = false;
 
-    if (this.eatBackwards) {
+    if (this.eatBackwards && !("eat_back" in this.creature.animSprites)) {
+        // bounce instead of animating
         var tween = this.game.make.tween(this.creature.sprite.scale).to({y: this.creature.spriteScaleY * 0.9}, 200, Phaser.Easing.Sinusoidal.InOut, true, 0, 4, true);
         tween.onLoop.addOnce(this._onChomp, this);
         tween.onComplete.addOnce(this.StopEating, this);
     } else {
-        this.anim = this.creature.PlayAnim("eat", false, this.creature.baseAnimSpeed, true); // restart if we were playing an eat anim
+        if (this.food.pen) this.creature.sprite.scale.x = - Math.abs(this.creature.sprite.scale.x);
+
+        var animName = (this.eatBackwards? "eat_back" : "eat");
+        this.anim = this.creature.PlayAnim(animName, false, this.creature.baseAnimSpeed, true); // restart if we were playing an eat anim
         if (this.anim) {
             this.anim.onComplete.addOnce(this.StopEating, this);
         } else {
