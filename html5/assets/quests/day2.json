@@ -95,7 +95,7 @@
               "serializedActions": [
                 {
                   "__type": "ShowAssistantDialogueAction",
-                  "text": "Very nice. Now *pull the red lever* to feed them."
+                  "text": "Very nice. Now *click on the pen* to feed them."
                 },
                 {
                   "__type": "WaitForCondition",

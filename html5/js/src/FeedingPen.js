@@ -254,7 +254,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 
             var numGroups = Math.floor(creatureRow.length / groupSize);
             var grouplessCreatures = creatureRow.length % groupSize;
-            console.log("numGroups",numGroups,"groupSize",groupSize,"grouplessCreatures",grouplessCreatures);
+            //console.log("numGroups",numGroups,"groupSize",groupSize,"grouplessCreatures",grouplessCreatures);
 
             // Then we can assign the rest of the food independently from the shared cols.
             var foodCount = foodRow.length; // how many whole pieces of food are left
@@ -293,11 +293,16 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     for (var row = 0; row < this.creatureSpots.length; row++) {
         var creatureRow = this.creatureSpots[row];
         if (!creatureRow) continue;
+        while (!creatureRow[0]) creatureRow.shift(); // the creatures might be offset b/c they are added from the right instead of the left
+
+        var numGroups = Math.floor(creatureRow.length / groupSize);
+        var grouplessCreatures = creatureRow.length % groupSize;
 
         for (var col = 0; col < creatureRow.length; col++) {
             var creature = creatureRow[col];
-            if (!creature) continue; // when there's an uneven number of creatures, the creatures might start at 1 instead of 0
-            var time = ((creatureRow.length - col) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
+            var inGroup = Math.floor((col - grouplessCreatures) / groupSize);
+            console.log(col, inGroup, numGroups - inGroup);
+            var time = ((numGroups - inGroup) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
             if (groupSize == 1 && creatureRow[col+1]) creature.creatureInFront = creatureRow[col+1]; // this is used to stop creatures from walking on top of each other
             this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
         }

@@ -19,12 +19,12 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.creature.draggableComponent.active = false;
 
-    // as long as we don't eat fractional food, run ahead to the first food we want (it's just too confusing with fractional food)
+    this.creature.sprite.scale.x = - Math.abs(this.creature.sprite.scale.x);
+
+    // run ahead to the first food we want
     var run = false;
-    if (!GLOBAL.creatureManager.getCreatureWantsFractionalFood(this.creature.type)) {
-        var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), this.creature.getGlobalPos());
-        run = (delta.getMagnitudeSq() >= GLOBAL.tileSize * GLOBAL.tileSize * 1.5625); // 1.5625 = 1.25^2, derived from when creatures leave this state and begin to eat food (.25 squares away))
-    }
+    var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), this.creature.getGlobalPos());
+    run = (delta.getMagnitudeSq() >= GLOBAL.tileSize * GLOBAL.tileSize * 1.5625); // 1.5625 = 1.25^2, derived from when creatures leave this state and begin to eat food (.25 squares away))
 
     // When far, run
     if (!run)
@@ -67,7 +67,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
         // Adjust the target position depending on our position in the eating group.
         var eatBackwards = (info.groupSize && info.groupIndex >= info.groupSize / 2);
         if (eatBackwards) {
-            foodPos.x += GLOBAL.tileSize * 0.5;
+            foodPos.x += GLOBAL.tileSize * 0.25;
             if (Math.floor(info.groupSize / 2) % 2 == 0) { // even number of creatures eating on this side
                 // checking if the group index is even will cause them to alternate higher and lower positions
                 if (info.groupIndex % 2) foodPos.y += GLOBAL.tileSize * 0.25;
