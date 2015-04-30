@@ -37,7 +37,7 @@ GlassLab.CreatureStateWaitingToEat.prototype.Exit = function() {
     if (this.timer) this.game.time.events.remove(this.timer);
     if (this.timer2) this.game.time.events.remove(this.timer2);
 
-    this.creature.thoughtBubble.hide();
+    // we might consider hiding the thoughtbubble now, but it caused issues (I think because a different thoughtbubble
 };
 
 GlassLab.CreatureStateWaitingToEat.prototype.stopWaiting = function() {
