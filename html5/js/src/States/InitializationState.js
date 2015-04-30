@@ -52,6 +52,9 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.image(spriteName+'_orderPhoto_wrongFood', 'assets/images/order/response_photos/order_response_photos_wrong_food_'+spriteName+'.png');
     }
 
+    game.load.atlasJSONHash('babybird_eat_back', 'assets/images/creatures/babybird_eatbf.png', 'assets/images/creatures/babybird_eatbf.json');
+    game.load.atlasJSONHash('bird_eat_back', 'assets/images/creatures/bird_eatbf.png', 'assets/images/creatures/bird_eatbf.json');
+
     var basicFoodSpriteNames = ["apple", "broccoli", "corn", "donut", "meat", "mushroom", "pizza", "strawberry", "taco", "tincan"];
     for (var i = 0; i < basicFoodSpriteNames.length; i++) {
         game.load.image(basicFoodSpriteNames[i], 'assets/images/food/food_standard/food_standard_'+basicFoodSpriteNames[i]+'.png');
