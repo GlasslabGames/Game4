@@ -222,7 +222,7 @@ GlassLab.UITable.prototype.getRowYCoord = function(rowNum) {
 };
 
 GlassLab.UITable.prototype.getWidth = function() {
-  var width = Math.max((this._columnLengths.length - 2) * this.padding, 0);
+  var width = Math.max((this._columnLengths.length - 1) * this.padding, 0);
   for (var j=0; j < this._columnLengths.length; j++)
   {
     width += this._columnLengths[j];

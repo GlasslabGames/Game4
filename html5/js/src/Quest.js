@@ -212,6 +212,13 @@ GlassLab.Quest.prototype.Cancel = function()
 {
     if (this.challenge != null)
     {
+        // Find deserialized challenge, remove it
+        for (var key in this.challenges) {
+            for (var index in this.challenges[key]) {
+                if (this.challenges[key][index] == this.challenge) delete this.challenges[key][index];
+            }
+        }
+
         this.challenge.Destroy();
         this.challenge = null;
     }
