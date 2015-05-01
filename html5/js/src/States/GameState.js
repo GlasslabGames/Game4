@@ -38,16 +38,19 @@ GlassLab.State.Game.prototype.create = function()
 
     //GLOBAL.transition.out();
 
-/*    GLOBAL.mailManager.currentOrder = {
+    GLOBAL.mailManager.rewardsPopup.show({
         "client": "Archibold Huxley III",
         "company": "Rupture Farms",
         //"numCreatures": 9,
-        //"numFoodA": 12,
+        "numFoodA":12,
         "creatureType": "baby_bird",
         "description": "blah *blah* blah",
-        "reward": 200
-    };
-    GLOBAL.mailManager.enterOrderFulfillment();*/
+        "reward": 200,
+        outcome: GlassLab.results.hungry,
+        outcomeDetail: ["meat"],
+        shipped: { numCreatures: 12, numFoodA: 10,
+        numFoodB: NaN, foodTypeA: "meat", foodTypeB: null }
+    });
 };
 
 GlassLab.State.Game.prototype.update = function()

@@ -23,6 +23,12 @@ GlassLab.RewardPopup = function(game)
     var fontStyle = {font: '11pt AmericanTypewriter', fill: "#807c7b"};
     var infoX = 5;
 
+    var receiptBg = game.make.sprite(-50, 105, "receiptBg");
+    this.addChild(receiptBg);
+    this.creatureEntry = receiptBg.addChild(new GlassLab.RewardReceiptEntry(this.game, 30, 60, true));
+    this.foodAEntry = receiptBg.addChild(new GlassLab.RewardReceiptEntry(this.game, 120, 60));
+    this.foodBEntry = receiptBg.addChild(new GlassLab.RewardReceiptEntry(this.game, 120, 95));
+
     this.clientLabel = game.make.text(infoX, -220, "From the desk of", fontStyle);
     this.addChild(this.clientLabel);
     this.clientNameLabel = game.make.text(infoX, this.clientLabel.y + 20, "Archibold Huxley I", fontStyle);
@@ -109,11 +115,30 @@ GlassLab.RewardPopup.prototype.show = function(data)
         string += " I’m afraid I can’t pay you for this unacceptable situation.";
     }
 
-    string += "\n\nSincerely,\n" + data.client;
+    // To make the name fit, we're going to get its initials here. We might need to consider another solution later.
+    var name = data.client;
+    if (name.length > 15) {
+        var nameParts = data.client.split(" ");
+        var initials = "";
+        var lastName = "";
+        for (var i = 0; i < nameParts.length; i++) {
+            if (/^[IVX]+$/.test(nameParts[i])) continue; // skip roman numerals (II, IV, etc)
+            lastName = nameParts[i];
+            initials += nameParts[i].substr(0, 1) + ". ";
+        }
+        name = initials.substr(0, initials.length - 3) + lastName; // try with the full last name
+        if (name.length > 15) name = initials; // just initials then
+    }
+
+    string += "\n\nSincerely,\n" + name;
 
     GlassLab.Util.SetColoredText(this.descriptionLabel, string, "#807c7b", "#994c4e");
 
     this.portrait.loadTexture(photo);
+
+    this.creatureEntry.set(this.data.creatureType, this.data.shipped.numCreatures, true, true);
+    this.foodAEntry.set(this.data.shipped.foodTypeA, this.data.shipped.numFoodA, true, true);
+    this.foodBEntry.set(this.data.shipped.foodTypeB, this.data.shipped.numFoodB, true, true);
 
     if (success) {
         GLOBAL.audioManager.playSound("successSound");
@@ -155,4 +180,50 @@ GlassLab.RewardPopup.prototype.hide = function()
 
 GlassLab.RewardPopup.prototype.finish = function() {
     this.hide();
+};
+
+/**
+ * RewardReceiptEntry
+ */
+GlassLab.RewardReceiptEntry = function(game, x, y, isCreature) {
+    Phaser.Sprite.prototype.constructor.call(this, game, x, y);
+
+    var tempSprite = (isCreature)? "babyram_sticker" : "broccoli_sticker";
+    this.sprite = this.addChild(game.make.sprite(0, 0, tempSprite));
+    var scale = (isCreature)? 0.3 : 0.6;
+    this.sprite.scale.setTo(scale, scale);
+    this.sprite.anchor.setTo(0, 0.5);
+
+    this.label = this.addChild(game.make.text(this.sprite.width + 5, 5, "x 16", {font: "12pt ArchitectsDaughter", fill: "#807c7b"}));
+    this.label.anchor.setTo(0, 0.5);
+
+    this.xMark = this.addChild(game.make.sprite(5, 0, "receiptX"));
+    this.xMark.anchor.setTo(0.5, 0.5);
+
+    this.isCreature = isCreature;
+};
+
+GlassLab.RewardReceiptEntry.prototype = Object.create(Phaser.Sprite.prototype);
+GlassLab.RewardReceiptEntry.prototype.constructor = GlassLab.RewardReceiptEntry;
+
+GlassLab.RewardReceiptEntry.prototype.set = function(type, number, typeIsCorrect, numberIsCorrect) {
+    this.visible = type;
+    if (!type) return;
+
+    var key;
+    if (this.isCreature) key = GLOBAL.creatureManager.GetCreatureData(type).spriteName + "_sticker";
+    else key = GlassLab.FoodTypes[type].spriteName + "_sticker";
+    this.sprite.loadTexture(key);
+
+    GlassLab.Util.SetCenteredText(this.label, "x "+number, 0);
+
+    if (!typeIsCorrect) {
+        this.xMark.visible = true;
+        this.xMark.x = 15;
+    } else if (!numberIsCorrect) {
+        this.xMark.visible = true;
+        this.xMark.x = this.label.x + 10 + (this.label.width * 0.5)
+    } else {
+        this.xMark.visible = false;
+    }
 };
