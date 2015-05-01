@@ -155,7 +155,12 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bigX', 'assets/images/matchingGame_x.png');
     game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
 
-    // New UI
+    game.load.image('pauseMenuBackground', 'assets/images/pause_menu/hud_pause_background.png');
+    game.load.image('pauseMenuButton', 'assets/images/pause_menu/hud_pause_button.png');
+    game.load.image('pauseMenuButtonOutline', 'assets/images/pause_menu/hud_pause_button_outline.png');
+    game.load.image('pauseMenuMusicIcon', 'assets/images/pause_menu/hud_pause_music_icon.png');
+    game.load.image('pauseMenuSFXIcon', 'assets/images/pause_menu/hud_pause_sfx_icon.png');
+
     game.load.image('hudSettingsBgRounded', 'assets/images/hud/hud_button_settings_rounded.png');
     game.load.image('hudSettingsBg', 'assets/images/hud/hud_button_settings_square.png');
     game.load.image('zoomInIcon', 'assets/images/hud/hud_icon_zoomin.png');
@@ -187,6 +192,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('paperClip', 'assets/images/order/shipping_ui_paper_clip.png');
     game.load.image('orderX', 'assets/images/order/shipping_ui_remove_item_x.png');
     game.load.image('orderHighlight', 'assets/images/order/shipping_ui_list_item_highlight.png');
+    game.load.image('keyboardTooltip', 'assets/images/order/keyboard_tooltip.png');
 
     game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
     game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');
@@ -341,7 +347,7 @@ GlassLab.State.Init.prototype.create = function()
 
     var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
-    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData, GLOBAL.grassGroup);
+    GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData);
 
     // Add clouds
     GLOBAL.cloudManager = new GlassLab.CloudManager(game);
@@ -410,9 +416,6 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.transition = new GlassLab.Transition(game);
     GLOBAL.UIManager.transitionAnchor.addChild(GLOBAL.transition);
-
-    //GLOBAL.debugText = game.make.text(-300,0,"test");
-    //GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.debugText);
 
     this.initComplete = true;
 };

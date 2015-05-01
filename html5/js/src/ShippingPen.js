@@ -105,7 +105,6 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     // Fill in the food to each section
     var startCol = this.widths[0];
     for (var i = 0, len = foodTypes.length; i < len; i++) {
-        if (!foodTypes[i]) continue;
         while (this.foodLists.length <= i) this.foodLists.push([]);
         var maxFood = (numFoods)? numFoods[i] : null;
         this.FillIn(GlassLab.Food.bind(null, this.game, foodTypes[i]), this.frontObjectRoot, this.foodLists[i], maxFood,
@@ -116,7 +115,6 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
         var unusedObjects = Array.prototype.concat.apply([], this.foodLists[j]);
         for (var i = unusedObjects.length-1; i >= 0; i--) {
             if (unusedObjects[i]) unusedObjects[i].visible = false;
-            else unusedObjects.splice(i, 1);
         }
     }
 

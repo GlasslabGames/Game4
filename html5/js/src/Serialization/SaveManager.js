@@ -133,5 +133,6 @@ GlassLab.SaveManager.prototype._doSave = function()
 
 GlassLab.SaveManager.prototype.EraseSave = function()
 {
-    document.cookie = null;
+    this.dataBlob = {};
+    this._doSave();
 };

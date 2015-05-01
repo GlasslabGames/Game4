@@ -508,7 +508,7 @@ GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
 };
 
 GlassLab.FeedingPen.prototype.checkPenStatus = function() {
-    if (this.feeding) return (this.canFeed = false);
+    if (this.feeding) return (this.canFeed = false); // intentional assignment
 
     var ok = (this.getNumCreatures() >= this.widths[0] * this.height) &&
         this.foodTypes.length == this.widths.length-1;
@@ -678,14 +678,25 @@ GlassLab.FeedingPen.prototype.forEachCreature = function(foo, argArray) {
 };
 
 GlassLab.FeedingPen.prototype._onMouseUp = function() {
-    if (!this.checkPenStatus()) return;
-
-    var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
-    this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
-    Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
-    var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
-    var section = this.getSection(tile);
-    if (section > 0) this._startFeedEffects();
+    if (this.checkPenStatus() || (this.feeding && !this.finished))
+    {
+        var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
+        this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
+        Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
+        var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
+        var section = this.getSection(tile);
+        if (section > 0)
+        {
+            if (this.feeding && !this.finished)
+            {
+                GLOBAL.levelManager.RestartLevel();
+            }
+            else
+            {
+                this._startFeedEffects();
+            }
+        }
+    }
 };
 
 // FIXME

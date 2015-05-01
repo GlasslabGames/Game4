@@ -40,6 +40,9 @@ GlassLab.UITextInput = function(game, inputType, spriteName, font, yOffset)
     this.clickHereLabel.alpha = .5;
     this.textLabel.addChild(this.clickHereLabel);
 
+    this.keyboardTooltip = null;
+    this.keyboardTooltipTween = null;
+
     this.events.onTextChange = new Phaser.Signal();
     this.enabled = true;
 };
@@ -47,6 +50,27 @@ GlassLab.UITextInput = function(game, inputType, spriteName, font, yOffset)
 // Extends Sprite
 GlassLab.UITextInput.prototype = Object.create(GlassLab.UIElement.prototype);
 GlassLab.UITextInput.prototype.constructor = GlassLab.UITextInput;
+
+/**
+ * @override
+ * @private
+ */
+GlassLab.UITextInput.prototype.SetFocus = function(onOrOff)
+{
+    GlassLab.UIElement.prototype.SetFocus.call(this, onOrOff);
+
+    if (onOrOff)
+    {
+        if (this.textLabel.text == "" || this.textLabel.text == " ") // Second check is because phaser puts a space in empty labels
+        {
+            this.ShowKeyboardTooltip();
+        }
+    }
+    else
+    {
+        this.HideKeyboardTooltip();
+    }
+};
 
 GlassLab.UITextInput.prototype._onClick = function()
 {
@@ -101,9 +125,43 @@ GlassLab.UITextInput.prototype._onFocusChanged = function()
     }
 };
 
+GlassLab.UITextInput.prototype.ShowKeyboardTooltip = function()
+{
+    if (!this.keyboardTooltip)
+    {
+        this.keyboardTooltip = this.game.make.sprite(0,0,"keyboardTooltip");
+        this.keyboardTooltip.anchor.setTo(.5, 1);
+
+        this.keyboardTooltip.x = this.width/2;
+        this.addChild(this.keyboardTooltip);
+    }
+
+    if (!this.keyboardTooltip.visible)
+    {
+        this.keyboardTooltip.visible = true;
+        this.keyboardTooltip.scale.y = 0;
+        this.keyboardTooltipTween = this.game.add.tween(this.keyboardTooltip.scale).to({y: 1}, 600, Phaser.Easing.Elastic.Out, true);
+        this.keyboardTooltipTween.onComplete.addOnce(function()
+        {
+            this.keyboardTooltipTween = null;
+        }, this);
+    }
+};
+
+GlassLab.UITextInput.prototype.HideKeyboardTooltip = function()
+{
+    if (this.keyboardTooltip && this.keyboardTooltip.visible)
+    {
+        this.keyboardTooltip.visible = false;
+        if (this.keyboardTooltipTween)
+        {
+            this.keyboardTooltipTween.stop(true);
+        }
+    }
+};
+
 GlassLab.UITextInput.prototype._onKeyDown = function(e)
 {
-    console.log(e.keyCode);
     if (this.hasFocus)
     {
         if (e.keyCode == 8) // backspace
@@ -149,6 +207,8 @@ GlassLab.UITextInput.prototype._addCharFromKeyboardEvent = function(e)
     {
         this.textLabel.setText(this.textLabel.text + char);
     }
+
+    this.HideKeyboardTooltip();
 
     this.events.onTextChange.dispatch(this.GetText());
 };
