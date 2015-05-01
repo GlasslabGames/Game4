@@ -82,7 +82,8 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
             var food1 = Math.round((desiredFood[0].amount / total) * response.totalFood);
             foodCounts.push( food1, response.totalFood - food1 );
         } else {
-            foodTypes.push(this.foodInputs[0].currentType, this.foodInputs[1].currentType);
+            foodTypes.push(this.foodInputs[0].currentType);
+            if (response.food.length > 1) foodTypes.push(this.foodInputs[1].currentType);
             foodCounts = response.food;
         }
 
