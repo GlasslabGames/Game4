@@ -94,7 +94,11 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     // else, show the pen with the correct dimensions of food
     if (response) {
         var numCreatures = response.shift();
-        var foodTypes = [this.answerInputs[1].currentType, this.answerInputs[2].currentType];
+        var foodTypes = [this.answerInputs[1].currentType];
+        if (this.answerInputs[2].currentType) // sometimes second type can be null
+        {
+            foodTypes.push(this.answerInputs[2].currentType);
+        }
         var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
         this.crate.setContents(this.data.creatureType, numCreatures, foodTypes, response, creatureWidth);
 

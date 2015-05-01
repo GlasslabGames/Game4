@@ -421,6 +421,5 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
 
     for (var i = unusedObjects.length-1; i >= 0; i--) {
         if (unusedObjects[i]) unusedObjects[i].visible = false;
-        else unusedObjects.splice(i, 1);
     }
 };
