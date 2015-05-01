@@ -297,15 +297,23 @@ GlassLab.OrderFulfillment.prototype._crateShipped = function() {
     numFoodB: this.crate.widths[2] * this.crate.height, foodTypeA: this.crate.foodTypes[0], foodTypeB: this.crate.foodTypes[1] };
     console.log(this.data.shipped);
 
-    if (this.crate.result == GlassLab.results.satisfied && this.data.totalNumFood) { // we need to check that the number of creatures is correct
-        var numCreatures = this._getResponse().creatures;
-        var targetNumCreatures = this._calculateTargetNumCreatures();
-        if (numCreatures < targetNumCreatures) {
-            this.data.outcome = GlassLab.results.wrongCreatureNumber;
-            this.data.outcomeDetail = "few"; // they sent too few creatures
-        } else if (numCreatures > targetNumCreatures) {
-            this.data.outcome = GlassLab.results.wrongCreatureNumber;
-            this.data.outcomeDetail = "many"; // they sent too many creatures
+    if (this.crate.result == GlassLab.results.satisfied) {
+        var response = this._getResponse();
+        if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
+            var numCreatures = this.response.creatures;
+            var targetNumCreatures = this._calculateTargetNumCreatures();
+            if (numCreatures < targetNumCreatures) {
+                this.data.outcome = GlassLab.results.wrongCreatureNumber;
+                this.data.outcomeDetail = "few"; // they sent too few creatures
+            } else if (numCreatures > targetNumCreatures) {
+                this.data.outcome = GlassLab.results.wrongCreatureNumber;
+                this.data.outcomeDetail = "many"; // they sent too many creatures
+            }
+        } else if (this.data.askTotalFood && !this.data.noFoodEntries) { // if they had to provide the total food and the food entries, check that they match
+            if (response.food[0] + response.food[1] != response.totalFood) {
+                this.data.outcome = GlassLab.results.wrongTotalFood;
+                this.data.outcomeDetail = response.totalFood;
+            }
         }
     }
     console.log("Crate shipped! Outcome:",this.data.outcome, "Problem:",this.data.outcomeDetail);
