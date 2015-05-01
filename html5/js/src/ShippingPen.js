@@ -76,6 +76,7 @@ GlassLab.ShippingPen.prototype.reset = function() {
 GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow) {
     console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow);
 
+    this.foodTypes = foodTypes;
     this.widths = [];
 
     // use the target creature width as set in order fulfillment, unless we have fewer creatures than that

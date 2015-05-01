@@ -84,7 +84,7 @@ GlassLab.LevelManager = function(game)
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
                 totalNumFood: 45,
-                noFoodEntries: true,
+                //noFoodEntries: true,
                 creatureType: "bird",
                 description: "Dear Friend! My island has 7 RAMS. I have heard you know HOW MANY CARROTS I need FOR EACH. Send me the correct NUMBER OF CARROTS, would you? I will pay you well!",
                 fulfilled: false,
