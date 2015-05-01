@@ -235,7 +235,6 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     var desiredFood = this.creatureSpots[0][0].desiredAmountsOfFood; // we can't feed if all spots aren't filled in with the same type of creature, so this should work
     var info = GLOBAL.creatureManager.GetCreatureData(this.creatureSpots[0][0].type);
     var groupSize = info.eatingGroup || 1;
-    console.log("Feeding creatures",info);
 
     // For each section of food, calculate which foods should go to which creatures
     for (var i = 0; i < this.foodTypes.length; i++) {
@@ -254,7 +253,6 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
 
             var numGroups = Math.floor(creatureRow.length / groupSize);
             var grouplessCreatures = creatureRow.length % groupSize;
-            //console.log("numGroups",numGroups,"groupSize",groupSize,"grouplessCreatures",grouplessCreatures);
 
             // Then we can assign the rest of the food independently from the shared cols.
             var foodCount = foodRow.length; // how many whole pieces of food are left
@@ -281,7 +279,6 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
                                 return;
                             }
                             creatureRow[creatureCol].addTargetFood(foodRow[foodCol], groupIndex, groupSize); // indicate this creature's position in the group
-                            //console.log("Food",foodCol,"to creature",creatureCol,"in group", group, groupIndex);
                         }
                     }
                 }
@@ -301,7 +298,6 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         for (var col = 0; col < creatureRow.length; col++) {
             var creature = creatureRow[col];
             var inGroup = Math.floor((col - grouplessCreatures) / groupSize);
-            console.log(col, inGroup, numGroups - inGroup);
             var time = ((numGroups - inGroup) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
             if (groupSize == 1 && creatureRow[col+1]) creature.creatureInFront = creatureRow[col+1]; // this is used to stop creatures from walking on top of each other
             this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
@@ -462,7 +458,6 @@ GlassLab.FeedingPen.prototype.tryRemoveCreature = function(creature) {
         console.error(creature.name,"wanted to leave the pen but it's not in the pen!");
         return false;
     }
-    console.log("Found creature to remove. Now spots:",this.creatureSpots);
     this._removeCreature(creature);
     this._onCreatureContentsChanged();
     return true;
@@ -475,7 +470,6 @@ GlassLab.FeedingPen.prototype._removeCreature = function(creature, offset) {
         creature.isoY = creature.isoY - offset.y;
     }
     var tile = creature.getTile();
-    //console.log("removing creature at",tile.col, tile.row);
     GLOBAL.creatureLayer.addChild(creature);
     GLOBAL.renderManager.UpdateIsoObjectSort(creature);
     creature.setIsoPos(tile.isoX, tile.isoY); // set the position so it stays on the tile it was over while in the pen

@@ -271,6 +271,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('failSound', 'assets/audio/sfx/lose_mini_game.mp3');
     game.load.audio('successSound', 'assets/audio/sfx/win_mini_game.mp3');
     game.load.audio('clickSound', 'assets/audio/sfx/general_click.mp3');
+    game.load.audio('buttonClickSound', 'assets/audio/sfx/button_click.mp3');
     game.load.audio('popUpSound', 'assets/audio/sfx/pop_up_notification.mp3');
     game.load.audio('gateDropSound', 'assets/audio/sfx/drop_pen_gate.mp3');
     game.load.audio('mailNoticeSound', 'assets/audio/sfx/mail_notice.mp3');

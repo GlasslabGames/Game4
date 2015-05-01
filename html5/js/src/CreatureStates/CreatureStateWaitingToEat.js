@@ -46,6 +46,5 @@ GlassLab.CreatureStateWaitingToEat.prototype.stopWaiting = function() {
 };
 
 GlassLab.CreatureStateWaitingToEat.prototype.eat = function() {
-    console.log(this.creature.name,"eating");
     this.creature.StateTransitionTo(new GlassLab.CreatureStateEating(this.game, this.creature, this.foodInfo));
 };

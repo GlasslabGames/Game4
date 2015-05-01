@@ -83,6 +83,7 @@ GlassLab.Assistant.prototype._tryOpen = function() {
 };
 
 GlassLab.Assistant.prototype._startOpening = function() {
+    GLOBAL.audioManager.playSound("buttonClickSound");
     this.sprite.visible = true;
     this.visibilityState == "opening";
     var anim = this.portrait.play("in");
