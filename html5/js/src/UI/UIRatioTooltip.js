@@ -178,6 +178,7 @@ GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
     if (message == "outerEdge") this.messageText.text = "Click/drag to resize";
     else if (message == "innerEdge") this.messageText.text = "Click/drag to change food ratio";
     else if (message == "readyPen") this.messageText.text = "Click to feed";
+    else if (message == "feeding") this.messageText.text = "Click to cancel";
 
     this.bgLeft.loadTexture( this.messageText.visible? "penTooltipCapTall" : "penTooltipCap");
     this.bgRight.loadTexture( this.messageText.visible? "penTooltipCapTall" : "penTooltipCap");
@@ -214,12 +215,27 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
     if (GLOBAL.dragTarget) {
         if (GLOBAL.dragTarget instanceof GlassLab.Edge) {
             currentPen = GLOBAL.dragTarget.pen;
-            message = GLOBAL.dragTarget.getIsInnerEdge()? "innerEdge" : "outerEdge";
+            if (currentPen.feeding && !currentPen.finished)
+            {
+                message = "feeding";
+            }
+            else
+            {
+                message = GLOBAL.dragTarget.getIsInnerEdge()? "innerEdge" : "outerEdge";
+            }
         }
         // Else, we're dragging something else, so don't show a tooltip
     } else if (GLOBAL.overTarget && GLOBAL.overTarget instanceof GlassLab.Edge) {
+
         currentPen = GLOBAL.overTarget.pen;
-        message = GLOBAL.overTarget.getIsInnerEdge()? "innerEdge" : "outerEdge";
+        if (currentPen.feeding && !currentPen.finished)
+        {
+            message = "feeding";
+        }
+        else
+        {
+            message = GLOBAL.overTarget.getIsInnerEdge()? "innerEdge" : "outerEdge";
+        }
     } else {
         var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
         this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
@@ -227,7 +243,14 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen) {
             currentPen = tileSprite.inPen;
-            if (currentPen.canFeed && currentPen.getSection(tileSprite) > 0) message = "readyPen";
+            if (currentPen.feeding && !currentPen.finished)
+            {
+                message = "feeding";
+            }
+            else if (currentPen.canFeed && currentPen.getSection(tileSprite) > 0)
+            {
+                message = "readyPen";
+            }
         }
     }
 
