@@ -30,6 +30,7 @@ GlassLab.Quest = function(name, data)
 
     this.backgroundOrders = data.backgroundOrders;
     this.unlockedFood = data.unlockedItems;
+    this.hideBackgroundOrders = data.hideBackgroundOrders;
 
     GLOBAL.questManager.questsByName[this.name] = this;
 
@@ -84,6 +85,8 @@ GlassLab.Quest.prototype.Start = function()
 
         this._startNextChallenge();
     }
+
+    GLOBAL.UIManager.mailButton.visible = !this.hideBackgroundOrders;
 };
 
 GlassLab.Quest.prototype._hasNextChallenge = function(category) {
