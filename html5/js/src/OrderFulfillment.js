@@ -222,18 +222,17 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
     this.creatureInput.currentType = this.data.creatureType;
     this.creatureInput.trySetValue(this.data.numCreatures);
 
-    // calculate the correct food division so that we can show it in the pen later
-/*    var total = desiredFood[0].amount + desiredFood[1].amount;
-    this.data.numFoodA = (desiredFood[0].amount / total) * this.data.totalNumFood;
-    this.data.numFoodB = (desiredFood[1].amount / total) * this.data.totalNumFood;*/
-
-    this.foodInputs[0].currentType = (this.data.numFoodA || this.data.noFoodEntries)? desiredFood[0].type : null;
-    this.foodInputs[0].trySetValue(this.data.numFoodA);
-
-    this.foodInputs[1].currentType = (this.data.numFoodB || this.data.noFoodEntries)? desiredFood[1].type : null;
-    this.foodInputs[1].trySetValue(this.data.numFoodB);
-
     this._refreshfoodInputs();
+
+    if (this.foodInputs[0].visible) {
+        this.foodInputs[0].currentType = (this.data.numFoodA || this.data.noFoodEntries)? desiredFood[0].type : null;
+        this.foodInputs[0].trySetValue(this.data.numFoodA);
+    }
+
+    if (this.foodInputs[1].visible) {
+        this.foodInputs[1].currentType = (this.data.numFoodB || this.data.noFoodEntries) ? desiredFood[1].type : null;
+        this.foodInputs[1].trySetValue(this.data.numFoodB);
+    }
 
     this._refreshPen();
 
