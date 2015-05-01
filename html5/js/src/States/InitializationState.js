@@ -195,6 +195,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('urgentStamp', 'assets/images/order/urgent_stamp.png');
     game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
     game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
+    game.load.image('receiptBg', 'assets/images/order/shipping_receipt_background.png');
+    game.load.image('receiptX', 'assets/images/order/shipping_receipt_x.png');
+
     game.load.image('bigCoin', 'assets/images/order/order_response_big_coin.png');
     game.load.atlasJSONHash('coinAnim', 'assets/images/order/get_money.png', 'assets/images/order/get_money.json');
 

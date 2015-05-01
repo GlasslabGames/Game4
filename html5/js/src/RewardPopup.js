@@ -23,6 +23,12 @@ GlassLab.RewardPopup = function(game)
     var fontStyle = {font: '11pt AmericanTypewriter', fill: "#807c7b"};
     var infoX = 5;
 
+    var receiptBg = game.make.sprite(-50, 105, "receiptBg");
+    this.addChild(receiptBg);
+    this.creatureEntry = receiptBg.addChild(new GlassLab.RewardReceiptEntry(this.game, 30, 60, true));
+    this.foodAEntry = receiptBg.addChild(new GlassLab.RewardReceiptEntry(this.game, 120, 60));
+    this.foodBEntry = receiptBg.addChild(new GlassLab.RewardReceiptEntry(this.game, 120, 95));
+
     this.clientLabel = game.make.text(infoX, -220, "From the desk of", fontStyle);
     this.addChild(this.clientLabel);
     this.clientNameLabel = game.make.text(infoX, this.clientLabel.y + 20, "Archibold Huxley I", fontStyle);
@@ -109,11 +115,56 @@ GlassLab.RewardPopup.prototype.show = function(data)
         string += " I’m afraid I can’t pay you for this unacceptable situation.";
     }
 
-    string += "\n\nSincerely,\n" + data.client;
+    // To make the name fit, we're going to get its initials here. We might need to consider another solution later.
+    var name = data.client;
+    if (name.length > 15) {
+        var nameParts = data.client.split(" ");
+        var initials = "";
+        var lastName = "";
+        for (var i = 0; i < nameParts.length; i++) {
+            if (/^[IVX]+$/.test(nameParts[i])) continue; // skip roman numerals (II, IV, etc)
+            lastName = nameParts[i];
+            initials += nameParts[i].substr(0, 1) + ". ";
+        }
+        name = initials.substr(0, initials.length - 3) + lastName; // try with the full last name
+        if (name.length > 15) name = initials; // just initials then
+    }
+
+    string += "\n\nSincerely,\n" + name;
 
     GlassLab.Util.SetColoredText(this.descriptionLabel, string, "#807c7b", "#994c4e");
 
     this.portrait.loadTexture(photo);
+
+    // Now we need to set up the receipt. First set the shipped type and amount for each
+    this.creatureEntry.set(data.creatureType, data.shipped.numCreatures, true, true);
+    this.foodAEntry.set(data.shipped.foodTypeA, data.shipped.numFoodA, true, true);
+    this.foodBEntry.set(data.shipped.foodTypeB, data.shipped.numFoodB, true, true); // if foodTypeB is null, the entry will be hidden
+
+    // Then show an X over the entries that were wrong.
+    if (data.outcome == GlassLab.results.dislike) { // at least one of the food types was wrong, so check both
+        var checkIfDesiredFood = function(foodType) {
+            for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
+                if (creatureInfo.desiredFood[i].type == foodType) return true;
+            }
+            return false;
+        };
+        if (!checkIfDesiredFood(data.shipped.foodTypeA)) this.foodAEntry.setX(false, true);
+        if (!checkIfDesiredFood(data.shipped.foodTypeB)) this.foodBEntry.setX(false, true);
+    } else if (data.outcome == GlassLab.results.wrongCreatureNumber) { // this is the case where they used the right ratio, but not one that matched the given totalFood
+        this.creatureEntry.setX(true, false);
+    } else if (data.outcome != GlassLab.results.satisfied) { // else if something else wrong
+        // The creature is the one that's wrong if it's not total food, or there were no food entries, or the food they entered matches the total food.
+        if (creatureAsk && (!data.totalNumFood || data.noFoodEntries || (data.shipped.numFoodA + (data.shipped.numFoodB || 0) == data.totalNumFood))) {
+            // if it's wrong, and they had to fill in the number of creatures, they must have got that wrong
+            this.creatureEntry.setX(true, false);
+        } else { // One or both foods were wrong, so check the details (problemFoods) to find out which ones
+            for (var i = 0; i < detail.length; i++) {
+                if (detail[i] == this.data.shipped.foodTypeA) this.foodAEntry.setX(true, false);
+                else if (detail[i] == this.data.shipped.foodTypeB) this.foodBEntry.setX(true, false);
+            }
+        }
+    }
 
     if (success) {
         GLOBAL.audioManager.playSound("successSound");
@@ -155,4 +206,58 @@ GlassLab.RewardPopup.prototype.hide = function()
 
 GlassLab.RewardPopup.prototype.finish = function() {
     this.hide();
+};
+
+/**
+ * RewardReceiptEntry
+ */
+GlassLab.RewardReceiptEntry = function(game, x, y, isCreature) {
+    Phaser.Sprite.prototype.constructor.call(this, game, x, y);
+
+    var tempSprite = (isCreature)? "babyram_sticker" : "broccoli_sticker";
+    this.sprite = this.addChild(game.make.sprite(0, 0, tempSprite));
+    var scale = (isCreature)? 0.3 : 0.6;
+    this.sprite.scale.setTo(scale, scale);
+    this.sprite.anchor.setTo(0, 0.5);
+
+    this.xLabel = this.addChild(game.make.text(this.sprite.width + 5, 5, "x ", {font: "12pt ArchitectsDaughter", fill: "#807c7b"}));
+    this.xLabel.anchor.setTo(0, 0.5);
+    this.label = this.addChild(game.make.text(this.xLabel.x + this.xLabel.width, 5, "16", {font: "12pt ArchitectsDaughter", fill: "#807c7b"}));
+    this.label.anchor.setTo(0.5, 0.5);
+
+    this.xMark = this.addChild(game.make.sprite(5, 0, "receiptX"));
+    this.xMark.anchor.setTo(0.5, 0.5);
+
+    this.isCreature = isCreature;
+};
+
+GlassLab.RewardReceiptEntry.prototype = Object.create(Phaser.Sprite.prototype);
+GlassLab.RewardReceiptEntry.prototype.constructor = GlassLab.RewardReceiptEntry;
+
+GlassLab.RewardReceiptEntry.prototype.set = function(type, number, typeIsCorrect, numberIsCorrect) {
+    this.visible = type;
+    if (!type) return;
+
+    var key;
+    if (this.isCreature) key = GLOBAL.creatureManager.GetCreatureData(type).spriteName + "_sticker";
+    else key = GlassLab.FoodTypes[type].spriteName + "_sticker";
+    this.sprite.loadTexture(key);
+
+    this.label.text = number;
+    this.label.x = this.xLabel.x + this.xLabel.width + (this.label.width / 2);
+    GlassLab.Util.SetCenteredText(this.label, number);
+
+    this.setX(typeIsCorrect, numberIsCorrect);
+};
+
+GlassLab.RewardReceiptEntry.prototype.setX = function(typeIsCorrect, numberIsCorrect) {
+    if (!typeIsCorrect) {
+        this.xMark.visible = true;
+        this.xMark.x = 15;
+    } else if (!numberIsCorrect) {
+        this.xMark.visible = true;
+        this.xMark.x = this.label.x;
+    } else {
+        this.xMark.visible = false;
+    }
 };
