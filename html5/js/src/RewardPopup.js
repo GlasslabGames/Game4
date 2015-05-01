@@ -103,6 +103,10 @@ GlassLab.RewardPopup.prototype.show = function(data)
             string += "I asked you to send the correct number of "+ creatures + " to eat "+ numTotalFood +" total food, but you sent too "+data.outcomeDetail+" "+ creatures + "!";
             photo += "cry";
             break;
+        case GlassLab.results.wrongTotalFood:
+            string += "You wrote on the Packing Slip that your shipment contained "+detail+" total food, but you didn't actually send that amount!";
+            photo += "cry";
+            break;
     }
 
     // Now if the result was sick or hungry, we might need to include info about the second kind of food as well.

@@ -7,10 +7,11 @@ GlassLab = GlassLab || {};
 /**
  * OrderFulfillmentSlot - an entry where the player can set / clear a food type and then enter the number
  */
-GlassLab.OrderFulfillmentSlot = function(game, x, y, i, isCreatureSlot) {
+GlassLab.OrderFulfillmentSlot = function(game, x, y, i, cantChangeType, isTotalFoodSlot) {
     GlassLab.UIButton.prototype.constructor.call(this, game, x, y);
     this.index = i;
     this.enabled = true;
+    this.isTotalFoodSlot = isTotalFoodSlot;
 
     this.highlight = game.make.sprite(0, -5, "orderHighlight");
     this.addChild(this.highlight);
@@ -32,13 +33,9 @@ GlassLab.OrderFulfillmentSlot = function(game, x, y, i, isCreatureSlot) {
 
     this.sprite = game.make.sprite(30, 20, "apple");
     this.sprite.anchor.setTo(.5, .5);
-    if (isCreatureSlot) {
-        this.sprite.scale.setTo(0.5, 0.5);
-        this.sprite.y -= 3;
-    }
     this.addChild(this.sprite);
 
-    if (!isCreatureSlot) { // the first input is for creatures, so we don't have to drag anything onto it
+    if (!cantChangeType) {
         var dragTarget = new GlassLab.UIDragTarget(game, 160, 50, "orderDragTarget");
         dragTarget.x = 5;
         dragTarget.y = 0;
@@ -73,7 +70,7 @@ GlassLab.OrderFulfillmentSlot = function(game, x, y, i, isCreatureSlot) {
     this.currentTweens = {}; // dictionary of tweens that may be active
 
     this.canEnterValue = true;
-    this.canSetType = (!isCreatureSlot);
+    this.canSetType = (!cantChangeType);
 
     this.onFoodSet = new Phaser.Signal();
 
@@ -158,14 +155,18 @@ GlassLab.OrderFulfillmentSlot.prototype.refresh = function(hide) {
     if (this.clearButton) this.clearButton.visible = this.currentType;
 
     // otherwise show the sprite
-    this.sprite.visible = true;
-    var spriteName;
+    var spriteName = null;
     if (this.currentType in GlassLab.FoodTypes) {
         spriteName = GlassLab.FoodTypes[this.currentType].spriteName + "_sticker";
-    } else {
+    } else if (this.currentType in GLOBAL.creatureManager.creatureDatabase) {
         spriteName = GLOBAL.creatureManager.GetCreatureData(this.currentType).spriteName + "_sticker";
+        if (this.isTotalFoodSlot) spriteName = "totalFood_"+spriteName;
     }
-    if (this.sprite.spriteName != spriteName) this.sprite.loadTexture( spriteName );
+    if (!spriteName) this.sprite.visible = false;
+    else if (this.sprite.spriteName != spriteName) {
+        this.sprite.loadTexture(spriteName);
+        this.sprite.visible = true;
+    }
 
     // and show either an entry field or a label, depending on whether the player can enter their own value
     this.answerInput.visible = this.canEnterValue;
