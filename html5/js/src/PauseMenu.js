@@ -17,63 +17,23 @@ GlassLab.PauseMenu = function(game, x, y)
     this.addChild(this.bg);
 
     this.resumeButton = new GlassLab.HUDButton(this.game, 0, -110, null, "pauseMenuButton", "RESUME GAME", {font: "14pt EnzoBlack"}, true, this.toggle, this);
+    this.resumeButton.addOutline("pauseMenuButtonOutline");
     this.addChild(this.resumeButton);
-    this.buttonHighlight = this.game.make.sprite(0,0,"pauseMenuButtonOutline");
-    this.buttonHighlight.anchor.setTo(.5, .5);
-    this.resumeButton.addChild(this.buttonHighlight);
-    this.resumeButton.events.onInputOver.add(function()
-    {
-        this.tint = 0xFFFFFF;
-    }, this.buttonHighlight);
-    this.resumeButton.events.onInputOut.add(function()
-    {
-        this.tint = 0xCCCCCC;
-    }, this.buttonHighlight);
 
     this.musicButton = new GlassLab.HUDButton(this.game, 0, 25, "pauseMenuMusicIcon", "pauseMenuButton", "TURN MUSIC OFF", {font: "14pt EnzoBlack"}, true, this._onMusicButton, this);
+    this.musicButton.addOutline("pauseMenuButtonOutline");
     this.addChild(this.musicButton);
-    this.buttonHighlight = this.game.make.sprite(0,0,"pauseMenuButtonOutline");
-    this.buttonHighlight.anchor.setTo(.5, .5);
-    this.musicButton.addChild(this.buttonHighlight);
-    this.musicButton.events.onInputOver.add(function()
-    {
-        this.tint = 0xFFFFFF;
-    }, this.buttonHighlight);
-    this.musicButton.events.onInputOut.add(function()
-    {
-        this.tint = 0xCCCCCC;
-    }, this.buttonHighlight);
 
     this.soundButton = new GlassLab.HUDButton(this.game, 0, 95, "pauseMenuSFXIcon", "pauseMenuButton", "TURN SFX OFF", {font: "14pt EnzoBlack"}, true, this._onSoundButton, this);
+    this.soundButton.addOutline("pauseMenuButtonOutline");
     this.addChild(this.soundButton);
-    this.buttonHighlight = this.game.make.sprite(0,0,"pauseMenuButtonOutline");
-    this.buttonHighlight.anchor.setTo(.5, .5);
-    this.soundButton.addChild(this.buttonHighlight);
-    this.soundButton.events.onInputOver.add(function()
-    {
-        this.tint = 0xFFFFFF;
-    }, this.buttonHighlight);
-    this.soundButton.events.onInputOut.add(function()
-    {
-        this.tint = 0xCCCCCC;
-    }, this.buttonHighlight);
 
     this.restartButton = new GlassLab.HUDButton(this.game, 0, 165, null, "pauseMenuButton", "RESTART GAME", {font: "14pt EnzoBlack"}, true, function()
     {
         this.restartModal.show();
     }, this);
+    this.restartButton.addOutline("pauseMenuButtonOutline");
     this.addChild(this.restartButton);
-    this.buttonHighlight = this.game.make.sprite(0,0,"pauseMenuButtonOutline");
-    this.buttonHighlight.anchor.setTo(.5, .5);
-    this.restartButton.addChild(this.buttonHighlight);
-    this.restartButton.events.onInputOver.add(function()
-    {
-        this.tint = 0xFFFFFF;
-    }, this.buttonHighlight);
-    this.restartButton.events.onInputOut.add(function()
-    {
-        this.tint = 0xCCCCCC;
-    }, this.buttonHighlight);
 
     this.confirmRestartButton = new GlassLab.UIRectButton(this.game, 0, 0, function()
     {
