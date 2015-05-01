@@ -70,6 +70,12 @@ GlassLab.HUDButton = function(game, x, y, imageSprite, bgSprite, text, fontStyle
             this.fontStyle.fill = "#"+this.imageColor.toString(16);
             this.label.setStyle(this.fontStyle);
         }
+
+        if (imageSprite)
+        {
+            this.label.x = this.image.width/2+5;
+            this.image.x = -this.label.width/2-5;
+        }
     }
 
     // Note that UIButton adds all input handlers

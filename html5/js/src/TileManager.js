@@ -132,6 +132,11 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
             }
         }
     }
+
+    if (GLOBAL.groundLayer.cacheAsBitmap)
+    {
+        GLOBAL.groundLayer.GLASSLAB_BITMAP_DIRTY = true;
+    }
 };
 
 GlassLab.TileManager.prototype.SetCenter = function(x, y)
