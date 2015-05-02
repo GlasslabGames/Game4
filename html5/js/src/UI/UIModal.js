@@ -24,7 +24,7 @@ GlassLab.UIModal = function(game, text, buttons)
         this.table.addManagedChild(buttons[i], i == len-1); // refresh on the last one
     }
 
-    this.label = game.make.text(0, this.borderPadding, text, {font: "bold 20px Arial"});
+    this.label = game.make.text(0, this.borderPadding, text, {font: "20px EnzoBlack", fill:"#cccccc"});
     this.label.anchor.setTo(.5, 0);
 
     this.bg = game.make.graphics();
@@ -73,7 +73,7 @@ GlassLab.UIModal.prototype.resize = function() {
     if (this.label.height > 0) this.table.y = this.borderPadding + this.label.height + this.innerPadding;
 
     this.bg.clear();
-    this.bg.beginFill(0xffffff).lineStyle(3, 0x000000).drawRect(0,0,width,height);
+    this.bg.beginFill(0x000000, .8).drawRect(0,0,width,height);
 
     this.root.x = -0.5 * width;
     this.root.y = -0.5 * height;
