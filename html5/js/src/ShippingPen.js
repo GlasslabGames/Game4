@@ -73,12 +73,15 @@ GlassLab.ShippingPen.prototype.reset = function() {
 };
 
 // Adds the specified number of creatures and food
-GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow) {
-    console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow);
+// If hideCreatures or hideFood is true, then all those contents will be hidden except for one row (used for hints)
+GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, hideFood) {
+    console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, hideFood);
 
     this.foodTypes = foodTypes;
     this.widths = [];
 
+    // TODO: fix hideCreatures and hideFood
+    
     // use the target creature width as set in order fulfillment, unless we have fewer creatures than that
     if (targetCreatureWidth) this.widths[0] = Math.min(targetCreatureWidth, numCreatures);
     else this.widths[0] = numCreatures;

@@ -36,7 +36,22 @@ GlassLab.State.Game.prototype.create = function()
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
 
-    GLOBAL.transition.out();
+    //GLOBAL.transition.out();
+
+    GLOBAL.mailManager.currentOrder = {
+        "client": "Archibold Huxley III",
+        "company": "Rupture Farms",
+        "numCreatures": 2,
+        //"numFoodA": 8,
+        "askTotalFood": true,
+        "noFoodEntries": true,
+        //"totalNumFood": 72,
+        "creatureType": "rammus",
+        "description": "blah *blah* blah",
+        "reward": 200,
+        hint: 2
+    };
+    GLOBAL.mailManager.enterOrderFulfillment();
 };
 
 GlassLab.State.Game.prototype.update = function()

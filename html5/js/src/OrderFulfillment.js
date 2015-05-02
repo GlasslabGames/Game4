@@ -71,7 +71,7 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     this.crate.reset();
 
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-    var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
+    var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).eatingGroup || 1;
 
     if (response) {
         // If noFoodEntries is true, we have to figure out what foodTypes and counts to use
@@ -88,28 +88,20 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
         }
 
         this.crate.setContents(this.data.creatureType, response.creatures, foodTypes, foodCounts, creatureWidth);
-        this.focusCamera();
-    } else if (this.data.hint) { // for a hint, show one row of food
-        // if hint is true, we have two options
-        // if numCreatures is provided, add one row of food.
-        // else, show the pen with the correct dimensions of food
+    } else if (this.data.hint) {
+        // hint 1: a single complete row, with a total food popup if applicable
+        // hint 2: a full size pen with the known info filled in as well as a single complete row (with total food popup if applicable)
+        var creatureCount = (this.data.hint == 1)? creatureWidth : this._calculateTargetNumCreatures();
 
-        var creatureMult; // determines how much food to show.
-        if (this.data.numCreatures) { // when the number of creatures is provided, give them a hint of a single row of food
-            creatureMult = creatureWidth;
-        } else {
-            creatureMult = this._calculateTargetNumCreatures(); // otherwise, give them enough food for all the creatures.
+        var foodTypes = [ desiredFood[0].type ];
+        var foodCounts = [ desiredFood[0].amount * creatureCount ];
+        if (desiredFood.length > 1) {
+            foodTypes.push( desiredFood[1].type );
+            foodCounts.push( desiredFood[1].amount * creatureCount );
         }
 
-        var foodCounts = [desiredFood[0].amount * creatureMult];
-        var foodTypes = [desiredFood[0].type];
-        if (desiredFood[1]) {
-            foodCounts[1] = desiredFood[1].amount * creatureMult;
-            foodTypes[1] = desiredFood[1].type;
-        }
-        this.crate.setContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
-            creatureWidth, !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
-
+        this.crate.setContents(this.data.creatureType, creatureCount, foodTypes, foodCounts, creatureWidth,
+            !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, hideFood)
     } else if (this.crate) { // we have a pen with no purpose, so remove it
         this.crate.hide();
     }

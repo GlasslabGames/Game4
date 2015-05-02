@@ -138,7 +138,7 @@ GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
     this.failureCount ++;
 
-    this.challenge.Do(true, (this.failureCount >= 3)); // re-do the current challenge, with constraints if we've made more than 3 attempts
+    this.challenge.Do(true, (this.failureCount >= 3), this.failureCount); // re-do the current challenge, with constraints if we've made more than 3 attempts
 
     this._saveQuestState();
 };
