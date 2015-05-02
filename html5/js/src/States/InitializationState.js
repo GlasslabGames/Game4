@@ -156,6 +156,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('pauseMenuButtonOutline', 'assets/images/pause_menu/hud_pause_button_outline.png');
     game.load.image('pauseMenuMusicIcon', 'assets/images/pause_menu/hud_pause_music_icon.png');
     game.load.image('pauseMenuSFXIcon', 'assets/images/pause_menu/hud_pause_sfx_icon.png');
+    game.load.image('bigButtonOutline', 'assets/images/pause_menu/modal_big_button_outline.png');
+    game.load.image('bigButton', 'assets/images/pause_menu/modal_button_bg.png');
 
     game.load.image('hudSettingsBgRounded', 'assets/images/hud/hud_button_settings_rounded.png');
     game.load.image('hudSettingsBg', 'assets/images/hud/hud_button_settings_square.png');
