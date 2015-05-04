@@ -44,7 +44,10 @@ GlassLab.CreatureStateIdle.prototype._findNewDestination = function()
     {
       if (j==0 && i == 0) continue;
       var tile = GLOBAL.tileManager.GetTile(currentTile.col + i, currentTile.row + j);
-      if (tile && tile.getIsWalkable()) possibleTiles.push(tile);
+      if (tile && tile.getIsWalkable())
+      {
+          possibleTiles.push(tile);
+      }
     }
   }
 
@@ -61,7 +64,7 @@ GlassLab.CreatureStateIdle.prototype._setNewDestination = function(tile) {
 
   this.findDestinationHandler = null;
 
-  if (GLOBAL.debug) this.tint = 0x00ff00;
+  if (GLOBAL.debug) tile.tint = 0x00ff00;
   this.creature.PathToTile(tile);
 };
 

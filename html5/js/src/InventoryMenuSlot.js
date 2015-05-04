@@ -130,15 +130,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             // TODO GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row}); // Incorrect name
         }
     } else if (!this.data.unlocked && this.data.cost > 0) {
-        if (!this.modal) {
-            var yesButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseConfirmed, this, 150, 60, 0xffffff, "Yes");
-            var noButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onPurchaseCanceled, this, 150, 60, 0xffffff, "No");
-
-            this.modal = new GlassLab.UIModal(this.game, "Purchase for " + this.cost_display + "?", [yesButton, noButton]);
-            GLOBAL.UIManager.centerAnchor.addChild(this.modal);
-        }
-
-        this.modal.show();
+        this._onPurchaseConfirmed();
     }
 };
 

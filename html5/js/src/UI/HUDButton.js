@@ -89,6 +89,22 @@ GlassLab.HUDButton.prototype.setEnabled = function(enabled) {
     this.alpha = enabled? 1 : 0.25;
 };
 
+GlassLab.HUDButton.prototype.addOutline = function(imageKey)
+{
+    this.outline = this.game.make.sprite(0,0,imageKey);
+    this.outline.anchor.setTo(.5, .5);
+    this.addChild(this.outline);
+    this.events.onInputOver.add(function()
+    {
+        this.tint = 0xFFFFFF;
+    }, this.outline);
+    this.events.onInputOut.add(function()
+    {
+        this.tint = 0xCCCCCC;
+    }, this.outline);
+
+};
+
 GlassLab.HUDButton.prototype._onOver = function() {
     if (!this.over) { // no need to tween get this event unnecessarily after releasing the mouse
         this.game.add.tween(this.bg).to( { alpha: this.bgOverAlpha }, 150, Phaser.Easing.Quadratic.InOut, true);

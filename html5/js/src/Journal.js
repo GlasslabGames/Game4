@@ -55,42 +55,19 @@ GlassLab.Journal = function(game) {
 
     // Page buttons (almost the same as OrdersMenu)
     var pageButtonX = this.bg.width / 2 + 40;
-    this.nextPageButtonHighlight = this.game.make.sprite(0,0, "sideArrowHighlight");
-    this.nextPageButtonHighlight.anchor.setTo(.5, .5);
-    this.nextPageButtonHighlight.tint = 0xCCCCCC;
     this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next\nPage", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.nextPageButton.label.x -= 8;
+    this.nextPageButton.addOutline("sideArrowHighlight");
     this.bg.addChild(this.nextPageButton);
-    this.nextPageButton.addChild(this.nextPageButtonHighlight);
-    this.nextPageButton.events.onInputOver.add(function()
-    {
-        this.tint = 0xFFFFFF;
-    }, this.nextPageButtonHighlight);
-    this.nextPageButton.events.onInputOut.add(function()
-    {
-        this.tint = 0xCCCCCC;
-    }, this.nextPageButtonHighlight);
 
-    this.prevPageButtonHighlight = this.game.make.sprite(0,0, "sideArrowHighlight");
-    this.prevPageButtonHighlight.anchor.setTo(.5, .5);
-    this.prevPageButtonHighlight.tint = 0xCCCCCC;
-    this.prevPageButtonHighlight.scale.x = -1;
     this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev\nPage", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
     this.prevPageButton.anchor.setTo(0, 0.5);
-    this.prevPageButton.bg.scale.x *= -1;
     this.prevPageButton.label.x += 8;
     this.bg.addChild(this.prevPageButton);
-    this.prevPageButton.addChild(this.prevPageButtonHighlight);
-    this.prevPageButton.events.onInputOver.add(function()
-    {
-        this.tint = 0xFFFFFF;
-    }, this.prevPageButtonHighlight);
-    this.prevPageButton.events.onInputOut.add(function()
-    {
-        this.tint = 0xCCCCCC;
-    }, this.prevPageButtonHighlight);
-
+    this.prevPageButton.addOutline("sideArrowHighlight");
+    this.prevPageButton.outline.scale.x = -1;
+    this.prevPageButton.bg.scale.x *= -1;
 
     this.dailyDietTable = new GlassLab.UITable(this.game, 8, 5);
     this.dailyDietTable.y = 130;
