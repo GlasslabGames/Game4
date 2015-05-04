@@ -69,6 +69,10 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_VFX.png', 'assets/images/food/'+spriteName+'_long_death_VFX.json');
     }
 
+    game.load.image('totalFood_ram_sticker', 'assets/images/food/food_stickers/total_food_ram.png');
+    game.load.image('totalFood_bird_sticker', 'assets/images/food/food_stickers/total_food_bird.png');
+    game.load.image('totalFood_unifox_sticker', 'assets/images/food/food_stickers/total_food_unifox.png');
+
     game.load.image('shadow', 'assets/images/iso_shadow2.png');
     game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
 
