@@ -107,6 +107,12 @@ GlassLab.State.Game.prototype.update = function()
 
     GLOBAL.lastMousePosition.setTo(game.input.activePointer.x, game.input.activePointer.y); // Always remember last mouse position
 
+    if (this.prevFullScreen != this.game.scale.isFullScreen)
+    {
+        this.prevFullScreen = this.game.scale.isFullScreen;
+        GlassLab.SignalManager.cameraMoved.dispatch();
+    }
+
     GlassLab.SignalManager.postUpdate.dispatch();
 };
 
