@@ -389,12 +389,14 @@ GlassLab.Pen.prototype.GetValidEdgePos = function(edge, edgeIndex, targetPos) {
     }
 
     // Then check that our pen isn't exceeding the size of the pen area (currently the whole world, but it could be changed)
-
     var originTile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(this.sprite.isoX, this.sprite.isoY);
     var topRow = originTile.row, leftCol = originTile.col, bottomRow = originTile.row + this.height, rightCol = originTile.col + this.getFullWidth();
 
-    // note that we could change these later to reflect parts of the world that don't allow the pen.
-    var minRow = 0, maxRow = GLOBAL.tileManager.GetMapHeight(), minCol = 0, maxCol = GLOBAL.tileManager.GetMapWidth();
+    var centerCol = GLOBAL.tileManager.GetMapWidth() / 2;
+    var centerRow = GLOBAL.tileManager.GetMapHeight() / 2;
+    var halfWidth = 13;
+    var halfHeight = 14;
+    var minRow = centerRow - halfHeight, maxRow = centerRow + halfHeight, minCol = centerCol - halfWidth, maxCol = centerCol + halfWidth;
 
     if (edge == GlassLab.Edge.SIDES.top) {
         targetPos = Math.max( targetPos, (minRow - topRow) * GLOBAL.tileSize);
