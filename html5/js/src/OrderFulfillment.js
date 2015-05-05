@@ -91,7 +91,7 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     } else if (this.data.hint) {
         // hint 1: a single complete row, with a total food popup if applicable
         // hint 2: a full size pen with the known info filled in as well as a single complete row (with total food popup if applicable)
-        var creatureCount = (this.data.hint == 1)? creatureWidth : this._calculateTargetNumCreatures();
+        var creatureCount = this._calculateTargetNumCreatures();
 
         var foodTypes = [ desiredFood[0].type ];
         var foodCounts = [ desiredFood[0].amount * creatureCount ];
@@ -100,8 +100,11 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
             foodCounts.push( desiredFood[1].amount * creatureCount );
         }
 
+        var singleCreatureRow = this.data.hint == 1 || (this.data.hint > 1 && !this.data.numCreatures);
+        var singleFoodRow = this.data.hint == 1 || (this.data.hint > 1 && this.data.numCreatures);
+
         this.crate.setContents(this.data.creatureType, creatureCount, foodTypes, foodCounts, creatureWidth,
-            !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, hideFood)
+            singleCreatureRow, singleFoodRow, (this.data.totalNumFood || this.data.askTotalFood));
     } else if (this.crate) { // we have a pen with no purpose, so remove it
         this.crate.hide();
     }
@@ -144,13 +147,15 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
     response.totalFood = this.totalFoodInput.getValue();
     if (!response.totalFood && this.totalFoodInput.visible) return false;
 
-    console.log(response);
     return response;
 };
 
 GlassLab.OrderFulfillment.prototype.show = function(data)
 {
     this.sprite.visible = true;
+
+    this.creatureInput.reset();
+    this.totalFoodInput.reset();
     for (var i = 0; i < this.foodInputs.length; i++) {
         this.foodInputs[i].reset();
     }
@@ -245,7 +250,7 @@ GlassLab.OrderFulfillment.prototype._refreshfoodInputs = function() {
 
 GlassLab.OrderFulfillment.prototype._onSubmit = function()
 {
-    console.log("onSubmit", this.crateLoaded);
+    //console.log("onSubmit", this.crateLoaded);
     if (!this.crateLoaded) { // need to load the crate for the first time
         var response = this._getResponse();
         if (response) {
@@ -287,12 +292,12 @@ GlassLab.OrderFulfillment.prototype._crateShipped = function() {
     // this is kinda messy but we need all this info for the receipt on the response letter
     this.data.shipped = { numCreatures: this.crate.widths[0] * this.crate.height, numFoodA: this.crate.widths[1] * this.crate.height,
     numFoodB: this.crate.widths[2] * this.crate.height, foodTypeA: this.crate.foodTypes[0], foodTypeB: this.crate.foodTypes[1] };
-    console.log(this.data.shipped);
+    //console.log(this.data.shipped);
 
     if (this.crate.result == GlassLab.results.satisfied) {
         var response = this._getResponse();
         if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
-            var numCreatures = this.response.creatures;
+            var numCreatures = response.creatures;
             var targetNumCreatures = this._calculateTargetNumCreatures();
             if (numCreatures < targetNumCreatures) {
                 this.data.outcome = GlassLab.results.wrongCreatureNumber;

@@ -127,7 +127,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     this.challenge = this._getNextChallenge(this.currentChallengeCategory);
     this.challenge.onComplete.remove(this._onChallengeComplete, this); // in case we had previously added this listener, remove it to make sure we have just one copy
     this.challenge.onComplete.addOnce(this._onChallengeComplete, this);
-    this.challenge.Do();
+    this.challenge.Do(false, (this.failureCount >= 3), this.failureCount);
 
     this._addBackgroundOrders(); // note that we should have already added the challenge order when we called this.challenge.do()
 
@@ -137,7 +137,6 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
 GlassLab.Quest.prototype.restartChallenge = function() {
     console.log("Restarting",this.currentChallengeCategory,"challenge",this.index[this.currentChallengeCategory]);
     this.failureCount ++;
-
     this.challenge.Do(true, (this.failureCount >= 3), this.failureCount); // re-do the current challenge, with constraints if we've made more than 3 attempts
 
     this._saveQuestState();
