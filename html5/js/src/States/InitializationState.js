@@ -126,7 +126,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
     game.load.atlasJSONHash('tiles_v2', 'assets/images/tiles/tiles_v2.png', 'assets/images/tiles/tiles_v2.json');
-    game.load.image('squareGrassTile', 'assets/images/tiles/grass_blank_1.png');
+    game.load.image('tiledGrass', 'assets/images/tiles/square_grass.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
     game.load.image('penTooltipCapTall', 'assets/images/pen/pen_tooltip_cap_tall.png');
@@ -338,7 +338,7 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.renderManager = new GlassLab.RenderManager(GLOBAL.game);
 
-    GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
+    GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 120, "tiledGrass");
     GLOBAL.tiledBg.anchor.setTo(0.5, 0.5);
     GLOBAL.tiledBg.visible = false;
     GLOBAL.WorldLayer.addAt(GLOBAL.tiledBg, 2);
