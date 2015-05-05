@@ -224,6 +224,8 @@ GlassLab.CreatureManager.prototype.hideCreatures = function() {
             this.creatures[i].StateTransitionTo(new GlassLab.CreatureState(this.game, this.creatures[i])); // else, go to a blank state
         }
     }
+
+    GLOBAL.creatureLayer.visible = false;
 };
 
 GlassLab.CreatureManager.prototype.showCreatures = function() {
@@ -233,6 +235,8 @@ GlassLab.CreatureManager.prototype.showCreatures = function() {
             this.creatures[i].lookForTargets();
         }
     }
+
+    GLOBAL.creatureLayer.visible = true;
 };
 
 GlassLab.CreatureManager.prototype.getCreatureWantsFractionalFood = function(creatureType) {
