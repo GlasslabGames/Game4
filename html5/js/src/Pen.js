@@ -394,8 +394,8 @@ GlassLab.Pen.prototype.GetValidEdgePos = function(edge, edgeIndex, targetPos) {
 
     var centerCol = GLOBAL.tileManager.GetMapWidth() / 2;
     var centerRow = GLOBAL.tileManager.GetMapHeight() / 2;
-    var halfWidth = 13;
-    var halfHeight = 14;
+    var halfWidth =  Math.round(GLOBAL.penAreaWidth / 2);
+    var halfHeight = Math.round(GLOBAL.penAreaHeight / 2);
     var minRow = centerRow - halfHeight, maxRow = centerRow + halfHeight, minCol = centerCol - halfWidth, maxCol = centerCol + halfWidth;
 
     if (edge == GlassLab.Edge.SIDES.top) {

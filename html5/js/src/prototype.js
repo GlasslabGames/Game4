@@ -24,6 +24,8 @@ window.onload = function() {
     GLOBAL.debug = (getParameterByName("debug") == "true");
     GLOBAL.stickyMode = (getParameterByName("sticky") == "true"); // If true, click to grab something or put it down. If false, drag things around.
     GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
+    GLOBAL.penAreaWidth = 26;
+    GLOBAL.penAreaHeight = 28;
 
     game.state.add("Init", GlassLab.State.Init);
     game.state.add("Game", GlassLab.State.Game);
