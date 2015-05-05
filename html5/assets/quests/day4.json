@@ -5,6 +5,7 @@
      "__type": "DoFeedingChallengeAction",
      "challengeId": "T2.01",
      "problemType": "3UR_intro_adult_rammus",
+     "hideBackgroundOrders": true,
      "challengeData": {
         "creatureType": "rammus",
         "numCreatures": 1,
@@ -32,11 +33,42 @@
           }
         ]
       } 
+    },
+    {
+     "__type": "DoPenChallengeAction",
+     "challengeId": "T2.02",
+     "problemType": "3UR1MC",
+     "hideBackgroundOrders": true,
+     "challengeData": {
+        "creatureType": "rammus",
+        "numCreatures": 4,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true
+      },
+      "constraints": {
+        "maxHeight": 4,
+        "leftDraggable": false
+      }
+    },
+    {
+     "__type": "DoOrderChallengeAction",
+     "challengeId": "T2.03",
+     "problemType": "3UR1MTc",
+     "hideBackgroundOrders": true,
+     "challengeData": {
+        "client": "Archibold Huxley III",
+        "creatureType": "rammus",
+        "numCreatures": 1,
+        "description": "Dear Friend! I have 1 ADULT RAMMUS. Please send me enough TOTAL FOOD for it!",
+        "askTotalFood": true,
+        "noFoodEntries": true
+      }
     },   
     {
      "__type": "DoPenChallengeAction",
      "challengeId": "2.01c",
-     "problemType": "3UR1MC",
+     "problemType": "3UR2MC",
      "reviewKey": "start",
      "challengeData": {
         "creatureType": "rammus",
@@ -44,6 +76,10 @@
         "bottomDraggable": true,
         "topDraggable": true,
         "leftDraggable": true
+      },
+      "constraints": {
+        "maxHeight": 14,
+        "leftDraggable": false
       }
     },
     {
@@ -91,46 +127,65 @@
         },
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "2.06b",
-          "problemType": "3UR2MTb",
+          "challengeId": "2.05c",
+          "problemType": "3UR2MTa",
           "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "rammus",
-            "totalNumFood": 184,
-            "description": "Dear Friend! I have 184 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+            "totalNumFood": 120,
+            "noFoodEntries": true,
+            "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
             "reward": 200
           }
         },
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "2.04b",
-          "problemType": "3UR2MF",
+          "challengeId": "2.05d",
+          "problemType": "3UR2MTa",
           "reviewKey": "middle",
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "rammus",
-            "numFoodB": 130,
-            "description": "Dear Friend! I have 130 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+            "numFoodB": 136,
+            "noFoodEntries": true,
+            "description": "Dear Friend! I have 136 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
             "reward": 200
           }
         }
       ]
     },
     {
-      "__type": "DoOrderChallengeAction",
-      "challengeId": "2.05",
-      "problemType": "3UR2MF",
+      "__type": "DoPenChallengeAction",
+      "challengeId": "2.01d",
+      "problemType": "3UR2MC",
       "challengeData": {
-          "client": "Archibold Huxley III",
-          "creatureType": "rammus",
-          "numFoodA": 48,
-          "description": "Dear Friend! I have 48 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-          "reward": 200
-        },
-      "boss": true,
-      "reviewKeyForFailure": "middle"
+        "creatureType": "rammus",
+        "numCreatures": 36,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "leftDraggable": true
+      },
+      "constraints": {
+        "creatureWidth": 2,
+        "maxHeight": 18,
+        "leftDraggable": false
+      }
     },
+    {
+          "__type": "DoOrderChallengeAction",
+          "challengeId": "2.06b",
+          "problemType": "3UR2MTb",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "rammus",
+            "totalNumFood": 184,
+            "description": "Dear Friend! I have 184 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+            "reward": 200
+          },
+          "boss": true,
+          "reviewKeyForFailure": "middle"
+        },
     {
     "__type": "DoBonusRoundAction",
     "data": [
@@ -159,69 +214,7 @@
     }
   ],
   "reviewChallenges": {
-    "_comment": "============ ******************************** THIS IS WHERE REVIEW CHALLENGES BEGIN ******************************** ==============",    
-    "middle": [
-      {
-      "_comment": "============ ******************************** THE MIDDLE SET OF REVIEW PROBLEMS ******************************** ==============",
-      "__type": "RandomSelectionGroup",
-      "possibilities": [
-      {         
-       "__type": "DoOrderChallengeAction",
-       "challengeId": "2.06a",
-       "problemType": "3UR2MTb",
-       "challengeData": {
-          "client": "Archibold Huxley III",
-          "creatureType": "rammus",
-          "totalNumFood": 120,
-          "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-          "reward": 200
-        }
-      },
-      {         
-       "__type": "DoOrderChallengeAction",
-       "challengeId": "2.05b",
-       "problemType": "3UR2MTa",
-       "challengeData": {
-          "client": "Archibold Huxley III",
-          "creatureType": "rammus",
-          "totalNumFood": 136,
-          "noFoodEntries": true,
-          "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-          "reward": 200
-        }
-      }
-      ]
-      },
-      {
-      "__type": "RandomSelectionGroup",
-      "possibilities": [
-        {
-         "__type": "DoOrderChallengeAction",
-         "challengeId": "2.04a",
-         "problemType": "3UR2MF",
-         "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "rammus",
-            "numFoodB": 65,
-          "description": "Dear Friend! I have 65 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-          "reward": 200
-          }
-        },
-        {
-         "__type": "DoOrderChallengeAction",
-         "challengeId": "2.03b",
-         "problemType": "3UR2MF",
-         "challengeData": {
-            "client": "Archibold Huxley III",
-            "creatureType": "rammus",
-            "numFoodA": 54,
-          "description": "Dear Friend! I have 54 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-          "reward": 200
-          }
-        }
-      ]
-    }
-    ],
+    "_comment": "============ ******************************** THIS IS WHERE REVIEW CHALLENGES BEGIN ******************************** ==============",
     "start": [
       {
        "_comment": "============ ******************************** THE STARTING SET OF REVIEW PROBLEMS ******************************** ==============",         
@@ -266,6 +259,10 @@
               "bottomDraggable": true,
               "topDraggable": true,
               "leftDraggable": true
+            },
+            "constraints": {
+              "maxHeight": 10,
+              "leftDraggable": false
             }
           },
           {
@@ -278,10 +275,145 @@
               "bottomDraggable": true,
               "topDraggable": true,
               "leftDraggable": true
+            },
+            "constraints": {
+              "maxHeight": 8,
+              "leftDraggable": false
             }
           }
         ]
       } 
+    ],    
+    "middle": [
+      {
+      "_comment": "============ ******************************** THE MIDDLE SET OF REVIEW PROBLEMS ******************************** ==============",
+      "__type": "RandomSelectionGroup",
+      "possibilities": [
+      {         
+       "__type": "DoOrderChallengeAction",
+       "challengeId": "2.06a",
+       "problemType": "3UR2MTb",
+       "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "rammus",
+          "totalNumFood": 88,
+          "description": "Dear Friend! I have 88 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+          "reward": 200
+        }
+      },
+      {         
+       "__type": "DoOrderChallengeAction",
+       "challengeId": "2.06d",
+       "problemType": "3UR2MTb",
+       "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "rammus",
+          "totalNumFood": 80,
+          "description": "Dear Friend! I have 80 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+          "reward": 200
+        }
+      },
+      {         
+       "__type": "DoOrderChallengeAction",
+       "challengeId": "2.06e",
+       "problemType": "3UR2MTb",
+       "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "rammus",
+          "totalNumFood": 72,
+          "description": "Dear Friend! I have 72 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+          "reward": 200
+        }
+      }
+      ]
+      },
+      {
+        "__type": "RandomSelectionGroup",
+      "possibilities": [
+      {         
+       "__type": "DoOrderChallengeAction",
+       "challengeId": "2.07a",
+       "problemType": "3UR1MTc",
+       "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "rammus",
+          "numCreatures": 8,
+          "askTotalFood": true,
+          "noFoodEntries": true,
+          "description": "Dear Friend! I have 8 ADULT RAMMUSES. Please send me enough TOTAL FOOD for them!",
+          "reward": 200
+        }
+      },
+      {         
+       "__type": "DoOrderChallengeAction",
+       "challengeId": "2.07b",
+       "problemType": "3UR2MTc",
+       "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "rammus",
+          "numCreatures": 13,
+          "askTotalFood": true,
+          "noFoodEntries": true,
+          "description": "Dear Friend! I have 13 ADULT RAMMUSES. Please send me enough TOTAL FOOD for them!",
+          "reward": 200
+        }
+      }
+      ]
+      },
+      {
+      "__type": "RandomSelectionGroup",
+      "possibilities": [
+        {
+         "__type": "DoOrderChallengeAction",
+         "challengeId": "2.04a",
+         "problemType": "3UR2MF",
+         "challengeData": {
+           "client": "Archibold Huxley III",
+           "creatureType": "rammus",
+           "numFoodB": 65,
+           "description": "Dear Friend! I have 65 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+           "reward": 200
+          }
+        },
+        {
+         "__type": "DoOrderChallengeAction",
+         "challengeId": "2.03b",
+         "problemType": "3UR2MF",
+         "challengeData": {
+           "client": "Archibold Huxley III",
+           "creatureType": "rammus",
+           "numFoodA": 54,
+           "description": "Dear Friend! I have 54 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+           "reward": 200
+          }
+        },
+    {
+      "__type": "DoOrderChallengeAction",
+      "challengeId": "2.03a",
+      "problemType": "3UR2MF",
+      "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "rammus",
+          "numFoodA": 48,
+          "description": "Dear Friend! I have 48 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+          "reward": 200
+        }
+    },
+    {
+          "__type": "DoOrderChallengeAction",
+          "challengeId": "2.04b",
+          "problemType": "3UR2MF",
+          "reviewKey": "middle",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "rammus",
+            "numFoodB": 130,
+            "description": "Dear Friend! I have 130 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+            "reward": 200
+          }
+        }
+      ]
+    }
     ]
   },
   "funChallenges": [
@@ -289,26 +421,13 @@
   ],
   "backgroundOrders": [
     {
-       "_comment": "============ ******************************** THIS IS WHERE BACKGROUND ORDERS BEGIN ******************************** ==============",    
-      "orderId": "2.06c",
-      "problemType": "3UR2MTb",
+      "orderId": "2.02b",
+      "problemType": "3UR2MC",
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "rammus",
-        "totalNumFood": 216,
-        "description": "Dear Friend! I have 216 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-        "reward": 200
-      }
-    },
-    {  
-      "orderId": "2.05c",
-      "problemType": "3UR2MTa",
-      "orderData": {
-        "client": "Archibold Huxley III",
-        "creatureType": "rammus",
-        "totalNumFood": 192,
-        "noFoodEntries": true,
-        "description": "Dear Friend! I have 192 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+        "numCreatures": 17,
+        "description": "Dear Friend! I have 17 ADULT RAMMUSES. Please send me enough food for all of them!",
         "reward": 200
       }
     },
@@ -323,14 +442,26 @@
         "reward": 200
       }
     },
-    {
-      "orderId": "2.02b",
-      "problemType": "3UR2MC",
+    {  
+      "orderId": "2.05b",
+      "problemType": "3UR2MTa",
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "rammus",
-        "numCreatures": 17,
-        "description": "Dear Friend! I have 17 ADULT RAMMUSES. Please send me enough food for all of them!",
+        "totalNumFood": 192,
+        "noFoodEntries": true,
+        "description": "Dear Friend! I have 192 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+        "reward": 200
+      }
+    },
+    {
+      "orderId": "2.06c",
+      "problemType": "3UR2MTb",
+      "orderData": {
+        "client": "Archibold Huxley III",
+        "creatureType": "rammus",
+        "totalNumFood": 216,
+        "description": "Dear Friend! I have 216 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
         "reward": 200
       }
     }

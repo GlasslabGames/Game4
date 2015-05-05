@@ -2,9 +2,8 @@
   "progression": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "T1.02a",
+      "challengeId": "T1.02",
       "problemType": "2UR1MC",
-      "reviewKey": "baby_ram_pen",
       "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 3,
@@ -224,10 +223,13 @@
       "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 30,
-        "creatureWidth": 2,
         "bottomDraggable":true,
         "topDraggable":true,
-        "leftDraggable":true       
+        "leftDraggable":true
+      },
+      "constraints": {
+        "maxHeight": 15,
+        "creatureWidth": 2
       }      
     },           
     {
@@ -257,22 +259,7 @@
       ]
     }
   ],
-  "reviewChallenges": {
-    "baby_ram_pen": [
-    {
-      "__type": "DoPenChallengeAction",
-      "challengeId": "T1.02b",
-      "problemType": "2UR1MC",
-      "challengeData": {
-        "creatureType": "baby_rammus",
-        "numCreatures": 4,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true
-      }
-    }
-    ]
-  },
+  "reviewChallenges": [],
   "funChallenges": [],
   "backgroundOrders": []
 }

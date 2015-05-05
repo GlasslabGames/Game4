@@ -5,12 +5,41 @@
      "__type": "DoPenChallengeAction",
      "challengeId": "T3.01a",
      "problemType": "2BR_intro_baby_bird",
+     "hideBackgroundOrders": true,
      "challengeData": {
         "creatureType": "baby_bird",
         "numCreatures": 3,
-        "leftDraggable": true
+        "creatureWidth": 3
       }
     },
+    {
+     "__type": "DoPenChallengeAction",
+     "challengeId": "T3.02",
+     "problemType": "2BR1MC",
+     "hideBackgroundOrders": true,
+     "challengeData": {
+        "creatureType": "baby_bird",
+        "numCreatures": 6,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "creatureWidth": 3,
+        "maxHeight": 2
+      }
+    },
+    {
+          "__type": "DoOrderChallengeAction",
+          "challengeId": "T3.03",
+          "problemType": "2BR1MF",
+          "hideBackgroundOrders": true,
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "baby_bird",
+            "numFoodA": 12,
+            "description": "Dear Friend! I have 12 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+            "reward": 200,
+            "creatureWidth": 3
+          }
+        },
     {
      "__type": "DoPenChallengeAction",
      "challengeId": "3.01b",
@@ -18,10 +47,13 @@
      "reviewKey": "start",
      "challengeData": {
         "creatureType": "baby_bird",
-        "numCreatures": 18,
+        "numCreatures": 24,
         "bottomDraggable": true,
         "topDraggable": true,
-        "leftDraggable": true
+        "creatureWidth": 3
+      },
+      "constraints": {
+        "maxHeight": 8
       }
     },
     {
@@ -55,7 +87,7 @@
       "possibilities": [
         {
           "__type": "DoOrderChallengeAction",
-          "challengeId": "3.04b",
+          "challengeId": "3.03b",
           "problemType": "2BR2MF",
           "reviewKey": "middle",
           "challengeData": {
@@ -63,22 +95,66 @@
             "creatureType": "baby_bird",
             "numFoodA": 52,
             "description": "Dear Friend! I have 52 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 200
+            "reward": 200,
+            "creatureWidth": 3
+          }
+        },
+        {
+          "__type": "DoOrderChallengeAction",
+          "challengeId": "3.03e",
+          "problemType": "2BR2MF",
+          "reviewKey": "middle",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "baby_bird",
+            "numFoodA": 48,
+            "description": "Dear Friend! I have 48 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+            "reward": 200,
+            "creatureWidth": 3
+          }
+        },
+        {
+          "__type": "DoOrderChallengeAction",
+          "challengeId": "3.03f",
+          "problemType": "2BR2MF",
+          "reviewKey": "middle",
+          "challengeData": {
+            "client": "Archibold Huxley III",
+            "creatureType": "baby_bird",
+            "numFoodA": 56,
+            "description": "Dear Friend! I have 56 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+            "reward": 200,
+            "creatureWidth": 3
           }
         }
       ]
     },
     {
-      "__type": "DoOrderChallengeAction",
-      "_comment": "============ ******************************** EVAN PLZ FIX THESE - BABY BIRD BOSS NEEDED ******************************** ==============",        
-      "challengeId": "3.04d",
+     "__type": "DoPenChallengeAction",
+     "challengeId": "3.01f",
+     "problemType": "2BR3MC",
+     "challengeData": {
+        "creatureType": "baby_bird",
+        "numCreatures": 90,
+        "bottomDraggable": true,
+        "topDraggable": true,
+        "creatureWidth": 6
+      },
+      "constraints": {
+        "maxHeight": 15
+      }
+    },
+    {
+      "__type": "DoOrderChallengeAction",        
+      "challengeId": "3.03d",
       "problemType": "2BR2MF",
       "challengeData": {
           "client": "Archibold Huxley III",
           "creatureType": "baby_bird",
-          "numFoodA": 104,
-          "description": "Dear Friend! I have 104 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-          "reward": 200
+          "numFoodA": 108,
+          "description": "Dear Friend! I have 108 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "reward": 200,
+          "creatureWidth": 3
         },
       "boss": true,
       "reviewKeyForFailure": "middle"
@@ -114,7 +190,10 @@
     "_comment": "============ ******************************** THIS IS WHERE REVIEW CHALLENGES BEGIN ******************************** ==============",    
     "middle": [
       {
-       "_comment": "============ ******************************** THE MIDDLE SET OF REVIEW PROBLEMS ******************************** ==============",        
+       "_comment": "============ ******************************** THE MIDDLE SET OF REVIEW PROBLEMS ******************************** ==============",
+       "__type": "RandomSelectionGroup",
+        "possibilities": [
+        {        
         "__type": "DoOrderChallengeAction",
         "challengeId": "3.03a",
         "problemType": "2BR1MF",
@@ -126,7 +205,38 @@
           "reward": 200,
           "creatureWidth": 3
         }
+        },
+        {        
+        "__type": "DoOrderChallengeAction",
+        "challengeId": "3.03c",
+        "problemType": "2BR1MF",
+        "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "baby_bird",
+          "numFoodA": 40,
+          "description": "Dear Friend! I have 40 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "reward": 200,
+          "creatureWidth": 3
+        }
+        },
+        {        
+        "__type": "DoOrderChallengeAction",
+        "challengeId": "3.03h",
+        "problemType": "2BR1MF",
+        "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "baby_bird",
+          "numFoodA": 36,
+          "description": "Dear Friend! I have 36 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "reward": 200,
+          "creatureWidth": 3
+        }
+        }
+        ]
       },
+      {
+       "__type": "RandomSelectionGroup",
+        "possibilities": [
       {
         "__type": "DoOrderChallengeAction",
         "challengeId": "3.02b",
@@ -134,11 +244,26 @@
         "challengeData": {
           "client": "Archibold Huxley III",
           "creatureType": "baby_bird",
-          "numCreatures": 30,
+          "numCreatures": 27,
+          "description": "Dear Friend! I have 27 BABY FLOCKINS. Please send me enough food for all of them!",
+          "reward": 200,
+          "creatureWidth": 3
+        }
+      },
+      {
+        "__type": "DoOrderChallengeAction",
+        "challengeId": "3.02c",
+        "problemType": "2BR2MC",
+        "challengeData": {
+          "client": "Archibold Huxley III",
+          "creatureType": "baby_bird",
+          "numCreatures": 45,
           "description": "Dear Friend! I have 30 BABY FLOCKINS. Please send me enough food for all of them!",
           "reward": 200,
           "creatureWidth": 3
         }
+      }
+      ]
       }
     ],
     "start": [
@@ -153,10 +278,12 @@
             "challengeData": {
               "bottomDraggable": true,
               "topDraggable": true,
-              "leftDraggable": true,
               "creatureType": "baby_bird",
-              "numCreatures": 12,
+              "numCreatures": 18,
               "creatureWidth": 3
+            },
+            "constraints": {
+              "maxHeight": 6
             }
           },
           {
@@ -165,18 +292,52 @@
             "problemType": "2BR1MC",
             "challengeData": {
               "creatureType": "baby_bird",
-              "numCreatures": 27,
+              "numCreatures": 21,
               "bottomDraggable": true,
               "topDraggable": true,
-              "leftDraggable": true,
               "creatureWidth": 3
+            },
+            "constraints": {
+              "maxHeight": 7
             }
           }
         ]
-      } 
-    ],
-    "bird_intro": [
-
+      },
+      {
+        "__type": "RandomSelectionGroup",
+        "possibilities": [
+          {
+            "__type": "DoPenChallengeAction",
+            "challengeId": "3.01d",
+            "problemType": "2BR1MC",
+            "challengeData": {
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "creatureType": "baby_bird",
+              "numCreatures": 15,
+              "creatureWidth": 3
+            },
+            "constraints": {
+              "maxHeight": 5
+            }
+          },
+          {
+            "__type": "DoPenChallengeAction",
+            "challengeId": "3.01e",
+            "problemType": "2BR1MC",
+            "challengeData": {
+              "creatureType": "baby_bird",
+              "numCreatures": 12,
+              "bottomDraggable": true,
+              "topDraggable": true,
+              "creatureWidth": 3
+            },
+            "constraints": {
+              "maxHeight": 4
+            }
+          }
+        ]
+      }
     ]
   },
   "funChallenges": [
@@ -185,7 +346,7 @@
   "backgroundOrders": [
     {
       "_comment": "============ ******************************** THIS IS WHERE BACKGROUND ORDERS BEGIN ******************************** ==============",      
-      "orderId": "3.03c",
+      "orderId": "3.03g",
       "problemType": "2BR2MF",
       "orderData": {
         "client": "Archibold Huxley III",
@@ -202,8 +363,8 @@
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "baby_bird",
-        "numCreatures": 24,
-        "description": "Dear Friend! I have 24 BABY FLOCKINS. Please send me enough food for all of them!",
+        "numCreatures": 36,
+        "description": "Dear Friend! I have 36 BABY FLOCKINS. Please send me enough food for all of them!",
         "reward": 200,
         "creatureWidth": 3
       }

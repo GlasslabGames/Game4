@@ -84,7 +84,7 @@
         },
         {
           "__type": "HideAssistantDialogueAction"
-        },                                
+        },
         {
           "__type": "WaitForCondition",
           "conditions": [
@@ -170,8 +170,8 @@
     },
     { 
      "__type": "DoFeedingChallengeAction",
-     "challengeId": "T2.01-REPLACE",
-     "problemType": "3UR_intro_adult_rammus-REPLACE",
+     "challengeId": "T1.07",
+     "problemType": "2UR_handfeed_multuple_rams",
      "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 3      
@@ -210,6 +210,5 @@
   ],
   "reviewChallenges": [],
   "funChallenges": [],
-  "backgroundOrders": [],
-  "hideBackgroundOrders": true
+  "backgroundOrders": []
 }
