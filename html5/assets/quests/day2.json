@@ -125,8 +125,8 @@
        "client": "Archibold Huxley III",
        "creatureType": "baby_rammus",
        "numCreatures": 4,
-       "description": "Dear Friend! I have 4 BABY RAMMUSES. Please send me enough food for all of them!",
-        "reward": 200
+       "description": "Dear Friend! I have *4 baby rammuses*. Please send me enough food for all of them!",
+        "reward": 10
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -182,8 +182,8 @@
         "company": "Rupture Farms",
         "numFoodA": 15,
         "type": "baby_rammus",
-        "description": "Dear Friend! I have 15 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
-        "reward": 200
+        "description": "Dear Friend! I have *15 broccoli*. Please send me the exact number of *baby rams* to eat all my food!",
+        "reward": 10
       },
       "serializedTutorial": {
         "__type": "ActionGroup",

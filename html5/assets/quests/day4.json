@@ -122,7 +122,7 @@
             "totalNumFood": 112,
             "noFoodEntries": true,
             "description": "Dear Friend! I have 112 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-            "reward": 200
+            "reward": 50
           }
         },
         {
@@ -136,7 +136,7 @@
             "totalNumFood": 120,
             "noFoodEntries": true,
             "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-            "reward": 200
+            "reward": 50
           }
         },
         {
@@ -150,7 +150,7 @@
             "numFoodB": 136,
             "noFoodEntries": true,
             "description": "Dear Friend! I have 136 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-            "reward": 200
+            "reward": 50
           }
         }
       ]
@@ -181,7 +181,7 @@
             "creatureType": "rammus",
             "totalNumFood": 184,
             "description": "Dear Friend! I have 184 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-            "reward": 200
+            "reward": 40
           },
           "boss": true,
           "reviewKeyForFailure": "middle"
@@ -229,7 +229,7 @@
               "creatureType": "rammus",
               "numCreatures": 15,
               "description": "Dear Friend! I have 15 ADULT RAMMUSES. Please send me enough food for all of them!",
-              "reward": 200
+              "reward": 40
             }
           },
           {
@@ -241,7 +241,7 @@
               "creatureType": "rammus",
               "numCreatures": 22,
               "description": "Dear Friend! I have 22 ADULT RAMMUSES. Please send me enough food for all of them!",
-              "reward": 200
+              "reward": 40
             }
           }
         ]
@@ -298,7 +298,7 @@
           "creatureType": "rammus",
           "totalNumFood": 88,
           "description": "Dear Friend! I have 88 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-          "reward": 200
+          "reward": 50
         }
       },
       {         
@@ -310,7 +310,7 @@
           "creatureType": "rammus",
           "totalNumFood": 80,
           "description": "Dear Friend! I have 80 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-          "reward": 200
+          "reward": 50
         }
       },
       {         
@@ -322,7 +322,7 @@
           "creatureType": "rammus",
           "totalNumFood": 72,
           "description": "Dear Friend! I have 72 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-          "reward": 200
+          "reward": 50
         }
       }
       ]
@@ -341,7 +341,7 @@
           "askTotalFood": true,
           "noFoodEntries": true,
           "description": "Dear Friend! I have 8 ADULT RAMMUSES. Please send me enough TOTAL FOOD for them!",
-          "reward": 200
+          "reward": 40
         }
       },
       {         
@@ -355,7 +355,7 @@
           "askTotalFood": true,
           "noFoodEntries": true,
           "description": "Dear Friend! I have 13 ADULT RAMMUSES. Please send me enough TOTAL FOOD for them!",
-          "reward": 200
+          "reward": 40
         }
       }
       ]
@@ -372,7 +372,7 @@
            "creatureType": "rammus",
            "numFoodB": 65,
            "description": "Dear Friend! I have 65 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-           "reward": 200
+           "reward": 40
           }
         },
         {
@@ -384,7 +384,7 @@
            "creatureType": "rammus",
            "numFoodA": 54,
            "description": "Dear Friend! I have 54 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-           "reward": 200
+           "reward": 40
           }
         },
     {
@@ -396,7 +396,7 @@
           "creatureType": "rammus",
           "numFoodA": 48,
           "description": "Dear Friend! I have 48 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-          "reward": 200
+          "reward": 40
         }
     },
     {
@@ -409,7 +409,7 @@
             "creatureType": "rammus",
             "numFoodB": 130,
             "description": "Dear Friend! I have 130 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-            "reward": 200
+            "reward": 40
           }
         }
       ]
@@ -428,7 +428,7 @@
         "creatureType": "rammus",
         "numCreatures": 17,
         "description": "Dear Friend! I have 17 ADULT RAMMUSES. Please send me enough food for all of them!",
-        "reward": 200
+        "reward": 40
       }
     },
     {  
@@ -439,7 +439,7 @@
         "creatureType": "rammus",
         "numFoodB": 95,
         "description": "Dear Friend! I have 95 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
-        "reward": 200
+        "reward": 40
       }
     },
     {  
@@ -451,7 +451,7 @@
         "totalNumFood": 192,
         "noFoodEntries": true,
         "description": "Dear Friend! I have 192 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-        "reward": 200
+        "reward": 50
       }
     },
     {
@@ -462,7 +462,7 @@
         "creatureType": "rammus",
         "totalNumFood": 216,
         "description": "Dear Friend! I have 216 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-        "reward": 200
+        "reward": 50
       }
     }
   ]

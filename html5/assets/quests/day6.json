@@ -156,7 +156,7 @@
             "creatureType": "bird",
             "numFoodB": 62,
             "description": "Dear Friend! I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to eat all my food!",
-            "reward": 200,
+            "reward": 70,
             "creatureWidth": 3
           }
         },
@@ -170,7 +170,7 @@
             "creatureType": "bird",
             "numFoodB": 66,
             "description": "Dear Friend! I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to eat all my food!",
-            "reward": 200,
+            "reward": 70,
             "creatureWidth": 3
           }
         },
@@ -184,7 +184,7 @@
             "creatureType": "bird",
             "numFoodA": 140,
             "description": "Dear Friend! I have 140 MEAT. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
-            "reward": 200,
+            "reward": 100,
             "creatureWidth": 3
           }
         },
@@ -198,7 +198,7 @@
             "creatureType": "bird",
             "numFoodA": 130,
             "description": "Dear Friend! I have 130 MEAT. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
-            "reward": 200,
+            "reward": 100,
             "creatureWidth": 3
           }
         }
@@ -228,7 +228,7 @@
           "creatureType": "bird",
           "totalNumFood": 231,
           "description": "Dear Friend! I have 231 TOTAL FOOD. Please send me the exact number of ADULT FLOCKINS to eat all my food! How much of each food type do I have?",
-          "reward": 200,
+          "reward": 100,
           "creatureWidth": 3
         },
       "boss": true,
@@ -275,7 +275,7 @@
               "creatureType": "unifox",
               "totalNumFood": 85,
               "description": "Dear Friend! I have 85 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
-              "reward": 200
+              "reward": 50
             }
           },
           {
@@ -287,7 +287,7 @@
               "creatureType": "unifox",
               "totalNumFood": 95,
               "description": "Dear Friend! I have 95 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
-              "reward": 200
+              "reward": 50
             }
           },
           {
@@ -299,7 +299,7 @@
               "creatureType": "unifox",
               "totalNumFood": 80,
               "description": "Dear Friend! I have 80 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
-              "reward": 200,
+              "reward": 50,
               "creatureWidth": 2
             }
           },
@@ -312,7 +312,7 @@
               "creatureType": "unifox",
               "totalNumFood": 90,
               "description": "Dear Friend! I have 90 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
-              "reward": 200,
+              "reward": 50,
               "creatureWidth": 2
             }
           }
@@ -331,7 +331,7 @@
               "totalNumFood": 168,
               "noFoodEntries": true,
               "description": "Dear Friend! I have 168 TOTAL FOOD. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
-              "reward": 200,
+              "reward": 100,
               "creatureWidth": 3
             }
           },
@@ -345,7 +345,7 @@
               "totalNumFood": 175,
               "noFoodEntries": true,
               "description": "Dear Friend! I have 175 TOTAL FOOD. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
-              "reward": 200,
+              "reward": 100,
               "creatureWidth": 3
             }
           }
@@ -363,7 +363,7 @@
               "creatureType": "unifox",
               "numFoodA": 112,
               "description": "Dear Friend! I have 112 STRAWBERRIES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-              "reward": 200,
+              "reward": 50,
               "creatureWidth": 2
             }
           },
@@ -376,7 +376,7 @@
               "creatureType": "unifox",
               "numFoodB": 90,
               "description": "Dear Friend! I have 90 PIZZA SLICES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-              "reward": 200,
+              "reward": 50,
               "creatureWidth": 2
             }
           },
@@ -389,7 +389,7 @@
               "creatureType": "unifox",
               "numFoodA": 110,
               "description": "Dear Friend! I have 110 STRAWBERRIES. Please send me the exact number of ADULT UNIFOXES to eat all my food!",
-              "reward": 200
+              "reward": 50
             }
           },
           {
@@ -401,7 +401,7 @@
               "creatureType": "unifox",
               "numFoodB": 117,
               "description": "Dear Friend! I have 117 PIZZA SLICES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-              "reward": 200
+              "reward": 50
             }
           }
         ]
@@ -420,7 +420,7 @@
               "creatureType": "bird",
               "numCreatures": 36,
               "description": "Dear Friend! I have 36 ADULT BIRDS. Please send me enough food for all of them!",
-              "reward": 200,
+              "reward": 70,
               "creatureWidth": 3
             }
           },
@@ -433,7 +433,7 @@
               "creatureType": "bird",
               "numCreatures": 33,
               "description": "Dear Friend! I have 33 ADULT BIRDS. Please send me enough food for all of them!",
-              "reward": 200,
+              "reward": 70,
               "creatureWidth": 3
             } 
           }
@@ -488,7 +488,7 @@
             "creatureType": "unifox",
             "numCreatures": 30,
             "description": "Dear Friend! I have 30 ADULT UNIFOX. Please send me enough food for all of them!",
-            "reward": 200,
+            "reward": 40,
             "creatureWidth": 2
           }
          },
@@ -501,7 +501,7 @@
             "creatureType": "unifox",
             "numCreatures": 34,
             "description": "Dear Friend! I have 34 ADULT UNIFOX. Please send me enough food for all of them!",
-            "reward": 200,
+            "reward": 40,
             "creatureWidth": 2
           }
          }
@@ -594,7 +594,7 @@
         "creatureType": "unifox",
         "numCreatures": 37,
         "description": "Dear Friend! I have 37 ADULT UNIFOX. Please send me enough food for all of them!",
-        "reward": 200
+        "reward": 40
       }
     },
     {
@@ -606,7 +606,7 @@
         "totalNumFood": 145,
         "noFoodEntries": true,
         "description": "Dear Friend! I have 145 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-        "reward": 200
+        "reward": 50
       }
     },
     {
@@ -618,7 +618,7 @@
         "totalNumFood": 130,
         "noFoodEntries": true,
         "description": "Dear Friend! I have 130 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food!",
-        "reward": 200,
+        "reward": 50,
         "creatureWidth": 2
       }
     },
@@ -630,7 +630,7 @@
         "creatureType": "bird",
         "numCreatures": 72,
         "description": "Dear Friend! I have 72 ADULT BIRDS. Please send me enough food for all of them!",
-        "reward": 200,
+        "reward": 70,
         "creatureWidth": 3
       } 
     }

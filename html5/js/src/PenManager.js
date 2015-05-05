@@ -127,6 +127,8 @@ GlassLab.PenManager.prototype.zoomToPen = function(pen) {
     this.game.camera.x = pos.x*//* - this.game.camera.width * 0.5;*//*
     this.game.camera.y = pos.y*//* - this.game.camera.height * 0.5;*/
 
+    // TODO!!
+
     var xOffset = 0; //-75;
     var yOffset = 0; //100;
     this.game.camera.x = -this.game.camera.width * 0.5 + xOffset;

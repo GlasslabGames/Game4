@@ -107,7 +107,7 @@
             "creatureType": "baby_unifox",
             "numFoodA": 24,
             "description": "Dear Friend! I have 24 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-            "reward": 200,
+            "reward": 20,
             "creatureWidth": 2
           }
         },
@@ -121,7 +121,7 @@
             "creatureType": "baby_unifox",
             "numCreatures": 48,
             "description": "Dear Friend! I have 48 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-            "reward": 200,
+            "reward": 20,
             "creatureWidth": 2
           }
         },
@@ -135,7 +135,7 @@
             "creatureType": "baby_unifox",
             "numFoodA": 32,
             "description": "Dear Friend! I have 32 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-            "reward": 200,
+            "reward": 20,
             "creatureWidth": 2
           }
         }
@@ -167,7 +167,7 @@
           "creatureType": "baby_rammus",
           "numFoodA": 24,
           "description": "Dear Friend! I have 24 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
-          "reward": 200
+          "reward": 20
         },
       "boss": true,
       "reviewKeyForFailure": "middle"
@@ -213,7 +213,7 @@
           "creatureType": "baby_unifox",
           "numFoodA": 68,
           "description": "Dear Friend! I have 68 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-          "reward": 200,
+          "reward": 30,
           "creatureWidth": 2
         }
       },
@@ -226,7 +226,7 @@
           "creatureType": "baby_unifox",
           "numFoodA": 52,
           "description": "Dear Friend! I have 52 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-          "reward": 200,
+          "reward": 30,
           "creatureWidth": 2
         }
       },
@@ -239,7 +239,7 @@
           "creatureType": "baby_unifox",
           "numFoodA": 60,
           "description": "Dear Friend! I have 52 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-          "reward": 200,
+          "reward": 30,
           "creatureWidth": 2
         }
       }
@@ -294,7 +294,7 @@
           "creatureType": "baby_unifox",
           "numCreatures": 10,
           "description": "Dear Friend! I have 10 BABY UNIFOXES. Please send me enough food for all of them!",
-          "reward": 200,
+          "reward": 10,
           "creatureWidth": 2
         }
       },
@@ -307,7 +307,7 @@
           "creatureType": "baby_unifox",
           "numCreatures": 5,
           "description": "Dear Friend! I have 5 BABY UNIFOXES. Please send me enough food for all of them!",
-          "reward": 200
+          "reward": 10
         }
       }
       ]
@@ -326,7 +326,7 @@
               "creatureType": "baby_rammus",
               "numCreatures": 7,
               "description": "Dear Friend! I have 7 BABY RAMS. Please send me enough food for all of them!",
-              "reward": 200
+              "reward": 10
             }
           },
           {
@@ -338,7 +338,7 @@
               "creatureType": "baby_rammus",
               "numCreatures": 13,
               "description": "Dear Friend! I have 13 BABY RAMS. Please send me enough food for all of them!",
-              "reward": 200
+              "reward": 20
             }
           }
         ]
@@ -433,7 +433,7 @@
         "creatureType": "baby_rammus",
         "numCreatures": 10,
         "description": "Dear Friend! I have 10 BABY RAMS. Please send me enough food for all of them!",
-        "reward": 200
+        "reward": 20
       }
     },
     {
@@ -444,7 +444,7 @@
         "creatureType": "baby_unifox",
         "numCreatures": 18,
         "description": "Dear Friend! I have 18 BABY UNIFOXES. Please send me enough food for all of them!",
-        "reward": 200,
+        "reward": 10,
         "creatureWidth": 2
       }
     },
@@ -456,7 +456,7 @@
         "creatureType": "baby_unifox",
         "numFoodA": 60,
         "description": "Dear Friend! I have 60 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-        "reward": 200,
+        "reward": 30,
         "creatureWidth": 2
       }
     }

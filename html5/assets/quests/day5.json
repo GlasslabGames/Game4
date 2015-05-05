@@ -36,7 +36,7 @@
             "creatureType": "baby_bird",
             "numFoodA": 12,
             "description": "Dear Friend! I have 12 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 200,
+            "reward": 50,
             "creatureWidth": 3
           }
         },
@@ -95,7 +95,7 @@
             "creatureType": "baby_bird",
             "numFoodA": 52,
             "description": "Dear Friend! I have 52 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 200,
+            "reward": 70,
             "creatureWidth": 3
           }
         },
@@ -109,7 +109,7 @@
             "creatureType": "baby_bird",
             "numFoodA": 48,
             "description": "Dear Friend! I have 48 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 200,
+            "reward": 70,
             "creatureWidth": 3
           }
         },
@@ -123,7 +123,7 @@
             "creatureType": "baby_bird",
             "numFoodA": 56,
             "description": "Dear Friend! I have 56 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 200,
+            "reward": 70,
             "creatureWidth": 3
           }
         }
@@ -153,7 +153,7 @@
           "creatureType": "baby_bird",
           "numFoodA": 108,
           "description": "Dear Friend! I have 108 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-          "reward": 200,
+          "reward": 70,
           "creatureWidth": 3
         },
       "boss": true,
@@ -202,7 +202,7 @@
           "creatureType": "baby_bird",
           "numFoodA": 44,
           "description": "Dear Friend! I have 44 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-          "reward": 200,
+          "reward": 50,
           "creatureWidth": 3
         }
         },
@@ -215,7 +215,7 @@
           "creatureType": "baby_bird",
           "numFoodA": 40,
           "description": "Dear Friend! I have 40 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-          "reward": 200,
+          "reward": 50,
           "creatureWidth": 3
         }
         },
@@ -228,7 +228,7 @@
           "creatureType": "baby_bird",
           "numFoodA": 36,
           "description": "Dear Friend! I have 36 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-          "reward": 200,
+          "reward": 50,
           "creatureWidth": 3
         }
         }
@@ -246,7 +246,7 @@
           "creatureType": "baby_bird",
           "numCreatures": 27,
           "description": "Dear Friend! I have 27 BABY FLOCKINS. Please send me enough food for all of them!",
-          "reward": 200,
+          "reward": 50,
           "creatureWidth": 3
         }
       },
@@ -259,7 +259,7 @@
           "creatureType": "baby_bird",
           "numCreatures": 45,
           "description": "Dear Friend! I have 30 BABY FLOCKINS. Please send me enough food for all of them!",
-          "reward": 200,
+          "reward": 50,
           "creatureWidth": 3
         }
       }
@@ -353,7 +353,7 @@
         "creatureType": "baby_bird",
         "numFoodA": 84,
         "description": "Dear Friend! I have 84 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-        "reward": 200,
+        "reward": 70,
         "creatureWidth": 3
       }
     },
@@ -365,7 +365,7 @@
         "creatureType": "baby_bird",
         "numCreatures": 36,
         "description": "Dear Friend! I have 36 BABY FLOCKINS. Please send me enough food for all of them!",
-        "reward": 200,
+        "reward": 50,
         "creatureWidth": 3
       }
     }
