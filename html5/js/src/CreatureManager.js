@@ -118,7 +118,7 @@ GlassLab.CreatureManager = function (game) {
             journalInfo: {
                 name: "Flockin Aviarus (adult)",
                 temperament: "Friendly",
-                numCreatures: 4
+                numCreatures: 3
             },
             displayNames: {
                 singular: "flockin",
