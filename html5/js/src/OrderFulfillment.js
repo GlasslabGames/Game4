@@ -71,7 +71,7 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
     this.crate.reset();
 
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
-    var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.getMinCreatureCols(this.data.creatureType) || 1;
+    var creatureWidth = this.data.creatureWidth || GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).eatingGroup || 1;
 
     if (response) {
         // If noFoodEntries is true, we have to figure out what foodTypes and counts to use
@@ -88,28 +88,23 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
         }
 
         this.crate.setContents(this.data.creatureType, response.creatures, foodTypes, foodCounts, creatureWidth);
-        this.focusCamera();
-    } else if (this.data.hint) { // for a hint, show one row of food
-        // if hint is true, we have two options
-        // if numCreatures is provided, add one row of food.
-        // else, show the pen with the correct dimensions of food
+    } else if (this.data.hint) {
+        // hint 1: a single complete row, with a total food popup if applicable
+        // hint 2: a full size pen with the known info filled in as well as a single complete row (with total food popup if applicable)
+        var creatureCount = this._calculateTargetNumCreatures();
 
-        var creatureMult; // determines how much food to show.
-        if (this.data.numCreatures) { // when the number of creatures is provided, give them a hint of a single row of food
-            creatureMult = creatureWidth;
-        } else {
-            creatureMult = this._calculateTargetNumCreatures(); // otherwise, give them enough food for all the creatures.
+        var foodTypes = [ desiredFood[0].type ];
+        var foodCounts = [ desiredFood[0].amount * creatureCount ];
+        if (desiredFood.length > 1) {
+            foodTypes.push( desiredFood[1].type );
+            foodCounts.push( desiredFood[1].amount * creatureCount );
         }
 
-        var foodCounts = [desiredFood[0].amount * creatureMult];
-        var foodTypes = [desiredFood[0].type];
-        if (desiredFood[1]) {
-            foodCounts[1] = desiredFood[1].amount * creatureMult;
-            foodTypes[1] = desiredFood[1].type;
-        }
-        this.crate.setContents(this.data.creatureType, this.data.numCreatures || creatureMult, foodTypes, foodCounts,
-            creatureWidth, !this.data.numCreatures, this.data.numCreatures); // (hideCreatures, singleFoodRow)
+        var singleCreatureRow = this.data.hint == 1 || (this.data.hint > 1 && !this.data.numCreatures);
+        var singleFoodRow = this.data.hint == 1 || (this.data.hint > 1 && this.data.numCreatures);
 
+        this.crate.setContents(this.data.creatureType, creatureCount, foodTypes, foodCounts, creatureWidth,
+            singleCreatureRow, singleFoodRow, (this.data.totalNumFood || this.data.askTotalFood));
     } else if (this.crate) { // we have a pen with no purpose, so remove it
         this.crate.hide();
     }
@@ -122,8 +117,7 @@ GlassLab.OrderFulfillment.prototype.focusCamera = function() {
     // The pen is already set to be centered, so we can center the camera (with some offset for the UI)
     var xOffset = -75;
     var yOffset = 100;
-    this.game.camera.x = -this.game.camera.width * 0.5 + xOffset;
-    this.game.camera.y = -this.game.camera.height * 0.5 + yOffset;
+    GLOBAL.UIManager.setCenterCameraPos(xOffset, yOffset);
     if (this.crate && this.crate.sprite.visible) {
         var maxDimension = Math.max(this.crate.getFullWidth(), this.crate.height);
         GLOBAL.UIManager.zoomTo(2.5 / maxDimension);
@@ -152,13 +146,15 @@ GlassLab.OrderFulfillment.prototype._getResponse = function() {
     response.totalFood = this.totalFoodInput.getValue();
     if (!response.totalFood && this.totalFoodInput.visible) return false;
 
-    console.log(response);
     return response;
 };
 
 GlassLab.OrderFulfillment.prototype.show = function(data)
 {
     this.sprite.visible = true;
+
+    this.creatureInput.reset();
+    this.totalFoodInput.reset();
     for (var i = 0; i < this.foodInputs.length; i++) {
         this.foodInputs[i].reset();
     }
@@ -253,7 +249,7 @@ GlassLab.OrderFulfillment.prototype._refreshfoodInputs = function() {
 
 GlassLab.OrderFulfillment.prototype._onSubmit = function()
 {
-    console.log("onSubmit", this.crateLoaded);
+    //console.log("onSubmit", this.crateLoaded);
     if (!this.crateLoaded) { // need to load the crate for the first time
         var response = this._getResponse();
         if (response) {
@@ -295,12 +291,12 @@ GlassLab.OrderFulfillment.prototype._crateShipped = function() {
     // this is kinda messy but we need all this info for the receipt on the response letter
     this.data.shipped = { numCreatures: this.crate.widths[0] * this.crate.height, numFoodA: this.crate.widths[1] * this.crate.height,
     numFoodB: this.crate.widths[2] * this.crate.height, foodTypeA: this.crate.foodTypes[0], foodTypeB: this.crate.foodTypes[1] };
-    console.log(this.data.shipped);
+    //console.log(this.data.shipped);
 
     if (this.crate.result == GlassLab.results.satisfied) {
         var response = this._getResponse();
         if (this.data.totalNumFood) { // we need to check that the number of creatures is correct
-            var numCreatures = this.response.creatures;
+            var numCreatures = response.creatures;
             var targetNumCreatures = this._calculateTargetNumCreatures();
             if (numCreatures < targetNumCreatures) {
                 this.data.outcome = GlassLab.results.wrongCreatureNumber;

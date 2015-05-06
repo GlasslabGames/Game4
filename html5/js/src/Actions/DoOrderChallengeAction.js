@@ -14,11 +14,11 @@ GlassLab.DoOrderChallengeAction = function(game)
 GlassLab.DoOrderChallengeAction.prototype = Object.create(GlassLab.DoChallengeAction.prototype);
 GlassLab.DoOrderChallengeAction.prototype.constructor = GlassLab.DoOrderChallengeAction;
 
-GlassLab.DoOrderChallengeAction.prototype.Do = function()
+GlassLab.DoOrderChallengeAction.prototype.Do = function(redo, withConstraints, failureCount)
 {
     GlassLab.DoChallengeAction.prototype.Do.apply(this, arguments);
-
     this.data.key = true; // mark that this order is key for this challenge
+    this.data.hint = failureCount; // 1 failure = level 1 hint, 2+ failure = level 2 hint
     GLOBAL.mailManager.AddOrders(this.data);
 
     GlassLab.SignalManager.orderResolved.remove(this._onOrderResolved, this); // make sure we don't have two copies

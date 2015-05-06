@@ -36,6 +36,7 @@ GlassLab.State.Game.prototype.create = function()
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
 
+    GLOBAL.UIManager.resetCamera();
     GLOBAL.transition.out();
 };
 
@@ -53,7 +54,8 @@ GlassLab.State.Game.prototype.update = function()
     // Re-sort creatures because they probably moved
     //game.iso.simpleSort(GLOBAL.creatureLayer);
 
-    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !game.input.activePointer.targetObject && !GLOBAL.mailManager.currentOrder)
+    if (game.input.activePointer.isDown && !GLOBAL.dragTarget && !GLOBAL.mailManager.currentOrder && !(game.input.activePointer.targetObject &&
+        game.input.activePointer.targetObject.sprite && game.input.activePointer.targetObject.sprite instanceof GlassLab.UIElement))
     {
         var dx = game.input.activePointer.x - GLOBAL.lastMousePosition.x;
         var dy = game.input.activePointer.y - GLOBAL.lastMousePosition.y;

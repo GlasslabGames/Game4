@@ -87,7 +87,7 @@ GlassLab.CreatureManager = function (game) {
             spriteName: "unifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
             fxFrames: {eat: 1, vomit: 40, poop: 70 },
-            desiredFood: [{type: "strawberry", amount: 4}, {type: "pizza", amount: 5}],
+            desiredFood: [{type: "strawberry", amount: 2}, {type: "pizza", amount: 3}],
             eatingGroup: 1,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
@@ -118,7 +118,7 @@ GlassLab.CreatureManager = function (game) {
             journalInfo: {
                 name: "Flockin Aviarus (adult)",
                 temperament: "Friendly",
-                numCreatures: 4
+                numCreatures: 3
             },
             displayNames: {
                 singular: "flockin",
@@ -127,8 +127,8 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "bird",
             fxFrames: {eat: 16, vomit: 60, poop: 70 },
-            desiredFood: [{type: "meat", amount: (10/4)}, {type: "taco", amount: (5/4)}],
-            eatingGroup: 4,
+            desiredFood: [{type: "meat", amount: (5/3)}, {type: "taco", amount: (2/3)}],
+            eatingGroup: 3,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}

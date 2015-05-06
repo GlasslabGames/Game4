@@ -33,6 +33,24 @@ GlassLab.LevelManager = function(game)
         objective: "This is a test!"
     };
 
+    this._addLevelData(new GlassLab.Level()).data = {
+        pens: [
+            {type: "baby_rammus",
+                creatureWidth: 6, foodAWidth: 18, height: 28, /*foodBWidth: 2,*/
+                bottomDraggable: true, leftDraggable: true, topDraggable: true}
+        ],
+        objective: "This is a test!"
+    };
+
+    this._addLevelData(new GlassLab.Level()).data = {
+        pens: [
+            {type: "baby_unifox",
+                creatureWidth: 5, foodAWidth: 20, height: 1, /*foodBWidth: 2,*/
+                bottomDraggable: true, leftDraggable: true, topDraggable: true}
+        ],
+        objective: "This is a test!"
+    };
+
     // 7
     this._addLevelData(new GlassLab.Level()).data = {
         objective: "This is a test!",
