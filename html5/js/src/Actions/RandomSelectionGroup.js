@@ -16,7 +16,7 @@ GlassLab.RandomSelectionGroup = function()
 GlassLab.RandomSelectionGroup.prototype = Object.create(GlassLab.Action.prototype);
 GlassLab.RandomSelectionGroup.prototype.constructor = GlassLab.RandomSelectionGroup;
 
-GlassLab.RandomSelectionGroup.prototype.Do = function(redo, withConstraints)
+GlassLab.RandomSelectionGroup.prototype.Do = function(redo, withConstraints, failureCount)
 {
     if (!redo || this.index < 0) this.index = Math.floor(Math.random() * this.possibilities.length);
     // if redo is true (and we've chosen an index already), we don't want to choose the random index again.
@@ -24,7 +24,7 @@ GlassLab.RandomSelectionGroup.prototype.Do = function(redo, withConstraints)
     this.action = GlassLab.Deserializer.deserializeObj(this.possibilities[this.index]);
 
     this.action.onComplete.addOnce(this._onActionComplete, this);
-    this.action.Do(redo, withConstraints);
+    this.action.Do(redo, withConstraints, failureCount);
 
     if (!this.waitForComplete)
     {

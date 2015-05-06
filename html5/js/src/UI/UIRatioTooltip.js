@@ -6,7 +6,7 @@ var GlassLab = GlassLab || {};
 /**
  * UIRatioTooltip
  */
-GlassLab.UIRatioTooltip = function(game, padding)
+GlassLab.UIRatioTooltip = function(game, padding, totalFoodHint)
 {
     GlassLab.UIElement.prototype.constructor.call(this, game);
 
@@ -91,7 +91,10 @@ GlassLab.UIRatioTooltip = function(game, padding)
     this.root.addChild(this.messageText);
     this.messageText.anchor.setTo(0.5, 1);
 
-    GlassLab.SignalManager.update.add(this._onUpdate, this);
+    this.totalFoodHint = totalFoodHint;
+    if (!totalFoodHint) {
+        GlassLab.SignalManager.update.add(this._onUpdate, this);
+    }
 };
 
 // Extends Sprite
@@ -119,7 +122,7 @@ GlassLab.UIRatioTooltip.prototype.show = function(targetPen, message)
     // Since we want to highlight the gate exactly when we want to show the popup with "Click to feed"
     if (this.pen.setGateHighlight) this.pen.setGateHighlight(message == "readyPen");
 
-    this._refreshPosition();
+    //this._refreshPosition();
 
     this.root.scale.y = 0;
     this.game.add.tween(this.root.scale).to({y: 1}, 600, Phaser.Easing.Elastic.Out, true);
@@ -127,28 +130,32 @@ GlassLab.UIRatioTooltip.prototype.show = function(targetPen, message)
 
 GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
 {
-    if (!this.pen._getCurrentCreatureType)
-    {
-        console.error("Tried to use UIRatioTooltip on pen that didn't know _getCurrentCreatureType");
-        return;
-    }
+    //console.log("Refresh tooltip on pen", this.pen, "with message", message);
 
     // Update creature info
-    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.pen._getCurrentCreatureType());
+    var creatureType = (this.pen._getCurrentCreatureType)? this.pen._getCurrentCreatureType() : this.pen.creatureType;
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(creatureType);
     this.creatureIcon.visible = creatureInfo;
     if (creatureInfo) this.creatureIcon.loadTexture(creatureInfo.spriteName + "_sticker");
-    //this.creatureIcon.loadTexture(creatureInfo ? creatureInfo.spriteName + "_sticker" : null);
 
     this.creatureCount.text = this.pen.currentWidths[0]*this.pen.currentHeight; // TODO: Don't access internal unlabeled data directly
 
     // Update food info
-    var foodInfo = GlassLab.FoodTypes[this.pen.foodTypes[0]];
-    this.foodIcon.visible = foodInfo;
-    if (foodInfo) this.foodIcon.loadTexture(foodInfo.spriteName + "_sticker");
-    this.foodCount.text = this.pen.currentWidths[1]*this.pen.currentHeight;
+    if (this.totalFoodHint) {
+        this.foodIcon.visible = true;
+        this.foodIcon.loadTexture("totalFood_" + creatureInfo.spriteName + "_sticker"); //totalFood_ram_sticker
+        this.foodCount.text = this.pen.currentWidths[1] + this.pen.currentWidths[2]; // 1 row
+
+        this.creatureCount.text = this.pen.currentWidths[0]; // 1 row
+    } else {
+        var foodInfo = GlassLab.FoodTypes[this.pen.foodTypes[0]];
+        this.foodIcon.visible = foodInfo;
+        if (foodInfo) this.foodIcon.loadTexture(foodInfo.spriteName + "_sticker");
+        this.foodCount.text = this.pen.currentWidths[1]*this.pen.currentHeight;
+    }
 
     // Update 2nd food info
-    if (this.pen.currentWidths[2])
+    if (!this.totalFoodHint && this.pen.currentWidths[2])
     {
         var foodInfo = GlassLab.FoodTypes[this.pen.foodTypes[1]];
         this.foodIcon2.visible = foodInfo;
@@ -179,6 +186,7 @@ GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
     else if (message == "innerEdge") this.messageText.text = "Click/drag to change food ratio";
     else if (message == "readyPen") this.messageText.text = "Click to feed";
     else if (message == "feeding") this.messageText.text = "Click to cancel";
+    else if (message == "hint") this.messageText.text = "Hint";
 
     this.bgLeft.loadTexture( this.messageText.visible? "penTooltipCapTall" : "penTooltipCap");
     this.bgRight.loadTexture( this.messageText.visible? "penTooltipCapTall" : "penTooltipCap");
@@ -192,6 +200,11 @@ GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
     this.bgContainer.y = this.arrow.y - this.bgContainer.getHeight();
     this.contentsContainer.y = this.bgContainer.y + (this.messageText.visible? 25 : 30);
     if (this.messageText.visible) this.messageText.y = this.arrow.y - 5;
+
+    if (this.totalFoodHint) {
+        this.contentsContainer.y = this.bgContainer.y + 25 + this.messageText.height;
+        this.messageText.y = this.bgContainer.y + 35;
+    }
 
     this.bgContainer.x = -this.bgContainer.getWidth()/2;
     this.contentsContainer.x = -this.contentsContainer.getWidth() / 2;
@@ -241,7 +254,7 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
         Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
         var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
-        if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen) {
+        if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen && !tileSprite.inPen.tooltipDisabled) {
             currentPen = tileSprite.inPen;
             if (currentPen.feeding && !currentPen.finished)
             {

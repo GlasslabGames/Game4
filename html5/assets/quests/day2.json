@@ -2,9 +2,8 @@
   "progression": [
     {
       "__type": "DoPenChallengeAction",
-      "challengeId": "T1.02a",
+      "challengeId": "T1.02",
       "problemType": "2UR1MC",
-      "reviewKey": "baby_ram_pen",
       "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 3,
@@ -15,6 +14,36 @@
       "serializedTutorial": {
         "__type": "ActionGroup",
         "serializedActions": [
+          {
+            "__type": "DeliverPenAction"
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Wow, what could it be? Click the box to open it!"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "tutorialAdvanced",
+                "_comment": "(when the box is clicked)"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "tutorialAdvanced",
+                "_comment": "(when the pen is finished appearing)"
+              }
+            ]
+          },
           {
             "__type": "ShowAssistantDialogueAction",
             "text": "To *feed many rams* at once, *drag the sides* of this pen to make it bigger."
@@ -126,8 +155,8 @@
        "client": "Archibold Huxley III",
        "creatureType": "baby_rammus",
        "numCreatures": 4,
-       "description": "Dear Friend! I have 4 BABY RAMMUSES. Please send me enough food for all of them!",
-        "reward": 200
+       "description": "Dear Friend! I have *4 baby rammuses*. Please send me enough food for all of them!",
+        "reward": 10
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -183,8 +212,8 @@
         "company": "Rupture Farms",
         "numFoodA": 15,
         "type": "baby_rammus",
-        "description": "Dear Friend! I have 15 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
-        "reward": 200
+        "description": "Dear Friend! I have *15 broccoli*. Please send me the exact number of *baby rams* to eat all my food!",
+        "reward": 10
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -224,10 +253,13 @@
       "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 30,
-        "creatureWidth": 2,
         "bottomDraggable":true,
         "topDraggable":true,
-        "leftDraggable":true       
+        "leftDraggable":true
+      },
+      "constraints": {
+        "maxHeight": 15,
+        "creatureWidth": 2
       }      
     },           
     {
@@ -257,22 +289,7 @@
       ]
     }
   ],
-  "reviewChallenges": {
-    "baby_ram_pen": [
-    {
-      "__type": "DoPenChallengeAction",
-      "challengeId": "T1.02b",
-      "problemType": "2UR1MC",
-      "challengeData": {
-        "creatureType": "baby_rammus",
-        "numCreatures": 4,
-        "bottomDraggable":true,
-        "topDraggable":true,
-        "leftDraggable":true
-      }
-    }
-    ]
-  },
+  "reviewChallenges": [],
   "funChallenges": [],
   "backgroundOrders": []
 }

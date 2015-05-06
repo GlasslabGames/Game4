@@ -57,6 +57,15 @@ GlassLab.ShippingPen = function(game) {
 
     this.SetDraggableOnly(); // no dragging
 
+    this.tooltip = new GlassLab.UIRatioTooltip(this.game, 5, true);
+    GLOBAL.UIManager.topAnchor.addChild(this.tooltip);
+    this.tooltip.scale.setTo(0.8, 0.8);
+    this.tooltip.y = 100;
+
+    // Make distinct roots for the food and creatures so we can tween them as a hint
+    this.creatureRoot = this.frontObjectRoot.addChild(this.game.make.sprite());
+    this.foodRoot = this.frontObjectRoot.addChild(this.game.make.sprite());
+
     this.onShipped = new Phaser.Signal();
 };
 
@@ -72,24 +81,46 @@ GlassLab.ShippingPen.prototype.reset = function() {
     this.shadow.isoPosition.setTo(GLOBAL.tileSize + 20, GLOBAL.tileSize);
 };
 
-// Adds the specified number of creatures and food
-GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow) {
-    console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, hideCreatures, singleFoodRow);
+GlassLab.ShippingPen.prototype.hide = function() {
+    GlassLab.Pen.prototype.hide.apply(this, arguments);
+    this.tooltip.hide();
+};
 
+// Adds the specified number of creatures and food
+// If hideCreatures or hideFood is true, then all those contents will be hidden except for one row (used for hints)
+GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, singleCreatureRow, singleFoodRow, totalFoodHint) {
+    console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, singleCreatureRow, singleFoodRow, totalFoodHint);
+
+    // Remember a few things that we need to access later
     this.foodTypes = foodTypes;
+    this.creatureType = creatureType;
+
     this.widths = [];
+
+    // First figure out the normal dimensions of the pen. Then afterwards we can constrain it based on singleCreatureRow and singleFoodRow.
 
     // use the target creature width as set in order fulfillment, unless we have fewer creatures than that
     if (targetCreatureWidth) this.widths[0] = Math.min(targetCreatureWidth, numCreatures);
     else this.widths[0] = numCreatures;
 
-    this.height = Math.ceil(numCreatures / this.widths[0]);
+    this.height = Math.ceil(numCreatures / this.widths[0]); // tall enough for all the creatures
 
+    // calculate the width for each food is such that the total food fits into our height
     for (var j = 0; j < numFoods.length; j++) {
-        this.widths[j+1] = (singleFoodRow)? numFoods[j] : (Math.ceil(numFoods[j] / this.height));
+        this.widths[j+1] = Math.ceil(numFoods[j] / this.height);
+        if (singleFoodRow) { // if we only want to show a single row of food, then the number of each food is equal to as many are in one row
+            numFoods[j] = this.widths[j+1];
+        }
     }
 
-    if (hideCreatures) numCreatures = 0; // keep the same widths and height, but don't add any creatures
+    // if we only want to show a single row of creatures and a single row of food, we only have 1 row.
+    if (singleCreatureRow && singleFoodRow) this.height = 1;
+
+    // if we only want to show a single row of creatures, the number of creatures is equal to as many are in one row.
+    if (singleCreatureRow) numCreatures = this.widths[0];
+
+    this.tintRows = (singleCreatureRow || singleFoodRow); // if there's some kind of hint, turn on the alternatingly tinted rows
+
     this.centerEdge.sprite.visible = false;
 
     this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
@@ -97,8 +128,27 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
 
     this.show(); // make sure the pen is visible, and also call Resize
 
+    // Stop previous tweens
+    if (this.foodTween) this.foodTween.stop();
+    if (this.creatureTween) this.creatureTween.stop();
+
+    // Tween the parts that are hints
+    if (singleFoodRow) {
+        this.foodRoot.alpha = 0.75;
+        this.foodTween = this.game.add.tween(this.foodRoot).to({alpha: 0.25}, 1000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    } else {
+        this.foodRoot.alpha = 1;
+    }
+
+    if (singleCreatureRow) {
+        this.creatureRoot.alpha = 0.75;
+        this.creatureTween = this.game.add.tween(this.creatureRoot).to({alpha: 0.25}, 1000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+    } else {
+        this.creatureRoot.alpha = 1;
+    }
+
     // Fill in the creatures in the pen
-    this.FillIn(GlassLab.Creature.bind(null, this.game, creatureType, this), this.frontObjectRoot, this.creatureSpots, numCreatures,
+    this.FillIn(GlassLab.Creature.bind(null, this.game, creatureType, this), this.creatureRoot, this.creatureSpots, numCreatures,
             0, this.widths[0], true, creatureType);
     this.game.time.events.add(0, this._refreshCreatures, this); // hack to make sure creatures are visible. I don't know why they sometimes don't show up
 
@@ -107,7 +157,7 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     for (var i = 0, len = foodTypes.length; i < len; i++) {
         while (this.foodLists.length <= i) this.foodLists.push([]);
         var maxFood = (numFoods)? numFoods[i] : null;
-        this.FillIn(GlassLab.Food.bind(null, this.game, foodTypes[i]), this.frontObjectRoot, this.foodLists[i], maxFood,
+        this.FillIn(GlassLab.Food.bind(null, this.game, foodTypes[i]), this.foodRoot, this.foodLists[i], maxFood,
             startCol, startCol += this.widths[i+1], false, foodTypes[i]);
     }
     // hide any food in other sections that we're not using
@@ -117,6 +167,9 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
             if (unusedObjects[i]) unusedObjects[i].visible = false;
         }
     }
+
+    if (totalFoodHint) this.tooltip.show(this, "hint");
+    else this.tooltip.hide();
 
     // we have all the information, so we can calculate the result right now
     this.problemFoods = []; // list of food types that were incorrect
@@ -252,7 +305,7 @@ GlassLab.ShippingPen.prototype._drawEdges = function() {
 };
 
 GlassLab.ShippingPen.prototype._drawBgAtTile = function(col, row, tile) {
-    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.tileRoot, "crate", "crate_floor.png");
+    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.tileRoot, "crate", "crate_floor.png", (this.tintRows && row % 2)? 0xeeeeee : 0xffffff);
     this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.shadow, "crate_shadow", "", 0x000000, 0.995);
     if (this.lid.visible) this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.lidTileRoot, "crate", "crate_floor.png");
 };

@@ -263,6 +263,11 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('dropTargetRing', 'assets/images/drop_target_outer_ring.png');
     game.load.image('dropTargetX', 'assets/images/drop_target_inner_x.png');
 
+    // pen delivery system
+    game.load.image('penDeliveryCrate', 'assets/images/pen/delivery/pen_delivery_crate.png');
+    game.load.image('penDeliveryHighlight', 'assets/images/pen/delivery/pen_delivery_crate_white.png');
+    game.load.image('penDeliveryShadow', 'assets/images/pen/delivery/pen_delivery_shadow.png');
+
     // poop
     game.load.atlasJSONHash('poopAnim', 'assets/images/poo/poo.png', 'assets/images/poo/poo.json');
 
