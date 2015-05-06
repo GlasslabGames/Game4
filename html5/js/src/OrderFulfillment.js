@@ -117,8 +117,7 @@ GlassLab.OrderFulfillment.prototype.focusCamera = function() {
     // The pen is already set to be centered, so we can center the camera (with some offset for the UI)
     var xOffset = -75;
     var yOffset = 100;
-    this.game.camera.x = -this.game.camera.width * 0.5 + xOffset;
-    this.game.camera.y = -this.game.camera.height * 0.5 + yOffset;
+    GLOBAL.UIManager.setCenterCameraPos(xOffset, yOffset);
     if (this.crate && this.crate.sprite.visible) {
         var maxDimension = Math.max(this.crate.getFullWidth(), this.crate.height);
         GLOBAL.UIManager.zoomTo(2.5 / maxDimension);

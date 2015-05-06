@@ -58,6 +58,9 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     //row = row || penData.startRow;
     this._centerPen(pen); // automatically center the pen
 
+    // center the camera over the pen
+    this.focusCameraOnPen(pen); // only works if you delay for a frame, for an unknown reason
+
     pen.targetNumCreatures = penData.targetNumCreatures || penData.numCreatures;
     pen.maxHeight = penData.maxHeight;
 
@@ -110,32 +113,25 @@ GlassLab.PenManager.prototype._centerPen = function(pen) {
     pen.Resize();
 };
 
-GlassLab.PenManager.prototype.zoomToPen = function(pen) {
+GlassLab.PenManager.prototype.focusCameraOnPen = function(pen) {
     if (!pen) pen = this.pens[0];
     if (!pen) {
-        console.error("Called PenManager.zoomToPen without a pen to focus on!");
+        console.error("Called PenManager.focusCameraOnPen without a pen to focus on!");
         return;
     }
 
-    /*var isoPos = pen.sprite.isoPosition;
-    //isoPos.x += pen.getFullWidth() / 2;
-    //isoPos.y += pen.height / 2;
-    var pos = this.game.iso.project(isoPos);
-    pos = Phaser.Point.multiply(pos, GLOBAL.worldLayer.scale);
-    console.log(isoPos.x, isoPos.y, pos.x, pos.y);
+    // We could zoom into the pen, but it doesn't really make sense since the pen is usually small at the beginning but must grow
+    //var maxDimension = Math.max(pen.getFullWidth(), pen.height);
+    //var targetZoomLevel = 2.5 / maxDimension;
+    //GLOBAL.UIManager.snapZoomTo(targetZoomLevel);
 
-    this.game.camera.x = pos.x*//* - this.game.camera.width * 0.5;*//*
-    this.game.camera.y = pos.y*//* - this.game.camera.height * 0.5;*/
+    var isoPos = new Phaser.Point(pen.sprite.isoX, pen.sprite.isoY);
+    isoPos.x += pen.widths[0] * GLOBAL.tileSize;
+    isoPos.y += pen.height / 2 * GLOBAL.tileSize;
+    isoPos.multiply(GLOBAL.UIManager.zoomLevel, GLOBAL.UIManager.zoomLevel);
+    var pos = this.game.iso.projectXY(isoPos);
 
-    // TODO!!
-
-    var xOffset = 0; //-75;
-    var yOffset = 0; //100;
-    this.game.camera.x = -this.game.camera.width * 0.5 + xOffset;
-    this.game.camera.y = -this.game.camera.height * 0.5 + yOffset;
-
-    var maxDimension = Math.max(pen.getFullWidth(), pen.height);
-    GLOBAL.UIManager.zoomTo(0);
+    GLOBAL.UIManager.setCenterCameraPos(pos.x, pos.y);
 };
 
 GlassLab.PenManager.prototype.hidePens = function() {

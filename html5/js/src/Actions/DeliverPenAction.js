@@ -17,6 +17,6 @@ GlassLab.DeliverPenAction.prototype.constructor = GlassLab.DeliverPenAction;
 GlassLab.DeliverPenAction.prototype.Do = function()
 {
     var pen = GLOBAL.penManager.CreatePen(this.data);
-    GLOBAL.penManager.zoomToPen(pen);
+    GLOBAL.penManager.focusCameraOnPen(pen);
     //this._complete();
 };

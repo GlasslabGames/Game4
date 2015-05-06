@@ -133,7 +133,7 @@ GlassLab.UIRatioTooltip.prototype.Refresh = function(message)
     //console.log("Refresh tooltip on pen", this.pen, "with message", message);
 
     // Update creature info
-    var creatureType = (this.pen._getCurrentCreatureType && this.pen._getCurrentCreatureType()) || this.pen.creatureType;
+    var creatureType = (this.pen._getCurrentCreatureType)? this.pen._getCurrentCreatureType() : this.pen.creatureType;
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(creatureType);
     this.creatureIcon.visible = creatureInfo;
     if (creatureInfo) this.creatureIcon.loadTexture(creatureInfo.spriteName + "_sticker");
