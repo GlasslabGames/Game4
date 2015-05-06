@@ -127,7 +127,7 @@ GlassLab.Quest.prototype._startNextChallenge = function() {
     this.challenge = this._getNextChallenge(this.currentChallengeCategory);
     this.challenge.onComplete.remove(this._onChallengeComplete, this); // in case we had previously added this listener, remove it to make sure we have just one copy
     this.challenge.onComplete.addOnce(this._onChallengeComplete, this);
-    this.challenge.Do(false, (this.failureCount >= 3), this.failureCount);
+    this.challenge.Do(false, (this.failureCount >= 3), this.failureCount); // on the 4th attempt, if they failed the first 3 times
 
     this._addBackgroundOrders(); // note that we should have already added the challenge order when we called this.challenge.do()
 
