@@ -98,6 +98,35 @@ GlassLab.Creature = function (game, type, startInPen) {
         this.animSprites[animName] = animSprite;
     }
 
+    var multiAnimAtlasNames = [{
+        sheetName: "hyper",
+        animations: ["loopbf", "end", "loop", "start"]
+    }];
+    for (var i = 0; i < multiAnimAtlasNames.length; i++) {
+        var sheetInfo = multiAnimAtlasNames[i];
+        var sheetName = sheetInfo.sheetName;
+        var spriteName = info.spriteName + "_" + sheetName;
+        var sheetFrameData = this.game.cache.getFrameData(spriteName);
+        GLOBAL.resourceManager.preloadResource(spriteName);
+
+        for (var j=sheetInfo.animations.length-1; j>=0; j--)
+        {
+            var suffix = sheetInfo.animations[j];
+            var animName = spriteName + "_" + suffix;
+            var animSprite = this.game.make.sprite(0, 0, spriteName);
+
+            animSprite.anchor.setTo(0.5, 0.8);
+            //var frameNames = Phaser.Animation.generateFrameNames(animName + "_", subAnimInfo.startFrame, subAnimInfo.endFrame, ".png", 5);
+            var frameNames = GlassLab.Util.GetFrameNamesFromPrefix(sheetFrameData, animName + "_");
+            animSprite.animations.add('anim', frameNames);
+            this.sprite.addChild(animSprite);
+
+            animSprite.visible = false;
+
+            this.animSprites[sheetName + "_" + suffix] = animSprite;
+        }
+    }
+
     this.spriteHeight = this.animSprites.idle.height; // for future reference
 
     this.hungerBar.sprite.y = -(this.spriteHeight * this.sprite.scale.y / 2) - 20;
@@ -256,14 +285,14 @@ GlassLab.Creature.prototype.moveToRandomTile = function () {
 
 GlassLab.Creature.prototype.PlayAnim = function (anim, loop, framerate, restart) { // anim should be "walk", "eat", etc. Possibly pull into an enum?
     if (anim == this.currentAnimName && !restart) return this.currentAnim; // no need to change anything
-    var spriteName = GLOBAL.creatureManager.creatureDatabase[this.type].spriteName;
 
     if (anim) this.facingBack = anim.indexOf("back") > -1; // remember if we're facing back for next time
     else anim = "idle" + (this.facingBack ? "_back" : ""); // no anim = idle (facing back if we had been before)
     this.currentAnimName = anim;
 
     if (!framerate) framerate = 48;
-    var playedAnim;
+
+    this.currentAnim = null;
 
     for (var animName in this.animSprites) {
         var animation = this.animSprites[animName];
@@ -422,12 +451,26 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
         var debugPoint = this.game.iso.project(new Phaser.Plugin.Isometric.Point3(delta.x, delta.y, 0));
         if (debugPoint.y < 0)
         {
-            this.PlayAnim('walk_back', true, this.baseAnimSpeed * this.moveSpeed);
+            if (this.running)
+            {
+                this.PlayAnim('hyper_loopbf', true, this.baseAnimSpeed * this.moveSpeed);
+            }
+            else
+            {
+                this.PlayAnim('walk_back', true, this.baseAnimSpeed * this.moveSpeed);
+            }
             this.sprite.scale.x = Math.abs(this.sprite.scale.x) * (debugPoint.x < 0 ? -1 : 1);
         }
         else
         {
-            this.PlayAnim('walk', true, this.baseAnimSpeed * this.moveSpeed);
+            if (this.running)
+            {
+                this.PlayAnim('hyper_loop', true, this.baseAnimSpeed * this.moveSpeed);
+            }
+            else
+            {
+                this.PlayAnim('walk', true, this.baseAnimSpeed * this.moveSpeed);
+            }
 
             this.sprite.scale.x = Math.abs(this.sprite.scale.x) * (debugPoint.x > 0 ? -1 : 1);
         }
@@ -462,7 +505,11 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
         // Find new point along path
         if (!this._setNextTargetPosition())
         {
-            this.StopAnim();
+            // HACK: Stop anim stops the current looping animation, which breaks CreatureStateCrazyRun.
+            if (!this.running)
+            {
+                this.StopAnim();
+            }
             this.targetPosition.x = Number.NaN;
 
             this.onDestinationReached.dispatch(this);
@@ -806,13 +853,13 @@ GlassLab.Creature.prototype.setIsoPos = function (x, y) {
     this.isoY = y;
 
     this._clearPath();
+    this.StopAnim();
 };
 
 GlassLab.Creature.prototype._clearPath = function()
 {
     this.currentPath = [];
     this.targetPosition.x = Number.NaN;
-    this.StopAnim();
 };
 
 GlassLab.Creature.prototype._onOver = function()
