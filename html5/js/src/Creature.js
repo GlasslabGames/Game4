@@ -310,7 +310,7 @@ GlassLab.Creature.prototype.PathToTileCoordinate = function(col, row)
 // A*
 GlassLab.Creature.prototype.PathToTile = function(goalTile)
 {
-    this.PathToIsoPosition(goalTile.isoX, goalTile.isoY);
+    this.PathToIsoPosition(goalTile.isoX - GLOBAL.tileSize/2, goalTile.isoY - GLOBAL.tileSize/2);
 };
 
 GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)

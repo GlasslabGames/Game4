@@ -126,7 +126,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
     game.load.atlasJSONHash('tiles_v2', 'assets/images/tiles/tiles_v2.png', 'assets/images/tiles/tiles_v2.json');
-    game.load.image('squareGrassTile', 'assets/images/tiles/grass_blank_1.png');
+    game.load.image('tiledGrass', 'assets/images/tiles/square_grass.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');
     game.load.image('penTooltipCapTall', 'assets/images/pen/pen_tooltip_cap_tall.png');
@@ -160,6 +160,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('pauseMenuButtonOutline', 'assets/images/pause_menu/hud_pause_button_outline.png');
     game.load.image('pauseMenuMusicIcon', 'assets/images/pause_menu/hud_pause_music_icon.png');
     game.load.image('pauseMenuSFXIcon', 'assets/images/pause_menu/hud_pause_sfx_icon.png');
+    game.load.image('bigButtonOutline', 'assets/images/pause_menu/modal_big_button_outline.png');
+    game.load.image('bigButton', 'assets/images/pause_menu/modal_button_bg.png');
 
     game.load.image('hudSettingsBgRounded', 'assets/images/hud/hud_button_settings_rounded.png');
     game.load.image('hudSettingsBg', 'assets/images/hud/hud_button_settings_square.png');
@@ -275,6 +277,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('failSound', 'assets/audio/sfx/lose_mini_game.mp3');
     game.load.audio('successSound', 'assets/audio/sfx/win_mini_game.mp3');
     game.load.audio('clickSound', 'assets/audio/sfx/general_click.mp3');
+    game.load.audio('buttonClickSound', 'assets/audio/sfx/button_click.mp3');
     game.load.audio('popUpSound', 'assets/audio/sfx/pop_up_notification.mp3');
     game.load.audio('gateDropSound', 'assets/audio/sfx/drop_pen_gate.mp3');
     game.load.audio('mailNoticeSound', 'assets/audio/sfx/mail_notice.mp3');
@@ -335,7 +338,7 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.renderManager = new GlassLab.RenderManager(GLOBAL.game);
 
-    GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 100, "squareGrassTile");
+    GLOBAL.tiledBg = game.make.tileSprite(0, 0, 100, 120, "tiledGrass");
     GLOBAL.tiledBg.anchor.setTo(0.5, 0.5);
     GLOBAL.tiledBg.visible = false;
     GLOBAL.WorldLayer.addAt(GLOBAL.tiledBg, 2);

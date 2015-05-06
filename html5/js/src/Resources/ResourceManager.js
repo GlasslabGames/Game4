@@ -28,8 +28,6 @@ GlassLab.ResourceManager.prototype.preloadResource = function(resourceKey)
         resource.alpha = 0.001;
         resource.fixedToCamera = true;
         this.resourceCache[resourceKey] = resource;
-
-        console.log("Preloading "+ resourceKey);
     }
 };
 
