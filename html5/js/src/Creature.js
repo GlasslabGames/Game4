@@ -420,7 +420,7 @@ GlassLab.Creature.prototype._onUpdate = function (dt) {
 
     if (!this.previousLocalPosition.equals(this.position))
     {
-        GLOBAL.renderManager.AddToIsoWorld(this);
+        GLOBAL.renderManager.UpdateIsoObjectSort(this);
         this.previousLocalPosition.setTo(this.position.x, this.position.y);
     }
 };

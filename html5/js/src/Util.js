@@ -165,6 +165,29 @@ GlassLab.Util.GetFrameNamesFromPrefix = function(data, prefix)
     return frameNames;
 };
 
+GlassLab.Util.SetChildIndexInPlace = function(array, child, targetIndex)
+{
+    var currentIndex = array.indexOf(child);
+    if (targetIndex < currentIndex)
+    {
+        while (currentIndex > targetIndex)
+        {
+            array[currentIndex] = array[--currentIndex];
+        }
+
+        array[targetIndex] = child;
+    }
+    else if (targetIndex > currentIndex)
+    {
+        while (currentIndex < targetIndex)
+        {
+            array[currentIndex] = array[++currentIndex];
+        }
+
+        array[targetIndex] = child;
+    }
+};
+
 /* These are old string procressing functions that allow you to set the color using tags like in NGUI. But we're just using * to start and end highlighted sections instead.
  function getProcessedString(string)
  {
