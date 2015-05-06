@@ -15,6 +15,36 @@
         "__type": "ActionGroup",
         "serializedActions": [
           {
+            "__type": "DeliverPenAction"
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Wow, what could it be? Click the box to open it!"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "tutorialAdvanced",
+                "_comment": "(when the box is clicked)"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "tutorialAdvanced",
+                "_comment": "(when the pen is finished appearing)"
+              }
+            ]
+          },
+          {
             "__type": "ShowAssistantDialogueAction",
             "text": "To *feed many rams* at once, *drag the sides* of this pen to make it bigger."
           },

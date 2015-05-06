@@ -4,16 +4,6 @@
       "__type": "ActionGroup",
       "serializedActions": [
         {
-          "__type": "DeliverPenAction",
-          "data": {
-            "creatureType": "baby_rammus",
-            "numCreatures": 3,
-            "bottomDraggable": true,
-            "topDraggable": true,
-            "leftDraggable": true
-          }
-        },
-        {
           "__type": "StartChallengeAction",
           "id": "T1.01",
           "problemType": "2UR_intro_baby_ram",

@@ -16,7 +16,13 @@ GlassLab.DeliverPenAction.prototype.constructor = GlassLab.DeliverPenAction;
 
 GlassLab.DeliverPenAction.prototype.Do = function()
 {
-    var pen = GLOBAL.penManager.CreatePen(this.data);
-    GLOBAL.penManager.focusCameraOnPen(pen);
-    //this._complete();
+    this.pen = GLOBAL.penManager.pens[0];
+    if (!this.pen) {
+        console.error("There's no pen to deliver!");
+        this._complete();
+    }
+
+    // TODO: make crate appear offscreen and tween in
+
+    this.pen.sprite.visible = false;
 };
