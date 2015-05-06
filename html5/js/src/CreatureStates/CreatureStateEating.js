@@ -64,6 +64,17 @@ GlassLab.CreatureStateEating.prototype.Update = function() {
 
 GlassLab.CreatureStateEating.prototype._onChomp = function() {
     this.chomped = true;
+
+    // audio:
+    // if (this is on screen) // TODO
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
+    GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
+
+    if (!this.food || this.food.game == null)
+    {
+        console.error("Creature ate food that doesn't exist!");
+        return;
+    }
     this.amountEaten = this.food.BeEaten();
     this.creature.lastEatenFoodInfo = this.food.info;
 
@@ -72,11 +83,6 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
         var hideBarAfter = (this.creature.pen? null : 2); // if we're in the pen, keep the hunger bar up. Else show it briefly.
         this.creature.ShowHungerBar(this.amountEaten, this.food.type, hideBarAfter);
     }
-
-    // audio:
-    // if (this is on screen) // TODO
-    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
-    GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_eat");
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
@@ -102,7 +108,11 @@ GlassLab.CreatureStateEating.prototype.StopEating = function() {
         }
         else if (this.altReactionToFood.result == "hyper") {
             // update creature's moveSpeed and continue....
-            this.creature.moveSpeed = this.altReactionToFood.details.speedMultiplier * this.creature.normalMoveSpeed; 
+
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateCrazyRun(this.game, this.creature, 15000));
+            //this.creature.moveSpeed = this.altReactionToFood.details.speedMultiplier * this.creature.normalMoveSpeed;
+
+            return;
         }
     }
 

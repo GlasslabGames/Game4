@@ -272,25 +272,9 @@
 	"spriteSourceSize": {"x":62,"y":55,"w":228,"h":225},
 	"sourceSize": {"w":350,"h":350}
 },
-"ram_walkbf_00084 (1).png":
-{
-	"frame": {"x":2530,"y":229,"w":228,"h":224},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":62,"y":55,"w":228,"h":224},
-	"sourceSize": {"w":350,"h":350}
-},
 "ram_walkbf_00084.png":
 {
 	"frame": {"x":2530,"y":229,"w":228,"h":224},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":62,"y":55,"w":228,"h":224},
-	"sourceSize": {"w":350,"h":350}
-},
-"ram_walkbf_00085 (1).png":
-{
-	"frame": {"x":2530,"y":455,"w":228,"h":224},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":62,"y":55,"w":228,"h":224},

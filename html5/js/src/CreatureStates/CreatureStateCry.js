@@ -2,10 +2,7 @@
  * Created by Jerry Fu on 4/1/2015.
  */
 /**
- * Created by Rose Abernathy on 2/3/2015.
- */
-/**
- * CreatureStateCry - chewing on some food
+ * CreatureStateCry - crying for a specified period of time
  */
 GlassLab.CreatureStateCry = function(game, owner, duration)
 {

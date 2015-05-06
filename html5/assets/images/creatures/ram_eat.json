@@ -264,28 +264,12 @@
 	"spriteSourceSize": {"x":59,"y":42,"w":233,"h":243},
 	"sourceSize": {"w":350,"h":350}
 },
-"ram_eat_00033 (1).png":
-{
-	"frame": {"x":706,"y":233,"w":232,"h":242},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":59,"y":43,"w":232,"h":242},
-	"sourceSize": {"w":350,"h":350}
-},
 "ram_eat_00033.png":
 {
 	"frame": {"x":706,"y":233,"w":232,"h":242},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":59,"y":43,"w":232,"h":242},
-	"sourceSize": {"w":350,"h":350}
-},
-"ram_eat_00034 (1).png":
-{
-	"frame": {"x":475,"y":499,"w":228,"h":239},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":61,"y":46,"w":228,"h":239},
 	"sourceSize": {"w":350,"h":350}
 },
 "ram_eat_00034.png":
@@ -296,28 +280,12 @@
 	"spriteSourceSize": {"x":61,"y":46,"w":228,"h":239},
 	"sourceSize": {"w":350,"h":350}
 },
-"ram_eat_00035 (1).png":
-{
-	"frame": {"x":233,"y":1458,"w":224,"h":235},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":63,"y":50,"w":224,"h":235},
-	"sourceSize": {"w":350,"h":350}
-},
 "ram_eat_00035.png":
 {
 	"frame": {"x":233,"y":1458,"w":224,"h":235},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":63,"y":50,"w":224,"h":235},
-	"sourceSize": {"w":350,"h":350}
-},
-"ram_eat_00036 (1).png":
-{
-	"frame": {"x":233,"y":1695,"w":218,"h":230},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":66,"y":55,"w":218,"h":230},
 	"sourceSize": {"w":350,"h":350}
 },
 "ram_eat_00036.png":
@@ -328,28 +296,12 @@
 	"spriteSourceSize": {"x":66,"y":55,"w":218,"h":230},
 	"sourceSize": {"w":350,"h":350}
 },
-"ram_eat_00037 (1).png":
-{
-	"frame": {"x":940,"y":459,"w":220,"h":231},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":65,"y":54,"w":220,"h":231},
-	"sourceSize": {"w":350,"h":350}
-},
 "ram_eat_00037.png":
 {
 	"frame": {"x":940,"y":459,"w":220,"h":231},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":65,"y":54,"w":220,"h":231},
-	"sourceSize": {"w":350,"h":350}
-},
-"ram_eat_00038 (1).png":
-{
-	"frame": {"x":940,"y":225,"w":220,"h":232},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":65,"y":53,"w":220,"h":232},
 	"sourceSize": {"w":350,"h":350}
 },
 "ram_eat_00038.png":
@@ -360,25 +312,9 @@
 	"spriteSourceSize": {"x":65,"y":53,"w":220,"h":232},
 	"sourceSize": {"w":350,"h":350}
 },
-"ram_eat_00039 (1).png":
-{
-	"frame": {"x":909,"y":1639,"w":222,"h":233},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":64,"y":52,"w":222,"h":233},
-	"sourceSize": {"w":350,"h":350}
-},
 "ram_eat_00039.png":
 {
 	"frame": {"x":909,"y":1639,"w":222,"h":233},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":64,"y":52,"w":222,"h":233},
-	"sourceSize": {"w":350,"h":350}
-},
-"ram_eat_00040 (1).png":
-{
-	"frame": {"x":459,"y":1690,"w":222,"h":233},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":64,"y":52,"w":222,"h":233},
