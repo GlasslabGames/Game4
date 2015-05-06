@@ -50,7 +50,7 @@ GlassLab.WorldDropTarget.prototype._onUpdate = function() {
 
     if (this.active) {
         this.ring.angle += 1.5;
-        var cursorPos = new Phaser.Point(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
+        var cursorPos = GlassLab.Util.POINT2.setTo(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
         var tile = GLOBAL.tileManager.GetTileAtWorldPosition(cursorPos.x, cursorPos.y);
         if (!target.sprite || !target.sprite.canDropOn || target.sprite.canDropOn(tile)) { // check WorldObject.canDropOn
             this.lastValidPoint = cursorPos.clone(); // remember this as a valid point to drag over

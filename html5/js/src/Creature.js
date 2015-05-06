@@ -11,11 +11,9 @@ GlassLab.Creature = function (game, type, startInPen) {
     GlassLab.WorldObject.prototype.constructor.call(this, game);
 
     this.type = type;
-    var info = GLOBAL.creatureManager.creatureDatabase[type];
 
     this.state = null;
     this.isCrying = false;
-    this.prevIsoPos = new Phaser.Point();
 
     this.shadow.loadTexture("shadow");
     this.shadow.scale.setTo(0.25, 0.25);
@@ -37,6 +35,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     // desired food:
     this.desiredAmountsOfFood = {};
     this.foodEaten = {};
+    var info = GLOBAL.creatureManager.creatureDatabase[type];
     var totalFoodDesired = 0; // count so that we know what percentage of the hunger bar should go to this food
     for (var i = 0, len = info.desiredFood.length; i < len; i++) {
         var desiredFood = info.desiredFood[i];
@@ -313,12 +312,16 @@ GlassLab.Creature.prototype.StopAnim = function () {
 };
 
 GlassLab.Creature.prototype.standFacingPosition = function(targetIsoPos) {
+    return this.standFacingPositionCoord(targetIsoPos.x, targetIsoPos.y);
+};
+
+GlassLab.Creature.prototype.standFacingPositionCoord = function(x, y) {
     var pos = this.getGlobalPos();
     var dir;
-    if (Math.abs(pos.x - targetIsoPos.x) > Math.abs(pos.y - targetIsoPos.y)) {
-        dir = (pos.x < targetIsoPos.x)? "right" : "left";
+    if (Math.abs(pos.x - x) > Math.abs(pos.y - y)) {
+        dir = (pos.x < x)? "right" : "left";
     } else {
-        dir = (pos.y < targetIsoPos.y)? "down" : "up";
+        dir = (pos.y < y)? "down" : "up";
     }
     this.standFacing(dir);
     return dir;
@@ -366,13 +369,14 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
             if (dX == pathDelta.x && dY == pathDelta.y) // Same direction
             {
                 // Modify last node to simplify path
-                lastNode.setTo(node.x, node.y);
+                lastNode.x = node.x;
+                lastNode.y = node.y;
             }
             else // Different direction
             {
                 // Add new node
                 pathDelta.setTo(dX, dY);
-                this.currentPath.push(new Phaser.Point(node.x, node.y));
+                this.currentPath.push(node);
             }
         }
 
@@ -416,7 +420,7 @@ GlassLab.Creature.prototype._onUpdate = function (dt) {
 
     if (!this.previousLocalPosition.equals(this.position))
     {
-        GLOBAL.renderManager.UpdateIsoObjectSort(this);
+        GLOBAL.renderManager.AddToIsoWorld(this);
         this.previousLocalPosition.setTo(this.position.x, this.position.y);
     }
 };
@@ -762,7 +766,7 @@ GlassLab.Creature.prototype.tryReachTarget = function(target) {
             this.showEmote(false); // emote sad that we can't enter the pen
             // Next frame, make sure they're facing the spot they want to go (we have to wait since finding the destination might still be wrapping up)
             this.game.time.events.add(0, function() {
-                this.standFacingPosition(new Phaser.Point(target.pos.x + GLOBAL.tileSize, target.pos.y)); // add a tile here since we offset the position when we set the target in FeedingPen
+                this.standFacingPositionCoord(target.pos.x + GLOBAL.tileSize, target.pos.y); // add a tile here since we offset the position when we set the target in FeedingPen
             }, this);
             if (!target.outsidePen) return false; // we thought we'd be able to enter, so if we can't, it's time to look for a new target
         }
