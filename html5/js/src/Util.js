@@ -141,6 +141,30 @@ GlassLab.Util.SetColoredText = function(label, text, normalColor, highlightedCol
     return label;
 };
 
+/**
+ * GetFrameNamesFromPrefix - Returns an array of strings listing the data inside with all the frame names
+ * @param data
+ * @param prefix
+ * @returns {Array}
+ * @constructor
+ */
+GlassLab.Util.GetFrameNamesFromPrefix = function(data, prefix)
+{
+    var frameNames = [];
+
+    var rawFrames = data._frames;
+    for (var i=0, j=rawFrames.length; i < j; i++)
+    {
+        var rawFrame = rawFrames[i];
+        if (rawFrame.name.indexOf(prefix) != -1)
+        {
+            frameNames.push(rawFrame.name);
+        }
+    }
+
+    return frameNames;
+};
+
 /* These are old string procressing functions that allow you to set the color using tags like in NGUI. But we're just using * to start and end highlighted sections instead.
  function getProcessedString(string)
  {

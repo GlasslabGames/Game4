@@ -31,6 +31,7 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.atlasJSONHash(spriteName+'_cry_end', 'assets/images/creatures/'+spriteName+'_cry_end.png', 'assets/images/creatures/'+spriteName+'_cry_end.json');
         game.load.atlasJSONHash(spriteName+'_cry_loop', 'assets/images/creatures/'+spriteName+'_cry_loop.png', 'assets/images/creatures/'+spriteName+'_cry_loop.json');
         game.load.atlasJSONHash(spriteName+'_cry_start', 'assets/images/creatures/'+spriteName+'_cry_start.png', 'assets/images/creatures/'+spriteName+'_cry_start.json');
+        game.load.atlasJSONHash(spriteName+'_hyper', 'assets/images/creatures/'+spriteName+'_hyper.png', 'assets/images/creatures/'+spriteName+'_hyper.json');
         game.load.image(spriteName+'_art', 'assets/images/creatures/portrait_'+spriteName+'.png');
         game.load.image(spriteName+'_art_white', 'assets/images/creatures/portrait_'+spriteName+'_white.png');
         game.load.image(spriteName+'_sticker', 'assets/images/creatures/stickers/creature_sticker_'+spriteName+'.png');
