@@ -570,6 +570,7 @@ GlassLab.FeedingPen.prototype.reset = function() {
 
     this.forEachCreature(function() { this.StateTransitionTo(new GlassLab.CreatureStateWaitingInPen(this.game, this)); });
     this.forEachCreature(GlassLab.Creature.prototype.resetFoodEaten);
+    this.forEachCreature(GlassLab.Creature.prototype.HideHungerBar);
 
     // reenable draggable edge
     if (this.previouslyDraggableEdges) {
