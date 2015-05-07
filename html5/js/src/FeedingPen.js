@@ -79,10 +79,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
     this.id = GLOBAL.penManager.pens.length;
     GLOBAL.penManager.AddPen(this);
 
-    // Testing
-    this.cursors = game.input.keyboard.createCursorKeys();
-    GlassLab.SignalManager.update.add(this._update, this);
-
     this.sprite.inputEnabled = true;
     this.sprite.events.onInputUp.add(this._onMouseUp, this);
 };
@@ -214,11 +210,22 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         return;
     }
 
+    this.startedFeedEffects = false; // we're feeding now so we must be done with the sparkle etc
+
     this.unfedCreatures = this.getNumCreatures();
     this.result = GlassLab.results.satisfied; // this is the default result unless something worse happens
     this.feeding = true;
     this.canFeed = false;
-    this.SetDraggableOnly(); // make all edges undraggable
+
+    // make all edges undraggable
+    this.previouslyDraggableEdges = []; // we want to remember these in case they reset the pen
+    for (var i = 0; i < this.edges.length; i++) {
+        if (this.edges[i].draggable) {
+            this.previouslyDraggableEdges.push(this.edges[i]);
+            this.edges[i].setDraggable(false);
+        }
+    }
+
     for (var i = 0; i < this.rightEdges.length; i++) {
         this.rightEdges[i].sprite.visible = false; // hide the middle fences
     }
@@ -540,6 +547,7 @@ GlassLab.FeedingPen.prototype.setGateHighlight = function(on) {
 };
 
 GlassLab.FeedingPen.prototype._startFeedEffects = function() {
+    this.startedFeedEffects = true;
     //this.gateHighlightSprite.visible = false;
     this.setGateHighlight(false);
 
@@ -553,6 +561,31 @@ GlassLab.FeedingPen.prototype._startFeedEffects = function() {
         this.gatePieces[i].play("down");
         if (i == 0) this.gatePieces[i].events.onAnimationComplete.addOnce(this.FeedCreatures, this);
     }
+};
+
+// Completely reset the creatures and food in the pen to a pre-fed state
+GlassLab.FeedingPen.prototype.reset = function() {
+    this.feeding = this.finished = false;
+
+    this.forEachCreature(function() { this.StateTransitionTo(new GlassLab.CreatureStateWaitingInPen(this.game, this)); });
+    this.forEachCreature(GlassLab.Creature.prototype.resetFoodEaten);
+
+    // reenable draggable edge
+    if (this.previouslyDraggableEdges) {
+        for (var i = 0; i < this.previouslyDraggableEdges.length; i++) {
+            this.previouslyDraggableEdges[i].setDraggable(true);
+        }
+    }
+
+    // move the creatures to be in behind the gate
+    this.backObjectRoot.addChild(this.creatureRoot);
+
+    // close the gate
+    for (var i = 0; i < this.gatePieces.length; i++) {
+        this.gatePieces[i].animations.frame = 0;
+    }
+
+    this.Resize();
 };
 
 GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(result) {
@@ -672,7 +705,8 @@ GlassLab.FeedingPen.prototype.forEachCreature = function(foo, argArray) {
 };
 
 GlassLab.FeedingPen.prototype._onMouseUp = function() {
-    if (this.checkPenStatus() || (this.feeding && !this.finished))
+    if (this.startedFeedEffects) return; // don't accept clicks while the gate is dropping
+    else if (this.checkPenStatus() || (this.feeding && !this.finished))
     {
         var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
         this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
@@ -683,28 +717,17 @@ GlassLab.FeedingPen.prototype._onMouseUp = function() {
         {
             if (this.feeding && !this.finished)
             {
-                GLOBAL.levelManager.RestartLevel();
+                console.log("\n\n** Click to reset pen**");
+                this.reset();
             }
             else
             {
+                console.log("\n\n** Click to feed pen**");
                 this._startFeedEffects();
             }
         }
     }
 };
-
-// FIXME
-var anchorX = 0;
-var anchorY = 0;
-
-GlassLab.FeedingPen.prototype._update = function() {
-    if (this.cursors.up.isDown) anchorY += 0.002;
-    else if (this.cursors.down.isDown) anchorY -= 0.002;
-    else if (this.cursors.left.isDown) anchorX += 0.002;
-    else if (this.cursors.right.isDown) anchorX -= 0.002;
-    if (this.cursors.up.isDown || this.cursors.down.isDown || this.cursors.left.isDown || this.cursors.right.isDown) this.Resize();
-};
-
 
 GlassLab.FeedingPen.prototype._drawEdges = function() {
     // The positioning of each piece (by row and col) might seem a little random. In some cases it would have made more sense to use a different anchor point to keep a "truer" row/col... but this is how it is now and it's not worth changing.

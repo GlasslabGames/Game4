@@ -23,6 +23,8 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
 
+    console.log("Eating",this.food.name);
+
     if (!this.food.pen || this.eatBackwards) { // eating in the wild or we need to face backwards towards the food
         var dir = this.creature.standFacingPosition(this.food.getGlobalPos());
         if (dir == "up" || dir == "left") this.eatBackwards = true; // catch the case where they need to eat backwards outside the pen
@@ -56,6 +58,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
     GlassLab.CreatureState.prototype.Exit.call(this);
+    if (this.anim) this.anim.onComplete.remove(this.StopEating, this); // clean up a pending event if necessary
 };
 
 GlassLab.CreatureStateEating.prototype.Update = function() {
@@ -86,6 +89,8 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
+    if (!this.active) return; // catch a weird case where this gets called after we've left the state
+
     if (!this.chomped) this._onChomp();
 
     this.creature.foodEaten[this.food.type] += this.amountEaten;

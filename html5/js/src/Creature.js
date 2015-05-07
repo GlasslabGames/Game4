@@ -543,13 +543,22 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
 };
 
 GlassLab.Creature.prototype.tryWalkToNextFood = function () {
+    console.log("Looking for next food...");
+    for (var i = 0; i < this.targetFood.length; i++) {
+        if (this.targetFood[i] && this.targetFood[i].food) console.log("\t",this.targetFood[i].food.name);
+        else console.log("\t???");
+    }
+
     var foodInfo = this.targetFood.shift();
     if (!foodInfo || !foodInfo.food) {
+        console.log("No food!");
         if (this.getIsSatisfied()) this.FinishEating(GlassLab.results.satisfied);
         else this.FinishEating(GlassLab.results.hungry);
     } else if (!this.desiredAmountsOfFood[foodInfo.food.type]) { // we don't want this food
+        console.log("Disliked food!");
         this.FinishEating(GlassLab.results.dislike, foodInfo.food.type);
     } else {
+        console.log("Walking to food",foodInfo.food.name);
         this.StateTransitionTo(new GlassLab.CreatureStateWalkingToFood(this.game, this, foodInfo));
     }
 };

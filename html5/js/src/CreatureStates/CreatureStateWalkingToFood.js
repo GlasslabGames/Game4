@@ -109,6 +109,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
             this.creature.isoY = delta.y;
         }
         else {
+            console.log("Reached ",this.foodInfo.food.name);
             this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingToEat(this.game, this.creature, this.foodInfo));
         }
         //this.creature._move(); // If we use pathing

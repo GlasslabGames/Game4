@@ -23,12 +23,12 @@ GlassLab.LevelManager = function(game)
     // 6
     this._addLevelData(new GlassLab.Level()).data = {
       pens: [
-        {type: "baby_bird",
-            creatureWidth: 3, foodAWidth: 4, height: 1, /*foodBWidth: 2,*/
+        {type: "baby_rammus",
+            creatureWidth: 1, foodAWidth: 3, height: 1, /*foodBWidth: 2,*/
             bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],
       looseCreatures: {
-          baby_bird: 3
+          baby_rammus: 1
       },
         objective: "This is a test!"
     };

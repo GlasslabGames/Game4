@@ -11,9 +11,11 @@ GlassLab.CreatureState = function (game, owner) {
 };
 
 GlassLab.CreatureState.prototype.Enter = function () {
+    this.active = true;
 };
 
 GlassLab.CreatureState.prototype.Exit = function () {
+    this.active = false;
 };
 
 GlassLab.CreatureState.prototype.Update = function () {
