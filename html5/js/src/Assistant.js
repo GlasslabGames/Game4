@@ -29,10 +29,14 @@ GlassLab.Assistant = function(game) {
     this.label.anchor.set(0, 0);
     this.dialogue.addChild(this.label);
 
-    this.cancelButton = new GlassLab.UIRectButton(this.game, -535, -40, this._onCancelPressed, this, 175, 40, 0xffffff, "Nope, reload it", 18);
-    this.continueButton = new GlassLab.UIRectButton(this.game, -345, -40, this._onContinuePressed, this, 175, 40, 0xffffff, "Yes!", 18);
-    this.modalButton = new GlassLab.UIRectButton(this.game, -345, -40, this._onModalPressed, this, 175, 40, 0xffffff, "OK", 18);
-    this.advanceTutorialButton = new GlassLab.UIRectButton(this.game, -200, 10, this._onAdvanceTutorialPressed, this, 75, 40, 0xffffff, "OK", 18);
+    this.cancelButton = new GlassLab.HUDButton(this.game, -440, -50, null, "speech_button", "Nope...", {font: "14pt EnzoBlack", fill: "#ffffff"}, true, this._onCancelPressed, this);
+    this.cancelButton.addOutline("speech_button_border");
+    this.continueButton = new GlassLab.HUDButton(this.game, -270, -50, null, "speech_button", "Yes!", {font: "14pt EnzoBlack", fill: "#ffffff"}, true, this._onContinuePressed, this);
+    this.continueButton.addOutline("speech_button_border");
+    this.modalButton = new GlassLab.HUDButton(this.game, -270, -50, null, "speech_button", "OK", {font: "14pt EnzoBlack", fill: "#ffffff"}, true, this._onModalPressed, this);
+    this.modalButton.addOutline("speech_button_border");
+    this.advanceTutorialButton = new GlassLab.HUDButton(this.game, -270, -50, null, "speech_button", "OK", {font: "14pt EnzoBlack", fill: "#ffffff"}, true, this._onAdvanceTutorialPressed, this);
+    this.advanceTutorialButton.addOutline("speech_button_border");
     this.advanceTutorialButton.visible = false;
     this.dialogue.addChild(this.cancelButton);
     this.dialogue.addChild(this.continueButton);
@@ -70,6 +74,8 @@ GlassLab.Assistant.prototype.showTutorial = function(text, showButton) {
     this.showButtons(false);
     this.advanceTutorialButton.visible = showButton;
     this._setText(text);
+
+    this.modalButton.visible = false;
 
     this.inTutorial = true;
 };
