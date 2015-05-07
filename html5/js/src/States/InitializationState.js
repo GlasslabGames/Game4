@@ -257,6 +257,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('speech_bubble', 'assets/images/assistant/assistant_speech.png');
     game.load.image('speech_bubble_small', 'assets/images/assistant/assistant_speech_min.png');
     game.load.image('speech_bubble_dots', 'assets/images/assistant/assistant_speech_min_dots.png');
+    game.load.image('speech_button', 'assets/images/assistant/assistant_response_button.png');
+    game.load.image('speech_button_border', 'assets/images/assistant/assistant_response_border.png');
     game.load.atlasJSONHash('assistantAnim', 'assets/images/assistant/assistant_animations.png', 'assets/images/assistant/assistant_animations.json');
 
     // drop target

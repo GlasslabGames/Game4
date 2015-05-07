@@ -109,7 +109,16 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
 
                 var image = new GlassLab.Tile(this.game, i, j, tileType);
                 //image.tint = Math.random() * 16777215;
-                GLOBAL.renderManager.AddToIsoWorld(image, shouldSortWithCreatures ? GLOBAL.creatureLayer : GLOBAL.groundLayer);
+                if (shouldSortWithCreatures)
+                {
+                    GLOBAL.creatureLayer.add(image);
+                }
+                else
+                {
+                    GLOBAL.groundLayer.add(image);
+                }
+
+                GLOBAL.renderManager.AddToIsoWorld(image);
 
                 if (!this.map[i]) this.map[i] = [];
 
@@ -137,6 +146,9 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
     {
         GLOBAL.groundLayer.GLASSLAB_BITMAP_DIRTY = true;
     }
+
+    this.game.iso.simpleSort(GLOBAL.creatureLayer);
+    this.game.iso.simpleSort(GLOBAL.groundLayer);
 };
 
 GlassLab.TileManager.prototype.SetCenter = function(x, y)
@@ -193,7 +205,7 @@ GlassLab.TileManager.prototype.GetTileAtIsoWorldPosition = function(x, y)
 };
 GlassLab.TileManager.prototype.GetTileAtWorldPosition = function(x, y)
 {
-    var isoPosition = this.game.iso.unproject(new Phaser.Point(x,y));
+    var isoPosition = this.game.iso.unproject(GlassLab.Util.POINT2.setTo(x,y));
     Phaser.Point.divide(isoPosition, GLOBAL.WorldLayer.scale, isoPosition);
     var tilePosition = this.GetTileIndexAtWorldPosition(isoPosition.x, isoPosition.y);
     return this.GetTile(tilePosition.x, tilePosition.y);
@@ -209,7 +221,7 @@ GlassLab.TileManager.prototype.TryGetTileAtIsoWorldPosition = function(x, y)
 
 GlassLab.TileManager.prototype.TryGetTileAtWorldPosition = function(x, y)
 {
-    var isoPosition = this.game.iso.unproject(new Phaser.Point(x,y));
+    var isoPosition = this.game.iso.unproject(GlassLab.Util.POINT2.setTo(x,y));
     Phaser.Point.divide(isoPosition, GLOBAL.WorldLayer.scale, isoPosition);
     var tilePosition = this.GetTileIndexAtWorldPosition(isoPosition.x, isoPosition.y);
     if (tilePosition.x < 0 || tilePosition.x >= this.map.length || tilePosition.y < 0 || tilePosition.y >= this.map[0].length) return null;
