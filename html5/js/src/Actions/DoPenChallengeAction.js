@@ -41,10 +41,9 @@ GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatu
 
 GlassLab.DoPenChallengeAction.prototype._showResult = function() {
     if (this.result == GlassLab.results.satisfied) {
-        var nextButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.completeChallenge, this, 150, 60, 0xffffff, "Continue");
-        this.modal = new GlassLab.UIModal(GLOBAL.game, "Good job! You did it!", nextButton);
+        GLOBAL.assistant.showModal("Good job! You did it!", this.completeChallenge.bind(this));
     } else {
-        var retryButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.failChallenge, this, 150, 60, 0xffffff, "Retry");
+        //var retryButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.failChallenge, this, 150, 60, 0xffffff, "Retry");
         var text = "Oops, ";
         if (this.result == GlassLab.results.wrongCreatureType) text += "that wasn't the right kind of creature.";
         else if (this.result == GlassLab.results.dislike) text += "that wasn't the right kind of food.";
@@ -53,11 +52,8 @@ GlassLab.DoPenChallengeAction.prototype._showResult = function() {
         else if (this.result == GlassLab.results.wrongCreatureNumber) text += "some creatures were left out of the pen.";
         else text += "that wasn't right."; // fallback
 
-        this.modal = new GlassLab.UIModal(GLOBAL.game, "", retryButton);
-        this.modal.setText(text + " Try again?", true); // wrap text
+        GLOBAL.assistant.showModal(text + " Try again?", this.failChallenge.bind(this));
     }
-    GLOBAL.UIManager.centerAnchor.addChild(this.modal);
-    this.modal.show();
 };
 
 GlassLab.DoPenChallengeAction.prototype.completeChallenge = function() {
