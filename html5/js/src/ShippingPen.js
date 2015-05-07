@@ -89,7 +89,7 @@ GlassLab.ShippingPen.prototype.hide = function() {
 // Adds the specified number of creatures and food
 // If hideCreatures or hideFood is true, then all those contents will be hidden except for one row (used for hints)
 GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, singleCreatureRow, singleFoodRow, totalFoodHint) {
-    console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, singleCreatureRow, singleFoodRow, totalFoodHint);
+    //console.log("Set contents",creatureType, numCreatures, foodTypes, numFoods, targetCreatureWidth, singleCreatureRow, singleFoodRow, totalFoodHint);
 
     // Remember a few things that we need to access later
     this.foodTypes = foodTypes;

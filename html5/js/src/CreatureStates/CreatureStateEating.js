@@ -56,6 +56,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
     GlassLab.CreatureState.prototype.Exit.call(this);
+    if (this.anim) this.anim.onComplete.remove(this.StopEating, this); // clean up a pending event if necessary
 };
 
 GlassLab.CreatureStateEating.prototype.Update = function() {
@@ -86,6 +87,8 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
 };
 
 GlassLab.CreatureStateEating.prototype.StopEating = function() {
+    if (!this.active) return; // catch a weird case where this gets called after we've left the state
+
     if (!this.chomped) this._onChomp();
 
     this.creature.foodEaten[this.food.type] += this.amountEaten;

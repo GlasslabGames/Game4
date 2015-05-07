@@ -284,9 +284,23 @@ GlassLab.Food.prototype.setAnimStyle = function(style) {
 };
 
 GlassLab.Food.prototype._afterEaten = function(fadeTime) {
+    if (this.health) return; // there must be a mistake
+
     fadeTime = fadeTime || 3000;
-  var tween = this.game.add.tween(this).to( { alpha: 0 }, fadeTime, "Linear", true);
-  tween.onComplete.add( function() {this.destroy();}, this);
+    this.deathTween = this.game.add.tween(this).to( { alpha: 0 }, fadeTime, "Linear", true);
+    this.deathTween.onComplete.add( function() {this.destroy();}, this);
+};
+
+GlassLab.Food.prototype.reset = function() {
+    if (this.deathTween) this.deathTween.stop();
+    this.image.animations.stop();
+    this.health = 1;
+    this.eaten = false;
+    this.draggableComponent.active = true;
+    for (var i = 0; i < this.eaters.length; i++) {
+        this.removeEater(this.eaters[i]);
+    }
+    this.prevEaters = [];
 };
 
 GlassLab.Food.prototype.setType = function(type, showSmoke)
