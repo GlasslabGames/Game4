@@ -227,7 +227,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     }
 
     for (var i = 0; i < this.rightEdges.length; i++) {
-        this.rightEdges[i].sprite.visible = false; // hide the middle fences
+        this.rightEdges[i].setVisible(false); // hide the middle fences
     }
 
     // move the creatures to be in front of the gate
@@ -302,12 +302,13 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         var numGroups = Math.floor(creatureRow.length / groupSize);
         var grouplessCreatures = creatureRow.length % groupSize;
 
+        this.feedingTimers = [];
         for (var col = 0; col < creatureRow.length; col++) {
             var creature = creatureRow[col];
             var inGroup = Math.floor((col - grouplessCreatures) / groupSize);
             var time = ((numGroups - inGroup) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
             if (groupSize == 1 && creatureRow[col+1]) creature.creatureInFront = creatureRow[col+1]; // this is used to stop creatures from walking on top of each other
-            this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
+            this.feedingTimers.push( this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state) );
         }
     }
 
@@ -577,6 +578,13 @@ GlassLab.FeedingPen.prototype.reset = function() {
         }
     }
 
+    // stop all timers that are waiting to make creatures start eating
+    if (this.feedingTimers) {
+        for (var i = 0; i < this.feedingTimers.length; i++) {
+            this.game.time.events.remove(this.feedingTimers[i]);
+        }
+    }
+
     // move the creatures to be in behind the gate
     this.backObjectRoot.addChild(this.creatureRoot);
 
@@ -717,12 +725,10 @@ GlassLab.FeedingPen.prototype._onMouseUp = function() {
         {
             if (this.feeding && !this.finished)
             {
-                console.log("\n\n** Click to reset pen**");
                 this.reset();
             }
             else
             {
-                console.log("\n\n** Click to feed pen**");
                 this._startFeedEffects();
             }
         }

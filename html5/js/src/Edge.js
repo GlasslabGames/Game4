@@ -197,6 +197,12 @@ GlassLab.Edge.prototype.setDraggable = function(draggable) {
     }
 };
 
+GlassLab.Edge.prototype.setVisible = function(visible) {
+    for (var j = 0; j < this.layers.length; j++) {
+        this.layers[j].visible = visible;
+    }
+};
+
 GlassLab.Edge.prototype._onDown = function( target, pointer ) {
     if (this.draggable && !this.dragging && !GLOBAL.dragTarget) this._startDrag(pointer);
 };

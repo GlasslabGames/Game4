@@ -23,8 +23,6 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 {
     GlassLab.CreatureState.prototype.Enter.call(this);
 
-    console.log("Eating",this.food.name);
-
     if (!this.food.pen || this.eatBackwards) { // eating in the wild or we need to face backwards towards the food
         var dir = this.creature.standFacingPosition(this.food.getGlobalPos());
         if (dir == "up" || dir == "left") this.eatBackwards = true; // catch the case where they need to eat backwards outside the pen

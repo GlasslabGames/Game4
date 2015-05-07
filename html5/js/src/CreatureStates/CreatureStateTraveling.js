@@ -47,7 +47,6 @@ GlassLab.CreatureStateTraveling.prototype.Update = function() {
 
 GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creature)
 {
-    console.log("Destination reached! target:",this.target);
     this.creature.StopAnim();
 
     if (this.footstepSound) this.footstepSound.stop();

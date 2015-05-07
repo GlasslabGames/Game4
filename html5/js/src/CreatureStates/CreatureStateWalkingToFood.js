@@ -24,7 +24,7 @@ GlassLab.CreatureStateWalkingToFood.prototype.Enter = function()
     // run ahead to the first food we want
     var run = false;
     var delta = Phaser.Point.subtract(this.foodInfo.food.getGlobalPos(), this.creature.getGlobalPos());
-    run = (delta.getMagnitudeSq() >= GLOBAL.tileSize * GLOBAL.tileSize * 1.5625); // 1.5625 = 1.25^2, derived from when creatures leave this state and begin to eat food (.25 squares away))
+    run = (delta.getMagnitudeSq() >= GLOBAL.tileSize * GLOBAL.tileSize * 4); // 1.5625 = 1.25^2, derived from when creatures leave this state and begin to eat food (.25 squares away))
 
     // When far, run
     if (!run)
@@ -109,7 +109,6 @@ GlassLab.CreatureStateWalkingToFood.prototype.Update = function()
             this.creature.isoY = delta.y;
         }
         else {
-            console.log("Reached ",this.foodInfo.food.name);
             this.creature.StateTransitionTo(new GlassLab.CreatureStateWaitingToEat(this.game, this.creature, this.foodInfo));
         }
         //this.creature._move(); // If we use pathing

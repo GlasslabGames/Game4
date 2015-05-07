@@ -203,9 +203,9 @@ GlassLab.Pen.prototype.Resize = function() {
     for (var i = 0, len = this.rightEdges.length; i < len; i++) {
         if (i < this.widths.length-2) {
             this.rightEdges[i].sideIndex = i;
-            this.rightEdges[i].sprite.visible = true;
+            this.rightEdges[i].setVisible(true);
         } else {
-            this.rightEdges[i].sprite.visible = false;
+            this.rightEdges[i].setVisible(false);
         }
     };
 
