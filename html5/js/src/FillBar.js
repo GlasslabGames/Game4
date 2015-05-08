@@ -222,10 +222,6 @@ GlassLab.HungerBar.prototype._setUp = function() {
     } else {
         console.error("HungerBars can only have 1 or 2 sections!");
     }
-
-    for (var i = 0; i < this.sprite.children.length; i++) {
-        console.log(this.sprite.children[i].width);
-    }
 };
 
 GlassLab.HungerBar.prototype._redraw = function() {
