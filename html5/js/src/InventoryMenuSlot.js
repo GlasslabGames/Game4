@@ -254,7 +254,8 @@ GlassLab.InventoryMenuSlot.prototype.Highlight = function(yes_or_no)
                 this.bgSprite.tint = 0x000000;
                 this.label.alpha = 1;
                 this.label.tint = 0xffffff; //this.label.style.fill = '#cccccc';
-                this.hoverLabelCoin.alpha = 1;
+                if (!this.data.unlocked)
+                    this.hoverLabelCoin.alpha = 1; // reveal coin sprite only if not unlocked
             }
         }
     }
