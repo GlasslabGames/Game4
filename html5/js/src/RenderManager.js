@@ -33,17 +33,29 @@ GlassLab.RenderManager = function(game)
 
     GLOBAL.hoverLayer = this.layers[6];
 };
-
+GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE = false;
 GlassLab.RenderManager.prototype.AddToIsoWorld = function(child)
 {
-    var layer = child.parent;
+    var layer = child.parent || child._preOptimizedParent;
 
     // Check if outside camera view
-    if (!GlassLab.RenderManager.IsoObjectOffCamera(child))
+    if (GlassLab.RenderManager.IsoObjectOffCamera(child))
     {
-        child.visible = true;
-        this.UpdateIsoObjectSort(child);
-        layer.GLASSLAB_BITMAP_DIRTY = true;
+    }
+    else
+    {
+        if (!GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE)
+        {
+            var childIndex = this.GetIsoObjectTargetIndex(child, layer);
+            layer.addAt(child, childIndex, true);
+        }
+        else
+        {
+            child.visible = true;
+            this.UpdateIsoObjectSort(child);
+            child.parent.GLASSLAB_BITMAP_DIRTY = true;
+        }
+
     }
 };
 
@@ -58,7 +70,21 @@ GlassLab.RenderManager.IsoObjectOffCamera = function(child)
 
 GlassLab.RenderManager.prototype.RemoveFromIsoWorld = function(child)
 {
-    child.visible = false;
+    if (GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE)
+    {
+        child.visible = false;
+    }
+    else
+    {
+        if (!child.parent)
+        {
+            console.error("RemoveFromIsoWorld called on child with no parent");
+            return;
+        }
+
+        child._preOptimizedParent = child.parent;
+        child.parent.removeChild(child);
+    }
 };
 
 GlassLab.RenderManager.prototype._onPostUpdate = function()
@@ -74,8 +100,8 @@ GlassLab.RenderManager.prototype._updateDirtyLayers = function()
         // Re-render if dirty
         if (renderLayer.cacheAsBitmap && renderLayer.GLASSLAB_BITMAP_DIRTY)
         {
-            renderLayer.updateCache();
             renderLayer.GLASSLAB_BITMAP_DIRTY = false;
+            renderLayer.updateCache();
         }
     }
 };
