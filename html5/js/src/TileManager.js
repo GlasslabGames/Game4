@@ -109,27 +109,13 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
 
                 var image = new GlassLab.Tile(this.game, i, j, tileType);
                 //image.tint = Math.random() * 16777215;
-                if (GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE)
+                if (shouldSortWithCreatures)
                 {
-                    if (shouldSortWithCreatures)
-                    {
-                        GLOBAL.creatureLayer.add(image);
-                    }
-                    else
-                    {
-                        GLOBAL.groundLayer.add(image);
-                    }
+                    image._preOptimizedParent = GLOBAL.creatureLayer;
                 }
                 else
                 {
-                    if (shouldSortWithCreatures)
-                    {
-                        image._preOptimizedParent = GLOBAL.creatureLayer;
-                    }
-                    else
-                    {
-                        image._preOptimizedParent = GLOBAL.groundLayer;
-                    }
+                    image._preOptimizedParent = GLOBAL.groundLayer;
                 }
 
                 GLOBAL.renderManager.AddToIsoWorld(image);

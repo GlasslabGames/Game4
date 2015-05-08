@@ -20,12 +20,12 @@ GlassLab.Tile = function(game, col, row, type) {
     GlassLab.SignalManager.cameraMoved.add(function(){
         if (GlassLab.RenderManager.IsoObjectOffCamera(this))
         {
-            if((GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE && this.visible) || (!GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE && this.parent))
+            if(this.parent)
             {
                 GLOBAL.renderManager.RemoveFromIsoWorld(this);
             }
         }
-        else if((GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE && !this.visible) || (!GLOBAL.OPTIMIZE_CHILD_USING_VISIBLE && !this.parent))
+        else if(!this.parent)
         {
             GLOBAL.renderManager.AddToIsoWorld(this);
         }
