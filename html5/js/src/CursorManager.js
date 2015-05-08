@@ -38,11 +38,14 @@ CURSOR.Manager = function() {
 	else
 		console.warn("WARNING: CURSOR.Manager should probably only be created once.");
 
+    GlassLab.SignalManager.update.add(this.update, this);
+
 	// member vars:
 	this._element_id = null; // likely to be set to the id of canvas element, or other game container
 	this._cursors = {}; // dictionary of custom cursor names, img rsc urls, and regXY's.
 
     this._cursorRequests = []; // list of cursor requests: {source: requestingObj, name: cursorName}
+    this._hoverCursorName = "default"; // this will be updated whenever the mouse is over something
 };
 
 CURSOR.Manager.prototype = {
@@ -121,9 +124,9 @@ CURSOR.Manager.prototype = {
     },
 
     chooseCursor: function() {
-        var name = "default";
-        var priorities = ["grab_open", "button", "grab_closed", "none"]; // later names take priority over earlier ones
-        var currentPriority = -1;
+        var name = this._hoverCursorName; // stick with this cursor unless one of the requests has a higher priority.
+        var priorities = ["default", "grab_open", "button", "grab_closed", "none"]; // later names take priority over earlier ones
+        var currentPriority = priorities.indexOf(name);
         for (var i = 0; i < this._cursorRequests.length; i++) {
             var req = this._cursorRequests[i];
             var priority = priorities.indexOf(req.name);
@@ -133,5 +136,17 @@ CURSOR.Manager.prototype = {
             }
         }
         this.setCursor(name);
+    },
+
+    update: function() {
+        var name = "default";
+        if (GLOBAL.game && GLOBAL.game.input.activePointer.targetObject && GLOBAL.game.input.activePointer.targetObject.customHoverCursor) {
+            name = GLOBAL.game.input.activePointer.targetObject.customHoverCursor;
+        }
+
+        if (name != this._hoverCursorName) {
+            this._hoverCursorName = name;
+            this.chooseCursor(name); // we only want to call this if something has changed
+        }
     }
 };

@@ -291,6 +291,8 @@ GlassLab.Food.prototype.setAnimStyle = function(style) {
 GlassLab.Food.prototype._afterEaten = function(fadeTime) {
     if (this.health) return; // there must be a mistake
 
+    this.inputEnabled = false; // TODO: I don't think the food is actually getting destroyed. This is just a temp fix.
+
     fadeTime = fadeTime || 3000;
     this.deathTween = this.game.add.tween(this).to( { alpha: 0 }, fadeTime, "Linear", true);
     this.deathTween.onComplete.add( function() {this.destroy();}, this);

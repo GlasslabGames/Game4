@@ -38,6 +38,7 @@ GlassLab.WorldObject = function (game) {
     this.draggableComponent = new GlassLab.DraggableComponent(game, this);
     this.draggableComponent.snap = true;
     this.draggableComponent.showDropTarget = true;
+    this.draggableComponent.customDragCursor = "none"; // hide the cursor when we're dragging this
 
     this.input.priorityID = 5; // above the base pen, but below the edges of the pen
 

@@ -203,6 +203,8 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
         // hover label adjustments:
         this.hoverLabel.setText(this.data.displayNames["singular"]);
         this.UpdateHoverLabel();
+
+        this.input.customHoverCursor = "grab_open";
     }
     else {
         if (this.data.cost > 0) {
@@ -220,11 +222,15 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
                 this.label.alpha = 0.25;
                 this.hoverLabel.setText("Need More       "); // spaces important
                 this.UpdateHoverLabel();
+
+                this.input.customHoverCursor = null;
             }
             else {
                 // can afford!
                 this.hoverLabel.setText("Unlock " + this.data.displayNames["singular"]);
                 this.UpdateHoverLabel();
+
+                this.input.customHoverCursor = "button";
             }
         }
         else {
