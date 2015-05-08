@@ -82,7 +82,7 @@ CURSOR.Manager.prototype = {
 			if (document.getElementById(this._element_id))
 				document.getElementById(this._element_id).style.cursor = "url(" + this._cursors[name].src + ") " + this._cursors[name].regX + " " + this._cursors[name].regY + ", auto"; // add "auto" as a fallback.
 			else
-				console.error("CURSOR: setCursor(): Assigned DOM element '" + name + "' not found, bailing.");
+				console.error("CURSOR: setCursor(): Assigned DOM element '" + this._element_id + "' not found, bailing.");
 		}
 		else {
 			console.warn("CURSOR: setCursor(): Cursor name '" + name + "' not configured, bailing.");
