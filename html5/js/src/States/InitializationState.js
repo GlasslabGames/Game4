@@ -63,7 +63,7 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.image(basicFoodSpriteNames[i]+'_shadow', 'assets/images/food/food_shadows/food_shadow_'+basicFoodSpriteNames[i]+'.png');
     }
 
-    game.load.atlasJSONHash('foodAnim', 'assets/images/food/food_animation.png', 'assets/images/food/food_animation.json');
+    game.load.atlasJSONHash('foodAnim', 'assets/images/food/food_death.png', 'assets/images/food/food_death.json');
 
     game.load.image('totalFood_ram_sticker', 'assets/images/food/food_stickers/total_food_ram.png');
     game.load.image('totalFood_bird_sticker', 'assets/images/food/food_stickers/total_food_bird.png');
