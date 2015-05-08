@@ -5,28 +5,16 @@
 var GlassLab = GlassLab || {};
 
 /**
- * FillBar - a percent bar that can be made up of multiple segments. Each segment can be set individually. For example,
- * one segment can be set to take up 25% of the total space in the bar, so if that segment is 100% full but the rest are 0%,
- * only 25% of the total bar will be full. Each segment also has its own color. If a segment exceeds 100%, it will turn red.
- * (Currently the "bad color" isn't customizable.)
+ * FillBar - a percent bar that might have multiple sub bars. Each segment also has its own color.
+ * If a segment exceeds 100%, it will turn red. (Currently the "bad color" isn't customizable.)
  * @param sections: an collection of objects containing information about each section of the bar, with keys,
- *  like carrots: {percent: 0.25, color: 0x0000ff} (= a blue bar that takes up at most 0.25 of the total)
+ *  like carrots: {percent: 0.25, color: 0x0000ff} (= a blue bar that's 25% as long as the max size)
  */
 GlassLab.FillBar = function(game, width, height, sections) {
     this.game = game;
     this.sprite = game.add.sprite();
     this.width = width || 500;
     this.height = height || 100;
-
-    var borderSize = 4;
-    var bg = game.add.graphics(0, 0);
-    bg.beginFill(0xffffff);
-    this.sprite.addChild(bg);
-    bg.x = -this.width / 2;
-
-    this.fill = game.add.graphics(0, 0);
-    this.fill.x = -this.width / 2;
-    this.sprite.addChild(this.fill);
 
     sections = sections || {0: {percent: 1, color: GlassLab.FillBar.GOOD_COLOR }};
     this.sections = sections;
@@ -44,14 +32,14 @@ GlassLab.FillBar = function(game, width, height, sections) {
         return sections[b].percent - sections[a].percent;
     });
 
-    // add a background for each section
+    // figure out the max width for each section
     var maxPercent = this.sections[this.sectionOrder[0]].percent;
     for (var i = 0; i < this.sectionOrder.length; i++) {
         var section = this.sections[this.sectionOrder[i]];
-        section.yOffset = (this.height + borderSize * 3) * (this.sectionOrder.length - 1 - i);
         section.totalWidth = this.width * (section.percent / maxPercent);
-        bg.drawRect(-borderSize, borderSize - section.yOffset, section.totalWidth + 2*borderSize, -this.height - 2*borderSize);
     }
+
+    this._setUp(); // set up the graphics
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
     this.sprite.events.onDestroy.add(this._onDestroy, this);
@@ -62,6 +50,25 @@ GlassLab.FillBar.BAD_COLOR = 0xc0272d;
 
 GlassLab.FillBar.prototype._onDestroy = function () {
     if (this.updateHandler) this.updateHandler.detach();
+};
+
+// override this to use something except simple graphics
+GlassLab.FillBar.prototype._setUp = function () {
+    var borderSize = 4;
+    var bg = this.game.add.graphics(0, 0);
+    bg.beginFill(0xffffff);
+    this.sprite.addChild(bg);
+    bg.x = -this.width / 2;
+
+    this.fill = this.game.add.graphics(0, 0);
+    this.fill.x = -this.width / 2;
+    this.sprite.addChild(this.fill);
+
+    for (var i = 0; i < this.sectionOrder.length; i++) {
+        var section = this.sections[this.sectionOrder[i]];
+        section.yOffset = (this.height + borderSize * 3) * (this.sectionOrder.length - 1 - i);
+        bg.drawRect(-borderSize, borderSize - section.yOffset, section.totalWidth + 2*borderSize, -this.height - 2*borderSize);
+    }
 };
 
 // Set the nth section of the fill bar to this amount (clamped to 0-1). If animate is true, it will gradually change.
@@ -139,8 +146,7 @@ GlassLab.FillBar.prototype._onUpdate = function() {
         }
         if (!this.animating) this._onFinishAnim();
     }
-    if (this.sprite) this.sprite.scale.x = (this.sprite.parent.scale.x > 0)? 1 : -1;
-    // TODO: remove update if destroyed
+    if (this.sprite) this.sprite.scale.x = ((this.sprite.parent.scale.x > 0)? 1 : -1) * Math.abs(this.sprite.scale.x);
 };
 
 GlassLab.FillBar.prototype._redraw = function() {
@@ -156,5 +162,87 @@ GlassLab.FillBar.prototype._redraw = function() {
         }
         var width = section.totalWidth * amount;
         this.fill.drawRect(0, - section.yOffset, width, -this.height);
+    }
+};
+
+// Hunger bar - a fillbar with different graphics
+GlassLab.HungerBar = function(game, sections) {
+    GlassLab.FillBar.prototype.constructor.call(this, game, 80, 0, sections);
+    // _setUp will be called by the parent constructor
+};
+
+GlassLab.HungerBar.prototype = Object.create(GlassLab.FillBar.prototype);
+GlassLab.HungerBar.prototype.constructor = GlassLab.HungerBar.prototype;
+
+
+GlassLab.HungerBar.prototype._setUp = function() {
+    this.sprite.anchor.setTo(0.5, 1);
+
+    if (this.sectionOrder.length == 1) {
+        var bg = this.game.make.sprite(0, 0, "hungerBarSingleBg");
+        this.sprite.addChild(bg);
+
+        var fill = this.game.make.sprite(0, 0, "hungerBarSingleFill");
+        this.sprite.addChild(fill);
+
+        this.sections[this.sectionOrder[0]].fill = fill;
+
+    } else if (this.sectionOrder.length == 2) {
+        var bg = this.game.make.sprite(0, 0, "hungerBarDoubleBgBase");
+        bg.anchor.setTo(0, 0.5);
+        this.sprite.addChild(bg);
+
+        for (var i = 0; i < this.sectionOrder.length; i++) {
+            var section = this.sections[this.sectionOrder[i]];
+
+            var bgWidth = this.game.make.sprite(bg.x + bg.width, 0, "hungerBarDoubleBgWidth");
+            bgWidth.width = section.totalWidth;
+            bgWidth.anchor.setTo(0, 0.5);
+            if (i % 2 == 0) bgWidth.scale.y = -1;
+            this.sprite.addChild(bgWidth);
+
+            var bgCap = this.game.make.sprite(bgWidth.x + bgWidth.width, 0, "hungerBarDoubleBgCap");
+            bgCap.anchor.setTo(0, 0.5);
+            if (i % 2 == 0) bgCap.scale.y = -1;
+            this.sprite.addChild(bgCap);
+
+            var fillBase = this.game.make.sprite(bg.x + bg.width, 0, "hungerBarDoubleFillBase");
+            fillBase.anchor.setTo(1, 0.5);
+            if (i % 2 == 0) fillBase.scale.y = -1;
+            this.sprite.addChild(fillBase);
+            section.fillBase = fillBase;
+
+            var fill = this.game.make.sprite(fillBase.x, 0, "hungerBarDoubleFillWidth");
+            fill.anchor.setTo(0, 0.5);
+            fill.width = section.totalWidth;
+            if (i % 2 == 0) fill.scale.y = -1;
+            this.sprite.addChild(fill);
+            section.fill = fill;
+        }
+    } else {
+        console.error("HungerBars can only have 1 or 2 sections!");
+    }
+
+    for (var i = 0; i < this.sprite.children.length; i++) {
+        console.log(this.sprite.children[i].width);
+    }
+};
+
+GlassLab.HungerBar.prototype._redraw = function() {
+    for (var i = 0; i < this.sectionOrder.length; i++) {
+        var section = this.sections[this.sectionOrder[i]];
+        var amount = section.amount;
+        if (section.fillBase) section.fillBase.tint = (section.amount > 1)? GlassLab.FillBar.BAD_COLOR : section.color;
+        section.fill.tint = (section.amount > 1)? GlassLab.FillBar.BAD_COLOR : section.color;
+        if (section.amount > 1) amount = 1;
+
+        var width = section.totalWidth * amount;
+        if (section.fillBase) {
+            section.fillBase.visible = (width > 0);
+            section.fill.width = width;
+        } else {
+            if (width > 0) width += 30; // 30 is the size of space on the left side of the fill asset
+            section.fill.crop(new Phaser.Rectangle(0, 0, width, section.fill.height));
+        }
     }
 };

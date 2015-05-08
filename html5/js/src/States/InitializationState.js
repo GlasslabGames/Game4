@@ -276,6 +276,15 @@ GlassLab.State.Init.prototype.preload = function()
     // smoke
     game.load.atlasJSONHash('smokeAnim', 'assets/images/smoke_puffs.png', 'assets/images/smoke_puffs.json');
 
+    // hunger bar
+    game.load.image('hungerBarSingleBg', 'assets/images/hunger_bar/hunger_bar_hud_hunger_single_background.png');
+    game.load.image('hungerBarSingleFill', 'assets/images/hunger_bar/hunger_bar_hud_hunger_single_fill.png');
+    game.load.image('hungerBarDoubleBgBase', 'assets/images/hunger_bar/hunger_bar_double_background_base.png');
+    game.load.image('hungerBarDoubleBgCap', 'assets/images/hunger_bar/hunger_bar_double_background_cap.png');
+    game.load.image('hungerBarDoubleBgWidth', 'assets/images/hunger_bar/hunger_bar_double_background_width.png');
+    game.load.image('hungerBarDoubleFillBase', 'assets/images/hunger_bar/hunger_bar_double_fill_base.png');
+    game.load.image('hungerBarDoubleFillWidth', 'assets/images/hunger_bar/hunger_bar_double_fill_width.png');
+
     // Tilemap
     game.load.tilemap('worldTileMap', 'assets/tilemaps/prima_world.json', null, Phaser.Tilemap.TILED_JSON);
 
