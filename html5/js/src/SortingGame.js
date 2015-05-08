@@ -428,7 +428,7 @@ GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
     var colWidth = 42, rowHeight = 35;
     var maxCols = 4;
     var creature_and_food_count = 0;
-    this.displaySprite = this.game.make.sprite(colWidth / 2, rowHeight / 2 + 50);
+    this.displaySprite = this.game.make.sprite(colWidth / 2, rowHeight / 2 + 60);
     this.addChild(this.displaySprite);
 
     var foodLeft = {}; // track the total number of food left to split among all creatures
@@ -437,15 +437,15 @@ GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
     var offset = (this.getWidth() - width) / 2;
     this.card_creatures = [];
     for (var i = 0; i < this.numCreatures; i++) {
-        var creature = this.game.make.sprite(i * colWidth + offset, 0, creatureInfo.spriteName + "_art");
-        creature.scale.setTo(0.2, 0.2);
+        var creature = this.game.make.sprite(i * colWidth + offset, 0, creatureInfo.spriteName + "_sticker");
+        creature.scale.setTo(0.45, 0.45);
         creature.anchor.setTo(0.5, 1.0);
         this.displaySprite.addChild(creature);
 
         // save to array of objs:
         this.card_creatures.push({
             obj: creature,
-            orig_scale: 0.2,
+            orig_scale: 0.45,
             tween_start: null,
             tween_stop: null,
             tween_delay: (creature_and_food_count % 3) * 100
@@ -464,15 +464,15 @@ GlassLab.SortingGameCard.prototype._addSpriteDisplay = function() {
         for (var j = 0; j < this.numFood[i]; j++) {
             var col = j % maxCols;
             row = Math.floor(j / maxCols) + lastRow;
-            var food = this.game.make.sprite(col * colWidth + offset, row * rowHeight + 10, foodInfo.spriteName);
-            food.scale.setTo(0.5, 0.5);
+            var food = this.game.make.sprite(col * colWidth + offset, row * rowHeight + 10, foodInfo.spriteName + "_sticker");
+            food.scale.setTo(0.75, 0.75);
             food.anchor.setTo(0.5, 1.0);
             this.displaySprite.addChild(food);
 
             // save to array of objs:
             this.card_food.push({
                 obj: food,
-                orig_scale: 0.5,
+                orig_scale: 0.75,
                 tween_start: null,
                 tween_stop: null,
                 tween_delay: (creature_and_food_count % 3) * 100
@@ -488,19 +488,19 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
 
     var rowHeight = 60;
     var creature_and_food_count = 0;
-    this.displaySprite = this.game.make.sprite(this.actualWidth / 2 - 40, rowHeight / 2 + 50);
+    this.displaySprite = this.game.make.sprite(this.actualWidth / 2 - 40, rowHeight / 2 + 60);
     this.addChild(this.displaySprite);
 
     this.card_creatures = [];
-    var creature = this.game.make.sprite(0, 0, creatureInfo.spriteName+"_art");
-    creature.scale.setTo(0.3, 0.3);
+    var creature = this.game.make.sprite(0, 0, creatureInfo.spriteName+"_sticker");
+    creature.scale.setTo(0.6, 0.6);
     creature.anchor.setTo(0.5, 1.0);
     this.displaySprite.addChild(creature);
 
     // save to array of objs:
     this.card_creatures.push({
         obj: creature,
-        orig_scale: 0.3,
+        orig_scale: 0.6,
         tween_start: null,
         tween_stop: null,
         tween_delay: (creature_and_food_count % 3) * 100
@@ -508,7 +508,7 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
     creature_and_food_count++;
 
     var label = this.game.make.text(36, (i+1) * rowHeight, "x "+this.numCreatures, {font: "36px EnzoBlack", fill: "#333"});
-    label.anchor.setTo(0, 1.0); // adjust anchor to avoid subpixel blur?
+    label.anchor.setTo(0, 1.2); // adjust anchor to avoid subpixel blur?
     this.displaySprite.addChild(label);
 
     this.card_food = [];
@@ -516,23 +516,23 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
         var foodInfo = GlassLab.FoodTypes[creatureInfo.desiredFood[i].type];
         var numFoods = this.numFood[i] || 0;
         if (numFoods) {
-            var food = this.game.make.sprite(0, ((i+1) * rowHeight) + 10, foodInfo.spriteName);
-            food.scale.setTo(0.75, 0.75);
+            var food = this.game.make.sprite(0, ((i+1) * rowHeight) + 10, foodInfo.spriteName + "_sticker");
+            food.scale.setTo(1.0, 1.0);
             food.anchor.setTo(0.5, 1.0);
             this.displaySprite.addChild(food);
 
             // save to array of objs:
             this.card_food.push({
                 obj: food,
-                orig_scale: 0.75,
+                orig_scale: 1.0,
                 tween_start: null,
                 tween_stop: null,
                 tween_delay: (creature_and_food_count % 3) * 100
             });
             creature_and_food_count++;
 
-            var food_label = this.game.make.text(36, (i+1) * rowHeight, "x "+numFoods, {font: "36px EnzoBlack", fill: "#333"});
-            food_label.anchor.setTo(0, 0.9); // adjust anchor to avoid subpixel blur?
+            var food_label = this.game.make.text(33, (i+1) * rowHeight, "x "+numFoods, {font: "36px EnzoBlack", fill: "#333"});
+            food_label.anchor.setTo(0, 0.8); // adjust anchor to avoid subpixel blur?
             this.displaySprite.addChild(food_label);
         }
     }

@@ -340,6 +340,15 @@ GlassLab.State.Init.prototype.create = function()
 
     game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
 
+    // Cursor Manager
+    GLOBAL.cursorManager = CURSOR.getManager();
+    GLOBAL.cursorManager.setTargetElementID('gameContainer');
+    GLOBAL.cursorManager.addCursor('default', 'assets/images/cursors/pointer_default.png', 20, 20);
+    GLOBAL.cursorManager.addCursor('button', 'assets/images/cursors/pointer_button.png', 20, 20);
+    GLOBAL.cursorManager.addCursor('grab_open', 'assets/images/cursors/pointer_grabby_open.png', 20, 20);
+    GLOBAL.cursorManager.addCursor('grab_closed', 'assets/images/cursors/pointer_grabby_closed.png', 20, 20);
+    GLOBAL.cursorManager.setCursor('default');
+
     // Save Manager
     GLOBAL.saveManager = new GlassLab.SaveManager(game);
 
