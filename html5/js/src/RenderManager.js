@@ -36,14 +36,13 @@ GlassLab.RenderManager = function(game)
 
 GlassLab.RenderManager.prototype.AddToIsoWorld = function(child)
 {
-    var layer = child.parent;
+    var layer = child.parent || child._preOptimizedParent;
 
     // Check if outside camera view
     if (!GlassLab.RenderManager.IsoObjectOffCamera(child))
     {
-        child.visible = true;
-        this.UpdateIsoObjectSort(child);
-        layer.GLASSLAB_BITMAP_DIRTY = true;
+        var childIndex = this.GetIsoObjectTargetIndex(child, layer);
+        layer.addAt(child, childIndex, true);
     }
 };
 
@@ -58,7 +57,14 @@ GlassLab.RenderManager.IsoObjectOffCamera = function(child)
 
 GlassLab.RenderManager.prototype.RemoveFromIsoWorld = function(child)
 {
-    child.visible = false;
+    if (!child.parent)
+    {
+        console.error("RemoveFromIsoWorld called on child with no parent");
+        return;
+    }
+
+    child._preOptimizedParent = child.parent;
+    child.parent.removeChild(child);
 };
 
 GlassLab.RenderManager.prototype._onPostUpdate = function()
@@ -74,8 +80,8 @@ GlassLab.RenderManager.prototype._updateDirtyLayers = function()
         // Re-render if dirty
         if (renderLayer.cacheAsBitmap && renderLayer.GLASSLAB_BITMAP_DIRTY)
         {
-            renderLayer.updateCache();
             renderLayer.GLASSLAB_BITMAP_DIRTY = false;
+            renderLayer.updateCache();
         }
     }
 };
@@ -112,29 +118,14 @@ GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj)
     }
     else
     {
-        var scanIndex = 2;
         var neighbor = layer.getAt(childIndex + 1);
-        while (!neighbor.visible)
+        if (obj.y > neighbor.y)
         {
-            if (childIndex + scanIndex == numChildren)
-            {
-                sortDirection = -1;
-                break;
-            }
-            neighbor = layer.getAt(childIndex + scanIndex);
-            scanIndex++;
+            sortDirection = 1;
         }
-
-        if (neighbor.visible)
+        else
         {
-            if (obj.y > neighbor.y)
-            {
-                sortDirection = 1;
-            }
-            else
-            {
-                sortDirection = -1;
-            }
+            sortDirection = -1;
         }
     }
 
@@ -143,7 +134,7 @@ GlassLab.RenderManager.prototype.UpdateIsoObjectSort = function(obj)
     while (targetIndex > 0 && targetIndex < numChildren-1)
     {
         var neighbor = layer.getAt(targetIndex + sortDirection);
-        if (!neighbor.visible || -Math.sign(neighbor.y - obj.y) == sortDirection)
+        if (-Math.sign(neighbor.y - obj.y) == sortDirection)
         {
             targetIndex += sortDirection;
         }
@@ -166,7 +157,7 @@ GlassLab.RenderManager.prototype.GetIsoObjectTargetIndex = function(obj, layer)
     while (targetIndex < numChildren)
     {
         var neighbor = layer.getAt(targetIndex);
-        if (!neighbor.visible || obj.y - neighbor.y > 0)
+        if (obj.y - neighbor.y > 0)
         {
             targetIndex++;
         }

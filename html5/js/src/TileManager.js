@@ -111,11 +111,11 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
                 //image.tint = Math.random() * 16777215;
                 if (shouldSortWithCreatures)
                 {
-                    GLOBAL.creatureLayer.add(image);
+                    image._preOptimizedParent = GLOBAL.creatureLayer;
                 }
                 else
                 {
-                    GLOBAL.groundLayer.add(image);
+                    image._preOptimizedParent = GLOBAL.groundLayer;
                 }
 
                 GLOBAL.renderManager.AddToIsoWorld(image);
