@@ -648,6 +648,7 @@ GlassLab.Creature.prototype.resetTargetFood = function() {
 };
 
 GlassLab.Creature.prototype.showEmote = function (happy, callback) {
+    if (this.game == null) return;
     if (happy)
     {
         var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.type);
