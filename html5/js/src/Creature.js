@@ -61,7 +61,7 @@ GlassLab.Creature = function (game, type, startInPen) {
     }
 
     this.thoughtBubble = new GlassLab.ThoughtBubble(this.game);
-    this.thoughtBubble.position.setTo(-70, -60);
+    this.thoughtBubble.position.setTo(-70, -80);
     this.thoughtBubble.scale.setTo(0.8, 0.8);
     this.addChild(this.thoughtBubble);
 

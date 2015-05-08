@@ -51,7 +51,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
 
     var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
     this.chompFrame = info.fxFrames.eat;
-    if (info.eatFxStyle) this.food.setAnimStyle(info.eatFxStyle);
+    this.eatFxStyle = info.eatFxStyle || "short";
 };
 
 GlassLab.CreatureStateEating.prototype.Exit = function() {
@@ -76,7 +76,7 @@ GlassLab.CreatureStateEating.prototype._onChomp = function() {
         console.error("Creature ate food that doesn't exist!");
         return;
     }
-    this.amountEaten = this.food.BeEaten();
+    this.amountEaten = this.food.BeEaten(this.eatFxStyle);
     this.creature.lastEatenFoodInfo = this.food.info;
 
     // show hunger bar if food is desirable:

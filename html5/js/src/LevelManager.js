@@ -28,7 +28,7 @@ GlassLab.LevelManager = function(game)
             bottomDraggable: true, leftDraggable: true, topDraggable: true}
       ],*/
       looseCreatures: {
-          rammus: 1
+          unifox: 1
       },
         objective: "This is a test!"
     };
@@ -36,7 +36,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
             {type: "baby_rammus",
-                creatureWidth: 6, foodAWidth: 18, height: 28, /*foodBWidth: 2,*/
+                creatureWidth: 1, foodAWidth: 2, height: 3, /*foodBWidth: 2,*/
                 bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         objective: "This is a test!"
