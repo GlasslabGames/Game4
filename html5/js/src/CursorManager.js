@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////////////
 // CSS3 cursor management for canvas/HTML5 games wrapped up in singleton CURSOR object
 // - typically cursors are set on a per element basis, but in this case we will
-// - set the cursor for the canvas div element as a whole, at various times, as
+// - set the cursor for the canvas div element as a whole, at various fun times, as
 // - determined by game logic.
 //
 // Usage (setup):
 // - CURSOR.getManager().setTargetElementID('container'); // 'container' being an example canvas id.
-// - CURSOR.getManager().addCursor('default', 'assets/images/cursors/pointer_default.png');
-// - CURSOR.getManager().addCursor('button', 'assets/images/cursors/pointer_button.png');
+// - CURSOR.getManager().addCursor('default', 'assets/images/cursors/pointer_default.png', 10, 10); // regX,Y = 10,10 from top left
+// - CURSOR.getManager().addCursor('button', 'assets/images/cursors/pointer_button.png', 10, 10);
 //
 // Usage (to change cursor during game):
 // - CURSOR.getManager().setCursor('button');
@@ -40,7 +40,7 @@ CURSOR.Manager = function() {
 
 	// member vars:
 	this._element_id = null; // likely to be set to the id of canvas element, or other game container
-	this._cursors = {}; // dictionary of custom cursor names and img rsc urls.
+	this._cursors = {}; // dictionary of custom cursor names, img rsc urls, and regXY's.
 };
 
 CURSOR.Manager.prototype = {
@@ -55,12 +55,18 @@ CURSOR.Manager.prototype = {
 		this._element_id = name;
 	},
 
-	addCursor: function(name, resource_url) {
+	addCursor: function(name, resource_url, reg_x, reg_y) {
+		// set reg_x and _y to 0,0 if not defined:
+		if (typeof(reg_x) == "undefined")
+			reg_x = 0;
+		if (typeof(reg_y) == "undefined")
+			reg_y = 0;
+
 		// add new url image resource to dictionary of possible custom cursors:
 		if (typeof(this._cursors[name]) != "undefined")
 			console.warn("CURSOR: addCursor(): overwriting previous configuration for cursor name '" + name + "'.");
 
-		this._cursors[name] = resource_url;
+		this._cursors[name] = { src: resource_url, regX: reg_x, regY: reg_y };
 	},
 
 	setCursor: function(name) {
@@ -74,7 +80,7 @@ CURSOR.Manager.prototype = {
 		if (typeof(this._cursors[name]) != "undefined") {
 			// good to go:
 			if (document.getElementById(this._element_id))
-				document.getElementById(this._element_id).style.cursor = "url(" + this._cursors[name] + "), auto"; // add "auto" as a fallback.
+				document.getElementById(this._element_id).style.cursor = "url(" + this._cursors[name].src + ") " + this._cursors[name].regX + " " + this._cursors[name].regY + ", auto"; // add "auto" as a fallback.
 			else
 				console.error("CURSOR: setCursor(): Assigned DOM element '" + name + "' not found, bailing.");
 		}
