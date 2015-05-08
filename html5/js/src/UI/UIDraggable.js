@@ -17,6 +17,8 @@ GlassLab.UIDraggable = function(game) {
 
     this.dropValidator = function(target) { return true; }; // overwrite this with a custom function
     this.destroyOnSuccessfulDrop = false; // if true, if we're able to validate the drop, destroy ourselves
+
+    this._at_start_point = true;
 };
 
 GlassLab.UIDraggable.prototype = Object.create(GlassLab.UIElement.prototype);
@@ -43,6 +45,7 @@ GlassLab.UIDraggable.prototype.canDropOnto = function(target) {
 GlassLab.UIDraggable.prototype._onStartDraggingComponent = function() {
     this._applyDragEffect();
     GLOBAL.audioManager.playSound("clickSound");
+    this._at_start_point = false;
 
     this.events.onStartDrag.dispatch();
 };
@@ -54,9 +57,13 @@ GlassLab.UIDraggable.prototype._onEndDraggingComponent = function() {
     var target = GLOBAL.UIManager.getDragTarget(this);
     this.events.onEndDrag.dispatch(target);
     if (!target) {
-        // fly back to the starting place
+        // fly back to the starting place, during which time it's inputEnabled is false:
         var start = this.draggableComponent.dragStartPoint;
-        if (!this.returnTween) this.returnTween = this.game.add.tween(this).to( {x: start.x, y: start.y}, 500, Phaser.Easing.Cubic.Out);
+        //this.inputEnabled = false;
+        if (!this.returnTween) {
+            this.returnTween = this.game.add.tween(this).to( {x: start.x, y: start.y}, 500, Phaser.Easing.Cubic.Out);
+            this.returnTween.onComplete.add(function() { this._at_start_point = true; }, this);
+        }
         this.returnTween.start();
     } else {
         target.drop(this);

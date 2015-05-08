@@ -48,8 +48,9 @@ GlassLab.Creature = function (game, type, startInPen) {
         var foodInfo = GlassLab.FoodTypes[type];
         hungerBarSections[type] = {percent: this.desiredAmountsOfFood[type] / totalFoodDesired, color: foodInfo.color };
     };
-    this.hungerBar = new GlassLab.FillBar(this.game, 100, 20 / info.desiredFood.length, hungerBarSections);
+    this.hungerBar = new GlassLab.HungerBar(this.game, /*100, 20 / info.desiredFood.length,*/ hungerBarSections);
     this.addChild(this.hungerBar.sprite);
+    this.hungerBar.sprite.scale.setTo(this.spriteScaleY * 3, this.spriteScaleY * 3); // e.g. 1.35 for babies, 1.8 for adults
     this.hungerBar.sprite.visible = false;
 
     // other food: (i.e. mushrooms, donuts)
@@ -128,7 +129,8 @@ GlassLab.Creature = function (game, type, startInPen) {
 
     this.spriteHeight = this.animSprites.idle.height; // for future reference
 
-    this.hungerBar.sprite.y = -(this.spriteHeight * this.sprite.scale.y / 2) - 20;
+    this.hungerBar.sprite.y = -(this.spriteHeight * this.sprite.scale.y / 2) - 50;
+    this.hungerBar.sprite.x = -(this.hungerBar.width + 32) / 2 * this.hungerBar.sprite.scale.x;
 
     //game.physics.isoArcade.enable(this.sprite);
     this.events.onDestroy.add(this._onDestroy, this);
@@ -646,6 +648,7 @@ GlassLab.Creature.prototype.resetTargetFood = function() {
 };
 
 GlassLab.Creature.prototype.showEmote = function (happy, callback) {
+    if (this.game == null) return;
     if (happy)
     {
         var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.type);
