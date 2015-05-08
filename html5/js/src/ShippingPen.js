@@ -85,6 +85,8 @@ GlassLab.ShippingPen.prototype._onDestroy = function() {
             this.smokePuffs.destroy();
         }
     }
+
+    if (this.smokeRoot) this.smokeRoot.destroy();
 };
 
 GlassLab.ShippingPen.prototype.reset = function() {
