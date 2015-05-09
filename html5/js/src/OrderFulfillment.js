@@ -232,6 +232,12 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
 
     this._refreshPen();
 
+    // After a short delay, auto-focus one of the empty slots if we can
+    this.game.time.events.add(1000, function() {
+        if (this.creatureInput.canEnterValue) this.creatureInput.answerInput.SetFocus(true);
+        else if (this.totalFoodInput.canEnterValue) this.totalFoodInput.answerInput.SetFocus(true);
+    }, this);
+
     // refresh the submit button
     this.submitButton.setEnabled( this._getResponse() );
 };

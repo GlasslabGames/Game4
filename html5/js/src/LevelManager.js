@@ -84,6 +84,7 @@ GlassLab.LevelManager = function(game)
                 client: "Archibold Huxley III",
                 company: "Rupture Farms",
                 numCreatures: 6,
+                askTotalFood: true,
                 creatureType: "unifox",
                 description: "Dear Friend! I want *[numCreatures] [creatureType]*. But I also need *enough food* to keep them all satisfied during the journey.",
                 reward: 200,
