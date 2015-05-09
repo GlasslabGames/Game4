@@ -379,8 +379,8 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData);
 
     // Add clouds
-    GLOBAL.cloudManager = new GlassLab.CloudManager(game);
-    GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
+    //GLOBAL.cloudManager = new GlassLab.CloudManager(game);
+    //GLOBAL.WorldLayer.add(GLOBAL.cloudManager.renderGroup);
 
     // Add UI
     GLOBAL.UIManager = new GlassLab.UIManager(GLOBAL.game);
