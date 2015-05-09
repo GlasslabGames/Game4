@@ -101,7 +101,6 @@ CURSOR.Manager.prototype = {
     // We may need to consider applying multiple cursor styles depending on the situation
     requestCursor: function(source, name) {
         this._cursorRequests.push({source: source, name: name});
-        console.log("request", name, this._cursorRequests.length);
         this.chooseCursor();
     },
 
@@ -113,7 +112,6 @@ CURSOR.Manager.prototype = {
                 this._cursorRequests.splice(i, 1);
             }
         }
-        console.log("unrequest", name, this._cursorRequests.length);
         this.chooseCursor();
     },
 

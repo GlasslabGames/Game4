@@ -14,7 +14,7 @@ GlassLab.FoodTypes = {
         color: 0x8cb149,
         unlocked: true,
         cost: -1,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Broccoli",
             plural: "Broccoli"
@@ -26,7 +26,7 @@ GlassLab.FoodTypes = {
         color: 0xef5067,
         unlocked: true,
         cost: -1,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Strawberry",
             plural: "Strawberries"
@@ -38,7 +38,7 @@ GlassLab.FoodTypes = {
         color: 0x975f3d, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 50,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Meat",
             plural: "Meat"
@@ -50,7 +50,7 @@ GlassLab.FoodTypes = {
         color: 0x99a2ac,
         unlocked: false,
         cost: 100,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Can",
             plural: "Cans"
@@ -62,7 +62,7 @@ GlassLab.FoodTypes = {
         color: 0xc03b30, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 20,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Apple",
             plural: "Apples"
@@ -74,7 +74,7 @@ GlassLab.FoodTypes = {
         color: 0xf6cf62,
         unlocked: false,
         cost: 200,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Taco",
             plural: "Tacos"
@@ -86,7 +86,7 @@ GlassLab.FoodTypes = {
         color: 0x99a2ac,
         unlocked: false,
         cost: 20,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Corn",
             plural: "Corn"
@@ -98,7 +98,7 @@ GlassLab.FoodTypes = {
         color: 0xe4b76e,
         unlocked: false,
         cost: 200,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Pizza",
             plural: "Pizzas"
@@ -110,7 +110,7 @@ GlassLab.FoodTypes = {
         color: 0xca5d5c,
         unlocked: false,
         cost: 100,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Mushroom",
             plural: "Mushrooms"
@@ -122,7 +122,7 @@ GlassLab.FoodTypes = {
         color: 0xf696ed,
         unlocked: false,
         cost: 2000,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Donut",
             plural: "Donuts"
