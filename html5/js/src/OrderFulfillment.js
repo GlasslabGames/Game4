@@ -198,6 +198,8 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
         return;
     }
 
+    this.showTooltip = this.data.showTooltip;
+
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
     if (this.data.totalNumFood || this.data.askTotalFood) {
         if (this.data.noFoodEntries) {  // we can use the shorter bg and move things down

@@ -78,7 +78,8 @@ GlassLab.LevelManager = function(game)
                 "creatureType": "baby_bird",
                 "description": "blah *blah* blah",
                 "reward": 200,
-                hint: true
+                hint: true,
+                showTooltip: true
             },
             {
                 client: "Archibold Huxley III",

@@ -63,7 +63,8 @@ GlassLab.UITextInput.prototype.SetFocus = function(onOrOff)
     {
         if (this.textLabel.text == "" || this.textLabel.text == " ") // Second check is because phaser puts a space in empty labels
         {
-            this.ShowKeyboardTooltip();
+            // it's pretty hacky to check a value on orderFulfillment but too bad. We only use TextInputs there anyway.
+            if (GLOBAL.orderFulfillment && GLOBAL.orderFulfillment.showTooltip) this.ShowKeyboardTooltip();
         }
     }
     else

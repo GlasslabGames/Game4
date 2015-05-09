@@ -156,7 +156,8 @@
        "creatureType": "baby_rammus",
        "numCreatures": 4,
        "description": "Dear Friend! I have *4 baby rammuses*. Please send me enough food for all of them!",
-        "reward": 10
+        "reward": 10,
+         "showTooltip": true
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -213,7 +214,8 @@
         "numFoodA": 15,
         "type": "baby_rammus",
         "description": "Dear Friend! I have *15 broccoli*. Please send me the exact number of *baby rams* to eat all my food!",
-        "reward": 10
+        "reward": 10,
+        "showTooltip": true
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
