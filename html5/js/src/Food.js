@@ -14,7 +14,7 @@ GlassLab.FoodTypes = {
         color: 0x8cb149,
         unlocked: true,
         cost: -1,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Broccoli",
             plural: "Broccoli"
@@ -26,7 +26,7 @@ GlassLab.FoodTypes = {
         color: 0xef5067,
         unlocked: true,
         cost: -1,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Strawberry",
             plural: "Strawberries"
@@ -38,7 +38,7 @@ GlassLab.FoodTypes = {
         color: 0x975f3d, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 50,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Meat",
             plural: "Meat"
@@ -50,7 +50,7 @@ GlassLab.FoodTypes = {
         color: 0x99a2ac,
         unlocked: false,
         cost: 100,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Can",
             plural: "Cans"
@@ -62,7 +62,7 @@ GlassLab.FoodTypes = {
         color: 0xc03b30, // associated color for the vomit and the hunger bar
         unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 20,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Apple",
             plural: "Apples"
@@ -74,7 +74,7 @@ GlassLab.FoodTypes = {
         color: 0xf6cf62,
         unlocked: false,
         cost: 200,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Taco",
             plural: "Tacos"
@@ -86,7 +86,7 @@ GlassLab.FoodTypes = {
         color: 0x99a2ac,
         unlocked: false,
         cost: 20,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Corn",
             plural: "Corn"
@@ -98,7 +98,7 @@ GlassLab.FoodTypes = {
         color: 0xe4b76e,
         unlocked: false,
         cost: 200,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Pizza",
             plural: "Pizzas"
@@ -110,7 +110,7 @@ GlassLab.FoodTypes = {
         color: 0xca5d5c,
         unlocked: false,
         cost: 100,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Mushroom",
             plural: "Mushrooms"
@@ -122,7 +122,7 @@ GlassLab.FoodTypes = {
         color: 0xf696ed,
         unlocked: false,
         cost: 2000,
-        hidden: false,
+        available: true,
         displayNames: {
             singular: "Donut",
             plural: "Donuts"
@@ -137,7 +137,13 @@ GlassLab.Food = function(game, type) {
     GlassLab.WorldObject.prototype.constructor.call(this, game);
 
     this.type = type;
+
+    this.image = this.game.make.sprite(0, 0, "foodAnim");
+    this.sprite.addChild(this.image);
+    this.image.anchor.setTo(0.5, 0.58);
+    this.image.scale.x = this.image.scale.y = 1.25;
     this._setImage();
+
     this.canDropInPen = true; // setting on WorldObject
     this.destroyIfOutOfBounds = true; // allow the food to be destroyed if it's dropped somewhere invalid
 
@@ -174,22 +180,14 @@ GlassLab.Food.prototype.constructor = GlassLab.Food;
 GlassLab.Food.prototype._setImage = function() {
     this.info = GlassLab.FoodTypes[this.type];
     if (!this.info) return; // can't set the image if we don't have a valid type
-    this.hasAnimations = false; // this.game.cache.checkImageKey(this.info.spriteName+"_eaten"); // in the future we want to check for anims, but for now we're just using static images since the anims have shadows baked in and other inconsistencies
-
-    var key = (this.hasAnimations)? this.info.spriteName+"_eaten" : this.info.spriteName;
-    if (!this.image) {
-        this.image = this.game.make.sprite(0, 0, key);
-        this.sprite.addChild(this.image);
-    }
-    else if (this.image.key != key) this.image.loadTexture(key);
-
-    if (this.hasAnimations) this.image.animations.add('anim');
-    this.image.scale.x = this.image.scale.y = (this.hasAnimations)? 0.4 : 1.25;
-    if (this.hasAnimations) this.image.anchor.setTo(0.4, 1);
-    else this.image.anchor.setTo(0.5, 0.7); // this anchor is specific to the carrot, so generify later
 
     this.shadow.loadTexture(this.info.spriteName+"_shadow");
     this.baseOffsetWhileDragging = -this.info.spriteOffsetWhileDragging || 0;
+
+    // Destroy old animation, if there is one
+    if (this.image.animations.currentAnim) this.image.animations.currentAnim.destroy();
+
+    this.image.animations.frameName = this.type+"_idle.png";
 };
 
 GlassLab.Food.prototype._onDestroy = function() {
@@ -254,7 +252,7 @@ GlassLab.Food.getName = function(type, plural) {
     return GlassLab.FoodTypes[type].displayNames[key];
 };
 
-GlassLab.Food.prototype.BeEaten = function() {
+GlassLab.Food.prototype.BeEaten = function(animStyle) {
     var amount = 1 / (this.eaters.length || 1); // split between all eaters
     amount = Math.min(amount, this.health); // can't eat more than we have left
     this.health -= amount;
@@ -263,12 +261,19 @@ GlassLab.Food.prototype.BeEaten = function() {
     } else {
         this.health = 0;
         if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
-        if (this.hasAnimations) {
-            var anim = this.image.animations.play('anim', 24);
+        if (animStyle == "long") {
+            this.image.animations.add("eat", Phaser.Animation.generateFrameNames(this.type + "_death_long_", 5, 48, ".png", 5), 24, false);
+        } else { // assume it's short
+            this.image.animations.add("eat", Phaser.Animation.generateFrameNames(this.type + "_death_short_", 14, 28, ".png", 5), 24, false);
+        }
+
+        var anim = this.image.animations.play('eat', 24);
+        if (anim) {
             anim.onComplete.add(this._afterEaten, this);
         } else {
             this._afterEaten(1000);
         }
+
         this.draggableComponent.active = false;
     }
     return amount; // return the actual amount that was eaten
@@ -285,6 +290,8 @@ GlassLab.Food.prototype.setAnimStyle = function(style) {
 
 GlassLab.Food.prototype._afterEaten = function(fadeTime) {
     if (this.health) return; // there must be a mistake
+
+    this.inputEnabled = false; // TODO: I don't think the food is actually getting destroyed. This is just a temp fix.
 
     fadeTime = fadeTime || 3000;
     this.deathTween = this.game.add.tween(this).to( { alpha: 0 }, fadeTime, "Linear", true);

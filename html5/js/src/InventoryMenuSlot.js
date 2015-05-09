@@ -191,6 +191,8 @@ GlassLab.InventoryMenuSlot.prototype.UpdateHoverLabel = function()
 
 GlassLab.InventoryMenuSlot.prototype.Refresh = function()
 {
+    this.inputEnabled = true; // true for almost all cases, but it will be turned off if the food is not unlocked and not available
+
     if (this.data.unlocked) {
         this.bgSprite.alpha = 0.5;
         // If we're currently filling an order, use the draggableItem (which can be dragged to the order form.)
@@ -203,9 +205,11 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
         // hover label adjustments:
         this.hoverLabel.setText(this.data.displayNames["singular"]);
         this.UpdateHoverLabel();
+
+        this.input.customHoverCursor = "grab_open";
     }
     else {
-        if (this.data.cost > 0) {
+        if (this.data.cost > 0 && this.data.available) {
             this.bgSprite.alpha = 0.75;
             this.coinSprite.visible = true;
             this.coinSprite.alpha = 1;
@@ -220,15 +224,22 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
                 this.label.alpha = 0.25;
                 this.hoverLabel.setText("Need More       "); // spaces important
                 this.UpdateHoverLabel();
+
+                this.input.customHoverCursor = null;
             }
             else {
                 // can afford!
                 this.hoverLabel.setText("Unlock " + this.data.displayNames["singular"]);
                 this.UpdateHoverLabel();
+
+                this.input.customHoverCursor = "button";
             }
         }
         else {
             this.label.visible = false;
+            this.coinSprite.visible = false;
+            this.inputEnabled = false;
+            // this.visible = false; // This option hides the whole button (and other buttons will move left to fill in the gap)
         }
         this.foodSprite.visible = false;
         this.draggableItem.visible = false;

@@ -29,11 +29,11 @@ GlassLab.DoBonusRoundAction.prototype.Do = function()
         console.log("Session start failed: "+data);
     }.bind(this));
 
-    if (this.startImmediately) {
-        GLOBAL.sortingGame.start(this.data);
-    } else {
+    if (this.showModal) { // special case where we want to pop a modal first... but we mostly don't want to do this
         GLOBAL.sortingGame.storedData = this.data;
         GLOBAL.UIManager.bonusModal.show(); // this will start the sorting game once they press a button
+    } else {
+        GLOBAL.sortingGame.start(this.data);
     }
 
     GLOBAL.questManager.UpdateObjective("Complete a bonus round!");

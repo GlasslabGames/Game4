@@ -40,6 +40,7 @@ GlassLab.FillBar = function(game, width, height, sections) {
     }
 
     this._setUp(); // set up the graphics
+    this._redraw(); // refresh with the starting amounts
 
     this.updateHandler = GlassLab.SignalManager.update.add(this._onUpdate, this);
     this.sprite.events.onDestroy.add(this._onDestroy, this);

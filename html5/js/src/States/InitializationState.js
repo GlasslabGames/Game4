@@ -63,12 +63,7 @@ GlassLab.State.Init.prototype.preload = function()
         game.load.image(basicFoodSpriteNames[i]+'_shadow', 'assets/images/food/food_shadows/food_shadow_'+basicFoodSpriteNames[i]+'.png');
     }
 
-    var animFoodSpriteNames = ["apple", "strawberry", "tincan", "broccoli"];
-    for (var i = 0; i < animFoodSpriteNames.length; i++) {
-        spriteName = animFoodSpriteNames[i];
-        game.load.atlasJSONHash(spriteName+'_eaten', 'assets/images/food/'+spriteName+'_death_VFX.png', 'assets/images/food/'+spriteName+'_death_VFX.json');
-        game.load.atlasJSONHash(spriteName+'_eaten_long', 'assets/images/food/'+spriteName+'_long_death_VFX.png', 'assets/images/food/'+spriteName+'_long_death_VFX.json');
-    }
+    game.load.atlasJSONHash('foodAnim', 'assets/images/food/food_death.png', 'assets/images/food/food_death.json');
 
     game.load.image('totalFood_ram_sticker', 'assets/images/food/food_stickers/total_food_ram.png');
     game.load.image('totalFood_bird_sticker', 'assets/images/food/food_stickers/total_food_bird.png');

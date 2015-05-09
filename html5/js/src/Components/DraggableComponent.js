@@ -8,7 +8,10 @@ GlassLab.DraggableComponent = function(game, sprite) {
 
     // Note that if you use this class with graphics, you have to specify the hitArea for input to work correctly
     this.sprite.inputEnabled = true;
-    //this.sprite.events.onInputUp.add(this._onUp, this);
+    this.sprite.input.customHoverCursor = "grab_open";
+
+    this.customDragCursor = "grab_closed"; // overwrite this to change what cursor is used for dragging
+
     this.sprite.events.onInputDown.add(this._onDown, this);
     GlassLab.SignalManager.update.add(this._onUpdate, this);
 
@@ -33,6 +36,8 @@ GlassLab.DraggableComponent = function(game, sprite) {
     } else {
         GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
     }
+
+    this.sprite.events.onDestroy.add(function() { GLOBAL.cursorManager.unrequestCursor(this); }, this);
 };
 
 GlassLab.DraggableComponent.prototype._onInitGame = function() {
@@ -68,6 +73,7 @@ GlassLab.DraggableComponent.prototype._onUp = function(sprite, pointer) {
         }
     }
 };
+
 
 GlassLab.DraggableComponent.prototype._onUpdate = function() {
     if (this.dragging) {
@@ -105,6 +111,7 @@ GlassLab.DraggableComponent.prototype._startDrag = function(pointer) {
     GLOBAL.dragTarget = this;
     this.stickyDrag = false;
     this.events.onStartDrag.dispatch();
+    GLOBAL.cursorManager.requestCursor(this, this.customDragCursor);
 };
 
 GlassLab.DraggableComponent.prototype._endDrag = function() {
@@ -112,6 +119,7 @@ GlassLab.DraggableComponent.prototype._endDrag = function() {
     if (GLOBAL.dragTarget == this) GLOBAL.dragTarget = null; // it should be this, but check just in case so we don't screw up something else
 
     this.events.onEndDrag.dispatch();
+    GLOBAL.cursorManager.unrequestCursor(this, this.customDragCursor);
 };
 
 // When we start dragging, we need to check for position and scale of parents in order to stay attached to the mouse

@@ -13,6 +13,8 @@ GlassLab.OrderFulfillmentSlot = function(game, x, y, i, cantChangeType, isTotalF
     this.enabled = true;
     this.isTotalFoodSlot = isTotalFoodSlot;
 
+    this.input.customHoverCursor = null;
+
     this.highlight = game.make.sprite(0, -5, "orderHighlight");
     this.addChild(this.highlight);
     this.highlight.alpha = 0;

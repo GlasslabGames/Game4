@@ -55,6 +55,8 @@ GlassLab.ShippingPen = function(game) {
     this.propellerRoot = this.lid.addChild( this.game.make.sprite(0, -GLOBAL.tileSize) );
     this.unusedPropellers = [];
 
+    this.centerEdge.setVisible(false);
+
     this.SetDraggableOnly(); // no dragging
 
     this.tooltip = new GlassLab.UIRatioTooltip(this.game, 5, true);
@@ -72,6 +74,21 @@ GlassLab.ShippingPen = function(game) {
 GlassLab.ShippingPen.prototype = Object.create(GlassLab.Pen.prototype);
 GlassLab.ShippingPen.constructor = GlassLab.ShippingPen;
 
+
+GlassLab.ShippingPen.prototype._onDestroy = function() {
+    GlassLab.Pen.prototype._onDestroy.call(this);
+
+    // Clean up the smokepuff anims so we don't have issues with "killOnComplete"
+    if (this.smokePuffs) {
+        for (var i = 0; i < this.smokePuffs.length; i++) {
+            this.smokePuffs.animations.stopAll();
+            this.smokePuffs.destroy();
+        }
+    }
+
+    if (this.smokeRoot) this.smokeRoot.destroy();
+};
+
 GlassLab.ShippingPen.prototype.reset = function() {
     // reset to the pre-shipped state
     this.frontEdgeRoot.visible = false;
@@ -84,6 +101,10 @@ GlassLab.ShippingPen.prototype.reset = function() {
 GlassLab.ShippingPen.prototype.hide = function() {
     GlassLab.Pen.prototype.hide.apply(this, arguments);
     this.tooltip.hide();
+
+    // Remember that we don't have any dimensions for the next open
+    this.prevHeight = 0;
+    this.prevWidth = 0;
 };
 
 // Adds the specified number of creatures and food
@@ -94,6 +115,12 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     // Remember a few things that we need to access later
     this.foodTypes = foodTypes;
     this.creatureType = creatureType;
+    this.numFoods = numFoods;
+    this.numCreatures = numCreatures;
+
+    this.singleFoodRow = singleFoodRow;
+    this.singleCreatureRow = singleCreatureRow;
+    this.totalFoodHint = totalFoodHint;
 
     this.widths = [];
 
@@ -107,9 +134,9 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
 
     // calculate the width for each food is such that the total food fits into our height
     for (var j = 0; j < numFoods.length; j++) {
-        this.widths[j+1] = Math.ceil(numFoods[j] / this.height);
+        this.widths[j + 1] = Math.ceil(numFoods[j] / this.height);
         if (singleFoodRow) { // if we only want to show a single row of food, then the number of each food is equal to as many are in one row
-            numFoods[j] = this.widths[j+1];
+            this.numFoods[j] = this.widths[j + 1];
         }
     }
 
@@ -117,14 +144,58 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     if (singleCreatureRow && singleFoodRow) this.height = 1;
 
     // if we only want to show a single row of creatures, the number of creatures is equal to as many are in one row.
-    if (singleCreatureRow) numCreatures = this.widths[0];
+    if (singleCreatureRow) this.numCreatures = this.widths[0];
 
     this.tintRows = (singleCreatureRow || singleFoodRow); // if there's some kind of hint, turn on the alternatingly tinted rows
 
-    this.centerEdge.sprite.visible = false;
+    // we have all the information, so we can calculate the result right now
+    this.calculateResult();
 
-    this.sprite.isoY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
-    this.sprite.isoX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
+    // We don't call showNewContents until we're done zooming out
+    this.game.time.events.add(500, this.transitionToNewContents, this); // the zoom takes 300 ms, so this should work fine
+};
+
+GlassLab.ShippingPen.prototype.transitionToNewContents = function() {
+    this.newY = -Math.floor(this.height / 2.0) * GLOBAL.tileManager.tileSize;
+    this.newX = -Math.floor(this.getFullWidth() / 2.0) * GLOBAL.tileManager.tileSize;
+
+    // Show smoke puffs to cover whichever dimension of the pen is larger (current or previous)
+    var maxWidth = Math.max(this.getFullWidth(), this.prevWidth || 0);
+    var maxHeight = Math.max(this.height, this.prevHeight || 0);
+
+    var minX = Math.min(this.sprite.isoX, this.newX);
+    var minY = Math.min(this.sprite.isoY, this.newY);
+
+    if (!this.smokeRoot) {
+        this.smokeRoot = this.game.make.isoSprite(minX, minY);
+        this.sprite.parent.addChild(this.smokeRoot);
+    } else {
+        this.smokeRoot.isoPosition.setTo(minX, minY);
+    }
+
+    this.smokePuffs = [];
+    for (var col = 0; col < maxWidth; col++) {
+        for (var row = 0; row < maxHeight; row++) {
+            var smoke = this.game.make.isoSprite(col * GLOBAL.tileSize, row * GLOBAL.tileSize, 0, "smokeAnim");
+            smoke.anchor.setTo(0.4, 0.75);
+            smoke.animations.add("puff", Phaser.Animation.generateFrameNames("smoke_puff_crate_", 259, 285, ".png", 3), 24, false);
+            smoke.play("puff", 24, false, true); // killOnComplete is true
+            this.smokePuffs.push(smoke);
+            this.smokeRoot.addChild(smoke);
+        }
+    }
+
+    // Remember the dimensions for next time
+    this.prevHeight = this.height;
+    this.prevWidth = this.getFullWidth();
+
+    // Actually update the pen after a short delay
+    this.game.time.events.add(100, this.showNewContents, this);
+};
+
+GlassLab.ShippingPen.prototype.showNewContents = function() {
+    this.sprite.isoX = this.newX;
+    this.sprite.isoY = this.newY;
 
     this.show(); // make sure the pen is visible, and also call Resize
 
@@ -133,14 +204,14 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     if (this.creatureTween) this.creatureTween.stop();
 
     // Tween the parts that are hints
-    if (singleFoodRow) {
+    if (this.singleFoodRow) {
         this.foodRoot.alpha = 0.75;
         this.foodTween = this.game.add.tween(this.foodRoot).to({alpha: 0.25}, 1000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
     } else {
         this.foodRoot.alpha = 1;
     }
 
-    if (singleCreatureRow) {
+    if (this.singleCreatureRow) {
         this.creatureRoot.alpha = 0.75;
         this.creatureTween = this.game.add.tween(this.creatureRoot).to({alpha: 0.25}, 1000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
     } else {
@@ -148,45 +219,46 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
     }
 
     // Fill in the creatures in the pen
-    this.FillIn(GlassLab.Creature.bind(null, this.game, creatureType, this), this.creatureRoot, this.creatureSpots, numCreatures,
-            0, this.widths[0], true, creatureType);
+    this.FillIn(GlassLab.Creature.bind(null, this.game, this.creatureType, this), this.creatureRoot, this.creatureSpots, this.numCreatures,
+            0, this.widths[0], true, this.creatureType);
     this.game.time.events.add(0, this._refreshCreatures, this); // hack to make sure creatures are visible. I don't know why they sometimes don't show up
 
     // Fill in the food to each section
     var startCol = this.widths[0];
-    for (var i = 0, len = foodTypes.length; i < len; i++) {
+    for (var i = 0, len = this.foodTypes.length; i < len; i++) {
         while (this.foodLists.length <= i) this.foodLists.push([]);
-        var maxFood = (numFoods)? numFoods[i] : null;
-        this.FillIn(GlassLab.Food.bind(null, this.game, foodTypes[i]), this.foodRoot, this.foodLists[i], maxFood,
-            startCol, startCol += this.widths[i+1], false, foodTypes[i]);
+        var maxFood = (this.numFoods)? this.numFoods[i] : null;
+        this.FillIn(GlassLab.Food.bind(null, this.game, this.foodTypes[i]), this.foodRoot, this.foodLists[i], maxFood,
+            startCol, startCol += this.widths[i+1], false, this.foodTypes[i]);
     }
     // hide any food in other sections that we're not using
-    for (var j = foodTypes.length, len = this.foodLists.length; j < len; j++) {
+    for (var j = this.foodTypes.length, len = this.foodLists.length; j < len; j++) {
         var unusedObjects = Array.prototype.concat.apply([], this.foodLists[j]);
         for (var i = unusedObjects.length-1; i >= 0; i--) {
             if (unusedObjects[i]) unusedObjects[i].visible = false;
         }
     }
 
-    if (totalFoodHint) this.tooltip.show(this, "hint");
+    if (this.totalFoodHint) this.tooltip.show(this, "hint");
     else this.tooltip.hide();
+};
 
-    // we have all the information, so we can calculate the result right now
+GlassLab.ShippingPen.prototype.calculateResult = function() {
     this.problemFoods = []; // list of food types that were incorrect
-    if (numCreatures == 0) this.result = GlassLab.results.invalid;
+    if (this.numCreatures == 0) this.result = GlassLab.results.invalid;
     else {
         this.result = GlassLab.results.satisfied; // unless we discover a problem with one of the food types
-        var info = GLOBAL.creatureManager.GetCreatureData(creatureType);
+        var info = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
         for (var i = 0; i < info.desiredFood.length; i++) {
             var type = info.desiredFood[i].type;
-            var index = foodTypes.indexOf(type);
+            var index = this.foodTypes.indexOf(type);
             if (index == -1) {
                 this.result = GlassLab.results.dislike;
                 this.problemFoods.push(type);
                 break;
             } else {
-                var targetAmount = info.desiredFood[i].amount * numCreatures;
-                var currentAmount = (numFoods && parseInt(numFoods[index])) || 0;
+                var targetAmount = info.desiredFood[i].amount * this.numCreatures;
+                var currentAmount = (this.numFoods && parseInt(this.numFoods[index])) || 0;
                 //console.log(info.desiredFood[i].type, "target:",targetAmount,"current:",currentAmount,"for creatures:",numCreatures);
 
                 if (currentAmount + 0.01 < targetAmount) { // add a little wiggle room

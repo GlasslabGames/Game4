@@ -22,13 +22,13 @@ GlassLab.LevelManager = function(game)
     // TESTING LEVELS:
     // 6
     this._addLevelData(new GlassLab.Level()).data = {
-      /*pens: [
-        {type: "rammus",
+      pens: [
+        {type: "unifox",
             creatureWidth: 1, foodAWidth: 3, height: 1, foodBWidth: 5,
             bottomDraggable: true, leftDraggable: true, topDraggable: true}
-      ],*/
+      ],
       looseCreatures: {
-          rammus: 1
+          unifox: 1
       },
         objective: "This is a test!"
     };
@@ -36,7 +36,7 @@ GlassLab.LevelManager = function(game)
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
             {type: "baby_rammus",
-                creatureWidth: 6, foodAWidth: 18, height: 28, /*foodBWidth: 2,*/
+                creatureWidth: 1, foodAWidth: 2, height: 3, /*foodBWidth: 2,*/
                 bottomDraggable: true, leftDraggable: true, topDraggable: true}
         ],
         objective: "This is a test!"
@@ -111,7 +111,7 @@ GlassLab.LevelManager = function(game)
             }
         ]
     };
-    
+
     // 9
     this._addLevelData(new GlassLab.Level()).data = {
         pens: [
@@ -216,7 +216,9 @@ GlassLab.LevelManager.prototype._destroyCurrentLevel = function()
 
     GLOBAL.tileManager.clearTiles();
 
-    // It would be nice to pull this functionality into a manager, but we don't have a Food Manager atm. It doesn't belong in TileManager though.
+    GLOBAL.cursorManager.clearRequests();
+
+    // It would be nice to pull this functionality into a manager, but we don't have a Food Manager atm.
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
         GLOBAL.foodLayer.getChildAt(i).destroy();
     }

@@ -13,6 +13,7 @@ GlassLab.UIButton = function(game, x, y, spriteName, callback, callbackContext)
     GlassLab.UIElement.prototype.constructor.call(this, game, x, y, spriteName);
 
     this.inputEnabled = true;
+    this.input.customHoverCursor = "button";
     this.input.priorityID = GLOBAL.UIpriorityID;
 
     this.callback = callback;

@@ -44,7 +44,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "ram",
-            fxFrames: {eat: 16, vomit: 60, poop: 40 },
+            fxFrames: {eat: 18, vomit: 60, poop: 40 },
             desiredFood: [{type: "broccoli", amount: 3}, {type: "tincan", amount: 5}],
             eatingGroup: 1,
             otherFood: [
@@ -65,7 +65,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "babyunifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
-            fxFrames: {eat: 22, vomit: 36, poop: 70 },
+            fxFrames: {eat: 20, vomit: 36, poop: 70 },
             desiredFood: [{type: "strawberry", amount: 4}],
             eatingGroup: 1,
             otherFood: [
@@ -86,7 +86,7 @@ GlassLab.CreatureManager = function (game) {
             unlocked: false,
             spriteName: "unifox",
             eatFxStyle: "long", // specification for which animation to play when eating food
-            fxFrames: {eat: 1, vomit: 40, poop: 70 },
+            fxFrames: {eat: 4, vomit: 40, poop: 70 },
             desiredFood: [{type: "strawberry", amount: 2}, {type: "pizza", amount: 3}],
             eatingGroup: 1,
             otherFood: [
@@ -106,7 +106,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false,
             spriteName: "babybird",
-            fxFrames: {eat: 16, vomit: 60, poop: 70 },
+            fxFrames: {eat: 22, vomit: 60, poop: 70 },
             desiredFood: [{type: "meat", amount: 4/3}], // 3 birds eat 4 food
             eatingGroup: 3,
             otherFood: [
@@ -126,7 +126,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false,
             spriteName: "bird",
-            fxFrames: {eat: 16, vomit: 60, poop: 70 },
+            fxFrames: {eat: 30, vomit: 60, poop: 70 },
             desiredFood: [{type: "meat", amount: (5/3)}, {type: "taco", amount: (2/3)}],
             eatingGroup: 3,
             otherFood: [

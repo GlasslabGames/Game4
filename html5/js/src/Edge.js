@@ -53,6 +53,7 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.onHighlight = new Phaser.Signal();
     this.sprite.events.onDestroy.add(function() {
         if (this.onHighlight) this.onHighlight.dispose();
+        GLOBAL.cursorManager.unrequestCursor(this);
     }, this);
 };
 
@@ -125,6 +126,8 @@ GlassLab.Edge.prototype._setInputHandlers = function(sprite, isEdgePiece) {
     sprite.events.onInputDown.add(this._onDown, this);
     sprite.events.onInputOver.add(this._onOver, this);
     sprite.events.onInputOut.add(this._onOut, this);
+
+    sprite.input.customHoverCursor = "grab_open";
 
     if (isEdgePiece) {
         if (this.horizontal || sprite.key == "dottedLine") { // the dotted line is just flipped for vertical use, so we can set the same hitArea
@@ -225,6 +228,7 @@ GlassLab.Edge.prototype._startDrag = function() {
     this.initialCursorIsoPos = this.game.iso.unproject(this.game.input.activePointer.position);
     Phaser.Point.divide(this.initialCursorIsoPos, GLOBAL.WorldLayer.scale, this.initialCursorIsoPos);
     GLOBAL.dragTarget = this;
+    GLOBAL.cursorManager.requestCursor(this, "grab_closed");
 };
 
 GlassLab.Edge.prototype.onStickyDrop = function() { // called by (atm) prototype.js
@@ -236,6 +240,7 @@ GlassLab.Edge.prototype._endDrag = function() {
     this.pen.SetSizeFromEdge(this);
     GLOBAL.dragTarget = null;
     this._highlight(false);
+    GLOBAL.cursorManager.unrequestCursor(this, "grab_closed");
 };
 
 GlassLab.Edge.prototype._onOver = function( target, pointer ) {

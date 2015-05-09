@@ -16,6 +16,8 @@ GlassLab.Poop = function(game, type) {
     this.alpha = 0;
     var tween = this.game.add.tween(this).to( { alpha: 1 }, 100, "Linear", true);
 
+    this.input.customHoverCursor = "button";
+
     this.clicked = false;
     this.events.onInputDown.add(this._onClick, this);
 

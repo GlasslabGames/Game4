@@ -29,7 +29,7 @@ GlassLab.Quest = function(name, data)
     }
 
     this.backgroundOrders = data.backgroundOrders;
-    this.unlockedFood = data.unlockedItems;
+    this.availableFood = data.unlockedItems;
     this.hideBackgroundOrders = data.hideBackgroundOrders;
 
     GLOBAL.questManager.questsByName[this.name] = this;
@@ -75,10 +75,10 @@ GlassLab.Quest.prototype.Start = function()
 
 
         GLOBAL.dayManager.dayMeter.SetDots(this.serializedChallenges.progression.length);
-        if (this.unlockedFood) {
-            for (var i=0; i < this.unlockedFood.length; i++) {
-                GLOBAL.inventoryManager.unlock(this.unlockedFood[i]);
-            }
+        if (this.availableFood) {
+            GLOBAL.inventoryManager.setAvailableOnly(this.availableFood);
+        } else { // fallback if availableFood wasn't defined
+            GLOBAL.inventoryManager.setAllAvailable();
         }
 
         GlassLab.SignalManager.questStarted.dispatch(this);

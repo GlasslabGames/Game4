@@ -38,9 +38,14 @@ CURSOR.Manager = function() {
 	else
 		console.warn("WARNING: CURSOR.Manager should probably only be created once.");
 
+    GlassLab.SignalManager.update.add(this.update, this);
+
 	// member vars:
 	this._element_id = null; // likely to be set to the id of canvas element, or other game container
 	this._cursors = {}; // dictionary of custom cursor names, img rsc urls, and regXY's.
+
+    this._cursorRequests = []; // list of cursor requests: {source: requestingObj, name: cursorName}
+    this._hoverCursorName = "default"; // this will be updated whenever the mouse is over something
 };
 
 CURSOR.Manager.prototype = {
@@ -77,16 +82,69 @@ CURSOR.Manager.prototype = {
 		}
 
 		// apply cursor CSS to this._element_id:
-		if (typeof(this._cursors[name]) != "undefined") {
+		if (name == "none" || typeof(this._cursors[name]) != "undefined") { // "none" is a special case
 			// good to go:
-			if (document.getElementById(this._element_id))
-				document.getElementById(this._element_id).style.cursor = "url(" + this._cursors[name].src + ") " + this._cursors[name].regX + " " + this._cursors[name].regY + ", auto"; // add "auto" as a fallback.
-			else
+			if (document.getElementById(this._element_id)) {
+                if (name == "none") {
+                    document.getElementById(this._element_id).style.cursor = 'none';
+                } else {
+                    document.getElementById(this._element_id).style.cursor = "url(" + this._cursors[name].src + ") " + this._cursors[name].regX + " " + this._cursors[name].regY + ", auto"; // add "auto" as a fallback.
+                }
+            } else
 				console.error("CURSOR: setCursor(): Assigned DOM element '" + this._element_id + "' not found, bailing.");
 		}
 		else {
 			console.warn("CURSOR: setCursor(): Cursor name '" + name + "' not configured, bailing.");
 		}
 	},
-	
+
+    // We may need to consider applying multiple cursor styles depending on the situation
+    requestCursor: function(source, name) {
+        this._cursorRequests.push({source: source, name: name});
+        this.chooseCursor();
+    },
+
+    // end a request for a certain cursor (or all cursors if name is null)
+    unrequestCursor: function(source, name) {
+        for (var i = this._cursorRequests.length - 1; i >= 0; i--) {
+            var req = this._cursorRequests[i];
+            if (req.source == source && (!name || req.name == name)) {
+                this._cursorRequests.splice(i, 1);
+            }
+        }
+        this.chooseCursor();
+    },
+
+    // clear all requests
+    clearRequests: function() {
+        this._cursorRequests = [];
+        this.chooseCursor();
+    },
+
+    chooseCursor: function() {
+        var name = this._hoverCursorName; // stick with this cursor unless one of the requests has a higher priority.
+        var priorities = ["default", "grab_open", "button", "grab_closed", "none"]; // later names take priority over earlier ones
+        var currentPriority = priorities.indexOf(name);
+        for (var i = 0; i < this._cursorRequests.length; i++) {
+            var req = this._cursorRequests[i];
+            var priority = priorities.indexOf(req.name);
+            if (priority > currentPriority) {
+                name = req.name;
+                currentPriority = priority;
+            }
+        }
+        this.setCursor(name);
+    },
+
+    update: function() {
+        var name = "default";
+        if (GLOBAL.game && GLOBAL.game.input.activePointer.targetObject && GLOBAL.game.input.activePointer.targetObject.customHoverCursor) {
+            name = GLOBAL.game.input.activePointer.targetObject.customHoverCursor;
+        }
+
+        if (name != this._hoverCursorName) {
+            this._hoverCursorName = name;
+            this.chooseCursor(name); // we only want to call this if something has changed
+        }
+    }
 };

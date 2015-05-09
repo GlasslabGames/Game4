@@ -33,6 +33,24 @@ GlassLab.InventoryManager.prototype.unlock = function(type) {
     this._saveUnlockedFood();
 };
 
+// set a specific food to be available for buying
+GlassLab.InventoryManager.prototype.setAvailable = function(food) {
+    GlassLab.FoodTypes[food].available = true;
+};
+
+// set only the given foods to be available
+GlassLab.InventoryManager.prototype.setAvailableOnly = function(foods) {
+    foods = [].concat(foods); // ensure it's an array
+    for (var key in GlassLab.FoodTypes) {
+        GlassLab.FoodTypes[key].available = (foods.indexOf(key) > -1);
+    }
+};
+
+// set all foods to be available
+GlassLab.InventoryManager.prototype.setAllAvailable = function() {
+    for (var key in GlassLab.FoodTypes) GlassLab.FoodTypes[key].available = true;
+};
+
 GlassLab.InventoryManager.prototype._saveUnlockedFood = function()
 {
     var unlockedItems = [];
