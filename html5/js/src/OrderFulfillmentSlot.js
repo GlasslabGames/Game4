@@ -30,7 +30,7 @@ GlassLab.OrderFulfillmentSlot = function(game, x, y, i, cantChangeType, isTotalF
     this.answerInput.events.onInputOut.add(function() { this.overInput = false; }, this);
 
     this.label = game.make.text(100, 10, "100", {font: "20px ArchitectsDaughter", fill: "#4d4b4a"});
-    this.label.anchor.set(0.5, 0);
+    this.label = GlassLab.Util.SetCenteredText(this.label, null, 0.5, 0);
     this.addChild(this.label);
 
     this.sprite = game.make.sprite(30, 20, "apple");
@@ -176,6 +176,8 @@ GlassLab.OrderFulfillmentSlot.prototype.refresh = function(hide) {
 
     this.label.visible = !this.canEnterValue;
     this.label.text = this.presetValue || ""; // if we have no value, the label will be invisible anyway, so w/e
+    this.label = GlassLab.Util.SetCenteredText(this.label, null, 0.5, 0); // reset anchor
+
 
     return false; // no, we aren't showing a drag target
 };

@@ -63,18 +63,19 @@ GlassLab.HUDButton = function(game, x, y, imageSprite, bgSprite, text, fontStyle
 
     if (text) {
         this.label = this.game.make.text(0, 0, text, fontStyle);
-        this.label.anchor.setTo(0.5, 0.5);
+        this.label = GlassLab.Util.SetCenteredText(this.label, null, 0.5, 0.5);
         this.addChild(this.label);
         if (this.isIcon) {
             this.fontStyle = fontStyle;
             this.fontStyle.fill = "#"+this.imageColor.toString(16);
             this.label.setStyle(this.fontStyle);
+            this.label = GlassLab.Util.SetCenteredText(this.label, null, 0.5, 0.5); // do again due to diff style?
         }
 
         if (imageSprite)
         {
-            this.label.x = this.image.width/2+5;
-            this.image.x = -this.label.width/2-5;
+            this.label.x = Math.round(this.image.width/2) + 5;
+            this.image.x = -this.label.width/2 - 5;
         }
     }
 

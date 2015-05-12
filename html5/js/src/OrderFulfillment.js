@@ -16,6 +16,7 @@ GlassLab.OrderFulfillment = function(game)
 
     this.bg = game.make.sprite(0,0,"orderBg");
     this.bg.anchor.setTo(1,1);
+    this.bg = GlassLab.Util.PixelSnapAnchor(this.bg);
     this.sprite.addChild(this.bg);
 
     this.answerInputRoot = new GlassLab.UITable(game, 1, 30);//game.make.sprite(-205, -270);

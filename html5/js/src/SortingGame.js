@@ -58,14 +58,12 @@ GlassLab.SortingGame = function(game) {
     // bonusAmount text, and hidden text behind it that animates when correct token is placed on card:
     this.bonusAmount = 0;
     this.bonusAmountLabel = game.make.text(630, 517, "x 0", {font: "36px EnzoBlack", fill: "#fff"});
-    this.bonusAmountLabel.anchor.setTo(0, 0.5);
-    this.bonusAmountLabel.anchor.y = Math.round(this.bonusAmountLabel.height * 0.5) / this.bonusAmountLabel.height; // round to avoid blur
+    this.bonusAmountLabel = GlassLab.Util.SetCenteredText(this.bonusAmountLabel, null, 0, 0.5);
     this.root.addChild(this.bonusAmountLabel);
 
     this.bonusAmountAddedLabel = game.make.text(630, 500, "+ 0", {font: "36px EnzoBlack", fill: "#fff"}); // a bit higher
     this.bonusAmountAddedLabel.alpha = 0; // hidden for now
-    this.bonusAmountAddedLabel.anchor.setTo(0, 0.5);
-    this.bonusAmountAddedLabel.anchor.y = Math.round(this.bonusAmountAddedLabel.height * 0.5) / this.bonusAmountAddedLabel.height; // round to avoid blur
+    this.bonusAmountAddedLabel = GlassLab.Util.SetCenteredText(this.bonusAmountAddedLabel, null, 0, 0.5);
     this.root.addChild(this.bonusAmountAddedLabel);
 
     this.visible = false; // start invisible until we want to begin the sorting game
@@ -195,7 +193,7 @@ GlassLab.SortingGame.prototype.start = function(data) {
     GlassLabSDK.saveTelemEvent("bonus_game_start", {});
 
     this.show();
-    
+
 };
 
 GlassLab.SortingGame.prototype.finish = function() {
@@ -270,8 +268,7 @@ GlassLab.SortingGameCard = function(sortingGame, creatureType, numCreatures, num
     // text "place sticker here!"
     var mark =  this.game.make.text(this.actualWidth / 2, this.actualHeight - 67, "Place\nSticker\nHere!",
         {font: "14px EnzoBlack", align: "center", fill: "#a0a9b2"});
-    mark.anchor.x = Math.round(mark.width * 0.5) / mark.width; // round to avoid subpixel blur
-    mark.anchor.y = Math.round(mark.height * 0.5) / mark.height; // round to avoid subpixel blur
+    mark = GlassLab.Util.SetCenteredText(mark, null, 0.5, 0.5);
     mark.lineSpacing = -5;
     this.addChild(mark);
 
@@ -509,8 +506,8 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
     });
     creature_and_food_count++;
 
-    var label = this.game.make.text(36, (i+1) * rowHeight, "x "+this.numCreatures, {font: "36px EnzoBlack", fill: "#333"});
-    label.anchor.setTo(0, 1.2); // adjust anchor to avoid subpixel blur?
+    var label = this.game.make.text(36, (i+1) * rowHeight, "x " + this.numCreatures, {font: "36px EnzoBlack", fill: "#333"});
+    label = GlassLab.Util.SetCenteredText(label, null, 0, 1.2);
     this.displaySprite.addChild(label);
 
     this.card_food = [];
@@ -533,8 +530,8 @@ GlassLab.SortingGameCard.prototype._addNumberDisplay = function() {
             });
             creature_and_food_count++;
 
-            var food_label = this.game.make.text(33, (i+1) * rowHeight, "x "+numFoods, {font: "36px EnzoBlack", fill: "#333"});
-            food_label.anchor.setTo(0, 0.8); // adjust anchor to avoid subpixel blur?
+            var food_label = this.game.make.text(33, (i+1) * rowHeight, "x " + numFoods, {font: "36px EnzoBlack", fill: "#333"});
+            food_label = GlassLab.Util.SetCenteredText(food_label, null, 0, 0.8);
             this.displaySprite.addChild(food_label);
         }
     }
@@ -750,8 +747,7 @@ GlassLab.SortingGameToken = function(sortingGame, value) {
     this.hoverLabelBgPointer.tint = 0x000000;
 
     // calculates sizes, scales, text anchors, etc of various components of the hoverLabel:
-    this.hoverLabel.anchor.x = Math.round(this.hoverLabel.width * 0.5) / this.hoverLabel.width; // round to avoid subpixel blur
-    this.hoverLabel.anchor.y = Math.round(this.hoverLabel.height * 0.5) / this.hoverLabel.height; // round to avoid subpixel blur
+    this.hoverLabel = GlassLab.Util.SetCenteredText(this.hoverLabel, null, 0.5, 0.5);
     this.hoverLabelBg.scale.x = (this.hoverLabel.width + 30) / this.hoverLabelBg._original_width; // 15px padding before endcaps
     this.hoverLabelBgEndcapLeft.x = 0 - (this.hoverLabel.width/2 + 15);
     this.hoverLabelBgEndcapRight.x = this.hoverLabel.width/2 + 15;
