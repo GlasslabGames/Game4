@@ -25,6 +25,8 @@ GlassLab.UIManager = function(game)
         this.shade.clear().beginFill(0x000000).drawRect(-this.game.width / 2, -this.game.height / 2, this.game.width, this.game.height);
     }, this);
 
+    this.shadeTween = null; // pointer to single shade tween instance
+
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
     this.bonusModal = new GlassLab.UIModal(this.game, "Great job! Now it's time for\nBONUS GAME!", nextButton);
@@ -185,14 +187,16 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
 
 GlassLab.UIManager.prototype._onUIOpened = function(window) {
     if (this.openWindows.indexOf(window) == -1) this.openWindows.push(window);
-    //console.log("Opened:", this.openWindows);
-    if (!this.shade.visible) {
-        this.shade.visible = true;
-        this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
-    } else {
-        this.shade.alpha = 0.4;
-    }
+    //console.log("Opened:", this.openWindows.length);
 
+    // stop alpha tween if it's still running:
+    if (this.shadeTween != null && this.shadeTween.isRunning)
+        this.shadeTween.stop();
+
+    // fade in the shade:
+    this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
+    this.shade.visible = true;
+        
     if (GLOBAL.dayManager.dayMeter.visible && this._wantToHideDayMeter()) {
         var tween = this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 0}, GLOBAL.dayManager.dayMeter.alpha * 150, Phaser.Easing.Quadratic.InOut, true);
         tween.onComplete.addOnce(function() { if (this._wantToHideDayMeter()) GLOBAL.dayManager.dayMeter.visible = false; }, this);
@@ -202,14 +206,23 @@ GlassLab.UIManager.prototype._onUIOpened = function(window) {
 GlassLab.UIManager.prototype._onUIClosed = function(window) {
     var index = this.openWindows.indexOf(window);
     if (index > -1) this.openWindows.splice(index, 1);
-    //console.log("Closed:",this.openWindows);
+    //console.log("Closed:", this.openWindows.length);
+
     if (this.openWindows.length == 0) {
-        if (this.shade.visible) {
-            var shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true);
-            shadeTween.onComplete.addOnce(function() { if (this.openWindows.length == 0) this.shade.visible = false; }, this);
-        } else {
-            this.shade.alpha = 0;
-        }
+
+        // stop alpha tween if it's still running:
+        if (this.shadeTween != null && this.shadeTween.isRunning)
+            this.shadeTween.stop();
+
+        // fade out the shade:
+        this.shade.visible = false;
+        this.shadeTween = this.game.add.tween(this.shade)
+            .to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true)
+            .onComplete.addOnce(function() {
+                this.shade.visible = false; // better safe than sorry
+                //console.log("Closed:",this.openWindows);
+            }, this);
+        
 
         GLOBAL.dayManager.dayMeter.visible = true;
 
