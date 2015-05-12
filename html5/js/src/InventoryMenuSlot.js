@@ -52,6 +52,24 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.coinSprite.visible = false;
     this.addChild(this.coinSprite);
 
+    // copy of bgSprite that goes OVER the foodsprite, 0xffffff tint,
+    // and it's used only briefly right after the largeCoinAnim sparklepop anim upon food purchase:
+    this.largeCoinBgFlash = this.game.make.sprite(0, 0, "foodItemBg");
+    this.largeCoinBgFlash.anchor.setTo(0.5, 0.5);
+    this.largeCoinBgFlash.tint = 0xffffff;
+    this.largeCoinBgFlash.alpha = 0;
+    this.largeCoinBgFlash.inputEnabled = false;
+    this.addChild(this.largeCoinBgFlash);
+
+    // add foodPurchaseEffects spritesheet and add get_coins anim:
+    this.largeCoinAnim = game.make.sprite(0, -26, "foodPurchaseEffects");
+    this.largeCoinAnim.animations.add("coin_jump", Phaser.Animation.generateFrameNames("coin_jump_",0,17,".png",3), 24, false);
+    this.largeCoinAnim.animations.add("sparkle_pop", Phaser.Animation.generateFrameNames("sparkle_pop_",0,6,".png",3), 24, false);
+    this.largeCoinAnim.anchor.setTo(0.5, 0.5);
+    this.largeCoinAnim.alpha = 0;
+    this.largeCoinAnim.visible = true;
+    this.addChild(this.largeCoinAnim);
+
     // cost:
     this.label = game.make.text(0, this.height / 2, this.cost_display, {fill: '#ffffff', font: "14px EnzoBlack"});
     this.label = GlassLab.Util.SetCenteredText(this.label, this.cost_display, 0.5, 1.0);
@@ -137,7 +155,33 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
 {
     if (GLOBAL.inventoryManager.TrySpendMoney(this.data.cost)) {
         GLOBAL.inventoryManager.unlock(this.foodType); // if we don't actually call unlock(), the unlock won't be saved
-        this.parent.parent.Refresh(); // refresh on all MenuSlots, not just this one.
+
+        // do coin jump:
+        this.largeCoinAnim.alpha = 1;
+        this.coinSprite.alpha = 0;
+        var anim = this.largeCoinAnim.play("coin_jump");
+        if (anim) {
+            anim.onComplete.addOnce(function() {
+                // refresh on all MenuSlots, not just this one:
+                this.parent.parent.Refresh();
+
+                // this.largeCoinBgFlash, tween opacity:
+                this.largeCoinBgFlash.alpha = 1.0;
+                var flash_tween = this.game.add.tween(this.largeCoinBgFlash)
+                    .to( { alpha: 0 }, 300, Phaser.Easing.Linear.None)
+                    .start();
+
+                // sparkle pop:
+                var pop_anim = this.largeCoinAnim.play("sparkle_pop");
+                if (pop_anim) {
+                    pop_anim.onComplete.addOnce(function() {
+                        // all done with both anims:
+                        this.largeCoinAnim.alpha = 0; // hide anim
+                        
+                    }, this);
+                }
+            }, this);
+        }
     }
     else {
         // Failed, not enough money
