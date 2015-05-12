@@ -110,12 +110,20 @@ GlassLab.Util.HasCookieData = function(key)
 GlassLab.Util.SetCenteredText = function(label, text, anchorX, anchorY) {
     if (typeof anchorX == 'undefined') anchorX = 0.5;
     if (typeof anchorY == 'undefined') anchorY = 0.5;
+    if (typeof text != 'undefined' && text != null) label.text = text; // only reset text if provided
 
-    label.text = text;
     label.anchor.x = Math.round(label.width * anchorX) / label.width; // round to avoid subpixel blur
     label.anchor.y = Math.round(label.height * anchorY) / label.height; // round to avoid subpixel blur
 
     return label;
+};
+
+GlassLab.Util.PixelSnapAnchor = function(obj) {
+    if (typeof obj.anchor != "undefined" && typeof obj.width != "undefined" && typeof obj.height != "undefined") {
+        obj.anchor.x = Math.round(obj.width * obj.anchor.x) / obj.width;
+        obj.anchor.y = Math.round(obj.height * obj.anchor.y) / obj.height;
+    }
+    return obj;
 };
 
 GlassLab.Util.SetColoredText = function(label, text, normalColor, highlightedColor) {

@@ -222,6 +222,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('foodItemBg', 'assets/images/hud/hud_food/hud_food_item_bg.png');
     game.load.image('foodLabelBg', 'assets/images/hud/hud_food/hud_food_label_bg_width.png');
     game.load.image('foodLabelBgEndcap', 'assets/images/hud/hud_food/hud_food_label_bg_endcap.png');
+    game.load.atlasJSONHash('foodPurchaseEffects', 'assets/images/hud/hud_food/hud_food_purchase_effects.png', 'assets/images/hud/hud_food/hud_food_purchase_effects.json');
 
     // bonus game
     game.load.image('bonusBoardBg', 'assets/images/bonus_game/bonus_board_bg.png');
@@ -237,8 +238,8 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bonusStickerDropzoneShader', 'assets/images/bonus_game/bonus_sticker_dropzone_shader.png');
     game.load.image('bonusStickerOverlay', 'assets/images/bonus_game/bonus_sticker_overlay.png');
     game.load.atlasJSONHash('bonusAnims', 'assets/images/bonus_game/bonus_anims.png', 'assets/images/bonus_game/bonus_anims.json');
-        game.load.image('bigO', 'assets/images/matchingGame_o.png');
-        game.load.image('bigX', 'assets/images/matchingGame_x.png');
+        //game.load.image('bigO', 'assets/images/matchingGame_o.png');
+        //game.load.image('bigX', 'assets/images/matchingGame_x.png');
 
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');

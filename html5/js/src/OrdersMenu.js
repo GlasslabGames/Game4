@@ -11,10 +11,12 @@ GlassLab.OrdersMenu = function(game, x, y) {
 
     this.bg = game.make.sprite(0, 0, "letterBg");
     this.bg.anchor.setTo(0.5, 0.5);
+    this.bg = GlassLab.Util.PixelSnapAnchor(this.bg);
     this.sprite.addChild(this.bg);
 
     this.portrait = game.make.sprite(-95, -150, "bossmanPhoto");
     this.portrait.anchor.setTo(.5, .5);
+    this.portrait = GlassLab.Util.PixelSnapAnchor(this.portrait);
     this.sprite.addChild(this.portrait);
 
     var fontStyle = {font: '11pt AmericanTypewriter', fill: "#807c7b"};
@@ -58,7 +60,7 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.currentPage = 0;
 
     // Page buttons
-    var pageButtonX = this.bg.width / 2 + 20;
+    var pageButtonX = Math.round(this.bg.width / 2) + 20;
     this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.nextPageButton.label.x -= 5;

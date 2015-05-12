@@ -92,7 +92,7 @@ GlassLab.UIButton.prototype.whenDisabled = function() {};
 GlassLab.UITextButton = function(game, x, y, spriteName, text, fontStyle, callback, callbackContext) {
     GlassLab.UIButton.prototype.constructor.call(this, game, x, y, spriteName, callback, callbackContext);
     this.label = game.make.text(0, 0, text, fontStyle);
-    this.label.anchor.setTo(0.5, 0.5);
+    this.label = GlassLab.Util.SetCenteredText(this.label, null, 0.5, 0.5);
     this.addChild(this.label);
 };
 
@@ -114,8 +114,8 @@ GlassLab.UIRectButton = function(game, x, y, callback, callbackContext, width, h
     this.addChild(this.graphic);
 
     var style = { font: "bold " + (fontsize || 20) + "px Arial", fill: "#000000", align: "center" };
-    this.label = game.make.text(width/2, height/2, text, style);
-    this.label.anchor.setTo(0.5, 0.5);
+    this.label = game.make.text(Math.round(width/2), Math.round(height/2), text, style);
+    this.label = GlassLab.Util.SetCenteredText(this.label, null, 0.5, 0.5);
     this.addChild(this.label);
 };
 

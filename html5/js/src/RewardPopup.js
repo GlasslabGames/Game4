@@ -14,10 +14,12 @@ GlassLab.RewardPopup = function(game)
     // Note that a lot of this is the same as OrdersMenu.js . I don't think it was worth making a subclass, but maybe I should
     this.bg = game.make.sprite(0, 0, "letterBg");
     this.bg.anchor.setTo(0.5, 0.5);
+    this.bg = GlassLab.Util.PixelSnapAnchor(this.bg);
     this.addChild(this.bg);
 
     this.portrait = game.make.sprite(-95, -150, "bossmanPhoto");
     this.portrait.anchor.setTo(.5, .5);
+    this.portrait = GlassLab.Util.PixelSnapAnchor(this.portrait);
     this.addChild(this.portrait);
 
     var fontStyle = {font: '11pt AmericanTypewriter', fill: "#807c7b"};

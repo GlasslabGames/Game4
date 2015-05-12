@@ -7,7 +7,7 @@ var GlassLab = GlassLab || {};
 GlassLab.InventoryMenuSlot = function(game, foodType)
 {
     this.foodType = foodType;
-    this.data = GlassLab.FoodTypes[foodType];
+    this.data = GlassLab.FoodTypes[this.foodType];
     GlassLab.UIElement.prototype.constructor.call(this, game, 0, 0);
 
     // prettify the cost:
@@ -52,10 +52,27 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.coinSprite.visible = false;
     this.addChild(this.coinSprite);
 
+    // copy of bgSprite that goes OVER the foodsprite, 0xffffff tint,
+    // and it's used only briefly right after the largeCoinAnim sparklepop anim upon food purchase:
+    this.largeCoinBgFlash = this.game.make.sprite(0, 0, "foodItemBg");
+    this.largeCoinBgFlash.anchor.setTo(0.5, 0.5);
+    this.largeCoinBgFlash.tint = 0xffffff;
+    this.largeCoinBgFlash.alpha = 0;
+    this.largeCoinBgFlash.inputEnabled = false;
+    this.addChild(this.largeCoinBgFlash);
+
+    // add foodPurchaseEffects spritesheet and add get_coins anim:
+    this.largeCoinAnim = game.make.sprite(0, -26, "foodPurchaseEffects");
+    this.largeCoinAnim.animations.add("coin_jump", Phaser.Animation.generateFrameNames("coin_jump_",0,17,".png",3), 24, false);
+    this.largeCoinAnim.animations.add("sparkle_pop", Phaser.Animation.generateFrameNames("sparkle_pop_",0,6,".png",3), 24, false);
+    this.largeCoinAnim.anchor.setTo(0.5, 0.5);
+    this.largeCoinAnim.alpha = 0;
+    this.largeCoinAnim.visible = true;
+    this.addChild(this.largeCoinAnim);
+
     // cost:
     this.label = game.make.text(0, this.height / 2, this.cost_display, {fill: '#ffffff', font: "14px EnzoBlack"});
-    this.label.anchor.setTo(.5, 1);
-    this.label.anchor.x = Math.round(this.label.width * 0.5) / this.label.width; // round to avoid subpixel blur
+    this.label = GlassLab.Util.SetCenteredText(this.label, this.cost_display, 0.5, 1.0);
     this.addChild(this.label);
 
     // hoverLabel above slot (show on hover):
@@ -138,7 +155,33 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
 {
     if (GLOBAL.inventoryManager.TrySpendMoney(this.data.cost)) {
         GLOBAL.inventoryManager.unlock(this.foodType); // if we don't actually call unlock(), the unlock won't be saved
-        this.Refresh();
+
+        // do coin jump:
+        this.largeCoinAnim.alpha = 1;
+        this.coinSprite.alpha = 0;
+        var anim = this.largeCoinAnim.play("coin_jump");
+        if (anim) {
+            anim.onComplete.addOnce(function() {
+                // refresh on all MenuSlots, not just this one:
+                this.parent.parent.Refresh();
+
+                // this.largeCoinBgFlash, tween opacity:
+                this.largeCoinBgFlash.alpha = 1.0;
+                var flash_tween = this.game.add.tween(this.largeCoinBgFlash)
+                    .to( { alpha: 0 }, 300, Phaser.Easing.Linear.None)
+                    .start();
+
+                // sparkle pop:
+                var pop_anim = this.largeCoinAnim.play("sparkle_pop");
+                if (pop_anim) {
+                    pop_anim.onComplete.addOnce(function() {
+                        // all done with both anims:
+                        this.largeCoinAnim.alpha = 0; // hide anim
+                        
+                    }, this);
+                }
+            }, this);
+        }
     }
     else {
         // Failed, not enough money
@@ -155,8 +198,7 @@ GlassLab.InventoryMenuSlot.prototype.UpdateHoverLabel = function()
     this.hoverLabelCoin.x = 45;
 
     // calculates sizes, scales, text anchors, etc of various components of the hoverLabel:
-    this.hoverLabel.anchor.x = Math.round(this.hoverLabel.width * 0.5) / this.hoverLabel.width; // round to avoid subpixel blur
-    this.hoverLabel.anchor.y = Math.round(this.hoverLabel.height * 0.5) / this.hoverLabel.height; // round to avoid subpixel blur
+    this.hoverLabel = GlassLab.Util.SetCenteredText(this.hoverLabel, null, 0.5, 0.5); // no change in text, just recenter
     this.hoverLabelBg.scale.x = (this.hoverLabel.width + 30) / this.hoverLabelBg._original_width; // 15px padding before endcaps
     this.hoverLabelBgEndcapLeft.x = 0 - (this.hoverLabel.width/2 + 15);
     this.hoverLabelBgEndcapRight.x = this.hoverLabel.width/2 + 15;
@@ -222,7 +264,7 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
                 // can't afford item:
                 this.coinSprite.alpha = 0.25;
                 this.label.alpha = 0.25;
-                this.hoverLabel.setText("Need More       "); // spaces important
+                this.hoverLabel.setText("Need More       "); // spaces important to leave room for hoverLabelCoin
                 this.UpdateHoverLabel();
 
                 this.input.customHoverCursor = null;
@@ -250,6 +292,8 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
 
 GlassLab.InventoryMenuSlot.prototype.Highlight = function(yes_or_no)
 {
+    //this.data = GlassLab.FoodTypes[this.foodType]; // refresh this in case another food item was bought and it changed things here!
+
     if (yes_or_no) {
         this.bgSprite.tint = 0xffffff;
         this.label.tint = 0x4d4d4d; //this.label.style.fill = '#4d4d4d';
@@ -258,7 +302,7 @@ GlassLab.InventoryMenuSlot.prototype.Highlight = function(yes_or_no)
         this.hoverLabelBgEndcapRight.alpha = 0.5;
         this.hoverLabelBgPointer.alpha = 0.5;
         this.hoverLabel.alpha = 1;
-        if (this.data.cost > 0) {
+        if (this.data.cost > 0 && !this.data.unlocked) {
             if (this.data.cost > GLOBAL.inventoryManager.money) {
                 // can't afford item:
                 this.bgSprite.alpha = 0.5;
@@ -278,7 +322,7 @@ GlassLab.InventoryMenuSlot.prototype.Highlight = function(yes_or_no)
         this.hoverLabelBgEndcapRight.alpha = 0;
         this.hoverLabelBgPointer.alpha = 0;
         this.hoverLabel.alpha = 0;
-        if (this.data.cost > 0) {
+        if (this.data.cost > 0 && !this.data.unlocked) {
             if (this.data.cost > GLOBAL.inventoryManager.money) {
                 // can't afford item:
                 this.bgSprite.alpha = 0.75;

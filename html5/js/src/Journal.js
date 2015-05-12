@@ -12,7 +12,11 @@ GlassLab.Journal = function(game) {
 
     this.bg = game.make.sprite(-25,30, "journalBg");
     this.bg.anchor.set(0.5, 0.5);
+    this.bg = GlassLab.Util.PixelSnapAnchor(this.bg);
     this.sprite.addChild(this.bg);
+
+    this.alerts = game.make.sprite();
+    this.sprite.addChild(this.alerts);
 
     // Creature Picture
     this.creatureSilhouette = game.make.sprite(0, 50);
@@ -25,36 +29,51 @@ GlassLab.Journal = function(game) {
 
     // Creature info
     this.nameLabel = game.make.text(0, 50, "Species Unknown", {font: "14pt ArchitectsDaughter", fill: "#808080"});
-    this.nameLabel.anchor.setTo(0.5, 0);
+    this.nameLabel = GlassLab.Util.SetCenteredText(this.nameLabel, null, 0.5, 0);
     this.sprite.addChild(this.nameLabel);
 
+    /*
+    var temperamentTitleLabel = game.make.text(-90, 100, "Temperament:", {font: "bold 14pt Arial"});
+    temperamentTitleLabel = GlassLab.Util.SetCenteredText(temperamentTitleLabel, null, 0.5, 0);
+    this.sprite.addChild(temperamentTitleLabel);
+
+    this.temperamentLabel = game.make.text(-90, 130, "Combative", {font: "bold 14pt Arial"});
+    this.temperamentLabel = GlassLab.Util.SetCenteredText(this.temperamentLabel, null, 0.5, 0);
+    this.sprite.addChild(this.temperamentLabel);
+    */
+
     var dietTitleLabel = game.make.text(0, 100, "Daily Diet:", {font: "14pt ArchitectsDaughter", fill: "#808080"});
-    //dietTitleLabel.anchor.setTo(0.5, 0);
-    dietTitleLabel.x = -dietTitleLabel.width/2;
+    dietTitleLabel = GlassLab.Util.SetCenteredText(dietTitleLabel, null, 0.5, 0);
     this.sprite.addChild(dietTitleLabel);
 
     this.dailyDiet = game.make.sprite(20, 130);
     this.sprite.addChild(this.dailyDiet);
 
     this.unknownDietLabel = game.make.text(0, 140, "???", {font: "12pt ArchitectsDaughter", fill: "#808080"});
-    this.unknownDietLabel.anchor.setTo(0.5, 0);
+    this.unknownDietLabel = GlassLab.Util.SetCenteredText(this.unknownDietLabel, null, 0.5, 0);
     this.sprite.addChild(this.unknownDietLabel);
 
     // Page buttons (almost the same as OrdersMenu)
-    var pageButtonX = this.bg.width / 2 + 40;
-    this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next\nPage", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
-    this.nextPageButton.anchor.setTo(0, 0.5);
-    this.nextPageButton.label.x -= 8;
+    var pageButtonX = Math.round(this.bg.width/2) + 40;
+    this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next\nPage", {font: "12pt EnzoBlack", align: "left"}, true, this._onNextPagePressed, this);
+    // manually positioning label because for some reason it's rendering blurry - likely something deep in the parent/inheritance:
+    this.nextPageButton.label = GlassLab.Util.SetCenteredText(this.nextPageButton.label, null, 0, 0);
+    this.nextPageButton.label.lineSpacing = -5;
+    this.nextPageButton.label.x -= Math.round(this.nextPageButton.label.width / 2) + 8;
+    this.nextPageButton.label.y -= Math.round(this.nextPageButton.label.height / 2) - 1;
     this.nextPageButton.addOutline("sideArrowHighlight");
     this.bg.addChild(this.nextPageButton);
 
-    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev\nPage", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
-    this.prevPageButton.anchor.setTo(0, 0.5);
-    this.prevPageButton.label.x += 8;
-    this.bg.addChild(this.prevPageButton);
+    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev\nPage", {font: "12pt EnzoBlack", align: "right"}, true, this._onPrevPagePressed, this);
+    // manually positioning label because for some reason it's rendering blurry - likely something deep in the parent/inheritance:
+    this.prevPageButton.label = GlassLab.Util.SetCenteredText(this.prevPageButton.label, null, 0, 0);
+    this.prevPageButton.label.lineSpacing = -5;
+    this.prevPageButton.label.x -= Math.round(this.prevPageButton.label.width / 2) - 8;
+    this.prevPageButton.label.y -= Math.round(this.prevPageButton.label.height / 2) - 1;
     this.prevPageButton.addOutline("sideArrowHighlight");
     this.prevPageButton.outline.scale.x = -1;
     this.prevPageButton.bg.scale.x *= -1;
+    this.bg.addChild(this.prevPageButton);
 
     this.dailyDietTable = new GlassLab.UITable(this.game, 8, 5);
     this.dailyDietTable.y = 130;
@@ -99,6 +118,7 @@ GlassLab.Journal.prototype.RefreshWithCreature = function(creatureType)
     var creatureData = GLOBAL.creatureManager.GetCreatureData(creatureType);
 
     this.nameLabel.setText(creatureData.unlocked? creatureData.journalInfo.name : "Species Unknown");
+    this.nameLabel = GlassLab.Util.SetCenteredText(this.nameLabel, null, 0.5, 0); // reset pixel snapping after any time text changes
     //this.temperamentLabel.setText(creatureData.unlocked? creatureData.journalInfo.temperament : "Unknown");
 
     if (creatureData.unlocked) {
@@ -190,7 +210,7 @@ GlassLab.Journal.prototype._setupImageFeedLayout = function(creatureData)
         unusedChildren[k].visible = false;
     }
 
-    this.dailyDiet.x = -(GlassLab.Journal.MAX_ROW_LENGTH * GlassLab.Journal.UNIT_SIZE / 2);
+    this.dailyDiet.x = Math.round(-(GlassLab.Journal.MAX_ROW_LENGTH * GlassLab.Journal.UNIT_SIZE / 2));
 
 };
 GlassLab.Journal.prototype._setupNumericalFeedLayout = function(creatureData)
@@ -229,7 +249,7 @@ GlassLab.Journal.prototype._setupNumericalFeedLayout = function(creatureData)
 
     this.dailyDietTable._refresh();
 
-    this.dailyDietTable.x = -this.dailyDietTable.getWidth()/2;
+    this.dailyDietTable.x = Math.round(-this.dailyDietTable.getWidth() / 2);
 };
 
 GlassLab.Journal.prototype._revealCreatureInfo = function() {
