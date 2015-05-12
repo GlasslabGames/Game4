@@ -120,7 +120,7 @@
           "challengeData": {
             "client": "Archibold Huxley III",
             "creatureType": "baby_unifox",
-            "numCreatures": 48,
+            "numFoodA": 48,
             "description": "Dear Friend! I have 48 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
             "reward": 20,
             "creatureWidth": 2
@@ -215,7 +215,6 @@
           "numFoodA": 68,
           "description": "Dear Friend! I have 68 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
           "reward": 30,
-          "creatureWidth": 2
         }
       },
       {
@@ -228,7 +227,6 @@
           "numFoodA": 52,
           "description": "Dear Friend! I have 52 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
           "reward": 30,
-          "creatureWidth": 2
         }
       },
       {
@@ -241,7 +239,6 @@
           "numFoodA": 60,
           "description": "Dear Friend! I have 52 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
           "reward": 30,
-          "creatureWidth": 2
         }
       }
       ]
@@ -455,10 +452,9 @@
       "orderData": {
         "client": "Archibold Huxley III",
         "creatureType": "baby_unifox",
-        "numFoodA": 60,
-        "description": "Dear Friend! I have 60 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
+        "numFoodA": 76,
+        "description": "Dear Friend! I have 76 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
         "reward": 30,
-        "creatureWidth": 2
       }
     }
   ]
