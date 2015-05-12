@@ -14,9 +14,6 @@ GlassLab.Journal = function(game) {
     this.bg.anchor.set(0.5, 0.5);
     this.sprite.addChild(this.bg);
 
-    this.alerts = game.make.sprite();
-    this.sprite.addChild(this.alerts);
-
     // Creature Picture
     this.creatureSilhouette = game.make.sprite(0, 50);
     this.creatureSilhouette.anchor.setTo(.5, 1);
@@ -30,16 +27,6 @@ GlassLab.Journal = function(game) {
     this.nameLabel = game.make.text(0, 50, "Species Unknown", {font: "14pt ArchitectsDaughter", fill: "#808080"});
     this.nameLabel.anchor.setTo(0.5, 0);
     this.sprite.addChild(this.nameLabel);
-
-    /*
-    var temperamentTitleLabel = game.make.text(-90, 100, "Temperament:", {font: "bold 14pt Arial"});
-    temperamentTitleLabel.anchor.setTo(0.5, 0);
-    this.sprite.addChild(temperamentTitleLabel);
-
-    this.temperamentLabel = game.make.text(-90, 130, "Combative", {font: "bold 14pt Arial"});
-    this.temperamentLabel.anchor.setTo(0.5, 0);
-    this.sprite.addChild(this.temperamentLabel);
-    */
 
     var dietTitleLabel = game.make.text(0, 100, "Daily Diet:", {font: "14pt ArchitectsDaughter", fill: "#808080"});
     //dietTitleLabel.anchor.setTo(0.5, 0);

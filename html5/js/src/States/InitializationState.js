@@ -282,6 +282,7 @@ GlassLab.State.Init.prototype.preload = function()
 
     // Title
     game.load.image('titleBg', 'assets/images/main_menu/title_screen_800x600.png');
+    game.load.image('creditsBg', 'assets/images/main_menu/credits_journal.png');
     game.load.spritesheet('titleButton', 'assets/images/main_menu/play_button_frames.png', 288, 118);
     game.load.spritesheet('creditsButtonBg', 'assets/images/main_menu/title_credits_btn_bg.png');
 
@@ -308,6 +309,9 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.json('day5', 'assets/quests/day5.json');
     game.load.json('day6', 'assets/quests/day6.json');
     game.load.json('day7', 'assets/quests/day7.json');
+
+    // Credits
+    game.load.json('creditText', 'assets/quests/credit_text.json');
 
     game.plugins.add(Phaser.Plugin.Isometric);
     GLOBAL.astar = game.plugins.add(Phaser.Plugin.AStar);

@@ -1,0 +1,66 @@
+{
+  "Game Design": [
+    "Erin Hoffman",
+    "Evan Rushton",
+    "Seth Corrigan"
+  ],
+  "Learning Design": [
+    "Evan Rushton",
+    "Seth Corrigan"
+  ],
+  "Engineering Lead": "Jerry Fu",
+  "Engineers": ["Rose Abernathy", "Owen Grace"],
+  "Art Direction": "Greg Bliss",
+  "Artists": "Michael Louie",
+  "Producer": "Elena Macomber",
+  "Music & Sound": "Dren McDonald",
+  "Assessment Design": "Seth Corrigan",
+  "GlassLab Platform": ["Ben Dapkiewicz", "Michael Mulligan", "Luke Ramsey", "Charles Tai"],
+  "GlassLab": [
+    "Jessica Lindl -- General Manager",
+    "Michael John -- Game Director",
+    "Liz Kline -- Product Manager",
+    "Paula Escuarda -- Marketing Director"
+  ],
+  "Special Thanks": {
+    "The team would like to thank:": "",
+    "our supporters at the Macarthur Foundation:": ["Connie Yowell", "Jennifer Humke"],
+    "our supporters at the Bill & Melinda Gates Foundation:": ["Brad Bernatek", "Tom Stritikus"],
+    "our partners at the ESA:": ["Erik Huey", "Diana Lawson"],
+    "our teacher advisors": [
+      "Reina Cabezas",
+      "Suzanne Giddens",
+      "Precious James",
+      "Christy Novack",
+      "Jennifer Trombino"
+    ],
+    "our friends & co-designers at Epic Middle School:": ["Precious James", "the students of Epic Middle School"],
+    "our friends & co-designers at Lazear Middle School:": ["Francis Abbatantuono", "Petrut Ababei", "the students of Lazear Middle School"],
+    "our awesome beta teachers:": [
+      "Jennifer Trombino",
+      "Reina Cabezas",
+      "Precious James",
+      "Karen Pearson",
+      "Christy Novack",
+      "Suzanne Giddens",
+      "Jeff Brain",
+      "Stephen Wierzbinski",
+      "Donna Jander",
+      "Dan Huddell",
+      "Nicholas Clayton",
+      "Jeffrey Allen",
+      "Kate Fox",
+      "Maryd Geyer",
+      "Sarah Sullivan"
+    ],
+    "and our awesome alpha teachers:": [
+      "Michelle Roberts",
+      "Ben McLuckie",
+      "Larry Schowalter",
+      "Todd Sinclair",
+      "Chris Richardson",
+      "Steve Heil",
+      "Nanci Liscinsky"
+    ]
+  }
+}
