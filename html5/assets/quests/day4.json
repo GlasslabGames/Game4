@@ -1,4 +1,5 @@
 {
+  "unlockedItems": ["strawberry", "broccoli", "apple", "meat", "tincan", "corn"],
   "progression": [
     {
      "_comment": "============ ******************************** THIS IS WHERE PROGRESSION BEGINS ******************************** ==============",  
@@ -62,7 +63,8 @@
         "numCreatures": 1,
         "description": "Dear Friend! I have 1 ADULT RAMMUS. Please send me enough TOTAL FOOD for it!",
         "askTotalFood": true,
-        "noFoodEntries": true
+        "noFoodEntries": true,
+        "reward": 30
       }
     },   
     {
@@ -181,7 +183,7 @@
             "creatureType": "rammus",
             "totalNumFood": 184,
             "description": "Dear Friend! I have 184 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
-            "reward": 40
+            "reward": 500
           },
           "boss": true,
           "reviewKeyForFailure": "middle"

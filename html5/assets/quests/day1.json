@@ -1,4 +1,5 @@
 {
+  "unlockedItems": ["strawberry", "broccoli", "apple"],
   "progression": [
     {
       "__type": "ActionGroup",
@@ -84,7 +85,7 @@
         },
         {
           "__type": "HideAssistantDialogueAction"
-        },
+        },                                
         {
           "__type": "WaitForCondition",
           "conditions": [
@@ -135,6 +136,15 @@
           "__type": "HideAssistantDialogueAction"
         },
         {
+          "__type": "WaitForCondition",
+          "conditions": [
+            {
+              "__type": "WaitCondition",
+              "waitTime": 500
+            }
+          ]
+        },
+        {
           "__type": "ClearWorldAction"
         },
         {
@@ -170,8 +180,8 @@
     },
     { 
      "__type": "DoFeedingChallengeAction",
-     "challengeId": "T1.07",
-     "problemType": "2UR_handfeed_multuple_rams",
+     "challengeId": "T2.01-REPLACE",
+     "problemType": "3UR_intro_adult_rammus-REPLACE",
      "challengeData": {
         "creatureType": "baby_rammus",
         "numCreatures": 3      

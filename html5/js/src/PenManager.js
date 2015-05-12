@@ -59,7 +59,9 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     this._centerPen(pen); // automatically center the pen
 
     // center the camera over the pen
-    this.focusCameraOnPen(pen); // only works if you delay for a frame, for an unknown reason
+    this.focusCameraOnPen(pen);
+
+    if (penData.hidden) pen.sprite.alpha = 0;
 
     pen.targetNumCreatures = penData.targetNumCreatures || penData.numCreatures;
     pen.maxHeight = penData.maxHeight;
