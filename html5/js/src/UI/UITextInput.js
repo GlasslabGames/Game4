@@ -63,7 +63,8 @@ GlassLab.UITextInput.prototype.SetFocus = function(onOrOff)
     {
         if (this.textLabel.text == "" || this.textLabel.text == " ") // Second check is because phaser puts a space in empty labels
         {
-            this.ShowKeyboardTooltip();
+            // it's pretty hacky to check a value on orderFulfillment but too bad. We only use TextInputs there anyway.
+            if (GLOBAL.orderFulfillment && GLOBAL.orderFulfillment.showTooltip) this.ShowKeyboardTooltip();
         }
     }
     else
@@ -130,17 +131,19 @@ GlassLab.UITextInput.prototype.ShowKeyboardTooltip = function()
     if (!this.keyboardTooltip)
     {
         this.keyboardTooltip = this.game.make.sprite(0,0,"keyboardTooltip");
-        this.keyboardTooltip.anchor.setTo(.5, 1);
+        this.keyboardTooltip.anchor.setTo(0, 0.5);
 
-        this.keyboardTooltip.x = this.width/2;
+        this.keyboardTooltip.x = this.width + 35;
+        this.keyboardTooltip.y = this.height / 2;
         this.addChild(this.keyboardTooltip);
+        this.keyboardTooltip.visible = false; // trigger the tween below
     }
 
     if (!this.keyboardTooltip.visible)
     {
         this.keyboardTooltip.visible = true;
-        this.keyboardTooltip.scale.y = 0;
-        this.keyboardTooltipTween = this.game.add.tween(this.keyboardTooltip.scale).to({y: 1}, 600, Phaser.Easing.Elastic.Out, true);
+        this.keyboardTooltip.scale.x = 0;
+        this.keyboardTooltipTween = this.game.add.tween(this.keyboardTooltip.scale).to({x: 1}, 600, Phaser.Easing.Elastic.Out, true);
         this.keyboardTooltipTween.onComplete.addOnce(function()
         {
             this.keyboardTooltipTween = null;

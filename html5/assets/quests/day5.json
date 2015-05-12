@@ -1,4 +1,5 @@
 {
+  "unlockedItems": ["strawberry", "broccoli", "apple", "meat", "tincan", "corn", "taco"],
   "progression": [
     {
      "_comment": "============ ******************************** THIS IS WHERE PROGRESSION BEGINS ******************************** ==============",      
@@ -95,7 +96,7 @@
             "creatureType": "baby_bird",
             "numFoodA": 52,
             "description": "Dear Friend! I have 52 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 70,
+            "reward": 250,
             "creatureWidth": 3
           }
         },
@@ -109,7 +110,7 @@
             "creatureType": "baby_bird",
             "numFoodA": 48,
             "description": "Dear Friend! I have 48 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 70,
+            "reward": 250,
             "creatureWidth": 3
           }
         },
@@ -123,7 +124,7 @@
             "creatureType": "baby_bird",
             "numFoodA": 56,
             "description": "Dear Friend! I have 56 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-            "reward": 70,
+            "reward": 250,
             "creatureWidth": 3
           }
         }
@@ -153,7 +154,7 @@
           "creatureType": "baby_bird",
           "numFoodA": 108,
           "description": "Dear Friend! I have 108 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-          "reward": 70,
+          "reward": 500,
           "creatureWidth": 3
         },
       "boss": true,
@@ -353,7 +354,7 @@
         "creatureType": "baby_bird",
         "numFoodA": 84,
         "description": "Dear Friend! I have 84 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
-        "reward": 70,
+        "reward": 250,
         "creatureWidth": 3
       }
     },

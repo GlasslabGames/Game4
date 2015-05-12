@@ -1,4 +1,5 @@
 {
+  "unlockedItems": ["strawberry", "broccoli", "apple"],
   "progression": [
     {
       "__type": "DoPenChallengeAction",
@@ -9,7 +10,9 @@
         "numCreatures": 3,
         "bottomDraggable": true,
         "topDraggable": true,
-        "maxHeight": 3
+        "maxHeight": 3,
+        "hidden": true,
+        "_comment": "Hide the pen at first, since DeliverPenAction shows the crate flying in."
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -156,7 +159,8 @@
        "creatureType": "baby_rammus",
        "numCreatures": 4,
        "description": "Dear Friend! I have *4 baby rammuses*. Please send me enough food for all of them!",
-        "reward": 10
+        "reward": 10,
+        "showTooltip": true
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -213,7 +217,8 @@
         "numFoodA": 15,
         "type": "baby_rammus",
         "description": "Dear Friend! I have *15 broccoli*. Please send me the exact number of *baby rams* to eat all my food!",
-        "reward": 10
+        "reward": 10,
+        "showTooltip": true
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -226,10 +231,6 @@
                 "signalName": "mailOpened"
               }
             ]
-          },
-          {
-            "__type": "ShowAssistantDialogueAction",
-            "text": "Ah, a tricky one. This order is *reversed* - they want you to ship *enough rammuses for their food*."
           },
           {
             "__type": "WaitForCondition",

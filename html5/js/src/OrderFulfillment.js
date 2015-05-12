@@ -198,6 +198,8 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
         return;
     }
 
+    this.showTooltip = this.data.showTooltip;
+
     var desiredFood = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood;
     if (this.data.totalNumFood || this.data.askTotalFood) {
         if (this.data.noFoodEntries) {  // we can use the shorter bg and move things down
@@ -231,6 +233,12 @@ GlassLab.OrderFulfillment.prototype.Refresh = function()
     }
 
     this._refreshPen();
+
+    // After a short delay, auto-focus one of the empty slots if we can
+    this.game.time.events.add(1000, function() {
+        if (this.creatureInput.canEnterValue) this.creatureInput.answerInput.SetFocus(true);
+        else if (this.totalFoodInput.canEnterValue) this.totalFoodInput.answerInput.SetFocus(true);
+    }, this);
 
     // refresh the submit button
     this.submitButton.setEnabled( this._getResponse() );

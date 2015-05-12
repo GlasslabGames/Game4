@@ -1,4 +1,5 @@
 {
+  "unlockedItems": ["strawberry", "broccoli", "apple", "meat", "tincan", "corn"],
   "progression": [
     {
      "__type": "DoPenChallengeAction",
@@ -167,7 +168,7 @@
           "creatureType": "baby_rammus",
           "numFoodA": 24,
           "description": "Dear Friend! I have 24 BROCCOLI. Please send me the exact number of BABY RAMS to eat all my food!",
-          "reward": 20
+          "reward": 500
         },
       "boss": true,
       "reviewKeyForFailure": "middle"

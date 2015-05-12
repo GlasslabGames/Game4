@@ -1,5 +1,5 @@
 {
-  "unlockedItems": ["strawberry", "broccoli", "apple", "tincan", "meat", "pizza", "corn", "taco"],
+  "unlockedItems": ["strawberry", "broccoli", "apple", "meat", "tincan", "corn", "taco", "pizza", "mushroom", "donut"],
   "progression": [
     {
 		"__type": "ActionGroup",
