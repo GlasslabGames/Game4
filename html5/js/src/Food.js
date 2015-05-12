@@ -32,6 +32,18 @@ GlassLab.FoodTypes = {
             plural: "Strawberries"
         }
     },
+    apple: {
+        spriteName: "apple",
+        spriteOffsetWhileDragging: 15,
+        color: 0xc03b30, // associated color for the vomit and the hunger bar
+        unlocked: false, // Default value, unlock tracked by InventoryManager
+        cost: 20,
+        available: true,
+        displayNames: {
+            singular: "Apple",
+            plural: "Apples"
+        }
+    },
     meat: {
         spriteName: "meat",
         spriteOffsetWhileDragging: 1,
@@ -49,35 +61,11 @@ GlassLab.FoodTypes = {
         spriteOffsetWhileDragging: -1,
         color: 0x99a2ac,
         unlocked: false,
-        cost: 100,
+        cost: 500,
         available: true,
         displayNames: {
             singular: "Can",
             plural: "Cans"
-        }
-    },
-    apple: {
-        spriteName: "apple",
-        spriteOffsetWhileDragging: 15,
-        color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
-        cost: 20,
-        available: true,
-        displayNames: {
-            singular: "Apple",
-            plural: "Apples"
-        }
-    },
-    taco: {
-        spriteName: "taco",
-        spriteOffsetWhileDragging: 0,
-        color: 0xf6cf62,
-        unlocked: false,
-        cost: 200,
-        available: true,
-        displayNames: {
-            singular: "Taco",
-            plural: "Tacos"
         }
     },
     corn: {
@@ -92,12 +80,24 @@ GlassLab.FoodTypes = {
             plural: "Corn"
         }
     },
+    taco: {
+        spriteName: "taco",
+        spriteOffsetWhileDragging: 0,
+        color: 0xf6cf62,
+        unlocked: false,
+        cost: 500,
+        available: true,
+        displayNames: {
+            singular: "Taco",
+            plural: "Tacos"
+        }
+    },
     pizza: {
         spriteName: "pizza",
         spriteOffsetWhileDragging: -4,
         color: 0xe4b76e,
         unlocked: false,
-        cost: 200,
+        cost: 700,
         available: true,
         displayNames: {
             singular: "Pizza",
@@ -109,7 +109,7 @@ GlassLab.FoodTypes = {
         spriteOffsetWhileDragging: 7,
         color: 0xca5d5c,
         unlocked: false,
-        cost: 100,
+        cost: 2000,
         available: true,
         displayNames: {
             singular: "Mushroom",

@@ -429,7 +429,7 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.04b",
             "problemType": "3BR1MC",
-            "orderData": {
+            "challengeData": {
               "client": "Archibold Huxley III",
               "creatureType": "bird",
               "numCreatures": 33,
