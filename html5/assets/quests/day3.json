@@ -214,7 +214,7 @@
           "creatureType": "baby_unifox",
           "numFoodA": 68,
           "description": "Dear Friend! I have 68 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-          "reward": 30,
+          "reward": 30
         }
       },
       {
@@ -226,7 +226,7 @@
           "creatureType": "baby_unifox",
           "numFoodA": 52,
           "description": "Dear Friend! I have 52 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-          "reward": 30,
+          "reward": 30
         }
       },
       {
@@ -238,7 +238,7 @@
           "creatureType": "baby_unifox",
           "numFoodA": 60,
           "description": "Dear Friend! I have 52 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-          "reward": 30,
+          "reward": 30
         }
       }
       ]
@@ -454,7 +454,7 @@
         "creatureType": "baby_unifox",
         "numFoodA": 76,
         "description": "Dear Friend! I have 76 STRAWBERRIES. Please send me the exact number of BABY UNIFOXES to eat all my food!",
-        "reward": 30,
+        "reward": 30
       }
     }
   ]
