@@ -1,93 +1,44 @@
 /**
- * Created by Jerry Fu on 12/12/2014.
+ * Created by Jerry Fu on 1/9/2015.
  */
+var GLOBAL = GLOBAL || {};
 
-CC = {};
-
-CC.Game = {};
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 window.onload = function() {
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update});
+    GLOBAL.fullScreenAllowed = document.fullscreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.mozFullScreenEnabled ||
+        document.msFullscreenEnabled;
 
-  function preload() {
-    game.load.image('disk', 'assets/images/copy-that-floppy.png');
-    game.load.image('1UP', 'assets/images/mushroom2.png');
+    GLOBAL.telemetryManager = new GlassLab.TelemetryManager();
 
-  }
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameContainer');
+    GLOBAL.game = game;
+    GLOBAL.version = "0.3.0";
+    GLOBAL.debug = (getParameterByName("debug") == "true");
+    GLOBAL.stickyMode = (getParameterByName("sticky") == "true"); // If true, click to grab something or put it down. If false, drag things around.
+    GLOBAL.UIpriorityID = 100; // set the input.priorityID on all UI elements to this so they'll be above the game elements
+    GLOBAL.penAreaWidth = 26;
+    GLOBAL.penAreaHeight = 28;
 
-  var parent;
-  var child;
-  var child2;
-  var dragObject;
-  var dragOrigin;
-  function conseClick()
-  {
-  };
+    game.state.add("Init", GlassLab.State.Init);
+    game.state.add("Game", GlassLab.State.Game);
+    game.state.add("Title", GlassLab.State.Title);
 
-  function create()
-  {
+    game.state.start("Init");
+};
 
-    game.load.start();
-
-    parent = game.add.sprite(100, 100, 'disk');
-    parent.inputEnabled = true;
-    parent.anchor.x = parent.anchor.y = .5;
-    parent.name = 'disk';
-    parent.events.onInputUp.add(onUp, this);
-    parent.events.onInputDown.add(onDown, this);
-
-    child = game.make.sprite(0, 0, '1UP');
-    child.name = "1UP";
-    child.anchor.x = child.anchor.y = .5;
-    child.x = 200;
-    child.y = 50;
-    child.inputEnabled = true;
-    child.input.priorityID = 1;
-    child.events.onInputUp.add(onUp, this);
-    child.events.onInputDown.add(onDown, this);
-    parent.addChild(child);
-
-    child2 = game.make.sprite(0, 0, '1UP');
-    child2.name = "1UP";
-    child2.anchor.x = child2.anchor.y = .5;
-    child2.x = 50;
-    child2.y = 250;
-    child2.inputEnabled = true;
-    child2.input.priorityID = 2;
-    child2.events.onInputUp.add(onUp, this);
-    child2.events.onInputDown.add(onDown, this);
-    child.addChild(child2);
-
-    game.add.text(250, 250, "Awesome", { fill:"#fff" }).name = "Text";
-  }
-
-  function update()
-  {
-    if (dragObject)
+Math.sign = Math.sign || function(x) {
+    x = +x;
+    if (x === 0 || isNaN(x))
     {
-      var localPoint = dragObject.toLocal(new PIXI.Point(game.input.worldX, game.input.worldY));
-      dragObject.x += localPoint.x;
-      dragObject.y += localPoint.y;
+        return x;
     }
-  }
-
-  function onDown(sprite, pointer)
-  {
-    dragObject = sprite;
-    dragOrigin = new PIXI.Point(pointer.screenX, pointer.screenY);
-  }
-
-  function onUp(sprite, pointer)
-  {
-    dragObject = null;
-    dragOrigin.subtract(pointer.screenX, pointer.screenY);
-    if (dragOrigin.getMagnitudeSq() <= 1)
-    {
-      var o = sprite;
-      if (o.scale.x == 2)
-        o.scale.x = 1;
-      else
-        o.scale.x = 2;
-    }
-  }
+    return x > 0 ? 1 : -1;
 };

@@ -280,9 +280,15 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('hungerBarDoubleFillBase', 'assets/images/hunger_bar/hunger_bar_double_fill_base.png');
     game.load.image('hungerBarDoubleFillWidth', 'assets/images/hunger_bar/hunger_bar_double_fill_width.png');
 
+    // Title
+    game.load.image('titleBg', 'assets/images/main_menu/title_screen_800x600.png');
+    game.load.spritesheet('titleButton', 'assets/images/main_menu/play_button_frames.png', 288, 118);
+    game.load.spritesheet('creditsButtonBg', 'assets/images/main_menu/title_credits_btn_bg.png');
+
     // Tilemap
     game.load.tilemap('worldTileMap', 'assets/tilemaps/prima_world.json', null, Phaser.Tilemap.TILED_JSON);
 
+    // Music/sound
     game.load.audio('backgroundMusic', 'assets/audio/bgm/cc_in-game_music_loop.mp3');
     game.load.audio('menuMusic', 'assets/audio/bgm/cc_menu_music_loop.mp3');
     game.load.audio('bonusMusic', 'assets/audio/bgm/cc_menu_music_loop.mp3');
@@ -451,6 +457,6 @@ GlassLab.State.Init.prototype.update = function()
         GLOBAL.loadingText.destroy();
         delete GLOBAL.loadingText;
 
-        this.game.state.start("Game", false);
+        this.game.state.start("Title", false);
     }
 };
