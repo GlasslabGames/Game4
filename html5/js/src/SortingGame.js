@@ -156,7 +156,6 @@ GlassLab.SortingGame.prototype.start = function(data) {
         return;
     }
 
-    this.show();
 
     // Remove all the cards and make new ones. (Yes, we should reset cards instead, but that's more complicated.)
     while (this.cards.length) {
@@ -194,6 +193,9 @@ GlassLab.SortingGame.prototype.start = function(data) {
     GLOBAL.audioManager.switchMusic("bonus");
 
     GlassLabSDK.saveTelemEvent("bonus_game_start", {});
+
+    this.show();
+    
 };
 
 GlassLab.SortingGame.prototype.finish = function() {
