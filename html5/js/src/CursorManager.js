@@ -138,7 +138,8 @@ CURSOR.Manager.prototype = {
 
     update: function() {
         var name = "default";
-        if (GLOBAL.game && GLOBAL.game.input.activePointer.targetObject && GLOBAL.game.input.activePointer.targetObject.customHoverCursor) {
+        if (GLOBAL.game && GLOBAL.game.input.activePointer.targetObject && GLOBAL.game.input.activePointer.targetObject.customHoverCursor &&
+            (!GLOBAL.game.input.activePointer.targetObject.sprite || GLOBAL.game.input.activePointer.targetObject.sprite.enabled !== false)) {
             name = GLOBAL.game.input.activePointer.targetObject.customHoverCursor;
         }
 

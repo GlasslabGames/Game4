@@ -38,19 +38,49 @@ GlassLab.Assistant = function(game) {
     this.advanceTutorialButton = new GlassLab.HUDButton(this.game, -270, -50, null, "speech_button", "OK", {font: "14pt EnzoBlack", fill: "#ffffff"}, true, this._onAdvanceTutorialPressed, this);
     this.advanceTutorialButton.addOutline("speech_button_border");
     this.advanceTutorialButton.visible = false;
+
     this.dialogue.addChild(this.cancelButton);
     this.dialogue.addChild(this.continueButton);
     this.dialogue.addChild(this.modalButton);
     this.modalButton.visible = false;
     this.dialogue.addChild(this.advanceTutorialButton);
 
+    this.buttons = [this.cancelButton, this.continueButton, this.modalButton, this.advanceTutorialButton];
+
+    this.dialogue.inputEnabled = true;
+    this.dialogue.events.onInputUp.add(this.toggleMinimized, this);
+    this.dialogue.input.customHoverCursor = "button";
+
+    this.miniDialogue = game.make.sprite(0, 0);
+    this.sprite.addChild(this.miniDialogue);
+    this.miniDialogue.visible = false;
+
+    this.miniSpeechBubble = game.make.sprite(-160, -80, "speech_bubble_small");
+    this.miniSpeechBubble.tint = 0x000000;
+    this.miniSpeechBubble.alpha = 0.75;
+    this.miniSpeechBubble.anchor.set(1, 0.5);
+    this.miniDialogue.addChild(this.miniSpeechBubble);
+
+    this.dots = game.make.sprite(-187,-80, "assistantAnim");
+    this.dots.animations.add("anim", Phaser.Animation.generateFrameNames("assistant_speech_min_dot_dance_",0,25,".png",3), 24, true);
+    this.dots.play("anim");
+    this.dots.anchor.setTo(0.5, 0.5);
+    this.miniDialogue.addChild(this.dots);
+
+    this.miniDialogue.inputEnabled = true;
+    this.miniDialogue.events.onInputUp.add(this.toggleMinimized, this);
+    this.miniDialogue.input.customHoverCursor = "button";
+
     this.numberOfReloads = 0;
     this.maxReloads = 3;
 
     this.sprite.visible = false;
     this.visibilityState = "closed"; // "open", "opening", "closed", "closing"
+    this.minimized = false;
     this.inTutorial = false;
     this.order = null;
+
+    this.dialogueTween;
 
     this.currentText = "";
 
@@ -78,6 +108,7 @@ GlassLab.Assistant.prototype.showTutorial = function(text, showButton) {
     this.modalButton.visible = false;
 
     this.inTutorial = true;
+    this._refreshMinimizeable();
 };
 
 GlassLab.Assistant.prototype.hideTutorial = function() {
@@ -93,6 +124,7 @@ GlassLab.Assistant.prototype._tryClose = function() {
 };
 
 GlassLab.Assistant.prototype._tryOpen = function() {
+    this.setMinimized(false);
     if (this.visibilityState != "open" && this.visibilityState != "opening") {
         this._startOpening();
     }
@@ -114,35 +146,65 @@ GlassLab.Assistant.prototype.showModal = function(text, buttonCallback)
 GlassLab.Assistant.prototype._startOpening = function() {
     GLOBAL.audioManager.playSound("buttonClickSound");
     this.sprite.visible = true;
-    this.visibilityState == "opening";
+    this.visibilityState = "opening";
     var anim = this.portrait.play("in");
-    if (anim) anim.onComplete.addOnce(this._startOpen, this);
-    else this._startOpen();
+    if (anim) anim.onComplete.addOnce(this._open, this);
+    else this._open();
     this.dialogue.alpha = 0;
     this.game.add.tween(this.dialogue).to( { alpha: 1 }, 100, Phaser.Easing.Quadratic.InOut, true);
+    this._refreshMinimizeable();
 };
 
-GlassLab.Assistant.prototype._startOpen = function() {
+GlassLab.Assistant.prototype._open = function() {
     this.sprite.visible = true;
-    this.visibilityState == "open";
+    this.visibilityState = "open";
     var anim = this.portrait.play("in");
     anim.paused = true;
     anim.frame = 14;
     this.dialogue.alpha = 1;
+    this._refreshMinimizeable();
 };
 
 GlassLab.Assistant.prototype._startClosing = function() {
     this.sprite.visible = true;
-    this.visibilityState == "closing";
+    this.visibilityState = "closing";
     var anim = this.portrait.play("out");
-    if (anim) anim.onComplete.addOnce(this._startClosed, this);
-    else this._startClosed();
+    if (anim) anim.onComplete.addOnce(this._close, this);
+    else this._close;
     this.game.add.tween(this.dialogue).to( { alpha: 0 }, 100, Phaser.Easing.Quadratic.InOut, true);
 };
 
-GlassLab.Assistant.prototype._startClosed = function() {
+GlassLab.Assistant.prototype._close = function() {
     this.sprite.visible = false;
-    this.visibilityState == "closed";
+    this.visibilityState = "closed";
+};
+
+GlassLab.Assistant.prototype._refreshMinimizeable = function() {
+    var canMinimize = (this.visibilityState == "open");
+    if (canMinimize && !this.minimized) {
+        for (var i = 0; i < this.buttons.length; i++) {
+            if (this.buttons[i] && this.buttons[i].visible) canMinimize = false;
+        }
+    }
+
+    this.dialogue.inputEnabled = canMinimize;
+    this.miniDialogue.inputEnabled = canMinimize;
+
+    return canMinimize;
+};
+
+GlassLab.Assistant.prototype.toggleMinimized = function() {
+    if (!this._refreshMinimizeable()) return;
+
+    this.setMinimized(!this.minimized);
+};
+
+
+GlassLab.Assistant.prototype.setMinimized = function(minimized) {
+    this.minimized = minimized;
+
+    this.dialogue.visible = !this.minimized;
+    this.miniDialogue.visible = this.minimized;
 };
 
 // For use when completing an order
@@ -237,6 +299,8 @@ GlassLab.Assistant.prototype._enterStateOrderCrateReady = function(lastChance) {
 GlassLab.Assistant.prototype._setText = function(text) {
     this.currentText = text;
     GlassLab.Util.SetColoredText(this.label, text, GlassLab.Assistant.TEXT_COLOR, GlassLab.Assistant.HIGHLIGHT_TEXT_COLOR);
+    this.setMinimized(false);
+    this._refreshMinimizeable();
 };
 
 GlassLab.Assistant.prototype._onCancelPressed = function() {
@@ -289,16 +353,3 @@ GlassLab.Assistant.prototype._onInventoryOpened = function() {
 GlassLab.Assistant.prototype._onInventoryClosed = function() {
     this.sprite.y = 0;
 };
-
-/*
- 1. Start: Here's the order, how should I load the crate?
- 2. Add food: Carrots, I see. How many? // Carrots and potatoes, very good. How many?
- 3. Load crate: Is this what you wanted? Nope // Yes
- 4. Nope: Ok, how many then??
- 5. Load crate: I've reloaded. Correct?
- 6. Nope again: Ok, I'll load it one more time.
- 7. Load crate: I hope this is what you wanted. Click Ship Crate.
- 6. Yes: Ok, click the Ship Crate button
-
-    Plus intro stuff.
-  */
