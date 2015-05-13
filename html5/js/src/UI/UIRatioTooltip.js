@@ -267,11 +267,14 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         }
     }
 
-    /*if (currentPen) {
-        if (this.pen != currentPen || this.message != message) this.show(currentPen, message);
-    } else if (this.pen) this.hide();*/
-    // everytime the thing we want to show changes, restart the countdown
-    if (currentPen != this.desiredPen || message != this.desiredMessage) this.changeCountdown = this.changeDelay;
+    if (currentPen) {
+        if (this.pen != currentPen) this.show(currentPen, message); // re-popup the tooltip
+        else if (this.message != message && this.desiredMessage != message) {
+            this.changeCountdown = this.changeDelay; // delay the re-popup for a moment
+        }
+    } else if (this.pen) this.hide();
+
+    // keep track of what pen and message we want to show for when any changeCountdown runs out
     this.desiredPen = currentPen;
     this.desiredMessage = message;
 };
