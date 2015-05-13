@@ -18,6 +18,7 @@ GlassLab.State.Title.prototype.create = function()
     button.input.priorityID = GLOBAL.UIpriorityID;
     this.title.addChild(button);
     this.playButton = button;
+    button.input.customHoverCursor = "button";
 
     var creditsButton = new GlassLab.HUDButton(this.game, this.game.width / 2, this.game.height - 60, null, "creditsButtonBg",
         "CREDITS", {font: "12pt EnzoBlack"}, true, this._toggleCredits, this);
@@ -67,4 +68,9 @@ GlassLab.State.Title.prototype._openCredits = function() {
     this.tween = this.game.make.tween(this.fade).to({alpha: 1}, 100, Phaser.Easing.Quadratic.InOut, true);
     this.credits.show();
     this.playButton.inputEnabled = false; // disable while the journal is up
+};
+
+
+GlassLab.State.Title.prototype.update = function() {
+    if (!GLOBAL.paused) GlassLab.SignalManager.update.dispatch(this.game.time.elapsedMS);
 };
