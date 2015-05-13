@@ -14,14 +14,14 @@ GlassLab.Credits = function(game) {
     this.pages = [];
 
     // Page buttons - like Journal.js
-    var pageButtonX = this.bg.width / 2 + 40;
+    var pageButtonX = this.bg.width / 2 + 50;
     this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next\nPage", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.nextPageButton.label.x -= 8;
     this.nextPageButton.addOutline("sideArrowHighlight");
     this.bg.addChild(this.nextPageButton);
 
-    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev\nPage", {font: "14pt EnzoBlack"}, true, this._onPrevPagePressed, this);
+    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev\nPage", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
     this.prevPageButton.anchor.setTo(0, 0.5);
     this.prevPageButton.label.x += 8;
     this.bg.addChild(this.prevPageButton);
@@ -98,7 +98,6 @@ GlassLab.Credits.prototype._generatePages = function()
         section.push(label);
         y += label.height;
 
-        console.log(text, y);
         if (y > 400) { // end of this page, so restart this section on a new page
             y = 0;
 
@@ -113,6 +112,39 @@ GlassLab.Credits.prototype._generatePages = function()
             i = sectionIndex-1; // restart from the beginning of the section, adding stuff to this page
         }
     }
+
+    this._addStickers();
+};
+
+
+GlassLab.Credits.prototype._addStickers = function() {
+    // The reason we add childAt 0 is so it will be under the text
+    this.pages[0].addChildAt(this._makeSticker("babyunifox", .15, .22, 0.7, 5), 0);
+    this.pages[0].addChildAt(this._makeSticker("strawberry", .8, .75, 1), 0);
+
+    this.pages[1].addChildAt(this._makeSticker("babyram", .8, .15, -0.5, -5), 0);
+    this.pages[1].addChildAt(this._makeSticker("broccoli", .17, .85, 1), 0);
+
+    this.pages[2].addChildAt(this._makeSticker("donut", .8, .85, 1, -10), 0);
+
+    this.pages[3].addChildAt(this._makeSticker("babybird", .85, .4, -0.5, 5), 0);
+    this.pages[3].addChildAt(this._makeSticker("mushroom", .17, .2, 1), 0);
+
+    this.pages[4].addChildAt(this._makeSticker("apple", .2, .85, 1, -10), 0);
+    this.pages[4].addChildAt(this._makeSticker("corn", .5, .9, 1, 0), 0);
+    this.pages[4].addChildAt(this._makeSticker("pizza", .8, .85, 1, -10), 0);
+
+    this.pages[5].addChildAt(this._makeSticker("ram", .23, .55, 0.75, 5), 0);
+    this.pages[5].addChildAt(this._makeSticker("unifox", .47, .8, -0.75, 5), 0);
+    this.pages[5].addChildAt(this._makeSticker("bird", .8, .65, -0.75, 5), 0);
+};
+
+GlassLab.Credits.prototype._makeSticker = function(spriteName, xPercent, yPercent, scale, angle) {
+    var sprite = this.game.make.sprite((xPercent - 0.5) * 320, yPercent * 400, spriteName+"_sticker");
+    sprite.anchor.setTo(0.5, 0.5);
+    sprite.scale.setTo(scale, Math.abs(scale)); // if you pass a negative scale, only the x flips
+    sprite.angle = angle || 0;
+    return sprite;
 };
 
 GlassLab.Credits.prototype._drawSection = function(index)

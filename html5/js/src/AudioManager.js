@@ -24,7 +24,7 @@ GlassLab.AudioManager.SOUND_GROUPS = {
 
 };
 
-GlassLab.AudioManager.prototype.toggleMusic = function(on)
+GlassLab.AudioManager.prototype.toggleMusic = function(on, key)
 {
     if (typeof on == 'undefined') on = !this.musicOn;
     this.musicOn = on;
@@ -33,6 +33,8 @@ GlassLab.AudioManager.prototype.toggleMusic = function(on)
     } else {
         this.currentMusic.stop();
     }
+
+    if (key) this.switchMusic(key);
 
     GlassLab.Util.SetCookieData("musicOn", this.musicOn);
 };

@@ -27,7 +27,7 @@ GlassLab.UIWindow.prototype.toggle = function() {
 };
 
 GlassLab.UIWindow.prototype.show = function() {
-    if (!this.open) { // tween in
+    if (!this.open && this.game) { // tween in
         this.y = this.game.height;
         var tween = this.game.add.tween(this).to({ y: 0 }, 300, Phaser.Easing.Quintic.Out, true);
         tween.onComplete.addOnce(function() { this.onFinishedShowing.dispatch(); }, this);
@@ -42,7 +42,7 @@ GlassLab.UIWindow.prototype.show = function() {
 };
 
 GlassLab.UIWindow.prototype.hide = function() {
-    if (this.open) { // tween out
+    if (this.open && this.game) { // tween out
         var tween = this.game.add.tween(this).to({ y: this.game.height }, 300, Phaser.Easing.Quintic.Out, true);
         tween.onComplete.addOnce(function() {
             if (!this.open) this.visible = false;

@@ -31,7 +31,7 @@ GlassLab.State.Game.prototype.create = function()
     GlassLab.SignalManager.initializationComplete.dispatch();
 
     // start with the sound effects off during development.
-    GLOBAL.audioManager.toggleMusic(GlassLab.Util.HasCookieData("musicOn") ? GlassLab.Util.GetCookieData("musicOn") == 'true' : true);
+    GLOBAL.audioManager.toggleMusic(GlassLab.Util.HasCookieData("musicOn") ? GlassLab.Util.GetCookieData("musicOn") == 'true' : true, "background");
     GLOBAL.audioManager.toggleSoundEffects(GlassLab.Util.HasCookieData("sfxOn") ? GlassLab.Util.GetCookieData("sfxOn") == 'true' : true);
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
