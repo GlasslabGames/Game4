@@ -301,6 +301,7 @@ GlassLab.Food.prototype._afterEaten = function(fadeTime) {
 GlassLab.Food.prototype.reset = function() {
     if (this.deathTween) this.deathTween.stop();
     this.image.animations.stop();
+    this.image.animations.frameName = this.type+"_idle.png";
     this.health = 1;
     this.eaten = false;
     this.draggableComponent.active = true;
