@@ -327,6 +327,7 @@ GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel)
     this.enforceCameraBounds();
 
     GlassLab.SignalManager.cameraMoved.dispatch();
+    GlassLab.SignalManager.zoomChanged.dispatch();
 };
 
 GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
@@ -349,6 +350,8 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
         GlassLab.SignalManager.cameraMoved.dispatch();
     }, this);
     this.zoomTween.start();
+
+    GlassLab.SignalManager.zoomChanged.dispatch();
 };
 
 GlassLab.UIManager.prototype.zoomIn = function() {
