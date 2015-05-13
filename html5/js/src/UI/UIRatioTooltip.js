@@ -239,7 +239,6 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         }
         // Else, we're dragging something else, so don't show a tooltip
     } else if (GLOBAL.overTarget && GLOBAL.overTarget instanceof GlassLab.Edge) {
-
         currentPen = GLOBAL.overTarget.pen;
         if (currentPen.getCanReset())
         {
@@ -254,7 +253,7 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
         Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
         var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
-        if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen && !tileSprite.inPen.tooltipDisabled) {
+        if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen) {
             currentPen = tileSprite.inPen;
             if (currentPen.getCanReset())
             {
@@ -266,6 +265,9 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
             }
         }
     }
+
+    // check for a case where the pen isn't visible or we don't want to show the tooltip.
+    if (!currentPen || currentPen.tooltipDisabled || !currentPen.sprite || !currentPen.sprite.visible || !currentPen.sprite.alpha) currentPen = null;
 
     if (currentPen) {
         if (this.pen != currentPen) this.show(currentPen, message); // re-popup the tooltip

@@ -61,7 +61,7 @@ GlassLab.PenManager.prototype.CreatePen = function(penData, col, row)
     // center the camera over the pen
     this.focusCameraOnPen(pen);
 
-    if (penData.hidden) pen.sprite.alpha = 0;
+    if (penData.hidden) pen.sprite.visible = false;
 
     pen.targetNumCreatures = penData.targetNumCreatures || penData.numCreatures;
     pen.maxHeight = penData.maxHeight;

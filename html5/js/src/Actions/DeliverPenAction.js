@@ -64,6 +64,7 @@ GlassLab.DeliverPenAction.prototype._propellerClosed = function() {
     GlassLab.SignalManager.tutorialAdvanced.dispatch();
     this.crate.inputEnabled = true;
     this.crate.input.priorityID = GLOBAL.UIpriorityID - 1; // highest priority, not counting the UI
+    this.crate.input.customHoverCursor = "button";
     this.crate.events.onInputUp.addOnce(this._crateClicked, this);
 
     this._complete(); // now that the crate is visible, we can advance the tutorial
@@ -87,6 +88,7 @@ GlassLab.DeliverPenAction.prototype._crateClicked = function() {
     smoke1.events.onAnimationComplete.addOnce(this._finishDelivery, this);
 
     this.highlightTween.stop();
+    this.pen.sprite.visible = true;
     this.game.add.tween(this.pen.sprite).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true);
     this.game.add.tween(this.crate).to({alpha: 0}, 100, Phaser.Easing.Quadratic.InOut, true);
     this.game.add.tween(this.shadow).to({alpha: 0}, 100, Phaser.Easing.Quadratic.InOut, true);
@@ -106,6 +108,7 @@ GlassLab.DeliverPenAction.prototype.Destroy = function()
     if (this.landTimer) this.game.time.events.remove(this.landTimer);
     if (this.pen) {
         this.pen.alpha = 1;
+        this.pen.visible = true;
         this.pen.tooltipDisabled = false;
     }
 };
