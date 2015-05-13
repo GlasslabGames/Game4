@@ -31,6 +31,7 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.bgSprite.tint = 0x000000;
     this.bgSprite.alpha = 0.5;
     this.addChild(this.bgSprite);
+    this.bgSpriteColorTween = null;
 
     // slot image:
     this.foodSprite = game.make.sprite(0, 0, GlassLab.FoodTypes[this.foodType].spriteName); //new GlassLab.InventoryMenuItem(this.game, this.foodType);
@@ -76,31 +77,37 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.addChild(this.label);
 
     // hoverLabel above slot (show on hover):
-    var hoverLabelY = Math.round((this.height / -2)) - 37; // 37px above top edge of slot
+    this.hoverLabelContainer = game.make.group();
+    this.hoverLabelContainer.y = Math.round((this.height / -2)); // top edge of slot
+    this.hoverLabelContainer.alpha = 0;
+    this.hoverLabelContainerScaleTween = null;
+    this.hoverLabelContainerAlphaTween = null;
+
+    var hoverLabelY = -37; // center of words/labelBg etc is 37 px above top edge of slot
 
     this.hoverLabel = game.make.text(0, hoverLabelY + 2, this.data.displayNames["singular"], {fill: '#ffffff', font: "16px EnzoBlack"});
-    this.hoverLabel.alpha = 0;
+    //this.hoverLabel.alpha = 0;
 
     this.hoverLabelBg = this.game.make.image(0, hoverLabelY, "foodLabelBg");
     this.hoverLabelBg._original_width = this.hoverLabelBg.width;
     this.hoverLabelBg.anchor.setTo(.5, .5);
-    this.hoverLabelBg.alpha = 0;
+    //this.hoverLabelBg.alpha = 0;
     this.hoverLabelBg.tint = 0x000000;
 
     this.hoverLabelBgEndcapLeft = this.game.make.image(0, hoverLabelY, "foodLabelBgEndcap");
     this.hoverLabelBgEndcapLeft.anchor.setTo(1, .5);
-    this.hoverLabelBgEndcapLeft.alpha = 0;
+    //this.hoverLabelBgEndcapLeft.alpha = 0;
     this.hoverLabelBgEndcapLeft.tint = 0x000000;
 
     this.hoverLabelBgEndcapRight = this.game.make.image(0, hoverLabelY, "foodLabelBgEndcap");
     this.hoverLabelBgEndcapRight.anchor.setTo(1, .5);
-    this.hoverLabelBgEndcapRight.alpha = 0;
+    //this.hoverLabelBgEndcapRight.alpha = 0;
     this.hoverLabelBgEndcapRight.scale.x *= -1;
     this.hoverLabelBgEndcapRight.tint = 0x000000;
 
     this.hoverLabelBgPointer = this.game.make.image(0, hoverLabelY + 22, "questObjectiveArrow");
     this.hoverLabelBgPointer.anchor.setTo(.5, .5);
-    this.hoverLabelBgPointer.alpha = 0;
+    //this.hoverLabelBgPointer.alpha = 0;
     this.hoverLabelBgPointer.scale.y *= -1;
     this.hoverLabelBgPointer.tint = 0x000000;
 
@@ -108,16 +115,18 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.hoverLabelCoin.anchor.setTo(.5, .5);
     this.hoverLabelCoin.alpha = 0;
 
-    // add hoverLabel parts as children:
-    this.addChild(this.hoverLabelBg);
-    this.addChild(this.hoverLabelBgEndcapLeft);
-    this.addChild(this.hoverLabelBgEndcapRight);
-    this.addChild(this.hoverLabelBgPointer);
-    this.addChild(this.hoverLabel);
-    this.addChild(this.hoverLabelCoin);
+    // add hoverLabel parts as children to container group:
+    this.hoverLabelContainer.addChild(this.hoverLabelBg);
+    this.hoverLabelContainer.addChild(this.hoverLabelBgEndcapLeft);
+    this.hoverLabelContainer.addChild(this.hoverLabelBgEndcapRight);
+    this.hoverLabelContainer.addChild(this.hoverLabelBgPointer);
+    this.hoverLabelContainer.addChild(this.hoverLabel);
+    this.hoverLabelContainer.addChild(this.hoverLabelCoin);
+
+    // add group as child to this:
+    this.addChild(this.hoverLabelContainer);
 
     this.UpdateHoverLabel(); // sets text anchors, hover label bg positions and scale
-
 
     // mouse events:
     this.events.onInputDown.add(this._onInputDown, this);
@@ -184,7 +193,18 @@ GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
         }
     }
     else {
-        // Failed, not enough money
+        // Failed, not enough money: do a red color tween on the bg?
+        var bgSprite = this.bgSprite;
+        var startColor = 0xc1272d;
+        var targetColor = 0x000000;
+        var colorTweenCounter = { step: 0 };
+        this.bgSpriteColorTween = this.game.add.tween(colorTweenCounter).to( { step: 0.95 }, 2000, Phaser.Easing.Linear.None, true);
+        this.bgSpriteColorTween.onUpdateCallback(function() {
+            bgSprite.tint = Phaser.Color.interpolateColor(startColor, targetColor, 1, colorTweenCounter.step);
+        });
+        this.bgSpriteColorTween.onComplete.addOnce(function() {
+            bgSprite.tint = 0x000000;
+        }, this);
     }
 };
 
@@ -292,45 +312,65 @@ GlassLab.InventoryMenuSlot.prototype.Refresh = function()
 
 GlassLab.InventoryMenuSlot.prototype.Highlight = function(yes_or_no)
 {
-    //this.data = GlassLab.FoodTypes[this.foodType]; // refresh this in case another food item was bought and it changed things here!
+    // stop any tweening of the hoverlabel container if there is any:
+    if (this.hoverLabelContainerScaleTween != null && this.hoverLabelContainerScaleTween.isRunning)
+        this.hoverLabelContainerScaleTween.stop();
+    if (this.hoverLabelContainerAlphaTween != null && this.hoverLabelContainerAlphaTween.isRunning)
+        this.hoverLabelContainerAlphaTween.stop();
 
     if (yes_or_no) {
-        this.bgSprite.tint = 0xffffff;
+        if (this.bgSpriteColorTween == null || !this.bgSpriteColorTween.isRunning)
+            this.bgSprite.tint = 0xffffff;
         this.label.tint = 0x4d4d4d; //this.label.style.fill = '#4d4d4d';
         this.hoverLabelBg.alpha = 0.5;
         this.hoverLabelBgEndcapLeft.alpha = 0.5;
         this.hoverLabelBgEndcapRight.alpha = 0.5;
         this.hoverLabelBgPointer.alpha = 0.5;
         this.hoverLabel.alpha = 1;
+        this.hoverLabelCoin.alpha = 0;
         if (this.data.cost > 0 && !this.data.unlocked) {
             if (this.data.cost > GLOBAL.inventoryManager.money) {
                 // can't afford item:
                 this.bgSprite.alpha = 0.5;
-                this.bgSprite.tint = 0x000000;
+                if (this.bgSpriteColorTween == null || !this.bgSpriteColorTween.isRunning)
+                    this.bgSprite.tint = 0x000000;
                 this.label.alpha = 1;
                 this.label.tint = 0xffffff; //this.label.style.fill = '#cccccc';
                 if (!this.data.unlocked)
                     this.hoverLabelCoin.alpha = 1; // reveal coin sprite only if not unlocked
             }
         }
+
+        // set hoverLabelContainer scale and tween alpha and scale to 1.
+        this.hoverLabelContainer.scale.y = 0;
+        this.hoverLabelContainerScaleTween = this.game.add.tween(this.hoverLabelContainer.scale)
+            .to({y: 1}, 200, Phaser.Easing.Elastic.Out, true);
+        this.hoverLabelContainerAlphaTween = this.game.add.tween(this.hoverLabelContainer)
+            .to({alpha: 1}, 75, Phaser.Easing.Quadratic.Out, true);
     }
     else {
         this.bgSprite.tint = 0x000000;
         this.label.tint = 0xffffff; //this.label.style.fill = '#cccccc';
-        this.hoverLabelBg.alpha = 0;
-        this.hoverLabelBgEndcapLeft.alpha = 0;
-        this.hoverLabelBgEndcapRight.alpha = 0;
-        this.hoverLabelBgPointer.alpha = 0;
-        this.hoverLabel.alpha = 0;
+        //this.hoverLabelBg.alpha = 0;
+        //this.hoverLabelBgEndcapLeft.alpha = 0;
+        //this.hoverLabelBgEndcapRight.alpha = 0;
+        //this.hoverLabelBgPointer.alpha = 0;
+        //this.hoverLabel.alpha = 0;
         if (this.data.cost > 0 && !this.data.unlocked) {
             if (this.data.cost > GLOBAL.inventoryManager.money) {
                 // can't afford item:
                 this.bgSprite.alpha = 0.75;
                 this.bgSprite.tint = 0x000000;
                 this.label.alpha = 0.25;
-                this.hoverLabelCoin.alpha = 0;
+                //this.hoverLabelCoin.alpha = 0;
             }
         }
+
+        // tween hoverLabelContainer alpha and scale to 0.
+        this.hoverLabelContainerScaleTween = this.game.add.tween(this.hoverLabelContainer.scale)
+            .to({y: 0}, 75, Phaser.Easing.Quadratic.Out, true);
+        this.hoverLabelContainerAlphaTween = this.game.add.tween(this.hoverLabelContainer)
+            .to({alpha: 0}, 75, Phaser.Easing.Quadratic.Out, true);
     }
 };
 

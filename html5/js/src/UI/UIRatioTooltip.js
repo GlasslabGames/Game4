@@ -48,7 +48,7 @@ GlassLab.UIRatioTooltip = function(game, padding, totalFoodHint)
     var iconScale = 0.8;
 
     this.contentsContainer = new GlassLab.UITable(game, 8, 5);
-    this.creatureIcon = this.game.make.sprite(0,0, "rammus_sticker");
+    this.creatureIcon = this.game.make.sprite(0,0, "babyram_sticker");
     this.creatureIcon.scale.setTo(iconScale * 0.5, iconScale * 0.5);
     this.creatureIcon.anchor.setTo(0, .5);
     this.contentsContainer.addManagedChild(this.creatureIcon);
