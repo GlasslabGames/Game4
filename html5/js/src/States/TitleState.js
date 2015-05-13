@@ -21,6 +21,9 @@ GlassLab.State.Title.prototype.create = function()
     creditsButton.anchor.setTo(0.5, 0);
     this.title.addChild(creditsButton);
 
+    this.fade = this.game.make.graphics().beginFill(0,0.6).drawRect(0, 0, this.game.width, this.game.height);
+    this.title.addChild(this.fade);
+
     var creditContainer = this.title.addChild(this.game.make.sprite(this.game.width / 2, this.game.height / 2));
     this.credits = new GlassLab.Credits(this.game);
     creditContainer.addChild(this.credits);
