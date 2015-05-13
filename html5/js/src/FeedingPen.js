@@ -55,8 +55,6 @@ GlassLab.FeedingPen = function(game, layer, creatureType, height, widths, autoFi
 
     this.sprite.setChildIndex(this.tileRoot, this.sprite.getChildIndex(this.centerEdge.sprite));
 
-    this.presetCreatureWidth = this.widths[0]; // this is used when filling orders. It's not relevant for normal pens.
-
     // Instead of adding everything to objectRoot, make parents for the food and creatures so we can order them
     this.foodRoot = this.game.make.isoSprite();
     this.frontObjectRoot.addChild(this.foodRoot);
@@ -294,6 +292,7 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
     }
 
     // Start the creatures eating, staggering them a little by column
+    this.creaturesWaitingToEat = this.getNumCreatures(); // this will be reduced once the creatures actually start
     for (var row = 0; row < this.creatureSpots.length; row++) {
         var creatureRow = this.creatureSpots[row];
         if (!creatureRow) continue;
@@ -302,13 +301,12 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         var numGroups = Math.floor(creatureRow.length / groupSize);
         var grouplessCreatures = creatureRow.length % groupSize;
 
-        this.feedingTimers = [];
         for (var col = 0; col < creatureRow.length; col++) {
             var creature = creatureRow[col];
             var inGroup = Math.floor((col - grouplessCreatures) / groupSize);
             var time = ((numGroups - inGroup) - Math.random()) * Phaser.Timer.SECOND; // delay the start so that the right col moves first
             if (groupSize == 1 && creatureRow[col+1]) creature.creatureInFront = creatureRow[col+1]; // this is used to stop creatures from walking on top of each other
-            this.feedingTimers.push( this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state) );
+            this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
         }
     }
 
@@ -579,13 +577,6 @@ GlassLab.FeedingPen.prototype.reset = function() {
         }
     }
 
-    // stop all timers that are waiting to make creatures start eating
-    if (this.feedingTimers) {
-        for (var i = 0; i < this.feedingTimers.length; i++) {
-            this.game.time.events.remove(this.feedingTimers[i]);
-        }
-    }
-
     // move the creatures to be in behind the gate
     this.backObjectRoot.addChild(this.creatureRoot);
 
@@ -597,7 +588,11 @@ GlassLab.FeedingPen.prototype.reset = function() {
     this.Resize();
 };
 
-GlassLab.FeedingPen.prototype.SetCreatureFinishedEating = function(result) {
+GlassLab.FeedingPen.prototype.setCreatureStartedEating = function(creature) {
+    this.creaturesWaitingToEat --;
+};
+
+GlassLab.FeedingPen.prototype.setCreatureFinishedEating = function(result) {
     this.unfedCreatures --;
     if (result != GlassLab.results.satisfied) this.result = result; // even if one creature is satisfied, don't let it overwrite the result of other creatures
     if (this.unfedCreatures <= 0) {
@@ -713,9 +708,15 @@ GlassLab.FeedingPen.prototype.forEachCreature = function(foo, argArray) {
     }
 };
 
+GlassLab.FeedingPen.prototype.getCanReset = function() {
+    if (!this.feeding || this.startedFeedEffects || this.finished) return false; // we're not in the actual feeding
+    else if (this.creaturesWaitingToEat > 0) return false; // not all creatures have started walking
+    else if (this.unfedCreatures < this.getNumCreatures()) return false; // at least one creature has finished eating
+    else return true;
+};
+
 GlassLab.FeedingPen.prototype._onMouseUp = function() {
-    if (this.startedFeedEffects) return; // don't accept clicks while the gate is dropping
-    else if (this.checkPenStatus() || (this.feeding && !this.finished))
+    if (this.checkPenStatus() || this.getCanReset())
     {
         var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
         this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
@@ -724,7 +725,7 @@ GlassLab.FeedingPen.prototype._onMouseUp = function() {
         var section = this.getSection(tile);
         if (section > 0)
         {
-            if (this.feeding && !this.finished)
+            if (this.getCanReset())
             {
                 this.reset();
             }

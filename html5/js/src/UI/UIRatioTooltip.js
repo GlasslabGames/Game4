@@ -228,7 +228,7 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
     if (GLOBAL.dragTarget) {
         if (GLOBAL.dragTarget instanceof GlassLab.Edge) {
             currentPen = GLOBAL.dragTarget.pen;
-            if (currentPen.feeding && !currentPen.finished)
+            if (currentPen.getCanReset())
             {
                 message = "feeding";
             }
@@ -241,7 +241,7 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
     } else if (GLOBAL.overTarget && GLOBAL.overTarget instanceof GlassLab.Edge) {
 
         currentPen = GLOBAL.overTarget.pen;
-        if (currentPen.feeding && !currentPen.finished)
+        if (currentPen.getCanReset())
         {
             message = "feeding";
         }
@@ -256,11 +256,11 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen && !tileSprite.inPen.tooltipDisabled) {
             currentPen = tileSprite.inPen;
-            if (currentPen.feeding && !currentPen.finished)
+            if (currentPen.getCanReset())
             {
                 message = "feeding";
             }
-            else if (currentPen.canFeed && currentPen.getSection(tileSprite) > 0)
+            else if (currentPen.canFeed && currentPen.getSection(tileSprite) > 0 && !currentPen.startedFeedEffects)
             {
                 message = "readyPen";
             }
