@@ -10,12 +10,11 @@ GlassLab.Credits = function(game) {
     this.bg.anchor.set(0.5, 0.5);
     this.sprite.addChild(this.bg);
 
-    this.data = this.game.cache.getJSON("creditText");
-    this.pages = []; // list of credit data
-    console.log(this.data);
+    this.currentPage = 0;
+    this.pages = [];
 
     // Page buttons - like Journal.js
-    var pageButtonX = this.bg.width / 2 + 40;
+    var pageButtonX = this.bg.width / 2 + 50;
     this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next\nPage", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
     this.nextPageButton.anchor.setTo(0, 0.5);
     this.nextPageButton.label.x -= 8;
@@ -34,26 +33,119 @@ GlassLab.Credits = function(game) {
 GlassLab.Credits.prototype = Object.create(GlassLab.UIWindow.prototype);
 GlassLab.Credits.prototype.constructor = GlassLab.Credits;
 
-GlassLab.Credits.prototype.show = function(auto, creatureType)
+GlassLab.Credits.prototype.show = function()
 {
     GlassLab.UIWindow.prototype.show.call(this);
+    this.currentPage = 0;
+    this._refresh();
 };
 
-GlassLab.Credits.prototype.hide = function(auto)
+GlassLab.Credits.prototype.hide = function()
 {
     GlassLab.UIWindow.prototype.hide.call(this);
 };
 
 GlassLab.Credits.prototype._onNextPagePressed = function()
 {
-    //this.RefreshWithCreature(GLOBAL.creatureManager.creatureList[this.currentPage+1]);
+    this.currentPage ++;
+    this._refresh();
 };
 
 GlassLab.Credits.prototype._onPrevPagePressed = function()
 {
-    //this.RefreshWithCreature(GLOBAL.creatureManager.creatureList[this.currentPage-1]);
+    this.currentPage --;
+    this._refresh();
 };
 
+GlassLab.Credits.prototype._refresh = function() {
+    if (!this.pages.length) this._generatePages();
+    for (var i = 0; i < this.pages.length; i++) {
+        this.pages[i].visible = (this.currentPage == i);
+    }
+    this.prevPageButton.visible = (this.currentPage > 0);
+    this.nextPageButton.visible = (this.currentPage < this.pages.length - 1);
+};
+
+GlassLab.Credits.prototype._generatePages = function()
+{
+    var data = this.game.cache.getJSON("creditText");
+    var sectionIndex = 0, section = [];
+    var page = this.sprite.addChild(this.game.make.sprite(5, -180));
+    this.pages.push(page);
+    var text, style, margin, label;
+    var y = 0;
+    for (var i = 0; i < data.length; i++) {
+        text = data[i];
+        style = {wordWrap: true, wordWrapWidth: 320, align: "center"};
+        if (text.indexOf("*h") > -1) { // it has a header marker
+            style.fill = "#4d4d4d";
+            if (text.indexOf("*h0") > -1) style.font = "16pt ArchitectsDaughter"; // for "Credits" if we include it
+            else if (text.indexOf("*h1") > -1) style.font = "12pt ArchitectsDaughter";
+            else style.font = "8pt ArchitectsDaughter"; // *h2
+            margin = 10;
+            text = text.substr(text.indexOf("*h") + 4);
+            sectionIndex = i; // the index when we started a section
+            section = [];
+        } else {
+            style.font = "10pt ArchitectsDaughter";
+            style.fill = "#808080";
+            margin = -5;
+        }
+        y += margin;
+        label = this.game.make.text(0, y, "", style);
+        GlassLab.Util.SetCenteredText(label, text, 0.5, 0);
+        page.addChild(label);
+        section.push(label);
+        y += label.height;
+
+        if (y > 400) { // end of this page, so restart this section on a new page
+            y = 0;
+
+            page = this.sprite.addChild(this.game.make.sprite(5, -175));
+            this.pages.push(page);
+
+            // remove contents of this section, which are on the wrong page
+            for (var j = section.length - 1; j >= 0; j--) {
+                section[j].destroy();
+            }
+
+            i = sectionIndex-1; // restart from the beginning of the section, adding stuff to this page
+        }
+    }
+
+    this._addStickers();
+};
+
+
+GlassLab.Credits.prototype._addStickers = function() {
+    // The reason we add childAt 0 is so it will be under the text
+    this.pages[0].addChildAt(this._makeSticker("babyunifox", .15, .22, 0.7, 5), 0);
+    this.pages[0].addChildAt(this._makeSticker("strawberry", .8, .75, 1), 0);
+
+    this.pages[1].addChildAt(this._makeSticker("babyram", .8, .15, -0.5, -5), 0);
+    this.pages[1].addChildAt(this._makeSticker("broccoli", .17, .85, 1), 0);
+
+    this.pages[2].addChildAt(this._makeSticker("donut", .8, .85, 1, -10), 0);
+
+    this.pages[3].addChildAt(this._makeSticker("babybird", .85, .4, -0.5, 5), 0);
+    this.pages[3].addChildAt(this._makeSticker("mushroom", .17, .2, 1), 0);
+
+    this.pages[4].addChildAt(this._makeSticker("apple", .2, .85, 1, -10), 0);
+    this.pages[4].addChildAt(this._makeSticker("corn", .5, .9, 1, 0), 0);
+    this.pages[4].addChildAt(this._makeSticker("pizza", .8, .85, 1, -10), 0);
+
+    this.pages[5].addChildAt(this._makeSticker("ram", .23, .55, 0.75, 5), 0);
+    this.pages[5].addChildAt(this._makeSticker("unifox", .47, .8, -0.75, 5), 0);
+    this.pages[5].addChildAt(this._makeSticker("bird", .8, .65, -0.75, 5), 0);
+};
+
+GlassLab.Credits.prototype._makeSticker = function(spriteName, xPercent, yPercent, scale, angle) {
+    var sprite = this.game.make.sprite((xPercent - 0.5) * 320, yPercent * 400, spriteName+"_sticker");
+    sprite.anchor.setTo(0.5, 0.5);
+    sprite.scale.setTo(scale, Math.abs(scale)); // if you pass a negative scale, only the x flips
+    sprite.angle = angle || 0;
+    return sprite;
+};
 
 GlassLab.Credits.prototype._drawSection = function(index)
 {
