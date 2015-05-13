@@ -24,7 +24,7 @@ GlassLab.State.Title.prototype.create = function()
     var creditContainer = this.title.addChild(this.game.make.sprite(this.game.width / 2, this.game.height / 2));
     this.credits = new GlassLab.Credits(this.game);
     creditContainer.addChild(this.credits);
-    //this.credits.show();
+    this.credits.show();
 };
 
 GlassLab.State.Title.prototype._onPlayButton = function() {
