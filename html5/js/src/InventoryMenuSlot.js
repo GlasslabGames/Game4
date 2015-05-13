@@ -82,32 +82,26 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.hoverLabelContainer.alpha = 0;
     this.hoverLabelContainerScaleTween = null;
     this.hoverLabelContainerAlphaTween = null;
-
     var hoverLabelY = -37; // center of words/labelBg etc is 37 px above top edge of slot
 
     this.hoverLabel = game.make.text(0, hoverLabelY + 2, this.data.displayNames["singular"], {fill: '#ffffff', font: "16px EnzoBlack"});
-    //this.hoverLabel.alpha = 0;
 
     this.hoverLabelBg = this.game.make.image(0, hoverLabelY, "foodLabelBg");
     this.hoverLabelBg._original_width = this.hoverLabelBg.width;
     this.hoverLabelBg.anchor.setTo(.5, .5);
-    //this.hoverLabelBg.alpha = 0;
     this.hoverLabelBg.tint = 0x000000;
 
     this.hoverLabelBgEndcapLeft = this.game.make.image(0, hoverLabelY, "foodLabelBgEndcap");
     this.hoverLabelBgEndcapLeft.anchor.setTo(1, .5);
-    //this.hoverLabelBgEndcapLeft.alpha = 0;
     this.hoverLabelBgEndcapLeft.tint = 0x000000;
 
     this.hoverLabelBgEndcapRight = this.game.make.image(0, hoverLabelY, "foodLabelBgEndcap");
     this.hoverLabelBgEndcapRight.anchor.setTo(1, .5);
-    //this.hoverLabelBgEndcapRight.alpha = 0;
     this.hoverLabelBgEndcapRight.scale.x *= -1;
     this.hoverLabelBgEndcapRight.tint = 0x000000;
 
     this.hoverLabelBgPointer = this.game.make.image(0, hoverLabelY + 22, "questObjectiveArrow");
     this.hoverLabelBgPointer.anchor.setTo(.5, .5);
-    //this.hoverLabelBgPointer.alpha = 0;
     this.hoverLabelBgPointer.scale.y *= -1;
     this.hoverLabelBgPointer.tint = 0x000000;
 

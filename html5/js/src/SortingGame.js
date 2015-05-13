@@ -712,39 +712,38 @@ GlassLab.SortingGameToken = function(sortingGame, value) {
     this.addChild(this.stickerAnim);
 
 
-    // token label - TODO: make this a tooltip style label
-    //this.label = this.game.make.text(0, 0, value, {font: "bold 18pt arial", align: "center", fill: "#fff"});
-    //this.label.anchor.setTo(0.5, 0.5);
-    //this.label.alpha = 0; // hiding for now
-    //this.addChild(this.label);
-
     // hoverLabel above token (show on hover):
-    var hoverLabelY = -62;
+    this.hoverLabelContainer = this.game.make.group();
+    this.hoverLabelContainer.y = -35;
+    this.hoverLabelContainer.alpha = 0;
+    this.hoverLabelContainerScaleTween = null;
+    this.hoverLabelContainerAlphaTween = null;
+    var hoverLabelY = -27; // center of words/labelBg etc is 37 px above container bottom
+    
     this.hoverLabel = this.game.make.text(0, hoverLabelY + 2, value, {fill: '#ffffff', font: "16px EnzoBlack"});
-    this.hoverLabel.alpha = 0;
 
     this.hoverLabelBg = this.game.make.image(0, hoverLabelY, "foodLabelBg");
     this.hoverLabelBg._original_width = this.hoverLabelBg.width;
     this.hoverLabelBg.anchor.setTo(.5, .5);
-    this.hoverLabelBg.alpha = 0;
     this.hoverLabelBg.tint = 0x000000;
+    this.hoverLabelBg.alpha = 0.75;
 
     this.hoverLabelBgEndcapLeft = this.game.make.image(0, hoverLabelY, "foodLabelBgEndcap");
     this.hoverLabelBgEndcapLeft.anchor.setTo(1, .5);
-    this.hoverLabelBgEndcapLeft.alpha = 0;
     this.hoverLabelBgEndcapLeft.tint = 0x000000;
+    this.hoverLabelBgEndcapLeft.alpha = 0.75;
 
     this.hoverLabelBgEndcapRight = this.game.make.image(0, hoverLabelY, "foodLabelBgEndcap");
     this.hoverLabelBgEndcapRight.anchor.setTo(1, .5);
-    this.hoverLabelBgEndcapRight.alpha = 0;
     this.hoverLabelBgEndcapRight.scale.x *= -1;
     this.hoverLabelBgEndcapRight.tint = 0x000000;
+    this.hoverLabelBgEndcapRight.alpha = 0.75;
 
     this.hoverLabelBgPointer = this.game.make.image(0, hoverLabelY + 22, "questObjectiveArrow");
     this.hoverLabelBgPointer.anchor.setTo(.5, .5);
-    this.hoverLabelBgPointer.alpha = 0;
     this.hoverLabelBgPointer.scale.y *= -1;
     this.hoverLabelBgPointer.tint = 0x000000;
+    this.hoverLabelBgPointer.alpha = 0.75;
 
     // calculates sizes, scales, text anchors, etc of various components of the hoverLabel:
     this.hoverLabel = GlassLab.Util.SetCenteredText(this.hoverLabel, null, 0.5, 0.5);
@@ -753,12 +752,14 @@ GlassLab.SortingGameToken = function(sortingGame, value) {
     this.hoverLabelBgEndcapRight.x = this.hoverLabel.width/2 + 15;
 
     // add hoverLabel parts as children:
-    this.addChild(this.hoverLabelBg);
-    this.addChild(this.hoverLabelBgEndcapLeft);
-    this.addChild(this.hoverLabelBgEndcapRight);
-    this.addChild(this.hoverLabelBgPointer);
-    this.addChild(this.hoverLabel);
+    this.hoverLabelContainer.addChild(this.hoverLabelBg);
+    this.hoverLabelContainer.addChild(this.hoverLabelBgEndcapLeft);
+    this.hoverLabelContainer.addChild(this.hoverLabelBgEndcapRight);
+    this.hoverLabelContainer.addChild(this.hoverLabelBgPointer);
+    this.hoverLabelContainer.addChild(this.hoverLabel);
 
+    // add group as child to this:
+    this.addChild(this.hoverLabelContainer);
 
     this.hoverTarget = null; // pointer to target currently hovering over, if any
     this.dropValidator = function(target) { return (target instanceof GlassLab.SortingGameCard); };
@@ -811,6 +812,30 @@ GlassLab.SortingGameToken.prototype._onComponentDragged = function(mousePoint, d
     this.y = mousePoint.y;
 };
 
+GlassLab.SortingGameToken.prototype._showTooltip = function(yes_or_no) {
+    // stop any tweening of the hoverlabel container if there is any:
+    if (this.hoverLabelContainerScaleTween != null && this.hoverLabelContainerScaleTween.isRunning)
+        this.hoverLabelContainerScaleTween.stop();
+    if (this.hoverLabelContainerAlphaTween != null && this.hoverLabelContainerAlphaTween.isRunning)
+        this.hoverLabelContainerAlphaTween.stop();
+
+    if (yes_or_no) {
+        // set hoverLabelContainer scale and tween alpha and scale to 1.
+        this.hoverLabelContainer.scale.y = 0;
+        this.hoverLabelContainerScaleTween = this.game.add.tween(this.hoverLabelContainer.scale)
+            .to({y: 1}, 200, Phaser.Easing.Elastic.Out, true);
+        this.hoverLabelContainerAlphaTween = this.game.add.tween(this.hoverLabelContainer)
+            .to({alpha: 1}, 75, Phaser.Easing.Quadratic.Out, true);
+    }
+    else {
+        // tween hoverLabelContainer alpha and scale to 0.
+        this.hoverLabelContainerScaleTween = this.game.add.tween(this.hoverLabelContainer.scale)
+            .to({y: 0}, 75, Phaser.Easing.Quadratic.Out, true);
+        this.hoverLabelContainerAlphaTween = this.game.add.tween(this.hoverLabelContainer)
+            .to({alpha: 0}, 75, Phaser.Easing.Quadratic.Out, true);
+    }
+};
+
 GlassLab.SortingGameToken.prototype._applyDragEffect = function() {
     this.scale.x *= 1.05;
     this.scale.y *= 1.05;
@@ -820,11 +845,12 @@ GlassLab.SortingGameToken.prototype._applyDragEffect = function() {
     this.stickerOverlay.alpha = 0.1;
 
     // hide hoverLabel:
-    this.hoverLabelBg.alpha = 0;
-    this.hoverLabelBgEndcapLeft.alpha = 0;
-    this.hoverLabelBgEndcapRight.alpha = 0;
-    this.hoverLabelBgPointer.alpha = 0;
-    this.hoverLabel.alpha = 0;   
+    this._showTooltip(false);
+    //this.hoverLabelBg.alpha = 0;
+    //this.hoverLabelBgEndcapLeft.alpha = 0;
+    //this.hoverLabelBgEndcapRight.alpha = 0;
+    //this.hoverLabelBgPointer.alpha = 0;
+    //this.hoverLabel.alpha = 0;   
 };
 
 GlassLab.SortingGameToken.prototype._removeDragEffect = function() {
@@ -842,11 +868,12 @@ GlassLab.SortingGameToken.prototype._onOver = function() {
 
     // show hoverLabel only if at start point:
     if (this._at_start_point) {
-        this.hoverLabelBg.alpha = 1;
-        this.hoverLabelBgEndcapLeft.alpha = 1;
-        this.hoverLabelBgEndcapRight.alpha = 1;
-        this.hoverLabelBgPointer.alpha = 1;
-        this.hoverLabel.alpha = 1;
+        this._showTooltip(true);
+        //this.hoverLabelBg.alpha = 1;
+        //this.hoverLabelBgEndcapLeft.alpha = 1;
+        //this.hoverLabelBgEndcapRight.alpha = 1;
+        //this.hoverLabelBgPointer.alpha = 1;
+        //this.hoverLabel.alpha = 1;
     }
 };
 GlassLab.SortingGameToken.prototype._onOut = function() {
@@ -854,10 +881,11 @@ GlassLab.SortingGameToken.prototype._onOut = function() {
     this.stickerOverlay.alpha = 0;
 
     // hide hoverLabel:
-    this.hoverLabelBg.alpha = 0;
-    this.hoverLabelBgEndcapLeft.alpha = 0;
-    this.hoverLabelBgEndcapRight.alpha = 0;
-    this.hoverLabelBgPointer.alpha = 0;
-    this.hoverLabel.alpha = 0;   
+    this._showTooltip(false);
+    //this.hoverLabelBg.alpha = 0;
+    //this.hoverLabelBgEndcapLeft.alpha = 0;
+    //this.hoverLabelBgEndcapRight.alpha = 0;
+    //this.hoverLabelBgPointer.alpha = 0;
+    //this.hoverLabel.alpha = 0;   
 
 };
