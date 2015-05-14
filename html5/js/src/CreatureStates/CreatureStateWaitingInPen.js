@@ -27,6 +27,7 @@ GlassLab.CreatureStateWaitingInPen.prototype.Exit = function() {
 };
 
 GlassLab.CreatureStateWaitingInPen.prototype.StartWalkingToFood = function() {
+    this.creature.pen.setCreatureStartedEating(this);
     this.creature.tryWalkToNextFood(); // this will handle the result if there is no more food, etc
 };
 

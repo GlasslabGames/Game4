@@ -67,5 +67,6 @@ GlassLab.SignalManager = {
     foodDropped: new Phaser.Signal(), // food
 
     // Camera Events
-    cameraMoved: new Phaser.Signal() // when camera is dragged
+    cameraMoved: new Phaser.Signal(), // when camera is dragged
+    zoomChanged: new Phaser.Signal() // when the zoom level changes
 };

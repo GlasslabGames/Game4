@@ -170,6 +170,8 @@ GlassLab.FillBar.prototype._redraw = function() {
 GlassLab.HungerBar = function(game, sections) {
     GlassLab.FillBar.prototype.constructor.call(this, game, 80, 0, sections);
     // _setUp will be called by the parent constructor
+
+    this.sprite.hitArea = new Phaser.Rectangle(); // for some reason the hit area was way too big and getting added to the parent's. So just make it super tiny.
 };
 
 GlassLab.HungerBar.prototype = Object.create(GlassLab.FillBar.prototype);

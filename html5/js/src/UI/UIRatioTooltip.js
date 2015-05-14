@@ -228,7 +228,7 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
     if (GLOBAL.dragTarget) {
         if (GLOBAL.dragTarget instanceof GlassLab.Edge) {
             currentPen = GLOBAL.dragTarget.pen;
-            if (currentPen.feeding && !currentPen.finished)
+            if (currentPen.getCanReset())
             {
                 message = "feeding";
             }
@@ -239,9 +239,8 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         }
         // Else, we're dragging something else, so don't show a tooltip
     } else if (GLOBAL.overTarget && GLOBAL.overTarget instanceof GlassLab.Edge) {
-
         currentPen = GLOBAL.overTarget.pen;
-        if (currentPen.feeding && !currentPen.finished)
+        if (currentPen.getCanReset())
         {
             message = "feeding";
         }
@@ -254,24 +253,30 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         this.game.iso.unproject(cursorIsoPosition, cursorIsoPosition);
         Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
         var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
-        if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen && !tileSprite.inPen.tooltipDisabled) {
+        if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen) {
             currentPen = tileSprite.inPen;
-            if (currentPen.feeding && !currentPen.finished)
+            if (currentPen.getCanReset())
             {
                 message = "feeding";
             }
-            else if (currentPen.canFeed && currentPen.getSection(tileSprite) > 0)
+            else if (currentPen.canFeed && currentPen.getSection(tileSprite) > 0 && !currentPen.startedFeedEffects)
             {
                 message = "readyPen";
             }
         }
     }
 
-    /*if (currentPen) {
-        if (this.pen != currentPen || this.message != message) this.show(currentPen, message);
-    } else if (this.pen) this.hide();*/
-    // everytime the thing we want to show changes, restart the countdown
-    if (currentPen != this.desiredPen || message != this.desiredMessage) this.changeCountdown = this.changeDelay;
+    // check for a case where the pen isn't visible or we don't want to show the tooltip.
+    if (!currentPen || currentPen.tooltipDisabled || !currentPen.sprite || !currentPen.sprite.visible || !currentPen.sprite.alpha) currentPen = null;
+
+    if (currentPen) {
+        if (this.pen != currentPen) this.show(currentPen, message); // re-popup the tooltip
+        else if (this.message != message && this.desiredMessage != message) {
+            this.changeCountdown = this.changeDelay; // delay the re-popup for a moment
+        }
+    } else if (this.pen) this.hide();
+
+    // keep track of what pen and message we want to show for when any changeCountdown runs out
     this.desiredPen = currentPen;
     this.desiredMessage = message;
 };

@@ -575,7 +575,7 @@ GlassLab.Creature.prototype.FinishEating = function (result, food) {
         }
     }
     // else they would have started vomiting already
-    this.pen.SetCreatureFinishedEating(result);
+    this.pen.setCreatureFinishedEating(result);
     this.finishedEating = true; // checked by other creatures
 };
 
