@@ -272,9 +272,13 @@ GlassLab.Journal.prototype.hide = function(auto)
 GlassLab.Journal.prototype._onNextPagePressed = function()
 {
     this.RefreshWithCreature(GLOBAL.creatureManager.creatureList[this.currentPage+1]);
+
+    GLOBAL.audioManager.playSound("pageTurnSound");
 };
 
 GlassLab.Journal.prototype._onPrevPagePressed = function()
 {
     this.RefreshWithCreature(GLOBAL.creatureManager.creatureList[this.currentPage-1]);
+
+    GLOBAL.audioManager.playSound("pageTurnSound");
 };

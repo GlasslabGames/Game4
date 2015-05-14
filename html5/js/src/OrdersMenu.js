@@ -79,11 +79,15 @@ GlassLab.OrdersMenu.prototype.constructor = GlassLab.OrdersMenu;
 GlassLab.OrdersMenu.prototype._onNextPagePressed = function()
 {
     this.show(this.currentPage+1);
+
+    GLOBAL.audioManager.playSound("pageTurnSound");
 };
 
 GlassLab.OrdersMenu.prototype._onPrevPagePressed = function()
 {
     this.show(this.currentPage-1);
+
+    GLOBAL.audioManager.playSound("pageTurnSound");
 };
 
 GlassLab.OrdersMenu.prototype.IsShowing = function()
@@ -182,6 +186,9 @@ GlassLab.OrdersMenu.prototype._onSelectPressed = function() {
 };
 
 GlassLab.OrdersMenu.prototype._onStamped = function() {
+
+    GLOBAL.audioManager.playSound("orderAcceptedSound");
+
     var startY = this.sprite.y;
     this.sprite.y += 5;
     var tween = this.game.add.tween(this.sprite).to( { y: startY }, 100, Phaser.Easing.Quadratic.InOut, true);

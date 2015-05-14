@@ -97,8 +97,30 @@ GlassLab.AudioManager.prototype.playSound = function(key, randomStart, loop)
     return sound;
 };
 
+// plays a sound from our pool
+GlassLab.AudioManager.prototype.playSoundWithVolumeAndOffset = function(key, volume, offsetSeconds, loop) {
+    var use_volume = this.soundEffectsVolume * volume; // in case sfx are muted
+
+    var sound;
+    if (!this.sounds[key]) this.sounds[key] = [];
+    for (var i = 0; i < this.sounds[key].length; i++) {
+        if (!this.sounds[key][i].isPlaying) { // grab the first sound from the pool that isn't playing yet
+            sound = this.sounds[key][i];
+            break;
+        }
+    }
+    if (!sound) { // none available in the pool, so add a new one
+        if (this.sounds[key].length >= this.maxPoolSize) return null; // unless we've already hit our max pool size - then don't play anything
+
+        sound = this.game.add.audio(key);
+        this.sounds[key].push(sound);
+    }
+    sound.play('', offsetSeconds, use_volume, loop);
+    return sound;
+};
+
 GlassLab.AudioManager.prototype._playSound = function(sound, key, randomStart, loop) {
-    var volume = (key.indexOf("vomit") > -1)? this.soundEffectsVolume / 2 : this.soundEffectsVolume; // hacks because the vomit sound is too gross
+    var volume = this.soundEffectsVolume; // in case sfx are muted
 
     var start = 0;
     if (randomStart) {
@@ -113,4 +135,23 @@ GlassLab.AudioManager.prototype._playSound = function(sound, key, randomStart, l
 
     sound.play('',start,volume,loop);
     return sound;
+};
+
+// fade in or out a sound, if already playing.  If new_volume is 0, then sound will be stopped after fade completes:
+GlassLab.AudioManager.prototype.fadeSound = function(key, duration, new_volume)
+{
+    var sound;
+
+    if (!this.sounds[key]) this.sounds[key] = [];
+    for (var i = 0; i < this.sounds[key].length; i++) {
+        if (this.sounds[key][i].isPlaying) { // apply to first sound from the pool that are playing
+            sound = this.sounds[key][i];
+            sound.fadeTo(duration, new_volume);
+            sound.onFadeComplete.addOnce(function() {
+                if (new_volume == 0) sound.stop();
+            }, this);
+            break;
+        }
+    }
+
 };

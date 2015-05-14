@@ -186,8 +186,19 @@ GlassLab.InventoryMoneyTab.prototype._onMoneyChanged = function(amount) {
     this.refresh();
     if (amount > 0) { // add money
         // We want to play a different animation if there are flying coins coming in right now.
-        if (GLOBAL.UIManager.coinsFlying) this.effects.play("sparkle");
-        else this.effects.play("hop");
+        var coinAnim;
+        if (GLOBAL.UIManager.coinsFlying)
+            coinAnim = this.effects.play("sparkle");
+        else
+            coinAnim = this.effects.play("hop");
+
+        // annoying slot machine audio:
+        GLOBAL.audioManager.playSoundWithVolumeAndOffset("coinDropSound", 0.15, 0.0, true);
+        if (coinAnim) {
+            coinAnim.onComplete.addOnce(function() {
+                GLOBAL.audioManager.fadeSound("coinDropSound", 100, 0.0); // fade to volume 0.0 quickly, then stop loop.
+            }, this);
+        }
 
         // Start the popup showing how much money we got
         GlassLab.Util.SetCenteredText(this.moneyAddedLabel, "+"+this._formatMoney(amount));

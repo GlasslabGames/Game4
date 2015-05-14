@@ -52,7 +52,7 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
 
     // if (this is on screen) // TODO
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
-    this.footstepSound = GLOBAL.audioManager.playSound(creatureInfo.spriteName+"_sfx_throwup");
+    this.footstepSound = GLOBAL.audioManager.playSoundWithVolumeAndOffset(creatureInfo.spriteName+"_sfx_throwup", 1.0, 0.0, false); // quieter?
 };
 
 GlassLab.CreatureStateVomiting.prototype._onVomitAnimEnded = function(vomit) {
