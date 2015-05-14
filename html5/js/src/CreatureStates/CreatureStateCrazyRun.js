@@ -112,6 +112,9 @@ GlassLab.CreatureStateCrazyRun.prototype._findNextTile = function() {
 
     if (!nextTile)
     {
+        // audio:
+        GLOBAL.audioManager.playSound("donutRushBumpSound");
+
         var tileCandidates = [
             GLOBAL.tileManager.GetTile(currentTile.col - 1, currentTile.row),
             GLOBAL.tileManager.GetTile(currentTile.col + 1, currentTile.row),
