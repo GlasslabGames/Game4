@@ -69,6 +69,8 @@ GlassLab.ShippingPen = function(game) {
     this.foodRoot = this.frontObjectRoot.addChild(this.game.make.sprite());
 
     this.onShipped = new Phaser.Signal();
+
+    this.currentlyShipping = false; // tracks whether we're still shipping or we canceled it
 };
 
 GlassLab.ShippingPen.prototype = Object.create(GlassLab.Pen.prototype);
@@ -77,6 +79,8 @@ GlassLab.ShippingPen.constructor = GlassLab.ShippingPen;
 
 GlassLab.ShippingPen.prototype._onDestroy = function() {
     GlassLab.Pen.prototype._onDestroy.call(this);
+
+    this.currentlyShipping = false; // should prevent further shipping animations from being triggered
 
     // Clean up the smokepuff anims so we don't have issues with "killOnComplete"
     if (this.smokePuffs) {
@@ -90,6 +94,8 @@ GlassLab.ShippingPen.prototype._onDestroy = function() {
 };
 
 GlassLab.ShippingPen.prototype.reset = function() {
+    this.currentlyShipping = false; // should prevent further shipping animations from being triggered
+
     // reset to the pre-shipped state
     this.frontEdgeRoot.visible = false;
     this.lid.visible = false;
@@ -274,6 +280,8 @@ GlassLab.ShippingPen.prototype.calculateResult = function() {
 };
 
 GlassLab.ShippingPen.prototype.ship = function() {
+    this.currentlyShipping = true;
+
     this.frontEdgeRoot.visible = true;
     this.lid.visible = true;
 
@@ -295,6 +303,8 @@ GlassLab.ShippingPen.prototype.ship = function() {
 };
 
 GlassLab.ShippingPen.prototype._dropLid = function() {
+    if (!this.currentlyShipping) return; // maybe we canceled in the middle
+
     this.game.add.tween(this.lid).to({alpha: 1}, 50, Phaser.Easing.Linear.InOut, true, 0); // quickly fade in the lid (if we failed to get it totally offscreen)
     var tween = this.game.add.tween(this.lid).to({y: 0}, 500, Phaser.Easing.Cubic.In, true, 0);
     tween.onComplete.addOnce(function() {
@@ -304,6 +314,8 @@ GlassLab.ShippingPen.prototype._dropLid = function() {
 };
 
 GlassLab.ShippingPen.prototype._openPropellers = function() {
+    if (!this.currentlyShipping) return; // maybe we canceled in the middle
+
     var closedPropellers = [].concat(this.propellerRoot.children);
     var delay = 500, betweenPropellers = (400 / closedPropellers.length);
     var totalTime = delay + closedPropellers.length * betweenPropellers;
@@ -336,6 +348,8 @@ GlassLab.ShippingPen.prototype._openPropeller = function(prop) {
 };
 
 GlassLab.ShippingPen.prototype._flyAway = function() {
+    if (!this.currentlyShipping) return; // maybe we canceled in the middle
+
     // audio:
     this.game.time.events.add(1000, function() {
         GLOBAL.audioManager.playSound("propellerSpinLoopSound", false, true);
@@ -356,12 +370,16 @@ GlassLab.ShippingPen.prototype._flyAway = function() {
     this.game.add.tween(this.sprite).to({isoX: spriteTarget.x, isoY: spriteTarget.y}, time, Phaser.Easing.Quintic.In, true, delay);
     this.game.add.tween(this.shadow).to({isoX: shadowTarget.x, isoY: shadowTarget.y}, time, Phaser.Easing.Quintic.In, true, delay);
     this.game.add.tween(this.shadow).to({alpha: 0}, time * 0.8, Phaser.Easing.Quintic.In, true, delay);
+
     var tween = this.game.add.tween(this.sprite).to({alpha: 0}, 100, Phaser.Easing.Quadratic.InOut, true, time+delay-100); // fade out at the end in case we're not on screen
     tween.onComplete.addOnce(this._finishShipping, this);
 };
 
 GlassLab.ShippingPen.prototype._finishShipping = function() {
+    if (!this.currentlyShipping) return; // maybe we canceled in the middle
+
     console.log("Finished shipping!");
+    this.currentlyShipping = false;
     this.onShipped.dispatch();
 };
 

@@ -175,15 +175,16 @@ GlassLab.OrderFulfillment.prototype.show = function(data)
     GLOBAL.inventoryMenu.show(true); // show this after sending the event so that we don't have to refresh the inventory again
 };
 
-GlassLab.OrderFulfillment.prototype.hide = function(destroyPen)
+GlassLab.OrderFulfillment.prototype.hide = function()
 {
     for (var i = 0; i < this.foodInputs.length; i++) {
         this.foodInputs[i].answerInput.SetFocus(false);
     }
     this.sprite.visible = false;
 
-    if (destroyPen && this.crate)
+    if (this.crate)
     {
+        this.crate.reset();
         this.crate.hide();
     }
 
