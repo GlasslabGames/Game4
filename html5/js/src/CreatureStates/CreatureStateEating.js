@@ -47,7 +47,7 @@ GlassLab.CreatureStateEating.prototype.Enter = function()
         }
     }
 
-    this.creature.draggableComponent.active = false;
+    this.creature.draggableComponent.setActive(false);
 
     var info = GLOBAL.creatureManager.creatureDatabase[this.creature.type];
     this.chompFrame = info.fxFrames.eat;

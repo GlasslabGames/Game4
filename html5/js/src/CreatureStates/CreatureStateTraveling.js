@@ -16,7 +16,7 @@ GlassLab.CreatureStateTraveling.constructor = GlassLab.CreatureStateTraveling;
 
 GlassLab.CreatureStateTraveling.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
-    this.creature.draggableComponent.active = true;
+    this.creature.draggableComponent.setActive(true);
 
     this.originalSpeed = this.creature.moveSpeed;
     this.creature.moveSpeed += 1.5 + Math.random() * 2;
@@ -38,6 +38,8 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
 
     if (this.footstepSound) this.footstepSound.stop();
 
+    this.creature.StopAnim();
+
     this.creature.onDestinationReached.remove(this._onDestinationReached, this);
 };
 
@@ -51,15 +53,7 @@ GlassLab.CreatureStateTraveling.prototype._onDestinationReached = function(creat
 
     if (this.footstepSound) this.footstepSound.stop();
 
-    if (this.target.pos) {
-        // OLD:
-        // this.creature.setIsoPos(this.target.pos.x, this.target.pos.y);
-
-        // Make the creature actually stop at the target point instead of on a tile.
-        // (Does the following accomplish desire to simply stop at target point?  It does seem to remove the creature position snapping when it reaches a target.  Related Jira ticket: PRIM-887.  -OG)
-        this.creature._clearPath();
-    }
-    
+    if (this.target.pos) this.creature.setIsoPos(this.target.pos.x, this.target.pos.y); // TODO: make the creature actually stop at the target point instead of on a tile.
     if (!this.creature.tryReachTarget(this.target)) { // we weren't able to enter our target for some reason, so look for a new one
         this.creature.lookForTargets();
     }

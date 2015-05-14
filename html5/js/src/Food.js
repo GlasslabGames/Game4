@@ -194,6 +194,7 @@ GlassLab.Food.prototype._onDestroy = function() {
     var index = GLOBAL.foodInWorld.indexOf(this);
     if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
     if (this.onEnoughEaters) this.onEnoughEaters.dispose();
+    if (this.smokeTimer) this.game.time.events.remove(this.smokeTimer);
 };
 
 GlassLab.Food.prototype._onStartDrag = function () {
@@ -274,7 +275,7 @@ GlassLab.Food.prototype.BeEaten = function(animStyle) {
             this._afterEaten(1000);
         }
 
-        this.draggableComponent.active = false;
+        this.draggableComponent.setActive(false);
     }
     return amount; // return the actual amount that was eaten
 };
@@ -304,7 +305,7 @@ GlassLab.Food.prototype.reset = function() {
     this.image.animations.frameName = this.type+"_idle.png";
     this.health = 1;
     this.eaten = false;
-    this.draggableComponent.active = true;
+    this.draggableComponent.setActive(true);
     for (var i = 0; i < this.eaters.length; i++) {
         this.removeEater(this.eaters[i]);
     }
@@ -318,6 +319,8 @@ GlassLab.Food.prototype.setType = function(type, showSmoke)
         this._setImage();
     }
 
+    if (this.smokeTimer) this.game.time.events.remove(this.smokeTimer);
+
     if (showSmoke) {
         if (!this.smoke) {
             this.smoke = this.game.make.sprite(0, 0, "smokeAnim");
@@ -325,7 +328,13 @@ GlassLab.Food.prototype.setType = function(type, showSmoke)
             this.smoke.anchor.setTo(0.5, 0.75);
             this.smoke.animations.add("puff", Phaser.Animation.generateFrameNames("smoke_puff_food_", 156, 182, ".png", 3), 24, false);
         }
+        this.smoke.visible = true;
         this.smoke.play("puff");
+        // Since the smoke animations didn't always finish, put in a timer that hides them
+        this.smokeTimer = this.game.time.events.add(1000, function() {
+            this.smoke.animations.stop();
+            this.smoke.visible = false;
+        }, this);
     }
 };
 
@@ -360,9 +369,11 @@ GlassLab.Food.prototype.getTargets = function()
     if (!points.length) points = points.concat(points2); // only add the 2nd group of points if there are no points left from the first group
     if (!points.length) points = [new Phaser.Point(pos.x, pos.y - offset), new Phaser.Point(pos.x - offset)]; // in case no spots are left, default to the prefered points
 
+    var priority = 1 + (this.eaters.length * 2); // food that already has creatures waiting to eat it gets a higher priority
+
     var targets = [];
     for (var i = 0; i < points.length; i++) {
-        targets.push({food: this, priority: 1, pos: points[i]});
+        targets.push({food: this, priority: priority, pos: points[i]});
     }
     return targets;
 };
@@ -397,10 +408,11 @@ GlassLab.Food.prototype.addEater = function(creature)
     }
 };
 
-GlassLab.Food.prototype.removeEater = function(creature)
+GlassLab.Food.prototype.removeEater = function(creature, cancel)
 {
     var index = this.eaters.indexOf(creature);
     if (index > -1) this.eaters.splice(index, 1);
 
-    this.prevEaters.push(creature);
+    // cancel is true if the creature leaves by force (e.g. dragged away)
+    if (!cancel) this.prevEaters.push(creature);
 };

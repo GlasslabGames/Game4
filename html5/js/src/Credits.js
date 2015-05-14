@@ -118,33 +118,35 @@ GlassLab.Credits.prototype._generatePages = function()
 
 
 GlassLab.Credits.prototype._addStickers = function() {
-    // The reason we add childAt 0 is so it will be under the text
-    this.pages[0].addChildAt(this._makeSticker("babyunifox", .15, .22, 0.7, 5), 0);
-    this.pages[0].addChildAt(this._makeSticker("strawberry", .8, .75, 1), 0);
+    // Add stickers with page, sprite, xPercent, yPercet, scale, and angle
+    this._addSticker(0, "babyunifox", .15, .22, 0.7, 5);
+    this._addSticker(0, "strawberry", .8, .75, 1);
 
-    this.pages[1].addChildAt(this._makeSticker("babyram", .8, .15, -0.5, -5), 0);
-    this.pages[1].addChildAt(this._makeSticker("broccoli", .17, .85, 1), 0);
+    this._addSticker(1, "babyram", .8, .15, -0.5, -5);
+    this._addSticker(1, "broccoli", .17, .85, 1);
 
-    this.pages[2].addChildAt(this._makeSticker("donut", .8, .85, 1, -10), 0);
+    this._addSticker(2, "donut", .8, .85, 1, -10);
 
-    this.pages[3].addChildAt(this._makeSticker("babybird", .85, .4, -0.5, 5), 0);
-    this.pages[3].addChildAt(this._makeSticker("mushroom", .17, .2, 1), 0);
+    this._addSticker(3, "babybird", .85, .4, -0.5, 5);
+    this._addSticker(3, "mushroom", .17, .2, 1);
 
-    this.pages[4].addChildAt(this._makeSticker("apple", .2, .85, 1, -10), 0);
-    this.pages[4].addChildAt(this._makeSticker("corn", .5, .9, 1, 0), 0);
-    this.pages[4].addChildAt(this._makeSticker("pizza", .8, .85, 1, -10), 0);
+    this._addSticker(4, "apple", .2, .85, 1, -10);
+    this._addSticker(4, "corn", .5, .9, 1, 0);
+    this._addSticker(4, "pizza", .8, .85, 1, -10);
 
-    this.pages[5].addChildAt(this._makeSticker("ram", .23, .55, 0.75, 5), 0);
-    this.pages[5].addChildAt(this._makeSticker("unifox", .47, .8, -0.75, 5), 0);
-    this.pages[5].addChildAt(this._makeSticker("bird", .8, .65, -0.75, 5), 0);
+    this._addSticker(5, "ram", .23, .55, 0.75, 0);
+    this._addSticker(5, "unifox", .47, .8, -0.75, 5);
+    this._addSticker(5, "bird", .8, .6, -0.75, 0);
 };
 
-GlassLab.Credits.prototype._makeSticker = function(spriteName, xPercent, yPercent, scale, angle) {
+GlassLab.Credits.prototype._addSticker = function(pageIndex, spriteName, xPercent, yPercent, scale, angle) {
     var sprite = this.game.make.sprite((xPercent - 0.5) * 320, yPercent * 400, spriteName+"_sticker");
     sprite.anchor.setTo(0.5, 0.5);
     sprite.scale.setTo(scale, Math.abs(scale)); // if you pass a negative scale, only the x flips
     sprite.angle = angle || 0;
-    return sprite;
+
+    this.pages[pageIndex].addChildAt(sprite, 0);
+    // The reason we add childAt 0 is so it will be under the text
 };
 
 GlassLab.Credits.prototype._drawSection = function(index)

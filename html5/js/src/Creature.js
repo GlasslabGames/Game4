@@ -400,6 +400,11 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
 
 GlassLab.Creature.prototype._onStartDrag = function () {
     GlassLab.WorldObject.prototype._onStartDrag.call(this);
+    // This is a little hacky, but if we were WaitingToEat, make sure to clear our connection to that food
+    if (this.state instanceof GlassLab.CreatureStateWaitingToEat && this.state.foodInfo && this.state.foodInfo.food) {
+        this.state.foodInfo.food.removeEater(this, true); // cancel
+    }
+
     this.StateTransitionTo(new GlassLab.CreatureStateDragged(this.game, this));
     this.hungerBar.show(false);
     this.thoughtBubble.hide();

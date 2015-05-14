@@ -198,6 +198,8 @@ GlassLab.Edge.prototype.setDraggable = function(draggable) {
             else piece.inputEnabled = false;
         }
     }
+
+    this.showArrow(draggable);
 };
 
 GlassLab.Edge.prototype.setVisible = function(visible) {

@@ -429,7 +429,7 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
                 obj = new boundConstructor();
                 if (parent.addChild) parent.addChild(obj); // if the parent is a sprite
                 else parent.add(obj); // if the parent is a group
-                if (obj.draggableComponent) obj.draggableComponent.active = false; // prevent dragging it out of the pen
+                if (obj.draggableComponent) obj.draggableComponent.setActive(false); // prevent dragging it out of the pen
             }
             obj.visible = true;
             obj.alpha = (typeof alpha != 'undefined')? alpha : 1;
