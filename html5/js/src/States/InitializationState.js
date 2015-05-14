@@ -147,10 +147,6 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
     game.load.image('penArrowUp', 'assets/images/penArrow_upward.png');
 
-    game.load.image('bigO', 'assets/images/matchingGame_o.png');
-    game.load.image('bigX', 'assets/images/matchingGame_x.png');
-    game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
-
     game.load.image('pauseMenuBackground', 'assets/images/pause_menu/hud_pause_background.png');
     game.load.image('pauseMenuButton', 'assets/images/pause_menu/hud_pause_button.png');
     game.load.image('pauseMenuButtonOutline', 'assets/images/pause_menu/hud_pause_button_outline.png');
@@ -238,8 +234,6 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bonusStickerDropzoneShader', 'assets/images/bonus_game/bonus_sticker_dropzone_shader.png');
     game.load.image('bonusStickerOverlay', 'assets/images/bonus_game/bonus_sticker_overlay.png');
     game.load.atlasJSONHash('bonusAnims', 'assets/images/bonus_game/bonus_anims.png', 'assets/images/bonus_game/bonus_anims.json');
-        //game.load.image('bigO', 'assets/images/matchingGame_o.png');
-        //game.load.image('bigX', 'assets/images/matchingGame_x.png');
 
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
@@ -256,6 +250,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('speech_button', 'assets/images/assistant/assistant_response_button.png');
     game.load.image('speech_button_border', 'assets/images/assistant/assistant_response_border.png');
     game.load.atlasJSONHash('assistantAnim', 'assets/images/assistant/assistant_animations.png', 'assets/images/assistant/assistant_animations.json');
+    game.load.atlasJSONHash('tutorialArrow', 'assets/images/assistant/arrow_bounce.png', 'assets/images/assistant/arrow_bounce.json');
 
     // drop target
     game.load.image('dropTargetRing', 'assets/images/drop_target_outer_ring.png');

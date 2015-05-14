@@ -152,13 +152,13 @@
     },
     {
       "__type": "DoOrderChallengeAction",
-       "challengeId": "T1.03",
-       "problemType": "2UR1MC",
-       "challengeData": {
-       "client": "Archibold Huxley III",
-       "creatureType": "baby_rammus",
-       "numCreatures": 4,
-       "description": "Dear Friend! I have *4 baby rammuses*. Please send me enough food for all of them!",
+      "challengeId": "T1.03",
+      "problemType": "2UR1MC",
+      "challengeData": {
+        "client": "Lyda Ross",
+        "creatureType": "baby_rammus",
+        "numCreatures": 4,
+        "description": "Well, hello! Horatio told us there would be a new wrangler about. Let's see if you know your stuff. I have *[numCreatures] [creatureType]*, and I need food for all of them! Can you send it?",
         "reward": 10,
         "showTooltip": true
       },
@@ -167,14 +167,14 @@
         "serializedActions": [
           {
             "__type": "ShowAssistantDialogueAction",
-            "text": "You've got *mail*! Click on the button to open it."
+            "text": "You've got *mail*! That's probably *Lyda*, she'll have heard about your arrival."
           },
           {
             "__type": "ShowArrowAction",
-            "direction": "up",
+            "direction": "left",
             "anchor": "topLeftAnchor",
-            "xPosition": 60,
-            "yPosition": 200
+            "xPosition": 180,
+            "yPosition": 160
           },
           {
             "__type": "WaitForCondition",
@@ -189,19 +189,6 @@
             "__type": "HideArrowAction"
           },
           {
-            "__type": "ShowAssistantDialogueAction",
-            "text": "This is an *order*! Your neighbor wants to feed some *baby rams*. Click the button to fill the order."
-          },
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "orderStarted"
-              }
-            ]
-          },
-          {
             "__type": "HideAssistantDialogueAction"
           }
         ]
@@ -212,41 +199,15 @@
       "challengeId": "T1.05",
       "problemType": "2UR1MF",
       "challengeData": {
-        "client": "Archibold Huxley III",
+        "client": "Lyda Ross",
         "company": "Rupture Farms",
         "numFoodA": 15,
-        "type": "baby_rammus",
-        "description": "Dear Friend! I have *15 broccoli*. Please send me the exact number of *baby rams* to eat all my food!",
+        "creatureType": "baby_rammus",
+        "description": "Well, aren't you clever! But I have a trickier one for you. I have *[numFoodA] [foodTypeA]*. Please send just enough *[creatureType]* to eat all of it!",
         "reward": 10,
         "showTooltip": true
-      },
-      "serializedTutorial": {
-        "__type": "ActionGroup",
-        "serializedActions": [
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "mailOpened"
-              }
-            ]
-          },
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "orderStarted"
-              }
-            ]
-          },
-          {
-            "__type": "HideAssistantDialogueAction"
-          }
-        ]
-      }      
-    }, 
+      }
+    },
     {
       "__type": "DoPenChallengeAction",
       "challengeId": "T1.04",
@@ -261,8 +222,49 @@
       "constraints": {
         "maxHeight": 15,
         "creatureWidth": 2
-      }      
-    },           
+      },
+      "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "WaitCondition",
+                "waitTime": 100,
+                "_comment": "Wait a moment to make sure we don't catch the 'zoomChanged' event from the beginning of the level."
+              }
+            ]
+          },
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Wow, you have a lot of rammuses here. *Click this button* to zoom out and see them all!"
+          },
+          {
+            "__type": "ShowArrowAction",
+            "direction": "right",
+            "anchor": "topRightAnchor",
+            "xPosition": -140,
+            "yPosition": 125
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "zoomChanged"
+              }
+            ]
+          },
+          {
+            "__type": "HideArrowAction"
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
+      }
+    },
     {
       "__type": "DoBonusRoundAction",
       "data": [
