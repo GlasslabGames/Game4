@@ -34,6 +34,7 @@ GlassLab.Poop.prototype._onDestroy = function() {
 GlassLab.Poop.prototype._onClick = function() {
     if (!this.clicked) {
         this.clicked = true;
+        GLOBAL.audioManager.playSound("poopSplatSound");
         var anim = this.sprite.play("explode");
         if (anim) anim.onComplete.addOnce(function() { this._fadeAway(300); }, this);
         else this._fadeAway();

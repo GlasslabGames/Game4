@@ -301,6 +301,25 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('popUpSound', 'assets/audio/sfx/pop_up_notification.mp3');
     game.load.audio('gateDropSound', 'assets/audio/sfx/drop_pen_gate.mp3');
     game.load.audio('mailNoticeSound', 'assets/audio/sfx/mail_notice.mp3');
+    game.load.audio('orderAcceptedSound', 'assets/audio/sfx/stamp_for_order_accepted.mp3');
+    game.load.audio('sparkleyPenSound', 'assets/audio/sfx/sparkley_pen.mp3');
+    game.load.audio('roofThudSound', 'assets/audio/sfx/roof_thud.mp3');
+    game.load.audio('propellerStartSound', 'assets/audio/sfx/propeller_start.mp3');
+    game.load.audio('propellerSpinLoopSound', 'assets/audio/sfx/propeller_spin_loop.mp3');
+    game.load.audio('poopSplatSound', 'assets/audio/sfx/poop_splat.mp3');
+    game.load.audio('pageTurnSound', 'assets/audio/sfx/page_turn.mp3');
+    game.load.audio('bonusGameIncorrectAnswerSound', 'assets/audio/sfx/incorrect_sound_bonus_game.mp3');
+    game.load.audio('bonusGameCorrectAnswerSound', 'assets/audio/sfx/correct_sound_bonus_game.mp3');
+        game.load.audio('donutRushStartSound', 'assets/audio/sfx/donut_rush_start.mp3');
+        game.load.audio('donutRushLoopSound', 'assets/audio/sfx/donut_rush_loop.mp3');
+        game.load.audio('donutRushEndSound', 'assets/audio/sfx/donut_rush_end.mp3');
+    game.load.audio('crySound1', 'assets/audio/sfx/cry_1.mp3');
+    game.load.audio('crySound2', 'assets/audio/sfx/cry_2.mp3');
+    game.load.audio('crySound3', 'assets/audio/sfx/cry_3.mp3');
+    game.load.audio('creaturePickUpWhaSound', 'assets/audio/sfx/creature_pick_up_wha.mp3');
+    game.load.audio('creatureBounceSound', 'assets/audio/sfx/creature_bounce.mp3');
+        game.load.audio('coinDropSound', 'assets/audio/sfx/coin_drop.mp3');
+        game.load.audio('bumpStopWalkSound', 'assets/audio/sfx/bump_stop_walk.mp3');
 
     // Quests
     game.load.json('day1', 'assets/quests/day1.json');

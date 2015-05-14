@@ -114,3 +114,30 @@ GlassLab.AudioManager.prototype._playSound = function(sound, key, randomStart, l
     sound.play('',start,volume,loop);
     return sound;
 };
+
+// fade in or out a sound, if already playing.  If new_volume is 0, then sound will be stopped after fade completes:
+GlassLab.AudioManager.prototype.fadeSound = function(key, duration, new_volume)
+{
+    var sound;
+
+    if (!this.sounds[key]) this.sounds[key] = [];
+    for (var i = 0; i < this.sounds[key].length; i++) {
+        if (this.sounds[key][i].isPlaying) { // grab the first sound from the pool that IS playing
+            sound = this.sounds[key][i];
+
+            // apply fade
+            sound.fadeTo(duration, new_volume);
+            sound.onFadeComplete.addOnce(function() {
+                    // test
+                    if (new_volume == 0) {
+                        console.log("*****fade complete - STOPPED!");
+                        sound.stop();
+                    }
+                    else
+                        console.log("*****fade complete - no stop!");
+                }, this);
+
+        }
+    }
+
+};

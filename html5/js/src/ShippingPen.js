@@ -297,7 +297,10 @@ GlassLab.ShippingPen.prototype.ship = function() {
 GlassLab.ShippingPen.prototype._dropLid = function() {
     this.game.add.tween(this.lid).to({alpha: 1}, 50, Phaser.Easing.Linear.InOut, true, 0); // quickly fade in the lid (if we failed to get it totally offscreen)
     var tween = this.game.add.tween(this.lid).to({y: 0}, 500, Phaser.Easing.Cubic.In, true, 0);
-    tween.onComplete.addOnce(this._openPropellers, this);
+    tween.onComplete.addOnce(function() {
+        GLOBAL.audioManager.playSound("roofThudSound");
+        this._openPropellers();
+    }, this);
 };
 
 GlassLab.ShippingPen.prototype._openPropellers = function() {
@@ -310,10 +313,23 @@ GlassLab.ShippingPen.prototype._openPropellers = function() {
         var prop = closedPropellers.splice(index, 1)[0]; // splice returns an array
         this.game.time.events.add(delay + closedPropellers.length * betweenPropellers, this._openPropeller, this, prop);
     }
+
+    // play 1 propeller start sound after delay:
+    this.game.time.events.add(delay + 420, function() {
+        GLOBAL.audioManager.playSound("propellerStartSound");
+    }, this);
+
+    // play 1 more prop start sound.....
+    this.game.time.events.add(totalTime + 700, function() {
+        GLOBAL.audioManager.playSound("propellerStartSound");
+    }, this);
+
     this.game.time.events.add(totalTime + 1000, this._flyAway, this);
 };
 
 GlassLab.ShippingPen.prototype._openPropeller = function(prop) {
+    
+    
     var anim = prop.play("extend");
     anim.paused = false;
     anim.onComplete.addOnce(function() {
@@ -322,6 +338,17 @@ GlassLab.ShippingPen.prototype._openPropeller = function(prop) {
 };
 
 GlassLab.ShippingPen.prototype._flyAway = function() {
+
+    // audio:
+    this.game.time.events.add(1000, function() {
+        GLOBAL.audioManager.playSound("propellerSpinLoopSound", false, true);
+    }, this);
+
+    // begin fading propeller loop after a few seconds:
+    this.game.time.events.add(3000, function() {
+        GLOBAL.audioManager.fadeSound("propellerSpinLoopSound", 4000, 0); // fade to volume 0 over a few seconds
+    }, this);
+
     var isoDist = this.game.iso.unproject(new Phaser.Point(0, this.offscreenY));
     var spriteTarget = Phaser.Point.add(this.sprite.isoPosition, isoDist);
     var shadowTarget = Phaser.Point.subtract(this.shadow.isoPosition, isoDist);

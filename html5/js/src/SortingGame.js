@@ -354,6 +354,9 @@ GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
 
     // animate the sticker border and do some fancy shenanigans if wrong answer:
     if (!this.correct) {
+        // audio
+        GLOBAL.audioManager.playSound("bonusGameIncorrectAnswerSound");
+
         // do sticker_border_incorrect:
         this.borderAnim.alpha = 1;
         var b_anim = this.borderAnim.play("sticker_border_incorrect");
@@ -415,6 +418,9 @@ GlassLab.SortingGameCard.prototype._animateResult = function(obj) {
         */
     }
     else {
+        // audio
+        GLOBAL.audioManager.playSound("bonusGameCorrectAnswerSound");
+
         // do sticker_border_correct:
         this.borderAnim.alpha = 1;
         var b_anim = this.borderAnim.play("sticker_border_correct");

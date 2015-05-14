@@ -528,12 +528,19 @@ GlassLab.FeedingPen.prototype.checkPenStatus = function() {
 };
 
 GlassLab.FeedingPen.prototype._setReadyToFeedEffects = function(ready) {
+    var play_audio = false;
     for (var i = 0; i < this.sparkles.length; i++) {
         for (var j = 0; j < this.sparkles[i].length; j++) {
             this.sparkles[i][j].visible = ready;
-            if (ready) this.sparkles[i][j].play("sparkle");
+            if (ready) {
+                this.sparkles[i][j].play("sparkle");
+                play_audio = true;
+            }
         }
     }
+
+    if (play_audio)
+        GLOBAL.audioManager.playSound("sparkleyPenSound");
 };
 
 GlassLab.FeedingPen.prototype.setGateHighlight = function(on) {
@@ -559,6 +566,14 @@ GlassLab.FeedingPen.prototype._startFeedEffects = function() {
     for (var i = 0; i < this.gatePieces.length; i++) {
         this.gatePieces[i].play("down");
         if (i == 0) this.gatePieces[i].events.onAnimationComplete.addOnce(this.FeedCreatures, this);
+    }
+
+    // audio:
+    if (this.gatePieces.length > 0) {
+        // play gate drop sound after short delay:
+        this.game.time.events.add(100, function() {
+            GLOBAL.audioManager.playSound("gateDropSound");
+        }, this);
     }
 };
 

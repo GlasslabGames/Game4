@@ -50,6 +50,10 @@ GlassLab.CreatureStateCry.prototype.Cry = function() {
         {
             animation.onComplete.addOnce(function()
             {
+                // audio:
+                var audioCryIndex = Math.floor(Math.random()*3) + 1; // crySound1, crySound2, crySound3
+                GLOBAL.audioManager.playSound("crySound" + audioCryIndex);
+
                 this.creature.PlayAnim("cry_loop", true);
                 this.isCrying = true;
             }, this);
