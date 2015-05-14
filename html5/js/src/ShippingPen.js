@@ -328,8 +328,6 @@ GlassLab.ShippingPen.prototype._openPropellers = function() {
 };
 
 GlassLab.ShippingPen.prototype._openPropeller = function(prop) {
-    
-    
     var anim = prop.play("extend");
     anim.paused = false;
     anim.onComplete.addOnce(function() {
@@ -338,7 +336,6 @@ GlassLab.ShippingPen.prototype._openPropeller = function(prop) {
 };
 
 GlassLab.ShippingPen.prototype._flyAway = function() {
-
     // audio:
     this.game.time.events.add(1000, function() {
         GLOBAL.audioManager.playSound("propellerSpinLoopSound", false, true);

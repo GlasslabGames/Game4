@@ -97,6 +97,27 @@ GlassLab.AudioManager.prototype.playSound = function(key, randomStart, loop)
     return sound;
 };
 
+// plays a sound from our pool
+GlassLab.AudioManager.prototype.playSoundWithVolumeAndOffset = function(key, volume, offsetSeconds, loop)
+{
+    var sound;
+    if (!this.sounds[key]) this.sounds[key] = [];
+    for (var i = 0; i < this.sounds[key].length; i++) {
+        if (!this.sounds[key][i].isPlaying) { // grab the first sound from the pool that isn't playing yet
+            sound = this.sounds[key][i];
+            break;
+        }
+    }
+    if (!sound) { // none available in the pool, so add a new one
+        if (this.sounds[key].length >= this.maxPoolSize) return null; // unless we've already hit our max pool size - then don't play anything
+
+        sound = this.game.add.audio(key);
+        this.sounds[key].push(sound);
+    }
+    sound.play('',offsetSeconds,volume,loop);
+    return sound;
+};
+
 GlassLab.AudioManager.prototype._playSound = function(sound, key, randomStart, loop) {
     var volume = (key.indexOf("vomit") > -1)? this.soundEffectsVolume / 2 : this.soundEffectsVolume; // hacks because the vomit sound is too gross
 
@@ -122,21 +143,12 @@ GlassLab.AudioManager.prototype.fadeSound = function(key, duration, new_volume)
 
     if (!this.sounds[key]) this.sounds[key] = [];
     for (var i = 0; i < this.sounds[key].length; i++) {
-        if (this.sounds[key][i].isPlaying) { // grab the first sound from the pool that IS playing
+        if (this.sounds[key][i].isPlaying) { // apply to any sounds from the pool that are playing
             sound = this.sounds[key][i];
-
-            // apply fade
             sound.fadeTo(duration, new_volume);
             sound.onFadeComplete.addOnce(function() {
-                    // test
-                    if (new_volume == 0) {
-                        console.log("*****fade complete - STOPPED!");
-                        sound.stop();
-                    }
-                    else
-                        console.log("*****fade complete - no stop!");
-                }, this);
-
+                if (new_volume == 0) sound.stop();
+            }, this);
         }
     }
 

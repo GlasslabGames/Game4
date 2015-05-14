@@ -120,7 +120,7 @@ GlassLab.FoodTypes = {
         spriteName: "donut",
         spriteOffsetWhileDragging: 3,
         color: 0xf696ed,
-        unlocked: false,
+        unlocked: true,
         cost: 2000,
         available: true,
         displayNames: {

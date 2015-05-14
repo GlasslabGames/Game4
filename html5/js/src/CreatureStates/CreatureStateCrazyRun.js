@@ -66,8 +66,10 @@ GlassLab.CreatureStateCrazyRun.prototype.CrazyRun = function() {
     if (!this.isCrazyRunning)
     {
         this.isCrazyRunning = true;
-
         this.creature.running = true;
+
+        // audio
+        GLOBAL.audioManager.playSoundWithVolumeAndOffset("donutRushStartSound", 1.0, 0.55, false);
 
         var animation = this.creature.PlayAnim("hyper_start");
         if (animation)
@@ -76,12 +78,19 @@ GlassLab.CreatureStateCrazyRun.prototype.CrazyRun = function() {
             {
                 this.creature.PlayAnim("hyper_loop", true);
                 this._findNextTile();
+
+                // loop audio as well:
+                GLOBAL.audioManager.playSound("donutRushLoopSound", false, true);
+                GLOBAL.audioManager.fadeSound("donutRushLoopSound", 3000, 0.4); // fade to volume 0.4 slowly...
+
             }, this);
         }
         else
         {
-            console.error("Creature tried to cry but couldn't find animation...");
+            console.error("Creature tried to go into hyper mode but couldn't find animation...");
         }
+
+
     }
 };
 
@@ -144,6 +153,10 @@ GlassLab.CreatureStateCrazyRun.prototype._findNextTile = function() {
 GlassLab.CreatureStateCrazyRun.prototype.StopCrazyRun = function() {
     if (this.isCrazyRunning)
     {
+        // audio:
+        GLOBAL.audioManager.fadeSound("donutRushLoopSound", 100, 0); // fade loop to volume 0 quickly then stop)
+        GLOBAL.audioManager.playSound("donutRushEndSound");
+
         var animation = this.creature.PlayAnim("hyper_end");
         if (animation)
         {
