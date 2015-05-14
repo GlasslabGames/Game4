@@ -194,6 +194,7 @@ GlassLab.Food.prototype._onDestroy = function() {
     var index = GLOBAL.foodInWorld.indexOf(this);
     if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
     if (this.onEnoughEaters) this.onEnoughEaters.dispose();
+    if (this.smokeTimer) this.game.time.events.remove(this.smokeTimer);
 };
 
 GlassLab.Food.prototype._onStartDrag = function () {
@@ -318,6 +319,8 @@ GlassLab.Food.prototype.setType = function(type, showSmoke)
         this._setImage();
     }
 
+    if (this.smokeTimer) this.game.time.events.remove(this.smokeTimer);
+
     if (showSmoke) {
         if (!this.smoke) {
             this.smoke = this.game.make.sprite(0, 0, "smokeAnim");
@@ -325,7 +328,13 @@ GlassLab.Food.prototype.setType = function(type, showSmoke)
             this.smoke.anchor.setTo(0.5, 0.75);
             this.smoke.animations.add("puff", Phaser.Animation.generateFrameNames("smoke_puff_food_", 156, 182, ".png", 3), 24, false);
         }
+        this.smoke.visible = true;
         this.smoke.play("puff");
+        // Since the smoke animations didn't always finish, put in a timer that hides them
+        this.smokeTimer = this.game.time.events.add(1000, function() {
+            this.smoke.animations.stop();
+            this.smoke.visible = false;
+        }, this);
     }
 };
 

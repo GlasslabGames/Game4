@@ -38,6 +38,8 @@ GlassLab.CreatureStateTraveling.prototype.Exit = function()
 
     if (this.footstepSound) this.footstepSound.stop();
 
+    this.creature.StopAnim();
+
     this.creature.onDestinationReached.remove(this._onDestinationReached, this);
 };
 
