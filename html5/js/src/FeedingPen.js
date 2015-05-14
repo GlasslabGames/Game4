@@ -201,17 +201,15 @@ GlassLab.FeedingPen.prototype._updateCreatureSpotsAfterResize = function() {
     }
 };
 
-GlassLab.FeedingPen.prototype.FeedCreatures = function() {
+GlassLab.FeedingPen.prototype.beginFeeding = function() {
     this.checkPenStatus();
     if (!this.autoFill && !this.canFeed) {
         console.error("Tried to feed creatures but ran into discrepancy with number of creatures. Try again.");
         return;
     }
 
-    this.startedFeedEffects = false; // we're feeding now so we must be done with the sparkle etc
+    GlassLab.SignalManager.penFeedingStarted.dispatch(this);
 
-    this.unfedCreatures = this.getNumCreatures();
-    this.result = GlassLab.results.satisfied; // this is the default result unless something worse happens
     this.feeding = true;
     this.canFeed = false;
 
@@ -228,11 +226,20 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
         this.rightEdges[i].setVisible(false); // hide the middle fences
     }
 
-    // move the creatures to be in front of the gate
-    this.frontObjectRoot.addChild(this.creatureRoot);
-
     // close the items
     GLOBAL.inventoryMenu.hide(true);
+
+    this._startFeedEffects(); // when this is done, _feedCreatures will be called
+};
+
+GlassLab.FeedingPen.prototype._feedCreatures = function() {
+    this.startedFeedEffects = false; // we're feeding now so we must be done with the sparkle etc
+
+    this.unfedCreatures = this.getNumCreatures();
+    this.result = GlassLab.results.satisfied; // this is the default result unless something worse happens
+
+    // move the creatures to be in front of the gate
+    this.frontObjectRoot.addChild(this.creatureRoot);
 
     // Reset creature foods in case anything weird happened before
     this.forEachCreature(GlassLab.Creature.prototype.resetTargetFood);
@@ -556,10 +563,9 @@ GlassLab.FeedingPen.prototype._startFeedEffects = function() {
 
     for (var i = 0; i < this.gatePieces.length; i++) {
         this.gatePieces[i].play("down");
-        if (i == 0) this.gatePieces[i].events.onAnimationComplete.addOnce(this.FeedCreatures, this);
+        if (i == 0) this.gatePieces[i].events.onAnimationComplete.addOnce(this._feedCreatures, this);
     }
 
-    GlassLab.SignalManager.penFeedingStarted.dispatch(this);
 };
 
 // Completely reset the creatures and food in the pen to a pre-fed state
@@ -731,7 +737,7 @@ GlassLab.FeedingPen.prototype._onMouseUp = function() {
             }
             else
             {
-                this._startFeedEffects();
+                this.beginFeeding();
             }
         }
     }
