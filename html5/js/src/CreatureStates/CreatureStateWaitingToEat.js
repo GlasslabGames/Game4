@@ -17,6 +17,8 @@ GlassLab.CreatureStateWaitingToEat.constructor = GlassLab.CreatureStateWaitingTo
 GlassLab.CreatureStateWaitingToEat.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
 
+    this.creature.draggableComponent.setActive( !this.creature.pen ); // don't allow dragging creatures in the pen, but do allow dragging them outside the pen
+
     var food = this.foodInfo.food;
     this.foodListener = food.onEnoughEaters.addOnce(this.eat, this);
     this.creature.standFacingPosition(food.getGlobalPos());

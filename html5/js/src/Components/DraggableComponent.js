@@ -45,6 +45,11 @@ GlassLab.DraggableComponent.prototype._onInitGame = function() {
     // we use a global input listener because it lets us use auto drag (start dragging something even if we didn't actually mouse down on it)
 };
 
+GlassLab.DraggableComponent.prototype.setActive = function(active) {
+    this.active = active;
+    this.sprite.input.customHoverCursor = (active)? "grab_open" : null;
+};
+
 GlassLab.DraggableComponent.prototype.remove = function() {
     this.sprite.events.onInputUp.remove(this._onUp, this);
     this.sprite.events.onInputDown.remove(this._onDown, this);

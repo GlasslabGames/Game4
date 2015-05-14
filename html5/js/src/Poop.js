@@ -6,7 +6,7 @@
  */
 GlassLab.Poop = function(game, type) {
     GlassLab.WorldObject.prototype.constructor.call(this, game);
-    this.draggableComponent.active = false; // you can't drag poop
+    this.draggableComponent.setActive(false); // you can't drag poop
 
     this.sprite.loadTexture("poopAnim");
     this.sprite.animations.add("idle", Phaser.Animation.generateFrameNames("poo_idle_",24,71,".png",3), 48, true);

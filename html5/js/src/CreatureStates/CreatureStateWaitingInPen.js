@@ -17,8 +17,10 @@ GlassLab.CreatureStateWaitingInPen.constructor = GlassLab.CreatureStateWaitingIn
 GlassLab.CreatureStateWaitingInPen.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.creature.standFacing("right");
-    this.creature.draggableComponent.active = !this.afterEating && (!this.creature.pen || this.creature.pen instanceof GlassLab.FeedingPen); // you can drag them out of the pen before you start feeding them, but not after they're done
+    this.creature.draggableComponent.setActive( !this.afterEating && (!this.creature.pen || this.creature.pen instanceof GlassLab.FeedingPen) );
+    // you can drag them out of the feeding pen before you start feeding them, but not after they're done
     this.foodTypesChangedHandler = GlassLab.SignalManager.penFoodTypeSet.add(this._onFoodTypeChanged, this);
+    this.foodTypesChangedHandler = GlassLab.SignalManager.penFeedingStarted.add(this._onPenFeedingStarted, this);
 };
 
 GlassLab.CreatureStateWaitingInPen.prototype.Exit = function() {
@@ -31,9 +33,20 @@ GlassLab.CreatureStateWaitingInPen.prototype.StartWalkingToFood = function() {
     this.creature.tryWalkToNextFood(); // this will handle the result if there is no more food, etc
 };
 
+GlassLab.CreatureStateWaitingInPen.prototype.StartWalkingToFood = function() {
+    this.creature.pen.setCreatureStartedEating(this);
+    this.creature.tryWalkToNextFood(); // this will handle the result if there is no more food, etc
+};
+
 GlassLab.CreatureStateWaitingInPen.prototype._onFoodTypeChanged = function(pen, food) {
     if (this.creature.pen != pen) return;
     if (!(food in this.creature.desiredAmountsOfFood)) {
         this.creature.thoughtBubble.show("redX", GlassLab.FoodTypes[food].spriteName, 1000);
+    }
+};
+
+GlassLab.CreatureStateWaitingInPen.prototype._onPenFeedingStarted = function(pen) {
+    if (this.creature.pen == pen) {
+        this.creature.draggableComponent.setActive(false);
     }
 };

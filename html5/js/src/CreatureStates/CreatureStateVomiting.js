@@ -19,7 +19,7 @@ GlassLab.CreatureStateVomiting.prototype.Enter = function() {
   if (this.anim) this.anim.onComplete.addOnce(this._onFinishVomiting, this);
     else this._onFinishVomiting();
   this.spewed = false;
-  this.creature.draggableComponent.active = false;
+  this.creature.draggableComponent.setActive(false);
 
     this.spewFrame = GLOBAL.creatureManager.creatureDatabase[this.creature.type].fxFrames.vomit;
 };

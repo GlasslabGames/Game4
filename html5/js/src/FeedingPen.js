@@ -309,8 +309,6 @@ GlassLab.FeedingPen.prototype.FeedCreatures = function() {
             this.game.time.events.add(time, creature.state.StartWalkingToFood, creature.state);
         }
     }
-
-    GlassLab.SignalManager.penFeedingStarted.dispatch(this);
 };
 
 GlassLab.FeedingPen.prototype._onDestroy = function()
@@ -560,6 +558,8 @@ GlassLab.FeedingPen.prototype._startFeedEffects = function() {
         this.gatePieces[i].play("down");
         if (i == 0) this.gatePieces[i].events.onAnimationComplete.addOnce(this.FeedCreatures, this);
     }
+
+    GlassLab.SignalManager.penFeedingStarted.dispatch(this);
 };
 
 // Completely reset the creatures and food in the pen to a pre-fed state

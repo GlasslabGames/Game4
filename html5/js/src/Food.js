@@ -275,7 +275,7 @@ GlassLab.Food.prototype.BeEaten = function(animStyle) {
             this._afterEaten(1000);
         }
 
-        this.draggableComponent.active = false;
+        this.draggableComponent.setActive(false);
     }
     return amount; // return the actual amount that was eaten
 };
@@ -305,7 +305,7 @@ GlassLab.Food.prototype.reset = function() {
     this.image.animations.frameName = this.type+"_idle.png";
     this.health = 1;
     this.eaten = false;
-    this.draggableComponent.active = true;
+    this.draggableComponent.setActive(true);
     for (var i = 0; i < this.eaters.length; i++) {
         this.removeEater(this.eaters[i]);
     }
@@ -408,10 +408,11 @@ GlassLab.Food.prototype.addEater = function(creature)
     }
 };
 
-GlassLab.Food.prototype.removeEater = function(creature)
+GlassLab.Food.prototype.removeEater = function(creature, cancel)
 {
     var index = this.eaters.indexOf(creature);
     if (index > -1) this.eaters.splice(index, 1);
 
-    this.prevEaters.push(creature);
+    // cancel is true if the creature leaves by force (e.g. dragged away)
+    if (!cancel) this.prevEaters.push(creature);
 };

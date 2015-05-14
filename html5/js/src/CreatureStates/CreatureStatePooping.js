@@ -16,7 +16,7 @@ GlassLab.CreatureStatePooping.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
     this.pooped = false;
 
-    this.creature.draggableComponent.active = false;
+    this.creature.draggableComponent.setActive(false);
     this.poopFrame = GLOBAL.creatureManager.creatureDatabase[this.creature.type].fxFrames.poop;
     this.creature.wantToPoop = false;
 

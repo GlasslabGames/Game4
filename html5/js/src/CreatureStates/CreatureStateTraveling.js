@@ -16,7 +16,7 @@ GlassLab.CreatureStateTraveling.constructor = GlassLab.CreatureStateTraveling;
 
 GlassLab.CreatureStateTraveling.prototype.Enter = function() {
     GlassLab.CreatureState.prototype.Enter.call(this);
-    this.creature.draggableComponent.active = true;
+    this.creature.draggableComponent.setActive(true);
 
     this.originalSpeed = this.creature.moveSpeed;
     this.creature.moveSpeed += 1.5 + Math.random() * 2;
