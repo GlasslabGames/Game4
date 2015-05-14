@@ -98,8 +98,9 @@ GlassLab.AudioManager.prototype.playSound = function(key, randomStart, loop)
 };
 
 // plays a sound from our pool
-GlassLab.AudioManager.prototype.playSoundWithVolumeAndOffset = function(key, volume, offsetSeconds, loop)
-{
+GlassLab.AudioManager.prototype.playSoundWithVolumeAndOffset = function(key, volume, offsetSeconds, loop) {
+    var use_volume = this.soundEffectsVolume * volume; // in case sfx are muted
+
     var sound;
     if (!this.sounds[key]) this.sounds[key] = [];
     for (var i = 0; i < this.sounds[key].length; i++) {
@@ -114,12 +115,12 @@ GlassLab.AudioManager.prototype.playSoundWithVolumeAndOffset = function(key, vol
         sound = this.game.add.audio(key);
         this.sounds[key].push(sound);
     }
-    sound.play('',offsetSeconds,volume,loop);
+    sound.play('', offsetSeconds, use_volume, loop);
     return sound;
 };
 
 GlassLab.AudioManager.prototype._playSound = function(sound, key, randomStart, loop) {
-    var volume = (key.indexOf("vomit") > -1)? this.soundEffectsVolume / 2 : this.soundEffectsVolume; // hacks because the vomit sound is too gross
+    var volume = this.soundEffectsVolume; // in case sfx are muted
 
     var start = 0;
     if (randomStart) {

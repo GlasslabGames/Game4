@@ -19,7 +19,7 @@ GlassLab.CreatureStateDragged.prototype.Enter = function()
 {
 	GlassLab.CreatureState.prototype.Enter.call(this);
 
-	GLOBAL.audioManager.playSound("creaturePickUpWhaSound");
+	GLOBAL.audioManager.playSoundWithVolumeAndOffset("creaturePickUpWhaSound", 0.6, 0.0, false);
 
 	this.creature.PlayAnim('walk', true, this.creature.baseAnimSpeed * 5);
 };

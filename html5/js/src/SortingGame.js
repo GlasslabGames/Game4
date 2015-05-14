@@ -124,6 +124,15 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
         // animate the coin:
         var anim = this.largeCoin.play("get_coins");
 
+        // annoying slot machine audio:
+        GLOBAL.audioManager.playSoundWithVolumeAndOffset("coinDropSound", 0.15, 0.0, true);
+        if (anim) {
+            anim.onComplete.addOnce(function() {
+                GLOBAL.audioManager.fadeSound("coinDropSound", 100, 0.0); // fade to volume 0.0 quickly, then stop loop.
+            }, this);
+        }
+
+
         // animate the bonusAmountAddedLabel:
         this.bonusAmountAddedLabel.text = "+ " + GlassLab.SortingGame.REWARD_PER_CARD;
         var orig_y = this.bonusAmountAddedLabel.y;
