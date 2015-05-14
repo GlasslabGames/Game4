@@ -22,8 +22,9 @@ GlassLab.CreatureStateWaitingToEat.prototype.Enter = function() {
     this.creature.standFacingPosition(food.getGlobalPos());
 
     if (!this.creature.pen) {
-        this.timer = this.game.time.events.add(5000, this.stopWaiting, this); // only countdown if we're not in the pen
-        this.timer2 = this.game.time.events.add(3000, function() {
+        var t = Math.random() * 2000 + 4000;
+        this.timer = this.game.time.events.add(t, this.stopWaiting, this); // only countdown if we're not in the pen
+        this.timer2 = this.game.time.events.add(t - 2000, function() {
             this.creature.thoughtBubble.show(null, GLOBAL.creatureManager.GetCreatureData(this.creature.type).spriteName+"_idle", 2000, null, null, 0.25);
         }, this); // only countdown if we're not in the pen
     }

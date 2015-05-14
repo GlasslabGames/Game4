@@ -360,9 +360,12 @@ GlassLab.Food.prototype.getTargets = function()
     if (!points.length) points = points.concat(points2); // only add the 2nd group of points if there are no points left from the first group
     if (!points.length) points = [new Phaser.Point(pos.x, pos.y - offset), new Phaser.Point(pos.x - offset)]; // in case no spots are left, default to the prefered points
 
+    var priority = 1 + (this.eaters.length * 2); // food that already has creatures waiting to eat it gets a higher priority
+    console.log(this.eaters.length, priority);
+
     var targets = [];
     for (var i = 0; i < points.length; i++) {
-        targets.push({food: this, priority: 1, pos: points[i]});
+        targets.push({food: this, priority: priority, pos: points[i]});
     }
     return targets;
 };
