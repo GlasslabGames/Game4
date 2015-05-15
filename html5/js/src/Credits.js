@@ -80,12 +80,17 @@ GlassLab.Credits.prototype._generatePages = function()
         if (text.indexOf("*h") > -1) { // it has a header marker
             style.fill = "#4d4d4d";
             if (text.indexOf("*h0") > -1) style.font = "16pt ArchitectsDaughter"; // for "Credits" if we include it
-            else if (text.indexOf("*h1") > -1) style.font = "12pt ArchitectsDaughter";
+            else if (text.indexOf("*h1") > -1) style.font = "11pt ArchitectsDaughter";
             else style.font = "8pt ArchitectsDaughter"; // *h2
             margin = 10;
             text = text.substr(text.indexOf("*h") + 4);
             sectionIndex = i; // the index when we started a section
             section = [];
+        } else if (text.indexOf("*pagebreak*") > -1) { // hardcoded page break
+            y = 0;
+            page = this.sprite.addChild(this.game.make.sprite(5, -175));
+            this.pages.push(page);
+            continue;
         } else {
             style.font = "10pt ArchitectsDaughter";
             style.fill = "#808080";
@@ -98,9 +103,8 @@ GlassLab.Credits.prototype._generatePages = function()
         section.push(label);
         y += label.height;
 
-        if (y > 400) { // end of this page, so restart this section on a new page
+        if (y > 450) { // end of this page, so restart this section on a new page - was 450
             y = 0;
-
             page = this.sprite.addChild(this.game.make.sprite(5, -175));
             this.pages.push(page);
 
@@ -122,7 +126,8 @@ GlassLab.Credits.prototype._addStickers = function() {
     this._addSticker(0, "babyunifox", .15, .22, 0.7, 5);
     this._addSticker(0, "strawberry", .8, .75, 1);
 
-    this._addSticker(1, "babyram", .8, .15, -0.5, -5);
+    this._addSticker(1, "poo", .25, .1, 1, 10);
+    this._addSticker(1, "babyram", .8, .25, -0.5, -5);
     this._addSticker(1, "broccoli", .17, .85, 1);
 
     this._addSticker(2, "donut", .8, .85, 1, -10);
