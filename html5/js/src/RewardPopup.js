@@ -17,7 +17,7 @@ GlassLab.RewardPopup = function(game)
     this.bg = GlassLab.Util.PixelSnapAnchor(this.bg);
     this.addChild(this.bg);
 
-    this.portrait = game.make.sprite(-95, -150, "bossmanPhoto");
+    this.portrait = game.make.sprite(-95, -150, "clientPhoto3");
     this.portrait.anchor.setTo(.5, .5);
     this.portrait = GlassLab.Util.PixelSnapAnchor(this.portrait);
     this.addChild(this.portrait);
