@@ -128,6 +128,15 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
 
     GlassLab.Util.SetColoredText(this.descriptionLabel, text, "#807c7b", "#994c4e");
 
+    var clientNames = ["Elias Petters", "Lyda Ross", "Isabel Noether", "Marmaduke Biggs"]; // this order corresponds to the photo order as loaded by InitializationState
+    var clientIndex = clientNames.indexOf(this.data.client);
+    if (clientIndex > -1) {
+        this.portrait.loadTexture("clientPhoto"+clientIndex);
+    } else {
+        console.error("There's no photo that matches",this.data.client);
+        // and just keep the same photo as last time
+    }
+
     this.clientNameLabel.setText(this.data.client);
     this.rewardAmountLabel.setText("$"+this.data.reward);
 

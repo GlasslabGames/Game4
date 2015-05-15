@@ -190,12 +190,15 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('keyboardTooltip', 'assets/images/order/keyboard_popup.png');
 
     game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
-    game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');
     game.load.image('urgentStamp', 'assets/images/order/urgent_stamp.png');
     game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
     game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
     game.load.image('receiptBg', 'assets/images/order/shipping_receipt_background.png');
     game.load.image('receiptX', 'assets/images/order/shipping_receipt_x.png');
+
+    for (var i = 0; i < 4; i++) {
+        game.load.image('clientPhoto'+i, 'assets/images/order/character_photos/character_photos_customer_'+(i+1)+'.png');
+    }
 
     game.load.image('bigCoin', 'assets/images/order/order_response_big_coin.png');
     game.load.atlasJSONHash('coinAnim', 'assets/images/order/get_money.png', 'assets/images/order/get_money.json');
