@@ -456,3 +456,23 @@ GlassLab.Pen.prototype.FillIn = function(boundConstructor, parent, list, maxCoun
         if (unusedObjects[i]) unusedObjects[i].visible = false;
     }
 };
+
+// Static function that calculates the non-iso width and height of a pen with a given iso full width and height
+GlassLab.Pen.CalculateProjectedHeight = function(fullWidth, height) {
+    if (!GLOBAL.game) return 0;
+
+    var bottomPoint = new Phaser.Point(fullWidth * GLOBAL.tileSize, height * GLOBAL.tileSize); // the isopos of the bottommost point of the pen
+    bottomPoint = GLOBAL.game.iso.projectXY(bottomPoint);
+    return bottomPoint.y; // height (since the pen's top is at 0)
+};
+
+GlassLab.Pen.CalculateProjectedWidth = function(fullWidth, height) {
+    if (!GLOBAL.game) return 0;
+
+    var leftPoint = new Phaser.Point(0, height * GLOBAL.tileSize); // the isopos of the bottommost point of the pen
+    leftPoint = GLOBAL.game.iso.projectXY(leftPoint);
+    var rightPoint = new Phaser.Point(fullWidth * GLOBAL.tileSize, 0); // the isopos of the bottommost point of the pen
+    rightPoint = GLOBAL.game.iso.projectXY(rightPoint);
+
+    return rightPoint.x - leftPoint.x; // how wide the pen is
+};

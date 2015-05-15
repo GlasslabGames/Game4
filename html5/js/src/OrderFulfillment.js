@@ -116,12 +116,16 @@ GlassLab.OrderFulfillment.prototype._refreshPen = function(response) {
 GlassLab.OrderFulfillment.prototype.focusCamera = function() {
 
     // The pen is already set to be centered, so we can center the camera (with some offset for the UI)
-    var xOffset = -75;
+    var xOffset = -85;
     var yOffset = 100;
     GLOBAL.UIManager.setCenterCameraPos(xOffset, yOffset);
-    if (this.crate && this.crate.sprite.visible) {
-        var maxDimension = Math.max(this.crate.getFullWidth(), this.crate.height);
-        GLOBAL.UIManager.zoomTo(2.5 / maxDimension);
+    if (this.crate) {
+        // To figure out how much we need to zoom out, we have to use the crate's non-isometric size
+        var width = GlassLab.Pen.CalculateProjectedWidth(this.crate.getFullWidth(), this.crate.height);
+        if (width) {
+            var zoom = 450 / width; // we don't want UIManager to enforce the bounds since we can go as small as we need too.. but don't go closer than 1 either
+            GLOBAL.UIManager.zoomTo(zoom, true);
+        }
     }
 
     GLOBAL.tiledBg.width = this.game.width / GLOBAL.UIManager.zoomLevel * 1.25; // padding to cover a weird edge when full screen;

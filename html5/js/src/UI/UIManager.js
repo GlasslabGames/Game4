@@ -287,10 +287,10 @@ GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withou
     if (!addedListener) window.show(); // if we failed to add a listener, just show the target
 };
 
-GlassLab.UIManager.zoomAmount = 1.5;
+GlassLab.UIManager.zoomAmount = 1.8;
 GlassLab.UIManager.maxZoom = 1.0;
-GlassLab.UIManager.startZoom = GlassLab.UIManager.maxZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
-GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.minZoom = GlassLab.UIManager.maxZoom / Math.pow(GlassLab.UIManager.zoomAmount, 3); // 4 zoom levels
+GlassLab.UIManager.startZoom = GlassLab.UIManager.maxZoom / GlassLab.UIManager.zoomAmount;
 
 GlassLab.UIManager.prototype.enforceCameraBounds = function()
 {
@@ -319,9 +319,10 @@ GlassLab.UIManager.prototype.enforceCameraBounds = function()
     }
 };
 
-GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel)
+GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel, dontConstrain)
 {
-    this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+    if (dontConstrain) this.zoomLevel = zoomLevel;
+    else this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
 
     if (this.zoomTween)
     {
@@ -330,15 +331,16 @@ GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel)
 
     GLOBAL.WorldLayer.scale.setTo(this.zoomLevel, this.zoomLevel);
 
-    this.enforceCameraBounds();
+    if (!dontConstrain) this.enforceCameraBounds();
 
     GlassLab.SignalManager.cameraMoved.dispatch();
     GlassLab.SignalManager.zoomChanged.dispatch();
 };
 
-GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
+GlassLab.UIManager.prototype.zoomTo = function(zoomLevel, dontConstrain)
 {
-    this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+    if (dontConstrain) this.zoomLevel = zoomLevel;
+    else this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
 
     if (this.zoomTween)
     {
@@ -352,7 +354,7 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
     }, this);
 
     this.zoomTween.onUpdateCallback( function() {
-        this.enforceCameraBounds();
+        if (!dontConstrain) this.enforceCameraBounds();
         GlassLab.SignalManager.cameraMoved.dispatch();
     }, this);
     this.zoomTween.start();
