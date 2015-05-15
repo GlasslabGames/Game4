@@ -201,6 +201,7 @@ GlassLab.Food.prototype._onDestroy = function() {
 GlassLab.Food.prototype._onStartDrag = function () {
     GlassLab.WorldObject.prototype._onStartDrag.call(this);
     this.isHovering = true;
+    this.alpha = 0.25;
     var index = GLOBAL.foodInWorld.indexOf(this);
     if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
     GLOBAL.hoverLayer.add(this);
@@ -210,6 +211,7 @@ GlassLab.Food.prototype._onStartDrag = function () {
 GlassLab.Food.prototype._onEndDrag = function () {
     GlassLab.WorldObject.prototype._onEndDrag.call(this);
     this.isHovering = false;
+    this.alpha = 1.0;
     if (this.destroyed) return; // the world object might have destroyed itself if it was out of bounds
 
     var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);
