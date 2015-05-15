@@ -37,6 +37,7 @@ GlassLab.SortingGame = function(game) {
 
     this.tokenParent = game.make.sprite();
     this.root.addChild(this.tokenParent);
+    this._draggingToken = false;
 
     var col = 0; // one col per value
     for (var key in GlassLab.SortingGame.COMPARISON_VALUES) {
@@ -854,6 +855,7 @@ GlassLab.SortingGameToken.prototype._showTooltip = function(yes_or_no) {
 GlassLab.SortingGameToken.prototype._applyDragEffect = function() {
     this.scale.x *= 1.05;
     this.scale.y *= 1.05;
+    this.parent._draggingToken = true;
 
     // dark overlay at 10%:
     this.stickerOverlay.tint = 0x000000;
@@ -861,16 +863,12 @@ GlassLab.SortingGameToken.prototype._applyDragEffect = function() {
 
     // hide hoverLabel:
     this._showTooltip(false);
-    //this.hoverLabelBg.alpha = 0;
-    //this.hoverLabelBgEndcapLeft.alpha = 0;
-    //this.hoverLabelBgEndcapRight.alpha = 0;
-    //this.hoverLabelBgPointer.alpha = 0;
-    //this.hoverLabel.alpha = 0;   
 };
 
 GlassLab.SortingGameToken.prototype._removeDragEffect = function() {
     this.scale.x /= 1.05;
     this.scale.y /= 1.05;
+    this.parent._draggingToken = false;
 
     // remove overlay:
     this.stickerOverlay.alpha = 0;
@@ -882,14 +880,7 @@ GlassLab.SortingGameToken.prototype._onOver = function() {
     this.stickerOverlay.alpha = 0.15;
 
     // show hoverLabel only if at start point:
-    if (this._at_start_point) {
-        this._showTooltip(true);
-        //this.hoverLabelBg.alpha = 1;
-        //this.hoverLabelBgEndcapLeft.alpha = 1;
-        //this.hoverLabelBgEndcapRight.alpha = 1;
-        //this.hoverLabelBgPointer.alpha = 1;
-        //this.hoverLabel.alpha = 1;
-    }
+    if (!this.parent._draggingToken && this._at_start_point) this._showTooltip(true);
 };
 GlassLab.SortingGameToken.prototype._onOut = function() {
     // remove overlay:
@@ -897,10 +888,4 @@ GlassLab.SortingGameToken.prototype._onOut = function() {
 
     // hide hoverLabel:
     this._showTooltip(false);
-    //this.hoverLabelBg.alpha = 0;
-    //this.hoverLabelBgEndcapLeft.alpha = 0;
-    //this.hoverLabelBgEndcapRight.alpha = 0;
-    //this.hoverLabelBgPointer.alpha = 0;
-    //this.hoverLabel.alpha = 0;   
-
 };

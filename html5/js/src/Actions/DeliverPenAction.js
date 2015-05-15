@@ -82,6 +82,7 @@ GlassLab.DeliverPenAction.prototype._propellerClosed = function() {
 };
 
 GlassLab.DeliverPenAction.prototype._crateClicked = function() {
+    GLOBAL.audioManager.playSound("explosion");
     var makeSmoke = function(x, y) {
         var smoke = GLOBAL.game.make.sprite(x, y, "smokeAnim");
         smoke.anchor.setTo(0.5, 1);
