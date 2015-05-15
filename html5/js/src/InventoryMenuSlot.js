@@ -129,8 +129,9 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.events.onInputOver.add(this._onOver, this);
     this.events.onInputOut.add(this._onOut, this);
 
-    // signal listener:
-    GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
+    // signal listeners:
+    GlassLab.SignalManager.foodDropped.add(this._onFoodReleased, this);
+    GlassLab.SignalManager.penFoodTypeSet.add(this._onFoodReleased, this);
 
     this.Refresh();
 };
@@ -166,7 +167,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
     this.Highlight(false); // hide tooltip
 };
 
-GlassLab.InventoryMenuSlot.prototype._onFoodDropped = function()
+GlassLab.InventoryMenuSlot.prototype._onFoodReleased = function()
 {
     this.foodSprite.alpha = 1.0;
 };
