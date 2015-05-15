@@ -20,14 +20,14 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "There you are, Rancher! I’m your assistant, Snedley. We’re burning daylight, so best get started. Your *cargo* is in here."
+          "text": "There you are, rancher! I’m your assistant, Horatio Snedley. We’re burning daylight, so best get started. Your *cargo* is in here."
         },
         {
           "__type": "ShowArrowAction",
-          "direction": "left",
+          "direction": "down",
           "anchor": "bottomLeftAnchor",
-          "xPosition": 180,
-          "yPosition": -60
+          "xPosition": 60,
+          "yPosition": -110
         },
         {
           "__type": "AnimateButtonAction",
@@ -72,7 +72,7 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "Hmm, it liked that broccoli, but it's not full yet. See how *much broccoli* it needs."
+          "text": "Ah, a common *rammus gnarlus!* It liked that broccoli, but it's not full yet. See *how much broccoli* it needs."
         },
         {
           "__type": "WaitForCondition",
@@ -104,7 +104,7 @@
           "__type": "ShowArrowAction",
           "direction": "left",
           "anchor": "topLeftAnchor",
-          "xPosition": 180,
+          "xPosition": 110,
           "yPosition": 60
         },
         {
@@ -121,7 +121,7 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "You've mastered the *baby ram*! You can open your *notes* any time to check what creatures eat."
+          "text": "You've mastered the *juvenile rammus*! You can open your *notes* any time to check what creatures eat."
         },
         {
           "__type": "WaitForCondition",

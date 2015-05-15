@@ -17,7 +17,7 @@
         "serializedActions": [
           {
             "__type": "ShowAssistantDialogueAction",
-            "text": "One of the rammuses has *grown up*. It now needs *two* kinds of food. See if you can *feed it.*"
+            "text": "Look at that! One of the rammuses has *grown up*. It now needs *two* kinds of food. Try *feeding it.*"
           },
           {
             "__type": "WaitForCondition",
@@ -58,10 +58,10 @@
      "problemType": "3UR1MTc",
      "hideBackgroundOrders": true,
      "challengeData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "rammus",
         "numCreatures": 1,
-        "description": "Dear Friend! I have 1 ADULT RAMMUS. Please send me enough TOTAL FOOD for it!",
+        "description": "Well, hello, rancher! I am Isabel Noether, rammus enthusiast. I hear you have raised rammuses to adulthood! I have *[numCreatures] adult rammus*. How much *total food* must it eat?",
         "askTotalFood": true,
         "noFoodEntries": true,
         "reward": 30
@@ -119,11 +119,11 @@
           "problemType": "3UR2MTa",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Isabel Noether",
             "creatureType": "rammus",
             "totalNumFood": 112,
             "noFoodEntries": true,
-            "description": "Dear Friend! I have 112 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+            "description": "Well, well. You've come this far, but can you tell me how many *[creatureType]* I require to eat my *[totalNumFood] total food*?",
             "reward": 50
           }
         },
@@ -133,11 +133,11 @@
           "problemType": "3UR2MTa",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Isabel Noether",
             "creatureType": "rammus",
             "totalNumFood": 120,
             "noFoodEntries": true,
-            "description": "Dear Friend! I have 120 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+            "description": "Well, well. You've come this far, but can you tell me how many *[creatureType]* I require to eat my *[totalNumFood] total food*?",
             "reward": 50
           }
         },
@@ -147,11 +147,11 @@
           "problemType": "3UR2MTa",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Isabel Noether",
             "creatureType": "rammus",
-            "numFoodB": 136,
+            "totalNumFood": 136,
             "noFoodEntries": true,
-            "description": "Dear Friend! I have 136 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+            "description": "Well, well. You've come this far, but can you tell me how many *[creatureType]* I require to eat my *[totalNumFood] total food*?",
             "reward": 50
           }
         }
@@ -179,10 +179,10 @@
           "challengeId": "2.06b",
           "problemType": "3UR2MTb",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Marmaduke Biggs",
             "creatureType": "rammus",
             "totalNumFood": 184,
-            "description": "Dear Friend! I have 184 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+            "description": "Isabel is easy to please, her fondness for the rammus renders compassion. Hah! I have *[totalNumFood] total food*, and require an exact quantity of *[creatureType]* immediately!",
             "reward": 500
           },
           "boss": true,
@@ -227,10 +227,10 @@
             "challengeId": "2.02a",
             "problemType": "3UR2MC",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "rammus",
               "numCreatures": 15,
-              "description": "Dear Friend! I have 15 ADULT RAMMUSES. Please send me enough food for all of them!",
+              "description": "Oh dear. This plot is bigger than me. I have *[numCreatures] [creatureType]*, and I need food for all of them!",
               "reward": 40
             }
           },
@@ -239,10 +239,10 @@
             "challengeId": "2.02c",
             "problemType": "3UR2MC",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "rammus",
               "numCreatures": 22,
-              "description": "Dear Friend! I have 22 ADULT RAMMUSES. Please send me enough food for all of them!",
+              "description": "Jealousy is just love and hate at the same time. I have *[numCreatures] [creatureType]*, please send food for all of them!",
               "reward": 40
             }
           }
@@ -296,10 +296,10 @@
        "challengeId": "2.06a",
        "problemType": "3UR2MTb",
        "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Isabel Noether",
           "creatureType": "rammus",
           "totalNumFood": 88,
-          "description": "Dear Friend! I have 88 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+          "description": "Let's break this down. I have *[totalNumFood] total food*. Send me the *[creatureType]* to eat it, and tell me how much of each food!",
           "reward": 50
         }
       },
@@ -308,10 +308,10 @@
        "challengeId": "2.06d",
        "problemType": "3UR2MTb",
        "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Isabel Noether",
           "creatureType": "rammus",
           "totalNumFood": 80,
-          "description": "Dear Friend! I have 80 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+          "description": "It's not unusual to be loved by anyone. I have *[totalNumFood] total food*. Send me the *[creatureType]* to eat it, and tell me how much of each food!",
           "reward": 50
         }
       },
@@ -320,10 +320,10 @@
        "challengeId": "2.06e",
        "problemType": "3UR2MTb",
        "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Isabel Noether",
           "creatureType": "rammus",
           "totalNumFood": 72,
-          "description": "Dear Friend! I have 72 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+          "description": "Let's tear the roof off this one. I have *[totalNumFood] total food*. Send me the *[creatureType]* to eat it, and tell me how much of each food!",
           "reward": 50
         }
       }
@@ -337,12 +337,12 @@
        "challengeId": "2.07a",
        "problemType": "3UR1MTc",
        "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Isabel Noether",
           "creatureType": "rammus",
           "numCreatures": 8,
           "askTotalFood": true,
           "noFoodEntries": true,
-          "description": "Dear Friend! I have 8 ADULT RAMMUSES. Please send me enough TOTAL FOOD for them!",
+          "description": "It's just one of those funky things. I have *[numCreatures] [creatureType]* -- please send enough *total food* for them!",
           "reward": 40
         }
       },
@@ -351,12 +351,12 @@
        "challengeId": "2.07b",
        "problemType": "3UR2MTc",
        "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Isabel Noether",
           "creatureType": "rammus",
           "numCreatures": 13,
           "askTotalFood": true,
           "noFoodEntries": true,
-          "description": "Dear Friend! I have 13 ADULT RAMMUSES. Please send me enough TOTAL FOOD for them!",
+          "description": "Let's keep it together. I have *[numCreatures] [creatureType]* -- please send enough *total food* for them!",
           "reward": 40
         }
       }
@@ -370,10 +370,10 @@
          "challengeId": "2.04a",
          "problemType": "3UR2MF",
          "challengeData": {
-           "client": "Archibold Huxley III",
+           "client": "Isabel Noether",
            "creatureType": "rammus",
            "numFoodB": 65,
-           "description": "Dear Friend! I have 65 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+           "description": "I might press the button just so you know my discretion. I have *[numFoodB] [foodTypeB]* -- how many *[creatureType]* will eat this exact amount?",
            "reward": 40
           }
         },
@@ -382,10 +382,10 @@
          "challengeId": "2.03b",
          "problemType": "3UR2MF",
          "challengeData": {
-           "client": "Archibold Huxley III",
+           "client": "Isabel Noether",
            "creatureType": "rammus",
            "numFoodA": 54,
-           "description": "Dear Friend! I have 54 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+           "description": "We all just want to get along. I have *[numFoodA] [foodTypeA]* -- how many *[creatureType]* will eat this exact amount?",
            "reward": 40
           }
         },
@@ -394,10 +394,10 @@
       "challengeId": "2.03a",
       "problemType": "3UR2MF",
       "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Isabel Noether",
           "creatureType": "rammus",
           "numFoodA": 48,
-          "description": "Dear Friend! I have 48 BROCCOLI. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+          "description": "Marmaduke isn't so bad. Most of all he needs the funk. I have *[numFoodA] [foodTypeA]* -- how many *[creatureType]* will eat this exact amount?",
           "reward": 40
         }
     },
@@ -407,10 +407,10 @@
           "problemType": "3UR2MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Isabel Noether",
             "creatureType": "rammus",
             "numFoodB": 130,
-            "description": "Dear Friend! I have 130 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+            "description": "There are cans everywhere here and I need your help. I have *[numFoodB] [foodTypeB]* -- how many *[creatureType]* can get rid of them for me?",
             "reward": 40
           }
         }
@@ -437,10 +437,10 @@
       "orderId": "2.04c",
       "problemType": "3UR2MF",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "rammus",
         "numFoodB": 95,
-        "description": "Dear Friend! I have 95 TINCANS. Please send me the exact number of ADULT RAMMUSES to eat all my food!",
+        "description": "This can problem is out of hand. I have *[numFoodB] [foodTypeB]* -- how many *[creatureType]* can deal with them?",
         "reward": 40
       }
     },
@@ -448,11 +448,11 @@
       "orderId": "2.05b",
       "problemType": "3UR2MTa",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "rammus",
         "totalNumFood": 192,
         "noFoodEntries": true,
-        "description": "Dear Friend! I have 192 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+        "description": "A chance is like a picture, it'd be nice if you took it. I have *[totalNumFood] total food*. Send me the *[creatureType]* to eat it.",
         "reward": 50
       }
     },
@@ -460,10 +460,10 @@
       "orderId": "2.06c",
       "problemType": "3UR2MTb",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "rammus",
         "totalNumFood": 216,
-        "description": "Dear Friend! I have 216 TOTAL FOOD. Please send me the exact number of ADULT RAMMUSES to eat all my food! How much of each food type do I have?",
+        "description": "I'm about to say a true thing. I have *[totalNumFood] total food*. Send me the *[creatureType]* to eat it, and tell me how much of each food!",
         "reward": 50
       }
     }
