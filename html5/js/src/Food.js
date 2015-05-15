@@ -142,6 +142,12 @@ GlassLab.Food = function(game, type) {
     this.sprite.addChild(this.image);
     this.image.anchor.setTo(0.5, 0.58);
     this.image.scale.x = this.image.scale.y = 1.25;
+
+    // reduce the image hitbox since it was way larger than necessary
+    var circle = new Phaser.Circle(0, -10, 50);
+    //this.image.addChild(this.game.make.graphics().beginFill(0xffffff, 0.5).drawCircle(circle.x, circle.y, circle.radius));
+    this.image.hitArea = circle;
+
     this._setImage();
 
     this.canDropInPen = true; // setting on WorldObject
@@ -160,14 +166,14 @@ GlassLab.Food = function(game, type) {
     this.eaters = []; // list of creatures that are waiting to eat this food (waiting until they get a full eating group)
     this.prevEaters = []; // list of creatures who were waiting to eat this food but gave up
 
-    this.hungerBar = new GlassLab.FillBar(this.game, 60, 25);
+/*    this.hungerBar = new GlassLab.FillBar(this.game, 60, 25);
     this.hungerBar.sprite.scale.setTo(0.5, 0.5);
     this.hungerBar.sprite.angle = -90;
     this.hungerBar.setAmount(0, 1);
     this.hungerBar.show(false);
     this.hungerBar.sprite.x = 60;
     this.hungerBar.sprite.y = -60;
-    this.sprite.addChild(this.hungerBar.sprite);
+    this.sprite.addChild(this.hungerBar.sprite);*/
 
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 
@@ -261,7 +267,7 @@ GlassLab.Food.prototype.BeEaten = function(animStyle) {
         //this.hungerBar.setAmount(0, this.health, true); // Now that creatures eat in groups, we no longer need the health bar.
     } else {
         this.health = 0;
-        if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
+        //if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
         if (animStyle == "long") {
             this.image.animations.add("eat", Phaser.Animation.generateFrameNames(this.type + "_death_long_", 5, 48, ".png", 5), 24, false);
         } else { // assume it's short
