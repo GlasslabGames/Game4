@@ -24,10 +24,10 @@
         },
         {
           "__type": "ShowArrowAction",
-          "direction": "down",
+          "direction": "left",
           "anchor": "bottomLeftAnchor",
-          "xPosition": 60,
-          "yPosition": -110
+          "xPosition": 180,
+          "yPosition": -60
         },
         {
           "__type": "AnimateButtonAction",
@@ -104,7 +104,7 @@
           "__type": "ShowArrowAction",
           "direction": "left",
           "anchor": "topLeftAnchor",
-          "xPosition": 110,
+          "xPosition": 180,
           "yPosition": 60
         },
         {

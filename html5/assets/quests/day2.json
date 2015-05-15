@@ -171,10 +171,10 @@
           },
           {
             "__type": "ShowArrowAction",
-            "direction": "up",
+            "direction": "left",
             "anchor": "topLeftAnchor",
-            "xPosition": 60,
-            "yPosition": 200
+            "xPosition": 180,
+            "yPosition": 160
           },
           {
             "__type": "WaitForCondition",
@@ -244,8 +244,8 @@
             "__type": "ShowArrowAction",
             "direction": "right",
             "anchor": "topRightAnchor",
-            "xPosition": -65,
-            "yPosition": 135
+            "xPosition": -140,
+            "yPosition": 125
           },
           {
             "__type": "WaitForCondition",
