@@ -33,18 +33,19 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.addChild(this.bgSprite);
     this.bgSpriteColorTween = null;
 
-    // slot image:
-    this.foodSprite = game.make.sprite(0, 0, GlassLab.FoodTypes[this.foodType].spriteName); //new GlassLab.InventoryMenuItem(this.game, this.foodType);
+    // Note that the draggable food item will be available if they're doing an order. Otherwise, the basic food sprite will be visible
+    //  and a new world food object will be created when they start to drag.
+
+    // food image, used when not doing an order:
+    this.foodSprite = game.make.sprite(0, 0, GlassLab.FoodTypes[this.foodType].spriteName);
     this.foodSprite.anchor.setTo(0.5, 0.5);
     this.foodSprite.scale.setTo(0.75, 0.75);
     this.addChild(this.foodSprite);
 
-    // draggable food item:
+    // food STICKER:
     this.draggableItem = new GlassLab.InventoryMenuItem(this.game, this.foodType);
     this.addChild(this.draggableItem);
 
-    // Note that the draggable food item will be available if they're doing an order. Otherwise, the basic food sprite will be visible
-    //  and a new world food object will be created when they start to drag.
 
     // locked slot image (coin):
     this.coinSprite = this.game.make.sprite(0, 0, "inventoryCoin");
@@ -124,6 +125,7 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
 
     // mouse events:
     this.events.onInputDown.add(this._onInputDown, this);
+    this.events.onInputUp.add(this._onInputUp, this);
     this.events.onInputOver.add(this._onOver, this);
     this.events.onInputOut.add(this._onOut, this);
 
@@ -137,14 +139,18 @@ GlassLab.InventoryMenuSlot.prototype.constructor = GlassLab.InventoryMenuSlot;
 GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
 {
     if (this.data.unlocked) {
-        if (this.draggableItem.visible) { // the draggable sticker if visible, so start dragging it
+        if (this.draggableItem.visible) {
+            // the draggable sticker is visible, so start dragging it
+            this.parent.dragging_sticker = this.draggableItem;
             this.draggableItem.draggableComponent.tryStartDrag();
-        } else { // if we're not in shipping mode, spawn a food and start dragging it
-            var food = new GlassLab.Food(this.game, this.foodType);
-            GLOBAL.hoverLayer.add(food);
-            food.snapToMouse();
-            food.isInitialDropAttempt = true;
-            food.draggableComponent.tryStartDrag();
+        } else {
+            // if we're not in shipping mode, spawn a food and start dragging it
+            this.parent.dragging_food = new GlassLab.Food(this.game, this.foodType);
+            GLOBAL.hoverLayer.add(this.parent.dragging_food);
+            this.parent.dragging_food.snapToMouse();
+            this.parent.dragging_food.isInitialDropAttempt = true;
+            this.parent.dragging_food.draggableComponent.tryStartDrag();
+            
             //GLOBAL.UILayer.add(food); // there might be a way to make the food start above the inventory, but it adds complications (like where it should be placed.)
 
             // TODO GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row}); // Incorrect name
@@ -152,6 +158,32 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
     } else if (!this.data.unlocked && this.data.cost > 0) {
         this._onPurchaseConfirmed();
     }
+
+    this.Highlight(false); // hide tooltip
+};
+
+GlassLab.InventoryMenuSlot.prototype._onInputUp = function(sprite, pointer)
+{
+    this.Highlight(false);
+};
+
+GlassLab.InventoryMenuSlot.prototype._onOver = function()
+{
+    var show_tooltip = true;
+
+    // check food AND sticker possibilities:
+    if (typeof(this.parent.dragging_food) != "undefined" && this.parent.dragging_food != null && this.parent.dragging_food.isHovering)
+        show_tooltip = false;
+    if (typeof(this.parent.dragging_sticker) != "undefined" && this.parent.dragging_sticker != null)
+        show_tooltip = false;
+
+    // show if needed:
+    if (show_tooltip) this.Highlight(true);
+};
+
+GlassLab.InventoryMenuSlot.prototype._onOut = function()
+{
+    this.Highlight(false);
 };
 
 GlassLab.InventoryMenuSlot.prototype._onPurchaseConfirmed = function()
@@ -368,22 +400,10 @@ GlassLab.InventoryMenuSlot.prototype.Highlight = function(yes_or_no)
     }
 };
 
-GlassLab.InventoryMenuSlot.prototype._onOver = function()
-{
-    if (!this.parent.dragging_item)
-        this.Highlight(true);
-};
-
-GlassLab.InventoryMenuSlot.prototype._onOut = function()
-{
-    if (!this.parent.dragging_item)
-        this.Highlight(false);
-};
-
 
 
 // This was the piece of food that gets dragged out into the world, but we now create the food itself immediately.
-// So this class currently isn't used, but leaving it here for reference (e.g. the UI functionality)
+// This class is used just for the sticker in Shipping Mode
 GlassLab.InventoryMenuItem = function(game, foodType)
 {
     this.foodType = foodType;
@@ -409,25 +429,18 @@ GlassLab.InventoryMenuItem.prototype.constructor = GlassLab.InventoryMenuItem;
 
 GlassLab.InventoryMenuItem.prototype._onOver = function()
 {
-    if (!this.parent.parent.dragging_item) {
-        // for _onOver is called AFTER _onDragEnd. need to compensate for menuslot Highlighting purposes:
-        if (this.parent.parent.dropped_item)
-            this.parent.parent.dropped_item = false;
-        else
-            this.parent.Highlight(true);
-    }
+    if (this.parent.parent.dragging_sticker == null && this._at_start_point)
+        this.parent.Highlight(true);
 };
 
 GlassLab.InventoryMenuItem.prototype._onOut = function()
 {
-    if (!this.parent.parent.dragging_item)
-        this.parent.Highlight(false);
+    this.parent.Highlight(false);
 };
 
 GlassLab.InventoryMenuItem.prototype._onStartDrag = function()
 {
     this.parent.Highlight(false);
-    this.parent.parent.dragging_item = true; // this.parent.parent = InventoryMenu
 };
 
 GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
@@ -437,8 +450,7 @@ GlassLab.InventoryMenuItem.prototype._onEndDrag = function(target)
         this._jumpToStart(); // move the sprite back
     } // else it will fly back thanks to uiDraggable
 
-    this.parent.parent.dropped_item = true; // this.parent.parent = InventoryMenu
-    this.parent.parent.dragging_item = false;
+    this.parent.parent.dragging_sticker = null;
 };
 
 GlassLab.InventoryMenuItem.prototype._jumpToStart = function()

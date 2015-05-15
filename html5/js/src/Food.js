@@ -147,6 +147,7 @@ GlassLab.Food = function(game, type) {
     this.canDropInPen = true; // setting on WorldObject
     this.destroyIfOutOfBounds = true; // allow the food to be destroyed if it's dropped somewhere invalid
 
+    this.isHovering = false;
     this.hoveredPen = null; // track which pen this food is being dragged over
     this.hoveredPenSection = null; // track which section of the pen the food is being dragged over
 
@@ -199,6 +200,7 @@ GlassLab.Food.prototype._onDestroy = function() {
 
 GlassLab.Food.prototype._onStartDrag = function () {
     GlassLab.WorldObject.prototype._onStartDrag.call(this);
+    this.isHovering = true;
     var index = GLOBAL.foodInWorld.indexOf(this);
     if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
     GLOBAL.hoverLayer.add(this);
@@ -207,6 +209,7 @@ GlassLab.Food.prototype._onStartDrag = function () {
 
 GlassLab.Food.prototype._onEndDrag = function () {
     GlassLab.WorldObject.prototype._onEndDrag.call(this);
+    this.isHovering = false;
     if (this.destroyed) return; // the world object might have destroyed itself if it was out of bounds
 
     var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);

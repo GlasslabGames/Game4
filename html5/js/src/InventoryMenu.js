@@ -12,8 +12,8 @@ GlassLab.InventoryMenu = function(game)
     this.x = 100;
 
     // for tracking drag/drop state of any of inventory items (used to finesse onOver/onOut visual changes of items):
-    this.dragging_item = false;
-    this.dropped_item = false;
+    this.dragging_food = null; // ptr to food item
+    this.dragging_sticker = null; // pt to sticker
 
     this.items = []; // not certain if this is being used
 
