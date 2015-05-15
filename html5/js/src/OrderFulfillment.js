@@ -304,9 +304,9 @@ GlassLab.OrderFulfillment.prototype._crateShipped = function() {
     this.data.outcomeDetail = this.crate.problemFoods;
     var response = this._getResponse();
     // this is kinda messy but we need all this info for the receipt on the response letter
-    this.data.shipped = { numCreatures: response.creatures, numFoodA: response.food[0], numFoodB: response.food[1],
-        foodTypeA: this.foodInputs[0].currentType, foodTypeB: this.foodInputs[1].currentType };
-    //console.log(this.data.shipped);
+    this.data.shipped = { numCreatures: this.crate.numCreatures, numFoodA: this.crate.numFoods[0], numFoodB: this.crate.numFoods[1] || 0,
+        foodTypeA: this.crate.foodTypes[0], foodTypeB: this.crate.foodTypes[1] };
+    console.log(this.data.shipped);
 
     if (this.crate.result == GlassLab.results.satisfied) {
         var response = this._getResponse();
