@@ -33,10 +33,9 @@ GlassLab.UIManager = function(game)
     this.centerAnchor.addChild(this.bonusModal);
 
     this.tutorialArrow = this.game.add.sprite(0,0,"tutorialArrow");
-    this.tutorialArrow.scale.set(0.5, 0.5);
+    this.tutorialArrow.animations.add("anim");
+    this.tutorialArrow.play("anim", 24, true);
     this.tutorialArrow.anchor.set(1.1, 0.5);
-    this.tutorialArrowTween = game.add.tween(this.tutorialArrow.scale).to( { x: 0.55 }, 300, Phaser.Easing.Linear.InOut, true, 0, 150, true);
-    this.tutorialArrowTween.pause();
     this.tutorialArrow.visible = false;
 
     this.flyingCoins = this.transitionAnchor.addChild(game.make.sprite());
@@ -108,12 +107,11 @@ GlassLab.UIManager.prototype.showAnchoredArrow = function(direction, anchorName,
 GlassLab.UIManager.prototype.showArrow = function(direction, parent, x, y) {
     if (!parent) return;
 
-    this.tutorialArrowTween.resume();
     var angle = 0;
     switch (direction) {
-        case "left": angle = 180; break
-        case "up": angle = -90; break;
-        case "down": angle = 90; break;
+        case "right": angle = 180; break
+        case "up": angle = 90; break;
+        case "down": angle = -90; break;
     }
     this.tutorialArrow.visible = true;
     this.tutorialArrow.parent = parent;
@@ -123,7 +121,6 @@ GlassLab.UIManager.prototype.showArrow = function(direction, parent, x, y) {
 };
 
 GlassLab.UIManager.prototype.hideArrow = function() {
-    this.tutorialArrowTween.pause();
     this.tutorialArrow.visible = false;
 };
 
@@ -147,7 +144,16 @@ GlassLab.UIManager.prototype.startFlyingCoins = function(callback, callbackConte
     // Start each coin 1/10s of a second apart
     for (var i = 0; i < this.flyingCoins.children.length; i++) {
         var coin = this.flyingCoins.getChildAt(i);
+        coin.visible = true;
         this.game.time.events.add(100*i, function() { this.play("fly"); }, coin);
+    }
+};
+
+GlassLab.UIManager.prototype.hideFlyingCoins = function() {
+    for (var i = 0; i < this.flyingCoins.children.length; i++) {
+        var coin = this.flyingCoins.getChildAt(i);
+        if (coin.animations.currentAnim) coin.animations.currentAnim.stop(true, true);
+        coin.visible = false;
     }
 };
 

@@ -29,19 +29,7 @@ GlassLab.MailManager.prototype.ShowMail = function(auto)
 {
     if (this.rewards.length == 0)
     {
-        if (this.availableOrders.length != 0)
-        {
-            GLOBAL.UIManager.showInsteadOfOtherWindows(this.ordersMenu);
-        }
-        else if (!this.showingModal)
-        {
-            GLOBAL.assistant.showModal("You don't have any mail!", function()
-            {
-                this.showingModal = false;
-            }.bind(this));
-
-            this.showingModal = true;
-        }
+        GLOBAL.UIManager.showInsteadOfOtherWindows(this.ordersMenu);
     }
     else
     {

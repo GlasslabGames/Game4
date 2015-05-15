@@ -60,7 +60,7 @@ GlassLab.CreatureManager = function (game) {
             },
             displayNames: {
                 singular: "juvenile unifox",
-                plural: "juvenile unifoxi"
+                plural: "juvenile unifoxes"
             },
             unlocked: false,
             spriteName: "babyunifox",
@@ -81,7 +81,7 @@ GlassLab.CreatureManager = function (game) {
             },
             displayNames: {
                 singular: "unifox",
-                plural: "unifoxi"
+                plural: "unifoxes"
             },
             unlocked: false,
             spriteName: "unifox",

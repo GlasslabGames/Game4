@@ -688,6 +688,24 @@ GlassLab.FeedingPen.prototype.tryDropFood = function(foodType, tile) {
     this.refreshContents();
     this.checkPenStatus();
 
+    // If they dropped a food type that the creatures don't like, bounce the journal
+    var creatureType = this._getCurrentCreatureType();
+    if (creatureType && GLOBAL.creatureManager.GetCreatureData(creatureType) &&
+        GLOBAL.creatureManager.GetCreatureData(creatureType).unlocked) {
+        var desiredFood = GLOBAL.creatureManager.GetCreatureData(creatureType).desiredFood;
+        var ok = false;
+        for (var i = 0; i < desiredFood.length; i++) {
+            if (desiredFood[i].type == foodType) {
+                ok = true;
+                break;
+            }
+        }
+        if (!ok) {
+            GLOBAL.UIManager.journalButton.toggleActive(true);
+            GLOBAL.Journal.wantToShow = creatureType; // open to the correct page
+        }
+    }
+
     GlassLabSDK.saveTelemEvent("set_pen_food", {
         pen_id: this.id,
         previous_food_type: prevFoodType || "",

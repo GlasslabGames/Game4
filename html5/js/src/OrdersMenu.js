@@ -71,6 +71,15 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.prevPageButton.bg.scale.x *= -1;
     this.prevPageButton.label.x += 5;
     this.sprite.addChild(this.prevPageButton);
+
+    // If there's no mail, we show a totally different popup
+    this.noMailPopup = this.game.make.sprite();
+    this.addChild(this.noMailPopup);
+    var sprite = this.noMailPopup.addChild(this.game.make.sprite(0, -50, "noMailPopup"));
+    sprite.anchor.setTo(0.5, 0.5);
+    var label = sprite.addChild(this.game.make.text(85, 0, "Looks like your mailbox\nis empty!", {font: "14pt EnzoBlack", fill: "#cccccc"}));
+    GlassLab.Util.PixelSnapAnchor(label);
+    label.anchor.setTo(0.5, 0.5);
 };
 
 GlassLab.OrdersMenu.prototype = Object.create(GlassLab.UIWindow.prototype);
@@ -88,11 +97,6 @@ GlassLab.OrdersMenu.prototype._onPrevPagePressed = function()
     this.show(this.currentPage-1);
 
     GLOBAL.audioManager.playSound("pageTurnSound");
-};
-
-GlassLab.OrdersMenu.prototype.IsShowing = function()
-{
-    return this.sprite.visible;
 };
 
 GlassLab.OrdersMenu.prototype.Refresh = function()
@@ -123,6 +127,15 @@ GlassLab.OrdersMenu.prototype.Refresh = function()
     }
 
     GlassLab.Util.SetColoredText(this.descriptionLabel, text, "#807c7b", "#994c4e");
+
+    var clientNames = ["Elias Petters", "Lyda Ross", "Isabel Noether", "Marmaduke Biggs"]; // this order corresponds to the photo order as loaded by InitializationState
+    var clientIndex = clientNames.indexOf(this.data.client);
+    if (clientIndex > -1) {
+        this.portrait.loadTexture("clientPhoto"+clientIndex);
+    } else {
+        console.error("There's no photo that matches",this.data.client);
+        // and just keep the same photo as last time
+    }
 
     this.clientNameLabel.setText(this.data.client);
     this.rewardAmountLabel.setText("$"+this.data.reward);
@@ -155,11 +168,16 @@ GlassLab.OrdersMenu.prototype.show = function(orderNum)
     GlassLab.UIWindow.prototype.show.call(this);
     if (!this.sprite.visible) GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
 
-    if (typeof orderNum == 'undefined') orderNum = 0;
+    // Show either the no mail popup or the actual orders, depending on whether we have mail to show
+    this.sprite.visible = GLOBAL.mailManager.availableOrders.length;
+    this.noMailPopup.visible = !GLOBAL.mailManager.availableOrders.length;
+    if (GLOBAL.mailManager.availableOrders.length) {
+        if (typeof orderNum == 'undefined') orderNum = 0;
 
-    this.currentPage = orderNum;
+        this.currentPage = orderNum;
 
-    this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
+        this.SetInfo(GLOBAL.mailManager.availableOrders[orderNum]);
+    }
 
     GlassLab.SignalManager.mailOpened.dispatch(orderNum);
 };

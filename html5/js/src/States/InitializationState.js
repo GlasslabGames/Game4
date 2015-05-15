@@ -68,6 +68,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('totalFood_ram_sticker', 'assets/images/food/food_stickers/total_food_ram.png');
     game.load.image('totalFood_bird_sticker', 'assets/images/food/food_stickers/total_food_bird.png');
     game.load.image('totalFood_unifox_sticker', 'assets/images/food/food_stickers/total_food_unifox.png');
+    game.load.image('poo_sticker', 'assets/images/food/food_stickers/poo_sticker.png');
 
     game.load.image('shadow', 'assets/images/iso_shadow2.png');
     game.load.atlasJSONHash('vomit', 'assets/images/vomit_vfx.png', 'assets/images/vomit_vfx.json');
@@ -147,10 +148,6 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('penArrowDown', 'assets/images/penArrow_downward.png');
     game.load.image('penArrowUp', 'assets/images/penArrow_upward.png');
 
-    game.load.image('bigO', 'assets/images/matchingGame_o.png');
-    game.load.image('bigX', 'assets/images/matchingGame_x.png');
-    game.load.image('tutorialArrow', 'assets/images/white_arrow.png');
-
     game.load.image('pauseMenuBackground', 'assets/images/pause_menu/hud_pause_background.png');
     game.load.image('pauseMenuButton', 'assets/images/pause_menu/hud_pause_button.png');
     game.load.image('pauseMenuButtonOutline', 'assets/images/pause_menu/hud_pause_button_outline.png');
@@ -193,12 +190,15 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('keyboardTooltip', 'assets/images/order/keyboard_popup.png');
 
     game.load.image('letterBg', 'assets/images/order/order_letter_bg.png');
-    game.load.image('bossmanPhoto', 'assets/images/order/order_photo_bossman.png');
     game.load.image('urgentStamp', 'assets/images/order/urgent_stamp.png');
     game.load.image('letterButtonBg', 'assets/images/order/order_fill_button_bg.png');
     game.load.image('approvedStamp', 'assets/images/order/order_fill_approve_stamp.png');
     game.load.image('receiptBg', 'assets/images/order/shipping_receipt_background.png');
     game.load.image('receiptX', 'assets/images/order/shipping_receipt_x.png');
+
+    for (var i = 0; i < 4; i++) {
+        game.load.image('clientPhoto'+i, 'assets/images/order/character_photos/character_photos_customer_'+(i+1)+'.png');
+    }
 
     game.load.image('bigCoin', 'assets/images/order/order_response_big_coin.png');
     game.load.atlasJSONHash('coinAnim', 'assets/images/order/get_money.png', 'assets/images/order/get_money.json');
@@ -238,8 +238,6 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('bonusStickerDropzoneShader', 'assets/images/bonus_game/bonus_sticker_dropzone_shader.png');
     game.load.image('bonusStickerOverlay', 'assets/images/bonus_game/bonus_sticker_overlay.png');
     game.load.atlasJSONHash('bonusAnims', 'assets/images/bonus_game/bonus_anims.png', 'assets/images/bonus_game/bonus_anims.json');
-        //game.load.image('bigO', 'assets/images/matchingGame_o.png');
-        //game.load.image('bigX', 'assets/images/matchingGame_x.png');
 
     // creature thought bubble
     game.load.image('exclamationPoint', 'assets/images/thought_bubble/thought_bubble_exclamation_point.png');
@@ -256,6 +254,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('speech_button', 'assets/images/assistant/assistant_response_button.png');
     game.load.image('speech_button_border', 'assets/images/assistant/assistant_response_border.png');
     game.load.atlasJSONHash('assistantAnim', 'assets/images/assistant/assistant_animations.png', 'assets/images/assistant/assistant_animations.json');
+    game.load.atlasJSONHash('tutorialArrow', 'assets/images/assistant/arrow_bounce.png', 'assets/images/assistant/arrow_bounce.json');
 
     // drop target
     game.load.image('dropTargetRing', 'assets/images/drop_target_outer_ring.png');
