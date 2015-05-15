@@ -154,6 +154,8 @@ GlassLab.Creature = function (game, type, startInPen) {
     this.onPathChanged = new Phaser.Signal();
     this.onDestinationReached = new Phaser.Signal();
 
+    this.unreachableTiles = []; // list of tails we tried to find a path to but couldn't, so we don't have to keep trying
+
     GlassLab.SignalManager.tilePenStateChanged.add(this._onTilePenStateChanged, this);
 };
 
@@ -354,6 +356,7 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
     var globalPosition = this.getGlobalPos();
     var start = GLOBAL.tileManager.GetTileIndexAtWorldPosition(globalPosition.x, globalPosition.y);
     var goal = GLOBAL.tileManager.GetTileIndexAtWorldPosition(x, y);
+    this.goal = GLOBAL.tileManager.GetTile(goal.x, goal.y);
     var path = GLOBAL.astar.findPath(start, goal, null, this.type);
 
     if (path.nodes.length > 0)
@@ -394,7 +397,8 @@ GlassLab.Creature.prototype.PathToIsoPosition = function(x, y)
     }
     else
     {
-        this.onDestinationReached.dispatch(this);
+        //console.log(this.name,"has no path! At all");
+        this._finishPath();
     }
 };
 
@@ -418,6 +422,7 @@ GlassLab.Creature.prototype._onStartDrag = function () {
 
 GlassLab.Creature.prototype._onEndDrag = function () {
     GlassLab.WorldObject.prototype._onEndDrag.call(this);
+    this.unreachableTiles = []; // reset which tiles we know we can't get to, since we might have moved
     this.lookForTargets(); // figure out the nearest target (will go to Traveling, WaitingForFood, or Idle)
 };
 
@@ -441,7 +446,7 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
 
         if (!tile.getIsWalkable(this.type))
         {
-            return false; // can't actually get there, so just stop trying to follow the path
+            return false; // there's not a valid path here, so return false
         }
 
         if (GLOBAL.debug)
@@ -513,6 +518,8 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
         // Find new point along path
         if (!this._setNextTargetPosition())
         {
+            //console.log(this.name,"has no next tile in the path path, so stop!");
+
             // HACK: Stop anim stops the current looping animation, which breaks CreatureStateCrazyRun.
             if (!this.running)
             {
@@ -520,7 +527,7 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
             }
             this.targetPosition.x = Number.NaN;
 
-            this.onDestinationReached.dispatch(this);
+            this._finishPath();
         }
 
         // Physics
@@ -547,6 +554,17 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
             var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(globalPos.x, globalPos.y);
             tile.tint = 0xffffff;
         }
+    }
+};
+
+GlassLab.Creature.prototype._finishPath = function (goal) {
+    if (this.goal && Phaser.Point.distance(this.goal.isoPosition, this.isoPosition) > GLOBAL.tileSize) {
+        // We stopped before reach the goal, so look sadly at it and wait for a new target to arise
+        this.standFacingPosition(this.goal.isoPosition);
+        this.StateTransitionTo(new GlassLab.CreatureStateEmoting(this.game, this, false));
+        this.unreachableTiles.push(this.goal);
+    } else {
+        this.onDestinationReached.dispatch(this);
     }
 };
 
@@ -695,7 +713,7 @@ GlassLab.Creature.prototype.HideHungerBar = function () {
 };
 
 GlassLab.Creature.prototype._onFoodDropped = function(food) {
-    if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
+    if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling || this.state instanceof GlassLab.CreatureStateEmoting) {
         var dist = this.getGlobalPos().distance(food.getGlobalPos());
         if (dist < 3 * GLOBAL.tileSize) {
             this.StateTransitionTo(new GlassLab.CreatureState()); // do nothing
@@ -706,7 +724,7 @@ GlassLab.Creature.prototype._onFoodDropped = function(food) {
 };
 
 GlassLab.Creature.prototype._onTargetsChanged = function() {
-    if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling) {
+    if (this.state instanceof GlassLab.CreatureStateIdle || this.state instanceof GlassLab.CreatureStateTraveling || this.state instanceof GlassLab.CreatureStateEmoting) {
         this.lookForTargets();
     }
 };
@@ -736,6 +754,9 @@ GlassLab.Creature.prototype.lookForTargets = function () {
 
     var minDist = null, bestTarget, bestRealDist; // minDist is the best weighted dist so far, but
     for (var i = 0, len = targets.length; i < len; i++) {
+        var tile = GLOBAL.tileManager.GetTileAtIsoWorldPosition(targets[i].pos.x, targets[i].pos.y);
+        if (this.unreachableTiles.indexOf(tile) > -1) continue; // we know we can't get to this tile
+
         var distSqr = Math.pow((this.isoX - targets[i].pos.x), 2) + Math.pow((this.isoY - targets[i].pos.y), 2);
         // now divide the distance by the priority so that targets with higher priority count as closer
         var weightedDistSqr = distSqr;
@@ -889,6 +910,8 @@ GlassLab.Creature.prototype.StateTransitionTo = function (targetState) {
     }
 
     this.state = targetState;
+
+    //console.log(this.name,"entering state",targetState);
 
     if (this.state) {
         this.state.Enter();
