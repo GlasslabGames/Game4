@@ -129,6 +129,9 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     this.events.onInputOver.add(this._onOver, this);
     this.events.onInputOut.add(this._onOut, this);
 
+    // signal listener:
+    GlassLab.SignalManager.foodDropped.add(this._onFoodDropped, this);
+
     this.Refresh();
 };
 
@@ -145,6 +148,7 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             this.draggableItem.draggableComponent.tryStartDrag();
         } else {
             // if we're not in shipping mode, spawn a food and start dragging it
+            this.foodSprite.alpha = 0.25;
             this.parent.dragging_food = new GlassLab.Food(this.game, this.foodType);
             GLOBAL.hoverLayer.add(this.parent.dragging_food);
             this.parent.dragging_food.snapToMouse();
@@ -161,6 +165,12 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
 
     this.Highlight(false); // hide tooltip
 };
+
+GlassLab.InventoryMenuSlot.prototype._onFoodDropped = function()
+{
+    this.foodSprite.alpha = 1.0;
+};
+
 
 GlassLab.InventoryMenuSlot.prototype._onInputUp = function(sprite, pointer)
 {
