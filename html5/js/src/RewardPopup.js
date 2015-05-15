@@ -194,7 +194,7 @@ GlassLab.RewardPopup.prototype.addReward = function() {
             GLOBAL.inventoryManager.AddMoney(this.reward); // only add the money when the flying coins reach the bank
         }, this);
     } else { // no flying coins, just add the money
-        GLOBAL.inventoryManager.AddMoney(this.reward); // only add the money when the flying coins reach the bank
+        GLOBAL.inventoryManager.AddMoney(this.reward);
     }
 };
 
@@ -202,9 +202,12 @@ GlassLab.RewardPopup.prototype.hide = function()
 {
     GlassLab.UIWindow.prototype.hide.call(this);
 
+    GLOBAL.UIManager.hideFlyingCoins(); // hide coins even if they were in the middle of an animation
+
     if (this.data) {
         // Since the reward popup shows the results of an order, closing it is the final step in resolving an order
         GlassLab.SignalManager.orderResolved.dispatch(this.data, (this.data.outcome == GlassLab.results.satisfied));
+        this.data = null; // this makes sure that when we hide the popup again, we don't count it as another order resolved
     }
 
     GlassLab.SignalManager.mailClosed.dispatch();

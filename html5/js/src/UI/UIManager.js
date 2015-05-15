@@ -144,7 +144,16 @@ GlassLab.UIManager.prototype.startFlyingCoins = function(callback, callbackConte
     // Start each coin 1/10s of a second apart
     for (var i = 0; i < this.flyingCoins.children.length; i++) {
         var coin = this.flyingCoins.getChildAt(i);
+        coin.visible = true;
         this.game.time.events.add(100*i, function() { this.play("fly"); }, coin);
+    }
+};
+
+GlassLab.UIManager.prototype.hideFlyingCoins = function() {
+    for (var i = 0; i < this.flyingCoins.children.length; i++) {
+        var coin = this.flyingCoins.getChildAt(i);
+        if (coin.animations.currentAnim) coin.animations.currentAnim.stop(true, true);
+        coin.visible = false;
     }
 };
 
