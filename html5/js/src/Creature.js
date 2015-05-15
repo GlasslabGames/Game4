@@ -441,10 +441,7 @@ GlassLab.Creature.prototype._setNextTargetPosition = function()
 
         if (!tile.getIsWalkable(this.type))
         {
-            this._clearPath();
-            this.onDestinationReached.dispatch(this);
-
-            return false;
+            return false; // can't actually get there, so just stop trying to follow the path
         }
 
         if (GLOBAL.debug)
