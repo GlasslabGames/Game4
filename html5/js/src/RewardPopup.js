@@ -71,10 +71,26 @@ GlassLab.RewardPopup.prototype.show = function(data)
 
     var creatureAsk = !("numCreatures" in this.data); // the player had to fill in the amount of creatures
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
+
+    // There's a special case where 1 of the 2 food types is asked for and the number of creatures is asked for as well.
+    var singleProvidedFood = null; // when this is set, it means the other food was asked for.
+    if (creatureAsk && creatureInfo.desiredFood.length > 1) {
+        if ("numFoodA" in this.data) singleProvidedFood = creatureInfo.desiredFood[0].type;
+        if ("numFoodB" in this.data) {
+            if (singleProvidedFood) singleProvidedFood = null; // if both numFoodA and numFoodB are provided, there's no singleProvided food
+            else singleProvidedFood = creatureInfo.desiredFood[1].type;
+        }
+    }
+
     var creatures = creatureInfo.displayNames.plural;
     var detail = data.outcomeDetail;
     var foodNames = (detail && GlassLab.FoodTypes[detail[0]] && GlassLab.FoodTypes[detail[0]].displayNames) || {singular: "food", plural: "food"};
     var uncountable = (foodNames.plural == foodNames.singular); // e.g. "meat" is uncountable, "apples" is not
+
+    if (singleProvidedFood) {
+        var providedFoodName = GlassLab.FoodTypes[singleProvidedFood].displayNames.plural.toLowerCase();
+        var providedUncountable = (GlassLab.FoodTypes[singleProvidedFood].displayNames.plural == GlassLab.FoodTypes[singleProvidedFood].displayNames.singular);
+    }
 
     var photo = creatureInfo.spriteName + "_orderPhoto_";
     var string = "Dear Rancher," + "\n\n";
@@ -89,32 +105,44 @@ GlassLab.RewardPopup.prototype.show = function(data)
             photo += "wrongFood";
             break;
         case GlassLab.results.sick:
-            if (creatureAsk) string += "You sent too few " + creatures + " to eat all this food," //"+(uncountable? "this ":"these ")+foodNames.plural.toLowerCase()+",";
-            else string += "You sent too "+(uncountable? "much ":"many ")+foodNames.plural.toLowerCase()+" for these " + creatures + " to eat,";
+            if (creatureAsk) {
+                string += "You sent too few " + creatures + " to eat all ";
+                if (singleProvidedFood) string += (providedUncountable? "this ":"these ") + providedFoodName + ",";
+                else string += "this food,";
+            } else string += "You sent too "+(uncountable? "much ":"many ")+foodNames.plural.toLowerCase()+" for these " + creatures + " to eat,";
             string += " so they got sick!";
             photo += "vomit";
             break;
         case GlassLab.results.hungry:
-            if (creatureAsk) string += "You sent too many " + creatures + " and there wasn't enough food for all of them,"//+(uncountable? "wasn't" : "weren't")+" enough "+foodNames.plural.toLowerCase()+" for all of them,";
-            else string += "You didn't send enough "+foodNames.plural.toLowerCase()+" for all of these "+ creatures + ",";
+            if (creatureAsk) {
+                string += "You sent too many " + creatures + " and there ";
+                if (singleProvidedFood) string += (providedUncountable? "wasn't enough ":"weren't enough ") + providedFoodName;
+                else string += "wasn't enough food";
+                string += " for all of them,";
+            } else string += "You didn't send enough "+foodNames.plural.toLowerCase()+" for all of these "+ creatures + ",";
             string += " so they're still hungry!";
             photo += "cry";
             break;
         case GlassLab.results.wrongCreatureNumber:
-            var numTotalFood = this.data.totalNumFood || "some";
-            string += "I asked you to send the correct number of "+ creatures + " to eat "+ numTotalFood +" total food, but you sent too "+data.outcomeDetail+" "+ creatures + "!";
+            string += "I asked you to send the correct number of "+ creatures + " to eat "+ this.data.totalNumFood +" total food, but you sent too "+data.outcomeDetail+" "+ creatures + "!";
             photo += "cry";
             break;
         case GlassLab.results.wrongTotalFood:
             string += "You wrote on the Packing Slip that your shipment contained "+detail+" total food, but you didn't actually send that amount!";
             photo += "cry";
             break;
+        case GlassLab.results.wrongFoodSum:
+            string += "I asked you to send " + this.data.totalNumFood + " total food, but you sent "+ data.outcomeDetail +"total food instead!";
+            photo += "cry";
+            break;
     }
 
     // Now if the result was sick or hungry, we might need to include info about the second kind of food as well.
-    if ((data.outcome == GlassLab.results.sick || data.outcome == GlassLab.results.hungry) && !creatureAsk &&
-        detail[1] && GlassLab.FoodTypes[detail[1]]) { // add a bit about the 2nd wrong food
-        string += " The amount of "+GlassLab.FoodTypes[detail[1]].displayNames.plural.toLowerCase()+" wasn't right either!";
+    if (data.outcome == GlassLab.results.sick || data.outcome == GlassLab.results.hungry) {
+        var wrongFoodType;
+        if (!creatureAsk && detail[1] && GlassLab.FoodTypes[detail[1]]) wrongFoodType = detail[1];
+        else if (singleProvidedFood) wrongFoodType = detail[1];
+        if (wrongFoodType) string += " The amount of "+GlassLab.FoodTypes[wrongFoodType].displayNames.plural.toLowerCase()+" wasn't right either!";
     }
 
     if (data.outcome != GlassLab.results.satisfied) {

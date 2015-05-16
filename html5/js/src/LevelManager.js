@@ -73,13 +73,19 @@ GlassLab.LevelManager = function(game)
             {
                 "client": "Archibold Huxley III",
                 "company": "Rupture Farms",
-                //"numCreatures": 9,
-                "numFoodA":12,
-                "creatureType": "baby_bird",
+                "numFoodB":5,
+                "creatureType": "rammus",
                 "description": "blah *blah* blah",
-                "reward": 200,
-                hint: true,
-                showTooltip: true
+                "reward": 200
+            },
+            {
+                "client": "Archibold Huxley III",
+                "company": "Rupture Farms",
+                "numCreatures": 3,
+                "numFoodA":4,
+                "creatureType": "baby_bird",
+                "description": "blah *blah* blah 2",
+                "reward": 200
             },
             {
                 client: "Archibold Huxley III",
