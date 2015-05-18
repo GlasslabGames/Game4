@@ -153,10 +153,10 @@
           "problemType": "3BR3MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Elias Petters",
             "creatureType": "bird",
             "numFoodB": 62,
-            "description": "Dear Friend! I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to eat all my food!",
+            "description": "These [creatureType] are rather challenging to satisfy. I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to eat it.",
             "reward": 250,
             "creatureWidth": 3
           }
@@ -167,10 +167,10 @@
           "problemType": "3BR3MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Elias Petters",
             "creatureType": "bird",
             "numFoodB": 66,
-            "description": "Dear Friend! I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to eat all my food!",
+            "description": "I've only got 250 dollars in my pocket. I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to eat it.",
             "reward": 250,
             "creatureWidth": 3
           }
@@ -181,10 +181,10 @@
           "problemType": "3BR2MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Elias Petters",
             "creatureType": "bird",
             "numFoodA": 140,
-            "description": "Dear Friend! I have 140 MEAT. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
+            "description": "This is my moment. I'm trying to make it more than what it is. I have *[numFoodA] [foodTypeA]*. Please send me the exact number of *[creatureType]* to eat it.",
             "reward": 250,
             "creatureWidth": 3
           }
@@ -195,10 +195,10 @@
           "problemType": "3BR2MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Elias Petters",
             "creatureType": "bird",
             "numFoodA": 130,
-            "description": "Dear Friend! I have 130 MEAT. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
+            "description": "These [creatureType] are certainly ravenous. I have *[numFoodA] [foodTypeA]*. Please send me the exact number of *[creatureType]* to eat it.",
             "reward": 250,
             "creatureWidth": 3
           }
@@ -225,10 +225,10 @@
       "challengeId": "4.13",
       "problemType": "3BR2MTb",
       "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Marmaduke Biggs",
           "creatureType": "bird",
           "totalNumFood": 231,
-          "description": "Dear Friend! I have 231 TOTAL FOOD. Please send me the exact number of ADULT FLOCKINS to eat all my food! How much of each food type do I have?",
+          "description": "Elias might be forgiving, but I won't be. I have *[totalNumFood] total food*. Send me the exact number of *[creatureType]* to eat it, and without delay!",
           "reward": 2000,
           "creatureWidth": 3
         },
@@ -272,10 +272,10 @@
            "challengeId": "4.18a",
            "problemType": "3US2NTb",
            "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "totalNumFood": 85,
-              "description": "Dear Friend! I have 85 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
+              "description": "If you liked it then you should've put a ring on it. I have *[totalNumFood] total food*; please send exactly enough *[creatureType]* to eat it.",
               "reward": 50
             }
           },
@@ -284,10 +284,10 @@
            "challengeId": "4.18b",
            "problemType": "3US2NTb",
            "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "totalNumFood": 95,
-              "description": "Dear Friend! I have 95 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
+              "description": "The mature unifox is a shy and rare creature. I have *[totalNumFood] total food*; please send exactly enough *[creatureType]* to eat it.",
               "reward": 50
             }
           },
@@ -296,10 +296,10 @@
             "challengeId": "4.08a",
             "problemType": "3US1MTb",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "totalNumFood": 80,
-              "description": "Dear Friend! I have 80 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
+              "description": "The unifoxes may be a shy and gentle breed, but they are not imprecise. I have *[totalNumFood] total food*; please send exactly enough *[creatureType]* to eat it.",
               "reward": 50,
               "creatureWidth": 2
             }
@@ -309,10 +309,10 @@
             "challengeId": "4.08b",
             "problemType": "3US1MTb",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "totalNumFood": 90,
-              "description": "Dear Friend! I have 90 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food! How much of each food type do I have?",
+              "description": "Everyone dies, but not everyone really lives. I have *[totalNumFood] total food*; please send exactly enough *[creatureType]* to eat it.",
               "reward": 50,
               "creatureWidth": 2
             }
@@ -327,11 +327,11 @@
           "challengeId": "4.14a",
           "problemType": "3BR2MTa",
           "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Elias Petters",
               "creatureType": "bird",
               "totalNumFood": 168,
               "noFoodEntries": true,
-              "description": "Dear Friend! I have 168 TOTAL FOOD. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
+              "description": "These bold and big flockins are famished. I have *[totalNumFood] total food*; please send exactly enough *[creatureType]* to eat it all.",
               "reward": 50,
               "creatureWidth": 3
             }
@@ -341,11 +341,11 @@
           "challengeId": "4.14b",
           "problemType": "3BR2MTa",
           "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Elias Petters",
               "creatureType": "bird",
               "totalNumFood": 175,
               "noFoodEntries": true,
-              "description": "Dear Friend! I have 175 TOTAL FOOD. Please send me the exact number of ADULT FLOCKINS to eat all my food!",
+              "description": "Did Isabel tell you this was her moment? She always says that. I have *[totalNumFood] total food*; please send exactly enough *[creatureType]* to eat it.",
               "reward": 50,
               "creatureWidth": 3
             }
@@ -360,10 +360,10 @@
             "challengeId": "4.06",
             "problemType": "3US2MF",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "numFoodA": 112,
-              "description": "Dear Friend! I have 112 STRAWBERRIES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
+              "description": "An adult unifox is a thing of great beauty and rarity. I have *[numFoodA] [foodTypeA]*. Please send me the exact number of *[creatureType]* to eat it.",
               "reward": 50,
               "creatureWidth": 2
             }
@@ -373,10 +373,10 @@
             "challengeId": "4.05",
             "problemType": "3US2MF",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "numFoodB": 90,
-              "description": "Dear Friend! I have 90 PIZZA SLICES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
+              "description": "I ordered far too many pizzas and need a solution. I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to finish it off.",
               "reward": 50,
               "creatureWidth": 2
             }
@@ -386,10 +386,10 @@
             "challengeId": "4.16",
             "problemType": "3US2NF",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "numFoodA": 110,
-              "description": "Dear Friend! I have 110 STRAWBERRIES. Please send me the exact number of ADULT UNIFOXES to eat all my food!",
+              "description": "Elias has no appreciation for the finer things in life. I have *[numFoodA] [foodTypeA]*. Please send me the exact number of *[creatureType]* to eat it.",
               "reward": 50
             }
           },
@@ -398,10 +398,10 @@
            "challengeId": "4.15",
            "problemType": "3US1NF",
            "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Isabel Noether",
               "creatureType": "unifox",
               "numFoodB": 117,
-              "description": "Dear Friend! I have 117 PIZZA SLICES. Please send me the exact number of ADULT UNIFOX to eat all my food!",
+              "description": "This pizza parlor keeps mis-delivering pizzas. It's quite a nuisance. I have *[numFoodB] [foodTypeB]*. Please send me the exact number of *[creatureType]* to eat it.",
               "reward": 50
             }
           }
@@ -417,10 +417,10 @@
             "challengeId": "4.04a",
             "problemType": "3BR1MC",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Elias Petters",
               "creatureType": "bird",
               "numCreatures": 36,
-              "description": "Dear Friend! I have 36 ADULT BIRDS. Please send me enough food for all of them!",
+              "description": "Ah, the adult flockin! Such beauty, such magnificence! I have waited for them for so long. I have *[numCreatures] [creatureType]*, please send them food!",
               "reward": 70,
               "creatureWidth": 3
             }
@@ -430,10 +430,10 @@
             "challengeId": "4.04b",
             "problemType": "3BR1MC",
             "challengeData": {
-              "client": "Archibold Huxley III",
+              "client": "Elias Petters",
               "creatureType": "bird",
               "numCreatures": 33,
-              "description": "Dear Friend! I have 33 ADULT BIRDS. Please send me enough food for all of them!",
+              "description": "My flockins finally arrived, but their food is late! I have waited for them for so long. I have *[numCreatures] [creatureType]*, please send them food!",
               "reward": 70,
               "creatureWidth": 3
             } 
@@ -485,10 +485,10 @@
           "challengeId": "4.02a",
           "problemType": "3US2MC",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Isabel Noether",
             "creatureType": "unifox",
             "numCreatures": 30,
-            "description": "Dear Friend! I have 30 ADULT UNIFOX. Please send me enough food for all of them!",
+            "description": "My shy unifoxes crave the finest victuals. There are *[numCreatures]* among them, please ship all their food!",
             "reward": 40,
             "creatureWidth": 2
           }
@@ -498,10 +498,10 @@
           "challengeId": "4.02b",
           "problemType": "3US2MC",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Isabel Noether",
             "creatureType": "unifox",
             "numCreatures": 34,
-            "description": "Dear Friend! I have 34 ADULT UNIFOX. Please send me enough food for all of them!",
+            "description": "Can you not see that the unifox is the most mathematical of creatures? I have *[numCreatures]* fine specimens; what shall they eat?",
             "reward": 40,
             "creatureWidth": 2
           }
@@ -591,10 +591,10 @@
       "orderId": "4.12",
       "problemType": "3US2NC",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "unifox",
         "numCreatures": 37,
-        "description": "Dear Friend! I have 37 ADULT UNIFOX. Please send me enough food for all of them!",
+        "description": "Listen not to the advocates of the brash rammus or the flighty flockin; *unifoxes* are the finest. I have *[numCreatures] [creatureType]* -- please send their food!",
         "reward": 500
       }
     },
@@ -602,11 +602,11 @@
       "orderId": "4.17",
       "problemType": "3US2NTa",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "unifox",
         "totalNumFood": 145,
         "noFoodEntries": true,
-        "description": "Dear Friend! I have 145 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food!",
+        "description": "I desire to know only this: I have *[totalNumFood]*, exactly how many *[creatureType]* would eat it all?",
         "reward": 500
       }
     },
@@ -614,11 +614,11 @@
       "orderId": "4.09",
       "problemType": "3US1MTa",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "unifox",
         "totalNumFood": 130,
         "noFoodEntries": true,
-        "description": "Dear Friend! I have 130 TOTAL FOOD. Please send me the exact number of ADULT UNIFOX to eat all my food!",
+        "description": "Mastery of the *[creatureType]* is surely its own reward. I have *[totalNumFood]*, how many *[creatureType]* would it take to eat it all?",
         "reward": 500,
         "creatureWidth": 2
       }
@@ -627,10 +627,10 @@
       "orderId": "4.04c",
       "problemType": "3BR1MC",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Elias Petters",
         "creatureType": "bird",
         "numCreatures": 72,
-        "description": "Dear Friend! I have 72 ADULT BIRDS. Please send me enough food for all of them!",
+        "description": "Listen well and you shall be rewarded: I have *[numCreatures]* fine *[creatureType]*, please ship food in exact amounts to feed them!",
         "reward": 250,
         "creatureWidth": 3
       } 
