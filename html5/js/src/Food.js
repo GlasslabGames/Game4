@@ -12,7 +12,7 @@ GlassLab.FoodTypes = {
         spriteName: "broccoli",
         spriteOffsetWhileDragging: 5,
         color: 0x8cb149,
-        unlocked: true,
+        startUnlocked: true,
         cost: -1,
         available: true,
         displayNames: {
@@ -24,7 +24,7 @@ GlassLab.FoodTypes = {
         spriteName: "strawberry",
         spriteOffsetWhileDragging: 7,
         color: 0xef5067,
-        unlocked: true,
+        startUnlocked: true,
         cost: -1,
         available: true,
         displayNames: {
@@ -36,7 +36,6 @@ GlassLab.FoodTypes = {
         spriteName: "apple",
         spriteOffsetWhileDragging: 15,
         color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 20,
         available: true,
         displayNames: {
@@ -48,7 +47,6 @@ GlassLab.FoodTypes = {
         spriteName: "meat",
         spriteOffsetWhileDragging: 1,
         color: 0x975f3d, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 50,
         available: true,
         displayNames: {
@@ -60,7 +58,6 @@ GlassLab.FoodTypes = {
         spriteName: "tincan",
         spriteOffsetWhileDragging: -1,
         color: 0x99a2ac,
-        unlocked: false,
         cost: 500,
         available: true,
         displayNames: {
@@ -72,7 +69,6 @@ GlassLab.FoodTypes = {
         spriteName: "corn",
         spriteOffsetWhileDragging: -1,
         color: 0x99a2ac,
-        unlocked: false,
         cost: 20,
         available: true,
         displayNames: {
@@ -84,7 +80,6 @@ GlassLab.FoodTypes = {
         spriteName: "taco",
         spriteOffsetWhileDragging: 0,
         color: 0xf6cf62,
-        unlocked: false,
         cost: 500,
         available: true,
         displayNames: {
@@ -96,7 +91,6 @@ GlassLab.FoodTypes = {
         spriteName: "pizza",
         spriteOffsetWhileDragging: -4,
         color: 0xe4b76e,
-        unlocked: false,
         cost: 700,
         available: true,
         displayNames: {
@@ -108,7 +102,6 @@ GlassLab.FoodTypes = {
         spriteName: "mushroom",
         spriteOffsetWhileDragging: 7,
         color: 0xca5d5c,
-        unlocked: false,
         cost: 2000,
         available: true,
         displayNames: {
@@ -120,7 +113,6 @@ GlassLab.FoodTypes = {
         spriteName: "donut",
         spriteOffsetWhileDragging: 3,
         color: 0xf696ed,
-        unlocked: false,
         cost: 2000,
         available: true,
         displayNames: {

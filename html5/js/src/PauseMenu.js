@@ -43,10 +43,19 @@ GlassLab.PauseMenu = function(game, x, y)
     {
         this._hideRestartConfirmation();
         this.hide();
+
         GLOBAL.saveManager.EraseSave();
         if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().Cancel(); // cancel the current quest
+        
+        GLOBAL.inventoryMenu.hide();
+        GLOBAL.UIManager.hideAllWindows();
+        GLOBAL.assistant.forceClose();
+        GLOBAL.UIManager.journalButton.toggleActive(false);
+        GLOBAL.UIManager.mailButton.toggleActive(false);
+
         GLOBAL.levelManager.LoadLevel(0);
         GLOBAL.transition.out();
+
     }, this);
     this.confirmRestartButton.addOutline("pauseMenuButtonOutline");
     this.addChild(this.confirmRestartButton);

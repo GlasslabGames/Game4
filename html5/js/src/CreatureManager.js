@@ -139,6 +139,7 @@ GlassLab.CreatureManager = function (game) {
     this.creatures = [];
 
     GlassLab.SignalManager.gameInitialized.addOnce(this._loadDiscoveredCreatures, this);
+    GlassLab.SignalManager.gameReset.addOnce(this._loadDiscoveredCreatures, this);
 };
 
 /*
@@ -284,6 +285,10 @@ GlassLab.CreatureManager.prototype._saveDiscoveredCreatures = function()
 
 GlassLab.CreatureManager.prototype._loadDiscoveredCreatures = function()
 {
+    // lock all creatures
+    for (var type in this.creatureDatabase) this.creatureDatabase[type].unlocked = false;
+
+    // unlock creatures listed in the save data
     if (GLOBAL.saveManager.HasData("discoveredCreatures")) {
         var creatures = GLOBAL.saveManager.LoadData("discoveredCreatures");
         for (var i = 0; i < creatures.length; i++) {

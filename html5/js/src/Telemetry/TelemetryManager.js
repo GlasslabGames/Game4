@@ -9,21 +9,9 @@ GlassLab.TelemetryManager = function()
     this.initialized = false;
     this._initializeSDK();
 
-    this.attemptsOnLastProblem = 0;
-
-    this.ordersCompleted = 0;
-
-    this.challengesCompleted = 0;
-    this.challengesCompletedOnFirstAttempt = 0;
-    this.challengeLatencySum = 0;
+    this._resetData();
 
     this.userSaveString = "{}";
-
-    this.penResizes = [];
-    this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
-    this.SOWOs = {};
-    this.problemTypesCompletedPerfectly = {}; // problem types are added to this list when a player completes a problem of that type in 1 attempt
-    this.problemTypesFailedTwiceCount = {}; // count of how many problems of each type the player has failed at least twice.
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
     GlassLab.SignalManager.challengeComplete.add(this._onChallengeComplete, this);
@@ -31,6 +19,7 @@ GlassLab.TelemetryManager = function()
     GlassLab.SignalManager.penResized.add(this._onFeedingPenResized, this); // needed to track pen resizes
 
     GlassLab.SignalManager.gameInitialized.addOnce(this._loadData, this);
+    GlassLab.SignalManager.gameReset.addOnce(this._resetData, this);
 };
 
 GlassLab.TelemetryManager.prototype._initializeSDK = function()
@@ -292,4 +281,19 @@ GlassLab.TelemetryManager.prototype._loadData = function() {
             this[key] = data[key];
         }
     }
+};
+
+GlassLab.TelemetryManager.prototype._resetData = function() {
+    this.challengesCompleted = 0;
+    this.challengesCompletedOnFirstAttempt = 0;
+    this.challengeLatencySum = 0;
+
+    this.penResizes = [];
+    this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
+    this.SOWOs = {};
+    this.problemTypesCompletedPerfectly = {};
+    this.problemTypesFailedTwiceCount = {};
+
+    this.pastFirstNonIntroPenChallenge = false;
+    this.pastFirstNonIntroOrderChallenge = false;
 };

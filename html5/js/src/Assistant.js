@@ -179,6 +179,11 @@ GlassLab.Assistant.prototype._close = function() {
     this.visibilityState = "closed";
 };
 
+GlassLab.Assistant.prototype.forceClose = function() {
+    this.inTutorial = this.order = false;
+    this._close();
+};
+
 GlassLab.Assistant.prototype._refreshMinimizeable = function() {
     var canMinimize = (this.visibilityState == "open");
     if (canMinimize && !this.minimized) {
