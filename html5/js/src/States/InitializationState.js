@@ -319,6 +319,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.audio('creaturePickUpWhaSound', 'assets/audio/sfx/creature_pick_up_wha.mp3');
     game.load.audio('creatureBounceSound', 'assets/audio/sfx/creature_bounce.mp3');
     game.load.audio('coinDropSound', 'assets/audio/sfx/coin_drop.mp3');
+    game.load.audio('explosion', 'assets/audio/sfx/explode.ogg');
 
     // Quests
     game.load.json('day1', 'assets/quests/day1.json');

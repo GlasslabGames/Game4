@@ -34,6 +34,10 @@ GlassLab.DeliverPenAction.prototype.Do = function()
     this.propeller.animations.add("spin", Phaser.Animation.generateFrameNames("propeller_spin_",0,1,".png",3), 24, true);
     this.propeller.play("spin");
 
+    // audio:
+    GLOBAL.audioManager.playSoundWithVolumeAndOffset("propellerSpinLoopSound", 0.1, 0.0, true); // start propeller loop quiet
+    GLOBAL.audioManager.fadeSound("propellerSpinLoopSound", 2000, 1.0); // fade in loop to volume 1.0 over 2 seconds.
+
     this.highlight = this.crate.addChild( this.game.make.sprite(0, 0, "penDeliveryHighlight") );
     this.highlight.alpha = 0;
 
@@ -55,6 +59,13 @@ GlassLab.DeliverPenAction.prototype.Do = function()
 };
 
 GlassLab.DeliverPenAction.prototype._penLanded = function() {
+    // audio:
+    GLOBAL.audioManager.fadeSound("propellerSpinLoopSound", 100, 0); // fade loop to volume 0 quickly, then stop.
+    GLOBAL.audioManager.playSound("propellerStartSound"); // makes for a good wind-down sound too
+    this.game.time.events.add(700, function() {
+        GLOBAL.audioManager.fadeSound("propellerStartSound", 300, 0); // cut off the end of the start sound for better effect.
+    }, this);
+
     this.propeller.play("close");
     this.propeller.events.onAnimationComplete.addOnce(this._propellerClosed, this);
 };
@@ -71,6 +82,7 @@ GlassLab.DeliverPenAction.prototype._propellerClosed = function() {
 };
 
 GlassLab.DeliverPenAction.prototype._crateClicked = function() {
+    GLOBAL.audioManager.playSound("explosion");
     var makeSmoke = function(x, y) {
         var smoke = GLOBAL.game.make.sprite(x, y, "smokeAnim");
         smoke.anchor.setTo(0.5, 1);
