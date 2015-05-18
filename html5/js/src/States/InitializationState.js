@@ -19,9 +19,9 @@ GlassLab.State.Init.prototype.init = function() {
     var startWidth = fillBar.width;
     var cropRect = new Phaser.Rectangle(0, 0, 0, fillBar.height);
     fillBar.crop(cropRect);
-    
+
     this.game.load.onFileComplete.add(function(progress, cacheKey, success, totalLoaded, totalFiles){
-        cropRect.width = startWidth * progress / 100;
+        cropRect.width = startWidth * progress / 100 * 0.90; // 100% progress is before the end of the bar, to explain the lag before actually starting the game
         fillBar.crop(cropRect);
     }, this);
 
