@@ -7,6 +7,28 @@ GlassLab.State = GlassLab.State || {};
 
 GlassLab.State.Init = function(game) {};
 
+// Before starting to load assets, set up the loading indicators using assets we loaded in Boot.js
+GlassLab.State.Init.prototype.init = function() {
+    var bg = this.add.sprite(this.game.width / 2, this.game.height / 2, "loadingStatic");
+    bg.anchor.setTo(0.5, 0.5);
+
+    var fillBar = this.add.sprite(bg.x, bg.y, "loadingFill");
+    fillBar.anchor.setTo(0, 0.5);
+    fillBar.x -= fillBar.width / 2;
+
+    var startWidth = fillBar.width;
+    var cropRect = new Phaser.Rectangle(0, 0, 0, fillBar.height);
+    fillBar.crop(cropRect);
+    
+    this.game.load.onFileComplete.add(function(progress, cacheKey, success, totalLoaded, totalFiles){
+        cropRect.width = startWidth * progress / 100;
+        fillBar.crop(cropRect);
+    }, this);
+
+    this.spinner = this.add.sprite(bg.x, bg.y + 120, "loadingSpinner");
+    this.spinner.anchor.setTo(0.5, 0.5);
+};
+
 GlassLab.State.Init.prototype.preload = function()
 {
     var game = this.game;
@@ -337,7 +359,7 @@ GlassLab.State.Init.prototype.preload = function()
     GLOBAL.astar = game.plugins.add(Phaser.Plugin.AStar);
     GLOBAL.astar._useDiagonal = false;
 
-    var loadingText = game.add.text(32, 32, "Loading...", { fill: '#ffffff' } );
+    /*var loadingText = game.add.text(32, 32, "Loading...", { fill: '#ffffff' } );
 
     game.load.onFileComplete.add(function(progress, cacheKey, success, totalLoaded, totalFiles){
         loadingText.setText("Loading... "+progress+"%");
@@ -348,7 +370,7 @@ GlassLab.State.Init.prototype.preload = function()
         }
     }, this);
 
-    GLOBAL.loadingText = loadingText;
+    GLOBAL.loadingText = loadingText;*/
 };
 GlassLab.State.Init.prototype.create = function()
 {
@@ -474,12 +496,17 @@ GlassLab.State.Init.prototype.create = function()
     this.initComplete = true;
 };
 
+GlassLab.State.Init.prototype.loadRender = function() {
+    this.timePassed = (this.timePassed || 0) + (this.game.time.elapsed / 100);
+    this.spinner.angle = Math.floor(this.timePassed) * 60;
+};
+
 GlassLab.State.Init.prototype.update = function()
 {
     if (this.initComplete && GLOBAL.telemetryManager.initialized)
     {
-        GLOBAL.loadingText.destroy();
-        delete GLOBAL.loadingText;
+        //GLOBAL.loadingText.destroy();
+        //delete GLOBAL.loadingText;
 
         this.game.state.start("Title", false);
     }

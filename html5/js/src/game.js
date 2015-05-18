@@ -27,11 +27,12 @@ window.onload = function() {
     GLOBAL.penAreaWidth = 26;
     GLOBAL.penAreaHeight = 28;
 
+    game.state.add("Boot", GlassLab.State.Boot);
     game.state.add("Init", GlassLab.State.Init);
     game.state.add("Game", GlassLab.State.Game);
     game.state.add("Title", GlassLab.State.Title);
 
-    game.state.start("Init");
+    game.state.start("Boot");
 };
 
 Math.sign = Math.sign || function(x) {
