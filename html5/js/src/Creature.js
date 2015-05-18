@@ -689,7 +689,13 @@ GlassLab.Creature.prototype.showEmote = function (happy, callback) {
     this.emote.anchor.set(0.5, 1);
     this.addChild(this.emote);
     this.afterEmoteCallback = callback;
-    this.game.time.events.add(Phaser.Timer.SECOND * 1, this._afterEmote, this);
+    // Adding a try/catch here to try to prevent a strange phaser timer error to do with changing focus
+    try {
+        this.game.time.events.add(Phaser.Timer.SECOND * 1, this._afterEmote, this);
+    } catch (err) {
+        console.error("Error when setting afterEmote timer:", err);
+        this._afterEmote();
+    }
 };
 
 GlassLab.Creature.prototype._afterEmote = function() {
