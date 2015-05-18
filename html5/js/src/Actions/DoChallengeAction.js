@@ -41,7 +41,7 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
     }.bind(this));
 
     this.tutorial = null;
-    if (this.serializedTutorial) {
+    if (this.serializedTutorial && !redo) {
         this.tutorial = GlassLab.Deserializer.deserializeObj(this.serializedTutorial);
         GLOBAL.game.time.events.add(10, this.tutorial.Do, this.tutorial); // wait a moment so this happens after we cancel the prev tutorial
     }

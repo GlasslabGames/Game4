@@ -10,9 +10,7 @@
         "numCreatures": 3,
         "bottomDraggable": true,
         "topDraggable": true,
-        "maxHeight": 3,
-        "hidden": true,
-        "_comment": "Hide the pen at first, since DeliverPenAction shows the crate flying in."
+        "maxHeight": 3
       },
       "serializedTutorial": {
         "__type": "ActionGroup",

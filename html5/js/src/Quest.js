@@ -97,6 +97,7 @@ GlassLab.Quest.prototype._getNextChallenge = function(category) {
     if (!this._hasNextChallenge(category)) return null; // we don't have that many
 
     var index = this.index[category];
+    if (!this.challenges[category]) this.challenges[category] = [];
     if (!this.challenges[category][index]) { // we haven't deserialized this challenge yet
         this.challenges[category][index] = GlassLab.Deserializer.deserializeObj(this.serializedChallenges[category][index]);
     }
