@@ -43,7 +43,7 @@ GlassLab.RewardPopup = function(game)
     this.rewardAmountLabel.anchor.setTo(0, 0.5);
     this.addChild(this.rewardAmountLabel);
 
-    this.descriptionLabel = game.make.text(-165, -40, "Dear Rancher,\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.\n\nKindest Regards, Archie H.",
+    this.descriptionLabel = game.make.text(-165, -45, "Dear Rancher,\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.\n\nKindest Regards, Archie H.",
         {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.addChild(this.descriptionLabel);
 
@@ -69,12 +69,14 @@ GlassLab.RewardPopup.prototype.show = function(data)
     this.clientNameLabel.text = data.client;
     this.rewardAmountLabel.text = "$"+this.reward;
 
-    var creatureAsk = !("numCreatures" in this.data); // the player had to fill in the amount of creatures
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
+    var creatures = creatureInfo.displayNames.plural;
+    var detail = data.outcomeDetail;
+    var incorrectNumCreatures = detail.indexOf && detail.indexOf("creature") > -1;
 
     // There's a special case where 1 of the 2 food types is asked for and the number of creatures is asked for as well.
     var singleProvidedFood = null; // when this is set, it means the other food was asked for.
-    if (creatureAsk && creatureInfo.desiredFood.length > 1) {
+    if (incorrectNumCreatures && creatureInfo.desiredFood.length > 1) {
         if ("numFoodA" in this.data) singleProvidedFood = creatureInfo.desiredFood[0].type;
         if ("numFoodB" in this.data) {
             if (singleProvidedFood) singleProvidedFood = null; // if both numFoodA and numFoodB are provided, there's no singleProvided food
@@ -82,14 +84,22 @@ GlassLab.RewardPopup.prototype.show = function(data)
         }
     }
 
-    var creatures = creatureInfo.displayNames.plural;
-    var detail = data.outcomeDetail;
-    var foodNames = (detail && GlassLab.FoodTypes[detail[0]] && GlassLab.FoodTypes[detail[0]].displayNames) || {singular: "food", plural: "food"};
-    var uncountable = (foodNames.plural == foodNames.singular); // e.g. "meat" is uncountable, "apples" is not
-
+    var foodNames, foods, uncountable;
     if (singleProvidedFood) {
-        var providedFoodName = GlassLab.FoodTypes[singleProvidedFood].displayNames.plural.toLowerCase();
-        var providedUncountable = (GlassLab.FoodTypes[singleProvidedFood].displayNames.plural == GlassLab.FoodTypes[singleProvidedFood].displayNames.singular);
+        // we need the name for that single provided food
+        foodNames = (detail && GlassLab.FoodTypes[singleProvidedFood] && GlassLab.FoodTypes[singleProvidedFood].displayNames) || {singular: "food", plural: "food"};
+        uncountable = (foodNames.plural == foodNames.singular); // e.g. "meat" is uncountable, "apples" is not
+        foods = foodNames.plural.toLowerCase();
+    } else {
+        // we need the info about the first incorrect food (skip over other details like "creatures")
+        for (var i = 0; i < detail.length; i++) {
+            if (detail[i] in GlassLab.FoodTypes) {
+                foodNames = (detail && GlassLab.FoodTypes[detail[0]] && GlassLab.FoodTypes[detail[0]].displayNames) || {singular: "food", plural: "food"};
+                uncountable = (foodNames.plural == foodNames.singular); // e.g. "meat" is uncountable, "apples" is not
+                foods = foodNames.plural.toLowerCase();
+                break;
+            }
+        }
     }
 
     var photo = creatureInfo.spriteName + "_orderPhoto_";
@@ -105,26 +115,22 @@ GlassLab.RewardPopup.prototype.show = function(data)
             photo += "wrongFood";
             break;
         case GlassLab.results.sick:
-            if (creatureAsk) {
+            if (incorrectNumCreatures) {
                 string += "You sent too few " + creatures + " to eat all ";
-                if (singleProvidedFood) string += (providedUncountable? "this ":"these ") + providedFoodName + ",";
-                else string += "this food,";
-            } else string += "You sent too "+(uncountable? "much ":"many ")+foodNames.plural.toLowerCase()+" for these " + creatures + " to eat,";
+                if (singleProvidedFood) string += (uncountable? "this ":"these ") + foods + ",";
+                else string += "this food,"; // there's no single provided food so no need to specify which food we're talking about
+            } else string += "You sent too " + (uncountable? "much ":"many ") + foods + " for these " + creatures + " to eat,";
             string += " so they got sick!";
             photo += "vomit";
             break;
         case GlassLab.results.hungry:
-            if (creatureAsk) {
+            if (incorrectNumCreatures) {
                 string += "You sent too many " + creatures + " and there ";
-                if (singleProvidedFood) string += (providedUncountable? "wasn't enough ":"weren't enough ") + providedFoodName;
+                if (singleProvidedFood) string += (uncountable? "wasn't enough ":"weren't enough ") + foods;
                 else string += "wasn't enough food";
                 string += " for all of them,";
-            } else string += "You didn't send enough "+foodNames.plural.toLowerCase()+" for all of these "+ creatures + ",";
+            } else string += "You didn't send enough " + foods + " for all of these "+ creatures + ",";
             string += " so they're still hungry!";
-            photo += "cry";
-            break;
-        case GlassLab.results.wrongCreatureNumber:
-            string += "I asked you to send the correct number of "+ creatures + " to eat "+ this.data.totalNumFood +" total food, but you sent too "+data.outcomeDetail+" "+ creatures + "!";
             photo += "cry";
             break;
         case GlassLab.results.wrongTotalFood:
@@ -132,7 +138,8 @@ GlassLab.RewardPopup.prototype.show = function(data)
             photo += "cry";
             break;
         case GlassLab.results.wrongFoodSum:
-            string += "I asked you to send " + this.data.totalNumFood + " total food, but you sent "+ data.outcomeDetail +"total food instead!";
+            var totalFood = data.shipped.numFoodA + (data.shipped.numFoodB || 0);
+            string += "I asked you to send " + this.data.totalNumFood + " total food, but you sent "+ totalFood +" total food instead!";
             photo += "cry";
             break;
     }
@@ -140,8 +147,15 @@ GlassLab.RewardPopup.prototype.show = function(data)
     // Now if the result was sick or hungry, we might need to include info about the second kind of food as well.
     if (data.outcome == GlassLab.results.sick || data.outcome == GlassLab.results.hungry) {
         var wrongFoodType;
-        if (!creatureAsk && detail[1] && GlassLab.FoodTypes[detail[1]]) wrongFoodType = detail[1];
-        else if (singleProvidedFood) wrongFoodType = detail[1];
+        if (!incorrectNumCreatures && detail[1] && GlassLab.FoodTypes[detail[1]]) wrongFoodType = detail[1];
+        else if (singleProvidedFood) {
+            for (var i = 0; i < detail.length; i++) {
+                if (detail[i] in GlassLab.FoodTypes) {
+                    wrongFoodType = detail[i];
+                    break;
+                }
+            }
+        }
         if (wrongFoodType) string += " The amount of "+GlassLab.FoodTypes[wrongFoodType].displayNames.plural.toLowerCase()+" wasn't right either!";
     }
 
@@ -176,27 +190,14 @@ GlassLab.RewardPopup.prototype.show = function(data)
     this.foodBEntry.set(data.shipped.foodTypeB, data.shipped.numFoodB, true, true); // if foodTypeB is null, the entry will be hidden
 
     // Then show an X over the entries that were wrong.
-    if (data.outcome == GlassLab.results.dislike) { // at least one of the food types was wrong, so check both
-        var checkIfDesiredFood = function(foodType) {
-            for (var i = 0; i < creatureInfo.desiredFood.length; i++) {
-                if (creatureInfo.desiredFood[i].type == foodType) return true;
-            }
-            return false;
-        };
-        if (!checkIfDesiredFood(data.shipped.foodTypeA)) this.foodAEntry.setX(false, true);
-        if (!checkIfDesiredFood(data.shipped.foodTypeB)) this.foodBEntry.setX(false, true);
-    } else if (data.outcome == GlassLab.results.wrongCreatureNumber) { // this is the case where they used the right ratio, but not one that matched the given totalFood
-        this.creatureEntry.setX(true, false);
-    } else if (data.outcome != GlassLab.results.satisfied) { // else if something else wrong
-        // The creature is the one that's wrong if it's not total food, or there were no food entries, or the food they entered matches the total food.
-        if (creatureAsk && (!data.totalNumFood || data.noFoodEntries || (data.shipped.numFoodA + (data.shipped.numFoodB || 0) == data.totalNumFood))) {
-            // if it's wrong, and they had to fill in the number of creatures, they must have got that wrong
-            this.creatureEntry.setX(true, false);
-        } else { // One or both foods were wrong, so check the details (problemFoods) to find out which ones
-            for (var i = 0; i < detail.length; i++) {
-                if (detail[i] == this.data.shipped.foodTypeA) this.foodAEntry.setX(true, false);
-                else if (detail[i] == this.data.shipped.foodTypeB) this.foodBEntry.setX(true, false);
-            }
+    if (data.outcome == GlassLab.results.dislike) { // x out the types that are wrong
+        if (detail.indexOf(data.shipped.foodTypeA) > -1) this.foodAEntry.setX(false, true);
+        if (detail.indexOf(data.shipped.foodTypeB) > -1) this.foodBEntry.setX(false, true);
+    } else { // else x out all the numbers that are wrong
+        for (var i = 0; i < detail.length; i++) {
+            if (detail[i] == "creature") this.creatureEntry.setX(true, false);
+            else if (detail[i] == data.shipped.foodTypeA) this.foodAEntry.setX(true, false);
+            else if (detail[i] == data.shipped.foodTypeB) this.foodBEntry.setX(true, false);
         }
     }
 

@@ -300,39 +300,18 @@ GlassLab.OrderFulfillment.prototype.shipCrate = function() {
 };
 
 GlassLab.OrderFulfillment.prototype._crateShipped = function() {
-    this.data.outcome = this.crate.result;
-    this.data.outcomeDetail = this.crate.problemFoods;
-    var response = this._getResponse();
+    var resultInfo = this.crate.calculateResult(this._calculateTargetNumCreatures(), this.data.totalNumFood);
+    this.data.outcome = resultInfo.result;
+    this.data.outcomeDetail = resultInfo.problems;
+
     // this is kinda messy but we need all this info for the receipt on the response letter
     this.data.shipped = { numCreatures: this.crate.numCreatures, numFoodA: this.crate.numFoods[0], numFoodB: this.crate.numFoods[1] || 0,
         foodTypeA: this.crate.foodTypes[0], foodTypeB: this.crate.foodTypes[1] };
     console.log(this.data.shipped);
 
-    // Handle a few special cases where the result is different from just win/lose
-    var result = this.crate.result;
-
-    // For total food problems with food entries, we prioritize the "sum of food doesn't match provided total food" above other problems (except wrong food type)
-    if (this.data.totalNumFood && !this.data.noFoodEntries && result != GlassLab.results.dislike && (response.food[0] + response.food[1] != response.totalFood)) {
-        console.log(response.food[0] + response.food[1], response.totalFood);
-        this.data.outcome = GlassLab.results.wrongFoodSum;
-        this.data.outcomeDetail = response.food[0] + response.food[1];
-    }
-
-    // This is obsoleted by the wrongFoodSum response
-/*    if (this.crate.result == GlassLab.results.satisfied && this.data.totalNumFood) { // we need to check that the number of creatures is correct
-        var numCreatures = response.creatures;
-        var targetNumCreatures = this._calculateTargetNumCreatures();
-        if (numCreatures < targetNumCreatures) {
-            this.data.outcome = GlassLab.results.wrongCreatureNumber;
-            this.data.outcomeDetail = "few"; // they sent too few creatures
-        } else if (numCreatures > targetNumCreatures) {
-            this.data.outcome = GlassLab.results.wrongCreatureNumber;
-            this.data.outcomeDetail = "many"; // they sent too many creatures
-        }
-    }*/
-
-    // if the answer was otherwise right, but they had to provide the total food and the food entries, check that they match
-    if (this.crate.result == GlassLab.results.satisfied && this.data.askTotalFood && !this.data.noFoodEntries) {
+    var response = this._getResponse();
+    // if the answer was otherwise right, but they had to provide the total food AND the food entries, check that they match
+    if (this.data.outcome == GlassLab.results.satisfied && this.data.askTotalFood && !this.data.noFoodEntries) {
         if (response.food[0] + response.food[1] != response.totalFood) {
             this.data.outcome = GlassLab.results.wrongTotalFood;
             this.data.outcomeDetail = response.totalFood;
