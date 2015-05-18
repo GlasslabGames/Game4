@@ -53,11 +53,11 @@ GlassLab.UIRatioTooltip = function(game, padding, totalFoodHint)
     this.creatureIcon.anchor.setTo(0, .5);
     this.contentsContainer.addManagedChild(this.creatureIcon);
     this.creatureCount = this.game.make.text(0,0, "2", numberStyle);
-    this.creatureCount.anchor.setTo(0, .45);
+    this.creatureCount = GlassLab.Util.SetCenteredText(this.creatureCount, null, 0, 0.45);
     this.contentsContainer.addManagedChild(this.creatureCount);
 
     var colon = this.game.make.text(0,0, " : ", colonStyle);
-    colon.anchor.setTo(0, .5);
+    colon = GlassLab.Util.SetCenteredText(colon, null, 0, 0.5);
     this.contentsContainer.addManagedChild(colon);
 
     this.foodIcon = this.game.make.sprite(0, 0, "apple");
@@ -66,11 +66,11 @@ GlassLab.UIRatioTooltip = function(game, padding, totalFoodHint)
     this.contentsContainer.addManagedChild(this.foodIcon);
 
     this.foodCount = this.game.make.text(0,0, "6", numberStyle);
-    this.foodCount.anchor.setTo(0, .45);
+    this.foodCount = GlassLab.Util.SetCenteredText(this.foodCount, null, 0, 0.45);
     this.contentsContainer.addManagedChild(this.foodCount, true);
 
     this.colon2 = this.game.make.text(0,0, " : ", colonStyle);
-    this.colon2.anchor.setTo(0, .5);
+    this.colon2 = GlassLab.Util.SetCenteredText(this.colon2, null, 0, 0.5);
     this.contentsContainer.addManagedChild(this.colon2);
 
     this.foodIcon2 = this.game.make.sprite(0, 0, "apple");
@@ -79,7 +79,7 @@ GlassLab.UIRatioTooltip = function(game, padding, totalFoodHint)
     this.contentsContainer.addManagedChild(this.foodIcon2);
 
     this.foodCount2 = this.game.make.text(0,0, "6", numberStyle);
-    this.foodCount2.anchor.setTo(0, .45);
+    this.foodCount2 = GlassLab.Util.SetCenteredText(this.foodCount2, null, 0, 0.45);
     this.contentsContainer.addManagedChild(this.foodCount2, true);
 
     this.contentsContainer.x = 10;
@@ -88,8 +88,8 @@ GlassLab.UIRatioTooltip = function(game, padding, totalFoodHint)
     this.root.addChild(this.contentsContainer);
 
     this.messageText = this.game.make.text(0, 0, "Click/drag to resize", {font: "14pt EnzoBlack", fill: "#ffffff"});
+    this.messageText = GlassLab.Util.SetCenteredText(this.messageText, null, 0.5, 1.0);
     this.root.addChild(this.messageText);
-    this.messageText.anchor.setTo(0.5, 1);
 
     this.totalFoodHint = totalFoodHint;
     if (!totalFoodHint) {
