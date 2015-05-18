@@ -393,6 +393,7 @@ GlassLab.InventoryMenuSlot.prototype.Highlight = function(yes_or_no)
         //this.hoverLabelBgEndcapRight.alpha = 0;
         //this.hoverLabelBgPointer.alpha = 0;
         //this.hoverLabel.alpha = 0;
+        this.hoverLabelCoin.alpha = 0; // always hide the damn coin in case some condition changes without refreshing the food bar, like manually adding $ via the js console
         if (this.data.cost > 0 && !this.data.unlocked) {
             if (this.data.cost > GLOBAL.inventoryManager.money) {
                 // can't afford item:
