@@ -194,10 +194,7 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
 
 GlassLab.UIManager.prototype._onUIOpened = function(window) {
     if (this.openWindows.indexOf(window) == -1) this.openWindows.push(window);
-    console.log("\n\nOpened", window, this.openWindows.length);
-    for (var i = 0; i < this.openWindows.length; i++) {
-        if (this.openWindows[i] != window) console.log(this.openWindows[i]);
-    }
+    //console.log("\n\nOpened", window, this.openWindows.length);
 
     // stop alpha tween if it's still running:
     if (this.shadeTween != null && this.shadeTween.isRunning) {
@@ -219,10 +216,7 @@ GlassLab.UIManager.prototype._onUIOpened = function(window) {
 GlassLab.UIManager.prototype._onUIClosed = function(window) {
     var index = this.openWindows.indexOf(window);
     if (index > -1) this.openWindows.splice(index, 1);
-    console.log("\n\nClosed", window, this.openWindows.length);
-    for (var i = 0; i < this.openWindows.length; i++) {
-        console.log(this.openWindows[i]);
-    }
+    //console.log("\n\nClosed", window, this.openWindows.length);
 
     if (this.openWindows.length == 0) {
 
@@ -281,7 +275,7 @@ GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
 GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withoutAddingToList) {
     var addedListener = false;
 
-    console.log("\n\nShow",window,"instead of",this.openWindows.length,"other windows");
+    //console.log("\n\nShow",window,"instead of",this.openWindows.length,"other windows");
 
     // add an event listener to one of the windows we're about to hide
     for (var i = 0; i < this.openWindows.length; i++) {
@@ -381,7 +375,6 @@ GlassLab.UIManager.prototype.zoomOut = function() {
 
 
 GlassLab.UIManager.prototype.resetCamera = function() {
-    console.log("Reseting camera");
     this.zoomTo(GlassLab.UIManager.startZoom);
     if (GLOBAL.penManager.pens.length) GLOBAL.penManager.focusCameraOnPen(); // center the camera over the pen
     else this.setCenterCameraPos(0, 0); // center in the middle of the screen

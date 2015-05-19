@@ -475,7 +475,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.sortingGame.y = -GLOBAL.sortingGame.height / 2;
 
     GLOBAL.pauseMenu = new GlassLab.PauseMenu(game);
-    GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.pauseMenu);
+    GLOBAL.UIManager.transitionAnchor.addChild(GLOBAL.pauseMenu); // transition anchor is above everything else
 
     GLOBAL.levelManager = new GlassLab.LevelManager(GLOBAL.game);
 
@@ -508,6 +508,6 @@ GlassLab.State.Init.prototype.update = function()
         //GLOBAL.loadingText.destroy();
         //delete GLOBAL.loadingText;
 
-        this.game.state.start("Title", false);
+        this.game.state.start("Game", false);
     }
 };
