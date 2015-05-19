@@ -269,6 +269,8 @@ GlassLab.OrderFulfillment.prototype._onSubmit = function()
         if (response) {
             this._refreshPen(response);
             this.submitButton.setEnabled(false);
+            this.creatureInput.setEnabled(false);
+            this.totalFoodInput.setEnabled(false);
             for (var i = 0; i < this.foodInputs.length; i++) {
                 var answerInput = this.foodInputs[i];
                 answerInput.setEnabled(false);
@@ -331,6 +333,8 @@ GlassLab.OrderFulfillment.prototype.restartLoading = function(numAttempts)
     this.submitButton.setEnabled(true);
     this.crateLoaded = false;
 
+    this.creatureInput.setEnabled(true);
+    this.totalFoodInput.setEnabled(true);
     for (var i = 0; i < this.foodInputs.length; i++) {
         var answerInput = this.foodInputs[i];
         answerInput.setEnabled(true);
