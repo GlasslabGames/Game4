@@ -620,7 +620,7 @@ GlassLab.Creature.prototype.cancelPoop = function () {
 
 GlassLab.Creature.prototype.startPoopTimer = function () {
     this.cancelPoop();
-    var poopDelay = (Math.random() / 2 + 0.1) * Phaser.Timer.MINUTE;
+    var poopDelay = (Math.random() * 10 + 10) * Phaser.Timer.SECOND;
     this.poopTimer = this.game.time.events.add(poopDelay, function() {
         if (this.state instanceof GlassLab.CreatureStateIdle) { // we weren't doing anything else, so why not poop?
             this.StateTransitionTo(new GlassLab.CreatureStatePooping(this.game, this));
