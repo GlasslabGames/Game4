@@ -227,8 +227,7 @@ GlassLab.UIManager.prototype._onUIClosed = function(window) {
         if (isNaN(this.shade.alpha)) this.shade.alpha = 1; // normally just use whatever we have, but if it became NaN for some reason, fix it
         this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true);
         this.shadeTween.onComplete.addOnce(function() {
-                this.shade.alpha = 0; // better safe than sorry
-                //console.log("Closed:",this.openWindows);
+                this.shade.visible = false; // ensure sure they can click past the shade
             }, this);
         
 
