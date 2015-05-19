@@ -196,13 +196,15 @@ GlassLab.UIManager.prototype._onUIOpened = function(window) {
     //console.log("Opened:", this.openWindows.length);
 
     // stop alpha tween if it's still running:
-    if (this.shadeTween != null && this.shadeTween.isRunning)
+    if (this.shadeTween != null && this.shadeTween.isRunning) {
         this.shadeTween.stop();
+    }
 
     // fade in the shade:
-    this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
+    if (isNaN(this.shade.alpha)) this.shade.alpha = 0; // normally just use whatever we have, but if it became NaN for some reason, fix it
     this.shade.visible = true;
-        
+    this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
+
     if (GLOBAL.dayManager.dayMeter.visible && this._wantToHideDayMeter()) {
         var tween = this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 0}, GLOBAL.dayManager.dayMeter.alpha * 150, Phaser.Easing.Quadratic.InOut, true);
         tween.onComplete.addOnce(function() { if (this._wantToHideDayMeter()) GLOBAL.dayManager.dayMeter.visible = false; }, this);
@@ -217,15 +219,15 @@ GlassLab.UIManager.prototype._onUIClosed = function(window) {
     if (this.openWindows.length == 0) {
 
         // stop alpha tween if it's still running:
-        if (this.shadeTween != null && this.shadeTween.isRunning)
+        if (this.shadeTween != null && this.shadeTween.isRunning) {
             this.shadeTween.stop();
+        }
 
         // fade out the shade:
-        this.shade.visible = false;
-        this.shadeTween = this.game.add.tween(this.shade)
-            .to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true)
-            .onComplete.addOnce(function() {
-                this.shade.visible = false; // better safe than sorry
+        if (isNaN(this.shade.alpha)) this.shade.alpha = 1; // normally just use whatever we have, but if it became NaN for some reason, fix it
+        this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true);
+        this.shadeTween.onComplete.addOnce(function() {
+                this.shade.alpha = 0; // better safe than sorry
                 //console.log("Closed:",this.openWindows);
             }, this);
         
@@ -256,6 +258,7 @@ GlassLab.UIManager.prototype._wantToHideDayMeter = function() {
 };
 
 GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
+    //console.log("Hide all ", this.openWindows.length, "windows. Exception?", !!exception);
     for (var i = 0; i < this.openWindows.length; i++) {
         if (this.openWindows[i] != exception && this.openWindows[i].autoCloseable) {
             this.openWindows[i].hide();
@@ -271,6 +274,8 @@ GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
 
 GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withoutAddingToList) {
     var addedListener = false;
+
+    //console.log("Show",window,"instead of",this.openWindows.length,"other windows");
 
     if (!withoutAddingToList && this.openWindows.indexOf(window) == -1) this.openWindows.push(window); // so we don't unfade the background, etc
 
