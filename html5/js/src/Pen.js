@@ -548,5 +548,16 @@ GlassLab.Pen.prototype.calculateResult = function(targetNumCreatures, targetTota
     }
     // Else problems will be whatever food doesn't match the number of creatures.
 
+    // When the problem used totalFood, we want to judge sick/hungry based on the total food rather than individual food
+    // (But we still had to go through each food individually to figure out
+    if (incorrectNumCreatures && targetTotalFood) {
+        var totalDesiredFood = info.desiredFood[0].amount + info.desiredFood[1].amount;
+        if (totalDesiredFood * currentNumCreatures + 0.01 < targetTotalFood) { // not enough creatures
+            result = GlassLab.results.sick;
+        } else if (totalDesiredFood * currentNumCreatures - 0.01 > targetTotalFood) { // too many creatures
+            result = GlassLab.results.hungry;
+        }
+    }
+
     return {result: result, problems: problems};
 };
