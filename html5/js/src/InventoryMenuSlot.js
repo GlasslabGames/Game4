@@ -158,7 +158,6 @@ GlassLab.InventoryMenuSlot.prototype._onInputDown = function(sprite, pointer)
             
             //GLOBAL.UILayer.add(food); // there might be a way to make the food start above the inventory, but it adds complications (like where it should be placed.)
 
-            // TODO GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row}); // Incorrect name
         }
     } else if (!this.data.unlocked && this.data.cost > 0) {
         this._onPurchaseConfirmed();

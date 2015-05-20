@@ -133,23 +133,24 @@ GlassLab.OrderFulfillment.prototype.focusCamera = function() {
     GLOBAL.tiledBg.position.setTo(xOffset / GLOBAL.UIManager.zoomLevel, yOffset / GLOBAL.UIManager.zoomLevel);
 };
 
-GlassLab.OrderFulfillment.prototype._getResponse = function() {
+GlassLab.OrderFulfillment.prototype._getResponse = function(dontAbort) {
     var response = {};
     // Figure out how many food entries we expect (0 if no food entries, 1 for baby creatures, 2 for adult creatures)
     var numFoods = (this.data.noFoodEntries)? 0 : GLOBAL.creatureManager.GetCreatureData(this.data.creatureType).desiredFood.length;
 
     response.creatures = this.creatureInput.getValue();
-    if (!response.creatures) return false;
+    if (!response.creatures && !dontAbort) return false;
 
     response.food = [];
     for (var i = 0; i < this.foodInputs.length; i++) {
         var answer = this.foodInputs[i].getValue();
         if (answer) response.food.push(answer);
-        else if (i < numFoods) return false;
+        else if (i < numFoods && !dontAbort) return false;
+        else response.food.push(0);
     }
 
     response.totalFood = this.totalFoodInput.getValue();
-    if (!response.totalFood && this.totalFoodInput.visible) return false;
+    if (!response.totalFood && this.totalFoodInput.visible && !dontAbort) return false;
 
     return response;
 };
@@ -349,10 +350,11 @@ GlassLab.OrderFulfillment.prototype._onFoodSet = function(index, food) {
     this._onTextChange();
 };
 
-GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calculateSuccess) {
+GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calculateSuccess, result) {
     // Telemetry
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.data.creatureType);
-    var response = this._getResponse();
+    var response = this._getResponse(true);
+    console.log("Sending telemetry with response",response);
     var foodTypes = [this.foodInputs[0].currentType, this.foodInputs[1].currentType];
 
     // figure out the correct answer
@@ -362,25 +364,37 @@ GlassLab.OrderFulfillment.prototype._sendTelemetry = function(eventName, calcula
         order_id: this.data.id || "",
         key: this.data.key || false,
         creature_type: this.data.creatureType,
-        creature_count: response[0] || 0,
+        creature_count: response.creatures || 0,
         target_creature_count: targetNumCreatures,
         foodA_type: foodTypes[0] || "",
         target_foodA_type: creatureInfo.desiredFood[0].type || "",
         foodB_type: foodTypes[1] || "",
         target_foodB_type: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].type : ""),
-        foodA_count: response[1] || 0,
+        foodA_count: (response.food && response.food[0]) || 0, // TODO: we want to get the provided food here
         target_foodA_count: creatureInfo.desiredFood[0].amount * targetNumCreatures,
-        foodB_count: response[2] || 0,
+        foodB_count: (response.food && response.food[1]) || 0,
         target_foodB_count: (creatureInfo.desiredFood[1]? creatureInfo.desiredFood[1].amount : 0) * targetNumCreatures,
-        total_food: this.data.totalNumFood || 0
+        total_food: response.totalFood || 0,
+        target_total_food: this.data.totalNumFood || 0
     };
+    if (!data.target_total_food && this.data.askTotalFood) { // we need to calculate the total food they're meant to enter
+        data.target_total_food = data.target_foodA_count + data.target_foodB_count;
+    }
+    if (this.data.noFoodEntries) {
+        data.target_foodA_count = data.target_foodB_count = 0;
+        data.target_foodA_type = data.target_foodB_type = "";
+    }
+
     if (calculateSuccess) {
-        // check that the food type & counts match the target, or are swapped (A matches B, etc)
-        data.success = data.creature_count == data.target_creature_count && (
-        (data.foodA_type == data.target_foodA_type && data.foodB_type == data.target_foodB_type
-            && data.foodA_count == data.target_foodA_count && data.foodB_count == data.target_foodB_count) ||
-        (data.foodA_type == data.target_foodB_type && data.foodB_type == data.target_foodA_type
-        && data.foodA_count == data.target_foodB_count && data.foodB_count == data.target_foodA_count));
+        if (!result && this.crate) result = this.crate.calculateResult(targetNumCreatures, this.data.totalNumFood).result;
+        // one special case where they mismatched the entered total food and the sum of the food they entered
+        if (result == GlassLab.results.satisfied && this.data.askTotalFood && !this.data.noFoodEntries) {
+            if (response.food[0] + response.food[1] != response.totalFood) {
+                result = GlassLab.results.wrongTotalFood;
+            }
+        }
+        data.result = result || GlassLab.results.invalid; // we don't expect not to have a result, but just in case it happens use invalid
+        data.success = result == GlassLab.results.satisfied;
     }
     GlassLabSDK.saveTelemEvent(eventName, data);
 };

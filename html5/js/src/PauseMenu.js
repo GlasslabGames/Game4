@@ -49,7 +49,9 @@ GlassLab.PauseMenu = function(game)
     this.confirmRestartButton = new GlassLab.HUDButton(this.game, 0, 45, null, "pauseMenuButton", "#YOLO - DO IT!", {font: "14pt EnzoBlack"}, true, function()
     {
         this._hideRestartConfirmation();
-        this.hide();
+        this.hide(true);
+
+        GlassLabSDK.saveTelemEvent("restart_game", {});
 
         GLOBAL.saveManager.EraseSave();
         if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().Cancel(); // cancel the current quest
@@ -99,12 +101,16 @@ GlassLab.PauseMenu.prototype.show = function()
 {
     this.visible = true;
     this._refreshButtons();
+
+    GlassLabSDK.saveTelemEvent("open_pause_menu", {});
     //GlassLab.SignalManager.uiWindowOpened.dispatch(this);
 };
 
-GlassLab.PauseMenu.prototype.hide = function()
+GlassLab.PauseMenu.prototype.hide = function(auto)
 {
     this.visible = false;
+
+    if (auto !== true) GlassLabSDK.saveTelemEvent("close_pause_menu", {});
     //GlassLab.SignalManager.uiWindowClosed.dispatch(this);
 };
 

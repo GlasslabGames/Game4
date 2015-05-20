@@ -236,7 +236,7 @@ GlassLab.UIManager.prototype._onUIClosed = function(window) {
         GLOBAL.dayManager.dayMeter.visible = true;
 
         // pop the inventory menu back up if it was closed before. This may have to be refined to only start after everything is done closing (showInsteadOfOtherWindows), but it's fine for now.
-        if (this.inventoryWasOpen) GLOBAL.inventoryMenu.show();
+        if (this.inventoryWasOpen) GLOBAL.inventoryMenu.show(true);
         this.inventoryWasOpen = false;
     }
 
@@ -268,7 +268,7 @@ GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
     // hide the inventory if it's open (even though we don't add it as an openWindow, we still want to hide it in this case
     if (GLOBAL.inventoryMenu.visible) {
         this.inventoryWasOpen = true;
-        GLOBAL.inventoryMenu.hide();
+        GLOBAL.inventoryMenu.hide(true);
     }
 };
 
@@ -373,10 +373,20 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel, dontConstrain)
 
 GlassLab.UIManager.prototype.zoomIn = function() {
     this.zoomTo(this.zoomLevel * GlassLab.UIManager.zoomAmount);
+
+    GlassLabSDK.saveTelemEvent("change_zoom", {
+        "zoom_in": true,
+        "zoom_level": this.zoomLevel
+    });
 };
 
 GlassLab.UIManager.prototype.zoomOut = function() {
     this.zoomTo(this.zoomLevel / GlassLab.UIManager.zoomAmount);
+
+    GlassLabSDK.saveTelemEvent("change_zoom", {
+        "zoom_in": false,
+        "zoom_level": this.zoomLevel
+    });
 };
 
 
@@ -454,6 +464,8 @@ GlassLab.UIManager.prototype.createHud = function() {
             this.game.scale.startFullScreen(false);
             fullscreenButton.image.loadTexture("fullscreenOffIcon");
         }
+
+        GlassLabSDK.saveTelemEvent("toggle_fullscreen", { "fullscreen": this.game.scale.isFullScreen });
     }, this);
     fullscreenButton.bg.scale.y *= -1;
     fullscreenButton.setEnabled(GLOBAL.fullScreenAllowed);

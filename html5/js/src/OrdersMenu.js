@@ -92,14 +92,16 @@ GlassLab.OrdersMenu.prototype.constructor = GlassLab.OrdersMenu;
 
 GlassLab.OrdersMenu.prototype._onNextPagePressed = function()
 {
-    this.show(this.currentPage+1);
+    this.currentPage += 1;
+    this.SetInfo(GLOBAL.mailManager.availableOrders[this.currentPage]);
 
     GLOBAL.audioManager.playSound("pageTurnSound");
 };
 
 GlassLab.OrdersMenu.prototype._onPrevPagePressed = function()
 {
-    this.show(this.currentPage-1);
+    this.currentPage -= 1;
+    this.SetInfo(GLOBAL.mailManager.availableOrders[this.currentPage]);
 
     GLOBAL.audioManager.playSound("pageTurnSound");
 };
@@ -171,7 +173,7 @@ GlassLab.OrdersMenu.prototype.SetInfo = function(data)
 GlassLab.OrdersMenu.prototype.show = function(orderNum)
 {
     GlassLab.UIWindow.prototype.show.call(this);
-    if (!this.sprite.visible) GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
+    GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
 
     // Show either the no mail popup or the actual orders, depending on whether we have mail to show
     this.sprite.visible = GLOBAL.mailManager.availableOrders.length;
@@ -190,7 +192,7 @@ GlassLab.OrdersMenu.prototype.show = function(orderNum)
 GlassLab.OrdersMenu.prototype.hide = function(auto)
 {
     GlassLab.UIWindow.prototype.hide.call(this);
-    if (auto !== true) GlassLabSDK.saveTelemEvent("close_orders", {});
+    GlassLabSDK.saveTelemEvent("close_orders", {});
 
     GlassLab.SignalManager.mailClosed.dispatch();
 };

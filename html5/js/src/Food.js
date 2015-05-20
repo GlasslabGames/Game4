@@ -216,6 +216,9 @@ GlassLab.Food.prototype._onEndDrag = function () {
         console.log("Dropped food in pen");
         this.destroy();
     } else {
+        if (this.isInitialDropAttempt) GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
+        this.isInitialDropAttempt = false;
+
         GLOBAL.foodInWorld.push(this);
         GLOBAL.foodLayer.add(this);
 
