@@ -512,6 +512,6 @@ GlassLab.State.Init.prototype.update = function()
         this.fillBar.destroy();
         this.bg.destroy();
 
-        this.game.state.start("Game", false);
+        this.game.state.start("Title", false);
     }
 };

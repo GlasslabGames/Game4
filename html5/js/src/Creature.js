@@ -558,6 +558,9 @@ GlassLab.Creature.prototype._move = function(moveSpeed) {
 };
 
 GlassLab.Creature.prototype._finishPath = function (goal) {
+    // We have the option to either reach the destination no matter what, or just stop and look sad if we didn't make it to the destination.
+    // Since there are still issue with creatures getting stuck, let's go with "teleporting" for now. But we could change it back later.
+    /*
     if (this.goal && Phaser.Point.distance(this.goal.isoPosition, this.isoPosition) > GLOBAL.tileSize) {
         // We stopped before reach the goal, so look sadly at it and wait for a new target to arise
         this.standFacingPosition(this.goal.isoPosition);
@@ -566,6 +569,8 @@ GlassLab.Creature.prototype._finishPath = function (goal) {
     } else {
         this.onDestinationReached.dispatch(this);
     }
+    */
+    this.onDestinationReached.dispatch(this); // always reach destination
 };
 
 GlassLab.Creature.prototype.tryWalkToNextFood = function () {
