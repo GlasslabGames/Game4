@@ -133,7 +133,8 @@ GlassLab.PenManager.prototype.focusCameraOnPen = function(pen) {
     isoPos.multiply(GLOBAL.UIManager.zoomLevel, GLOBAL.UIManager.zoomLevel);
     var pos = this.game.iso.projectXY(isoPos);
 
-    GLOBAL.UIManager.setCenterCameraPos(pos.x, pos.y);
+    // use the magical wait one frame trick since something else is interfering
+    this.game.time.events.add(0, function() { GLOBAL.UIManager.setCenterCameraPos(this.x, this.y); }, pos);
 };
 
 GlassLab.PenManager.prototype.hidePens = function() {
