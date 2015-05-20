@@ -26,6 +26,7 @@ GlassLab.UIManager = function(game)
     }, this);
 
     this.shadeTween = null; // pointer to single shade tween instance
+    this.dayMeterTween = null; // pointer to single shade tween instance
 
     // Create the modal that introduces you to the bonus game
     nextButton = new GlassLab.UIRectButton(this.game, 0, 0, this._onBonusPressed, this, 300, 60, 0xffffff, "AWESOME, LET'S DO IT!");
@@ -193,57 +194,58 @@ GlassLab.UIManager.wrapText = function(label, text, maxWidth) {
 
 GlassLab.UIManager.prototype._onUIOpened = function(window) {
     if (this.openWindows.indexOf(window) == -1) this.openWindows.push(window);
-    //console.log("Opened:", this.openWindows.length);
+    //console.log("\n\nOpened", window, this.openWindows.length);
 
     // stop alpha tween if it's still running:
-    if (this.shadeTween != null && this.shadeTween.isRunning)
+    if (this.shadeTween != null && this.shadeTween.isRunning) {
         this.shadeTween.stop();
+    }
 
     // fade in the shade:
-    this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
+    if (isNaN(this.shade.alpha)) this.shade.alpha = 0; // normally just use whatever we have, but if it became NaN for some reason, fix it
     this.shade.visible = true;
-        
-    if (GLOBAL.dayManager.dayMeter.visible && this._wantToHideDayMeter()) {
-        var tween = this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 0}, GLOBAL.dayManager.dayMeter.alpha * 150, Phaser.Easing.Quadratic.InOut, true);
-        tween.onComplete.addOnce(function() { if (this._wantToHideDayMeter()) GLOBAL.dayManager.dayMeter.visible = false; }, this);
+    this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0.4}, (0.4 - this.shade.alpha) * 500, Phaser.Easing.Quadratic.InOut, true);
+
+    if (this._wantToHideDayMeter()) {
+        if (this.dayMeterTween != null && this.dayMeterTween.isRunning) this.dayMeterTween.stop();
+        if (isNaN(GLOBAL.dayManager.dayMeter.alpha)) GLOBAL.dayManager.dayMeter.alpha = 1;
+        this.dayMeterTween = this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 0}, GLOBAL.dayManager.dayMeter.alpha * 150, Phaser.Easing.Quadratic.InOut, true);
     }
 };
 
 GlassLab.UIManager.prototype._onUIClosed = function(window) {
     var index = this.openWindows.indexOf(window);
     if (index > -1) this.openWindows.splice(index, 1);
-    //console.log("Closed:", this.openWindows.length);
+    //console.log("\n\nClosed", window, this.openWindows.length);
 
     if (this.openWindows.length == 0) {
 
         // stop alpha tween if it's still running:
-        if (this.shadeTween != null && this.shadeTween.isRunning)
+        if (this.shadeTween != null && this.shadeTween.isRunning) {
             this.shadeTween.stop();
+        }
 
         // fade out the shade:
-        this.shade.visible = false;
-        this.shadeTween = this.game.add.tween(this.shade)
-            .to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true)
-            .onComplete.addOnce(function() {
-                this.shade.visible = false; // better safe than sorry
-                //console.log("Closed:",this.openWindows);
+        if (isNaN(this.shade.alpha)) this.shade.alpha = 1; // normally just use whatever we have, but if it became NaN for some reason, fix it
+        this.shadeTween = this.game.add.tween(this.shade).to({alpha: 0}, this.shade.alpha * 500, Phaser.Easing.Quadratic.InOut, true);
+        this.shadeTween.onComplete.addOnce(function() {
+                this.shade.visible = false; // ensure sure they can click past the shade
             }, this);
         
 
         GLOBAL.dayManager.dayMeter.visible = true;
 
         // pop the inventory menu back up if it was closed before. This may have to be refined to only start after everything is done closing (showInsteadOfOtherWindows), but it's fine for now.
-        if (this.inventoryWasOpen) GLOBAL.inventoryMenu.show();
+        if (this.inventoryWasOpen) GLOBAL.inventoryMenu.show(true);
         this.inventoryWasOpen = false;
     }
 
     if (!this._wantToHideDayMeter()) {
-        if (!GLOBAL.dayManager.dayMeter.visible) {
-            GLOBAL.dayManager.dayMeter = true;
-            this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 1}, (1 - GLOBAL.dayManager.dayMeter) * 150, Phaser.Easing.Quadratic.InOut, true);
-        } else {
-            GLOBAL.dayManager.dayMeter.alpha = 1;
-        }
+        if (this.dayMeterTween != null && this.dayMeterTween.isRunning) this.dayMeterTween.stop();
+        if (isNaN(GLOBAL.dayManager.dayMeter.alpha)) GLOBAL.dayManager.dayMeter.alpha = 0;
+
+        GLOBAL.dayManager.dayMeter.alpha = 0;
+        this.dayMeterTween = this.game.add.tween(GLOBAL.dayManager.dayMeter).to({alpha: 1}, (1 - GLOBAL.dayManager.dayMeter.alpha) * 150, Phaser.Easing.Quadratic.InOut, true);
     }
 };
 
@@ -256,6 +258,7 @@ GlassLab.UIManager.prototype._wantToHideDayMeter = function() {
 };
 
 GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
+    //console.log("Hide all ", this.openWindows.length, "windows. Exception?", !!exception);
     for (var i = 0; i < this.openWindows.length; i++) {
         if (this.openWindows[i] != exception && this.openWindows[i].autoCloseable) {
             this.openWindows[i].hide();
@@ -265,14 +268,14 @@ GlassLab.UIManager.prototype.hideAllWindows = function(exception) {
     // hide the inventory if it's open (even though we don't add it as an openWindow, we still want to hide it in this case
     if (GLOBAL.inventoryMenu.visible) {
         this.inventoryWasOpen = true;
-        GLOBAL.inventoryMenu.hide();
+        GLOBAL.inventoryMenu.hide(true);
     }
 };
 
 GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withoutAddingToList) {
     var addedListener = false;
 
-    if (!withoutAddingToList && this.openWindows.indexOf(window) == -1) this.openWindows.push(window); // so we don't unfade the background, etc
+    //console.log("\n\nShow",window,"instead of",this.openWindows.length,"other windows");
 
     // add an event listener to one of the windows we're about to hide
     for (var i = 0; i < this.openWindows.length; i++) {
@@ -287,10 +290,10 @@ GlassLab.UIManager.prototype.showInsteadOfOtherWindows = function(window, withou
     if (!addedListener) window.show(); // if we failed to add a listener, just show the target
 };
 
-GlassLab.UIManager.zoomAmount = 1.5;
+GlassLab.UIManager.zoomAmount = 1.8;
 GlassLab.UIManager.maxZoom = 1.0;
-GlassLab.UIManager.startZoom = GlassLab.UIManager.maxZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
-GlassLab.UIManager.minZoom = GlassLab.UIManager.startZoom / GlassLab.UIManager.zoomAmount / GlassLab.UIManager.zoomAmount;
+GlassLab.UIManager.minZoom = GlassLab.UIManager.maxZoom / Math.pow(GlassLab.UIManager.zoomAmount, 3); // 4 zoom levels
+GlassLab.UIManager.startZoom = GlassLab.UIManager.maxZoom / GlassLab.UIManager.zoomAmount;
 
 GlassLab.UIManager.prototype.enforceCameraBounds = function()
 {
@@ -319,9 +322,13 @@ GlassLab.UIManager.prototype.enforceCameraBounds = function()
     }
 };
 
-GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel)
+GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel, dontConstrain)
 {
-    this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+    if (dontConstrain) this.zoomLevel = zoomLevel;
+    else this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+
+    if (this.zoomInButton) this.zoomInButton.setEnabled(this.zoomLevel < GlassLab.UIManager.maxZoom);
+    if (this.zoomOutButton) this.zoomOutButton.setEnabled(this.zoomLevel > GlassLab.UIManager.minZoom);
 
     if (this.zoomTween)
     {
@@ -330,15 +337,19 @@ GlassLab.UIManager.prototype.snapZoomTo = function(zoomLevel)
 
     GLOBAL.WorldLayer.scale.setTo(this.zoomLevel, this.zoomLevel);
 
-    this.enforceCameraBounds();
+    if (!dontConstrain) this.enforceCameraBounds();
 
     GlassLab.SignalManager.cameraMoved.dispatch();
     GlassLab.SignalManager.zoomChanged.dispatch();
 };
 
-GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
+GlassLab.UIManager.prototype.zoomTo = function(zoomLevel, dontConstrain)
 {
-    this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+    if (dontConstrain) this.zoomLevel = zoomLevel;
+    else this.zoomLevel = Math.max( Math.min(GlassLab.UIManager.maxZoom, zoomLevel), GlassLab.UIManager.minZoom);
+
+    if (this.zoomInButton) this.zoomInButton.setEnabled(this.zoomLevel < GlassLab.UIManager.maxZoom);
+    if (this.zoomOutButton) this.zoomOutButton.setEnabled(this.zoomLevel > GlassLab.UIManager.minZoom);
 
     if (this.zoomTween)
     {
@@ -352,7 +363,7 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
     }, this);
 
     this.zoomTween.onUpdateCallback( function() {
-        this.enforceCameraBounds();
+        if (!dontConstrain) this.enforceCameraBounds();
         GlassLab.SignalManager.cameraMoved.dispatch();
     }, this);
     this.zoomTween.start();
@@ -362,16 +373,38 @@ GlassLab.UIManager.prototype.zoomTo = function(zoomLevel)
 
 GlassLab.UIManager.prototype.zoomIn = function() {
     this.zoomTo(this.zoomLevel * GlassLab.UIManager.zoomAmount);
+
+    GlassLabSDK.saveTelemEvent("change_zoom", {
+        "zoom_in": true,
+        "zoom_level": this.zoomLevel
+    });
 };
 
 GlassLab.UIManager.prototype.zoomOut = function() {
     this.zoomTo(this.zoomLevel / GlassLab.UIManager.zoomAmount);
+
+    GlassLabSDK.saveTelemEvent("change_zoom", {
+        "zoom_in": false,
+        "zoom_level": this.zoomLevel
+    });
 };
 
 
-GlassLab.UIManager.prototype.resetCamera = function() {
-    console.log("Reseting camera");
-    this.zoomTo(GlassLab.UIManager.startZoom);
+GlassLab.UIManager.prototype.storeCamera = function() {
+    this.previousZoomLevel = this.zoomLevel;
+    this.previousCameraX = GLOBAL.game.camera.x;
+    this.previousCameraY = GLOBAL.game.camera.y;
+};
+
+GlassLab.UIManager.prototype.loadCamera = function() {
+    this.snapZoomTo(this.previousZoomLevel);
+    GLOBAL.game.camera.x = this.previousCameraX;
+    GLOBAL.game.camera.y = this.previousCameraY;
+    this.enforceCameraBounds();
+    GlassLab.SignalManager.cameraMoved.dispatch();
+};
+
+GlassLab.UIManager.prototype.resetCameraPos = function() {
     if (GLOBAL.penManager.pens.length) GLOBAL.penManager.focusCameraOnPen(); // center the camera over the pen
     else this.setCenterCameraPos(0, 0); // center in the middle of the screen
 };
@@ -401,12 +434,12 @@ GlassLab.UIManager.prototype.createHud = function() {
     // for some reason the position in the table is a little off unless we set the y to 2 here
     var zoomGroup = new GlassLab.UIElement(this.game);
 
-    button = new GlassLab.HUDButton(this.game, 0, 2, "zoomInIcon", "hudSettingsBg", null, null, true, this.zoomIn, this);
-    zoomGroup.addChild(button);
-    zoomGroup.actualHeight = button.getHeight();
-    button = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", null, null, true, this.zoomOut, this);
-    zoomGroup.addChild(button);
-    zoomGroup.actualHeight += button.getHeight();
+    this.zoomInButton = new GlassLab.HUDButton(this.game, 0, 2, "zoomInIcon", "hudSettingsBg", null, null, true, this.zoomIn, this);
+    zoomGroup.addChild(this.zoomInButton);
+    zoomGroup.actualHeight = this.zoomInButton.getHeight();
+    this.zoomOutButton = new GlassLab.HUDButton(this.game, 0, 2 + zoomGroup.actualHeight, "zoomOutIcon", "hudSettingsBg", null, null, true, this.zoomOut, this);
+    zoomGroup.addChild(this.zoomOutButton);
+    zoomGroup.actualHeight += this.zoomOutButton.getHeight();
     this.zoomButtons = zoomGroup;
 
     table.addManagedChild(zoomGroup);
@@ -431,6 +464,8 @@ GlassLab.UIManager.prototype.createHud = function() {
             this.game.scale.startFullScreen(false);
             fullscreenButton.image.loadTexture("fullscreenOffIcon");
         }
+
+        GlassLabSDK.saveTelemEvent("toggle_fullscreen", { "fullscreen": this.game.scale.isFullScreen });
     }, this);
     fullscreenButton.bg.scale.y *= -1;
     fullscreenButton.setEnabled(GLOBAL.fullScreenAllowed);

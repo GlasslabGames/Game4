@@ -8,9 +8,16 @@ var GlassLab = GlassLab || {};
  * PauseMenu
  */
 
-GlassLab.PauseMenu = function(game, x, y)
+GlassLab.PauseMenu = function(game)
 {
-    GlassLab.UIElement.prototype.constructor.call(this, game, x, y);
+    GlassLab.UIElement.prototype.constructor.call(this, game, 20, 10);
+
+    this.shade = game.make.graphics(-20, -10).beginFill(0).drawRect(-this.game.width / 2, -this.game.height / 2, this.game.width, this.game.height);
+    this.shade.inputEnabled = true; // block interaction with the world
+    this.shade.events.onInputUp.add(this.hide, this); // close the window if they click anywhere
+    this.shade.input.priorityID = GLOBAL.UIpriorityID - 1; // below the rest of the UI
+    this.shade.alpha = 0.4;
+    this.addChild(this.shade);
 
     this.bg = this.game.make.sprite(0,0,"pauseMenuBackground");
     this.bg.anchor.setTo(.5, .5);
@@ -42,9 +49,22 @@ GlassLab.PauseMenu = function(game, x, y)
     this.confirmRestartButton = new GlassLab.HUDButton(this.game, 0, 45, null, "pauseMenuButton", "#YOLO - DO IT!", {font: "14pt EnzoBlack"}, true, function()
     {
         this._hideRestartConfirmation();
-        this.hide();
+        this.hide(true);
+
+        GlassLabSDK.saveTelemEvent("restart_game", {});
+
         GLOBAL.saveManager.EraseSave();
+        if (GLOBAL.questManager.GetCurrentQuest()) GLOBAL.questManager.GetCurrentQuest().Cancel(); // cancel the current quest
+        
+        GLOBAL.inventoryMenu.hide();
+        GLOBAL.UIManager.hideAllWindows();
+        GLOBAL.assistant.forceClose();
+        GLOBAL.UIManager.journalButton.toggleActive(false);
+        GLOBAL.UIManager.mailButton.toggleActive(false);
+
         GLOBAL.levelManager.LoadLevel(0);
+        GLOBAL.transition.out();
+
     }, this);
     this.confirmRestartButton.addOutline("pauseMenuButtonOutline");
     this.addChild(this.confirmRestartButton);
@@ -81,13 +101,17 @@ GlassLab.PauseMenu.prototype.show = function()
 {
     this.visible = true;
     this._refreshButtons();
-    GlassLab.SignalManager.uiWindowOpened.dispatch(this);
+
+    GlassLabSDK.saveTelemEvent("open_pause_menu", {});
+    //GlassLab.SignalManager.uiWindowOpened.dispatch(this);
 };
 
-GlassLab.PauseMenu.prototype.hide = function()
+GlassLab.PauseMenu.prototype.hide = function(auto)
 {
     this.visible = false;
-    GlassLab.SignalManager.uiWindowClosed.dispatch(this);
+
+    if (auto !== true) GlassLabSDK.saveTelemEvent("close_pause_menu", {});
+    //GlassLab.SignalManager.uiWindowClosed.dispatch(this);
 };
 
 GlassLab.PauseMenu.prototype._showRestartConfirmation = function()

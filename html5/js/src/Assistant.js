@@ -92,7 +92,8 @@ GlassLab.Assistant.STATES = {
     ORDER_INTRO: "ORDER_INTRO",
     ORDER_FOOD_CHOSEN: "ORDER_FOOD_CHOSEN",
     ORDER_CRATE_LOADED: "ORDER_CRATE_LOADED",
-    ORDER_CRATE_READY: "ORDER_CRATE_READY"
+    ORDER_CRATE_READY: "ORDER_CRATE_READY",
+    ORDER_CRATE_SHIPPING: "ORDER_CRATE_SHIPPING"
 };
 
 GlassLab.Assistant.TEXT_COLOR = "#ffffff"; // base color, used to stop highlights
@@ -177,6 +178,12 @@ GlassLab.Assistant.prototype._startClosing = function() {
 GlassLab.Assistant.prototype._close = function() {
     this.sprite.visible = false;
     this.visibilityState = "closed";
+    if (this.readyTimer) this.game.time.events.remove(this.readyTimer); // clean up the timer if necessary
+};
+
+GlassLab.Assistant.prototype.forceClose = function() {
+    this.inTutorial = this.order = false;
+    this._close();
 };
 
 GlassLab.Assistant.prototype._refreshMinimizeable = function() {
@@ -217,13 +224,14 @@ GlassLab.Assistant.prototype.startOrder = function(order) {
 
 GlassLab.Assistant.prototype.endOrder = function(order) {
     this.order = null;
+    if (this.readyTimer) this.game.time.events.remove(this.readyTimer); // clean up the timer if necessary
     this._tryClose();
 };
 
 GlassLab.Assistant.prototype.onPenLoaded = function() {
     var lastChance = this.numberOfReloads >= this.maxReloads;
     if (lastChance) {
-        this._enterStateOrderCrateReady(true);
+        this._enterStateOrderCrateReady();
     } else {
         this._enterStateOrderCrateLoaded();
     }
@@ -252,7 +260,7 @@ GlassLab.Assistant.prototype._enterStateOrderFoodChosen = function(foodTypes, la
     this.showButtons(false);
 
     if (!foodTypes) {
-        this._setText((lastChance? "I'll load this one more time. " : "") + "What should I load into the crate?");
+        this._setText((lastChance? "I'll load this *one more time.* " : "") + "What should I load into the crate?");
         return;
     }
 
@@ -287,9 +295,15 @@ GlassLab.Assistant.prototype._enterStateOrderCrateLoaded = function() {
     this._setText(text);
 };
 
-GlassLab.Assistant.prototype._enterStateOrderCrateReady = function(lastChance) {
+GlassLab.Assistant.prototype._enterStateOrderCrateReady = function() {
     this.state = GlassLab.Assistant.STATES.ORDER_CRATE_READY;
     this.showButtons(false);
+    this._setText("Ok, that's enough! I'm going to ship the crate off now.");
+    this.readyTimer = this.game.time.events.add(3000, this._enterStateOrderCrateShipping, this);
+};
+
+GlassLab.Assistant.prototype._enterStateOrderCrateShipping = function() {
+    this.state = GlassLab.Assistant.STATES.ORDER_CRATE_SHIPPING;
 
     GLOBAL.orderFulfillment.shipCrate();
 
@@ -308,13 +322,13 @@ GlassLab.Assistant.prototype._onCancelPressed = function() {
         this.numberOfReloads ++;
         GLOBAL.orderFulfillment.restartLoading(this.numberOfReloads);
         var lastChance = (this.numberOfReloads >= this.maxReloads);
-        this._enterStateOrderFoodChosen(null, lastChance); // TODO - set food
+        this._enterStateOrderFoodChosen(null, lastChance);
     }
 };
 
 GlassLab.Assistant.prototype._onContinuePressed = function() {
     if (this.state == GlassLab.Assistant.STATES.ORDER_CRATE_LOADED) {
-        this._enterStateOrderCrateReady();
+        this._enterStateOrderCrateShipping();
     }
 };
 

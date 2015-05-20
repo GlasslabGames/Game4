@@ -311,7 +311,8 @@ GlassLab.Edge.prototype._onUpdate = function() {
                 if (this.pen.widths.length > this.sideIndex + 2) {
                     targetPos.x = Math.min( targetPos.x, (this.pen.widths[this.sideIndex + 2] - 1) * ts);
                 }
-                targetPos.x = this.pen.GetValidEdgePos(this.side, this.sideIndex, targetPos.x);
+                // Only apply the pen bound limitations to the rightmost edge
+                if (this.sideIndex + 2 >= this.pen.widths.length) targetPos.x = this.pen.GetValidEdgePos(this.side, this.sideIndex, targetPos.x);
                 closestGridPos = Math.round(targetPos.x / ts);
                 flooredGridPos = Math.ceil(targetPos.x / ts);
                 break;

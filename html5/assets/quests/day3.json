@@ -107,7 +107,7 @@
             "client": "Elias Petters",
             "creatureType": "baby_unifox",
             "numFoodA": 24,
-            "description": "Welcome, wrangler. I'm pleased to make your acquaintance. I am entranced by unifoxes and require a population. I have *[totalNumFood] [foodTypeA]*. Please send enough *[creatureType]* to eat it all.",
+            "description": "Welcome, rancher. I'm pleased to make your acquaintance. I am entranced by unifoxes and require a population. I have *[numFoodA] [foodTypeA]*. Please send enough *[creatureType]* to eat it all.",
             "reward": 20,
             "creatureWidth": 2
           }
@@ -121,7 +121,7 @@
             "client": "Elias Petters",
             "creatureType": "baby_unifox",
             "numFoodA": 48,
-            "description": "Welcome, wrangler. I'm pleased to make your acquaintance. I am entranced by unifoxes and require a population. I have *[totalNumFood] [foodTypeA]*. Please send enough *[creatureType]* to eat it all.",
+            "description": "Welcome, rancher. I'm pleased to make your acquaintance. I am entranced by unifoxes and require a population. I have *[numFoodA] [foodTypeA]*. Please send enough *[creatureType]* to eat it all.",
             "reward": 20,
             "creatureWidth": 2
           }
@@ -135,7 +135,7 @@
             "client": "Elias Petters",
             "creatureType": "baby_unifox",
             "numFoodA": 32,
-            "description": "Welcome, wrangler. I'm pleased to make your acquaintance. I am entranced by unifoxes and require a population. I have *[totalNumFood] [foodTypeA]*. Please send enough *[creatureType]* to eat it all.",
+            "description": "Welcome, rancher. I'm pleased to make your acquaintance. I am entranced by unifoxes and require a population. I have *[numFoodA] [foodTypeA]*. Please send enough *[creatureType]* to eat it all.",
             "reward": 20,
             "creatureWidth": 2
           }
@@ -167,7 +167,7 @@
           "client": "Marmaduke Biggs",
           "creatureType": "baby_rammus",
           "numFoodA": 24,
-          "description": "Jumping Jehosaphat! A new wrangler, is it? I have *[numFoodA] [foodTypeA]* -- how many *[creatureType]* can I feed? Look sharp, now!",
+          "description": "Jumping Jehosaphat! A new rancher, is it? I have *[numFoodA] [foodTypeA]* -- how many *[creatureType]* can I feed? Look sharp, now!",
           "reward": 500
         },
       "boss": true,

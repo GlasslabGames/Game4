@@ -12,7 +12,7 @@ GlassLab.FoodTypes = {
         spriteName: "broccoli",
         spriteOffsetWhileDragging: 5,
         color: 0x8cb149,
-        unlocked: true,
+        startUnlocked: true,
         cost: -1,
         available: true,
         displayNames: {
@@ -24,7 +24,7 @@ GlassLab.FoodTypes = {
         spriteName: "strawberry",
         spriteOffsetWhileDragging: 7,
         color: 0xef5067,
-        unlocked: true,
+        startUnlocked: true,
         cost: -1,
         available: true,
         displayNames: {
@@ -36,7 +36,6 @@ GlassLab.FoodTypes = {
         spriteName: "apple",
         spriteOffsetWhileDragging: 15,
         color: 0xc03b30, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 20,
         available: true,
         displayNames: {
@@ -48,7 +47,6 @@ GlassLab.FoodTypes = {
         spriteName: "meat",
         spriteOffsetWhileDragging: 1,
         color: 0x975f3d, // associated color for the vomit and the hunger bar
-        unlocked: false, // Default value, unlock tracked by InventoryManager
         cost: 50,
         available: true,
         displayNames: {
@@ -60,7 +58,6 @@ GlassLab.FoodTypes = {
         spriteName: "tincan",
         spriteOffsetWhileDragging: -1,
         color: 0x99a2ac,
-        unlocked: false,
         cost: 500,
         available: true,
         displayNames: {
@@ -72,7 +69,6 @@ GlassLab.FoodTypes = {
         spriteName: "corn",
         spriteOffsetWhileDragging: -1,
         color: 0x99a2ac,
-        unlocked: false,
         cost: 20,
         available: true,
         displayNames: {
@@ -84,7 +80,6 @@ GlassLab.FoodTypes = {
         spriteName: "taco",
         spriteOffsetWhileDragging: 0,
         color: 0xf6cf62,
-        unlocked: false,
         cost: 500,
         available: true,
         displayNames: {
@@ -96,7 +91,6 @@ GlassLab.FoodTypes = {
         spriteName: "pizza",
         spriteOffsetWhileDragging: -4,
         color: 0xe4b76e,
-        unlocked: false,
         cost: 700,
         available: true,
         displayNames: {
@@ -108,7 +102,6 @@ GlassLab.FoodTypes = {
         spriteName: "mushroom",
         spriteOffsetWhileDragging: 7,
         color: 0xca5d5c,
-        unlocked: false,
         cost: 2000,
         available: true,
         displayNames: {
@@ -120,7 +113,6 @@ GlassLab.FoodTypes = {
         spriteName: "donut",
         spriteOffsetWhileDragging: 3,
         color: 0xf696ed,
-        unlocked: false,
         cost: 2000,
         available: true,
         displayNames: {
@@ -142,6 +134,12 @@ GlassLab.Food = function(game, type) {
     this.sprite.addChild(this.image);
     this.image.anchor.setTo(0.5, 0.58);
     this.image.scale.x = this.image.scale.y = 1.25;
+
+    // reduce the image hitbox since it was way larger than necessary
+    var circle = new Phaser.Circle(0, -10, 50);
+    //this.image.addChild(this.game.make.graphics().beginFill(0xffffff, 0.5).drawCircle(circle.x, circle.y, circle.radius));
+    this.image.hitArea = circle;
+
     this._setImage();
 
     this.canDropInPen = true; // setting on WorldObject
@@ -161,14 +159,14 @@ GlassLab.Food = function(game, type) {
     this.eaters = []; // list of creatures that are waiting to eat this food (waiting until they get a full eating group)
     this.prevEaters = []; // list of creatures who were waiting to eat this food but gave up
 
-    this.hungerBar = new GlassLab.FillBar(this.game, 60, 25);
+/*    this.hungerBar = new GlassLab.FillBar(this.game, 60, 25);
     this.hungerBar.sprite.scale.setTo(0.5, 0.5);
     this.hungerBar.sprite.angle = -90;
     this.hungerBar.setAmount(0, 1);
     this.hungerBar.show(false);
     this.hungerBar.sprite.x = 60;
     this.hungerBar.sprite.y = -60;
-    this.sprite.addChild(this.hungerBar.sprite);
+    this.sprite.addChild(this.hungerBar.sprite);*/
 
     this.sprite.events.onDestroy.add(this._onDestroy, this);
 
@@ -218,6 +216,9 @@ GlassLab.Food.prototype._onEndDrag = function () {
         console.log("Dropped food in pen");
         this.destroy();
     } else {
+        if (this.isInitialDropAttempt) GlassLabSDK.saveTelemEvent("place_food", {food_type: this.foodType, column: tile.col, row: tile.row});
+        this.isInitialDropAttempt = false;
+
         GLOBAL.foodInWorld.push(this);
         GLOBAL.foodLayer.add(this);
 
@@ -264,7 +265,7 @@ GlassLab.Food.prototype.BeEaten = function(animStyle) {
         //this.hungerBar.setAmount(0, this.health, true); // Now that creatures eat in groups, we no longer need the health bar.
     } else {
         this.health = 0;
-        if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
+        //if (this.hungerBar.sprite.visible) this.hungerBar.setAmount(0, 0, true, 0.5);
         if (animStyle == "long") {
             this.image.animations.add("eat", Phaser.Animation.generateFrameNames(this.type + "_death_long_", 5, 48, ".png", 5), 24, false);
         } else { // assume it's short

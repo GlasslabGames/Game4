@@ -11,7 +11,7 @@ GlassLab.CompleteChallengeAction = function(game)
 };
 
 GlassLab.CompleteChallengeAction.prototype = Object.create(GlassLab.Action.prototype);
-GlassLab.CompleteChallengeAction.prototype.constructor = GlassLab.StartChallengeAction;
+GlassLab.CompleteChallengeAction.prototype.constructor = GlassLab.CompleteChallengeAction;
 
 GlassLab.CompleteChallengeAction.prototype.Do = function()
 {

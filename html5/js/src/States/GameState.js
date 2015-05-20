@@ -36,7 +36,7 @@ GlassLab.State.Game.prototype.create = function()
     
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = true;
 
-    GLOBAL.UIManager.resetCamera();
+    GLOBAL.UIManager.snapZoomTo(GlassLab.UIManager.startZoom);
     GLOBAL.transition.out();
 };
 

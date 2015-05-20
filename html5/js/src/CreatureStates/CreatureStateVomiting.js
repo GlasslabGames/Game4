@@ -29,6 +29,8 @@ GlassLab.CreatureStateVomiting.prototype.Update = function() {
 };
 
 GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
+    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
+
     this.creature.resetFoodEaten(true);
   this.spewed = true;
   var vomit = this.game.make.isoSprite(0,0,0, "vomit");
@@ -40,18 +42,17 @@ GlassLab.CreatureStateVomiting.prototype._onSpew = function() {
   vomit.isoX = globalPos.x;
   vomit.isoY = globalPos.y;
     if (this.creature.sprite.scale.x > 0) {
-        vomit.isoX -= 50;
-        vomit.isoY -= 70;
+        vomit.isoX -= creatureInfo.vomitOffset[0].x * this.creature.sprite.scale.x;
+        vomit.isoY -= creatureInfo.vomitOffset[0].y * this.creature.sprite.scale.y;
     } else {
-        vomit.isoX -= 70;
-        vomit.isoY -= 50;
+        vomit.isoX -= creatureInfo.vomitOffset[1].x * -this.creature.sprite.scale.x;
+        vomit.isoY -= creatureInfo.vomitOffset[1].y * this.creature.sprite.scale.y;
     }
   vomit.animations.add("anim");
   vomit.animations.play("anim", this.creature.baseAnimSpeed, false);
   vomit.events.onAnimationComplete.add(this._onVomitAnimEnded, vomit);
 
     // if (this is on screen) // TODO
-    var creatureInfo = GLOBAL.creatureManager.GetCreatureData(this.creature.type);
     this.footstepSound = GLOBAL.audioManager.playSoundWithVolumeAndOffset(creatureInfo.spriteName+"_sfx_throwup", 1.0, 0.0, false); // quieter?
 };
 
@@ -72,7 +73,7 @@ GlassLab.CreatureStateVomiting.prototype._onFinishVomiting = function() {
         this.creature.FinishEating(GlassLab.results.sick);
     } else {
         if (this.food) { // only start crying if we had food, which means we're not just purging before entering a pen
-            this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 3000));
+            this.creature.StateTransitionTo(new GlassLab.CreatureStateCry(this.game, this.creature, 2000));
         } else { // else we were probably about to enter a pen, so look for it again
             this.creature.lookForTargets();
         }

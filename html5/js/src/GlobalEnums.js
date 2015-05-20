@@ -14,5 +14,6 @@ GlassLab.results = {
     wrongCreatureType: "wrongCreatureType", // the creature type in this pen/shipment didn't match the quest
     wrongCreatureNumber: "wrongCreatureNumber", // the number of creatures in this pen/shipment didn't match the quest
     invalid: "invalid", // this isn't a valid result (maybe the shipment or pen is incomplete
-    wrongTotalFood: "wrongTotalFood" // the shipment would have been right, but the totalFood count they provided was wrong
+    wrongTotalFood: "wrongTotalFood", // the shipment would have been right, but the totalFood count they provided was wrong
+    wrongFoodSum: "wrongFoodSum" // the sum of the food they sent doesn't match the totalFood they were supposed to send
 };

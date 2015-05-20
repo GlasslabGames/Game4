@@ -10,9 +10,7 @@
         "numCreatures": 3,
         "bottomDraggable": true,
         "topDraggable": true,
-        "maxHeight": 3,
-        "hidden": true,
-        "_comment": "Hide the pen at first, since DeliverPenAction shows the crate flying in."
+        "maxHeight": 3
       },
       "serializedTutorial": {
         "__type": "ActionGroup",
@@ -152,13 +150,13 @@
     },
     {
       "__type": "DoOrderChallengeAction",
-      "challengeId": "T1.03",
-      "problemType": "2UR1MC",
-      "challengeData": {
-        "client": "Lyda Ross",
-        "creatureType": "baby_rammus",
-        "numCreatures": 4,
-        "description": "Well, hello! Horatio told us there would be a new wrangler about. Let's see if you know your stuff. I have *[numCreatures] [creatureType]*, and I need food for all of them! Can you send it?",
+       "challengeId": "T1.03",
+       "problemType": "2UR1MC",
+       "challengeData": {
+       "client": "Lyda Ross",
+       "creatureType": "baby_rammus",
+       "numCreatures": 4,
+       "description": "Well, hello! Horatio told us there would be a new rancher about. Let's see if you know your stuff. I have *[numCreatures] [creatureType]*, and I need food for all of them! Can you send it?",
         "reward": 10,
         "showTooltip": true
       },
@@ -206,8 +204,8 @@
         "description": "Well, aren't you clever! But I have a trickier one for you. I have *[numFoodA] [foodTypeA]*. Please send just enough *[creatureType]* to eat all of it!",
         "reward": 10,
         "showTooltip": true
-      }
-    },
+      }      
+    }, 
     {
       "__type": "DoPenChallengeAction",
       "challengeId": "T1.04",
@@ -223,7 +221,7 @@
         "maxHeight": 15,
         "creatureWidth": 2
       },
-      "serializedTutorial": {
+        "serializedTutorial": {
         "__type": "ActionGroup",
         "serializedActions": [
           {
@@ -263,8 +261,8 @@
             "__type": "HideAssistantDialogueAction"
           }
         ]
-      }
-    },
+      }    
+    },           
     {
       "__type": "DoBonusRoundAction",
       "data": [

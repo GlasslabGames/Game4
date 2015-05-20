@@ -135,4 +135,5 @@ GlassLab.SaveManager.prototype.EraseSave = function()
 {
     this.dataBlob = {};
     this._doSave();
+    GlassLab.SignalManager.gameReset.dispatch();
 };

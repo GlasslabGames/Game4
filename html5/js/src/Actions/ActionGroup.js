@@ -59,7 +59,7 @@ GlassLab.ActionGroup.prototype._onDestroy = function()
         }
     }
 
-    this._deserializedActions = null;
+    this._deserializedActions = [];
     this.currentAction = null;
 };
 

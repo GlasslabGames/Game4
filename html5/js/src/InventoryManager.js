@@ -10,10 +10,11 @@ GlassLab.InventoryManager = function(game)
     this.money = 10;
 
     GlassLab.SignalManager.gameInitialized.addOnce(this._onInitGame, this);
+    GlassLab.SignalManager.gameReset.add(this._onInitGame, this);
 };
 
 GlassLab.InventoryManager.prototype._onInitGame = function() {
-    if (GLOBAL.saveManager.HasData("money")) this.money = GLOBAL.saveManager.LoadData("money");
+    this.money = GLOBAL.saveManager.LoadData("money") || 0;
 
     this._loadUnlockedFood();
 };
@@ -67,6 +68,10 @@ GlassLab.InventoryManager.prototype._saveUnlockedFood = function()
 
 GlassLab.InventoryManager.prototype._loadUnlockedFood = function()
 {
+    // to start, lock all food (except the ones that should always start unlocked)
+    for (var key in GlassLab.FoodTypes) GlassLab.FoodTypes[key].unlocked = GlassLab.FoodTypes[key].startUnlocked;
+
+    // then unlock the food specified by the save data
     if (GLOBAL.saveManager.HasData("unlockedItems")) {
         var unlockedItems = GLOBAL.saveManager.LoadData("unlockedItems");
         for (var i = 0; i < unlockedItems.length; i++) {

@@ -60,16 +60,21 @@ GlassLab.OrdersMenu = function(game, x, y) {
     this.currentPage = 0;
 
     // Page buttons
-    var pageButtonX = Math.round(this.bg.width / 2) + 20;
-    this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, -30, null, "sideArrow", "Next", {font: "12pt EnzoBlack"}, true, this._onNextPagePressed, this);
-    this.nextPageButton.anchor.setTo(0, 0.5);
-    this.nextPageButton.label.x -= 5;
+    var pageButtonX = Math.round(this.bg.width/2) + 20;
+    this.nextPageButton = new GlassLab.HUDButton(this.game, pageButtonX, 0, null, "sideArrow", "Next", {font: "12pt EnzoBlack", align: "left"}, true, this._onNextPagePressed, this);
+    this.nextPageButton.label = GlassLab.Util.SetCenteredText(this.nextPageButton.label, null, 0, 0);
+    this.nextPageButton.label.x -= Math.round(this.nextPageButton.label.width / 2) + 8;
+    this.nextPageButton.label.y -= Math.round(this.nextPageButton.label.height / 2) - 1;
+    this.nextPageButton.addOutline("sideArrowHighlight");
     this.sprite.addChild(this.nextPageButton);
 
-    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, -30, null, "sideArrow", "Prev", {font: "12pt EnzoBlack"}, true, this._onPrevPagePressed, this);
-    this.prevPageButton.anchor.setTo(0, 0.5);
+    this.prevPageButton = new GlassLab.HUDButton(this.game, -pageButtonX, 0, null, "sideArrow", "Prev", {font: "12pt EnzoBlack", align: "right"}, true, this._onPrevPagePressed, this);
+    this.prevPageButton.label = GlassLab.Util.SetCenteredText(this.prevPageButton.label, null, 0, 0);
+    this.prevPageButton.label.x -= Math.round(this.prevPageButton.label.width / 2) - 8;
+    this.prevPageButton.label.y -= Math.round(this.prevPageButton.label.height / 2) - 1;
+    this.prevPageButton.addOutline("sideArrowHighlight");
+    this.prevPageButton.outline.scale.x = -1;
     this.prevPageButton.bg.scale.x *= -1;
-    this.prevPageButton.label.x += 5;
     this.sprite.addChild(this.prevPageButton);
 
     // If there's no mail, we show a totally different popup
@@ -87,14 +92,16 @@ GlassLab.OrdersMenu.prototype.constructor = GlassLab.OrdersMenu;
 
 GlassLab.OrdersMenu.prototype._onNextPagePressed = function()
 {
-    this.show(this.currentPage+1);
+    this.currentPage += 1;
+    this.SetInfo(GLOBAL.mailManager.availableOrders[this.currentPage]);
 
     GLOBAL.audioManager.playSound("pageTurnSound");
 };
 
 GlassLab.OrdersMenu.prototype._onPrevPagePressed = function()
 {
-    this.show(this.currentPage-1);
+    this.currentPage -= 1;
+    this.SetInfo(GLOBAL.mailManager.availableOrders[this.currentPage]);
 
     GLOBAL.audioManager.playSound("pageTurnSound");
 };
@@ -166,7 +173,7 @@ GlassLab.OrdersMenu.prototype.SetInfo = function(data)
 GlassLab.OrdersMenu.prototype.show = function(orderNum)
 {
     GlassLab.UIWindow.prototype.show.call(this);
-    if (!this.sprite.visible) GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
+    GlassLabSDK.saveTelemEvent("open_orders", {}); // record the telemetry when we first open it
 
     // Show either the no mail popup or the actual orders, depending on whether we have mail to show
     this.sprite.visible = GLOBAL.mailManager.availableOrders.length;
@@ -185,7 +192,7 @@ GlassLab.OrdersMenu.prototype.show = function(orderNum)
 GlassLab.OrdersMenu.prototype.hide = function(auto)
 {
     GlassLab.UIWindow.prototype.hide.call(this);
-    if (auto !== true) GlassLabSDK.saveTelemEvent("close_orders", {});
+    GlassLabSDK.saveTelemEvent("close_orders", {});
 
     GlassLab.SignalManager.mailClosed.dispatch();
 };

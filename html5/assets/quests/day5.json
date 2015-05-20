@@ -33,10 +33,10 @@
           "problemType": "2BR1MF",
           "hideBackgroundOrders": true,
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Lyda Ross",
             "creatureType": "baby_bird",
             "numFoodA": 12,
-            "description": "Dear Friend! I have 12 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+            "description": "You've gotten the flockins! THEY'RE SO CUTE! I just have to have them! I have *[numFoodA] [foodTypeA]* -- can you send me just enough *[creatureType]*? I'll love them forever!",
             "reward": 50,
             "creatureWidth": 3
           }
@@ -92,10 +92,10 @@
           "problemType": "2BR2MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Lyda Ross",
             "creatureType": "baby_bird",
             "numFoodA": 52,
-            "description": "Dear Friend! I have 52 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+            "description": "Thanks for sending those flockins! Uh, something went wrong, I don't want to talk about it. Can you send me some more? I have *[numFoodA] [foodTypeA]* for them!",
             "reward": 250,
             "creatureWidth": 3
           }
@@ -106,10 +106,10 @@
           "problemType": "2BR2MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Lyda Ross",
             "creatureType": "baby_bird",
             "numFoodA": 48,
-            "description": "Dear Friend! I have 48 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+            "description": "Thanks for sending those flockins! Uh, something went wrong, I don't want to talk about it. Can you send me some more? I have *[numFoodA] [foodTypeA]* for them!",
             "reward": 250,
             "creatureWidth": 3
           }
@@ -120,10 +120,10 @@
           "problemType": "2BR2MF",
           "reviewKey": "middle",
           "challengeData": {
-            "client": "Archibold Huxley III",
+            "client": "Lyda Ross",
             "creatureType": "baby_bird",
             "numFoodA": 56,
-            "description": "Dear Friend! I have 56 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+            "description": "Thanks for sending those flockins! Uh, something went wrong, I don't want to talk about it. Can you send me some more? I have *[numFoodA] [foodTypeA]* for them!",
             "reward": 250,
             "creatureWidth": 3
           }
@@ -150,10 +150,10 @@
       "challengeId": "3.03d",
       "problemType": "2BR2MF",
       "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Marmaduke Biggs",
           "creatureType": "baby_bird",
           "numFoodA": 108,
-          "description": "Dear Friend! I have 108 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "description": "I see you've been supplying Lyda with flockins. Too bad for them. I'll take better care. Send me enough *[creatureType]* for my *[numFoodA] [foodTypeA]* post haste and I shall reward you handsomely!",
           "reward": 500,
           "creatureWidth": 3
         },
@@ -199,10 +199,10 @@
         "challengeId": "3.03a",
         "problemType": "2BR1MF",
         "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Lyda Ross",
           "creatureType": "baby_bird",
           "numFoodA": 44,
-          "description": "Dear Friend! I have 44 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "description": "These flockins sure are hard to keep after. I'm sure I'll figure it out. I've got *[numFoodA] [foodTypeA]*, can you send me more *[creatureType]* for it?",
           "reward": 50,
           "creatureWidth": 3
         }
@@ -212,10 +212,10 @@
         "challengeId": "3.03c",
         "problemType": "2BR1MF",
         "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Lyda Ross",
           "creatureType": "baby_bird",
           "numFoodA": 40,
-          "description": "Dear Friend! I have 40 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "description": "Okay, I've really got it this time. This is the last batch, I swear. I've got *[numFoodA] [foodTypeA]* and I need just enough *[creatureType]*!",
           "reward": 50,
           "creatureWidth": 3
         }
@@ -225,10 +225,10 @@
         "challengeId": "3.03h",
         "problemType": "2BR1MF",
         "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Lyda Ross",
           "creatureType": "baby_bird",
           "numFoodA": 36,
-          "description": "Dear Friend! I have 36 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+          "description": "Well, that didn't go so well. I've really got it this time. I've got *[numFoodA] [foodTypeA]*, so send just enough *[creatureType]*!",
           "reward": 50,
           "creatureWidth": 3
         }
@@ -243,10 +243,10 @@
         "challengeId": "3.02b",
         "problemType": "2BR2MC",
         "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Lyda Ross",
           "creatureType": "baby_bird",
           "numCreatures": 27,
-          "description": "Dear Friend! I have 27 BABY FLOCKINS. Please send me enough food for all of them!",
+          "description": "I told you I could do it! But my meat ran out. Now I have *[numCreatures] [creatureType]* -- can you send me food for them?",
           "reward": 50,
           "creatureWidth": 3
         }
@@ -259,7 +259,7 @@
           "client": "Archibold Huxley III",
           "creatureType": "baby_bird",
           "numCreatures": 45,
-          "description": "Dear Friend! I have 30 BABY FLOCKINS. Please send me enough food for all of them!",
+          "description": "I've acquired even more *[creatureType]*! Now I have *[numCreatures] [creatureType]* and I need just enough food!",
           "reward": 50,
           "creatureWidth": 3
         }
@@ -350,10 +350,10 @@
       "orderId": "3.03g",
       "problemType": "2BR2MF",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Lyda Ross",
         "creatureType": "baby_bird",
         "numFoodA": 84,
-        "description": "Dear Friend! I have 84 MEAT. Please send me the exact number of BABY FLOCKINS to eat all my food!",
+        "description": "My experiments continue. I'm on the edge of a breakthrough. I have *[numFoodA] [foodTypeA]* -- please send just enough *[creatureType]*!",
         "reward": 250,
         "creatureWidth": 3
       }
@@ -362,10 +362,10 @@
       "orderId": "3.02a",
       "problemType": "2BR1MC",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Lyda Ross",
         "creatureType": "baby_bird",
         "numCreatures": 36,
-        "description": "Dear Friend! I have 36 BABY FLOCKINS. Please send me enough food for all of them!",
+        "description": "Success! My *[creatureType]* are thriving! But I have a food shortage. Send me enough food for *[numCreatures] [creatureType]*, won't you?",
         "reward": 50,
         "creatureWidth": 3
       }

@@ -9,21 +9,9 @@ GlassLab.TelemetryManager = function()
     this.initialized = false;
     this._initializeSDK();
 
-    this.attemptsOnLastProblem = 0;
-
-    this.ordersCompleted = 0;
-
-    this.challengesCompleted = 0;
-    this.challengesCompletedOnFirstAttempt = 0;
-    this.challengeLatencySum = 0;
+    this._resetData();
 
     this.userSaveString = "{}";
-
-    this.penResizes = [];
-    this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
-    this.SOWOs = {};
-    this.problemTypesCompletedPerfectly = {}; // problem types are added to this list when a player completes a problem of that type in 1 attempt
-    this.problemTypesFailedTwiceCount = {}; // count of how many problems of each type the player has failed at least twice.
 
     GlassLab.SignalManager.challengeStarted.add(this._onChallengeStarted, this);
     GlassLab.SignalManager.challengeComplete.add(this._onChallengeComplete, this);
@@ -31,6 +19,7 @@ GlassLab.TelemetryManager = function()
     GlassLab.SignalManager.penResized.add(this._onFeedingPenResized, this); // needed to track pen resizes
 
     GlassLab.SignalManager.gameInitialized.addOnce(this._loadData, this);
+    GlassLab.SignalManager.gameReset.addOnce(this._resetData, this);
 };
 
 GlassLab.TelemetryManager.prototype._initializeSDK = function()
@@ -111,7 +100,7 @@ GlassLab.TelemetryManager.prototype._onFeedingPenResized = function(pen, prevDim
 };
 
 
-GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, challengeType, problemType)
+GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, challengeType, problemType, boss, creatureType)
 {
     // These things should be set whether we're starting a new challenge or just restarting
     this.challengeAttemptStartTime = GLOBAL.game.time.now;
@@ -123,6 +112,7 @@ GlassLab.TelemetryManager.prototype._onChallengeStarted = function(id, challenge
     this.currentChallengeType = challengeType;
     this.currentProblemType = problemType;
     this.challengeOriginalStartTime = GLOBAL.game.time.now;
+    this.currentCreatureType = creatureType;
 
     GlassLabSDK.saveTelemEvent("start_challenge", {challenge_type: challengeType, problemType: problemType});
 };
@@ -155,7 +145,7 @@ GlassLab.TelemetryManager.prototype._onChallengeFailure = function()
         problem_type: this.currentProblemType
     });
 
-    this._checkFailureSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType, this.currentProblemType);
+    this._checkFailureSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType, this.currentProblemType, this.currentCreatureType);
 };
 
 GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
@@ -197,75 +187,113 @@ GlassLab.TelemetryManager.prototype._onChallengeSuccess = function()
         value: this.challengeLatencySum / this.challengesCompleted
     });
 
-    this._checkSuccessSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType, this.currentProblemType);
+    this._checkSuccessSOWOs(this.currentChallengeId, this.challengeAttempts[this.currentChallengeId], this.currentChallengeType, this.currentProblemType, this.currentCreatureType);
 };
 
-GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, attempts, challengeType, problemType) {
-    var problemType = problemType.substring(problemType.length - 3).toUpperCase(); // make sure to update this if the problem type format changes
-    var lastIntroChallengeId = "T1.04"; // FIXME if we change the level IDs
-    var lastPart2ChallengeId = "2.05";
+// 3BR2MTb -> MTb, 2UR1MC -> MC -- make sure to update if the problem type changes
+GlassLab.TelemetryManager.prototype._extractProblemType = function(problemType) {
+    var index = problemType.search(/\D+\b/); // find the final sequence of non-digits in the string
+    //console.log("SOWO problem type:",problemType.substring(index),"from",problemType);
+    return problemType.substring(index); // make sure to update this if the problem type format changes
+};
 
+GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, attempts, challengeType, problemType, creatureType) {
+    problemType = this._extractProblemType(problemType);
+    var lastIntroChallengeId = "T1.05";
+    var lastPart2ChallengeId = "2.06b";
+
+    // compile a list of the sections (T, 1, 2, etc) in which the player finished every challenge on the first attempt
     var perfectProgressions = {};
     for (var id in this.challengeAttempts) {
-        var section = id.split(".")[0]; // make sure to update this if the challenge ID format changes
+        var section = id[0]; // make sure to update this if the challenge ID format changes
         if (section in perfectProgressions) {
-            perfectProgressions[section] = perfectProgressions[section] && (this.challengeAttempts[id] == 1);
+            perfectProgressions[section] = perfectProgressions[section] && (this.challengeAttempts[id] == 1); // stays true as long as the number of attempts is 1
         } else {
             perfectProgressions[section] = (this.challengeAttempts[id] == 1);
         }
     }
-    if (challengeId == lastIntroChallengeId && perfectProgressions["T1"]) this._sendSOWO("so1"); // all intro levels were successful on the 1st attempt
+    if (challengeId == lastIntroChallengeId && perfectProgressions["T"]) this._sendSOWO("so1"); // reached the last intro challenge with all tutorial levels successful on the 1st attempt
 
     if (challengeType == "pen") this._sendSOWO("so2"); // first successful pen (it will only be sent if it hasn't been sent yet.)
     else if (challengeType == "order") this._sendSOWO("so3"); // first successful order
 
-    if (attempts == 1) {
-        if (!this.problemTypesCompletedPerfectly[problemType]) {
-            this.problemTypesCompletedPerfectly[problemType] = true;
-            // the following SOs will be sent as soon as the player completes at least one problem of the specifies types perfectly
-            if (this.problemTypesCompletedPerfectly.NC && this.problemTypesCompletedPerfectly.NF) this._sendSOWO("so4");
-            if (this.problemTypesCompletedPerfectly.MC && this.problemTypesCompletedPerfectly.MF) this._sendSOWO("so5");
-            if (this.problemTypesCompletedPerfectly.MT) this._sendSOWO("so6");
+    // Check for some SO that are sent when we've completed certain combinations of problems on the first try
+    if (attempts == 1 && problemType.length <= 4) { // exclude odd problem types
+        var completed = this.problemTypesCompletedPerfectly;
+
+        // the categories are "baby", "adult", and "bird".
+        if (creatureType) {
+            var category = "adult";
+            if (creatureType.indexOf("bird") > -1) category = "bird";
+            else if (creatureType.indexOf("baby") > -1) category = "baby";
+
+            category += problemType[1]; // append the second letter of the problem type (F, C, T)
+            //console.log("SOWO category:",category);
+
+            completed[category] = true; // add the creature/problem type key (babyC, adultT, etc)
+
+            if (completed.babyC && completed.babyF) this._sendSOWO("so4");
+            if (completed.adultC && completed.adultF && completed.adultT) this._sendSOWO("so5");
+            if (completed.birdC && completed.birdF && completed.birdT) this._sendSOWO("so9");
         }
+
+        completed[problemType] = true;
+        if (completed.MTa && completed.MTb) this._sendSOWO("so6");
     }
 
-    if (challengeId == lastPart2ChallengeId && perfectProgressions[1] && perfectProgressions[2]) this._sendSOWO("so7"); // all challenges in parts 1 and 2 were completed in 1 attempt
+    if (challengeId == lastPart2ChallengeId && perfectProgressions["1"] && perfectProgressions["2"]) this._sendSOWO("so7"); // all challenges in parts 1 and 2 were completed in 1 attempt
 
-    if (problemType == "MT") this._sendSOWO("so8"); // the player has completed an advanced challenge (in any number of attempts)
+    if (problemType == "MTa" || problemType == "MTb") this._sendSOWO("so8"); // the player has completed an advanced challenge (in any number of attempts)
 
-    var section = parseInt(challengeId.split(".")[0]);
-    if (section > 0) { // we need to track these for wo2 and 3
+    if (challengeId[0] != "T") { // we need to track these for wo2 and 3
         if (challengeType == "pen") this.pastFirstNonIntroPenChallenge = true;
         else if (challengeType == "order") this.pastFirstNonIntroOrderChallenge = true;
         // Once we've won one of these challenges that's not in the intro, we can no longer trigger watch-outs that target the first non-intro challenge.
     }
+
+    if (challengeId == lastIntroChallengeId) this.finishedIntro = true; // once they pass the last intro challenge, they can no longer trigger wo1
 };
 
-GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, attempts, challengeType, problemType) {
-    var section = challengeId.split(".")[0]; // make sure to update this if the challenge ID format changes
-    if (section.indexOf("T") != -1) {
-        if (attempts == 3) this._sendSOWO("wo1"); // more than 3 attempts to complete an intro challenge
+GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, attempts, challengeType, problemType, creatureType) {
+    problemType = this._extractProblemType(problemType);
+
+    if (challengeId[0] == "T") { // tutorial challenge
+        if (attempts == 3 && !this.finishedIntro) this._sendSOWO("wo1"); // more than 3 attempts to complete a tutorial challenge (before finishing the intro)
     } else if (attempts == 4) {
         if (challengeType == "order" && !this.pastFirstNonIntroOrderChallenge) this._sendSOWO("wo2"); // more than 4 attempts for the first order challenge (they haven't beaten one before)
         else if (challengeType == "pen" && !this.pastFirstNonIntroPenChallenge) this._sendSOWO("wo3"); // more than 4 attempts for the first pen challenge (they haven't beaten one before)
     }
 
-    if (attempts == 2) { // note that we only want to increment the count when the attempt is 2 and not do it again when > 2
-        var problemType = problemType.substring(problemType.length - 3).toUpperCase(); // make sure to update this if the problem type format changes
-        this.problemTypesFailedTwiceCount[problemType] = this.problemTypesFailedTwiceCount[problemType] || 0;
-        this.problemTypesFailedTwiceCount[problemType] ++;
-        if (this.problemTypesFailedTwiceCount[problemType] >= 2) {
-            if (problemType == "NC") this._sendSOWO("wo4");
-            else if (problemType == "MC") this._sendSOWO("wo5");
-            else if (problemType == "MF") this._sendSOWO("wo6");
-            else if (problemType == "NF") this._sendSOWO("wo7");
-            else if (problemType == "MT") this._sendSOWO("wo8");
+    // Count up how many problems of each category they've failed twice
+    if (attempts == 2 && creatureType && problemType.length <= 4) { // note that we only want to increment the count when the attempt is 2 and not do it again when > 2
+
+        var category = "adult";
+        if (creatureType.indexOf("bird") > -1) category = "bird";
+        else if (creatureType.indexOf("baby") > -1) category = "baby";
+
+        category += problemType[1]; // append the second letter of the problem type (F, C, T)
+        //console.log("SOWO category:",category);
+
+        this.problemTypesFailedTwiceCount[category] = this.problemTypesFailedTwiceCount[category] || 0;
+        this.problemTypesFailedTwiceCount[category] ++;
+        if (this.problemTypesFailedTwiceCount[category] >= 2) {
+            switch (category) {
+                case "babyC":   this._sendSOWO("wo4"); break;
+                case "babyF":   this._sendSOWO("wo5"); break;
+                case "adultC":  this._sendSOWO("wo6"); break;
+                case "adultF":  this._sendSOWO("wo7"); break;
+                case "adultT":  this._sendSOWO("wo8"); break;
+                case "birdC":   this._sendSOWO("wo9"); break;
+                case "birdF":   this._sendSOWO("wo10"); break;
+                case "birdT":   this._sendSOWO("wo11"); break;
+            }
         }
     }
 };
 
 GlassLab.TelemetryManager.prototype._sendSOWO = function(name) {
     if (!this.SOWOs[name]) { // only send a SOWO if we haven't sent it yet
+        console.log("*** Saving SOWO:",name,"***");
         this.SOWOs[name] = true;
         GlassLabSDK.saveTelemEvent(name, {});
     }
@@ -281,7 +309,8 @@ GlassLab.TelemetryManager.prototype._saveData = function() {
         problemTypesCompletedPerfectly: this.problemTypesCompletedPerfectly,
         problemTypesFailedTwiceCount: this.problemTypesFailedTwiceCount,
         pastFirstNonIntroPenChallenge: this.pastFirstNonIntroPenChallenge,
-        pastFirstNonIntroOrderChallenge: this.pastFirstNonIntroOrderChallenge
+        pastFirstNonIntroOrderChallenge: this.pastFirstNonIntroOrderChallenge,
+        finishedIntro: this.finishedIntro
     });
 };
 
@@ -292,4 +321,20 @@ GlassLab.TelemetryManager.prototype._loadData = function() {
             this[key] = data[key];
         }
     }
+};
+
+GlassLab.TelemetryManager.prototype._resetData = function() {
+    this.challengesCompleted = 0;
+    this.challengesCompletedOnFirstAttempt = 0;
+    this.challengeLatencySum = 0;
+
+    this.penResizes = [];
+    this.challengeAttempts = {}; // challenge attempts by challengeID. We should be good to erase these when they go to the next level.
+    this.SOWOs = {};
+    this.problemTypesCompletedPerfectly = {};
+    this.problemTypesFailedTwiceCount = {};
+
+    this.pastFirstNonIntroPenChallenge = false;
+    this.pastFirstNonIntroOrderChallenge = false;
+    this.finishedIntro = false;
 };

@@ -633,7 +633,7 @@ either expressed or implied, of the FreeBSD Project.
           GlassLabSDK._activeGameSessionId = JSON.parse( responseData ).gameSessionId;
           defaultSuccessCallback( success, responseData );
 
-          console.log( "[GlassLabSDK] startSession success: " + GlassLabSDK._activeGameSessionId );
+          //console.log( "[GlassLabSDK] startSession success: " + GlassLabSDK._activeGameSessionId );
 
           // Send the next item in the message queue
           _dispatchNextRequest();
@@ -760,6 +760,9 @@ either expressed or implied, of the FreeBSD Project.
 
     this._gameSessionEventOrder++;
     this._playSessionEventOrder++;
+
+      // For easily checking telemetry
+      console.log(">>> ["+this._options.gameLevel+"]",name,":",data);
   };
 
   _GlassLabSDK.prototype.sendTotalTimePlayed = function( success, error ) {

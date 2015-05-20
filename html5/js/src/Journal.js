@@ -98,7 +98,7 @@ GlassLab.Journal.prototype.show = function(auto, creatureType)
 {
     GlassLab.UIWindow.prototype.show.call(this);
 
-    GlassLabSDK.saveTelemEvent((auto? "journal_shown" : "open_journal"), {});
+    GlassLabSDK.saveTelemEvent("open_journal", {});
 
     GLOBAL.inventoryMenu.hide(true);
 

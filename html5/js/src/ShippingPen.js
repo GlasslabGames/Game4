@@ -154,9 +154,6 @@ GlassLab.ShippingPen.prototype.setContents = function(creatureType, numCreatures
 
     this.tintRows = (singleCreatureRow || singleFoodRow); // if there's some kind of hint, turn on the alternatingly tinted rows
 
-    // we have all the information, so we can calculate the result right now
-    this.calculateResult();
-
     // We don't call showNewContents until we're done zooming out
     this.game.time.events.add(500, this.transitionToNewContents, this); // the zoom takes 300 ms, so this should work fine
 };
@@ -247,36 +244,6 @@ GlassLab.ShippingPen.prototype.showNewContents = function() {
 
     if (this.totalFoodHint) this.tooltip.show(this, "hint");
     else this.tooltip.hide();
-};
-
-GlassLab.ShippingPen.prototype.calculateResult = function() {
-    this.problemFoods = []; // list of food types that were incorrect
-    if (this.numCreatures == 0) this.result = GlassLab.results.invalid;
-    else {
-        this.result = GlassLab.results.satisfied; // unless we discover a problem with one of the food types
-        var info = GLOBAL.creatureManager.GetCreatureData(this.creatureType);
-        for (var i = 0; i < info.desiredFood.length; i++) {
-            var type = info.desiredFood[i].type;
-            var index = this.foodTypes.indexOf(type);
-            if (index == -1) {
-                this.result = GlassLab.results.dislike;
-                this.problemFoods.push(type);
-                break;
-            } else {
-                var targetAmount = info.desiredFood[i].amount * this.numCreatures;
-                var currentAmount = (this.numFoods && parseInt(this.numFoods[index])) || 0;
-                //console.log(info.desiredFood[i].type, "target:",targetAmount,"current:",currentAmount,"for creatures:",numCreatures);
-
-                if (currentAmount + 0.01 < targetAmount) { // add a little wiggle room
-                    if (this.result == GlassLab.results.satisfied) this.result = GlassLab.results.hungry; // only override "satisfied" - always keep on the first bad result
-                    this.problemFoods.push(type);
-                } else if (currentAmount > targetAmount + 0.01) {
-                    if (this.result == GlassLab.results.satisfied) this.result = GlassLab.results.sick;
-                    this.problemFoods.push(type);
-                } // else they're satisfied with this food at least
-            }
-        }
-    }
 };
 
 GlassLab.ShippingPen.prototype.ship = function() {

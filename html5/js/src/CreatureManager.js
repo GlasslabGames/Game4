@@ -30,7 +30,8 @@ GlassLab.CreatureManager = function (game) {
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
-            ]
+            ],
+            vomitOffset: [{x: 45, y: 100}, {x: 110, y: 40}]
         },
         rammus: {
             journalInfo: {
@@ -50,7 +51,8 @@ GlassLab.CreatureManager = function (game) {
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
-            ]
+            ],
+            vomitOffset: [{x: 65, y: 110}, {x: 110, y: 50}]
         },
         baby_unifox: {
             journalInfo: {
@@ -71,7 +73,8 @@ GlassLab.CreatureManager = function (game) {
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
-            ]
+            ],
+            vomitOffset: [{x: 60, y: 95}, {x: 90, y: 60}]
         },
         unifox: {
             journalInfo: {
@@ -92,7 +95,8 @@ GlassLab.CreatureManager = function (game) {
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
-            ]
+            ],
+            vomitOffset: [{x: 65, y: 110}, {x: 110, y: 70}]
         },
         baby_bird: {
             journalInfo: {
@@ -106,13 +110,14 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false,
             spriteName: "babybird",
-            fxFrames: {eat: 22, vomit: 60, poop: 70 },
+            fxFrames: {eat: 22, vomit: 64, poop: 70 },
             desiredFood: [{type: "meat", amount: 4/3}], // 3 birds eat 4 food
             eatingGroup: 3,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
-            ]
+            ],
+            vomitOffset: [{x: 35, y: 90}, {x: 90, y: 60}]
         },
         bird: {
             journalInfo: {
@@ -126,19 +131,21 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false,
             spriteName: "bird",
-            fxFrames: {eat: 30, vomit: 60, poop: 70 },
+            fxFrames: {eat: 30, vomit: 58, poop: 70 },
             desiredFood: [{type: "meat", amount: (5/3)}, {type: "taco", amount: (2/3)}],
             eatingGroup: 3,
             otherFood: [
                 {type: "mushroom", reaction: { result: "sick", details: {}}},
                 {type: "donut", reaction: { result: "hyper", details: { speedMultiplier: 3 }}}
-            ]
+            ],
+            vomitOffset: [{x: 75, y: 115}, {x: 115, y: 70}]
         }
     };
 
     this.creatures = [];
 
     GlassLab.SignalManager.gameInitialized.addOnce(this._loadDiscoveredCreatures, this);
+    GlassLab.SignalManager.gameReset.addOnce(this._loadDiscoveredCreatures, this);
 };
 
 /*
@@ -284,6 +291,10 @@ GlassLab.CreatureManager.prototype._saveDiscoveredCreatures = function()
 
 GlassLab.CreatureManager.prototype._loadDiscoveredCreatures = function()
 {
+    // lock all creatures
+    for (var type in this.creatureDatabase) this.creatureDatabase[type].unlocked = false;
+
+    // unlock creatures listed in the save data
     if (GLOBAL.saveManager.HasData("discoveredCreatures")) {
         var creatures = GLOBAL.saveManager.LoadData("discoveredCreatures");
         for (var i = 0; i < creatures.length; i++) {

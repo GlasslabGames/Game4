@@ -21,6 +21,8 @@ GlassLab.DoPenChallengeAction.prototype.Do = function() {
 
     this.pen = GLOBAL.penManager.CreatePen(this.data, this.data.startCol, this.data.startRow);
     this.pen.onResolved.add(this._onPenResolved, this);
+
+    GLOBAL.UIManager.resetCameraPos(); // scroll to focus on the pen
 };
 
 GlassLab.DoPenChallengeAction.prototype._onDestroy = function() {
