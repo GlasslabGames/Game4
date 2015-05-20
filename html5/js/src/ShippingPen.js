@@ -166,8 +166,9 @@ GlassLab.ShippingPen.prototype.transitionToNewContents = function() {
     var maxWidth = Math.max(this.getFullWidth(), this.prevWidth || 0);
     var maxHeight = Math.max(this.height, this.prevHeight || 0);
 
-    var minX = Math.min(this.sprite.isoX, this.newX);
-    var minY = Math.min(this.sprite.isoY, this.newY);
+    // if prevWidth or prevHeight don't exist, then there is no previous pen to accomodate
+    var minX = this.prevWidth? Math.min(this.sprite.isoX, this.newX) : this.newX;
+    var minY = this.prevHeight? Math.min(this.sprite.isoY, this.newY) : this.newY;
 
     if (!this.smokeRoot) {
         this.smokeRoot = this.game.make.isoSprite(minX, minY);
