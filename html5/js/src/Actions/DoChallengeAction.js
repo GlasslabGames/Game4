@@ -26,7 +26,7 @@ GlassLab.DoChallengeAction.prototype.constructor = GlassLab.DoChallengeAction;
 GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
 {
     GLOBAL.levelManager._destroyCurrentLevel(); // wipe the world in preparation
-    GLOBAL.UIManager.resetCamera(); // scroll back to the middle of the world
+    GLOBAL.UIManager.resetCameraPos(); // scroll back to the middle of the world or the pen
 
     GlassLabSDK.endSessionAndFlush(function(data){
         console.log("Session ended: "+data);

@@ -380,8 +380,21 @@ GlassLab.UIManager.prototype.zoomOut = function() {
 };
 
 
-GlassLab.UIManager.prototype.resetCamera = function() {
-    this.zoomTo(GlassLab.UIManager.startZoom);
+GlassLab.UIManager.prototype.storeCamera = function() {
+    this.previousZoomLevel = this.zoomLevel;
+    this.previousCameraX = GLOBAL.game.camera.x;
+    this.previousCameraY = GLOBAL.game.camera.y;
+};
+
+GlassLab.UIManager.prototype.loadCamera = function() {
+    this.snapZoomTo(this.previousZoomLevel);
+    GLOBAL.game.camera.x = this.previousCameraX;
+    GLOBAL.game.camera.y = this.previousCameraY;
+    this.enforceCameraBounds();
+    GlassLab.SignalManager.cameraMoved.dispatch();
+};
+
+GlassLab.UIManager.prototype.resetCameraPos = function() {
     if (GLOBAL.penManager.pens.length) GLOBAL.penManager.focusCameraOnPen(); // center the camera over the pen
     else this.setCenterCameraPos(0, 0); // center in the middle of the screen
 };

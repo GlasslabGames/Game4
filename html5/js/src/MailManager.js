@@ -133,6 +133,8 @@ GlassLab.MailManager.prototype.isOrderComplete = function(orderId) {
 };
 
 GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
+    GLOBAL.UIManager.storeCamera();
+
     GLOBAL.penManager.hidePens();
     GLOBAL.creatureManager.hideCreatures();
     for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
@@ -159,7 +161,7 @@ GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
 
     GLOBAL.orderFulfillment.hide(true);
     GLOBAL.tiledBg.visible = false;
-    GLOBAL.UIManager.resetCamera();
+    GLOBAL.UIManager.loadCamera();
     GLOBAL.UIManager.toggleCancelHUDButton(false);
     GLOBAL.UIManager.toggleZoomHUDButtons(true);
 };
