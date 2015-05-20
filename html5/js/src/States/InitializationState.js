@@ -9,23 +9,23 @@ GlassLab.State.Init = function(game) {};
 
 // Before starting to load assets, set up the loading indicators using assets we loaded in Boot.js
 GlassLab.State.Init.prototype.init = function() {
-    var bg = this.add.sprite(this.game.width / 2, this.game.height / 2, "loadingStatic");
-    bg.anchor.setTo(0.5, 0.5);
+    this.bg = this.add.sprite(this.game.width / 2, this.game.height / 2, "loadingStatic");
+    this.bg.anchor.setTo(0.5, 0.5);
 
-    var fillBar = this.add.sprite(bg.x, bg.y, "loadingFill");
-    fillBar.anchor.setTo(0, 0.5);
-    fillBar.x -= fillBar.width / 2;
+    this.fillBar = this.add.sprite(this.bg.x, this.bg.y, "loadingFill");
+    this.fillBar.anchor.setTo(0, 0.5);
+    this.fillBar.x -= this.fillBar.width / 2;
 
-    var startWidth = fillBar.width;
-    var cropRect = new Phaser.Rectangle(0, 0, 0, fillBar.height);
-    fillBar.crop(cropRect);
+    var startWidth = this.fillBar.width;
+    var cropRect = new Phaser.Rectangle(0, 0, 0, this.fillBar.height);
+    this.fillBar.crop(cropRect);
 
     this.game.load.onFileComplete.add(function(progress, cacheKey, success, totalLoaded, totalFiles){
         cropRect.width = startWidth * progress / 100 * 0.90; // 100% progress is before the end of the bar, to explain the lag before actually starting the game
-        fillBar.crop(cropRect);
+        this.fillBar.crop(cropRect);
     }, this);
 
-    this.spinner = this.add.sprite(bg.x, bg.y + 120, "loadingSpinner");
+    this.spinner = this.add.sprite(this.bg.x, this.bg.y + 120, "loadingSpinner");
     this.spinner.anchor.setTo(0.5, 0.5);
 };
 
@@ -498,7 +498,7 @@ GlassLab.State.Init.prototype.create = function()
 
 GlassLab.State.Init.prototype.loadRender = function() {
     this.timePassed = (this.timePassed || 0) + (this.game.time.elapsed / 100);
-    this.spinner.angle = Math.floor(this.timePassed) * 60;
+    if (this.spinner) this.spinner.angle = Math.floor(this.timePassed) * 60;
 };
 
 GlassLab.State.Init.prototype.update = function()
@@ -507,6 +507,10 @@ GlassLab.State.Init.prototype.update = function()
     {
         //GLOBAL.loadingText.destroy();
         //delete GLOBAL.loadingText;
+
+        this.spinner.destroy();
+        this.fillBar.destroy();
+        this.bg.destroy();
 
         this.game.state.start("Game", false);
     }
