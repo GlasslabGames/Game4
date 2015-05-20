@@ -64,7 +64,7 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
 
     GLOBAL.questManager.UpdateObjective(this.objective || this.getDefaultObjective());
 
-    GlassLab.SignalManager.challengeStarted.dispatch(this.challengeId, this.challengeType, this.problemType, this.boss);
+    GlassLab.SignalManager.challengeStarted.dispatch(this.challengeId, this.challengeType, this.problemType, this.boss, this.challengeData.creatureType);
 };
 
 GlassLab.DoChallengeAction.prototype.completeChallenge = function()
