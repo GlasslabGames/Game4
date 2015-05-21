@@ -14,10 +14,11 @@ GlassLab.ShippingPen = function(game) {
     GlassLab.Pen.call(this, game, GLOBAL.penLayer);
     this.edgeAnchor = new Phaser.Point(0.075, 0.04);
     this.lidAnchor = new Phaser.Point(0.075, 0.25);
+    this.scaleAmount = 0.83; // the old assets are too big for the new tilesize, so scale everything by this amoutn
 
-    this.frontObjectRoot.isoPosition.setTo(GLOBAL.tileSize * -0.25, GLOBAL.tileSize * -0.35);
+    this.frontObjectRoot.isoPosition.setTo(GLOBAL.tileSize * -0.6, GLOBAL.tileSize * -0.6);
 
-    this.shadow = this.game.make.isoSprite(GLOBAL.tileSize + 20, GLOBAL.tileSize);
+    this.shadow = this.game.make.isoSprite(GLOBAL.tileSize, GLOBAL.tileSize);
     this.sprite.addChildAt(this.shadow, 0);
     this.shadow.alpha = 0.4;
 
@@ -25,6 +26,7 @@ GlassLab.ShippingPen = function(game) {
     this.sprite.addChildAt(this.cornerSprite, this.sprite.getChildIndex(this.tileRoot));
     this.cornerSprite.anchor.setTo(this.edgeAnchor.x, this.edgeAnchor.y);
     this.cornerSprite.loadTexture("crate", "crate_back_corner.png");
+    this.cornerSprite.scale.setTo(this.scaleAmount, this.scaleAmount);
 
     this.frontBottomEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.bottom);
     this.frontRightEdge = new GlassLab.Edge(this, GlassLab.Edge.SIDES.right);
@@ -46,6 +48,7 @@ GlassLab.ShippingPen = function(game) {
     this.lidCornerSprite = this.game.make.isoSprite(GLOBAL.tileSize * -2, GLOBAL.tileSize * -1, 0, "crate_lidCorner");
     this.lid.addChild(this.lidCornerSprite);
     this.lidCornerSprite.anchor.setTo(this.lidAnchor.x, this.lidAnchor.y);
+    this.lidCornerSprite.scale.setTo(this.scaleAmount, this.scaleAmount);
 
     this.lid.addChild(this.lidTopEdge.sprite);
     this.lid.addChild(this.lidLeftEdge.sprite);
@@ -54,6 +57,10 @@ GlassLab.ShippingPen = function(game) {
 
     this.propellerRoot = this.lid.addChild( this.game.make.sprite(0, -GLOBAL.tileSize) );
     this.unusedPropellers = [];
+
+    for (var i = 0; i < this.edges.length; i++) {
+        this.edges[i].presetScale = this.scaleAmount; // this is applied to pieces that are added to the edge
+    }
 
     this.centerEdge.setVisible(false);
 
@@ -101,7 +108,7 @@ GlassLab.ShippingPen.prototype.reset = function() {
     this.lid.visible = false;
     this.sprite.alpha = 1;
     this.shadow.alpha = 0.3;
-    this.shadow.isoPosition.setTo(GLOBAL.tileSize + 20, GLOBAL.tileSize);
+    this.shadow.isoPosition.setTo(GLOBAL.tileSize, GLOBAL.tileSize);
 };
 
 GlassLab.ShippingPen.prototype.hide = function() {
@@ -387,9 +394,9 @@ GlassLab.ShippingPen.prototype._drawEdges = function() {
 };
 
 GlassLab.ShippingPen.prototype._drawBgAtTile = function(col, row, tile) {
-    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.tileRoot, "crate", "crate_floor.png", (this.tintRows && row % 2)? 0xeeeeee : 0xffffff);
-    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.shadow, "crate_shadow", "", 0x000000, 0.995);
-    if (this.lid.visible) this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.lidTileRoot, "crate", "crate_floor.png");
+    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.tileRoot, "crate", "crate_floor.png", (this.tintRows && row % 2)? 0xeeeeee : 0xffffff, this.scaleAmount);
+    this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.shadow, "crate_shadow", "", 0x000000, this.scaleAmount);//0.995);
+    if (this.lid.visible) this._placeTile(GLOBAL.tileSize * (col-2), GLOBAL.tileSize * (row-1), this.lidTileRoot, "crate", "crate_floor.png", 0xffffff, this.scaleAmount);
 };
 
 GlassLab.ShippingPen.prototype._drawPropellers = function() {
@@ -424,6 +431,7 @@ GlassLab.ShippingPen.prototype._addPropeller = function(col, row) {
     if (!propeller) {
         var propeller = this.game.make.isoSprite(col * GLOBAL.tileSize, row * GLOBAL.tileSize, 0, "propellerAnim");
         propeller.anchor.setTo(0.5, 0.92);
+        propeller.scale.setTo(this.scaleAmount, this.scaleAmount);
         propeller.animations.add("extend", Phaser.Animation.generateFrameNames("propeller_extender_",060,123,".png",3), 24, false);
         propeller.animations.add("spin", Phaser.Animation.generateFrameNames("propeller_spin_",0,1,".png",3), 24, true);
     }
