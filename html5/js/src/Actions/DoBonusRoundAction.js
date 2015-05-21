@@ -33,7 +33,7 @@ GlassLab.DoBonusRoundAction.prototype.Do = function()
         GLOBAL.sortingGame.storedData = this.data;
         GLOBAL.UIManager.bonusModal.show(); // this will start the sorting game once they press a button
     } else {
-        GLOBAL.sortingGame.start(this.data);
+        this.timer = GLOBAL.game.time.events.add(2000, function() { GLOBAL.sortingGame.start(this.data); }, this); // wait a moment so they can see the objective, etc
     }
 
     GLOBAL.questManager.UpdateObjective("Complete a bonus round!");
@@ -47,4 +47,5 @@ GlassLab.DoBonusRoundAction.prototype._onDestroy = function()
     {
         GlassLab.SignalManager.bonusGameComplete.remove(this._complete, this);
     }
+    if (this.timer) GLOBAL.game.time.events.remove(this.timer);
 };
