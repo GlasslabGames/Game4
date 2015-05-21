@@ -371,6 +371,11 @@ GlassLab.State.Init.prototype.preload = function()
     }, this);
 
     GLOBAL.loadingText = loadingText;*/
+
+    game.load.image('default', 'assets/images/cursors/pointer_default.png');
+    game.load.image('button', 'assets/images/cursors/pointer_button.png');
+    game.load.image('grab_open', 'assets/images/cursors/pointer_grabby_open.png');
+    game.load.image('grab_closed', 'assets/images/cursors/pointer_grabby_closed.png');
 };
 GlassLab.State.Init.prototype.create = function()
 {
@@ -391,15 +396,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.foodInWorld = [];
 
     game.physics.startSystem(Phaser.Plugin.Isometric.ISOARCADE);
-
-    // Cursor Manager
-    GLOBAL.cursorManager = CURSOR.getManager();
-    GLOBAL.cursorManager.setTargetElementID('gameContainer');
-    GLOBAL.cursorManager.addCursor('default', 'assets/images/cursors/pointer_default.png', 20, 20);
-    GLOBAL.cursorManager.addCursor('button', 'assets/images/cursors/pointer_button.png', 20, 20);
-    GLOBAL.cursorManager.addCursor('grab_open', 'assets/images/cursors/pointer_grabby_open.png', 20, 20);
-    GLOBAL.cursorManager.addCursor('grab_closed', 'assets/images/cursors/pointer_grabby_closed.png', 20, 20);
-    GLOBAL.cursorManager.setCursor('default');
 
     // Save Manager
     GLOBAL.saveManager = new GlassLab.SaveManager(game);
@@ -492,6 +488,18 @@ GlassLab.State.Init.prototype.create = function()
 
     GLOBAL.transition = new GlassLab.Transition(game);
     GLOBAL.UIManager.transitionAnchor.addChild(GLOBAL.transition);
+
+    // Cursor Manager
+    GLOBAL.cursorManager = CURSOR.getManager();
+    var cursorSprite = game.add.sprite();
+    //GLOBAL.UIManager.cursorAnchor.addChild(cursorSprite);  // should be above everything else
+    GLOBAL.cursorManager.setCursorSprite(cursorSprite);
+    //GLOBAL.cursorManager.setTargetElementID('gameContainer');
+    GLOBAL.cursorManager.addCursor('default', 'assets/images/cursors/pointer_default.png', 20, 20);
+    GLOBAL.cursorManager.addCursor('button', 'assets/images/cursors/pointer_button.png', 20, 20);
+    GLOBAL.cursorManager.addCursor('grab_open', 'assets/images/cursors/pointer_grabby_open.png', 20, 20);
+    GLOBAL.cursorManager.addCursor('grab_closed', 'assets/images/cursors/pointer_grabby_closed.png', 20, 20);
+    GLOBAL.cursorManager.setCursor('default');
 
     this.initComplete = true;
 };
