@@ -118,17 +118,14 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
         this.bonusAmount += GlassLab.SortingGame.REWARD_PER_CARD;
         this.bonusAmountLabel.text = "x " + this.bonusAmount;
 
-        //if (this.cardsCorrect == this.cards.length) { // color text green if they got them all right
-        //    this.bonusAmountLabel.style.fill = "#39b54a";
-        //}
-
         // animate the coin:
-        var anim = this.largeCoin.play("get_coins");
+        if (this.coinAnim) this.coinAnim.stop(true, true);
+        this.coinAnim = this.largeCoin.play("get_coins");
 
         // annoying slot machine audio:
         GLOBAL.audioManager.playSoundWithVolumeAndOffset("coinDropSound", 0.15, 0.0, true);
-        if (anim) {
-            anim.onComplete.addOnce(function() {
+        if (this.coinAnim) {
+            this.coinAnim.onComplete.addOnce(function() {
                 GLOBAL.audioManager.fadeSound("coinDropSound", 100, 0.0); // fade to volume 0.0 quickly, then stop loop.
             }, this);
         }
