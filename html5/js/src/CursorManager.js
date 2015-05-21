@@ -52,6 +52,8 @@ CURSOR.Manager = function() {
 
     this._cursorSprite = null;
     this._offsetX = this._offsetY = 0;
+
+    this._mouseOver = true; // tracks whether the mouse is over the element or not
 };
 
 CURSOR.Manager.prototype = {
@@ -59,14 +61,35 @@ CURSOR.Manager.prototype = {
 	constructor: CURSOR.Manager,
 
 	setTargetElementID: function(name) {
-        this._replaceCursor = false;
-
+        var newElement = document.getElementById(name);
         // saves DOM element ID string for use when setting the cursor later:
-		if (!document.getElementById(name))
-			console.warn("CURSOR: setElementID(): No such DOM element '" + name + "' for use with CURSOR. Saving configuration anyway.");
+		if (!newElement) {
+            console.warn("CURSOR: setElementID(): No such DOM element '" + name + "' for use with CURSOR. Saving configuration anyway.");
+        } else {
+            if (this._element && this._element != newElement) {
+                this._element.removeEventListener("mouseout", this.onMouseOut);
+                this._element.removeEventListener("mouseover", this.onMouseOver);
+            }
 
-        this._element = document.getElementById(name);
+            this._element = newElement;
+            this._element.addEventListener("mouseout", this.onMouseOut);
+            this._element.addEventListener("mouseover", this.onMouseOver);
+        }
 	},
+
+    onMouseOut: function() {
+        console.log("out");
+        if (!GLOBAL.cursorManager) return;
+        GLOBAL.cursorManager._mouseOver = false;
+        if (GLOBAL.cursorManager._replaceCursor && GLOBAL.cursorManager._cursorSprite) GLOBAL.cursorManager._cursorSprite.visible = false;
+    },
+
+    onMouseOver: function() {
+        console.log("over");
+        if (!GLOBAL.cursorManager) return;
+        GLOBAL.cursorManager._mouseOver = true;
+        if (GLOBAL.cursorManager._replaceCursor && GLOBAL.cursorManager._cursorSprite) GLOBAL.cursorManager._cursorSprite.visible = true;
+    },
 
     setCursorSprite: function(sprite) {
         this._replaceCursor = true;
@@ -88,7 +111,7 @@ CURSOR.Manager.prototype = {
 	},
 
 	setCursor: function(name) {
-        //console.log("CURSOR: setCursor(",name,")");
+        console.log("CURSOR: setCursor(",name,")");
 
         if (this._replaceCursor && !this._cursorSprite) {
             console.error("CURSOR: setCursor(): must use setTargetElementID() before setCursor().");
@@ -102,7 +125,7 @@ CURSOR.Manager.prototype = {
 		if (name == "none" || typeof(this._cursors[name]) != "undefined") { // "none" is a special case
 			// good to go:
             if (this._replaceCursor) {
-                if (name == "none") this._cursorSprite.visible = false;
+                if (!this._mouseOver || name == "none") this._cursorSprite.visible = false;
                 else {
                     this._cursorSprite.visible = true;
                     this._cursorSprite.loadTexture(name);
