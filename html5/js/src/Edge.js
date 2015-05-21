@@ -36,6 +36,7 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.arrow.anchor.setTo(0.5, 0.5);
     this.arrowTween = this.game.add.tween(this.arrow).to( { alpha: 0.5 }, 500, Phaser.Easing.Quadratic.InOut, true, 0, 150, true);
     this._setInputHandlers(this.arrow);
+    this.arrow.edge = this; // checked by the UIRatioTooltip
 
     this.draggable = false;
     this.dragging = false;
@@ -103,6 +104,7 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
     if (!sprite) {
         sprite = this.game.make.isoSprite(0, 0, 0, spriteName, frameName);
         this._setInputHandlers(sprite, true);
+        sprite.edge = this;
     }
 
     if (!layerIndex) layerIndex = 0;
@@ -251,14 +253,12 @@ GlassLab.Edge.prototype._endDrag = function() {
 GlassLab.Edge.prototype._onOver = function( target, pointer ) {
     if (this.draggable) {
         this._highlight(true);
-        GLOBAL.overTarget = this;
     }
 };
 
 GlassLab.Edge.prototype._onOut = function( target, pointer ) {
     if (!this.dragging) { // if we are dragging, stay highlighted
         this._highlight(false);
-        if (GLOBAL.overTarget == this) GLOBAL.overTarget = null;
     }
 };
 

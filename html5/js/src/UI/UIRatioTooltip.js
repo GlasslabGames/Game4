@@ -238,15 +238,18 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
             }
         }
         // Else, we're dragging something else, so don't show a tooltip
-    } else if (GLOBAL.overTarget && GLOBAL.overTarget instanceof GlassLab.Edge) {
-        currentPen = GLOBAL.overTarget.pen;
+    } else if (GLOBAL.game.input.activePointer.targetObject && GLOBAL.game.input.activePointer.targetObject.sprite &&
+        GLOBAL.game.input.activePointer.targetObject.sprite.edge) {
+
+        var edge = GLOBAL.game.input.activePointer.targetObject.sprite.edge;
+        currentPen = edge.pen;
         if (currentPen.getCanReset())
         {
             message = "feeding";
         }
         else
         {
-            message = GLOBAL.overTarget.getIsInnerEdge()? "innerEdge" : "outerEdge";
+            message = edge.getIsInnerEdge()? "innerEdge" : "outerEdge";
         }
     } else {
         var cursorIsoPosition = new Phaser.Point(this.game.input.activePointer.worldX,this.game.input.activePointer.worldY);
@@ -254,6 +257,7 @@ GlassLab.UIRatioTooltip.prototype._checkMouseOverPen = function()
         Phaser.Point.divide(cursorIsoPosition, GLOBAL.WorldLayer.scale, cursorIsoPosition);
         var tileSprite = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(cursorIsoPosition.x, cursorIsoPosition.y);
         if (tileSprite && tileSprite.inPen && tileSprite.inPen instanceof GlassLab.FeedingPen) {
+
             currentPen = tileSprite.inPen;
             if (currentPen.getCanReset())
             {
