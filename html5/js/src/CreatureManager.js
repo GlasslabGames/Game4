@@ -100,7 +100,7 @@ GlassLab.CreatureManager = function (game) {
         },
         baby_bird: {
             journalInfo: {
-                name: "Flockin Aviarus (junevile)",
+                name: "Flockin Aviarus (juvenile)",
                 temperament: "Flighty",
                 numCreatures: 3
             },
