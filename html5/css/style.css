@@ -27,7 +27,7 @@
 	font-style: normal;
 }
 
-#gameContainer { position: absolute; top: 0; left: 0; }
+#gameContainer { position: absolute; top: 0; left: 0; cursor: none }
 
 /* Phasor.io templates will be set up before @font-face's finish loading in the DOM,
 	so this hack ensures they're loaded beforehand. */

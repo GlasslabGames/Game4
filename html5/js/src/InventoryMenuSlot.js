@@ -18,6 +18,7 @@ GlassLab.InventoryMenuSlot = function(game, foodType)
     // set other props:
     this.anchor.setTo(0.5, 0.5);
     this.inputEnabled = true;
+    this.input.priorityID = GLOBAL.UIpriorityID;
 
     // bg:
     this.loadTexture("foodItemEmptyTexture"); // don't need this, except to set dimensions.  hmmph - another way?
@@ -290,6 +291,7 @@ GlassLab.InventoryMenuSlot.prototype.UpdateHoverLabel = function()
 GlassLab.InventoryMenuSlot.prototype.Refresh = function()
 {
     this.inputEnabled = true; // true for almost all cases, but it will be turned off if the food is not unlocked and not available
+    this.input.priorityID = GLOBAL.UIpriorityID; // gets reset when we turn off inputEnabled
 
     if (this.data.unlocked) {
         this.bgSprite.alpha = 0.5;

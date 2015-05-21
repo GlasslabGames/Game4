@@ -41,11 +41,17 @@ CURSOR.Manager = function() {
     GlassLab.SignalManager.update.add(this.update, this);
 
 	// member vars:
-	this._element_id = null; // likely to be set to the id of canvas element, or other game container
+    this._element = null; // likely to be set to the id of canvas element, or other game container
 	this._cursors = {}; // dictionary of custom cursor names, img rsc urls, and regXY's.
 
     this._cursorRequests = []; // list of cursor requests: {source: requestingObj, name: cursorName}
     this._hoverCursorName = "default"; // this will be updated whenever the mouse is over something
+
+    this._replaceCursor = true; // if this is true, the cursor will be hidden and replaced with a sprite. Else, the cursor's style will be changed.
+    // Changing the cursor style was very laggy, so we're replacing it instead.
+
+    this._cursorSprite = null;
+    this._offsetX = this._offsetY = 0;
 };
 
 CURSOR.Manager.prototype = {
@@ -53,12 +59,19 @@ CURSOR.Manager.prototype = {
 	constructor: CURSOR.Manager,
 
 	setTargetElementID: function(name) {
-		// saves DOM element ID string for use when setting the cursor later:
+        this._replaceCursor = false;
+
+        // saves DOM element ID string for use when setting the cursor later:
 		if (!document.getElementById(name))
 			console.warn("CURSOR: setElementID(): No such DOM element '" + name + "' for use with CURSOR. Saving configuration anyway.");
 
-		this._element_id = name;
+        this._element = document.getElementById(name);
 	},
+
+    setCursorSprite: function(sprite) {
+        this._replaceCursor = true;
+        this._cursorSprite = sprite;
+    },
 
 	addCursor: function(name, resource_url, reg_x, reg_y) {
 		// set reg_x and _y to 0,0 if not defined:
@@ -75,8 +88,12 @@ CURSOR.Manager.prototype = {
 	},
 
 	setCursor: function(name) {
-		// check to make sure element_id is set first:
-		if (this._element_id == null) {
+        //console.log("CURSOR: setCursor(",name,")");
+
+        if (this._replaceCursor && !this._cursorSprite) {
+            console.error("CURSOR: setCursor(): must use setTargetElementID() before setCursor().");
+            return;
+        } else if (!this._replaceCursor && !this._element) {
 			console.error("CURSOR: setCursor(): must use setTargetElementID() before setCursor().");
 			return;
 		}
@@ -84,14 +101,21 @@ CURSOR.Manager.prototype = {
 		// apply cursor CSS to this._element_id:
 		if (name == "none" || typeof(this._cursors[name]) != "undefined") { // "none" is a special case
 			// good to go:
-			if (document.getElementById(this._element_id)) {
-                if (name == "none") {
-                    document.getElementById(this._element_id).style.cursor = 'none';
-                } else {
-                    document.getElementById(this._element_id).style.cursor = "url(" + this._cursors[name].src + ") " + this._cursors[name].regX + " " + this._cursors[name].regY + ", auto"; // add "auto" as a fallback.
+            if (this._replaceCursor) {
+                if (name == "none") this._cursorSprite.visible = false;
+                else {
+                    this._cursorSprite.visible = true;
+                    this._cursorSprite.loadTexture(name);
+                    this._offsetX = this._cursors[name].regX;
+                    this._offsetY = this._cursors[name].regY;
                 }
-            } else
-				console.error("CURSOR: setCursor(): Assigned DOM element '" + this._element_id + "' not found, bailing.");
+            } else {
+                if (name == "none") {
+                    this._element.style.cursor = 'none';
+                } else {
+                    this._element.style.cursor = "url(" + this._cursors[name].src + ") " + this._cursors[name].regX + " " + this._cursors[name].regY + ", auto"; // add "auto" as a fallback.
+                }
+            }
 		}
 		else {
 			console.warn("CURSOR: setCursor(): Cursor name '" + name + "' not configured, bailing.");
@@ -148,6 +172,17 @@ CURSOR.Manager.prototype = {
         if (name != this._hoverCursorName) {
             this._hoverCursorName = name;
             this.chooseCursor(name); // we only want to call this if something has changed
+        }
+    },
+
+    // called from a render function for highest accuracy
+    updateCursorPos: function() {
+        if (this._replaceCursor && this._cursorSprite && GLOBAL.game) {
+            var mousePoint = new Phaser.Point(GLOBAL.game.input.activePointer.worldX, GLOBAL.game.input.activePointer.worldY);
+            this._cursorSprite.x = mousePoint.x - this._offsetX;
+            this._cursorSprite.y = mousePoint.y - this._offsetY;
+
+            this._cursorSprite.parent.bringToTop(this._cursorSprite); // make sure the cursor is on top
         }
     }
 };

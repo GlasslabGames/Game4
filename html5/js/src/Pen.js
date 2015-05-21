@@ -490,7 +490,7 @@ GlassLab.Pen.prototype.calculateResult = function(targetNumCreatures, targetTota
         return false;
     };
     for (var i = 0; i < this.foodTypes.length; i++) {
-        if (!checkIfDesiredFood(this.foodTypes[i])) problems.push(this.foodTypes[i]); // record that this food type was incorrect
+        if (this.foodTypes[i] && !checkIfDesiredFood(this.foodTypes[i])) problems.push(this.foodTypes[i]); // record that this food type was incorrect
     }
     if (problems.length) return { result: GlassLab.results.dislike, problems: problems }; // we found some disliked food types
 

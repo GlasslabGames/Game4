@@ -18,6 +18,8 @@ GlassLab.Edge = function(pen, side, sideIndex) {
     this.pieces = this.game.make.sprite();
     this.sprite.addChild(this.pieces);*/
 
+    this.presetScale = 1; // overwrite this to change the scale that's set on edge
+
     // Each edge can have multiple parts that we want to add to the parent Pen in different places
     this.layers = []; // list of sprites that can be added to the parent in a certain order
     this.sprite = this.addLayer(); // default sprite
@@ -108,7 +110,8 @@ GlassLab.Edge.prototype.PlacePieceAt = function(x, y, spriteName, frameName, anc
     else this.sprite.pieces.addChild(sprite);
 
     sprite.visible = true;
-    sprite.scale.setTo((flip)? -1 : 1, 1);
+    sprite.scale.setTo(this.presetScale, this.presetScale);
+    if (flip) sprite.scale.x *= -1;
     if (sprite.key != spriteName) sprite.loadTexture(spriteName, frameName);
     sprite.frame = frameName || 0;
     if (anchor) sprite.anchor.set(anchor.x, anchor.y);

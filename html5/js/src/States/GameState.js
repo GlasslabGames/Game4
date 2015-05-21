@@ -121,4 +121,5 @@ GlassLab.State.Game.prototype.update = function()
 // NOTE: Happens BEFORE update
 GlassLab.State.Game.prototype.render = function(game)
 {
+    if (GLOBAL.cursorManager) GLOBAL.cursorManager.updateCursorPos();
 };

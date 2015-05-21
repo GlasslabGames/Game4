@@ -59,6 +59,7 @@ GlassLab.PauseMenu = function(game)
         GLOBAL.inventoryMenu.hide();
         GLOBAL.UIManager.hideAllWindows();
         GLOBAL.assistant.forceClose();
+        if (GLOBAL.mailManager.currentOrder) GLOBAL.mailManager.exitOrderFulfillment();
         GLOBAL.UIManager.journalButton.toggleActive(false);
         GLOBAL.UIManager.mailButton.toggleActive(false);
 

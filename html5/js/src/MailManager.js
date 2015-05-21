@@ -137,9 +137,10 @@ GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
 
     GLOBAL.penManager.hidePens();
     GLOBAL.creatureManager.hideCreatures();
-    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+    /*for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
         GLOBAL.foodLayer.getChildAt(i).visible = false;
-    }
+    }*/
+    GLOBAL.foodLayer.visible = false;
     GLOBAL.orderFulfillment.show(this.currentOrder);
     GLOBAL.tiledBg.visible = true;
     this.ordersMenu.hide(true);
@@ -153,9 +154,10 @@ GlassLab.MailManager.prototype.enterOrderFulfillment = function() {
 GlassLab.MailManager.prototype.exitOrderFulfillment = function() {
     GLOBAL.penManager.showPens();
     GLOBAL.creatureManager.showCreatures();
-    for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
+    /*for (var i = GLOBAL.foodLayer.children.length-1; i>=0; i--) {
         GLOBAL.foodLayer.getChildAt(i).visible = true;
-    }
+    }*/
+    GLOBAL.foodLayer.visible = true;
 
     GLOBAL.dayManager.dayMeter.visible = true;
 

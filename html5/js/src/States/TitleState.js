@@ -74,3 +74,8 @@ GlassLab.State.Title.prototype._openCredits = function() {
 GlassLab.State.Title.prototype.update = function() {
     if (!GLOBAL.paused) GlassLab.SignalManager.update.dispatch(this.game.time.elapsedMS);
 };
+
+GlassLab.State.Title.prototype.render = function(game)
+{
+    if (GLOBAL.cursorManager) GLOBAL.cursorManager.updateCursorPos();
+};
