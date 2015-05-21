@@ -67,8 +67,8 @@ GlassLab.DraggableComponent.prototype._onUp = function(sprite, pointer) {
     if (this.dragging) {
         if (this.stickyDrag) this._endDrag(); // they finished their 2nd click which ends sticky drag
         else {
-            var pos = (this.sprite instanceof Phaser.Plugin.Isometric.IsoSprite)? this.sprite.isoPosition : this.sprite.position;
-            var dist = this.dragStartPoint.distance(pos);
+            var pos = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
+            var dist = this.dragStartMousePos.distance(pos);
             //console.log(dist, dist >= this.clickLeeway);
             if (dist >= this.clickLeeway) { // they held the mouse down and moved it, so it's normal drag and drop behavior
                 this._endDrag();
@@ -111,6 +111,7 @@ GlassLab.DraggableComponent.prototype._startDrag = function(pointer) {
 
     if (this.sprite instanceof Phaser.Plugin.Isometric.IsoSprite) this.dragStartPoint = new Phaser.Point(this.sprite.isoX, this.sprite.isoY);
     else this.dragStartPoint = new Phaser.Point(this.sprite.x, this.sprite.y);
+    this.dragStartMousePos = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y); // used to check for sticky click vs normal drag
     this._calculateAdjustments(); // calculate the parent's position/scale once per drag
     this.dragging = true;
     GLOBAL.dragTarget = this;
