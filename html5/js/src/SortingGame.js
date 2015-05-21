@@ -169,10 +169,11 @@ GlassLab.SortingGame.prototype.start = function(data) {
     }
 
     // Insert cards in a random order
-    while (data.length) {
-        var i = Math.floor( Math.random() * data.length );
-        var card = this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFood, data[i].displayMode, data[i].challengeType );
-        data.splice(i, 1);
+    var copiedData = [].concat(data);
+    while (copiedData.length) {
+        var i = Math.floor( Math.random() * copiedData.length );
+        var card = this.addCard( copiedData[i].creatureType, copiedData[i].numCreatures, copiedData[i].numFood, copiedData[i].displayMode, copiedData[i].challengeType );
+        copiedData.splice(i, 1);
     }
 
     // Add tokens if we don't have any or some were used last time
