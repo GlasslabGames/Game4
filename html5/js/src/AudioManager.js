@@ -146,10 +146,14 @@ GlassLab.AudioManager.prototype.fadeSound = function(key, duration, new_volume)
     for (var i = 0; i < this.sounds[key].length; i++) {
         if (this.sounds[key][i].isPlaying) { // apply to first sound from the pool that are playing
             sound = this.sounds[key][i];
-            sound.fadeTo(duration, new_volume);
-            sound.onFadeComplete.addOnce(function() {
-                if (new_volume == 0) sound.stop();
-            }, this);
+            if (sound.volume == 0) {
+                sound.stop();
+            } else {
+                sound.fadeTo(duration, new_volume);
+                sound.onFadeComplete.addOnce(function () {
+                    if (new_volume == 0) sound.stop();
+                }, this);
+            }
             break;
         }
     }
