@@ -101,7 +101,7 @@ GlassLab.FoodTypes = {
     mushroom: {
         spriteName: "mushroom",
         spriteOffsetWhileDragging: 7,
-        color: 0xca5d5c,
+        color: 0xBFDB9A,
         cost: 2000,
         available: true,
         displayNames: {
