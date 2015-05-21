@@ -194,6 +194,7 @@ GlassLab.Food.prototype._onDestroy = function() {
     if (index > -1) GLOBAL.foodInWorld.splice(index, 1);
     if (this.onEnoughEaters) this.onEnoughEaters.dispose();
     if (this.smokeTimer) this.game.time.events.remove(this.smokeTimer);
+    if (this.fadeTimer) this.game.time.events.remove(this.fadeTimer);
 };
 
 GlassLab.Food.prototype._onStartDrag = function () {
@@ -227,6 +228,9 @@ GlassLab.Food.prototype._onEndDrag = function () {
 
         GlassLab.SignalManager.foodDropped.dispatch(this);
         GlassLab.SignalManager.creatureTargetsChanged.dispatch();
+
+        if (this.fadeTimer) this.game.time.events.remove(this.fadeTimer);
+        this.fadeTimer = this.game.time.events.add(Phaser.Timer.MINUTE, this._onFadeTimer, this); // if it's not eaten or moved for 2 minutes, it fades away
     }
 };
 
@@ -275,6 +279,8 @@ GlassLab.Food.prototype.BeEaten = function(animStyle) {
         var anim = this.image.animations.play('eat', 24);
         if (anim) {
             anim.onComplete.add(this._afterEaten, this);
+
+            this.game.add.tween(this.shadow).to( { alpha: 0 }, 500, "Linear", true);
         } else {
             this._afterEaten(1000);
         }
@@ -296,11 +302,27 @@ GlassLab.Food.prototype.setAnimStyle = function(style) {
 GlassLab.Food.prototype._afterEaten = function(fadeTime) {
     if (this.health) return; // there must be a mistake
 
+    this._fadeAway(fadeTime);
+};
+
+GlassLab.Food.prototype._onFadeTimer = function() {
+    if (this.eaters.length) { // don't let it fade away if anyone's trying to eat it
+        this.fadeTimer = this.game.time.events.add(Phaser.Timer.MINUTE, this._onFadeTimer, this);
+    } else {
+        this._fadeAway();
+    }
+};
+
+GlassLab.Food.prototype._fadeAway = function(fadeTime) {
+    if (!this.game) return; // already been destroyed
+
     this.inputEnabled = false; // TODO: I don't think the food is actually getting destroyed. This is just a temp fix.
 
     fadeTime = fadeTime || 3000;
     this.deathTween = this.game.add.tween(this).to( { alpha: 0 }, fadeTime, "Linear", true);
     this.deathTween.onComplete.add( function() {this.destroy();}, this);
+
+    if (this.fadeTimer) this.game.time.events.remove(this.fadeTimer);
 };
 
 GlassLab.Food.prototype.reset = function() {
