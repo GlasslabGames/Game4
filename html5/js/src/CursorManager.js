@@ -78,14 +78,12 @@ CURSOR.Manager.prototype = {
 	},
 
     onMouseOut: function() {
-        console.log("out");
         if (!GLOBAL.cursorManager) return;
         GLOBAL.cursorManager._mouseOver = false;
         if (GLOBAL.cursorManager._replaceCursor && GLOBAL.cursorManager._cursorSprite) GLOBAL.cursorManager._cursorSprite.visible = false;
     },
 
     onMouseOver: function() {
-        console.log("over");
         if (!GLOBAL.cursorManager) return;
         GLOBAL.cursorManager._mouseOver = true;
         if (GLOBAL.cursorManager._replaceCursor && GLOBAL.cursorManager._cursorSprite) GLOBAL.cursorManager._cursorSprite.visible = true;
@@ -111,7 +109,7 @@ CURSOR.Manager.prototype = {
 	},
 
 	setCursor: function(name) {
-        console.log("CURSOR: setCursor(",name,")");
+        //console.log("CURSOR: setCursor(",name,")");
 
         if (this._replaceCursor && !this._cursorSprite) {
             console.error("CURSOR: setCursor(): must use setTargetElementID() before setCursor().");
