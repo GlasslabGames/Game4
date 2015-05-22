@@ -235,30 +235,43 @@
             ]
           },
           {
-            "__type": "ShowAssistantDialogueAction",
-            "text": "Wow, you have a lot of rammuses here. *Click this button* to zoom out and see them all!"
-          },
-          {
-            "__type": "ShowArrowAction",
-            "direction": "right",
-            "anchor": "topRightAnchor",
-            "xPosition": -140,
-            "yPosition": 125
-          },
-          {
-            "__type": "WaitForCondition",
-            "conditions": [
-              {
-                "__type": "SignalCondition",
-                "signalName": "zoomChanged"
-              }
-            ]
-          },
-          {
-            "__type": "HideArrowAction"
-          },
-          {
-            "__type": "HideAssistantDialogueAction"
+            "__type": "ConditionalAction",
+            "serializedCondition": {
+              "__type": "GlobalVariableEqualsCondition",
+              "variableName": "GLOBAL.UIManager.zoomLevel",
+              "targetVariable": "GlassLab.UIManager.startZoom"
+            },
+            "serializedTrueAction": {
+              "__type": "ActionGroup",
+              "serializedActions": [
+                {
+                  "__type": "ShowAssistantDialogueAction",
+                  "text": "Wow, you have a lot of rammuses here. *Click this button* to zoom out and see them all!"
+                },
+                {
+                  "__type": "ShowArrowAction",
+                  "direction": "right",
+                  "anchor": "topRightAnchor",
+                  "xPosition": -140,
+                  "yPosition": 125
+                },
+                {
+                  "__type": "WaitForCondition",
+                  "conditions": [
+                    {
+                      "__type": "SignalCondition",
+                      "signalName": "zoomChanged"
+                    }
+                  ]
+                },
+                {
+                  "__type": "HideArrowAction"
+                },
+                {
+                  "__type": "HideAssistantDialogueAction"
+                }
+              ]
+            }
           }
         ]
       }    
