@@ -24,7 +24,7 @@ GlassLab.CreatureManager = function (game) {
             },
             unlocked: false, // if the player has discovered this animal yet
             spriteName: "babyram",
-            fxFrames: {eat: 14, vomit: 21, poop: 40 },
+            fxFrames: {eat: 11, vomit: 21, poop: 40 },
             desiredFood: [{type: "broccoli", amount: 3}],
             eatingGroup: 1,
             otherFood: [
