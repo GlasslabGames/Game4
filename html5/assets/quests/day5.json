@@ -11,6 +11,10 @@
         "creatureType": "baby_bird",
         "numCreatures": 3,
         "creatureWidth": 3
+      },
+      "additionalCreatures": { 
+         "baby_unifox": 3,
+         "rammus": 3 
       }
     },
     {
@@ -25,6 +29,10 @@
         "topDraggable": true,
         "creatureWidth": 3,
         "maxHeight": 2
+      },
+      "additionalCreatures": { 
+         "baby_unifox": 3,
+         "rammus": 3 
       }
     },
     {
@@ -32,6 +40,10 @@
           "challengeId": "T3.03",
           "problemType": "2BR1MF",
           "hideBackgroundOrders": true,
+          "additionalCreatures": { 
+            "baby_unifox": 3,
+            "rammus": 3 
+          },
           "challengeData": {
             "client": "Lyda Ross",
             "creatureType": "baby_bird",
@@ -52,6 +64,10 @@
         "bottomDraggable": true,
         "topDraggable": true,
         "creatureWidth": 3
+      },
+      "additionalCreatures": { 
+         "baby_unifox": 3,
+         "rammus": 3 
       },
       "constraints": {
         "maxHeight": 8
@@ -91,6 +107,10 @@
           "challengeId": "3.03b",
           "problemType": "2BR2MF",
           "reviewKey": "middle",
+          "additionalCreatures": { 
+            "baby_unifox": 3,
+            "rammus": 3 
+          },
           "challengeData": {
             "client": "Lyda Ross",
             "creatureType": "baby_bird",
@@ -105,6 +125,10 @@
           "challengeId": "3.03e",
           "problemType": "2BR2MF",
           "reviewKey": "middle",
+          "additionalCreatures": { 
+            "baby_unifox": 3,
+            "rammus": 3 
+          },
           "challengeData": {
             "client": "Lyda Ross",
             "creatureType": "baby_bird",
@@ -119,6 +143,10 @@
           "challengeId": "3.03f",
           "problemType": "2BR2MF",
           "reviewKey": "middle",
+          "additionalCreatures": { 
+            "baby_unifox": 3,
+            "rammus": 3 
+          },          
           "challengeData": {
             "client": "Lyda Ross",
             "creatureType": "baby_bird",
@@ -134,6 +162,10 @@
      "__type": "DoPenChallengeAction",
      "challengeId": "3.01f",
      "problemType": "2BR3MC",
+     "additionalCreatures": { 
+       "baby_unifox": 3,
+       "rammus": 3 
+     },          
      "challengeData": {
         "creatureType": "baby_bird",
         "numCreatures": 90,
@@ -149,6 +181,10 @@
       "__type": "DoOrderChallengeAction",        
       "challengeId": "3.03d",
       "problemType": "2BR2MF",
+      "additionalCreatures": { 
+        "baby_unifox": 3,
+        "rammus": 3 
+      },       
       "challengeData": {
           "client": "Marmaduke Biggs",
           "creatureType": "baby_bird",
@@ -198,6 +234,10 @@
         "__type": "DoOrderChallengeAction",
         "challengeId": "3.03a",
         "problemType": "2BR1MF",
+        "additionalCreatures": { 
+          "baby_unifox": 3,
+          "rammus": 3 
+        },         
         "challengeData": {
           "client": "Lyda Ross",
           "creatureType": "baby_bird",
@@ -211,6 +251,10 @@
         "__type": "DoOrderChallengeAction",
         "challengeId": "3.03c",
         "problemType": "2BR1MF",
+        "additionalCreatures": { 
+          "baby_unifox": 3,
+          "rammus": 3 
+        },         
         "challengeData": {
           "client": "Lyda Ross",
           "creatureType": "baby_bird",
@@ -224,6 +268,10 @@
         "__type": "DoOrderChallengeAction",
         "challengeId": "3.03h",
         "problemType": "2BR1MF",
+        "additionalCreatures": { 
+          "baby_unifox": 3,
+          "rammus": 3 
+        },         
         "challengeData": {
           "client": "Lyda Ross",
           "creatureType": "baby_bird",
@@ -242,6 +290,10 @@
         "__type": "DoOrderChallengeAction",
         "challengeId": "3.02b",
         "problemType": "2BR2MC",
+        "additionalCreatures": { 
+          "baby_unifox": 3,
+          "rammus": 3 
+        },         
         "challengeData": {
           "client": "Lyda Ross",
           "creatureType": "baby_bird",
@@ -255,8 +307,12 @@
         "__type": "DoOrderChallengeAction",
         "challengeId": "3.02c",
         "problemType": "2BR2MC",
+        "additionalCreatures": { 
+          "baby_unifox": 3,
+          "rammus": 3 
+        },         
         "challengeData": {
-          "client": "Archibold Huxley III",
+          "client": "Lyda Ross",
           "creatureType": "baby_bird",
           "numCreatures": 45,
           "description": "I've acquired even more *[creatureType]*! Now I have *[numCreatures] [creatureType]* and I need just enough food!",
@@ -276,6 +332,10 @@
             "__type": "DoPenChallengeAction",
             "challengeId": "3.01a",
             "problemType": "2BR1MC",
+            "additionalCreatures": { 
+              "baby_unifox": 3,
+              "rammus": 3 
+            },             
             "challengeData": {
               "bottomDraggable": true,
               "topDraggable": true,
@@ -291,6 +351,10 @@
             "__type": "DoPenChallengeAction",
             "challengeId": "3.01c",
             "problemType": "2BR1MC",
+            "additionalCreatures": { 
+              "baby_unifox": 3,
+              "rammus": 3 
+            },              
             "challengeData": {
               "creatureType": "baby_bird",
               "numCreatures": 21,
@@ -311,6 +375,10 @@
             "__type": "DoPenChallengeAction",
             "challengeId": "3.01d",
             "problemType": "2BR1MC",
+            "additionalCreatures": { 
+              "baby_unifox": 3,
+              "rammus": 3 
+            },              
             "challengeData": {
               "bottomDraggable": true,
               "topDraggable": true,
@@ -326,6 +394,10 @@
             "__type": "DoPenChallengeAction",
             "challengeId": "3.01e",
             "problemType": "2BR1MC",
+            "additionalCreatures": { 
+              "baby_unifox": 3,
+              "rammus": 3 
+            },              
             "challengeData": {
               "creatureType": "baby_bird",
               "numCreatures": 12,
