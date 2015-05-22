@@ -222,12 +222,12 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
         var completed = this.problemTypesCompletedPerfectly;
 
         // the categories are "baby", "adult", and "bird".
-        if (creatureType) {
+        if (creatureType && (problemType.charAt(1) != "T" || problemType.charAt(2) != "c")) { // don't count Tc pro8blemTypes
             var category = "adult";
             if (creatureType.indexOf("bird") > -1) category = "bird";
             else if (creatureType.indexOf("baby") > -1) category = "baby";
 
-            category += problemType[1]; // append the second letter of the problem type (F, C, T)
+            category += problemType.charAt(1); // append the second letter of the problem type (F, C, T)
             //console.log("SOWO category:",category);
 
             completed[category] = true; // add the creature/problem type key (babyC, adultT, etc)
