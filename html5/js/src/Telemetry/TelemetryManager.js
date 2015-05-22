@@ -264,8 +264,9 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
         else if (challengeType == "pen" && !this.pastFirstNonIntroPenChallenge) this._sendSOWO("wo3"); // more than 4 attempts for the first pen challenge (they haven't beaten one before)
     }
 
-    // Count up how many problems of each category they've failed twice
-    if (attempts == 2 && creatureType && problemType.length <= 4) { // note that we only want to increment the count when the attempt is 2 and not do it again when > 2
+    // Count up how many problems of each category they've failed twice, not counting tutorial challenges
+    if (attempts == 2 && creatureType && challengeId[0] != "T") {
+        // note that we only want to increment the count when the attempt is 2 and not do it again when > 2
 
         var category = "adult";
         if (creatureType.indexOf("bird") > -1) category = "bird";
