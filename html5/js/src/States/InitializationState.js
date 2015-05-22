@@ -530,6 +530,6 @@ GlassLab.State.Init.prototype.update = function()
          this.bg.destroy();
          this.box.destroy();
 
-         this.game.state.start("Game", false);
+         this.game.state.start("Title", false);
     }
 };
