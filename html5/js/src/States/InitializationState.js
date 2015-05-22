@@ -20,13 +20,21 @@ GlassLab.State.Init.prototype.init = function() {
     var cropRect = new Phaser.Rectangle(0, 0, 0, this.fillBar.height);
     this.fillBar.crop(cropRect);
 
-    this.game.load.onFileComplete.add(function(progress, cacheKey, success, totalLoaded, totalFiles){
-        cropRect.width = startWidth * progress / 100 * 0.90; // 100% progress is before the end of the bar, to explain the lag before actually starting the game
-        this.fillBar.crop(cropRect);
-    }, this);
-
     this.spinner = this.add.sprite(this.bg.x, this.bg.y + 120, "loadingSpinner");
     this.spinner.anchor.setTo(0.5, 0.5);
+
+    this.box = this.add.graphics(this.bg.x, this.bg.y + 65).beginFill(0).drawRect(-100, -20, 200, 40);
+    var label = this.make.text(0, 0, "Almost there...", {font: "18pt EnzoBlack", fill: "#dce7f5" });
+    GlassLab.Util.SetCenteredText(label, "Almost there...");
+    this.box.addChild(label);
+    this.box.visible = false;
+
+    this.game.load.onFileComplete.add(function(progress, cacheKey, success, totalLoaded, totalFiles){
+        var percent = progress / 100;
+        cropRect.width = startWidth * percent * 0.90; // 100% progress is before the end of the bar, to explain the lag before actually starting the game
+        this.fillBar.crop(cropRect);
+        if (totalLoaded >= totalFiles - 2) this.box.visible = true;
+    }, this);
 };
 
 GlassLab.State.Init.prototype.preload = function()
@@ -418,8 +426,11 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.paused = false;
 
     // Create TileManager and map
-    GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
+    GLOBAL.bgData = this.game.make.bitmapData(7000, 4500);
+    var bg = GLOBAL.bgData.addToWorld(100, -290, 0.5, 0.5);
+    GLOBAL.groundLayer.add(bg);
 
+    GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
     var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
     GLOBAL.tileManager.SetTileSize(GLOBAL.tileSize);
     GLOBAL.tileManager.GenerateMapFromDataToGroup(mapData);
@@ -514,13 +525,11 @@ GlassLab.State.Init.prototype.update = function()
 {
     if (this.initComplete && GLOBAL.telemetryManager.initialized)
     {
-        //GLOBAL.loadingText.destroy();
-        //delete GLOBAL.loadingText;
+         this.spinner.destroy();
+         this.fillBar.destroy();
+         this.bg.destroy();
+         this.box.destroy();
 
-        this.spinner.destroy();
-        this.fillBar.destroy();
-        this.bg.destroy();
-
-        this.game.state.start("Title", false);
+         this.game.state.start("Game", false);
     }
 };

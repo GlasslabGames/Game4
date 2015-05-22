@@ -17,7 +17,7 @@ GlassLab.Tile = function(game, col, row, type) {
     this.food = null;
 
     this._preOptimizedParent = null;
-    GlassLab.SignalManager.cameraMoved.add(function(){
+/*    GlassLab.SignalManager.cameraMoved.add(function(){
         if (GlassLab.RenderManager.IsoObjectOffCamera(this))
         {
             if(this.parent)
@@ -29,7 +29,10 @@ GlassLab.Tile = function(game, col, row, type) {
         {
             GLOBAL.renderManager.AddToIsoWorld(this);
         }
-    }, this);
+    }, this);*/
+
+    var pos = this.game.iso.project(this.isoPosition);
+    GLOBAL.bgData.draw(this, pos.x + GLOBAL.bgData.width / 2, pos.y + GLOBAL.bgData.height / 2 + 400);
 
     //this.addChild(game.make.graphics().beginFill(0xffffff,1).drawCircle(0, 0, 20)); // for debugging where the tile anchor is
 };

@@ -100,16 +100,18 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
     {
         var layer = this.tilemap.layers[layerIndex];
         var shouldSortWithCreatures = layer.name == "border";
-        for (var i=this.tilemap.width-1; i>=0; i--)
+        for (var i = 0, max_i = this.tilemap.width; i < max_i; i++) //var i=this.tilemap.width-1; i>=0; i--)
         {
-            for (var j=this.tilemap.height-1; j>=0; j--)
+            for (var j = 0, max_j = this.tilemap.height; j < max_j; j++) //var j=this.tilemap.height-1; j>=0; j--)
             {
                 var tileType = this.GetTileData(i, j, layer.name);
                 if (tileType == -1) continue;
 
                 var image = new GlassLab.Tile(this.game, i, j, tileType);
-                //image.tint = Math.random() * 16777215;
-                if (shouldSortWithCreatures)
+                image.alpha = 0.5;
+                image.tint = 0x222222;
+
+/*                if (shouldSortWithCreatures)
                 {
                     image._preOptimizedParent = GLOBAL.creatureLayer;
                 }
@@ -118,7 +120,11 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
                     image._preOptimizedParent = GLOBAL.groundLayer;
                 }
 
-                GLOBAL.renderManager.AddToIsoWorld(image);
+                GLOBAL.renderManager.AddToIsoWorld(image);*/
+
+                // This is to check if our underlying tile map matches the copy we made in Init state
+                //var asset = GLOBAL.tileManager.tilemap.tilesets[0].tiles[tileType].image;
+                //if (asset && asset.indexOf("pond") > -1) GLOBAL.creatureLayer.addChild(image);
 
                 if (!this.map[i]) this.map[i] = [];
 
@@ -128,7 +134,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
                     this.map[i][j] = image;
                 }
 
-                if (GLOBAL.debug)
+                /*if (GLOBAL.debug)
                 {
                     var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
                     text.anchor.set(0.5, 0.5);
@@ -137,7 +143,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
                     {
                         text.scale.x = -text.scale.x;
                     }
-                }
+                }*/
             }
         }
     }
