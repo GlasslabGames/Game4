@@ -92,39 +92,48 @@ GlassLab.TileData = function() {
 GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
 {
     this.tilemap = tilemap;
+    console.log(this.tilemap);
+    console.log(this.game.cache.getTilemapData("worldTileMap"));
 
     this.SetCenter(this.tilemap.width/2, this.tilemap.height/2);
 
-    var tilesetProperties = this.tilemap.tilesets[0].tileproperties;
-    for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
+    var parent = this.game.make.sprite();
+    var creatureLayerGroup = this.game.make.group();
+    var groundLayerGroup = this.game.make.group();
+
+    for (var i = 0, max_i = this.tilemap.width; i < max_i; i++) //var i=this.tilemap.width-1; i>=0; i--)
     {
-        var layer = this.tilemap.layers[layerIndex];
-        var shouldSortWithCreatures = layer.name == "border";
-        for (var i = 0, max_i = this.tilemap.width; i < max_i; i++) //var i=this.tilemap.width-1; i>=0; i--)
+        for (var j = 0, max_j = this.tilemap.height; j < max_j; j++) //var j=this.tilemap.height-1; j>=0; j--)
         {
-            for (var j = 0, max_j = this.tilemap.height; j < max_j; j++) //var j=this.tilemap.height-1; j>=0; j--)
+            var tilesetProperties = this.tilemap.tilesets[0].tileproperties;
+            for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
             {
+
+                var layer = this.tilemap.layers[layerIndex];
+                var shouldSortWithCreatures = layer.name == "border";
                 var tileType = this.GetTileData(i, j, layer.name);
                 if (tileType == -1) continue;
 
+                if (shouldSortWithCreatures) {
+                    var imageName = GLOBAL.tileManager.tilemap.tilesets[0].tiles[tileType].image;
+                    if (imageName && imageName.indexOf("pond_edge") > -1) continue;
+                }
+
                 var image = new GlassLab.Tile(this.game, i, j, tileType);
-                image.alpha = 0.5;
-                image.tint = 0x222222;
 
-/*                if (shouldSortWithCreatures)
-                {
-                    image._preOptimizedParent = GLOBAL.creatureLayer;
-                }
-                else
-                {
-                    image._preOptimizedParent = GLOBAL.groundLayer;
-                }
+                if (shouldSortWithCreatures) creatureLayerGroup.add(image);
+                else groundLayerGroup.add(image);
 
-                GLOBAL.renderManager.AddToIsoWorld(image);*/
+                /*                if (shouldSortWithCreatures)
+                 {
+                 image._preOptimizedParent = GLOBAL.creatureLayer;
+                 }
+                 else
+                 {
+                 image._preOptimizedParent = GLOBAL.groundLayer;
+                 }
 
-                // This is to check if our underlying tile map matches the copy we made in Init state
-                //var asset = GLOBAL.tileManager.tilemap.tilesets[0].tiles[tileType].image;
-                //if (asset && asset.indexOf("pond") > -1) GLOBAL.creatureLayer.addChild(image);
+                 GLOBAL.renderManager.AddToIsoWorld(image);*/
 
                 if (!this.map[i]) this.map[i] = [];
 
@@ -135,17 +144,36 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
                 }
 
                 /*if (GLOBAL.debug)
-                {
-                    var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
-                    text.anchor.set(0.5, 0.5);
-                    image.addChild(text);
-                    if (image.scale.x < 0)
-                    {
-                        text.scale.x = -text.scale.x;
-                    }
-                }*/
+                 {
+                 var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
+                 text.anchor.set(0.5, 0.5);
+                 image.addChild(text);
+                 if (image.scale.x < 0)
+                 {
+                 text.scale.x = -text.scale.x;
+                 }
+                 }*/
             }
         }
+    }
+
+    this.game.iso.simpleSort(groundLayerGroup);
+    for (var i = 0; i < groundLayerGroup.children.length; i++) {
+        var sprite = groundLayerGroup.getChildAt(i);
+        var pos = this.game.iso.project(sprite.isoPosition);
+        //pos.x -= sprite.width / 2;
+        //pos.y -= sprite.height;
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2, pos.y + GLOBAL.bgData.height / 2 + 400);
+    }
+
+    this.game.iso.simpleSort(creatureLayerGroup);
+    for (var i = 0; i < creatureLayerGroup.children.length; i++) {
+        var sprite = creatureLayerGroup.getChildAt(i);
+        //console.log(sprite.isoX, sprite.isoY, sprite.isoZ);
+        var pos = this.game.iso.project(sprite.isoPosition);
+        //pos.x -= sprite.width / 2;
+        //pos.y -= sprite.height;
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2, pos.y + GLOBAL.bgData.height / 2 + 400);
     }
 
     if (GLOBAL.groundLayer.cacheAsBitmap)
@@ -153,8 +181,8 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
         GLOBAL.groundLayer.GLASSLAB_BITMAP_DIRTY = true;
     }
 
-    this.game.iso.simpleSort(GLOBAL.creatureLayer);
-    this.game.iso.simpleSort(GLOBAL.groundLayer);
+    //this.game.iso.simpleSort(GLOBAL.creatureLayer);
+    //this.game.iso.simpleSort(GLOBAL.groundLayer);
 };
 
 GlassLab.TileManager.prototype.SetCenter = function(x, y)
