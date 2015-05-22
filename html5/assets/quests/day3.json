@@ -453,7 +453,7 @@
         "client": "Elias Petters",
         "creatureType": "baby_unifox",
         "numFoodA": 76,
-        "description": "It's a mad world when you have *[numFoodA] [foodTypeA] and no *[creatureType]* to eat them. Help me out?",
+        "description": "It's a mad world when you have *[numFoodA] [foodTypeA]* and no *[creatureType]* to eat them. Help me out?",
         "reward": 30
       }
     }

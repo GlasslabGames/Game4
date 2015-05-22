@@ -43,7 +43,7 @@ GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatu
 
 GlassLab.DoPenChallengeAction.prototype._showResult = function() {
     if (this.result == GlassLab.results.satisfied) {
-        GLOBAL.assistant.showModal("Good job! You did it!", this.completeChallenge.bind(this));
+        GLOBAL.assistant.showModal("Nicely done, rancher.", this.completeChallenge.bind(this));
     } else {
         //var retryButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.failChallenge, this, 150, 60, 0xffffff, "Retry");
         var text = "Oops, ";
