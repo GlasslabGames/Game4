@@ -41,7 +41,7 @@ GlassLab.RandomSelectionGroup.prototype.Do = function(redo, withConstraints, fai
 GlassLab.RandomSelectionGroup.prototype._onDestroy = function()
 {
     for (var i = 0; i < this.deserializedActions.length; i++) {
-        this.deserializedActions[i].Destroy();
+        if (this.deserializedActions[i]) this.deserializedActions[i].Destroy();
     }
     this.deserializedActions = [];
     if (this.action) this.action.Destroy();
