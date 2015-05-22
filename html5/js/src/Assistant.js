@@ -86,6 +86,9 @@ GlassLab.Assistant = function(game) {
 
     GlassLab.SignalManager.inventoryOpened.add(this._onInventoryOpened, this);
     GlassLab.SignalManager.inventoryClosed.add(this._onInventoryClosed, this);
+
+    GlassLab.SignalManager.mailOpened.add(this._onMailOpened, this);
+    GlassLab.SignalManager.mailClosed.add(this._onMailClosed, this);
 };
 
 GlassLab.Assistant.STATES = {
@@ -110,6 +113,13 @@ GlassLab.Assistant.prototype.showTutorial = function(text, showButton) {
 
     this.inTutorial = true;
     this._refreshMinimizeable();
+
+    this.lastTutorialText = text;
+    this.lastTutorialShowButton = showButton;
+};
+
+GlassLab.Assistant.prototype.reshowTutorial = function() {
+    if (this.inTutorial && this.lastTutorialText) this.showTutorial(this.lastTutorialText, this.lastTutorialShowButton);
 };
 
 GlassLab.Assistant.prototype.hideTutorial = function() {
@@ -206,6 +216,9 @@ GlassLab.Assistant.prototype.toggleMinimized = function() {
     this.setMinimized(!this.minimized);
 };
 
+GlassLab.Assistant.prototype.getCanMinimize = function() {
+    return this._refreshMinimizeable();
+};
 
 GlassLab.Assistant.prototype.setMinimized = function(minimized) {
     this.minimized = minimized;
@@ -222,10 +235,10 @@ GlassLab.Assistant.prototype.startOrder = function(order) {
     this.order = order;
 };
 
-GlassLab.Assistant.prototype.endOrder = function(order) {
+GlassLab.Assistant.prototype.endOrder = function() {
     this.order = null;
     if (this.readyTimer) this.game.time.events.remove(this.readyTimer); // clean up the timer if necessary
-    this._tryClose();
+    this._startClosing(); // even if a tutorial was playing before, MailManager will restart it once the crate ships
 };
 
 GlassLab.Assistant.prototype.onPenLoaded = function() {
@@ -366,4 +379,19 @@ GlassLab.Assistant.prototype._onInventoryOpened = function() {
 
 GlassLab.Assistant.prototype._onInventoryClosed = function() {
     this.sprite.y = 0;
+};
+
+
+GlassLab.Assistant.prototype._onMailOpened = function() {
+    if (this.inTutorial && this.getCanMinimize()) {
+        this.setMinimized(true);
+        this.minimizedForMail = true;
+    }
+};
+
+GlassLab.Assistant.prototype._onMailClosed = function() {
+    if (this.minimizedForMail && this.getCanMinimize()) {
+        this.setMinimized(false);
+    }
+    this.minimizedForMail = false;
 };
