@@ -165,7 +165,7 @@ GlassLab.RewardPopup.prototype.show = function(data)
 
     // To make the name fit, we're going to get its initials here. We might need to consider another solution later.
     var name = data.client;
-    if (name.length > 15) {
+    if (name.length > 14) { // it's pretty arbitrary to go by number of letters instead of width, but 14 works for the names we have..
         var nameParts = data.client.split(" ");
         var initials = "";
         var lastName = "";
@@ -175,7 +175,7 @@ GlassLab.RewardPopup.prototype.show = function(data)
             initials += nameParts[i].substr(0, 1) + ". ";
         }
         name = initials.substr(0, initials.length - 3) + lastName; // try with the full last name
-        if (name.length > 15) name = initials; // just initials then
+        if (name.length > 14) name = initials; // just initials then
     }
 
     string += "\n\nSincerely,\n" + name;
