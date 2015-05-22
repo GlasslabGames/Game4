@@ -1,0 +1,26 @@
+{
+  "Lyda Ross" : {
+    "greeting": "Hello, rancher!",
+    "success": "Here's the money I promised. Let's do this again soon!",
+    "failure": "I can't believe this, it's such a mess. I certainly can't pay you for this!",
+    "signature": "See you next time,"
+  },
+  "Elias Petters" : {
+    "greeting": "Salutations,",
+    "success": "As contracted, your payment is duly enclosed.",
+    "failure": "This is most unsatisfactory. I'm afraid I'll have to deny payment.",
+    "signature": "Respectfully,"
+  },
+  "Isabel Noether" : {
+    "greeting": "Greetings, rancher,",
+    "success": "A deal is a deal. Here is your payment, delivered in full.",
+    "failure": "This is a disaster! I may have to find myself another rancher. And you surely will not be paid!",
+    "signature": "Farewell,"
+  },
+  "Lyda Ross" : {
+    "greeting": "Attention,",
+    "success": "You have performed satisfactorily for now. My hard-earned payment is enclosed.",
+    "failure": "You have utterly failed my expectations. I refuse to pay for this! Surely you can do better.",
+    "signature": "Hmph,"
+  }
+}

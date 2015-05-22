@@ -353,7 +353,10 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.json('day7', 'assets/quests/day7.json');
 
     // Credits
-    game.load.json('creditText', 'assets/quests/credit_text.json');
+    game.load.json('creditText', 'assets/data/credit_text.json');
+
+    // Narrative
+    game.load.json('characterResponseText', 'assets/data/character_responses.json');
 
     game.plugins.add(Phaser.Plugin.Isometric);
     GLOBAL.astar = game.plugins.add(Phaser.Plugin.AStar);
@@ -491,10 +494,8 @@ GlassLab.State.Init.prototype.create = function()
 
     // Cursor Manager
     GLOBAL.cursorManager = CURSOR.getManager();
-    var cursorSprite = game.add.sprite();
-    //GLOBAL.UIManager.cursorAnchor.addChild(cursorSprite);  // should be above everything else
-    GLOBAL.cursorManager.setCursorSprite(cursorSprite);
-    //GLOBAL.cursorManager.setTargetElementID('gameContainer');
+    GLOBAL.cursorManager.setCursorSprite(game.add.sprite()); // add a sprite directly to the game
+    GLOBAL.cursorManager.setTargetElementID('gameContainer');
     GLOBAL.cursorManager.addCursor('default', 'assets/images/cursors/pointer_default.png', 20, 20);
     GLOBAL.cursorManager.addCursor('button', 'assets/images/cursors/pointer_button.png', 20, 20);
     GLOBAL.cursorManager.addCursor('grab_open', 'assets/images/cursors/pointer_grabby_open.png', 20, 20);
@@ -520,6 +521,6 @@ GlassLab.State.Init.prototype.update = function()
         this.fillBar.destroy();
         this.bg.destroy();
 
-        this.game.state.start("Title", false);
+        this.game.state.start("Game", false);
     }
 };
