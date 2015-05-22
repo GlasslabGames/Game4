@@ -233,7 +233,7 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
             completed[category] = true; // add the creature/problem type key (babyC, adultT, etc)
 
             if (completed.babyC && completed.babyF) this._sendSOWO("so4");
-            if (completed.adultC && completed.adultF && completed.adultT) this._sendSOWO("so5");
+            if (completed.adultC && completed.adultT) this._sendSOWO("so5"); // no adultF because that problem type isn't present in the progression
             if (completed.birdC && completed.birdF && completed.birdT) this._sendSOWO("so9");
         }
 
