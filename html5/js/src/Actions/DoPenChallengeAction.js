@@ -33,8 +33,8 @@ GlassLab.DoPenChallengeAction.prototype._onDestroy = function() {
 
 GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatureType, creatureCount) {
     this.result = result;
-    if (result == GlassLab.results.satisfied) {
-        if (creatureType != this.data.creatureType) this.result = GlassLab.results.wrongCreatureType;
+    if (creatureType != this.data.creatureType) this.result = GlassLab.results.wrongCreatureType;
+    else if (result == GlassLab.results.satisfied) {
         else if (creatureCount < this.data.numCreatures) this.result = GlassLab.results.wrongCreatureNumber;
     }
 
