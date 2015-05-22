@@ -294,7 +294,7 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
 
 GlassLab.TelemetryManager.prototype._sendSOWO = function(name) {
     if (!this.SOWOs[name]) { // only send a SOWO if we haven't sent it yet
-        console.log("*** Saving SOWO:",name,"***");
+        //console.log("*** Saving SOWO:",name,"***");
         this.SOWOs[name] = true;
         GlassLabSDK.saveTelemEvent(name, {});
     }

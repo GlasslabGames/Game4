@@ -762,7 +762,7 @@ either expressed or implied, of the FreeBSD Project.
     this._playSessionEventOrder++;
 
       // For easily checking telemetry
-      console.log(">>> ["+this._options.gameLevel+"]",name,":",data);
+      //console.log(">>> ["+this._options.gameLevel+"]",name,":",data);
   };
 
   _GlassLabSDK.prototype.sendTotalTimePlayed = function( success, error ) {
