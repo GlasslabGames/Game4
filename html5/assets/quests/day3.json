@@ -17,7 +17,7 @@
         "serializedActions": [
           {
             "__type": "ShowAssistantDialogueAction",
-            "text": "Feeding those rams has attracted some shy unifoxes! *Unifoxes* will only eat in the pen, together. Oh, and they don't like broccoli!"
+            "text": "Feeding those rams has attracted some shy unifoxes! *Unifoxes* prefer to only eat in the pen, together. Oh, and they don't like broccoli!"
           },
           {
             "__type": "WaitForCondition",

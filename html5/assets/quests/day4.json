@@ -50,6 +50,27 @@
       "constraints": {
         "maxHeight": 4,
         "leftDraggable": false
+      },
+      "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "All *mature* creatures must be fed in a special pen. In addition to dragging the sides, you can *drag the middle* to change its ratio."
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "penFoodTypeSet"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
       }
     },
     {
@@ -426,10 +447,10 @@
       "orderId": "2.02b",
       "problemType": "3UR2MC",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "rammus",
         "numCreatures": 17,
-        "description": "Dear Friend! I have 17 ADULT RAMMUSES. Please send me enough food for all of them!",
+        "description": "Sticks and stones are never going to shake me, but I have *[numCreatures] [creatureType]* and they won't feed themselves. Send enough of each type of food for them, won't you?",
         "reward": 40
       }
     },

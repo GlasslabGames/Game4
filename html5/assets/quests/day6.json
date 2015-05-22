@@ -11,6 +11,27 @@
         "numCreatures": 2,
         "maxHeight": 1, 
         "creatureWidth": 2
+      },
+     "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Well, well. You've treated the *unifoxes* well and they've matured. Mature *unifoxes* are still peaceful, but look out for that horn!"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "penFoodTypeSet"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
       }
     },
     {
@@ -67,6 +88,27 @@
         "numCreatures": 3,
         "maxHeight": 1, 
         "creatureWidth": 3
+      },
+     "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "You've done it, rancher! This is the *adult flockin*, the rarest of creatures. So noble, it brings a tear to my eye!"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "penFoodTypeSet"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
       }
     },
     {

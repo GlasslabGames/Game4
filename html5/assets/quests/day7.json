@@ -6,23 +6,23 @@
         "serializedActions": [
           {
             "__type": "SetObjectiveAction",
-            "text": "Have fun!"
+            "text": "The creatures have taken over! What's next is up to you, rancher."
           },
           {
             "__type": "ShowAssistantDialogueAction",
-            "text": "Congratulations, you've finished the game! Thanks for playing!"
+            "text": "You've seen all there is to see so far on Mixia. Thank you for visiting us, and congratulations!"
           },   
           {
-     	 "__type": "CreateCreaturesAction",
-    	 	"data": {
-    	 	 "baby_rammus": 20,
-  	     "rammus": 20,
-  	     "unifox": 20,
-   	     "baby_unifox": 20,
-  	     "bird": 20,
-   	     "baby_bird": 20
-    		}
-        },
+     	      "__type": "CreateCreaturesAction",
+    	    	"data": {
+    	       	 "baby_rammus": 20,
+  	           "rammus": 20,
+  	           "unifox": 20,
+   	           "baby_unifox": 20,
+  	           "bird": 20,
+   	           "baby_bird": 20
+    		    }
+          },
           {
             "__type": "WaitForCondition",
             "conditions": []
@@ -32,5 +32,66 @@
   ],
   "reviewChallenges": {},
   "funChallenges": [],
-  "backgroundOrders": []
+  "backgroundOrders": [
+    {
+      "orderId": "4.12",
+      "problemType": "3US2NC",
+      "orderData": {
+        "client": "Isabel Noether",
+        "creatureType": "unifox",
+        "numCreatures": 282,
+        "description": "I heard that you might be looking to enhance your coffers. You've grown beyond the realm of hints now -- you're on your own! Who run the world?!",
+        "reward": 1000
+      }
+    },
+    {
+      "orderId": "4.17",
+      "problemType": "3US2NTa",
+      "orderData": {
+        "client": "Lyda Ross",
+        "creatureType": "baby_rammus",
+        "numCreatures": 333,
+        "description": "I was just kidding about everything I said about those flockins. Never mind your pretty head about any of that. I do have a whole lot of rammuses to feed, though.",
+        "reward": 1000
+      }
+    },
+    {
+      "orderId": "4.09",
+      "problemType": "3US1MTa",
+      "orderData": {
+        "client": "Elias Petters",
+        "creatureType": "baby_unifox",
+        "totalNumFood": 980,
+        "noFoodEntries": true,
+        "description": "It appears that my unifoxes have rather wildly multiplied. I don't suppose you can lend a hand? It's a lucrative opportunity if so.",
+        "reward": 1000,
+        "creatureWidth": 2
+      }
+    },
+    {
+      "orderId": "4.09",
+      "problemType": "3US1MTa",
+      "orderData": {
+        "client": "Marmaduke Biggs",
+        "creatureType": "rammus",
+        "totalNumFood": 864,
+        "noFoodEntries": true,
+        "description": "I'm really not a bad guy. My dad was in the marines is all. If it weren't for managers, nothing would get done. You get it, right?",
+        "reward": 1000,
+        "creatureWidth": 2
+      }
+    },    
+    {
+      "orderId": "4.04c",
+      "problemType": "3BR1MC",
+      "orderData": {
+        "client": "Elias Petters",
+        "creatureType": "unifox",
+        "numCreatures": 472,
+        "description": "All those unifoxes grew up. I tried to cull their numbers, but they're so quick. I guess there's nothing left to do but feed those that remain.",
+        "reward": 1000,
+        "creatureWidth": 3
+      } 
+    }
+  ]
 }
