@@ -152,13 +152,14 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
         }
     }
 
+    var xOffset = -100, yOffset = 300;
 
     this.game.iso.simpleSort(groundLayerGroup);
     for (var i = 0; i < groundLayerGroup.children.length; i++) {
         var sprite = groundLayerGroup.getChildAt(i);
         var pos = this.game.iso.project(sprite.isoPosition);
         var info = sprite.imageOffset;
-        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 - 200, pos.y + GLOBAL.bgData.height / 2 + 400 + info.h);
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 + xOffset, pos.y + GLOBAL.bgData.height / 2 + info.h + yOffset);
     }
 
     this.game.iso.simpleSort(creatureLayerGroup);
@@ -166,7 +167,7 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
         var sprite = creatureLayerGroup.getChildAt(i);
         var pos = this.game.iso.project(sprite.isoPosition);
         var info = sprite.imageOffset;
-        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 - 200, pos.y + GLOBAL.bgData.height / 2 + 400 + info.h);
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 + xOffset, pos.y + GLOBAL.bgData.height / 2 + info.h + yOffset);
     }
 
     if (GLOBAL.groundLayer.cacheAsBitmap)
