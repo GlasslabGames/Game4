@@ -300,28 +300,22 @@ GlassLab.UIManager.startZoom = GlassLab.UIManager.maxZoom / GlassLab.UIManager.z
 
 GlassLab.UIManager.prototype.enforceCameraBounds = function()
 {
-    var xLimit = 3500 * GLOBAL.WorldLayer.scale.x;
-    var camX = this.game.camera.x + this.game.camera.width/2;
-    var camY = this.game.camera.y + this.game.camera.height/2;
-    if (camX > xLimit) // xLimit found by testing in game
-    {
-        this.game.camera.x = xLimit - this.game.camera.width/2;
-        camX = this.game.camera.x + this.game.camera.width/2;
-    }
-    else if (camX < -xLimit)
-    {
-        this.game.camera.x = -xLimit - this.game.camera.width/2;
-        camX = this.game.camera.x + this.game.camera.width/2;
+    // These values were determined by testing the game
+    var minX = -3390 * GLOBAL.WorldLayer.scale.x;
+    var minY = -2510 * GLOBAL.WorldLayer.scale.y;
+    var maxX = 3575 * GLOBAL.WorldLayer.scale.x;
+    var maxY = 1872 * GLOBAL.WorldLayer.scale.y;
+
+    if (this.game.camera.x < minX) {
+        this.game.camera.x = minX;
+    } else if (this.game.camera.x + this.game.camera.width > maxX) {
+        this.game.camera.x = maxX - this.game.camera.width;
     }
 
-    var yLimit = 1750 * GLOBAL.WorldLayer.scale.y * (1-Math.abs(camX/ xLimit));
-    if (camY > yLimit)
-    {
-        this.game.camera.y = yLimit - this.game.camera.height/2;
-    }
-    else if (camY < -yLimit)
-    {
-        this.game.camera.y = -yLimit - this.game.camera.height/2;
+    if (this.game.camera.y < minY) {
+        this.game.camera.y = minY;
+    } else if (this.game.camera.y + this.game.camera.height > maxY) {
+        this.game.camera.y = maxY - this.game.camera.height;
     }
 };
 

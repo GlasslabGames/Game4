@@ -65,6 +65,12 @@ GlassLab.DoChallengeAction.prototype.Do = function(redo, withConstraints)
     GLOBAL.questManager.UpdateObjective(this.objective || this.getDefaultObjective());
 
     GlassLab.SignalManager.challengeStarted.dispatch(this.challengeId, this.challengeType, this.problemType, this.boss, this.challengeData.creatureType);
+
+    if (this.additionalCreatures) {
+        for (var type in this.additionalCreatures) {
+            GLOBAL.creatureManager.CreateCreatures(type, this.additionalCreatures[type]);
+        }
+    }
 };
 
 GlassLab.DoChallengeAction.prototype.completeChallenge = function()

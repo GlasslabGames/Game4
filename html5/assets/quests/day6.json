@@ -11,6 +11,31 @@
         "numCreatures": 2,
         "maxHeight": 1, 
         "creatureWidth": 2
+      },
+      "additionalCreatures": { 
+         "baby_bird": 3,
+         "rammus": 3 
+      },        
+     "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "Well, well. You've treated the *unifoxes* well and they've matured. Mature *unifoxes* are still peaceful, but look out for that horn!"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "penFoodTypeSet"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
       }
     },
     {
@@ -18,6 +43,10 @@
      "challengeId": "T4.03a",
      "problemType": "3US1MC",
      "hideBackgroundOrders": true,
+     "additionalCreatures": { 
+       "baby_bird": 3,
+       "rammus": 3 
+     },     
      "challengeData": {
         "creatureType": "unifox",
         "numCreatures": 10,
@@ -67,6 +96,31 @@
         "numCreatures": 3,
         "maxHeight": 1, 
         "creatureWidth": 3
+      },
+     "additionalCreatures": { 
+       "unifox": 3,
+       "rammus": 3 
+     },       
+     "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "You've done it, rancher! This is the *adult flockin*, the rarest of creatures. So noble, it brings a tear to my eye!"
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "penFoodTypeSet"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
       }
     },
     {
@@ -74,6 +128,10 @@
      "challengeId": "T4.01b",
      "problemType": "3BR1MC",
      "hideBackgroundOrders": true,
+     "additionalCreatures": { 
+       "unifox": 3,
+       "rammus": 3 
+     },      
      "challengeData": {
         "creatureType": "bird",
         "numCreatures": 12,
@@ -90,6 +148,10 @@
       "challengeId": "4.03c",
       "problemType": "3BR2MC",
       "reviewKey": "flockStart",
+      "additionalCreatures": { 
+        "unifox": 3,
+        "rammus": 3 
+      },       
       "challengeData": {
         "creatureType": "bird",
         "numCreatures": 42,
@@ -132,6 +194,10 @@
      "challengeId": "4.07b",
      "problemType": "3US1NC",
      "reviewKey": "uniStart",
+     "additionalCreatures": { 
+       "bird": 3,
+       "rammus": 3 
+     },      
      "challengeData": {
         "creatureType": "unifox",
         "numCreatures": 17,
@@ -152,6 +218,10 @@
           "challengeId": "4.11a",
           "problemType": "3BR3MF",
           "reviewKey": "middle",
+          "additionalCreatures": { 
+            "unifox": 3,
+            "rammus": 3 
+          },           
           "challengeData": {
             "client": "Elias Petters",
             "creatureType": "bird",
@@ -166,6 +236,10 @@
           "challengeId": "4.11b",
           "problemType": "3BR3MF",
           "reviewKey": "middle",
+          "additionalCreatures": { 
+            "unifox": 3,
+            "rammus": 3 
+          },           
           "challengeData": {
             "client": "Elias Petters",
             "creatureType": "bird",
@@ -180,6 +254,10 @@
           "challengeId": "4.10a",
           "problemType": "3BR2MF",
           "reviewKey": "middle",
+          "additionalCreatures": { 
+            "unifox": 3,
+            "rammus": 3 
+          },           
           "challengeData": {
             "client": "Elias Petters",
             "creatureType": "bird",
@@ -194,6 +272,10 @@
           "challengeId": "4.10b",
           "problemType": "3BR2MF",
           "reviewKey": "middle",
+          "additionalCreatures": { 
+            "unifox": 3,
+            "rammus": 3 
+          },           
           "challengeData": {
             "client": "Elias Petters",
             "creatureType": "bird",
@@ -209,6 +291,10 @@
       "__type": "DoPenChallengeAction",
       "challengeId": "4.03d",
       "problemType": "3BR3MC",
+      "additionalCreatures": { 
+        "unifox": 3,
+        "rammus": 3 
+      },       
       "challengeData": {
         "creatureType": "bird",
         "numCreatures": 102,
@@ -224,6 +310,10 @@
       "__type": "DoOrderChallengeAction",
       "challengeId": "4.13",
       "problemType": "3BR2MTb",
+      "additionalCreatures": { 
+        "unifox": 3,
+        "rammus": 3 
+      },        
       "challengeData": {
           "client": "Marmaduke Biggs",
           "creatureType": "bird",
@@ -271,6 +361,10 @@
            "__type": "DoOrderChallengeAction",
            "challengeId": "4.18a",
            "problemType": "3US2NTb",
+           "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+           },             
            "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -283,6 +377,10 @@
            "__type": "DoOrderChallengeAction",
            "challengeId": "4.18b",
            "problemType": "3US2NTb",
+           "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+           },            
            "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -295,6 +393,10 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.08a",
             "problemType": "3US1MTb",
+            "additionalCreatures": { 
+              "bird": 3,
+              "rammus": 3 
+            },             
             "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -308,6 +410,10 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.08b",
             "problemType": "3US1MTb",
+            "additionalCreatures": { 
+              "bird": 3,
+              "rammus": 3 
+            },             
             "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -326,6 +432,10 @@
           "__type": "DoOrderChallengeAction",
           "challengeId": "4.14a",
           "problemType": "3BR2MTa",
+          "additionalCreatures": { 
+            "unifox": 3,
+            "rammus": 3 
+          },           
           "challengeData": {
               "client": "Elias Petters",
               "creatureType": "bird",
@@ -340,6 +450,10 @@
           "__type": "DoOrderChallengeAction",
           "challengeId": "4.14b",
           "problemType": "3BR2MTa",
+          "additionalCreatures": { 
+            "unifox": 3,
+            "rammus": 3 
+          },           
           "challengeData": {
               "client": "Elias Petters",
               "creatureType": "bird",
@@ -359,6 +473,10 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.06",
             "problemType": "3US2MF",
+            "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+            },              
             "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -372,6 +490,10 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.05",
             "problemType": "3US2MF",
+            "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+            },            
             "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -385,6 +507,10 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.16",
             "problemType": "3US2NF",
+            "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+            },            
             "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -397,6 +523,10 @@
            "__type": "DoOrderChallengeAction",
            "challengeId": "4.15",
            "problemType": "3US1NF",
+           "additionalCreatures": { 
+            "bird": 3,
+            "rammus": 3 
+           },           
            "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "unifox",
@@ -416,6 +546,10 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.04a",
             "problemType": "3BR1MC",
+            "additionalCreatures": { 
+             "unifox": 3,
+             "rammus": 3 
+            },            
             "challengeData": {
               "client": "Elias Petters",
               "creatureType": "bird",
@@ -429,6 +563,10 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "4.04b",
             "problemType": "3BR1MC",
+            "additionalCreatures": { 
+             "unifox": 3,
+             "rammus": 3 
+            },            
             "challengeData": {
               "client": "Elias Petters",
               "creatureType": "bird",
@@ -447,6 +585,10 @@
             "__type": "DoPenChallengeAction",
             "challengeId": "4.03b",
             "problemType": "3BR1MC",
+            "additionalCreatures": { 
+             "unifox": 3,
+             "rammus": 3 
+            },            
             "challengeData": {
               "creatureType": "bird",
               "numCreatures": 24,
@@ -462,6 +604,10 @@
             "__type": "DoPenChallengeAction",
             "challengeId": "4.03a",
             "problemType": "3BR1MC",
+            "additionalCreatures": { 
+             "unifox": 3,
+             "rammus": 3 
+            },            
             "challengeData": {
               "creatureType": "bird",
               "numCreatures": 18,
@@ -484,6 +630,10 @@
           "__type": "DoOrderChallengeAction",
           "challengeId": "4.02a",
           "problemType": "3US2MC",
+          "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+          },          
           "challengeData": {
             "client": "Isabel Noether",
             "creatureType": "unifox",
@@ -497,6 +647,10 @@
           "__type": "DoOrderChallengeAction",
           "challengeId": "4.02b",
           "problemType": "3US2MC",
+          "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+          },          
           "challengeData": {
             "client": "Isabel Noether",
             "creatureType": "unifox",
@@ -515,6 +669,10 @@
            "__type": "DoPenChallengeAction",
            "challengeId": "4.01b",
            "problemType": "3US2MC",
+           "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+           },           
            "challengeData": {
               "creatureType": "unifox",
               "numCreatures": 22,
@@ -532,6 +690,10 @@
            "__type": "DoPenChallengeAction",
            "challengeId": "4.01a",
            "problemType": "3US1MC",
+           "additionalCreatures": { 
+             "bird": 3,
+             "rammus": 3 
+           },            
            "challengeData": {
               "creatureType": "unifox",
               "numCreatures": 18,
@@ -549,6 +711,10 @@
          "__type": "DoPenChallengeAction",
          "challengeId": "4.07c",
          "problemType": "3US2NC",
+         "additionalCreatures": { 
+            "bird": 3,
+            "rammus": 3 
+         },          
          "challengeData": {
           "creatureType": "unifox",
           "numCreatures": 27,
@@ -566,6 +732,10 @@
          "__type": "DoPenChallengeAction",
          "challengeId": "4.07a",
          "problemType": "3US1NC",
+         "additionalCreatures": { 
+            "bird": 3,
+            "rammus": 3 
+         },          
          "challengeData": {
           "creatureType": "unifox",
           "numCreatures": 21,

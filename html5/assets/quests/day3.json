@@ -12,12 +12,13 @@
         "maxHeight": 1,
         "creatureWidth": 2
       },
+     "additionalCreatures": { "baby_rammus": 3 },
       "serializedTutorial": {
         "__type": "ActionGroup",
         "serializedActions": [
           {
             "__type": "ShowAssistantDialogueAction",
-            "text": "Feeding those rams has attracted some shy unifoxes! *Unifoxes* will only eat in the pen, together. Oh, and they don't like broccoli!"
+            "text": "Feeding those rams has attracted some shy unifoxes! *Unifoxes* prefer to only eat in the pen, together. Oh, and they don't like broccoli!"
           },
           {
             "__type": "WaitForCondition",
@@ -47,6 +48,7 @@
         "leftDraggable": true,
         "creatureWidth": 2
       },
+      "additionalCreatures": { "baby_rammus": 3 },
       "constraints": {
         "maxHeight": 3,
         "leftDraggable": false
@@ -64,6 +66,7 @@
         "topDraggable": true,
         "leftDraggable": true
       },
+      "additionalCreatures": { "baby_rammus": 3 },
       "constraints": {
         "maxHeight": 11,
         "leftDraggable": false
@@ -103,6 +106,7 @@
           "challengeId": "1.07a",
           "problemType": "2US1MF",
           "reviewKey": "middle",
+          "additionalCreatures": { "baby_rammus": 3 },
           "challengeData": {
             "client": "Elias Petters",
             "creatureType": "baby_unifox",
@@ -117,6 +121,7 @@
           "challengeId": "1.07c",
           "problemType": "2US1MF",
           "reviewKey": "middle",
+          "additionalCreatures": { "baby_rammus": 3 },
           "challengeData": {
             "client": "Elias Petters",
             "creatureType": "baby_unifox",
@@ -131,6 +136,7 @@
           "challengeId": "1.07d",
           "problemType": "2US1MF",
           "reviewKey": "middle",
+          "additionalCreatures": { "baby_rammus": 3 },
           "challengeData": {
             "client": "Elias Petters",
             "creatureType": "baby_unifox",
@@ -153,6 +159,7 @@
         "topDraggable": true,
         "leftDraggable": true
       },
+      "additionalCreatures": { "baby_rammus": 3 },
       "constraints": {
         "creatureWidth": 3,
         "maxHeight": 20,
@@ -163,6 +170,7 @@
       "__type": "DoOrderChallengeAction",
       "challengeId": "1.06",
       "problemType": "2UR1MF",
+      "additionalCreatures": { "baby_rammus": 3 },
       "challengeData": {
           "client": "Marmaduke Biggs",
           "creatureType": "baby_rammus",
@@ -209,6 +217,7 @@
        "__type": "DoOrderChallengeAction",
        "challengeId": "1.09c",
        "problemType": "2US2NF",
+       "additionalCreatures": { "baby_rammus": 3 },
        "challengeData": {
           "client": "Elias Petters",
           "creatureType": "baby_unifox",
@@ -221,6 +230,7 @@
         "__type": "DoOrderChallengeAction",
        "challengeId": "1.09a",
        "problemType": "2US2NF",
+       "additionalCreatures": { "baby_rammus": 3 },
        "challengeData": {
           "client": "Elias Petters",
           "creatureType": "baby_unifox",
@@ -233,6 +243,7 @@
         "__type": "DoOrderChallengeAction",
        "challengeId": "1.09d",
        "problemType": "2US2NF",
+       "additionalCreatures": { "baby_rammus": 3 },
        "challengeData": {
           "client": "Elias Petters",
           "creatureType": "baby_unifox",
@@ -257,6 +268,7 @@
             "topDraggable": true,
             "leftDraggable": true
           },
+          "additionalCreatures": { "baby_rammus": 3 },
           "constraints": {
             "maxHeight": 9,
             "leftDraggable": false
@@ -273,6 +285,7 @@
             "topDraggable": true,
             "leftDraggable": true
           },
+          "additionalCreatures": { "baby_rammus": 3 },
           "constraints": {
             "maxHeight": 7,
             "leftDraggable": false
@@ -287,6 +300,7 @@
         "__type": "DoOrderChallengeAction",
         "challengeId": "1.04a",
         "problemType": "2US1MC",
+        "additionalCreatures": { "baby_rammus": 3 },
         "challengeData": {
           "client": "Elias Petters",
           "creatureType": "baby_unifox",
@@ -300,6 +314,7 @@
         "__type": "DoOrderChallengeAction",
         "challengeId": "1.08",
         "problemType": "2US1NC",
+        "additionalCreatures": { "baby_rammus": 3 },
         "challengeData": {
           "client": "Elias Petters",
           "creatureType": "baby_unifox",
@@ -319,6 +334,7 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "1.03a",
             "problemType": "2UR1MC",
+            "additionalCreatures": { "baby_rammus": 3 },
             "challengeData": {
               "client": "Lyda Ross",
               "creatureType": "baby_rammus",
@@ -331,6 +347,7 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "1.03c",
             "problemType": "2UR1MC",
+            "additionalCreatures": { "baby_rammus": 3 },
             "challengeData": {
               "client": "Lyda Ross",
               "creatureType": "baby_rammus",
@@ -348,6 +365,7 @@
             "__type": "DoPenChallengeAction",
             "challengeId": "1.02c",
             "problemType": "2US1MC",
+            "additionalCreatures": { "baby_rammus": 3 },
             "challengeData": {
               "creatureType": "baby_unifox",
               "numCreatures": 14,
@@ -365,6 +383,7 @@
            "__type": "DoPenChallengeAction",
            "challengeId": "1.02b",
            "problemType": "2US1MC",
+           "additionalCreatures": { "baby_rammus": 3 },
            "challengeData": {
               "creatureType": "baby_unifox",
               "numCreatures": 12,
@@ -387,6 +406,7 @@
            "__type": "DoPenChallengeAction",
            "challengeId": "1.01b",
            "problemType": "2UR1MC",
+           "additionalCreatures": { "baby_rammus": 3 },
            "challengeData": {
               "creatureType": "baby_rammus",
               "numCreatures": 9,
@@ -403,6 +423,7 @@
            "__type": "DoPenChallengeAction",
            "challengeId": "1.01a",
            "problemType": "2UR1MC",
+           "additionalCreatures": { "baby_rammus": 3 },
            "challengeData": {
               "creatureType": "baby_rammus",
               "numCreatures": 5,
@@ -453,7 +474,7 @@
         "client": "Elias Petters",
         "creatureType": "baby_unifox",
         "numFoodA": 76,
-        "description": "It's a mad world when you have *[numFoodA] [foodTypeA] and no *[creatureType]* to eat them. Help me out?",
+        "description": "It's a mad world when you have *[numFoodA] [foodTypeA]* and no *[creatureType]* to eat them. Help me out?",
         "reward": 30
       }
     }

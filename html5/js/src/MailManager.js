@@ -94,6 +94,7 @@ GlassLab.MailManager.prototype.cancelOrder = function() {
     GLOBAL.transition.onMiddle.addOnce(function() {
         GlassLabSDK.saveTelemEvent("cancel_order", {});
         GlassLab.SignalManager.orderCanceled.dispatch(this.data);
+        GLOBAL.assistant.reshowTutorial(); // if we had a tutorial before we started the order, reshow it now
     });
 };
 
@@ -118,9 +119,12 @@ GlassLab.MailManager.prototype.completeOrder = function(order, result)
 
     GLOBAL.transition.onMiddle.addOnce(function() {
         GlassLab.SignalManager.orderShipped.dispatch(order, result); // it's weird to have this here, but right now the mailbutton appears when we send it, which we don't want to do earlier.
+        GLOBAL.UIManager.mailButton.setEnabled(false);
+        GLOBAL.assistant.reshowTutorial(); // if we had a tutorial before we started the order, reshow it now
     }, this);
 
     GLOBAL.transition.onComplete.addOnce(function() {
+        GLOBAL.UIManager.mailButton.setEnabled(true);
         this.rewardsPopup.show(order);
     }, this);
 };

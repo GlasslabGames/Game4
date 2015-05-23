@@ -43,13 +43,15 @@ GlassLab.RewardPopup = function(game)
     this.rewardAmountLabel.anchor.setTo(0, 0.5);
     this.addChild(this.rewardAmountLabel);
 
-    this.descriptionLabel = game.make.text(-165, -45, "Dear Rancher,\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.\n\nKindest Regards, Archie H.",
+    this.descriptionLabel = game.make.text(-165, -50, "Dear Rancher,\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent maximus, risus quis dignissim lacinia, tellus eros facilisis nulla, vulputate laoreet erat nisl sit amet sem. Nam eget est a erat rhoncus consequat.\n\nKindest Regards, Archie H.",
         {wordWrap: true, wordWrapWidth: 330, font: '11pt AmericanTypewriter', fill: "#807c7b"});
     this.addChild(this.descriptionLabel);
 
     this.coinSparkle = this.addChild(game.make.sprite(coin.x + 20, coin.y, "coinAnim"));
     this.coinSparkle.anchor.setTo(0.5, 0.5);
     this.coinSparkle.animations.add("sparkle", Phaser.Animation.generateFrameNames("get_money_sparkle_on_letter_",0,20,".png",3), 24);
+
+    this.characterResponses = this.game.cache.getJSON("characterResponseText");
 
     this.onFinishedShowing.add(this.addReward, this); // add the reward as soon as the letter fully pops up
 };
@@ -68,6 +70,16 @@ GlassLab.RewardPopup.prototype.show = function(data)
 
     this.clientNameLabel.text = data.client;
     this.rewardAmountLabel.text = "$"+this.reward;
+
+    var responses = this.characterResponses[data.client];
+    if (!responses) {
+        console.error("No response text found for",data.client,"!");
+        // choose an existing character instead
+        for (var key in this.characterResponses) {
+            responses = this.characterResponses[key];
+            break;
+        }
+    }
 
     var creatureInfo = GLOBAL.creatureManager.GetCreatureData(data.creatureType);
     var creatures = creatureInfo.displayNames.plural;
@@ -103,11 +115,12 @@ GlassLab.RewardPopup.prototype.show = function(data)
     }
 
     var photo = creatureInfo.spriteName + "_orderPhoto_";
-    var string = "Dear Rancher," + "\n\n";
+    var string = responses.greeting + "\n\n";
 
     switch (data.outcome) {
         case GlassLab.results.satisfied:
-            string += "All the "+ creatures + " you sent arrived safe and sound! Your full payment is enclosed. It was a pleasure doing business with you.";
+            string += "All the "+ creatures + " you sent arrived safe and sound! ";
+            string += responses.success;
             photo += "happy";
             break;
         case GlassLab.results.dislike:
@@ -160,12 +173,12 @@ GlassLab.RewardPopup.prototype.show = function(data)
     }
 
     if (data.outcome != GlassLab.results.satisfied) {
-        string += " I’m afraid I can’t pay you for this unacceptable situation.";
+        string += " " + responses.failure;
     }
 
     // To make the name fit, we're going to get its initials here. We might need to consider another solution later.
     var name = data.client;
-    if (name.length > 15) {
+    if (name.length > 14) { // it's pretty arbitrary to go by number of letters instead of width, but 14 works for the names we have..
         var nameParts = data.client.split(" ");
         var initials = "";
         var lastName = "";
@@ -175,10 +188,10 @@ GlassLab.RewardPopup.prototype.show = function(data)
             initials += nameParts[i].substr(0, 1) + ". ";
         }
         name = initials.substr(0, initials.length - 3) + lastName; // try with the full last name
-        if (name.length > 15) name = initials; // just initials then
+        if (name.length > 14) name = initials; // just initials then
     }
 
-    string += "\n\nSincerely,\n" + name;
+    string += "\n\n" + responses.signature + "\n" + name;
 
     GlassLab.Util.SetColoredText(this.descriptionLabel, string, "#807c7b", "#994c4e");
 

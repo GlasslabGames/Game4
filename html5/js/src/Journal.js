@@ -42,7 +42,7 @@ GlassLab.Journal = function(game) {
     this.sprite.addChild(this.temperamentLabel);
     */
 
-    var dietTitleLabel = game.make.text(0, 100, "Daily Diet:", {font: "14pt ArchitectsDaughter", fill: "#808080"});
+    var dietTitleLabel = game.make.text(0, 100, "Feeding Ratio:", {font: "14pt ArchitectsDaughter", fill: "#808080"});
     dietTitleLabel = GlassLab.Util.SetCenteredText(dietTitleLabel, null, 0.5, 0);
     this.sprite.addChild(dietTitleLabel);
 
@@ -254,10 +254,9 @@ GlassLab.Journal.prototype._setupNumericalFeedLayout = function(creatureData)
 
 GlassLab.Journal.prototype._revealCreatureInfo = function() {
     this.creatureArt.alpha = 0;
-    this.game.add.tween(this.creatureArt).to( {alpha: 1}, 1000, Phaser.Easing.Linear.InOut, true );
-    this.game.add.tween(this.nameLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1000 );
-    //this.game.add.tween(this.temperamentLabel).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
-    this.game.add.tween(this.dailyDiet).from( {alpha: 0}, 1000, Phaser.Easing.Linear.InOut, true, 1500 );
+    this.game.add.tween(this.creatureArt).to( {alpha: 1}, 500, Phaser.Easing.Linear.InOut, true, 1000 );
+    this.game.add.tween(this.nameLabel).from( {alpha: 0}, 500, Phaser.Easing.Linear.InOut, true, 2000 );
+    this.game.add.tween(this.dailyDiet).from( {alpha: 0}, 500, Phaser.Easing.Linear.InOut, true, 3000 );
 };
 
 GlassLab.Journal.prototype.hide = function(auto)

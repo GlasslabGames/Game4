@@ -68,6 +68,9 @@ GlassLab.SortingGame = function(game) {
     this.root.addChild(this.bonusAmountAddedLabel);
 
     this.visible = false; // start invisible until we want to begin the sorting game
+
+    // Hide the other UI elements when this pops up
+    this.onFinishedShowing.add(function() { this.toggleOtherUI(false); }, this);
 };
 
 GlassLab.SortingGame.prototype = Object.create(GlassLab.UIWindow.prototype);
@@ -75,6 +78,17 @@ GlassLab.SortingGame.prototype.constructor = GlassLab.SortingGame;
 
 GlassLab.SortingGame.COMPARISON_VALUES = {NotEnough: "Not Enough", justRight: "Just Right", tooMuch: "Too Much"};
 GlassLab.SortingGame.REWARD_PER_CARD = 10;
+
+GlassLab.SortingGame.prototype.hide = function() {
+    GlassLab.UIWindow.prototype.hide.call(this);
+    this.toggleOtherUI(true);
+};
+
+GlassLab.SortingGame.prototype.toggleOtherUI = function(on) {
+    GLOBAL.UIManager.topLeftAnchor.visible = on;
+    GLOBAL.UIManager.bottomLeftAnchor.visible = on;
+    GLOBAL.UIManager.topRightAnchor.visible = on;
+};
 
 GlassLab.SortingGame.prototype.addCard = function(creatureType, numCreatures, numFood, displayMode, challengeType) {
     var card = new GlassLab.SortingGameCard(this, creatureType, numCreatures, numFood, displayMode, challengeType);
@@ -118,17 +132,14 @@ GlassLab.SortingGame.prototype._onCardAnswered = function(card, correct) {
         this.bonusAmount += GlassLab.SortingGame.REWARD_PER_CARD;
         this.bonusAmountLabel.text = "x " + this.bonusAmount;
 
-        //if (this.cardsCorrect == this.cards.length) { // color text green if they got them all right
-        //    this.bonusAmountLabel.style.fill = "#39b54a";
-        //}
-
         // animate the coin:
-        var anim = this.largeCoin.play("get_coins");
+        if (this.coinAnim) this.coinAnim.stop(true, true);
+        this.coinAnim = this.largeCoin.play("get_coins");
 
         // annoying slot machine audio:
         GLOBAL.audioManager.playSoundWithVolumeAndOffset("coinDropSound", 0.15, 0.0, true);
-        if (anim) {
-            anim.onComplete.addOnce(function() {
+        if (this.coinAnim) {
+            this.coinAnim.onComplete.addOnce(function() {
                 GLOBAL.audioManager.fadeSound("coinDropSound", 100, 0.0); // fade to volume 0.0 quickly, then stop loop.
             }, this);
         }
@@ -172,10 +183,11 @@ GlassLab.SortingGame.prototype.start = function(data) {
     }
 
     // Insert cards in a random order
-    while (data.length) {
-        var i = Math.floor( Math.random() * data.length );
-        var card = this.addCard( data[i].creatureType, data[i].numCreatures, data[i].numFood, data[i].displayMode, data[i].challengeType );
-        data.splice(i, 1);
+    var copiedData = [].concat(data);
+    while (copiedData.length) {
+        var i = Math.floor( Math.random() * copiedData.length );
+        var card = this.addCard( copiedData[i].creatureType, copiedData[i].numCreatures, copiedData[i].numFood, copiedData[i].displayMode, copiedData[i].challengeType );
+        copiedData.splice(i, 1);
     }
 
     // Add tokens if we don't have any or some were used last time

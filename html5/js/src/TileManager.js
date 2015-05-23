@@ -92,33 +92,43 @@ GlassLab.TileData = function() {
 GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
 {
     this.tilemap = tilemap;
+    console.log(this.tilemap);
+    console.log(this.game.cache.getTilemapData("worldTileMap"));
 
     this.SetCenter(this.tilemap.width/2, this.tilemap.height/2);
 
-    var tilesetProperties = this.tilemap.tilesets[0].tileproperties;
-    for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
+    var parent = this.game.make.sprite();
+    var creatureLayerGroup = this.game.make.group();
+    var groundLayerGroup = this.game.make.group();
+
+    for (var i = 0, max_i = this.tilemap.width; i < max_i; i++) //var i=this.tilemap.width-1; i>=0; i--)
     {
-        var layer = this.tilemap.layers[layerIndex];
-        var shouldSortWithCreatures = layer.name == "border";
-        for (var i=this.tilemap.width-1; i>=0; i--)
+        for (var j = 0, max_j = this.tilemap.height; j < max_j; j++) //var j=this.tilemap.height-1; j>=0; j--)
         {
-            for (var j=this.tilemap.height-1; j>=0; j--)
+            var tilesetProperties = this.tilemap.tilesets[0].tileproperties;
+            for (var layerIndex = 0; layerIndex < this.tilemap.layers.length; layerIndex++)
             {
+
+                var layer = this.tilemap.layers[layerIndex];
+                var shouldSortWithCreatures = layer.name == "border";
                 var tileType = this.GetTileData(i, j, layer.name);
                 if (tileType == -1) continue;
 
                 var image = new GlassLab.Tile(this.game, i, j, tileType);
-                //image.tint = Math.random() * 16777215;
-                if (shouldSortWithCreatures)
-                {
-                    image._preOptimizedParent = GLOBAL.creatureLayer;
-                }
-                else
-                {
-                    image._preOptimizedParent = GLOBAL.groundLayer;
-                }
 
-                GLOBAL.renderManager.AddToIsoWorld(image);
+                if (shouldSortWithCreatures) creatureLayerGroup.add(image);
+                else groundLayerGroup.add(image);
+
+                /*                if (shouldSortWithCreatures)
+                 {
+                 image._preOptimizedParent = GLOBAL.creatureLayer;
+                 }
+                 else
+                 {
+                 image._preOptimizedParent = GLOBAL.groundLayer;
+                 }
+
+                 GLOBAL.renderManager.AddToIsoWorld(image);*/
 
                 if (!this.map[i]) this.map[i] = [];
 
@@ -128,18 +138,36 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
                     this.map[i][j] = image;
                 }
 
-                if (GLOBAL.debug)
-                {
-                    var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
-                    text.anchor.set(0.5, 0.5);
-                    image.addChild(text);
-                    if (image.scale.x < 0)
-                    {
-                        text.scale.x = -text.scale.x;
-                    }
-                }
+                /*if (GLOBAL.debug)
+                 {
+                 var text = this.game.make.text(0,0, "(" + i + ", " + j + ")");
+                 text.anchor.set(0.5, 0.5);
+                 image.addChild(text);
+                 if (image.scale.x < 0)
+                 {
+                 text.scale.x = -text.scale.x;
+                 }
+                 }*/
             }
         }
+    }
+
+    var xOffset = -100, yOffset = 300;
+
+    this.game.iso.simpleSort(groundLayerGroup);
+    for (var i = 0; i < groundLayerGroup.children.length; i++) {
+        var sprite = groundLayerGroup.getChildAt(i);
+        var pos = this.game.iso.project(sprite.isoPosition);
+        var info = sprite.imageOffset;
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 + xOffset, pos.y + GLOBAL.bgData.height / 2 + info.h + yOffset);
+    }
+
+    this.game.iso.simpleSort(creatureLayerGroup);
+    for (var i = 0; i < creatureLayerGroup.children.length; i++) {
+        var sprite = creatureLayerGroup.getChildAt(i);
+        var pos = this.game.iso.project(sprite.isoPosition);
+        var info = sprite.imageOffset;
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 + xOffset, pos.y + GLOBAL.bgData.height / 2 + info.h + yOffset);
     }
 
     if (GLOBAL.groundLayer.cacheAsBitmap)
@@ -147,8 +175,8 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
         GLOBAL.groundLayer.GLASSLAB_BITMAP_DIRTY = true;
     }
 
-    this.game.iso.simpleSort(GLOBAL.creatureLayer);
-    this.game.iso.simpleSort(GLOBAL.groundLayer);
+    //this.game.iso.simpleSort(GLOBAL.creatureLayer);
+    //this.game.iso.simpleSort(GLOBAL.groundLayer);
 };
 
 GlassLab.TileManager.prototype.SetCenter = function(x, y)

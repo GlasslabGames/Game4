@@ -20,7 +20,7 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "There you are, rancher! I’m your assistant, Horatio Snedley. We’re burning daylight, so best get started. Your *cargo* is in here."
+          "text": "It's about time you arrived, rancher. I’m Horatio Snedley, your assistant. It's late already, so let's get started. Your *cargo* is in here."
         },
         {
           "__type": "ShowArrowAction",
@@ -72,7 +72,7 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "Ah, a common *rammus gnarlus!* It liked that broccoli, but it's not full yet. See *how much broccoli* it needs."
+          "text": "Hmm, it liked that broccoli, but it's not full yet. See how *much broccoli* it needs."
         },
         {
           "__type": "WaitForCondition",
@@ -121,7 +121,7 @@
         },
         {
           "__type": "ShowAssistantDialogueAction",
-          "text": "You've mastered the *juvenile rammus*! You can open your *notes* any time to check what creatures eat."
+          "text": "You've mastered the *baby ram*! You can open your *notes* any time to check what creatures eat."
         },
         {
           "__type": "WaitForCondition",
@@ -180,7 +180,7 @@
     },
     { 
      "__type": "DoFeedingChallengeAction",
-     "challengeId": "T2.01-REPLACE",
+     "challengeId": "T1.07",
      "problemType": "3UR_intro_adult_rammus-REPLACE",
      "challengeData": {
         "creatureType": "baby_rammus",

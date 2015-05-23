@@ -11,6 +11,7 @@ GlassLab.GlobalVariableEqualsCondition = function(variableName, compareTo)
     this.variableName = variableName;
 
     this.target = compareTo;
+    this.targetVariable = null;
 
     this.updateSignalBinder = null;
 };
@@ -20,7 +21,8 @@ GlassLab.GlobalVariableEqualsCondition.prototype.constructor = GlassLab.GlobalVa
 
 GlassLab.GlobalVariableEqualsCondition.prototype._calculateIsSatisfied = function()
 {
-    return GlassLab.Deserializer.getPropertyFromName(this.variableName) == this.target;
+    if (this.targetVariable) return GlassLab.Deserializer.getPropertyFromName(this.variableName) == GlassLab.Deserializer.getPropertyFromName(this.targetVariable);
+    else return GlassLab.Deserializer.getPropertyFromName(this.variableName) == this.target;
 };
 
 GlassLab.GlobalVariableEqualsCondition.prototype._doDestroy = function()

@@ -222,18 +222,18 @@ GlassLab.TelemetryManager.prototype._checkSuccessSOWOs = function(challengeId, a
         var completed = this.problemTypesCompletedPerfectly;
 
         // the categories are "baby", "adult", and "bird".
-        if (creatureType) {
+        if (creatureType && (problemType.charAt(1) != "T" || problemType.charAt(2) != "c")) { // don't count Tc pro8blemTypes
             var category = "adult";
             if (creatureType.indexOf("bird") > -1) category = "bird";
             else if (creatureType.indexOf("baby") > -1) category = "baby";
 
-            category += problemType[1]; // append the second letter of the problem type (F, C, T)
+            category += problemType.charAt(1); // append the second letter of the problem type (F, C, T)
             //console.log("SOWO category:",category);
 
             completed[category] = true; // add the creature/problem type key (babyC, adultT, etc)
 
             if (completed.babyC && completed.babyF) this._sendSOWO("so4");
-            if (completed.adultC && completed.adultF && completed.adultT) this._sendSOWO("so5");
+            if (completed.adultC && completed.adultT) this._sendSOWO("so5"); // no adultF because that problem type isn't present in the progression
             if (completed.birdC && completed.birdF && completed.birdT) this._sendSOWO("so9");
         }
 
@@ -264,8 +264,9 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
         else if (challengeType == "pen" && !this.pastFirstNonIntroPenChallenge) this._sendSOWO("wo3"); // more than 4 attempts for the first pen challenge (they haven't beaten one before)
     }
 
-    // Count up how many problems of each category they've failed twice
-    if (attempts == 2 && creatureType && problemType.length <= 4) { // note that we only want to increment the count when the attempt is 2 and not do it again when > 2
+    // Count up how many problems of each category they've failed twice, not counting tutorial challenges
+    if (attempts == 2 && creatureType && challengeId[0] != "T") {
+        // note that we only want to increment the count when the attempt is 2 and not do it again when > 2
 
         var category = "adult";
         if (creatureType.indexOf("bird") > -1) category = "bird";
@@ -293,7 +294,7 @@ GlassLab.TelemetryManager.prototype._checkFailureSOWOs = function(challengeId, a
 
 GlassLab.TelemetryManager.prototype._sendSOWO = function(name) {
     if (!this.SOWOs[name]) { // only send a SOWO if we haven't sent it yet
-        console.log("*** Saving SOWO:",name,"***");
+        //console.log("*** Saving SOWO:",name,"***");
         this.SOWOs[name] = true;
         GlassLabSDK.saveTelemEvent(name, {});
     }

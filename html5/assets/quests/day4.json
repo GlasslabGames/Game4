@@ -12,6 +12,7 @@
         "numCreatures": 1,
         "centered": true
     },
+     "additionalCreatures": { "baby_unifox": 3 },
       "serializedTutorial": {
         "__type": "ActionGroup",
         "serializedActions": [
@@ -47,9 +48,31 @@
         "topDraggable": true,
         "leftDraggable": true
       },
+      "additionalCreatures": { "baby_unifox": 3 },
       "constraints": {
         "maxHeight": 4,
         "leftDraggable": false
+      },
+      "serializedTutorial": {
+        "__type": "ActionGroup",
+        "serializedActions": [
+          {
+            "__type": "ShowAssistantDialogueAction",
+            "text": "All *mature* creatures must be fed in a special pen. In addition to dragging the sides, you can *drag the middle* to change its ratio."
+          },
+          {
+            "__type": "WaitForCondition",
+            "conditions": [
+              {
+                "__type": "SignalCondition",
+                "signalName": "penFoodTypeSet"
+              }
+            ]
+          },
+          {
+            "__type": "HideAssistantDialogueAction"
+          }
+        ]
       }
     },
     {
@@ -57,6 +80,7 @@
      "challengeId": "T2.03",
      "problemType": "3UR1MTc",
      "hideBackgroundOrders": true,
+     "additionalCreatures": { "baby_unifox": 3 },
      "challengeData": {
         "client": "Isabel Noether",
         "creatureType": "rammus",
@@ -79,6 +103,7 @@
         "topDraggable": true,
         "leftDraggable": true
       },
+      "additionalCreatures": { "baby_unifox": 3 },
       "constraints": {
         "maxHeight": 14,
         "leftDraggable": false
@@ -118,6 +143,7 @@
           "challengeId": "2.05a",
           "problemType": "3UR2MTa",
           "reviewKey": "middle",
+          "additionalCreatures": { "baby_unifox": 3 },
           "challengeData": {
             "client": "Isabel Noether",
             "creatureType": "rammus",
@@ -132,6 +158,7 @@
           "challengeId": "2.05c",
           "problemType": "3UR2MTa",
           "reviewKey": "middle",
+          "additionalCreatures": { "baby_unifox": 3 },
           "challengeData": {
             "client": "Isabel Noether",
             "creatureType": "rammus",
@@ -146,6 +173,7 @@
           "challengeId": "2.05d",
           "problemType": "3UR2MTa",
           "reviewKey": "middle",
+          "additionalCreatures": { "baby_unifox": 3 },
           "challengeData": {
             "client": "Isabel Noether",
             "creatureType": "rammus",
@@ -168,6 +196,7 @@
         "topDraggable": true,
         "leftDraggable": true
       },
+      "additionalCreatures": { "baby_unifox": 3 },
       "constraints": {
         "creatureWidth": 2,
         "maxHeight": 18,
@@ -178,6 +207,7 @@
           "__type": "DoOrderChallengeAction",
           "challengeId": "2.06b",
           "problemType": "3UR2MTb",
+          "additionalCreatures": { "baby_unifox": 3 },
           "challengeData": {
             "client": "Marmaduke Biggs",
             "creatureType": "rammus",
@@ -226,6 +256,7 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "2.02a",
             "problemType": "3UR2MC",
+            "additionalCreatures": { "baby_unifox": 3 },
             "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "rammus",
@@ -238,6 +269,7 @@
             "__type": "DoOrderChallengeAction",
             "challengeId": "2.02c",
             "problemType": "3UR2MC",
+            "additionalCreatures": { "baby_unifox": 3 },
             "challengeData": {
               "client": "Isabel Noether",
               "creatureType": "rammus",
@@ -262,6 +294,7 @@
               "topDraggable": true,
               "leftDraggable": true
             },
+            "additionalCreatures": { "baby_unifox": 3 },
             "constraints": {
               "maxHeight": 10,
               "leftDraggable": false
@@ -278,6 +311,7 @@
               "topDraggable": true,
               "leftDraggable": true
             },
+            "additionalCreatures": { "baby_unifox": 3 },
             "constraints": {
               "maxHeight": 8,
               "leftDraggable": false
@@ -295,6 +329,7 @@
        "__type": "DoOrderChallengeAction",
        "challengeId": "2.06a",
        "problemType": "3UR2MTb",
+       "additionalCreatures": { "baby_unifox": 3 },
        "challengeData": {
           "client": "Isabel Noether",
           "creatureType": "rammus",
@@ -307,6 +342,7 @@
        "__type": "DoOrderChallengeAction",
        "challengeId": "2.06d",
        "problemType": "3UR2MTb",
+       "additionalCreatures": { "baby_unifox": 3 },
        "challengeData": {
           "client": "Isabel Noether",
           "creatureType": "rammus",
@@ -319,6 +355,7 @@
        "__type": "DoOrderChallengeAction",
        "challengeId": "2.06e",
        "problemType": "3UR2MTb",
+       "additionalCreatures": { "baby_unifox": 3 },
        "challengeData": {
           "client": "Isabel Noether",
           "creatureType": "rammus",
@@ -336,6 +373,7 @@
        "__type": "DoOrderChallengeAction",
        "challengeId": "2.07a",
        "problemType": "3UR1MTc",
+       "additionalCreatures": { "baby_unifox": 3 },
        "challengeData": {
           "client": "Isabel Noether",
           "creatureType": "rammus",
@@ -350,6 +388,7 @@
        "__type": "DoOrderChallengeAction",
        "challengeId": "2.07b",
        "problemType": "3UR2MTc",
+       "additionalCreatures": { "baby_unifox": 3 },
        "challengeData": {
           "client": "Isabel Noether",
           "creatureType": "rammus",
@@ -369,6 +408,7 @@
          "__type": "DoOrderChallengeAction",
          "challengeId": "2.04a",
          "problemType": "3UR2MF",
+         "additionalCreatures": { "baby_unifox": 3 },
          "challengeData": {
            "client": "Isabel Noether",
            "creatureType": "rammus",
@@ -381,6 +421,7 @@
          "__type": "DoOrderChallengeAction",
          "challengeId": "2.03b",
          "problemType": "3UR2MF",
+         "additionalCreatures": { "baby_unifox": 3 },
          "challengeData": {
            "client": "Isabel Noether",
            "creatureType": "rammus",
@@ -393,6 +434,7 @@
       "__type": "DoOrderChallengeAction",
       "challengeId": "2.03a",
       "problemType": "3UR2MF",
+      "additionalCreatures": { "baby_unifox": 3 },
       "challengeData": {
           "client": "Isabel Noether",
           "creatureType": "rammus",
@@ -405,6 +447,7 @@
           "__type": "DoOrderChallengeAction",
           "challengeId": "2.04b",
           "problemType": "3UR2MF",
+          "additionalCreatures": { "baby_unifox": 3 },
           "reviewKey": "middle",
           "challengeData": {
             "client": "Isabel Noether",
@@ -426,10 +469,10 @@
       "orderId": "2.02b",
       "problemType": "3UR2MC",
       "orderData": {
-        "client": "Archibold Huxley III",
+        "client": "Isabel Noether",
         "creatureType": "rammus",
         "numCreatures": 17,
-        "description": "Dear Friend! I have 17 ADULT RAMMUSES. Please send me enough food for all of them!",
+        "description": "Sticks and stones are never going to shake me, but I have *[numCreatures] [creatureType]* and they won't feed themselves. Send enough of each type of food for them, won't you?",
         "reward": 40
       }
     },

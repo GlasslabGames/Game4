@@ -517,7 +517,10 @@ GlassLab.FeedingPen.prototype._onCreatureContentsChanged = function() {
 };
 
 GlassLab.FeedingPen.prototype.checkPenStatus = function() {
-    if (this.feeding) return (this.canFeed = false); // intentional assignment
+    if (this.feeding || GLOBAL.mailManager.currentOrder) {
+        this.canFeed = false;
+        return false;
+    }
 
     var ok = (this.getNumCreatures() >= this.widths[0] * this.height) &&
         this.foodTypes.length == this.widths.length-1;

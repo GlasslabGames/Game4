@@ -33,9 +33,9 @@ GlassLab.DoPenChallengeAction.prototype._onDestroy = function() {
 
 GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatureType, creatureCount) {
     this.result = result;
-    if (result == GlassLab.results.satisfied) {
-        if (creatureType != this.data.creatureType) this.result = GlassLab.results.wrongCreatureType;
-        else if (creatureCount < this.data.numCreatures) this.result = GlassLab.results.wrongCreatureNumber;
+    if (creatureType != this.data.creatureType) this.result = GlassLab.results.wrongCreatureType;
+    else if (result == GlassLab.results.satisfied) {
+        if (creatureCount < this.data.numCreatures) this.result = GlassLab.results.wrongCreatureNumber;
     }
 
     GLOBAL.game.time.events.add(2000, this._showResult, this);
@@ -43,7 +43,7 @@ GlassLab.DoPenChallengeAction.prototype._onPenResolved = function(result, creatu
 
 GlassLab.DoPenChallengeAction.prototype._showResult = function() {
     if (this.result == GlassLab.results.satisfied) {
-        GLOBAL.assistant.showModal("Good job! You did it!", this.completeChallenge.bind(this));
+        GLOBAL.assistant.showModal("Nicely done, rancher.", this.completeChallenge.bind(this));
     } else {
         //var retryButton = new GlassLab.UIRectButton(GLOBAL.game, 0, 0, this.failChallenge, this, 150, 60, 0xffffff, "Retry");
         var text = "Oops, ";

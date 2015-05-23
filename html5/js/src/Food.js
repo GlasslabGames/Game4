@@ -101,7 +101,7 @@ GlassLab.FoodTypes = {
     mushroom: {
         spriteName: "mushroom",
         spriteOffsetWhileDragging: 7,
-        color: 0xca5d5c,
+        color: 0xBFDB9A,
         cost: 2000,
         available: true,
         displayNames: {
@@ -213,7 +213,7 @@ GlassLab.Food.prototype._onEndDrag = function () {
 
     var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);
     if (this.hoveredPen) this.hoveredPen.showHoveredFood(null, tile);
-    if (tile && tile.inPen && tile.inPen.tryDropFood(this.type, tile)) {
+    if (tile && tile.inPen && tile.inPen.tryDropFood && tile.inPen.tryDropFood(this.type, tile)) {
         console.log("Dropped food in pen");
         this.destroy();
     } else {
@@ -240,7 +240,7 @@ GlassLab.Food.prototype._onDrag = function (mousePos, diff) {
     var hoveredPen = null;
     var section = -1;
     var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.isoX, this.isoY);
-    if (tile && tile.inPen && tile.inPen.canDropFoodAtTile(tile)) {
+    if (tile && tile.inPen && tile.inPen.canDropFoodAtTile && tile.inPen.canDropFoodAtTile(tile)) {
         hoveredPen = tile.inPen;
         section = tile.inPen.getSection(tile);
     }
