@@ -471,7 +471,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UIManager.tutorialAnchor.addChild(assistant.sprite);
     GLOBAL.assistant = assistant;
 
-    var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
+    /*var versionLabel = game.make.text(0,0,"v"+GLOBAL.version, {font: "8pt Arial", fill:'#ffffff'});
     versionLabel.fixedToCamera = true;
     GLOBAL._averageFrameTime = 33;
     GlassLab.SignalManager.update.add(function(dt)
@@ -479,7 +479,7 @@ GlassLab.State.Init.prototype.create = function()
         GLOBAL._averageFrameTime = (GLOBAL._averageFrameTime * 49 + dt) / 50;
         this.setText("v"+GLOBAL.version + " - " + Math.round(1000.0/GLOBAL._averageFrameTime) + "fps")
     }, versionLabel);
-    GLOBAL.UILayer.add(versionLabel);
+    GLOBAL.UILayer.add(versionLabel);*/
 
     GLOBAL.sortingGame = new GlassLab.SortingGame(game);
     GLOBAL.UIManager.centerAnchor.addChild(GLOBAL.sortingGame);
