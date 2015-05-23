@@ -114,11 +114,6 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
                 var tileType = this.GetTileData(i, j, layer.name);
                 if (tileType == -1) continue;
 
-                if (shouldSortWithCreatures) {
-                    var imageName = GLOBAL.tileManager.tilemap.tilesets[0].tiles[tileType].image;
-                    if (imageName && imageName.indexOf("pond_edge") > -1) continue;
-                }
-
                 var image = new GlassLab.Tile(this.game, i, j, tileType);
 
                 if (shouldSortWithCreatures) creatureLayerGroup.add(image);
@@ -157,23 +152,21 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
         }
     }
 
+
     this.game.iso.simpleSort(groundLayerGroup);
     for (var i = 0; i < groundLayerGroup.children.length; i++) {
         var sprite = groundLayerGroup.getChildAt(i);
         var pos = this.game.iso.project(sprite.isoPosition);
-        //pos.x -= sprite.width / 2;
-        //pos.y -= sprite.height;
-        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2, pos.y + GLOBAL.bgData.height / 2 + 400);
+        var info = sprite.imageOffset;
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 - 200, pos.y + GLOBAL.bgData.height / 2 + 400 + info.h);
     }
 
     this.game.iso.simpleSort(creatureLayerGroup);
     for (var i = 0; i < creatureLayerGroup.children.length; i++) {
         var sprite = creatureLayerGroup.getChildAt(i);
-        //console.log(sprite.isoX, sprite.isoY, sprite.isoZ);
         var pos = this.game.iso.project(sprite.isoPosition);
-        //pos.x -= sprite.width / 2;
-        //pos.y -= sprite.height;
-        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2, pos.y + GLOBAL.bgData.height / 2 + 400);
+        var info = sprite.imageOffset;
+        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 - 200, pos.y + GLOBAL.bgData.height / 2 + 400 + info.h);
     }
 
     if (GLOBAL.groundLayer.cacheAsBitmap)

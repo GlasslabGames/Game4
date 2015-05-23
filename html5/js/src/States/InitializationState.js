@@ -153,6 +153,7 @@ GlassLab.State.Init.prototype.preload = function()
     game.load.image('angryEmote', 'assets/images/emotes/angryEmote.png');
 
     game.load.atlasJSONHash('tiles_v2', 'assets/images/tiles/tiles_v2.png', 'assets/images/tiles/tiles_v2.json');
+    game.load.json('tileInfo', 'assets/images/tiles/tiles_v2.json');
     game.load.image('tiledGrass', 'assets/images/tiles/square_grass.png');
 
     game.load.image('penTooltipCap', 'assets/images/pen/pen_tooltip_cap.png');

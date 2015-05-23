@@ -8,6 +8,9 @@
 GlassLab.Tile = function(game, col, row, type) {
     var imageName = this._getImageFromType(type);
     Phaser.Plugin.Isometric.IsoSprite.prototype.constructor.call(this, game, (col-GLOBAL.tileManager.tilemap.width/2)*GLOBAL.tileSize, (row-GLOBAL.tileManager.tilemap.height/2)*GLOBAL.tileSize, 0, "tiles_v2", imageName);
+
+    this.imageOffset = this.game.cache.getJSON("tileInfo").frames[imageName].spriteSourceSize;
+
     this.type = type;
     //this.tint = Phaser.Color.getColor(Math.random() * 255, Math.random() * 255, Math.random() * 255); // for testing with clearly distinguished tiles (change type to placeholderTile)
     this.anchor.setTo(0.5, 1);
