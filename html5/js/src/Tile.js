@@ -164,7 +164,7 @@ GlassLab.Tile.prototype.onFoodRemoved = function(food) {
 };
 
 GlassLab.Tile.prototype.getIsWalkable = function() {
-    if (this.col < 20 || this.row < 20 || this.col > 47 || this.row > 47) return false;
+    if (this.col < 20 || this.row < 20 || this.col > 47 || this.row > 48) return false;
 
     var tileProperties = GLOBAL.tileManager.tilemap.tilesets[0].tileproperties[this.type];
     return (tileProperties.hasOwnProperty("walkable") && tileProperties.walkable === "true") // Walkable
