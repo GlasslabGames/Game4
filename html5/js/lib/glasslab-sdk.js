@@ -111,6 +111,10 @@ either expressed or implied, of the FreeBSD Project.
         this._options.gameLevel = options.gameLevel;
       }
 
+      if( options.hasOwnProperty( 'forceHttps' ) ) {
+        this._options.forceHttps = options.forceHttps;
+      }
+
       if( options.hasOwnProperty( 'dispatchQueueUpdateInterval' ) ) {
         //this._options.dispatchQueueUpdateInterval = options.dispatchQueueUpdateInterval;
         //setInterval( _flushDispatchQueue, this._options.dispatchQueueUpdateInterval );
@@ -184,6 +188,8 @@ either expressed or implied, of the FreeBSD Project.
       gameSecret:   "SECRET_NOT_SET",
       deviceId:     generateDeviceId( "null" ),
       gameLevel:    "LEVEL_NOT_SET",
+
+      forceHttps:   false,
 
       dispatchQueueUpdateInterval: 10000, // milliseconds
       sendTotalTimePlayedInterval: 5000,  // milliseconds
@@ -350,7 +356,10 @@ either expressed or implied, of the FreeBSD Project.
   };
 
   _GlassLabSDK.prototype.getConfig = function( uri, success, error ) {
-    // Set the URI
+    // Set the URI and replace http with https if required
+    if( this._options.forceHttps ) {
+      uri = uri.replace(/^http:\/\//i, 'https://');
+    }
     this.setOptions( { uri: uri } );
 
     // Perform the request

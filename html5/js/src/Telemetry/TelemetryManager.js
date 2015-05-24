@@ -37,7 +37,17 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     } );
 
     // Manually set local logging for the SDK
-    var hasServer = getParameterByName("telemetry") != "false" && (getParameterByName("sdkURL") != "" || location.hostname.indexOf("playfully.org") != -1);
+    var sdkUrl = getParameterByName("sdkURL");
+    console.log( "[GlassLabSDK] sdk URL is: " + sdkUrl );
+    var hasServer = getParameterByName("telemetry") != "false" && (sdkUrl != "" || location.hostname.indexOf("playfully.org") != -1);
+
+    // Force https if we are on stage or prod
+    console.log( "[GlassLabSDK] checking for secure connection." );
+    if( sdkUrl.indexOf("playfully.org") != -1 || sdkUrl.indexOf("glasslabgames.org") != -1 ) {
+        console.log( "[GlassLabSDK] Forcing a secure connection." );
+        GlassLabSDK.setOptions( { forceHttps: true } );
+    }
+
     //var hasServer = true; // Baked for stage builds
     GlassLabSDK.setOptions( { localLogging: !hasServer, dispatchQueueUpdateInterval: 500 } );
 
@@ -51,7 +61,7 @@ GlassLab.TelemetryManager.prototype._initializeSDK = function()
     else
     {
         // Attempt to connect to the server.
-        var connectURL = getParameterByName("sdkURL") || "http://stage.playfully.org";
+        var connectURL = sdkUrl || "http://stage.playfully.org";
         GlassLabSDK.connect( "PRIMA", connectURL, function( data ) {
             console.log( "[GlassLabSDK] Connection successful: " + data );
 
