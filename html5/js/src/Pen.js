@@ -293,8 +293,8 @@ GlassLab.Pen.prototype._drawBg = function() {
             var tile = GLOBAL.tileManager.TryGetTileAtIsoWorldPosition(this.sprite.isoX + (GLOBAL.tileSize * col), this.sprite.isoY + (GLOBAL.tileSize * row));
             if (tile) {
                 tile.setInPen(this);
-                this._drawBgAtTile(col, row, tile);
             }
+            this._drawBgAtTile(col, row, tile);
         }
     }
 };
@@ -332,7 +332,6 @@ GlassLab.Pen.prototype._placeArrows = function() {
 };
 
 GlassLab.Pen.prototype._placeTile = function(xPos, yPos, parent, atlasName, spriteName, tint, scale, anchor) {
-
     var tile = this.unusedTiles.pop();
     if (!tile) { // we ran out of existing tiles, so make a new one
         tile = this.game.make.isoSprite(0, 0, 0, atlasName, spriteName);
