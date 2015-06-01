@@ -118,7 +118,9 @@ GlassLab.OrderFulfillment.prototype.focusCamera = function() {
     // The pen is already set to be centered, so we can center the camera (with some offset for the UI)
     var xOffset = -85;
     var yOffset = 100;
-    GLOBAL.UIManager.setCenterCameraPos(xOffset, yOffset);
+    GLOBAL.UIManager.setCenterCameraPos(xOffset, yOffset, true);
+
+    var prevBgHeight = GLOBAL.tiledBg.height;
     if (this.crate) {
         // To figure out how much we need to zoom out, we have to use the crate's non-isometric size
         var width = GlassLab.Pen.CalculateProjectedWidth(this.crate.getFullWidth(), this.crate.height);
@@ -128,9 +130,12 @@ GlassLab.OrderFulfillment.prototype.focusCamera = function() {
         }
     }
 
-    GLOBAL.tiledBg.width = this.game.width / GLOBAL.UIManager.zoomLevel * 1.25; // padding to cover a weird edge when full screen;
-    GLOBAL.tiledBg.height = this.game.height / GLOBAL.UIManager.zoomLevel;
-    GLOBAL.tiledBg.position.setTo(xOffset / GLOBAL.UIManager.zoomLevel, yOffset / GLOBAL.UIManager.zoomLevel);
+    // if we're zooming out, resize the tiledBg. Else leave it larger so we don't have to stress about the animated zoom
+    if (this.game.height / GLOBAL.UIManager.zoomLevel > prevBgHeight) {
+        GLOBAL.tiledBg.width = this.game.width / GLOBAL.UIManager.zoomLevel * 1.25; // padding to cover a weird edge when full screen;
+        GLOBAL.tiledBg.height = this.game.height / GLOBAL.UIManager.zoomLevel;
+        GLOBAL.tiledBg.position.setTo(xOffset / GLOBAL.UIManager.zoomLevel, yOffset / GLOBAL.UIManager.zoomLevel);
+    }
 };
 
 GlassLab.OrderFulfillment.prototype._getResponse = function(dontAbort) {

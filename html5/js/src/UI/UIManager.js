@@ -406,11 +406,11 @@ GlassLab.UIManager.prototype.resetCameraPos = function() {
     else this.setCenterCameraPos(0, 0); // center in the middle of the screen
 };
 
-GlassLab.UIManager.prototype.setCenterCameraPos = function(x, y) {
+GlassLab.UIManager.prototype.setCenterCameraPos = function(x, y, dontConstrain) {
     GLOBAL.game.camera.x = x - GLOBAL.game.camera.width/2;
     GLOBAL.game.camera.y = y - GLOBAL.game.camera.height/2;
 
-    this.enforceCameraBounds();
+    if (!dontConstrain) this.enforceCameraBounds();
     GlassLab.SignalManager.cameraMoved.dispatch();
 };
 

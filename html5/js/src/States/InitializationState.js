@@ -428,8 +428,8 @@ GlassLab.State.Init.prototype.create = function()
 
     // Create TileManager and map
     GLOBAL.bgData = this.game.make.bitmapData(7000, 4500);
-    var bg = GLOBAL.bgData.addToWorld(100, -290, 0.5, 0.5);
-    GLOBAL.groundLayer.add(bg);
+    GLOBAL.bg = GLOBAL.bgData.addToWorld(100, -290, 0.5, 0.5);
+    GLOBAL.groundLayer.add(GLOBAL.bg);
 
     GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
     var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
@@ -531,6 +531,6 @@ GlassLab.State.Init.prototype.update = function()
          this.bg.destroy();
          this.box.destroy();
 
-         this.game.state.start("Title", false);
+         this.game.state.start("Game", false);
     }
 };
