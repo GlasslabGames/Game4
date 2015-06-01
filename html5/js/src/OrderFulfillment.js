@@ -196,6 +196,8 @@ GlassLab.OrderFulfillment.prototype.hide = function()
     {
         this.crate.reset();
         this.crate.hide();
+        // if we started shipping but didn't finish, be sure to remove the event listener
+        this.crate.onShipped.remove(this._crateShipped, this);
     }
 
     GLOBAL.assistant.endOrder();
