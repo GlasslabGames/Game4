@@ -159,7 +159,11 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
         var sprite = groundLayerGroup.getChildAt(i);
         var pos = this.game.iso.project(sprite.isoPosition);
         var info = sprite.imageOffset;
-        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 + xOffset, pos.y + GLOBAL.bgData.height / 2 + info.h + yOffset);
+
+        for (var j = GLOBAL.bgData.length-1; j >= 0; j--)
+        {
+            GLOBAL.bgData[j].draw(sprite, pos.x + GLOBAL.bgData[j].width * GLOBAL.bg[j].anchor.x + info.w / 2 + xOffset, pos.y + GLOBAL.bgData[j].height * GLOBAL.bg[j].anchor.y + info.h + yOffset);
+        }
     }
 
     this.game.iso.simpleSort(creatureLayerGroup);
@@ -167,7 +171,10 @@ GlassLab.TileManager.prototype.GenerateMapFromDataToGroup = function(tilemap)
         var sprite = creatureLayerGroup.getChildAt(i);
         var pos = this.game.iso.project(sprite.isoPosition);
         var info = sprite.imageOffset;
-        GLOBAL.bgData.draw(sprite, pos.x + GLOBAL.bgData.width / 2 + info.w / 2 + xOffset, pos.y + GLOBAL.bgData.height / 2 + info.h + yOffset);
+        for (var j = GLOBAL.bgData.length-1; j >= 0; j--)
+        {
+            GLOBAL.bgData[j].draw(sprite, pos.x + GLOBAL.bgData[j].width * GLOBAL.bg[j].anchor.x + info.w / 2 + xOffset, pos.y + GLOBAL.bgData[j].height * GLOBAL.bg[j].anchor.y + info.h + yOffset);
+        }
     }
 
     if (GLOBAL.groundLayer.cacheAsBitmap)

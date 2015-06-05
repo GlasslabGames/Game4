@@ -403,7 +403,7 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.UILayer = game.add.group();
     GLOBAL.UILayer.visible = GLOBAL.WorldLayer.visible = false;
 
-    GLOBAL.tileSize = 115; // Art tile size is about 139 (guessed with trial and error)
+    GLOBAL.tileSize = 115; // Art tile size (guessed with trial and error)
 
     GLOBAL.foodInWorld = [];
 
@@ -427,9 +427,24 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.paused = false;
 
     // Create TileManager and map
-    GLOBAL.bgData = this.game.make.bitmapData(7000, 4500);
-    GLOBAL.bg = GLOBAL.bgData.addToWorld(100, -290, 0.5, 0.5);
-    GLOBAL.groundLayer.add(GLOBAL.bg);
+
+    GLOBAL.bgData = [
+        this.game.make.bitmapData(4096, 4096),
+        this.game.make.bitmapData(4096, 4096),
+        this.game.make.bitmapData(4096, 4096),
+        this.game.make.bitmapData(4096, 4096)
+    ];
+    GLOBAL.bg = [
+        GLOBAL.bgData[0].addToWorld(100, -290, 0, 0),
+        GLOBAL.bgData[1].addToWorld(100, -290, 0, 1),
+        GLOBAL.bgData[2].addToWorld(100, -290, 1, 0),
+        GLOBAL.bgData[3].addToWorld(100, -290, 1, 1)
+    ];
+
+    for (var j = GLOBAL.bg.length-1; j >= 0; j--)
+    {
+        GLOBAL.groundLayer.add(GLOBAL.bg[j]);
+    }
 
     GLOBAL.tileManager = new GlassLab.TileManager(GLOBAL.game);
     var mapData = GLOBAL.tileManager.GenerateMapData("worldTileMap");
@@ -495,8 +510,6 @@ GlassLab.State.Init.prototype.create = function()
     GLOBAL.dayManager = new GlassLab.DayManager(GLOBAL.game);
 
     GLOBAL.audioManager = new GlassLab.AudioManager(GLOBAL.game);
-
-    GLOBAL.resourceManager = new GlassLab.ResourceManager(GLOBAL.game);
 
     GLOBAL.dropTarget = new GlassLab.WorldDropTarget(game);
     GLOBAL.baseWorldLayer.add(GLOBAL.dropTarget);
