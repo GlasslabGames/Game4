@@ -2,7 +2,7 @@
 
 "ram_cry_loop_00040.png":
 {
-	"frame": {"x":1,"y":285,"w":426,"h":281},
+	"frame": {"x":2,"y":856,"w":426,"h":281},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":56,"y":107,"w":426,"h":281},
@@ -10,7 +10,7 @@
 },
 "ram_cry_loop_00041.png":
 {
-	"frame": {"x":433,"y":1,"w":429,"h":282},
+	"frame": {"x":2,"y":287,"w":429,"h":282},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":56,"y":106,"w":429,"h":282},
@@ -18,7 +18,7 @@
 },
 "ram_cry_loop_00042.png":
 {
-	"frame": {"x":1,"y":1,"w":431,"h":283},
+	"frame": {"x":2,"y":2,"w":431,"h":283},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":56,"y":105,"w":431,"h":283},
@@ -26,7 +26,7 @@
 },
 "ram_cry_loop_00043.png":
 {
-	"frame": {"x":1,"y":567,"w":423,"h":285},
+	"frame": {"x":2,"y":1139,"w":423,"h":285},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":66,"y":103,"w":423,"h":285},
@@ -34,7 +34,7 @@
 },
 "ram_cry_loop_00044.png":
 {
-	"frame": {"x":425,"y":568,"w":420,"h":287},
+	"frame": {"x":2,"y":1426,"w":420,"h":287},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":56,"y":101,"w":420,"h":287},
@@ -42,7 +42,7 @@
 },
 "ram_cry_loop_00045.png":
 {
-	"frame": {"x":1,"y":853,"w":419,"h":287},
+	"frame": {"x":2,"y":1715,"w":419,"h":287},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":56,"y":101,"w":419,"h":287},
@@ -50,7 +50,7 @@
 },
 "ram_cry_loop_00046.png":
 {
-	"frame": {"x":1,"y":1141,"w":417,"h":286},
+	"frame": {"x":2,"y":2290,"w":417,"h":286},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":58,"y":102,"w":417,"h":286},
@@ -58,15 +58,15 @@
 },
 "ram_cry_loop_00047.png":
 {
-	"frame": {"x":419,"y":1141,"w":415,"h":285},
+	"frame": {"x":2,"y":2578,"w":415,"h":285},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":61,"y":103,"w":415,"h":285},
 	"sourceSize": {"w":500,"h":500}
 },
-"ram_cry_loop_00048 (1).png":
+"ram_cry_loop_00048.png":
 {
-	"frame": {"x":421,"y":856,"w":418,"h":284},
+	"frame": {"x":2,"y":2004,"w":418,"h":284},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":58,"y":104,"w":418,"h":284},
@@ -74,7 +74,7 @@
 },
 "ram_cry_loop_00049.png":
 {
-	"frame": {"x":433,"y":284,"w":426,"h":283},
+	"frame": {"x":2,"y":571,"w":426,"h":283},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":56,"y":105,"w":426,"h":283},
@@ -85,8 +85,8 @@
 	"version": "1.0",
 	"image": "ram_cry_loop.png",
 	"format": "RGBA8888",
-	"size": {"w":1024,"h":2048},
+	"size": {"w":435,"h":2865},
 	"scale": "0.5",
-	"smartupdate": "$TexturePacker:SmartUpdate:a89724e160a87de6dea64fb2b073830a:6c4cfea28e86d23a06332459b93007a7:373ac561afcac00a2cda350c439366b5$"
+	"smartupdate": "$TexturePacker:SmartUpdate:f2e6525d168174652541f73a96ffdb76:6c4cfea28e86d23a06332459b93007a7:373ac561afcac00a2cda350c439366b5$"
 }
 }
