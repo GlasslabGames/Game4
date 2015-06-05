@@ -78,8 +78,6 @@ GlassLab.Creature = function (game, type, startInPen) {
 
         var animSprite = this.game.make.sprite(0, 0, spriteName);
 
-        GLOBAL.resourceManager.preloadResource(spriteName);
-
         animSprite.anchor.setTo(0.5, 0.8);
         animSprite.animations.add('anim'); // this animation uses the whole spritesheet
         this.sprite.addChild(animSprite);
@@ -107,7 +105,6 @@ GlassLab.Creature = function (game, type, startInPen) {
         var sheetName = sheetInfo.sheetName;
         var spriteName = info.spriteName + "_" + sheetName;
         var sheetFrameData = this.game.cache.getFrameData(spriteName);
-        GLOBAL.resourceManager.preloadResource(spriteName);
 
         for (var j=sheetInfo.animations.length-1; j>=0; j--)
         {

@@ -1290,7 +1290,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
         return;
     }
 
-    var i;
+    var i, j=this.children.length;
 
     if (this._mask || this._filters)
     {
@@ -1309,7 +1309,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
         }
 
         // simple render children!
-        for (i = 0; i < this.children.length; i++)
+        for (i = 0; i < j; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -1324,7 +1324,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
     else
     {
         // simple render children!
-        for (i = 0; i < this.children.length; i++)
+        for (i = 0; i < j; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -1353,7 +1353,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
         renderSession.maskManager.pushMask(this._mask, renderSession);
     }
 
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0, j=this.children.length; i < j; i++)
     {
         this.children[i]._renderCanvas(renderSession);
     }
@@ -1658,7 +1658,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         spriteBatch.render(this);
 
         // now loop through the children and make sure they get rendered
-        for (i = 0; i < this.children.length; i++)
+        for (i = 0, j=this.children.length; i < j; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -1676,7 +1676,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         renderSession.spriteBatch.render(this);
 
         // simple render children!
-        for (i = 0; i < this.children.length; i++)
+        for (i = 0, j=this.children.length; i < j; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -1784,7 +1784,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
     }
 
     // OVERWRITE
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0, j=this.children.length; i < j; i++)
     {
         this.children[i]._renderCanvas(renderSession);
     }
@@ -1949,7 +1949,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
 
     var isRotated = true;
 
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0, j=this.children.length; i < j; i++)
     {
         var child = this.children[i];
 
@@ -2862,7 +2862,7 @@ PIXI.Stage.prototype.updateTransform = function()
 {
     this.worldAlpha = 1;
 
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0, j=this.children.length; i < j; i++)
     {
         this.children[i].updateTransform();
     }
@@ -9623,7 +9623,7 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
             renderSession.spriteBatch.start();
 
             // simple render children!
-            for (var i = 0; i < this.children.length; i++)
+            for (var i = 0, j=this.children.length; i < j; i++)
             {
                 this.children[i]._renderWebGL(renderSession);
             }
@@ -9706,7 +9706,7 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
         PIXI.CanvasGraphics.renderGraphics(this, context);
 
          // simple render children!
-        for (var i = 0; i < this.children.length; i++)
+        for (var i = 0, j=this.children.length; i < j; i++)
         {
             this.children[i]._renderCanvas(renderSession);
         }
@@ -19857,7 +19857,7 @@ Phaser.Stage.prototype.preUpdate = function () {
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the orderID to be in sequence
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0, j=this.children.length; i < j; i++)
     {
         this.children[i].preUpdate();
     }
@@ -19930,7 +19930,7 @@ Phaser.Stage.prototype.updateTransform = function () {
 
     this.worldAlpha = 1;
 
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0, j=this.children.length; i < j; i++)
     {
         this.children[i].updateTransform();
     }
@@ -34442,11 +34442,10 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 };
 
 Phaser.Component.Core.preUpdate = function () {
-
     this.previousPosition.set(this.world.x, this.world.y);
     this.previousRotation = this.rotation;
 
-    if (!this.exists || !this.parent.exists)
+    if (!this.exists)
     {
         this.renderOrderID = -1;
         return false;
@@ -34674,7 +34673,7 @@ Phaser.Component.Core.prototype = {
             Phaser.Component.FixedToCamera.postUpdate.call(this);
         }
 
-        for (var i = 0; i < this.children.length; i++)
+        for (var i = 0, j=this.children.length; i < j; i++)
         {
             this.children[i].postUpdate();
         }
